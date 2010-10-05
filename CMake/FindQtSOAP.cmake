@@ -1,0 +1,7 @@
+#
+# QtSOAP
+#
+
+SET(QtSOAP_DIR "$ENV{MAF3_FOUNDATION_LIB_DIR}/qtsoap/")
+SET(QtSOAP_FOUND TRUE)    
+
