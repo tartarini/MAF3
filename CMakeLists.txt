@@ -8,7 +8,7 @@ PROJECT(MAF)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
 
 include(dtkDependencies)
-include(ctkMacroSetupQt)
+include(mafMacroSetupQt)
 
 #foundation libraries
 include(FindQtSOAP)
@@ -19,7 +19,7 @@ include(FindQtSOAP)
 # QT
 #
 
-ctkMacroSetupQt()
+mafMacroSetupQt()
 # Update CTK_BASE_LIBRARIES with QT libraries
 IF(QT4_FOUND)
   SET(CTK_BASE_LIBRARIES ${CTK_BASE_LIBRARIES} ${QT_LIBRARIES} CACHE INTERNAL "MAF base libraries" FORCE)
