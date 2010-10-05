@@ -1,0 +1,44 @@
+# Ignore all dotfiles...
+.*
+
+# Ignore all back-up files...
+*~
+*.bak
+
+# except for .gitignore
+!.gitignore
+
+# Exclude Kdevelop4 files ...
+.kdev*
+
+# Exclude QtCreator files ...
+CMakeLists.txt.user
+*.pro.user
+moc*
+*.app*
+*.moc
+*.dylib
+*.so*
+*.dll
+*.lib
+*.a
+Makefile*
+
+#Exclude gcov and lcov files ...
+*.gcda
+*.gcno
+
+#Exclude VS2008 project files ...
+*.obj
+object_*
+*.sln
+*.htm
+*.pdb
+*.idb
+*.suo
+*.ncb
+*.manifest
+*.dep
+Debug
+Release
+*.vcproj
