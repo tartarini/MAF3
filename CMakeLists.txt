@@ -5,10 +5,13 @@ PROJECT(MAF)
 #############################################################################################
 ### where to search modules
 #############################################################################################
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
 
 include(dtkDependencies)
 include(ctkMacroSetupQt)
+
+#foundation libraries
+include(FindQtSOAP)
 
 
 
@@ -43,10 +46,10 @@ INCLUDE_DIRECTORIES(BEFORE ".")
 FILE(GLOB dir_list "${PROJECT_SOURCE_DIR}/*")
 FOREACH(dir_name ${dir_list})
   FILE(RELATIVE_PATH local_dir_name "${PROJECT_SOURCE_DIR}" ${dir_name})
-	IF(IS_DIRECTORY ${dir_name} AND NOT ${local_dir_name} STREQUAL ".svn")
+	IF(IS_DIRECTORY ${dir_name} AND NOT ${local_dir_name} STREQUAL ".git")
     INCLUDE_DIRECTORIES("${dir_name}")
 		SUBDIRS("${local_dir_name}")
-	ENDIF(IS_DIRECTORY ${dir_name} AND NOT ${local_dir_name} STREQUAL ".svn")
+	ENDIF(IS_DIRECTORY ${dir_name} AND NOT ${local_dir_name} STREQUAL ".git")
 ENDFOREACH(dir_name ${dir_list})
 
 #############################################################################################
