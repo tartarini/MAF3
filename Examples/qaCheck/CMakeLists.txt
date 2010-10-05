@@ -23,5 +23,5 @@ SET(PROJECT_SRCS
 # List libraries that are needed by this project.
 SET(PROJECT_LIBS ${CTK_BASE_LIBRARIES})
 # Create the library.
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
+add_executable(${PROJECT_NAME} ${PROJECT_SRCS})
+target_link_libraries(${PROJECT_NAME} ${PROJECT_LIBS})
