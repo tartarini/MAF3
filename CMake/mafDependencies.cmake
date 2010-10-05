@@ -1,21 +1,6 @@
-### dtkDependencies.cmake --- 
+### mafDependencies.cmake --- 
 ## 
-## Author: Julien Wintz
-## Copyright (C) 2008 - Julien Wintz, Inria.
-## Created: Fri Apr  2 09:11:53 2010 (+0200)
-## Version: $Id$
-## Last-Updated: Wed Sep  8 10:10:21 2010 (+0200)
-##           By: Julien Wintz
-##     Update #: 38
-######################################################################
-## 
-### Commentary: 
-## 
-######################################################################
-## 
-### Change log:
-## 
-######################################################################
+## Author: Daniele Giunchi
 
 ## #################################################################
 ## Qt
@@ -50,7 +35,7 @@ if(SWIG_FOUND)
   include(${SWIG_USE_FILE})
   set(CMAKE_SWIG_FLAGS "")
   
-  macro(dtk_wrap project target name language input deps)
+  macro(maf_wrap project target name language input deps)
     
     set(wrap_output ${project}_wrap_${language}.cpp)
     add_custom_command(
@@ -68,7 +53,7 @@ if(SWIG_FOUND)
       COMMENT "Wrapping ${input} to ${language}")
     set(${target} ${${target}} ${wrap_output})
     
-  endmacro(dtk_wrap)
+  endmacro(maf_wrap)
   
   mark_as_advanced(SWIG_DIR)
   mark_as_advanced(SWIG_EXECUTABLE)
