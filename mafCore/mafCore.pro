@@ -6,7 +6,8 @@ TARGET = mafCore
 TEMPLATE = lib
 CONFIG += create_prl
 win32:CONFIG += dll
-DEFINES += MAFCORE_LIBRARY
+DEFINES += mafCore_EXPORTS
+message($$DEFINES)
 HEADERS += mafCore_global.h \
     mafObjectBase.h \
     mafIdProvider.h \

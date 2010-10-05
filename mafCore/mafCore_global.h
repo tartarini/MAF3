@@ -15,7 +15,7 @@
 // Includes list
 #include <QtCore/qglobal.h>
 
-#if defined(MAFCORE_LIBRARY)
+#if defined(mafCore_EXPORTS)
 #  define MAFCORESHARED_EXPORT Q_DECL_EXPORT
 #else
 #  define MAFCORESHARED_EXPORT Q_DECL_IMPORT
