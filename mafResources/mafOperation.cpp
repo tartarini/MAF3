@@ -27,9 +27,8 @@ bool mafOperation::initialize() {
     return true;
 }
 
-bool mafOperation::execute() {
+void mafOperation::execute() {
     m_IsRunning = true;
-    return m_IsRunning;
 }
 
 bool mafOperation::terminate() {
