@@ -51,7 +51,7 @@ public:
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
 
-    /// Return the instance of the object's status. The caller has to delete the allocated memory he asked.
+    /// Return the instance of the object's status. The caller has to delete the allocated memento memory he asked for.
     virtual mafMemento *createMemento() const;
 
     /// Allows setting a previous saved object's state.
