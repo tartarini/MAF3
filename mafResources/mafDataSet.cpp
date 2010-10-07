@@ -18,12 +18,12 @@ using namespace mafEventBus;
 using namespace mafResources;
 
 mafDataSet::mafDataSet(const mafString code_location) : mafObject(code_location), m_DataValue(NULL), m_DataBoundary(NULL), m_Matrix(NULL), m_DataBoundaryAlgorithm(NULL) {
-    mafId connectDataID = mafIdProvider::instance()->idValue("DATA_CONNECTED");
-    mafId disconnectDataId = mafIdProvider::instance()->idValue("DISCONNECT_OLD_DATA");
+    mafId connectDataID = mafIdProvider::instance()->idValue("maf.local.resources.dataSet.dataConnected");
+    mafId disconnectDataId = mafIdProvider::instance()->idValue("maf.local.resources.dataSet.disconnetOldData");
     if(connectDataID == -1) {
         // Define IDs for data value connected and disconnected.
-        connectDataID = mafIdProvider::instance()->createNewId("DATA_CONNECTED");
-        disconnectDataId = mafIdProvider::instance()->createNewId("DISCONNECT_OLD_DATA");
+        connectDataID = mafIdProvider::instance()->createNewId("maf.local.resources.dataSet.dataConnected");
+        disconnectDataId = mafIdProvider::instance()->createNewId("maf.local.resources.dataSet.disconnetOldData");
     }
     // Register signals to allow event notification.
 //    mafRegisterLocalSignal(connectDataID, this, "dataValueConnected()");
@@ -55,17 +55,17 @@ void mafDataSet::setDataValue(mafContainerInterface *data_value) {
         return; // Data is equal to that one already present.
 
     if(m_DataValue != NULL) {
-        mafId disconnectDataId = mafIdProvider::instance()->idValue("DISCONNECT_OLD_DATA");
+        mafId disconnectDataId = mafIdProvider::instance()->idValue("maf.local.resources.dataSet.disconnetOldData");
         ENSURE(disconnectDataId != -1);
-        // DISCONNECT_OLD_DATA event emitted to notify that previous data has been disconnected.
+        // maf.local.resources.dataSet.disconnetOldData event emitted to notify that previous data has been disconnected.
 //        mafEventBusManager::instance()->notifyEventLocal(disconnectDataId);
     }
 
     m_DataValue = data_value;
     if(m_DataValue != NULL) {
-        mafId connectDataID = mafIdProvider::instance()->idValue("DATA_CONNECTED");
+        mafId connectDataID = mafIdProvider::instance()->idValue("maf.local.resources.dataSet.dataConnected");
         ENSURE(connectDataID != -1);
-        // DATA_CONNECTED event emitted to notify that new data value is available into the mafDataSet
+        // maf.local.resources.dataSet.dataConnected event emitted to notify that new data value is available into the mafDataSet
 //        mafEventBusManager::instance()->notifyEventLocal(connectDataID);
     }
 }
@@ -132,7 +132,7 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
             if (url.isValid()) {
                 mafString urlString = url.toString();
                 argList.append(mafEventArgument(mafString, urlString));
-                mafEventBusManager::instance()->notifyEvent("LOAD_EXTERNALDATA", mafEventTypeLocal, &argList, &mafEventReturnArgument(mafByteArray,stringArray));
+                mafEventBusManager::instance()->notifyEvent("maf.local.resource.serialization.loadExternalData", mafEventTypeLocal, &argList, &mafEventReturnArgument(mafByteArray,stringArray));
                 value = (char*)stringArray.constData();
             } else {
                 value = (char*)item.m_Value.toByteArray().constData();

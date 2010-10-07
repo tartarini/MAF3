@@ -137,11 +137,11 @@ void mafEventBusManagerTest::eventBusRegistrationNotificationTest() {
     QVERIFY(status == 0);
 
     // Create new Event ID used for callback and event notification.
-    mafString updateID = "GLOBAL_UPDATE_EVENT";
+    mafString updateID = "maf.local.eventBus.globalUpdate";
     mafRegisterLocalCallback(updateID, m_ObjTestObserver, "updateObject()");
 
     // Notify the update event... (event logging is disabled)
-    m_EventBus->notifyEvent("GLOBAL_UPDATE_EVENT");
+    m_EventBus->notifyEvent("maf.local.eventBus.globalUpdate");
 
     status = m_ObjTestObserver->var();
     QVERIFY(status == 1);
@@ -202,7 +202,7 @@ void mafEventBusManagerTest::eventBusWithReturnArgumentTest() {
 
 
 void mafEventBusManagerTest::eventNotificationBenchmarkTest() {
-    mafString updateID = "GLOBAL_UPDATE_EVENT";
+    mafString updateID = "maf.local.eventBus.globalUpdate";
     m_EventBus->logAllEvents();
 
     QBENCHMARK {

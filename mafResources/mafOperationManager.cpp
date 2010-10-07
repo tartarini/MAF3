@@ -40,44 +40,44 @@ mafOperationManager::~mafOperationManager() {
 void mafOperationManager::initializeConnections() {
     // Create the IDs required to add a resource to the management system.
     mafIdProvider *provider = mafIdProvider::instance();
-    provider->createNewId("RESOURCES_OPERATION_START");
-    provider->createNewId("RESOURCES_OPERATION_SET_PARAMETERS");
-    provider->createNewId("RESOURCES_OPERATION_EXECUTE");
-    provider->createNewId("RESOURCES_OPERATION_EXECUTE_WITH_PARAMETERS");
-    provider->createNewId("RESOURCES_OPERATION_STOP");
-    provider->createNewId("RESOURCES_OPERATION_UNDO");
-    provider->createNewId("RESOURCES_OPERATION_REDO");
-    provider->createNewId("RESOURCES_OPERATION_CLEAR_UNDOSTACK");
-    provider->createNewId("RESOURCES_OPERATION_SIZE_UNDOSTACK");
-    provider->createNewId("RESOURCES_OPERATION_RETURN_CURRENT_OPERATION_RUNNING");
-    provider->createNewId("RESOURCES_OPERATION_RETURN_LAST_EXECUTED_OPERATION");
+    provider->createNewId("maf.local.resources.operation.start");
+    provider->createNewId("maf.local.resources.operation.setParameters");
+    provider->createNewId("maf.local.resources.operation.execute");
+    provider->createNewId("maf.local.resources.operation.executeWithParameters");
+    provider->createNewId("maf.local.resources.operation.stop");
+    provider->createNewId("maf.local.resources.operation.undo");
+    provider->createNewId("maf.local.resources.operation.redo");
+    provider->createNewId("maf.local.resources.operation.clearUndoStack");
+    provider->createNewId("maf.local.resources.operation.sizeUndoStack");
+    provider->createNewId("maf.local.resources.operation.currentRunning");
+    provider->createNewId("maf.local.resources.operation.lastExecuted");
 
     // Register API signals.
-    mafRegisterLocalSignal("RESOURCES_OPERATION_START", this, "startOperationSignal(const mafString)");
-    mafRegisterLocalSignal("RESOURCES_OPERATION_SET_PARAMETERS", this, "setOperationParametersSignal(mafList<mafVariant>)");
-    mafRegisterLocalSignal("RESOURCES_OPERATION_EXECUTE", this, "executeOperationSignal()");
-    mafRegisterLocalSignal("RESOURCES_OPERATION_EXECUTE_WITH_PARAMETERS", this, "executeWithParametersSignal(mafList<mafVariant>)");
-    mafRegisterLocalSignal("RESOURCES_OPERATION_STOP", this, "stopOperationSignal()");
-    mafRegisterLocalSignal("RESOURCES_OPERATION_UNDO", this, "undoOperationSignal()");
-    mafRegisterLocalSignal("RESOURCES_OPERATION_REDO", this, "redoOperationSignal()");
-    mafRegisterLocalSignal("RESOURCES_OPERATION_CLEAR_UNDOSTACK", this, "clearUndoStackSignal()");
-    mafRegisterLocalSignal("RESOURCES_OPERATION_SIZE_UNDOSTACK", this, "undoStackSizeSignal()");
-    mafRegisterLocalSignal("RESOURCES_OPERATION_RETURN_CURRENT_OPERATION_RUNNING", this, "currentOperationSignal()");
-    mafRegisterLocalSignal("RESOURCES_OPERATION_RETURN_LAST_EXECUTED_OPERATION", this, "lastExecutedOperationSignal()");
+    mafRegisterLocalSignal("maf.local.resources.operation.start", this, "startOperationSignal(const mafString)");
+    mafRegisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(mafList<mafVariant>)");
+    mafRegisterLocalSignal("maf.local.resources.operation.execute", this, "executeOperationSignal()");
+    mafRegisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(mafList<mafVariant>)");
+    mafRegisterLocalSignal("maf.local.resources.operation.stop", this, "stopOperationSignal()");
+    mafRegisterLocalSignal("maf.local.resources.operation.undo", this, "undoOperationSignal()");
+    mafRegisterLocalSignal("maf.local.resources.operation.redo", this, "redoOperationSignal()");
+    mafRegisterLocalSignal("maf.local.resources.operation.clearUndoStack", this, "clearUndoStackSignal()");
+    mafRegisterLocalSignal("maf.local.resources.operation.sizeUndoStack", this, "undoStackSizeSignal()");
+    mafRegisterLocalSignal("maf.local.resources.operation.currentRunning", this, "currentOperationSignal()");
+    mafRegisterLocalSignal("maf.local.resources.operation.lastExecuted", this, "lastExecutedOperationSignal()");
 
 
     // Register private callbacks to the instance of the manager..
-    mafRegisterLocalCallback("RESOURCES_OPERATION_START", this, "startOperation(const mafString)");
-    mafRegisterLocalCallback("RESOURCES_OPERATION_SET_PARAMETERS", this, "setOperationParameters(mafList<mafVariant>)");
-    mafRegisterLocalCallback("RESOURCES_OPERATION_EXECUTE", this, "executeOperation()");
-    mafRegisterLocalCallback("RESOURCES_OPERATION_EXECUTE_WITH_PARAMETERS", this, "executeWithParameters(mafList<mafVariant>)");
-    mafRegisterLocalCallback("RESOURCES_OPERATION_STOP", this, "stopOperation()");
-    mafRegisterLocalCallback("RESOURCES_OPERATION_UNDO", this, "undoOperation()");
-    mafRegisterLocalCallback("RESOURCES_OPERATION_REDO", this, "redoOperation()");
-    mafRegisterLocalCallback("RESOURCES_OPERATION_CLEAR_UNDOSTACK", this, "clearUndoStack()");
-    mafRegisterLocalCallback("RESOURCES_OPERATION_SIZE_UNDOSTACK", this, "undoStackSize()");
-    mafRegisterLocalCallback("RESOURCES_OPERATION_RETURN_CURRENT_OPERATION_RUNNING", this, "currentOperation()");
-    mafRegisterLocalCallback("RESOURCES_OPERATION_RETURN_LAST_EXECUTED_OPERATION", this, "lastExecutedOperation()");
+    mafRegisterLocalCallback("maf.local.resources.operation.start", this, "startOperation(const mafString)");
+    mafRegisterLocalCallback("maf.local.resources.operation.setParameters", this, "setOperationParameters(mafList<mafVariant>)");
+    mafRegisterLocalCallback("maf.local.resources.operation.execute", this, "executeOperation()");
+    mafRegisterLocalCallback("maf.local.resources.operation.executeWithParameters", this, "executeWithParameters(mafList<mafVariant>)");
+    mafRegisterLocalCallback("maf.local.resources.operation.stop", this, "stopOperation()");
+    mafRegisterLocalCallback("maf.local.resources.operation.undo", this, "undoOperation()");
+    mafRegisterLocalCallback("maf.local.resources.operation.redo", this, "redoOperation()");
+    mafRegisterLocalCallback("maf.local.resources.operation.clearUndoStack", this, "clearUndoStack()");
+    mafRegisterLocalCallback("maf.local.resources.operation.sizeUndoStack", this, "undoStackSize()");
+    mafRegisterLocalCallback("maf.local.resources.operation.currentRunning", this, "currentOperation()");
+    mafRegisterLocalCallback("maf.local.resources.operation.lastExecuted", this, "lastExecutedOperation()");
 }
 
 

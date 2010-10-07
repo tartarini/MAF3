@@ -35,40 +35,40 @@ mafSerializationManager::mafSerializationManager(const mafString code_location) 
 void mafSerializationManager::initializeConnections() {
     // Create the IDs required to Save/Load MAF3 data.
     mafIdProvider *provider = mafIdProvider::instance();
-    provider->createNewId("PLUG_CODEC");
-    provider->createNewId("PLUG_SERIALIZER");
-    provider->createNewId("SAVE");
-    provider->createNewId("LOAD");
-    provider->createNewId("EXPORT");
-    provider->createNewId("IMPORT");
-    provider->createNewId("SAVE_EXTERNALDATA");
-    provider->createNewId("LOAD_EXTERNALDATA");
-    m_MementoLoadedId = "MEMENTO_LOADED";
+    provider->createNewId("maf.local.serialization.plugCodec");
+    provider->createNewId("maf.local.serialization.plugSerializer");
+    provider->createNewId("maf.local.serialization.save");
+    provider->createNewId("maf.local.serialization.load");
+    provider->createNewId("maf.local.serialization.export");
+    provider->createNewId("maf.local.serialization.import");
+    provider->createNewId("maf.local.serialization.saveExternalData");
+    provider->createNewId("maf.local.serialization.loadExternalData");
+    m_MementoLoadedId = "maf.local.serialization.mementoLoaded";
     provider->createNewId(m_MementoLoadedId);
-    m_ExtDataImportedId = "EXTDATA_IMPORTED";
+    m_ExtDataImportedId = "maf.local.serialization.extDataImported";
     provider->createNewId(m_ExtDataImportedId);
 
     // Register API signals.
-    mafRegisterLocalSignal("PLUG_CODEC", this, "plugCodecInModule(const mafString &, const mafString &, const mafString &)");
-    mafRegisterLocalSignal("PLUG_SERIALIZER", this, "plugSerializerInModule(const mafString &, const mafString &)");
-    mafRegisterLocalSignal("SAVE", this, "save(mafCore::mafMemento *, const mafString &, const mafString &)");
-    mafRegisterLocalSignal("LOAD", this, "load(const mafString &, const mafString &)");
-    mafRegisterLocalSignal("EXPORT", this, "exportData(mafCore::mafContainerInterface *, const mafString &, const mafString &)");
-    mafRegisterLocalSignal("IMPORT", this, "importData(const mafString &, const mafString &)");
-    mafRegisterLocalSignal("SAVE_EXTERNALDATA", this, "saveExtData(char *, const mafString &, int)");
-    mafRegisterLocalSignal("LOAD_EXTERNALDATA", this, "loadExtData(const mafString &)");
+    mafRegisterLocalSignal("maf.local.serialization.plugCodec", this, "plugCodecInModule(const mafString &, const mafString &, const mafString &)");
+    mafRegisterLocalSignal("maf.local.serialization.plugSerializer", this, "plugSerializerInModule(const mafString &, const mafString &)");
+    mafRegisterLocalSignal("maf.local.serialization.save", this, "save(mafCore::mafMemento *, const mafString &, const mafString &)");
+    mafRegisterLocalSignal("maf.local.serialization.load", this, "load(const mafString &, const mafString &)");
+    mafRegisterLocalSignal("maf.local.serialization.export", this, "exportData(mafCore::mafContainerInterface *, const mafString &, const mafString &)");
+    mafRegisterLocalSignal("maf.local.serialization.import", this, "importData(const mafString &, const mafString &)");
+    mafRegisterLocalSignal("maf.local.serialization.saveExternalData", this, "saveExtData(char *, const mafString &, int)");
+    mafRegisterLocalSignal("maf.local.serialization.loadExternalData", this, "loadExtData(const mafString &)");
     mafRegisterLocalSignal("MEMENTO_LOADED", this, "mementoLoaded(mafCore::mafMemento *)");
     mafRegisterLocalSignal("EXTDATA_IMPORTED", this, "extDataImported(mafCore::mafContainerInterface *)");
 
     // Register private callbacks.
-    mafRegisterLocalCallback("PLUG_CODEC", this, "plugCodec(const mafString &, const mafString &, const mafString &)");
-    mafRegisterLocalCallback("PLUG_SERIALIZER", this, "plugSerializer(const mafString &, const mafString &)");
-    mafRegisterLocalCallback("SAVE", this, "saveMemento(mafCore::mafMemento *, const mafString &, const mafString &)");
-    mafRegisterLocalCallback("LOAD", this, "loadMemento(const mafString &, const mafString &)");
-    mafRegisterLocalCallback("EXPORT", this, "exportExternalData(mafCore::mafContainerInterface *, const mafString &, const mafString &)");
-    mafRegisterLocalCallback("IMPORT", this, "importExternalData(const mafString &, const mafString &)");
-    mafRegisterLocalCallback("SAVE_EXTERNALDATA", this, "saveExternalData(char *, const mafString &, int)");
-    mafRegisterLocalCallback("LOAD_EXTERNALDATA", this, "loadExternalData(const mafString &)");
+    mafRegisterLocalCallback("maf.local.serialization.plugCodec", this, "plugCodec(const mafString &, const mafString &, const mafString &)");
+    mafRegisterLocalCallback("maf.local.serialization.plugSerializer", this, "plugSerializer(const mafString &, const mafString &)");
+    mafRegisterLocalCallback("maf.local.serialization.save", this, "saveMemento(mafCore::mafMemento *, const mafString &, const mafString &)");
+    mafRegisterLocalCallback("maf.local.serialization.load", this, "loadMemento(const mafString &, const mafString &)");
+    mafRegisterLocalCallback("maf.local.serialization.export", this, "exportExternalData(mafCore::mafContainerInterface *, const mafString &, const mafString &)");
+    mafRegisterLocalCallback("maf.local.serialization.import", this, "importExternalData(const mafString &, const mafString &)");
+    mafRegisterLocalCallback("maf.local.serialization.saveExternalData", this, "saveExternalData(char *, const mafString &, int)");
+    mafRegisterLocalCallback("maf.local.serialization.loadExternalData", this, "loadExternalData(const mafString &)");
 }
 
 void mafSerializationManager::saveMemento(mafMemento *memento, const mafString &url, const mafString &encode_type) {
@@ -167,7 +167,7 @@ void mafSerializationManager::loadMemento(const mafString &url, const mafString 
     mafDEL(codec);
     mafDEL(ser);
 
-    // Notify through the event bus that the memento has beed loaded by using the ID: MEMENTO_LOADED
+    // Notify through the event bus that the memento has beed loaded by using the ID: "maf.local.serialization.mementoLoaded"
     mafEventArgumentsList list;
     list.append(mafEventArgument(mafCore::mafMemento *, m));
     mafEventBusManager::instance()->notifyEvent(m_MementoLoadedId, mafEventTypeLocal, &list);
@@ -307,7 +307,7 @@ void mafSerializationManager::importExternalData(const mafString &url, const maf
     codec->setStringSize(size);
     codec->decode(inputString);
 
-    // Notify through the event bus that the Externaldata has beed imported by using the ID: EXTDATA_IMPORTED
+    // Notify through the event bus that the Externaldata has beed imported by using the ID: "maf.local.serialization.extDataImported"
     mafEventArgumentsList list;
     list.append(mafEventArgument(mafCore::mafContainerInterface *, codec->externalData()));
     mafEventBusManager::instance()->notifyEvent(m_ExtDataImportedId, mafEventTypeLocal, &list);

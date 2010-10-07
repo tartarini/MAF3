@@ -144,7 +144,7 @@ void mafTimeManagerTest::createTimerTest() {
     argList.append(mafEventArgument(int, interval));
     argList.append(mafEventArgument(bool, true));
 
-    m_EventBus->notifyEvent("TIME_SPACE_TIMER_CREATE", mafEventTypeLocal, &argList, &mafEventReturnArgument(mafCore::mafId, m_TimerId));
+    m_EventBus->notifyEvent("maf.local.time.create", mafEventTypeLocal, &argList, &mafEventReturnArgument(mafCore::mafId, m_TimerId));
     QVERIFY(m_TimerId != -1);
 
     // Register the callback with the timer ID. Later on will be used in the test suite.
@@ -157,7 +157,7 @@ void mafTimeManagerTest::createTimerTest() {
     argList.append(mafEventArgument(mafCore::mafId, m_TimerId));
 
     bool res(true);
-    m_EventBus->notifyEvent("TIME_SPACE_TIMER_IS_RUNNING", mafEventTypeLocal, &argList, &mafEventReturnArgument(bool, res));
+    m_EventBus->notifyEvent("maf.local.time.isRunning", mafEventTypeLocal, &argList, &mafEventReturnArgument(bool, res));
 
     QVERIFY(res == false);
 }
@@ -172,7 +172,7 @@ void mafTimeManagerTest::startTimerTest() {
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafId, m_TimerId));
     argList.append(mafEventArgument(bool, false));
-    m_EventBus->notifyEvent("TIME_SPACE_TIMER_START", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.time.start", mafEventTypeLocal, &argList);
 
 //    m_TimeManager->startTimer(m_TimerId, false);
     timerLoop.start(interval);
@@ -187,7 +187,7 @@ void mafTimeManagerTest::startTimerOnThreadTest() {
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafId, m_TimerId));
     argList.append(mafEventArgument(bool, true));
-    m_EventBus->notifyEvent("TIME_SPACE_TIMER_START", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.time.start", mafEventTypeLocal, &argList);
 
 //    m_TimeManager->startTimer(m_TimerId, true);
 

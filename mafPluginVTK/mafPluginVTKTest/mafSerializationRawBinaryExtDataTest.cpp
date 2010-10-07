@@ -231,7 +231,7 @@ void mafSerializationRawBinaryExtDataTest::mafSerializationVTKSaveTest() {
     mafString test_file = test_dir;
     test_file.append("/testExtFile.raw");
 
-    mafString plug_codec_id = "PLUG_CODEC";
+    mafString plug_codec_id = "maf.local.serialization.plugCodec";
     mafString obj_type("mafResources::mafVME");
     mafString cType = "RAW";
     mafString codec = "mafSerialization::mafCodecRawBinary";
@@ -252,7 +252,7 @@ void mafSerializationRawBinaryExtDataTest::mafSerializationVTKSaveTest() {
     argList.append(mafEventArgument(mafCore::mafMemento *, mementoVME));
     argList.append(mafEventArgument(mafString, test_file));
     argList.append(mafEventArgument(mafString, encodeType));
-    mafEventBusManager::instance()->notifyEvent("SAVE", mafEventTypeLocal, &argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal, &argList);
 
     QVERIFY(mafFile::exists(test_file));
     QFileInfo fInfo3(test_file);
@@ -263,7 +263,7 @@ void mafSerializationRawBinaryExtDataTest::mafSerializationVTKSaveTest() {
     argList.clear();
     argList.append(mafEventArgument(mafString, test_file));
     argList.append(mafEventArgument(mafString, encodeType));
-    mafEventBusManager::instance()->notifyEvent("LOAD", mafEventTypeLocal, &argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal, &argList);
 
     mafDEL(mementoVME);
 

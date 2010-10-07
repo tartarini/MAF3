@@ -23,9 +23,9 @@ class mafPlugin;
 /**
 Class name: mafPluginManager
 This class provides the engine for loading plug-ins and define the IDs:
-- LOAD_PLUGIN_LIBRARY which allows you to load a shared library.
-- REGISTER_PLUGIN which is used by external libraries to register their plugged objects.
-- RESOURCES_PLUGIN_QUERY which allows you to query for plugged objects that extend the given base class.
+- maf.local.resources.plugin.loadLibrary which allows you to load a shared library.
+- maf.local.resources.plugin.registerLibrary which is used by external libraries to register their plugged objects.
+- maf.local.resources.plugin.resourcesQuery which allows you to query for plugged objects that extend the given base class.
 */
 /** mafPluginManager - The engine's system core.*/
 class MAFRESOURCESSHARED_EXPORT mafPluginManager : public mafCore::mafObjectBase {

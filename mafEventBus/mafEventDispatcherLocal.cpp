@@ -24,7 +24,7 @@ mafEventDispatcherLocal::~mafEventDispatcherLocal() {
 
 void mafEventDispatcherLocal::initializeGlobalEvents() {
     mafEvent *properties = new mafEvent();
-    mafString topic = "GLOBAL_UPDATE_EVENT";
+    mafString topic = "maf.local.eventBus.globalUpdate";
     (*properties)[TOPIC] =  topic;
     (*properties)[TYPE] = mafEventTypeLocal;
     (*properties)[SIGTYPE] = mafSignatureTypeSignal;

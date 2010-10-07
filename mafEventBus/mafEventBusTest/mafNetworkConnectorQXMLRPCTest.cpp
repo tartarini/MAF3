@@ -124,7 +124,7 @@ void mafNetworkConnectorQXMLRPCTest::mafNetworkConnectorQXMLRPCCommunictionTest(
 //    QVERIFY(m_EventBus->addEventProperty(propCallback));
 
     // Register callback (done by the remote object).
-    mafRegisterLocalCallback("GLOBAL_UPDATE_EVENT", m_ObjectTest, "updateObject()");
+    mafRegisterLocalCallback("maf.local.eventBus.globalUpdate", m_ObjectTest, "updateObject()");
 
 
     m_NetWorkConnectorQXMLRPC->createClient("localhost", 8000);
@@ -133,7 +133,7 @@ void mafNetworkConnectorQXMLRPCTest::mafNetworkConnectorQXMLRPCCommunictionTest(
     //first parameter is a list which contains event prperties
     mafList<mafVariant> listToSend;
     mafList<mafVariant> eventParameters;
-    eventParameters.append("GLOBAL_UPDATE_EVENT");
+    eventParameters.append("maf.local.eventBus.globalUpdate");
     eventParameters.append(mafEventTypeLocal);
     eventParameters.append(mafSignatureTypeCallback);
     eventParameters.append("updateObject()");

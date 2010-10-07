@@ -71,7 +71,7 @@ void mafViewManagerTest::createViewTest() {
     // Send the message through the vent bus to create it.
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafString, vt));
-    m_EventBus->notifyEvent("RESOURCES_VIEW_CREATE", mafEventTypeLocal, &argList, &mafEventReturnArgument(mafCore::mafObjectBase *, m_View));
+    m_EventBus->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList, &mafEventReturnArgument(mafCore::mafObjectBase *, m_View));
 
     // Return value should be not NULL.
     QVERIFY(m_View != NULL);
@@ -80,17 +80,17 @@ void mafViewManagerTest::createViewTest() {
 void mafViewManagerTest::selectViewTest() {
     // Ask for default selected view (should b NULL.
     mafCore::mafObjectBase *sel_view;
-    m_EventBus->notifyEvent("RESOURCES_VIEW_SELECTED", mafEventTypeLocal, NULL, &mafEventReturnArgument(mafCore::mafObjectBase *, sel_view));
+    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &mafEventReturnArgument(mafCore::mafObjectBase *, sel_view));
 
     QVERIFY(sel_view == NULL);
 
     // Ask the view manager to select the previous created view.
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, m_View));
-    m_EventBus->notifyEvent("RESOURCES_VIEW_SELECT", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.view.select", mafEventTypeLocal, &argList);
 
     // Retrieve the selected view that now should be not NULL and equal to the previous created view.
-    m_EventBus->notifyEvent("RESOURCES_VIEW_SELECTED", mafEventTypeLocal, NULL, &mafEventReturnArgument(mafCore::mafObjectBase *, sel_view));
+    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &mafEventReturnArgument(mafCore::mafObjectBase *, sel_view));
     QVERIFY(sel_view != NULL);
     QVERIFY(sel_view == m_View);
 }

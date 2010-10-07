@@ -233,7 +233,7 @@ void mafOperationManagerTest::setParametersTest() {
     mafString op("testOperationforOperationManager");
     argList.append(mafEventArgument(mafString, op));
     // Notify the event.
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_START", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
 
     mafList<mafVariant> op_params;
     op_params.append(mafVariant(5));
@@ -241,17 +241,17 @@ void mafOperationManagerTest::setParametersTest() {
 
     argList.clear();
     argList.append(mafEventArgument(mafList<mafVariant>, op_params));
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_SET_PARAMETERS", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.setParameters", mafEventTypeLocal, &argList);
 
     const mafCore::mafObjectBase *curr_op = NULL;
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_RETURN_CURRENT_OPERATION_RUNNING", mafEventTypeLocal, NULL, &mafEventReturnArgument(const mafCore::mafObjectBase *, curr_op));
+    m_EventBus->notifyEvent("maf.local.resources.operation.currentRunning", mafEventTypeLocal, NULL, &mafEventReturnArgument(const mafCore::mafObjectBase *, curr_op));
     int vi = ((testOperationforOperationManager *)curr_op)->paramInt();
     double vd = ((testOperationforOperationManager *)curr_op)->paramDouble();
 
     QVERIFY(vi != 0);
     QVERIFY(vd != 0);
 
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_EXECUTE", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 }
 
 void mafOperationManagerTest::startOperationTest() {
@@ -260,10 +260,10 @@ void mafOperationManagerTest::startOperationTest() {
     mafString op("mafResources::mafOperation");
     argList.append(mafEventArgument(mafString, op));
     // notify the event.
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_START", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
 
     const mafCore::mafObjectBase *curr_op = NULL;
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_RETURN_CURRENT_OPERATION_RUNNING", mafEventTypeLocal, NULL, &mafEventReturnArgument(const mafCore::mafObjectBase *, curr_op));
+    m_EventBus->notifyEvent("maf.local.resources.operation.currentRunning", mafEventTypeLocal, NULL, &mafEventReturnArgument(const mafCore::mafObjectBase *, curr_op));
 
     QVERIFY(curr_op != NULL);
 }
@@ -284,13 +284,13 @@ void mafOperationManagerTest::vmeSelectedTest() {
 }
 
 void mafOperationManagerTest::executeOperationTest() {
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_EXECUTE", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 
     const mafCore::mafObjectBase *op = NULL;
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_RETURN_CURRENT_OPERATION_RUNNING", mafEventTypeLocal, NULL, &mafEventReturnArgument(const mafCore::mafObjectBase *, op));
+    m_EventBus->notifyEvent("maf.local.resources.operation.currentRunning", mafEventTypeLocal, NULL, &mafEventReturnArgument(const mafCore::mafObjectBase *, op));
 
     QVERIFY(op == NULL);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_CLEAR_UNDOSTACK", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.clearUndoStack", mafEventTypeLocal);
 }
 
 /*void mafOperationManagerTest::stopOperationTest() {
@@ -307,9 +307,9 @@ void mafOperationManagerTest::undoOperationTest() {
     mafString vt("testFirstUndoableOperationforOperationManager");
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafString, vt));
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_START", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
 
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_EXECUTE", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 
     argList.clear();
     // Starts and execute another operation using the 'batch mode' call.
@@ -320,122 +320,122 @@ void mafOperationManagerTest::undoOperationTest() {
 
     argList.push_back(mafEventArgument(mafList<mafVariant>, params));
     //m_OperationManager->executeWithParameters(params);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_EXECUTE_WITH_PARAMETERS", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.executeWithParameters", mafEventTypeLocal, &argList);
 
     mafString vt2("testFirstUndoableOperationforOperationManager");
     argList.clear();
     argList.append(mafEventArgument(mafString, vt2));
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_START", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
 
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_EXECUTE", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_UNDO", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_UNDO", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_UNDO", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.undo", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.undo", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.undo", mafEventTypeLocal);
 
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_CLEAR_UNDOSTACK", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.clearUndoStack", mafEventTypeLocal);
 }
 
 void mafOperationManagerTest::redoOperationTest() {
     mafString vt("testFirstUndoableOperationforOperationManager");
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafString, vt));
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_START", mafEventTypeLocal, &argList);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_EXECUTE", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 
     mafString vt2("testFirstUndoableOperationforOperationManager");
     argList.clear();
     argList.append(mafEventArgument(mafString, vt2));
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_START", mafEventTypeLocal, &argList);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_EXECUTE", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 
     mafString vt3("testFirstUndoableOperationforOperationManager");
     argList.clear();
     argList.append(mafEventArgument(mafString, vt3));
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_START", mafEventTypeLocal, &argList);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_EXECUTE", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_UNDO", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_UNDO", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_UNDO", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.undo", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.undo", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.undo", mafEventTypeLocal);
 
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_REDO", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_REDO", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_REDO", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.redo", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.redo", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.redo", mafEventTypeLocal);
 
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_CLEAR_UNDOSTACK", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.clearUndoStack", mafEventTypeLocal);
 }
 
 void mafOperationManagerTest::undoStackStressTest() {
     mafString vt("testFirstUndoableOperationforOperationManager");
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafString, vt));
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_START", mafEventTypeLocal, &argList);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_EXECUTE", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 
     int value;
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_SIZE_UNDOSTACK", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
+    m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
     QVERIFY(value == 1);
 
     mafString vt2("testSecondUndoableOperationforOperationManager");
     argList.clear();
     argList.append(mafEventArgument(mafString, vt2));
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_START", mafEventTypeLocal, &argList);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_EXECUTE", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_SIZE_UNDOSTACK", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
+    m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
     QVERIFY(value == 2);
 
     mafString vt3("testFirstUndoableOperationforOperationManager");
     argList.clear();
     argList.append(mafEventArgument(mafString, vt3));
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_START", mafEventTypeLocal, &argList);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_EXECUTE", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_SIZE_UNDOSTACK", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
+    m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
     QVERIFY(value == 3);
 
 
     mafString vt4("testFirstUndoableOperationforOperationManager");
     argList.clear();
     argList.append(mafEventArgument(mafString, vt4));
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_START", mafEventTypeLocal, &argList);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_EXECUTE", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_SIZE_UNDOSTACK", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
+    m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
     QVERIFY(value == 4);
 
     mafString vt5("testSecondUndoableOperationforOperationManager");
     argList.clear();
     argList.append(mafEventArgument(mafString, vt5));
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_START", mafEventTypeLocal, &argList);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_EXECUTE", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_SIZE_UNDOSTACK", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
+    m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
     QVERIFY(value == 5);
 
     mafString vt6("testFirstUndoableOperationforOperationManager");
     argList.clear();
     argList.append(mafEventArgument(mafString, vt6));
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_START", mafEventTypeLocal, &argList);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_EXECUTE", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_SIZE_UNDOSTACK", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
+    m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
     QVERIFY(value == 6);
 
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_UNDO", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_UNDO", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_UNDO", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_UNDO", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.undo", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.undo", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.undo", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.undo", mafEventTypeLocal);
 
 
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_REDO", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.redo", mafEventTypeLocal);
 
     mafString vt7("testFirstUndoableOperationforOperationManager");
     argList.clear();
     argList.append(mafEventArgument(mafString, vt7));
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_START", mafEventTypeLocal, &argList);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_EXECUTE", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_SIZE_UNDOSTACK", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
+    m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
     QVERIFY(value == 4);
 
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_CLEAR_UNDOSTACK", mafEventTypeLocal);
-    m_EventBus->notifyEvent("RESOURCES_OPERATION_SIZE_UNDOSTACK", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
+    m_EventBus->notifyEvent("maf.local.resources.operation.clearUndoStack", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &mafEventReturnArgument(int, value));
     QVERIFY(value == 0);
 
 }

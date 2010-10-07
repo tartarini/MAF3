@@ -82,7 +82,7 @@ void mafCodecRawASCII::encode(mafMemento *memento) {
             argList.append(mafEventArgument(char*, (char*)item.m_Value.toByteArray().constData()));
             argList.append(mafEventArgument(mafString, url));
             argList.append(mafEventArgument(int, dataSize));
-            mafEventBusManager::instance()->notifyEvent("SAVE_EXTERNALDATA", mafEventTypeLocal, &argList);
+            mafEventBusManager::instance()->notifyEvent("maf.local.serialization.saveExternalData", mafEventTypeLocal, &argList);
             m_DataTextWrite << fileName << endl;
         } else {
             marshall(item.m_Value);

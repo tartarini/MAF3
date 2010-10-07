@@ -36,26 +36,26 @@ mafTimeManager::~mafTimeManager() {
 void mafTimeManager::initializeConnections() {
     // Create IDs for deal with timer's creation and start/stop.
     mafIdProvider *provider = mafIdProvider::instance();
-    provider->createNewId("TIME_SPACE_TIMER_CREATE");
-    provider->createNewId("TIME_SPACE_TIMER_DESTROY");
-    provider->createNewId("TIME_SPACE_TIMER_START");
-    provider->createNewId("TIME_SPACE_TIMER_IS_RUNNING");
-    provider->createNewId("TIME_SPACE_TIMER_STOP");
+    provider->createNewId("maf.local.time.create");
+    provider->createNewId("maf.local.time.destroy");
+    provider->createNewId("maf.local.time.start");
+    provider->createNewId("maf.local.time.isRunning");
+    provider->createNewId("maf.local.time.stop");
 
 
     // Register signals to the event bus.
-    mafRegisterLocalSignal("TIME_SPACE_TIMER_CREATE", this, "createTimerSignal(int, bool)");
-    mafRegisterLocalSignal("TIME_SPACE_TIMER_DESTROY", this, "destroyTimerSignal(mafCore::mafId)");
-    mafRegisterLocalSignal("TIME_SPACE_TIMER_START", this, "startTimerSignal(mafCore::mafId , bool)");
-    mafRegisterLocalSignal("TIME_SPACE_TIMER_IS_RUNNING", this, "isRunningSignal(mafCore::mafId)");
-    mafRegisterLocalSignal("TIME_SPACE_TIMER_STOP", this, "stopTimerSignal(mafCore::mafId)");
+    mafRegisterLocalSignal("maf.local.time.create", this, "createTimerSignal(int, bool)");
+    mafRegisterLocalSignal("maf.local.time.destroy", this, "destroyTimerSignal(mafCore::mafId)");
+    mafRegisterLocalSignal("maf.local.time.start", this, "startTimerSignal(mafCore::mafId , bool)");
+    mafRegisterLocalSignal("maf.local.time.isRunning", this, "isRunningSignal(mafCore::mafId)");
+    mafRegisterLocalSignal("maf.local.time.stop", this, "stopTimerSignal(mafCore::mafId)");
 
     // ... and connect the callbacks.
-    mafRegisterLocalCallback("TIME_SPACE_TIMER_CREATE", this, "createTimer(int, bool)");
-    mafRegisterLocalCallback("TIME_SPACE_TIMER_DESTROY", this, "destroyTimer(mafCore::mafId)");
-    mafRegisterLocalCallback("TIME_SPACE_TIMER_START", this, "startTimer(mafCore::mafId, bool)");
-    mafRegisterLocalCallback("TIME_SPACE_TIMER_IS_RUNNING", this, "isRunning(mafCore::mafId)");
-    mafRegisterLocalCallback("TIME_SPACE_TIMER_STOP", this, "stopTimer(mafCore::mafId)");
+    mafRegisterLocalCallback("maf.local.time.create", this, "createTimer(int, bool)");
+    mafRegisterLocalCallback("maf.local.time.destroy", this, "destroyTimer(mafCore::mafId)");
+    mafRegisterLocalCallback("maf.local.time.start", this, "startTimer(mafCore::mafId, bool)");
+    mafRegisterLocalCallback("maf.local.time.isRunning", this, "isRunning(mafCore::mafId)");
+    mafRegisterLocalCallback("maf.local.time.stop", this, "stopTimer(mafCore::mafId)");
 }
 
 mafTimeManager* mafTimeManager::instance() {

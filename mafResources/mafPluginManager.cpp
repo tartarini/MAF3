@@ -26,22 +26,22 @@ void mafPluginManager::shutdown() {
 
 mafPluginManager::mafPluginManager(const mafString code_location) : mafObjectBase(code_location) {
     // Create the ID needed to load the external library containing the plug-ins.
-    mafId load_library_id = mafIdProvider::instance()->createNewId("LOAD_PLUGIN_LIBRARY");
+    mafId load_library_id = mafIdProvider::instance()->createNewId("maf.local.resources.plugin.loadLibrary");
     if(load_library_id != -1) {
-        mafRegisterLocalSignal("LOAD_PLUGIN_LIBRARY", this, "loadPluginLibrary(const mafString &)");
-        mafRegisterLocalCallback("LOAD_PLUGIN_LIBRARY", this, "loadPlugin(const mafString &)");
+        mafRegisterLocalSignal("maf.local.resources.plugin.loadLibrary", this, "loadPluginLibrary(const mafString &)");
+        mafRegisterLocalCallback("maf.local.resources.plugin.loadLibrary", this, "loadPlugin(const mafString &)");
     }
 
     // Create the ID needed to register plug-in objects.
-    mafId register_plugin_id = mafIdProvider::instance()->createNewId("REGISTER_PLUGIN");
+    mafId register_plugin_id = mafIdProvider::instance()->createNewId("maf.local.resources.plugin.registerLibrary");
     if(register_plugin_id != -1) {
-        mafRegisterLocalSignal("REGISTER_PLUGIN", this, "registerPluginToManager(mafPluggedObjectsHash)");
-        mafRegisterLocalCallback("REGISTER_PLUGIN", this, "registerPlugin(mafPluggedObjectsHash)");
+        mafRegisterLocalSignal("maf.local.resources.plugin.registerLibrary", this, "registerPluginToManager(mafPluggedObjectsHash)");
+        mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "registerPlugin(mafPluggedObjectsHash)");
     }
-    mafId query_plugin_id = mafIdProvider::instance()->createNewId("RESOURCES_PLUGIN_QUERY");
+    mafId query_plugin_id = mafIdProvider::instance()->createNewId("maf.local.resources.plugin.resourcesQuery");
     if(query_plugin_id != -1) {
-        mafRegisterLocalSignal("RESOURCES_PLUGIN_QUERY", this, "queryPluggedObjectsSignal(const mafString &)");
-        mafRegisterLocalCallback("RESOURCES_PLUGIN_QUERY", this, "queryPluggedObjects(const mafString &)");
+        mafRegisterLocalSignal("maf.local.resources.plugin.resourcesQuery", this, "queryPluggedObjectsSignal(const mafString &)");
+        mafRegisterLocalCallback("maf.local.resources.plugin.resourcesQuery", this, "queryPluggedObjects(const mafString &)");
     }
 }
 

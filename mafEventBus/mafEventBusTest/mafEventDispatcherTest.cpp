@@ -107,7 +107,7 @@ void mafEventDispatcherTest::mafEventDispatcherAllocationTest() {
 
 void mafEventDispatcherTest::mafEventDispatcherAddAndRemoveObserverAndNotifyEventTest() {
     // Create new Event ID used for callback and event notification.
-    mafString updateID = "GLOBAL_UPDATE_EVENT";
+    mafString updateID = "maf.local.eventBus.globalUpdate";
 
     mafEvent *properties = new mafEventBus::mafEvent;
     (*properties)[TOPIC] =  updateID;
@@ -131,7 +131,7 @@ void mafEventDispatcherTest::mafEventDispatcherAddAndRemoveObserverAndNotifyEven
 }
 
 void mafEventDispatcherTest::mafEventDispatcherRegisterAndRemoveSignalAndNotifyEventTest() {
-    mafString updateID = "GLOBAL_UPDATE_EVENT";
+    mafString updateID = "maf.local.eventBus.globalUpdate";
 
     mafEvent *properties = new mafEventBus::mafEvent;
     (*properties)[TOPIC] =  updateID;
@@ -158,7 +158,7 @@ void mafEventDispatcherTest::mafEventDispatcherRegisterAndRemoveSignalAndNotifyE
 }
 
 void mafEventDispatcherTest::isSignalPresentTest() {
-    mafString updateID = "GLOBAL_UPDATE_EVENT";
+    mafString updateID = "maf.local.eventBus.globalUpdate";
     // Register the callback to update the object custom:
     QVERIFY(m_EventDispatcher->isSignalPresent(updateID));
 }
