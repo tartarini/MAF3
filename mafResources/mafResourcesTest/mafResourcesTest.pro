@@ -27,7 +27,8 @@ SOURCES += main.cpp \
     mafVMEManagerTest.cpp \
     mafOperationManagerTest.cpp \
     mafMementoDataSetTest.cpp \
-    mafMementoVMETest.cpp
+    mafMementoVMETest.cpp \
+    mafInteractorTest.cpp
 include(../../mafInstallTest.pri)
 include(../../mafImportVXL.pri)
 include(../../mafImportQXMLRPC.pri)
@@ -42,4 +43,3 @@ LIBS += -L$$DESTDIR \
 INCLUDEPATH += ../../mafCore
 LIBS += -L$$DESTDIR \
     -lmafCore$$LIB_EXT
-
