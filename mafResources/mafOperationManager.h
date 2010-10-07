@@ -65,9 +65,6 @@ signals:
     /// Signal that allows to start an operation with some optionals parameters.
     void executeWithParametersSignal(mafList<mafVariant> parameters);
 
-    /// called when selected a vme
-    //void vmeSelectedSignal(mafVME *vme);
-
     /// stop current operation
     void stopOperationSignal();
 
