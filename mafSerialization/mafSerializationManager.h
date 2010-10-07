@@ -126,11 +126,9 @@ private:
     mafCodecHash m_CodecHash; ///< Hash table that store the binding between encoding types (eg. "VTK") and related codec types (eg. mafCodecVTK).
     mafSerializerHash m_SerializerHash; ///< Hash table that store the binding between URL schema and serializer type.
 
-    mafString m_MementoLoadedId; ///< ID related to the signal 'mementoLoaded' invoked when new memento has been created during load operation.
+    mafString m_MementoLoadedId; ///< ID related to the signal 'maf.local.serialization.mementoLoaded' invoked when new memento has been created during load operation.
 
-    mafString m_ExtDataImportedId; ///< ID related to the signal 'extDataLoaded' invoked when new external data has been created during load operation.
-
-    //mafString m_ExternalDataLoadedId; ///< ID related to the signal 'externalDataLoaded' invoked when new external data has been created during load operation.
+    mafString m_ExtDataImportedId; ///< ID related to the signal 'maf.local.serialization.extDataImported' invoked when new external data has been created during load operation.
 };
 
 /////////////////////////////////////////////////////////////
