@@ -18,16 +18,6 @@ using namespace mafEventBus;
 using namespace mafResources;
 
 mafDataSet::mafDataSet(const mafString code_location) : mafObject(code_location), m_DataValue(NULL), m_DataBoundary(NULL), m_Matrix(NULL), m_DataBoundaryAlgorithm(NULL) {
-    mafId connectDataID = mafIdProvider::instance()->idValue("maf.local.resources.dataSet.dataConnected");
-    mafId disconnectDataId = mafIdProvider::instance()->idValue("maf.local.resources.dataSet.disconnetOldData");
-    if(connectDataID == -1) {
-        // Define IDs for data value connected and disconnected.
-        connectDataID = mafIdProvider::instance()->createNewId("maf.local.resources.dataSet.dataConnected");
-        disconnectDataId = mafIdProvider::instance()->createNewId("maf.local.resources.dataSet.disconnetOldData");
-    }
-    // Register signals to allow event notification.
-//    mafRegisterLocalSignal(connectDataID, this, "dataValueConnected()");
-//    mafRegisterLocalSignal(disconnectDataId, this, "dataValueDisconnected()");
 }
 
 mafDataSet::~mafDataSet() {
@@ -55,18 +45,12 @@ void mafDataSet::setDataValue(mafContainerInterface *data_value) {
         return; // Data is equal to that one already present.
 
     if(m_DataValue != NULL) {
-        mafId disconnectDataId = mafIdProvider::instance()->idValue("maf.local.resources.dataSet.disconnetOldData");
-        ENSURE(disconnectDataId != -1);
-        // maf.local.resources.dataSet.disconnetOldData event emitted to notify that previous data has been disconnected.
-//        mafEventBusManager::instance()->notifyEventLocal(disconnectDataId);
+        emit(dataValueDisconnected());
     }
 
     m_DataValue = data_value;
     if(m_DataValue != NULL) {
-        mafId connectDataID = mafIdProvider::instance()->idValue("maf.local.resources.dataSet.dataConnected");
-        ENSURE(connectDataID != -1);
-        // maf.local.resources.dataSet.dataConnected event emitted to notify that new data value is available into the mafDataSet
-//        mafEventBusManager::instance()->notifyEventLocal(connectDataID);
+        emit(dataValueConnected());
     }
 }
 
@@ -85,7 +69,6 @@ void mafDataSet::setPoseMatrix(const mafPoseMatrix *matrix) {
 mafMemento *mafDataSet::createMemento() const {
     return new mafMementoDataSet(this, m_Matrix, m_DataValue, mafCodeLocation);
 }
-
 
 void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
     Q_UNUSED(deep_memento);

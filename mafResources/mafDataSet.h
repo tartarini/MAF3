@@ -22,12 +22,12 @@ namespace mafResources {
 // Class forwarding list
 class mafDataBoundaryAlgorithm;
 
-
 /**
  Class name: mafDataSet
  This is the base class for the MAF3 DataSet.
- It provides also the creation of 2 new IDs: DATA_CONNECTED and DISCONNECT_OLD_DATA
- related to connecting new data and disconnecting previous data values. This events are emitted with modifiedObject() signal.
+ It provides also 2 signals for data connected and disconnected.
+ Each time that someone connect externally some data a dataValueConnected signal is emitted.
+ When the external data is deleted or removed manually, a dataValueDisconnected has been emitted.
  */
 class MAFRESOURCESSHARED_EXPORT mafDataSet : public mafCore::mafObject {
     Q_OBJECT
