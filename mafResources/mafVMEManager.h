@@ -23,10 +23,10 @@ class mafVME;
 Class name: mafVMEManager
 This class provides the manager class for MAF3 VMEs. The manager defines new IDs to add/remove
 a VME to/from the hierarchy tree and to select a vme. The IDs are:
-- RESOURCES_VME_ADD allows to add a new VME to the hierarchy.
-- RESOURCES_VME_REMOVE allows to remove a VME from the hierarchy.
-- RESOURCES_VME_SELECT allows to select the active VME on which operate.
-- RESOURCES_VME_SELECTED allows to retrieve the current selected VME.
+- maf.local.resources.vme.add allows to add a new VME to the hierarchy.
+- maf.local.resources.vme.remove allows to remove a VME from the hierarchy.
+- maf.local.resources.vme.select allows to select the active VME on which operate.
+- maf.local.resources.vme.selected allows to retrieve the current selected VME.
 */
 class MAFRESOURCESSHARED_EXPORT mafVMEManager : public mafCore::mafObjectBase {
     Q_OBJECT

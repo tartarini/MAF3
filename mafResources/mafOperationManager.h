@@ -25,17 +25,17 @@ Class name: mafOperationManager
 This class provides the manager class for MAF3 Operations.
 The mafOperationManager defines the SET_PARAMETERS id that allows to assign parameter to the operaiton to run.
 The manager defines these IDs:
-- RESOURCES_OPERATION_START create the instance and initialize the operation.
-- RESOURCES_OPERATION_SET_PARAMETERS asign the parameters to the current started operation.
-- RESOURCES_OPERATION_EXECUTE start the execution of operation.
-- RESOURCES_OPERATION_EXECUTE_WITH_PARAMETERS start the execution of operation.
-- RESOURCES_OPERATION_STOP terminate the execution of the operation.
-- RESOURCES_OPERATION_UNDO allow to navigate in undo stack in order to restore data before current operation.
-- RESOURCES_OPERATION_REDO allow to navigate in undo stack in order apply the next operation.
-- RESOURCES_OPERATION_CLEAR_UNDOSTACK clear the undo stack.
-- RESOURCES_OPERATION_SIZE_UNDOSTACK retrieve number of elements of undo stack.
-- RESOURCES_OPERATION_RETURN_CURRENT_OPERATION_RUNNING retrieve current operation.
-- RESOURCES_OPERATION_RETURN_LAST_EXECUTED_OPERATION retrieve last executed operation.
+- maf.local.resources.operation.start create the instance and initialize the operation.
+- maf.local.resources.operation.setParameters asign the parameters to the current started operation.
+- maf.local.resources.operation.execute start the execution of operation.
+- maf.local.resources.operation.executeWithParameters start the execution of operation.
+- maf.local.resources.operation.stop terminate the execution of the operation.
+- maf.local.resources.operation.undo allow to navigate in undo stack in order to restore data before current operation.
+- maf.local.resources.operation.redo allow to navigate in undo stack in order apply the next operation.
+- maf.local.resources.operation.clearundoStack clear the undo stack.
+- maf.local.resources.operation.sizeUndoStack retrieve number of elements of undo stack.
+- maf.local.resources.operation.currentRunning retrieve current operation.
+- maf.local.resources.operation.lastExecuted retrieve last executed operation.
 */
 
 class MAFRESOURCESSHARED_EXPORT mafOperationManager : public mafCore::mafObjectBase {

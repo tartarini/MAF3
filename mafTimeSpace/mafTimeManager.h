@@ -23,11 +23,11 @@ namespace mafTimeSpace {
 /**
  Class name: mafTimeManager
  This singletone provides the facade class for time managing. The class define some IDs to deal with created timers:
- - TIME_SPACE_TIMER_CREATE allows you to create a new timer.
- - TIME_SPACE_TIMER_DESTROY allows to destroy the timer associated with an ID passed as argument.
- - TIME_SPACE_TIMER_START allows to start a timer associated with the given ID in a separated thread (or in the main thread).
- - TIME_SPACE_TIMER_IS_RUNNING allow to check if the timer asociated with the given ID is running or no.
- - TIME_SPACE_TIMER_STOP allow to stop the timer corresponding to the given ID.
+ - maf.local.time.create allows you to create a new timer.
+ - maf.local.time.destroy allows to destroy the timer associated with an ID passed as argument.
+ - maf.local.time.start allows to start a timer associated with the given ID in a separated thread (or in the main thread).
+ - maf.local.time.isRunning allow to check if the timer asociated with the given ID is running or no.
+ - maf.local.time.stop allow to stop the timer corresponding to the given ID.
  */
 class MAFTIMESPACESHARED_EXPORT mafTimeManager : mafCore::mafObjectBase {
     Q_OBJECT

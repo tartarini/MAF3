@@ -24,11 +24,11 @@ class mafVME;
 /**
 Class name: mafViewManager
 This class provides the manager class for MAF3 views. The IDs are:
-- RESOURCES_VIEW_CREATE allows to create a new View.
-- RESOURCES_VIEW_DESTROY allows to destroy a given View.
-- RESOURCES_VIEW_SELECT allows to select the active View on which show/hide VMEs.
-- RESOURCES_VIEW_SELECTED allows to retrieve the current selected View.
-- RESOURCES_VME_SHOW allow to show/hide a given VME in the selected View.
+- maf.local.resources.view.create allows to create a new View.
+- maf.local.resources.view.destroy allows to destroy a given View.
+- maf.local.resources.view.select allows to select the active View on which show/hide VMEs.
+- maf.local.resources.view.selected allows to retrieve the current selected View.
+- maf.local.resources.view.show allow to show/hide a given VME in the selected View.
 */
 class MAFRESOURCESSHARED_EXPORT mafViewManager : public mafCore::mafObjectBase {
     Q_OBJECT
