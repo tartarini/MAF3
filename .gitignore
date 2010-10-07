@@ -24,6 +24,8 @@ moc*
 *.a
 *.o
 Makefile*
+ui_*
+qrc_*
 
 #Exclude gcov and lcov files ...
 *.gcda
