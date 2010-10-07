@@ -22,7 +22,10 @@ class mafVME;
 
 /**
 Class name: mafInteracionManager
-This class provides the manager class for MAF3 Interaction.
+Manager class for interaction resource. This class respond to signals coming from the
+input device and ask the interactor to perform a pick.
+Depending on what has been picked, it checks for a custom interactor style associated
+with the picked item and, if any, use it to start, stop and interact with the data item itself.
 */
 class MAFRESOURCESSHARED_EXPORT mafInteracionManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -37,7 +40,7 @@ public:
     void shutdown();
 
 private slots:
-    /// called when selected a vme
+    /// called when a new VME has been selected.
     void vmeSelected(mafVME *vme);
 
 private:
@@ -47,7 +50,7 @@ private:
     /// Object destructor
     /*virtual*/ ~mafInteracionManager();
 
-    /// create IDs and connect signals with slots for manage interaction's events.
+    /// Create IDs and connect signals with slots for manage interaction's events.
     void initializeConnections();
 };
 
