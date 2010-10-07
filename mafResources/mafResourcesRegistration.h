@@ -25,6 +25,7 @@
 #include "mafMementoResource.h"
 #include "mafMementoDataSet.h"
 #include "mafMementoVME.h"
+#include "mafInteractor.h"
 
 #define mafRegisterObjectAndAcceptBind(maf_object_type) \
     mafRegisterObject(maf_object_type);\

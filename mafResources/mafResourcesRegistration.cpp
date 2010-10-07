@@ -15,7 +15,7 @@
 #include "mafVMEManager.h"
 #include "mafOperationManager.h"
 #include "mafPluginManager.h"
-
+#include "mafInteracionManager.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -53,6 +53,7 @@ void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObject(mafResources::mafMementoDataSet);
     mafRegisterObject(mafResources::mafMementoVME);
     mafRegisterObject(mafResources::mafSceneNode);
+    mafRegisterObject(mafResources::mafInteractor);
 }
 
 void mafResources::initializeModule() {
@@ -61,5 +62,6 @@ void mafResources::initializeModule() {
     mafResources::mafViewManager::instance();
     mafResources::mafOperationManager::instance();
     mafResources::mafPluginManager::instance();
+    mafResources::mafInteracionManager::instance();
 }
 
