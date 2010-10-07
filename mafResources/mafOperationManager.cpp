@@ -130,7 +130,7 @@ void mafOperationManager::startOperation(const mafString operation) {
 
 void mafOperationManager::executeOperation() {
     if(m_CurrentOperation != NULL) {
-        bool result = m_CurrentOperation->execute();
+        m_CurrentOperation->execute();
         // check if operation canUndo
         if(!m_CurrentOperation->canUnDo()) {
             clearUndoStack();
@@ -139,7 +139,7 @@ void mafOperationManager::executeOperation() {
             return;
         }
 
-        if(result) {
+        if(m_CurrentOperation->isRunning()) {
             //undo stack insertion
             mafLinkedList<mafOperation*>::Iterator i;
             if(m_LastExecutedOperation == NULL) {
