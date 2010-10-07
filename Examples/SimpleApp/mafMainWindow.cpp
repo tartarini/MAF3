@@ -1,6 +1,4 @@
 #include "mafMainWindow.h"
-#include <QtGui>
-#include <QVTKWidget.h>
 #include "ui_mafMainWindow.h"
 
 #include <vtkPolyDataMapper.h>
@@ -29,11 +27,29 @@ mafMainWindow::mafMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     ui->statusBar->showMessage(mafTr("Ready!"));
     ui->centralWidget->setLayout(ui->gridLayout);
 
+    connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(viewSelected(QMdiSubWindow*)));
+
     setUnifiedTitleAndToolBarOnMac(true);
 }
 
 mafMainWindow::~mafMainWindow() {
     delete ui;
+}
+
+mafCore::mafMemento *mafMainWindow::createMemento() const {
+    return new mafMementoApplication(this, mafCodeLocation);
+}
+
+void mafMainWindow::mousePressEvent( QMouseEvent * event ) {
+    mafMsgDebug() << "Mouse pressed....";
+}
+
+void mafMainWindow::moveEvent ( QMoveEvent * event ) {
+    mafMsgDebug() << "Mouse moving....";
+}
+
+void mafMainWindow::mouseReleaseEvent ( QMouseEvent * event ) {
+    mafMsgDebug() << "Mouse released....";
 }
 
 void mafMainWindow::changeEvent(QEvent *e) {
@@ -48,6 +64,7 @@ void mafMainWindow::changeEvent(QEvent *e) {
 }
 
 void mafMainWindow::closeEvent(QCloseEvent *event) {
+    releaseMouse();
     if (maybeSave()) {
         writeSettings();
         event->accept();
@@ -106,7 +123,7 @@ void mafMainWindow::createActions() {
     newAct->setIconText(mafTr("New"));
     newAct->setShortcuts(QKeySequence::New);
     newAct->setStatusTip(mafTr("Create a new file"));
-//    connect(newAct, SIGNAL(triggered()), this, SLOT(newFile()));
+    connect(newAct, SIGNAL(triggered()), this, SLOT(createViewWindow()));
 
     openAct = new QAction(QIcon(":/images/open.png"), mafTr("&Open..."), this);
     openAct->setIconText(mafTr("Open"));
@@ -223,10 +240,20 @@ void mafMainWindow::createViewWindow() {
 //    subWindow1->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     QMdiSubWindow *sub_win = ui->mdiArea->addSubWindow(widget);
+    connect(sub_win, SIGNAL(aboutToActivate()), this, SLOT(viewWillBeSelected()));
+
     widget->setParent(sub_win);
     widget->setWindowTitle(mafTr("mafView %1").arg(windowCounter++));
     widget->GetRenderWindow()->AddRenderer(renderer);
     sub_win->setMinimumSize(200, 200);
 
     sub_win->show();
+}
+
+void mafMainWindow::viewWillBeSelected() {
+    mafMsgDebug() << "View will be selected!!";
+}
+
+void mafMainWindow::viewSelected(QMdiSubWindow *sub_win) {
+    mafMsgDebug() << "View selected!!";
 }

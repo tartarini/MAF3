@@ -1,8 +1,11 @@
 #ifndef MAFMAINWINDOW_H
 #define MAFMAINWINDOW_H
 
+#include <QtGui>
+#include <QVTKWidget.h>
 #include <QMainWindow>
 #include <mafCoreDefinitions.h>
+#include "mafMementoApplication.h"
 
 namespace Ui {
     class mafMainWindow;
@@ -21,12 +24,27 @@ public slots:
     /// Create the MDI sub window to host the mafView.
     void createViewWindow();
 
+    /// Return the instance of the mafMainWindow's status. The caller has to delete the allocated memento memory he asked for.
+    mafCore::mafMemento *createMemento() const;
+
+    /// Called when the view is going to be selected by the mouse
+    void viewWillBeSelected();
+
+    /// Called when the mouse start interacting with the view.
+    void viewSelected(QMdiSubWindow *sub_win);
+
 protected:
     /// Method used to catch events related to changes.
     void changeEvent(QEvent *e);
 
     /// Method used to catch the close application's event
     void closeEvent(QCloseEvent *event);
+
+    void mousePressEvent( QMouseEvent * event );
+
+    void moveEvent ( QMoveEvent * event );
+
+    void mouseReleaseEvent ( QMouseEvent * event );
 
     /// Create the actions associated with the menu items.
     virtual void createActions();
