@@ -57,7 +57,7 @@ testCustomManager::testCustomManager(QString code_location) : mafObjectBase(code
     mementoCallback.m_MethodSignature = "createdMemento(mafCore::mafMemento *)";
     eventBus->addEventProperty(mementoCallback);*/
 
-    mafRegisterLocalCallback("MEMENTO_LOADED", this, "createdMemento(mafCore::mafMemento *)");
+    mafRegisterLocalCallback("maf.local.serialization.mementoLoaded", this, "createdMemento(mafCore::mafMemento *)");
 }
 
 void testCustomManager::createdMemento(mafCore::mafMemento *m) {

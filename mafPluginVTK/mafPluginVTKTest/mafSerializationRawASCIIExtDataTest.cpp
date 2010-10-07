@@ -62,7 +62,7 @@ public slots:
 };
 
 testExtRawASCIICustomManager::testExtRawASCIICustomManager(QString code_location) : mafObjectBase(code_location) {
-    mafRegisterLocalCallback("MEMENTO_LOADED", this, "createdMemento(mafCore::mafMemento *)");
+    mafRegisterLocalCallback("maf.local.serialization.mementoLoaded", this, "createdMemento(mafCore::mafMemento *)");
 
 }
 

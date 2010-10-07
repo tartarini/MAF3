@@ -27,7 +27,10 @@ namespace mafSerialization {
 /**
  Class name: mafSerializationManager
  This singletone provides the facade class for the object serialization mechanism.
- It provides also the creation of 3 new IDs: LOAD, SAVE and MEMENTO_LOADED
+ It provides also the creation of 3 new IDs:
+ - maf.local.serialization.load
+ - maf.local.serialization.save
+ - maf.local.serialization.mementoLoaded
  related to 'load' and 'save' slots and 'mementoLoaded' signal.
  */
 class MAFSERIALIZATIONSHARED_EXPORT mafSerializationManager : mafCore::mafObjectBase {

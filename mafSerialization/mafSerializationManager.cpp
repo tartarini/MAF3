@@ -57,8 +57,8 @@ void mafSerializationManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.serialization.import", this, "importData(const mafString &, const mafString &)");
     mafRegisterLocalSignal("maf.local.serialization.saveExternalData", this, "saveExtData(char *, const mafString &, int)");
     mafRegisterLocalSignal("maf.local.serialization.loadExternalData", this, "loadExtData(const mafString &)");
-    mafRegisterLocalSignal("MEMENTO_LOADED", this, "mementoLoaded(mafCore::mafMemento *)");
-    mafRegisterLocalSignal("EXTDATA_IMPORTED", this, "extDataImported(mafCore::mafContainerInterface *)");
+    mafRegisterLocalSignal("maf.local.serialization.mementoLoaded", this, "mementoLoaded(mafCore::mafMemento *)");
+    mafRegisterLocalSignal("maf.local.serialization.extDataImported", this, "extDataImported(mafCore::mafContainerInterface *)");
 
     // Register private callbacks.
     mafRegisterLocalCallback("maf.local.serialization.plugCodec", this, "plugCodec(const mafString &, const mafString &, const mafString &)");

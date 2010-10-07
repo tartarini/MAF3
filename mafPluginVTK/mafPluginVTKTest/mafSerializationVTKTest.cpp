@@ -58,7 +58,7 @@ public slots:
 };
 
 testCustomManager::testCustomManager(QString code_location) : mafObjectBase(code_location) {
-    mafRegisterLocalCallback("EXTDATA_IMPORTED", this , "createdExtData(mafCore::mafContainerInterface *)");
+    mafRegisterLocalCallback("maf.local.serialization.extDataImported", this , "createdExtData(mafCore::mafContainerInterface *)");
 }
 
 void testCustomManager::createdExtData(mafCore::mafContainerInterface *data) {
