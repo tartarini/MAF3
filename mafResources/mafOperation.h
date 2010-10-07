@@ -56,14 +56,14 @@ public slots:
     /// Set parameters of operation.
     virtual void setParameters(mafList<mafVariant> parameters);
 
-    /// Execute the resource algorithm.
-    virtual bool execute();
-
     /// Allows to call the piece of algorithm that is needed to restore the previous state of the operation's execution.
     virtual void unDo();
 
     /// Allows to call the piece of algorithm that is needed to apply the operation again.
     virtual void reDo();
+
+    /// Execute the resource algorithm.
+    virtual void execute();
 
 protected:
     bool m_IsRunning; ///< Flag that check if the operation is running, i.e. the execution is started

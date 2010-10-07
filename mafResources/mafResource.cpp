@@ -175,7 +175,6 @@ bool mafResource::terminate() {
     return true;
 }
 
-bool mafResource::execute() {
-    return true;
+void mafResource::execute() {
 }
 

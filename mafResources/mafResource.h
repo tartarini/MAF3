@@ -49,8 +49,6 @@ public:
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
 
-
-
     /// Set input of the resource.
     /** If the resource is already present inside the input list, setInput will return
     its index inside the list and will not add the object. If idx is inside the range
@@ -104,15 +102,14 @@ public:
     virtual bool terminate();
 
 public slots:
-
     /// Set value of m_DataLoaded.
     void setDataLoaded(bool dataLoaded);
 
-    /// Execute the resource algorithm.
-    virtual bool execute();
-
     /// Slot called when an input is destroyed outside. It has to be removed automatically from the input list.
     void inputDestroyed();
+
+    /// Execute the resource algorithm.
+    virtual void execute();
 
 protected:
     bool m_Busy; ///< Indicates if resource is busy.
