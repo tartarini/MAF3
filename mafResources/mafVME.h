@@ -17,11 +17,14 @@
 #include "mafDataSetCollection.h"
 #include "mafMementoVME.h"
 
+#include <mafContainerInterface.h>
+
 namespace mafResources {
 
 // Class forwarding list
 class mafDataPipe;
 class mafMementoDataSet;
+class mafInteractor;
 
 /**
 Class name: mafVME
@@ -30,6 +33,7 @@ notified when new timestamp has been assigned to the system.
 */
 class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_OBJECT
+    Q_PROPERTY(bool modified READ modified WRITE setModified)
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
 
@@ -39,6 +43,12 @@ public:
 
     /// Object destructor.
     /* virtual */ ~mafVME();
+
+    /// Set the modified state of the VME.
+    void setModified(bool m = true);
+
+    /// Return the modified state of the VME.
+    bool modified() const;
 
     /// Return the collection of mafDataSet.
     mafDataSetCollection *dataSetCollection();
@@ -66,20 +76,28 @@ public:
     undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
-public slots:
-    /// Execute the resource algorithm.
-    /*virtual*/ bool execute();
+    /// Assign to the VME the interactor that will be used when user interact with the VME.
+    void setInteractor(mafInteractor *i);
 
+    /// Return the interactor associated with the VME.
+    mafInteractor *interactor();
+
+public slots:
     /// Set the current timestamp for the VME.
     void setTimestamp(double t);
 
     /// Load dataSet.
     void updateData();
 
+    /// Execute the resource algorithm.
+    /*virtual*/ void execute();
+
 private:
+    bool m_Modified; ///< Contains the modified state of the VME.
+    mafInteractor *m_Interactor; ///< Custom interactor associated with the VME.
     mafDataSetCollection *m_DataSetCollection; ///< Collection of timestamped data posed on homogeneous matrices.
     mafDataPipe *m_DataPipe; ///< Data pipe associated with the VME and used to elaborate new data.
-        mafHash<mafMementoDataSet *, double> m_MementoDatSetHash; ///< Hash of memento dataset and time.
+    mafHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
 };
 
 /////////////////////////////////////////////////////////////
@@ -97,6 +115,13 @@ inline mafDataPipe *mafVME::dataPipe() {
     return m_DataPipe;
 }
 
+inline mafInteractor *mafVME::interactor() {
+    return m_Interactor;
+}
+
+inline bool mafVME::modified() const {
+    return m_Modified;
+}
 
 } // mafResources
 
