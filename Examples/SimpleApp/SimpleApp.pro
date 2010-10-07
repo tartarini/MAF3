@@ -5,8 +5,11 @@ TARGET = SimpleApp
 TEMPLATE = app
 CONFIG -= app_bundle
 SOURCES += main.cpp \
-    mafMainWindow.cpp
-HEADERS += mafMainWindow.h
+    mafMainWindow.cpp \
+    mafMementoApplication.cpp
+HEADERS += mafMainWindow.h \
+    mafMementoApplication.h \
+    mafGUIRegistration.h
 FORMS += mafMainWindow.ui
 BUILD_DIR = Release
 CONFIG(debug, debug|release) { 
@@ -27,14 +30,10 @@ unix {
 INCLUDEPATH += ../../mafCore
 INCLUDEPATH += ../../mafEventBus
 INCLUDEPATH += ../../mafApplicationLogic
-
 LIBS += -L$$DESTDIR \
     -lmafCore$$LIB_EXT
 LIBS += -lmafEventBus$$LIB_EXT
 LIBS += -lmafApplicationLogic$$LIB_EXT
-
 RESOURCES += mafAppImages.qrc
-
 QMAKE_CLEAN += ./MakeFile
-
 include(../../mafImportVTK.pri)
