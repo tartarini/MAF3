@@ -11,11 +11,54 @@
 
 #include <mafTestSuite.h>
 #include <mafResourcesRegistration.h>
+#include <mafDataPipe.h>
 #include <mafContainer.h>
+#include <mafInteractor.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
+
+//------------------------------------------------------------------------------------------
+/**
+ Class name: testVMEDataPipeCustom
+ This class implements the data pipe to be tested.
+ */
+class testVMEDataPipeCustom : public  mafDataPipe {
+    Q_OBJECT
+    /// typedef macro.
+    mafSuperclassMacro(mafResources::mafDataPipe);
+
+public:
+    /// Object constructor.
+    testVMEDataPipeCustom(const mafString code_location = "");
+
+    /// Initialize and create the pipeline
+    /*virtual*/ void createPipe();
+
+    /// Return the string variable initializated and updated from the data pipe.
+    mafString pipeline() {return m_PipeLine;}
+
+public slots:
+    /// Allow to execute and update the pipeline when something change
+    /*virtual*/ void updatePipe(double t = -1);
+
+private:
+    mafString m_PipeLine; ///< Test Var.
+};
+
+testVMEDataPipeCustom::testVMEDataPipeCustom(const mafString code_location) : mafDataPipe(code_location), m_PipeLine("") {
+}
+
+void testVMEDataPipeCustom::createPipe() {
+    m_PipeLine = "Created";
+}
+
+void testVMEDataPipeCustom::updatePipe(double t) {
+    m_PipeLine = "Updated";
+    m_PipeLine.append(mafString::number(t));
+}
+//------------------------------------------------------------------------------------------
 
 
 /**
@@ -37,6 +80,7 @@ private slots:
     /// Initialize test variables
     void initTestCase() {
         mafResourcesRegistration::registerResourcesObjects();
+        mafRegisterObject(testVMEDataPipeCustom);
         //! <snippet>
         m_VME = mafNEW(mafResources::mafVME);
         //! </snippet>
@@ -50,6 +94,18 @@ private slots:
     /// mafVME allocation test case.
     void mafVMEAllocationTest();
 
+    /// Data pipe test suite
+    void mafVMEDataPipeTest();
+
+    /// Memento test suite.
+    void mafVMEMementeTest();
+
+    /// Interactor assignment test suite.
+    void mafVMEInteractorTest();
+
+    /// Output data test suite.
+    void mafVMEOutputDataTest();
+
 private:
     mafVME *m_VME; ///< Test var.
 };
@@ -58,6 +114,65 @@ void mafVMETest::mafVMEAllocationTest() {
     QVERIFY(m_VME != NULL);
     mafDataSetCollection *collection = m_VME->dataSetCollection();
     QVERIFY(collection != NULL);
+}
+
+void mafVMETest::mafVMEDataPipeTest() {
+    mafDataPipe *dp = m_VME->dataPipe();
+    QVERIFY(dp == NULL);
+
+    m_VME->setDataPipe("testVMEDataPipeCustom");
+    dp = m_VME->dataPipe();
+    QVERIFY(dp != NULL);
+}
+
+void mafVMETest::mafVMEMementeTest() {
+    // Get a snapshot of the VME (its name is the empty string
+    mafMemento *m = m_VME->createMemento();
+
+    // Assign a name to the VME.
+    m_VME->setObjectName("Test VME");
+
+    // Assign the previous memento and check the name again.
+    // The name should be the empty string again.
+    m_VME->setMemento(m);
+    mafString name;
+    name = m_VME->objectName();
+    QVERIFY(name.isEmpty());
+
+    // Free the memory associated with the requested memento.
+    mafDEL(m);
+}
+
+void mafVMETest::mafVMEInteractorTest() {
+    mafInteractor *inter = m_VME->interactor();
+    QVERIFY(inter == NULL);
+
+    mafInteractor *i = mafNEW(mafInteractor);
+    m_VME->setInteractor(i);
+
+    inter = m_VME->interactor();
+    QVERIFY(inter != NULL);
+
+    // Remove the interactor (and delete it)
+    m_VME->setInteractor(NULL);
+}
+
+void mafVMETest::mafVMEOutputDataTest() {
+    // Ask the output data
+    // datapipe exists => the output will be the output of the data pipe.
+    mafDataSet *output = m_VME->outputData();
+    QVERIFY(output == NULL);
+
+    // Delete the current data pipe.
+    m_VME->setDataPipe(NULL);
+
+    // This time the output data will be the
+    // element of the dataset collection at the current timestamp.
+    output = m_VME->outputData();
+    QVERIFY(output != NULL);
+    // This time an empty mafDataSet will be returned.
+    QVERIFY(output->dataBoundary() == NULL);
+    QVERIFY(output->dataValue() == NULL);
 }
 
 MAF_REGISTER_TEST(mafVMETest);
