@@ -32,7 +32,8 @@ SOURCES += mafResource.cpp \
     mafVisitorFindSceneNodeByVMEHash.cpp \
     mafUndoStackCommand.cpp \
     mafMementoVME.cpp \
-    mafMementoDataSet.cpp
+    mafMementoDataSet.cpp \
+    mafInteracionManager.cpp
 HEADERS += mafResource.h \
     mafResources_global.h \
     mafResourcesDefinitions.h \
@@ -60,15 +61,14 @@ HEADERS += mafResource.h \
     mafUndoStackCommand.h \
     mafVisitorFindSceneNodeByVMEHash.h \
     mafMementoVME.h \
-    mafMementoDataSet.h
+    mafMementoDataSet.h \
+    mafInteracionManager.h
 include(../mafInstallModule.pri)
 include(../mafImportVXL.pri)
 include(../mafImportQtSoap.pri)
-
 INCLUDEPATH += ../mafEventBus
 LIBS += -L$$DESTDIR \
     -lmafEventBus$$LIB_EXT
 INCLUDEPATH += ../mafCore
 LIBS += -L$$DESTDIR \
     -lmafCore$$LIB_EXT
-
