@@ -254,7 +254,7 @@ void mafSerializationExtDataTest::mafSerializationVTKSaveTest() {
     argList.append(mafEventArgument(mafCore::mafMemento *, mementoVME));
     argList.append(mafEventArgument(mafString, test_file));
     argList.append(mafEventArgument(mafString, encodeType));
-    mafEventBusManager::instance()->notifyEvent("SAVE", mafEventTypeLocal, &argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal, &argList);
 
     QVERIFY(mafFile::exists(test_file));
     QFileInfo fInfo3(test_file);
@@ -265,7 +265,7 @@ void mafSerializationExtDataTest::mafSerializationVTKSaveTest() {
     argList.clear();
     argList.append(mafEventArgument(mafString, test_file));
     argList.append(mafEventArgument(mafString, encodeType));
-    mafEventBusManager::instance()->notifyEvent("LOAD", mafEventTypeLocal, &argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal, &argList);
 
     mafDEL(mementoVME);
 

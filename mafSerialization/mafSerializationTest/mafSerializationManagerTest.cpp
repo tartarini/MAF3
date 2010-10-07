@@ -145,19 +145,19 @@ void mafSerializationManagerTest::mafSerializationManagerSaveTest() {
     argList.append(mafEventArgument(mafString, obj_type));
     argList.append(mafEventArgument(mafString, vtk));
     argList.append(mafEventArgument(mafString, codecVTK));
-    mafEventBusManager::instance()->notifyEvent("PLUG_CODEC", mafEventTypeLocal, &argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal, &argList);
 
     argList.clear();
     argList.append(mafEventArgument(mafString, obj_type));
     argList.append(mafEventArgument(mafString, stl));
     argList.append(mafEventArgument(mafString, codecSTL));
-    mafEventBusManager::instance()->notifyEvent("PLUG_CODEC", mafEventTypeLocal,&argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal,&argList);
 
     argList.clear();
     argList.append(mafEventArgument(mafString, obj_type));
     argList.append(mafEventArgument(mafString, vrml));
     argList.append(mafEventArgument(mafString, codecVRML));
-    mafEventBusManager::instance()->notifyEvent("PLUG_CODEC", mafEventTypeLocal,&argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal,&argList);
 
     mafObject *obj1 = mafNEW(mafCore::mafObject);
     obj1->setObjectName("Obj1");
@@ -170,7 +170,7 @@ void mafSerializationManagerTest::mafSerializationManagerSaveTest() {
     argList.append(mafEventArgument(mafCore::mafMemento *, m));
     argList.append(mafEventArgument(mafString, m_TestURL));
     argList.append(mafEventArgument(mafString, encodeType));
-    mafEventBusManager::instance()->notifyEvent("SAVE", mafEventTypeLocal,&argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal,&argList);
 
     QVERIFY(mafFile::exists(m_TestURL));
     QFileInfo fInfo1(m_TestURL);
@@ -195,7 +195,7 @@ void mafSerializationManagerTest::mafSerializationManagerSaveTest() {
     argList.append(mafEventArgument(mafCore::mafMemento *, cm));
     argList.append(mafEventArgument(mafString, m_TestURL));
     argList.append(mafEventArgument(mafString, encodeType));
-    mafEventBusManager::instance()->notifyEvent("SAVE", mafEventTypeLocal,&argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal,&argList);
     //! [1..]
     QVERIFY(mafFile::exists(m_TestURL));
     QFileInfo fInfo3(m_TestURL);
@@ -208,7 +208,7 @@ void mafSerializationManagerTest::mafSerializationManagerSaveTest() {
     argList.clear();
     argList.append(mafEventArgument(mafCore::mafMemento *, m));
     argList.append(mafEventArgument(mafString, m_TestURL));
-    mafEventBusManager::instance()->notifyEvent("SAVE", mafEventTypeLocal,&argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal,&argList);
 
     QVERIFY(mafFile::exists(m_TestURL));
     QFileInfo fInfo2(m_TestURL);
@@ -224,7 +224,7 @@ void mafSerializationManagerTest::mafSerializationManagerLoadTest() {
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafString, m_TestURL));
     argList.append(mafEventArgument(mafString, encodeType));
-    mafEventBusManager::instance()->notifyEvent("LOAD", mafEventTypeLocal,&argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal,&argList);
     //! [2..]
     mafFile::remove(m_TestURL);
 }

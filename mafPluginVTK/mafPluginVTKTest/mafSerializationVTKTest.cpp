@@ -183,8 +183,8 @@ void mafSerializationVTKTest::mafSerializationVTKSaveTest() {
     test_file.append("/testVTKFile.vtk");
     mafFile::remove(test_file);
 
-    //mafId plug_codec_id = mafIdProvider::instance()->idValue("PLUG_CODEC");
-    mafString plug_codec_id = "PLUG_CODEC";
+    //mafId plug_codec_id = mafIdProvider::instance()->idValue("maf.local.serialization.plugCodec");
+    mafString plug_codec_id = "maf.local.serialization.plugCodec";
     mafString obj_type("vtkPolyData");
     mafString vtk = "VTK";
     mafString codecVTK = "mafPluginVTK::mafExternalDataCodecVTK";
@@ -200,7 +200,7 @@ void mafSerializationVTKTest::mafSerializationVTKSaveTest() {
     argList.append(mafEventArgument(mafCore::mafContainerInterface *, &m_Container));
     argList.append(mafEventArgument(mafString, test_file));
     argList.append(mafEventArgument(mafString, encodeType));
-    mafEventBusManager::instance()->notifyEvent("EXPORT", mafEventTypeLocal, &argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.export", mafEventTypeLocal, &argList);
 
     QVERIFY(mafFile::exists(test_file));
     QFileInfo fInfo3(test_file);
@@ -211,7 +211,7 @@ void mafSerializationVTKTest::mafSerializationVTKSaveTest() {
     argList.clear();
     argList.append(mafEventArgument(mafString, test_file));
     argList.append(mafEventArgument(mafString, encodeType));
-    mafEventBusManager::instance()->notifyEvent("IMPORT", mafEventTypeLocal, &argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.import", mafEventTypeLocal, &argList);
 
     mafFile::remove(test_file);
 }

@@ -85,6 +85,6 @@ void mafLogic::loadPlugins() {
         argList.clear();
         file = dir.absoluteFilePath(file);
         argList.append(mafEventArgument(mafString, file));
-        mafEventBusManager::instance()->notifyEvent("LOAD_PLUGIN_LIBRARY", mafEventTypeLocal, &argList);
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.loadLibrary", mafEventTypeLocal, &argList);
     }
 }

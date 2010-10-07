@@ -34,22 +34,22 @@ mafVMEManager::~mafVMEManager() {
 void mafVMEManager::initializeConnections() {
     // Create the IDs required to add a resource to the management system.
     mafIdProvider *provider = mafIdProvider::instance();
-    provider->createNewId("RESOURCES_VME_ADD");
-    provider->createNewId("RESOURCES_VME_REMOVE");
-    provider->createNewId("RESOURCES_VME_SELECT");
-    provider->createNewId("RESOURCES_VME_SELECTED");
+    provider->createNewId("maf.local.resources.vme.add");
+    provider->createNewId("maf.local.resources.vme.remove");
+    provider->createNewId("maf.local.resources.vme.select");
+    provider->createNewId("maf.local.resources.vme.selected");
 
     // Register API signals.
-    mafRegisterLocalSignal("RESOURCES_VME_ADD", this, "attachVMEToHierarchy(mafCore::mafObjectBase *)");
-    mafRegisterLocalSignal("RESOURCES_VME_REMOVE", this, "detachVMEFromHierarchy(mafCore::mafObjectBase *)");
-    mafRegisterLocalSignal("RESOURCES_VME_SELECT", this, "selectVME(mafCore::mafObjectBase *)");
-    mafRegisterLocalSignal("RESOURCES_VME_SELECTED", this, "selectedVMESignal()");
+    mafRegisterLocalSignal("maf.local.resources.vme.add", this, "attachVMEToHierarchy(mafCore::mafObjectBase *)");
+    mafRegisterLocalSignal("maf.local.resources.vme.remove", this, "detachVMEFromHierarchy(mafCore::mafObjectBase *)");
+    mafRegisterLocalSignal("maf.local.resources.vme.select", this, "selectVME(mafCore::mafObjectBase *)");
+    mafRegisterLocalSignal("maf.local.resources.vme.selected", this, "selectedVMESignal()");
 
     // Register private callbacks to the instance of the manager..
-    mafRegisterLocalCallback("RESOURCES_VME_ADD", this, "vmeAdd(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("RESOURCES_VME_REMOVE", this, "vmeRemove(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("RESOURCES_VME_SELECT", this, "vmeSelect(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("RESOURCES_VME_SELECTED", this, "selectedVME()");
+    mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)");
+    mafRegisterLocalCallback("maf.local.resources.vme.remove", this, "vmeRemove(mafCore::mafObjectBase *)");
+    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)");
+    mafRegisterLocalCallback("maf.local.resources.vme.selected", this, "selectedVME()");
 }
 
 void mafVMEManager::vmeSelect(mafObjectBase *vme) {

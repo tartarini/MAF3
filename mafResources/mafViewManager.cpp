@@ -40,25 +40,25 @@ mafViewManager::~mafViewManager() {
 void mafViewManager::initializeConnections() {
     // Create the IDs required to add a resource to the management system.
     mafIdProvider *provider = mafIdProvider::instance();
-    provider->createNewId("RESOURCES_VIEW_CREATE");
-    provider->createNewId("RESOURCES_VIEW_DESTROY");
-    provider->createNewId("RESOURCES_VIEW_SELECT");
-    provider->createNewId("RESOURCES_VIEW_SELECTED");
-    provider->createNewId("RESOURCES_VME_SHOW");
+    provider->createNewId("maf.local.resources.view.create");
+    provider->createNewId("maf.local.resources.view.destroy");
+    provider->createNewId("maf.local.resources.view.select");
+    provider->createNewId("maf.local.resources.view.selected");
+    provider->createNewId("maf.local.resources.view.vmeShow");
 
     // Register API signals.
-    mafRegisterLocalSignal("RESOURCES_VIEW_CREATE", this, "createViewSignal(mafString)");
-    mafRegisterLocalSignal("RESOURCES_VIEW_DESTROY", this, "destroyViewSignal(mafCore::mafObjectBase *)");
-    mafRegisterLocalSignal("RESOURCES_VIEW_SELECT", this, "selectViewSignal(mafCore::mafObjectBase *)");
-    mafRegisterLocalSignal("RESOURCES_VIEW_SELECTED", this, "selectedViewSignal()");
-    mafRegisterLocalSignal("RESOURCES_VME_SHOW", this, "vmeShowSignal(mafCore::mafObjectBase *, bool)");
+    mafRegisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(mafString)");
+    mafRegisterLocalSignal("maf.local.resources.view.destroy", this, "destroyViewSignal(mafCore::mafObjectBase *)");
+    mafRegisterLocalSignal("maf.local.resources.view.select", this, "selectViewSignal(mafCore::mafObjectBase *)");
+    mafRegisterLocalSignal("maf.local.resources.view.selected", this, "selectedViewSignal()");
+    mafRegisterLocalSignal("maf.local.resources.view.vmeShow", this, "vmeShowSignal(mafCore::mafObjectBase *, bool)");
 
     // Register private callbacks to the instance of the manager..
-    mafRegisterLocalCallback("RESOURCES_VIEW_CREATE", this, "createView(mafString)");
-    mafRegisterLocalCallback("RESOURCES_VIEW_DESTROY", this, "destroyView(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("RESOURCES_VIEW_SELECT", this, "selectView(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("RESOURCES_VIEW_SELECTED", this, "selectedView()");
-    mafRegisterLocalCallback("RESOURCES_VME_SHOW", this, "vmeShow(mafCore::mafObjectBase *, bool)");
+    mafRegisterLocalCallback("maf.local.resources.view.create", this, "createView(mafString)");
+    mafRegisterLocalCallback("maf.local.resources.view.destroy", this, "destroyView(mafCore::mafObjectBase *)");
+    mafRegisterLocalCallback("maf.local.resources.view.select", this, "selectView(mafCore::mafObjectBase *)");
+    mafRegisterLocalCallback("maf.local.resources.view.selected", this, "selectedView()");
+    mafRegisterLocalCallback("maf.local.resources.view.vmeShow", this, "vmeShow(mafCore::mafObjectBase *, bool)");
 }
 
 void mafViewManager::selectView(mafCore::mafObjectBase *view) {

@@ -79,7 +79,7 @@ private slots:
         m_ObjTestObserver = new testObjectCustomForDispatcherLocal;
         m_EventDispatcherLocal =new mafEventBus::mafEventDispatcherLocal;
 
-        mafString updateID = "GLOBAL_UPDATE_EVENT";
+        mafString updateID = "maf.local.eventBus.globalUpdate";
 
         int i=0;
         for(; i < 100; i++) {
