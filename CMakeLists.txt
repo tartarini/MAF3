@@ -46,10 +46,10 @@ INCLUDE_DIRECTORIES(BEFORE ".")
 FILE(GLOB dir_list "${PROJECT_SOURCE_DIR}/*")
 FOREACH(dir_name ${dir_list})
   FILE(RELATIVE_PATH local_dir_name "${PROJECT_SOURCE_DIR}" ${dir_name})
-	IF(IS_DIRECTORY ${dir_name} AND NOT ${local_dir_name} STREQUAL ".git")
+	IF(IS_DIRECTORY ${dir_name} AND NOT ${local_dir_name} STREQUAL ".git" AND NOT ${local_dir_name} STREQUAL "CMake")
     INCLUDE_DIRECTORIES("${dir_name}")
 		SUBDIRS("${local_dir_name}")
-	ENDIF(IS_DIRECTORY ${dir_name} AND NOT ${local_dir_name} STREQUAL ".git")
+	ENDIF(IS_DIRECTORY ${dir_name} AND NOT ${local_dir_name} STREQUAL ".git" AND NOT ${local_dir_name} STREQUAL "CMake")
 ENDFOREACH(dir_name ${dir_list})
 
 #############################################################################################
