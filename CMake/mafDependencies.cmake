@@ -36,7 +36,6 @@ if(SWIG_FOUND)
   set(CMAKE_SWIG_FLAGS "")
   
   macro(maf_wrap project target name language input deps)
-    
     set(wrap_output ${project}_wrap_${language}.cpp)
     add_custom_command(
       OUTPUT ${wrap_output}
@@ -52,7 +51,6 @@ if(SWIG_FOUND)
       MAIN_DEPENDENCY ${input}
       COMMENT "Wrapping ${input} to ${language}")
     set(${target} ${${target}} ${wrap_output})
-    
   endmacro(maf_wrap)
   
   mark_as_advanced(SWIG_DIR)
