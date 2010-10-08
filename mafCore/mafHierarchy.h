@@ -13,7 +13,6 @@
 #define MAFHIERARCHY_H
 
 // Includes list
-#include "mafCoreDefinitions.h"
 #include "mafObjectBase.h"
 #include "mafTree.hpp"
 
