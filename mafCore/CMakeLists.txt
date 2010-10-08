@@ -23,13 +23,12 @@ SET(PROJECT_SRCS
 QT4_WRAP_CPP(MY_MOC_CXX ${include_file_list})
 
 # List libraries that are needed by this project.
-SET(PROJECT_LIBS ${CTK_BASE_LIBRARIES})
+SET(PROJECT_LIBS ${MAF_BASE_LIBRARIES})
 
 ## #################################################################
 ## Wrapping
 ## #################################################################
 
-include(mafMacroWrapTargetFiles)
 mafMacroWrapTargetFiles()
 
 ## #################################################################
