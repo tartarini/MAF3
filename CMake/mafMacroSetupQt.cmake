@@ -2,6 +2,9 @@
 #  mafMacroSetupQt.cmake
 #  maf
 #
+#  mafMacroSetupQt.cmake
+#  maf
+#
 #  Created by Daniele Giunchi - Paolo Quadrani on 10/09/10.
 #  Copyright 2009 B3C. All rights reserved.
 #
