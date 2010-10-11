@@ -10,10 +10,11 @@ MACRO(mafMacroSetupQt)
   IF(QT4_FOUND)
 
     IF("${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}" VERSION_LESS "${minimum_required_qt_version}")
-      MESSAGE(FATAL_ERROR "error: CTK requires Qt >= ${minimum_required_qt_version} -- you cannot use Qt ${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}.")
+      MESSAGE(FATAL_ERROR "error: MAF requires Qt >= ${minimum_required_qt_version} -- you cannot use Qt ${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}.")
     ENDIF()
 
     SET(QT_USE_QTNETWORK ON)
+    SET(QT_USE_QTXML ON)
     SET(QT_USE_QTSQL ON)
 	SET(QT_USE_QTOPENGL ON)
     SET(QT_USE_QTTEST ${BUILD_TESTING})

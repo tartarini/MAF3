@@ -6,7 +6,7 @@
 #ifndef MAFCORE_I
 #define MAFCORE_I
 
-%module core
+%module mafCore
 %include "carrays.i"
 %array_class(double, doubleArray);
 %{

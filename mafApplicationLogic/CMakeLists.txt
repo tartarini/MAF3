@@ -23,8 +23,40 @@ SET(PROJECT_SRCS
 QT4_WRAP_CPP(MY_MOC_CXX ${include_file_list})
 
 # List libraries that are needed by this project.
-SET(PROJECT_LIBS ${CTK_BASE_LIBRARIES} mafCore )
+mafMacroGetTargetLibraries(dependency_libraries)
+SET(PROJECT_LIBS ${dependency_libraries})
+
+## #################################################################
+## Wrapping
+## #################################################################
+
+mafMacroWrapTargetFiles()
+
+## #################################################################
+## Build rules
+## #################################################################
 
 # Create the library.
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS} ${MY_MOC_CXX})
+ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS} ${MY_MOC_CXX} ${${PROJECT_NAME}_SOURCES_WRAP})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
+
+## #################################################################
+## Wrapping Build rules
+## #################################################################
+
+mafMacroWrapBuild()
+
+
+## #################################################################
+## Installation
+## #################################################################
+
+install(FILES ${${PROJECT_NAME}_HEADERS} DESTINATION include/${PROJECT_NAME})
+install(FILES ${${PROJECT_NAME}_MODULES} DESTINATION modules)
+install(TARGETS ${PROJECT_NAME}
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+
+

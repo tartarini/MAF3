@@ -7,13 +7,9 @@ PROJECT(MAF)
 #############################################################################################
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
 
-include(mafDependencies)
 include(mafMacroSetupQt)
 include(mafMacroWrapTargetFiles)
-
-#foundation libraries
-include(FindQtSOAP)
-
+include(mafMacroTargetLibraries)
 
 
 #-----------------------------------------------------------------------------
@@ -23,7 +19,7 @@ include(FindQtSOAP)
 mafMacroSetupQt()
 # Update MAF_BASE_LIBRARIES with QT libraries
 IF(QT4_FOUND)
-  SET(MAF_BASE_LIBRARIES ${MAF_BASE_LIBRARIES} ${QT_LIBRARIES} CACHE INTERNAL "MAF base libraries" FORCE)
+  SET(MAF_BASE_LIBRARIES ${QT_LIBRARIES} CACHE INTERNAL "MAF base libraries" FORCE)
 ENDIF()
 
 #############################################################################################

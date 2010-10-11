@@ -1,3 +1,71 @@
+## #################################################################
+## Swig
+## #################################################################
+
+find_package(SWIG QUIET)
+
+if(SWIG_FOUND)
+  include(${SWIG_USE_FILE})
+  set(CMAKE_SWIG_FLAGS "")
+  
+  macro(mafMacroWrap project target name language input deps)
+    set(wrap_output ${project}_wrap_${language}.cpp)
+    add_custom_command(
+      OUTPUT ${wrap_output}
+      COMMAND ${SWIG_EXECUTABLE}
+      ARGS
+      "-${language}"
+      "-c++"
+      "-module" ${name}
+      "-I${CMAKE_SOURCE_DIR}/${name}"
+      "-outdir" ${CMAKE_CURRENT_BINARY_DIR}
+      "-o" ${wrap_output}
+      ${input}
+      MAIN_DEPENDENCY ${input}
+      COMMENT "Wrapping ${input} to ${language}")
+    set(${target} ${${target}} ${wrap_output})
+  endmacro(mafMacroWrap)
+  
+  mark_as_advanced(SWIG_DIR)
+  mark_as_advanced(SWIG_EXECUTABLE)
+  mark_as_advanced(SWIG_VERSION)
+endif(SWIG_FOUND)
+
+if(SWIG_FOUND)
+  add_definitions(-DHAVE_SWIG)
+endif(SWIG_FOUND)
+
+## #################################################################
+## Tcl
+## #################################################################
+
+find_package(TCL QUIET)
+
+if(TCL_FOUND)
+  include_directories(${TCL_INCLUDE_PATH})
+endif(TCL_FOUND)
+
+if(TCL_FOUND)
+  add_definitions(-DHAVE_TCL)
+endif(TCL_FOUND)
+
+## #################################################################
+## Python
+## #################################################################
+
+find_package(PythonLibs QUIET)
+
+if(PYTHONLIBS_FOUND)
+  include_directories(${PYTHON_INCLUDE_PATH})
+  get_filename_component(PYTHON_PATH ${PYTHON_LIBRARIES} PATH)
+  link_directories(${PYTHON_PATH})
+endif(PYTHONLIBS_FOUND)
+
+if(PYTHONLIBS_FOUND)
+  add_definitions(-DHAVE_PYTHON)
+endif(PYTHONLIBS_FOUND)
+
+
 MACRO(mafMacroWrapTargetFiles)
 
   SET(filepath ${CMAKE_CURRENT_SOURCE_DIR}/target_wrap_files.cmake)
@@ -31,21 +99,23 @@ MACRO(mafMacroWrapTargetFiles)
   # Wrapping step
   set(${PROJECT_NAME}_SOURCES_WRAP)
 
-  if(SWIG_FOUND)
+  list(LENGTH wrap_list length)
+  
+  if(SWIG_FOUND AND ${length})
     set(${PROJECT_NAME}_WRAP_DEPENDS ${wrap_list})
    
     SET(i_filepath ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i)
     IF(EXISTS ${i_filepath})
       if(PYTHONLIBS_FOUND)
-        maf_wrap(${PROJECT_NAME} ${PROJECT_NAME}_SOURCES_WRAP ${PROJECT_NAME} python ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i ${${PROJECT_NAME}_WRAP_DEPENDS})
+        mafMacroWrap(${PROJECT_NAME} ${PROJECT_NAME}_SOURCES_WRAP ${PROJECT_NAME} python ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i ${${PROJECT_NAME}_WRAP_DEPENDS})
       endif(PYTHONLIBS_FOUND)
   
       if(TCL_FOUND)
-        maf_wrap(${PROJECT_NAME} ${PROJECT_NAME}_SOURCES_WRAP ${PROJECT_NAME} tcl    ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i ${${PROJECT_NAME}_WRAP_DEPENDS})
+        mafMacroWrap(${PROJECT_NAME} ${PROJECT_NAME}_SOURCES_WRAP ${PROJECT_NAME} tcl    ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i ${${PROJECT_NAME}_WRAP_DEPENDS})
       endif(TCL_FOUND)
     ENDIF()
     
-  endif(SWIG_FOUND)
+  endif(SWIG_FOUND AND ${length})
 
 ENDMACRO()
 
