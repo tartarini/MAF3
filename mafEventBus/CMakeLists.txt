@@ -56,8 +56,10 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 ## #################################################################
 ## Wrapping Build rules
 ## #################################################################
-
-mafMacroWrapBuild()
+IF(${WRAP_LIST_FOUND})
+    mafMacroWrapBuild()
+    install(FILES ${${PROJECT_NAME}_MODULES} DESTINATION modules)
+ENDIF(${WRAP_LIST_FOUND})
 
 
 ## #################################################################
@@ -65,7 +67,7 @@ mafMacroWrapBuild()
 ## #################################################################
 
 install(FILES ${${PROJECT_NAME}_HEADERS} DESTINATION include/${PROJECT_NAME})
-install(FILES ${${PROJECT_NAME}_MODULES} DESTINATION modules)
+
 install(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib

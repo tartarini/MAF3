@@ -22,6 +22,19 @@ SET(PROJECT_SRCS
 
 QT4_WRAP_CPP(MY_MOC_CXX ${include_file_list})
 
+#foundation libraries
+include(FindQtSOAP)
+FIND_PACKAGE(QtSOAP)
+IF(NOT QtSOAP_FOUND)
+  MESSAGE(FATAL_ERROR "error: QtSOAP package is required to build ${PROJECT_NAME}" )
+ENDIF()
+
+include(FindQXMLRPC)
+FIND_PACKAGE(QXMLRPC)
+IF(NOT QXMLRPC_FOUND)
+  MESSAGE(FATAL_ERROR "error: QXMLRPC package is required to build ${PROJECT_NAME}" )
+ENDIF()
+
 # List libraries that are needed by this project.
 mafMacroGetTargetLibraries(dependency_libraries)
 SET(PROJECT_LIBS ${dependency_libraries})
@@ -43,8 +56,10 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 ## #################################################################
 ## Wrapping Build rules
 ## #################################################################
-
-mafMacroWrapBuild()
+IF(${WRAP_LIST_FOUND})
+    mafMacroWrapBuild()
+    install(FILES ${${PROJECT_NAME}_MODULES} DESTINATION modules)
+ENDIF(${WRAP_LIST_FOUND})
 
 
 ## #################################################################
@@ -52,7 +67,7 @@ mafMacroWrapBuild()
 ## #################################################################
 
 install(FILES ${${PROJECT_NAME}_HEADERS} DESTINATION include/${PROJECT_NAME})
-install(FILES ${${PROJECT_NAME}_MODULES} DESTINATION modules)
+
 install(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
