@@ -1,3 +1,14 @@
+#
+#  CMakeLists.txt
+#  maf
+#
+#  Created by Daniele Giunchi - Paolo Quadrani on 10/09/10.
+#  Copyright 2009 B3C. All rights reserved.
+#
+#  See Licence at: http://tiny.cc/QXJ4D
+#
+#
+
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 PROJECT(MAF)
