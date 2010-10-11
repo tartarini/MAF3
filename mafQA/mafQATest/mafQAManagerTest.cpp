@@ -14,14 +14,14 @@
 
 #ifdef WIN32
     #define TEST_LIBRARY_NAME "mafPluginTest_d.dll"
-    #define TEST_SCRIPT_NAME "../../../MAF/mafQA/mafQATest/AppExample.bat"
+    #define TEST_SCRIPT_NAME "../../../o/mafQA/mafQATest/AppExample.bat"
 #else
     #ifdef __APPLE__
         #define TEST_LIBRARY_NAME "libmafPluginTest_debug.dylib"
-        #define TEST_SCRIPT_NAME "../../../MAF/mafQA/mafQATest/AppExample"
+        #define TEST_SCRIPT_NAME "../../../o/mafQA/mafQATest/AppExample"
     #else
         #define TEST_LIBRARY_NAME "libmafPluginTest_debug.so"
-        #define TEST_SCRIPT_NAME "../../../MAF/mafQA/mafQATest/AppExample.sh"
+        #define TEST_SCRIPT_NAME "../../../o/mafQA/mafQATest/AppExample.sh"
     #endif
 #endif
 
@@ -128,12 +128,12 @@ void mafQAManagerTest::pollUrlTest() {
 void mafQAManagerTest::runPythonScriptTest() {
     mafMsgDebug() << "Asynchronous:";
     mafStringList argList;
-    int res = m_QAManager->runPythonScript("../../../MAF/mafQA/scriptsQA/GeneratorQA.py",argList);
+    int res = m_QAManager->runPythonScript("../../../o/mafQA/scriptsQA/GeneratorQA.py",argList);
     QVERIFY(res == 0);
 
     //launch sync
     mafMsgDebug() << "Synchronous:";
-    res = m_QAManager->runPythonScript("../../../MAF/mafQA/scriptsQA/GeneratorQA.py",argList, true);
+    res = m_QAManager->runPythonScript("../../../o/mafQA/scriptsQA/GeneratorQA.py",argList, true);
     QVERIFY(res == 0);
 }
 
