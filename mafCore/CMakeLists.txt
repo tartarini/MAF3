@@ -23,7 +23,8 @@ SET(PROJECT_SRCS
 QT4_WRAP_CPP(MY_MOC_CXX ${include_file_list})
 
 # List libraries that are needed by this project.
-SET(PROJECT_LIBS ${MAF_BASE_LIBRARIES})
+mafMacroGetTargetLibraries(dependency_libraries)
+SET(PROJECT_LIBS ${dependency_libraries})
 
 ## #################################################################
 ## Wrapping
@@ -35,11 +36,9 @@ mafMacroWrapTargetFiles()
 ## Build rules
 ## #################################################################
 
-##in
 # Create the library.
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS} ${MY_MOC_CXX} ${${PROJECT_NAME}_SOURCES_WRAP})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
-##in
 
 ## #################################################################
 ## Wrapping Build rules
