@@ -14,7 +14,6 @@ HEADERS += mafPluginTest_global.h \
     mafPluginTestDefinitions.h \
     mafDataPipeSurfacePluginTest.h \
     mafPluginRegistrator.h
-
 include(../../mafInstallTest.pri)
 include(../../mafImportVXL.pri)
 INCLUDEPATH += ../../mafResources
