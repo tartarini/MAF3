@@ -1,3 +1,17 @@
+#
+#  mafMacroSetupQt.cmake
+#  maf
+#
+#  mafMacroSetupQt.cmake
+#  maf
+#
+#  Created by Daniele Giunchi - Paolo Quadrani on 10/09/10.
+#  Copyright 2009 B3C. All rights reserved.
+#
+#  See Licence at: http://tiny.cc/QXJ4D
+#
+#
+
 MACRO(mafMacroSetupQt)
 
   SET(minimum_required_qt_version "4.6")
@@ -18,6 +32,8 @@ MACRO(mafMacroSetupQt)
     SET(QT_USE_QTSQL ON)
 	SET(QT_USE_QTOPENGL ON)
     SET(QT_USE_QTTEST ${BUILD_TESTING})
+    SET(QT_USE_QTTEST ON)
+    SET(QT_USE_QTSCRIPT ON)
     INCLUDE(${QT_USE_FILE})
 
     # Set variable QT_INSTALLED_LIBRARY_DIR that will contains

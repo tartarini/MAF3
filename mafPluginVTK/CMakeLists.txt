@@ -1,5 +1,12 @@
 #
-# Copyright and description to be placed here
+#  CMakeLists.txt
+#  maf
+#
+#  Created by Daniele Giunchi - Paolo Quadrani on 10/09/10.
+#  Copyright 2009 B3C. All rights reserved.
+#
+#  See Licence at: http://tiny.cc/QXJ4D
+#
 #
 
 # Extract current directory name to use as project name
@@ -22,8 +29,49 @@ SET(PROJECT_SRCS
 
 QT4_WRAP_CPP(MY_MOC_CXX ${include_file_list})
 
+#foundation libraries
+include(FindVXL)
+include(FindQtSOAP)
+include(FindQXMLRPC)
+include(FindVTK)
+
 # List libraries that are needed by this project.
-SET(PROJECT_LIBS ${CTK_BASE_LIBRARIES})
+mafMacroGetTargetLibraries(dependency_libraries)
+SET(PROJECT_LIBS ${dependency_libraries})
+
+## #################################################################
+## Wrapping
+## #################################################################
+
+mafMacroWrapTargetFiles()
+
+## #################################################################
+## Build rules
+## #################################################################
+
 # Create the library.
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS} ${MY_MOC_CXX})
+ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS} ${MY_MOC_CXX} ${${PROJECT_NAME}_SOURCES_WRAP})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
+
+## #################################################################
+## Wrapping Build rules
+## #################################################################
+IF(${WRAP_LIST_FOUND})
+    mafMacroWrapBuild()
+    install(FILES ${${PROJECT_NAME}_MODULES} DESTINATION modules)
+ENDIF(${WRAP_LIST_FOUND})
+
+
+## #################################################################
+## Installation
+## #################################################################
+
+install(FILES ${${PROJECT_NAME}_HEADERS} DESTINATION include/${PROJECT_NAME})
+
+install(TARGETS ${PROJECT_NAME}
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+
+

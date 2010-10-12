@@ -1,3 +1,14 @@
+#
+#  mafMacroWrapTargetFiles.cmake
+#  maf
+#
+#  Created by Daniele Giunchi - Paolo Quadrani on 10/09/10.
+#  Copyright 2009 B3C. All rights reserved.
+#
+#  See Licence at: http://tiny.cc/QXJ4D
+#
+#
+
 ## #################################################################
 ## Swig
 ## #################################################################
@@ -78,6 +89,7 @@ MACRO(mafMacroWrapTargetFiles)
   # Make sure the variable is cleared
   SET(file_to_wrap )
   SET(wrap_list )
+  set(WRAP_LIST_FOUND )
 
   IF(EXISTS ${filepath})
     # Let's make sure target_wrap_files contains only strings
@@ -102,6 +114,7 @@ MACRO(mafMacroWrapTargetFiles)
   list(LENGTH wrap_list length)
   
   if(SWIG_FOUND AND ${length})
+    set(WRAP_LIST_FOUND 1)
     set(${PROJECT_NAME}_WRAP_DEPENDS ${wrap_list})
    
     SET(i_filepath ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i)
