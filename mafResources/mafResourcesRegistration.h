@@ -77,7 +77,7 @@ void mafResourcesRegistration::registerBind( const mafString& className ) {
 
 extern "C" {
     /// Initialize the module by instantiating the singletons and register all the classes with the mafObjectFactory.
-    void initializeModule();
+    MAFRESOURCESSHARED_EXPORT void initializeModule();
 }
 
 } // mafResources
