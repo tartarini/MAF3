@@ -247,13 +247,13 @@ void mafNetworkConnectorQtSoap::processReturnValue( int requestId, QVariant valu
     Q_UNUSED( requestId );
     Q_ASSERT( value.canConvert( QVariant::String ) );
     mafMsgDebug("%s", value.toString().toAscii().data());
-    mafEventBusManager::instance()->notifyEvent("REMOTE_COMMUNICATION_DONE", mafEventTypeLocal);
+    mafEventBusManager::instance()->notifyEvent("maf.remote.eventBus.comunicationDone", mafEventTypeLocal);
 }
 
 void mafNetworkConnectorQtSoap::processFault( int requestId, int errorCode, QString errorString ) {
     // Log the error.
     mafMsgDebug("%s", mafTr("Process Fault for requestID %1 with error %2 - %3").arg(mafString::number(requestId), mafString::number(errorCode), errorString).toAscii().data());
-    mafEventBusManager::instance()->notifyEvent("REMOTE_COMMUNICATION_FAILED", mafEventTypeLocal);
+    mafEventBusManager::instance()->notifyEvent("maf.remote.eventBus.comunicationFailed", mafEventTypeLocal);
 }
 
 void mafNetworkConnectorQtSoap::processRequest( int requestId, QString methodName, QList<xmlrpc::Variant> parameters ) {

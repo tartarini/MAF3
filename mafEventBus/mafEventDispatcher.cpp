@@ -38,7 +38,7 @@ mafEventDispatcher::~mafEventDispatcher() {
 
 void mafEventDispatcher::initializeGlobalEvents() {
     mafEvent *remote_done = new mafEvent();
-    mafString eventId = "REMOTE_COMMUNICATION_DONE";
+    mafString eventId = "maf.remote.eventBus.comunicationDone";
 
     (*remote_done)[TOPIC] = eventId;
     (*remote_done)[TYPE] = mafEventTypeLocal;
@@ -50,7 +50,7 @@ void mafEventDispatcher::initializeGlobalEvents() {
     this->registerSignal(*remote_done);
 
     mafEvent *remote_failed = new mafEvent();
-    (*remote_failed)[TOPIC] = "REMOTE_COMMUNICATION_FAILED";
+    (*remote_failed)[TOPIC] = "maf.remote.eventBus.comunicationFalied";
     (*remote_failed)[TYPE] = mafEventTypeLocal;
     (*remote_failed)[SIGTYPE] = mafSignatureTypeSignal;
     var.setValue((QObject*)this);
