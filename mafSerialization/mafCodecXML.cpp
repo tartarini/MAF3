@@ -93,7 +93,7 @@ void mafCodecXML::encode(mafMemento *memento) {
             argList.append(mafEventArgument(char*, (char*)item.m_Value.toByteArray().constData()));
             argList.append(mafEventArgument(mafString, url));
             argList.append(mafEventArgument(int, dataSize));
-            mafEventBusManager::instance()->notifyEvent("maf.local.resources.serialization.saveExternalData", mafEventTypeLocal, &argList);
+            mafEventBusManager::instance()->notifyEvent("maf.local.serialization.saveExternalData", mafEventTypeLocal, &argList);
             marshall(fileName);
             m_XMLStreamWriter.writeEndElement();
         } else {
