@@ -49,7 +49,7 @@ void mafVME::setModified(bool m) {
         return;
     }
 
-    // Connect this modifiedObject signal with the class that hsould listen it
+    // Connect this modifiedObject signal with the class that should listen it
     // like the mafDataPipe or mafVisualPipe
     emit(modifiedObject());
 }
