@@ -16,14 +16,17 @@
 
 if(BUILD_EXAMPLES)
 
-  FILE(GLOB dir_list "${PROJECT_SOURCE_DIR}/*")
+  file(GLOB CUR_FILE "CMakeLists.txt")
+  get_filename_component(CUR_ABSOLUTE_DIR ${CUR_FILE} PATH)  
+
+  FILE(GLOB dir_list "${CUR_ABSOLUTE_DIR}/*")
   
   FOREACH(dir_name ${dir_list})
-    FILE(RELATIVE_PATH local_dir_name "${PROJECT_SOURCE_DIR}" ${dir_name})
-	  IF(IS_DIRECTORY ${dir_name} AND NOT ${local_dir_name} STREQUAL ".svn")
-      INCLUDE_DIRECTORIES("${dir_name}")
+    FILE(RELATIVE_PATH local_dir_name "${CUR_ABSOLUTE_DIR}" ${dir_name})
+	  IF(IS_DIRECTORY ${dir_name} AND NOT ${dir_name} STREQUAL ".git")
+        INCLUDE_DIRECTORIES("${dir_name}")
 		SUBDIRS("${local_dir_name}")
-	  ENDIF(IS_DIRECTORY ${dir_name} AND NOT ${local_dir_name} STREQUAL ".svn")
+	  ENDIF(IS_DIRECTORY ${dir_name} AND NOT ${dir_name} STREQUAL ".git")
   ENDFOREACH(dir_name ${dir_list})
 
 endif(BUILD_EXAMPLES)
