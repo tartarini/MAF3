@@ -14,14 +14,15 @@ MACRO(mafMacroGetTargetLibraries varname)
   SET(filepath ${CMAKE_CURRENT_SOURCE_DIR}/target_libraries.cmake)
   
   # Check if "target_libraries.cmake" file exists
-  IF(NOT EXISTS ${filepath} )
-    MESSAGE(FATAL_ERROR "${filepath} doesn't exists !")
-  ENDIF()
+#  IF(NOT EXISTS ${filepath} )
+#    MESSAGE(FATAL_ERROR "${filepath} doesn't exists !")
+#  ENDIF()
 
   # Make sure the variable is cleared
   SET(target_libraries )
   
-
+  # Check if "target_libraries.cmake" file exists
+  # if the file does not exists, no external dependences are assigned.
   IF(EXISTS ${filepath})
     # Let's make sure target_libraries contains only strings
     FILE(STRINGS "${filepath}" stringtocheck) # read content of 'filepath' into 'stringtocheck'
