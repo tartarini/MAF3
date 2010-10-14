@@ -27,17 +27,14 @@ mafMacroWrapTargetFiles()
 ## #################################################################
 
 # Create the library.
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS} ${${PROJECT_NAME}_SOURCES_WRAP})
+ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 
 ## #################################################################
 ## Wrapping Build rules
 ## #################################################################
-IF(${WRAP_LIST_FOUND})
-    mafMacroWrapBuild()
-    install(FILES ${${PROJECT_NAME}_MODULES} DESTINATION modules)
-ENDIF(${WRAP_LIST_FOUND})
 
+mafMacroWrapBuild()
 
 ## #################################################################
 ## Installation

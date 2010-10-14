@@ -21,7 +21,7 @@ mafMacroInitProject(0)
 ## #################################################################
 
 # Create the executable.
-ADD_EXECUTABLE(${PROJECT_NAME} ${PROJECT_SRCS} ${${PROJECT_NAME}_SOURCES_WRAP})
+ADD_EXECUTABLE(${PROJECT_NAME} ${PROJECT_SRCS})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 
 ## #################################################################
