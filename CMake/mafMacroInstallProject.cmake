@@ -1,0 +1,14 @@
+MACRO(mafMacroInstallProject)
+
+  install(FILES ${${PROJECT_NAME}_HEADERS} DESTINATION include/${PROJECT_NAME})
+  
+  if(${WRAP_LIST_FOUND})
+    install(FILES ${${PROJECT_NAME}_MODULES} DESTINATION modules)
+  endif(${WRAP_LIST_FOUND})
+
+  install(TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)
+
+ENDMACRO()
