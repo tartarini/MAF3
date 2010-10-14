@@ -18,7 +18,7 @@ PROJECT(MAF)
 #############################################################################################
 
 OPTION(BUILD_TEST_SUITE "Build Module's Tests" ON)
-OPTION(BUILD_EXAMPLES "Build Examples" OFF)
+OPTION(BUILD_EXAMPLES "Build Examples" ON)
 
 #############################################################################################
 ### where to search modules
