@@ -21,7 +21,7 @@ mafMacroInitProject(1)
 ## #################################################################
 
 # Create the executable.
-ADD_EXECUTABLE(${PROJECT_NAME} ${PROJECT_SRCS} ${MY_MOC_CXX} ${${PROJECT_NAME}_SOURCES_WRAP})
+ADD_EXECUTABLE(${PROJECT_NAME} ${PROJECT_SRCS} ${${PROJECT_NAME}_SOURCES_WRAP})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 
 ## #################################################################
