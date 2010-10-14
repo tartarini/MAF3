@@ -56,6 +56,13 @@ MACRO(mafMacroInitProject test)
     QT4_WRAP_UI(MY_UI_CXX ${ui_file_list})
     QT4_ADD_RESOURCES(MY_RESOURCE_CXX ${resource_file_list})
   endif(${test})
+  
+  SET(PROJECT_SRCS 
+    ${PROJECT_SRCS}
+    ${MY_MOC_CXX}
+    ${MY_UI_CXX}
+    ${MY_RESOURCE_CXX}
+    )
 
   # List libraries that are needed by this project.
   mafMacroGetTargetLibraries(dependency_libraries)
