@@ -121,10 +121,19 @@ MACRO(mafMacroWrapTargetFiles)
     IF(EXISTS ${i_filepath})
       if(PYTHONLIBS_FOUND)
         mafMacroWrap(${PROJECT_NAME} ${PROJECT_NAME}_SOURCES_WRAP ${PROJECT_NAME} python ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i ${${PROJECT_NAME}_WRAP_DEPENDS})
+        SET(PROJECT_SRCS 
+          ${PROJECT_SRCS}
+          ${${PROJECT_NAME}_SOURCES_WRAP}
+        )
+
       endif(PYTHONLIBS_FOUND)
   
       if(TCL_FOUND)
         mafMacroWrap(${PROJECT_NAME} ${PROJECT_NAME}_SOURCES_WRAP ${PROJECT_NAME} tcl    ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i ${${PROJECT_NAME}_WRAP_DEPENDS})
+        SET(PROJECT_SRCS 
+          ${PROJECT_SRCS}
+          ${${PROJECT_NAME}_SOURCES_WRAP}
+        )
       endif(TCL_FOUND)
     ENDIF()
     
