@@ -26,7 +26,7 @@ void mafAlgorithm::setParameters(mafList<mafVariant> parameters) {
     m_IterationParameter = parameters.at(2).toInt();
 }
 
-bool mafAlgorithm::execute() {
+void mafAlgorithm::execute() {
     mafMsgDebug("%s", mafTr("Executing testProcess!!!").toAscii().data());
 
     mafStringList commandAndParameters;
@@ -34,7 +34,5 @@ bool mafAlgorithm::execute() {
                         << m_FileNameOutput.toAscii() \
                         << mafString::number(m_IterationParameter);
 
-    bool result = mafProcess::execute("./testProcess" ,commandAndParameters) == 0;
-
-    return result;
+    bool ok = mafProcess::execute("./testProcess" ,commandAndParameters) == 0;
 }

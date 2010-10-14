@@ -35,7 +35,7 @@ public slots:
     /* virtual */ void setParameters(mafList<mafVariant> parameters);
 
     /// Execute the resource algorithm.
-    /*virtual*/ bool execute();
+    /*virtual*/ void execute();
 
 private:
     mafString m_FileNameInput;
