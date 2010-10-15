@@ -67,6 +67,9 @@ public:
     /// Set rendering window used by the view.
     void setRenderingWindow(mafCore::mafContainerInterface *renWindow);
 
+    /// Get rendering window used by the view.
+    mafCore::mafContainerInterface *renderingWindow();
+
   protected:
     mafCore::mafContainerInterface *m_RenWindow; ///< Rendering window for the view.
     mafString m_DefaultVisualPipe; ///< Name of the default visual pipe.
@@ -90,6 +93,10 @@ inline bool mafView::isSelected() {
 
 inline void mafView::setRenderingWindow(mafCore::mafContainerInterface *renWindow) {
     m_RenWindow = renWindow;
+}
+
+inline mafCore::mafContainerInterface *mafView::renderingWindow() {
+    return m_RenWindow;
 }
 
 } //namespace mafResources
