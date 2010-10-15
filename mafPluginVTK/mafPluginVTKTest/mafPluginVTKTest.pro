@@ -12,9 +12,8 @@ SOURCES += main.cpp \
     mafSerializationVTKTest.cpp \
     mafSerializationExtDataTest.cpp \
     mafSerializationRawBinaryExtDataTest.cpp \
-    mafSerializationRawASCIIExtDataTest.cpp
-    
-
+    mafSerializationRawASCIIExtDataTest.cpp \
+    mafEventBridgeVTKTest.cpp
 include(../../mafInstallTest.pri)
 include(../../mafImportVXL.pri)
 include(../../mafImportVTK.pri)
