@@ -17,6 +17,7 @@
 #include <mafSceneNode.h>
 #include <mafVisitorFindSceneNodeByVMEHash.h>
 
+
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindowInteractor.h>
@@ -29,6 +30,7 @@ mafViewVTK::mafViewVTK(const mafString code_location) : mafView(code_location)  
 }
 
 mafViewVTK::~mafViewVTK() {
+    mafDEL(m_EventBridge);
     m_Iren->Delete();
     m_Renderer->Delete();
 }
@@ -39,6 +41,7 @@ void mafViewVTK::create() {
     m_RenWin = mafContainerPointerTypeCast(vtkRenderWindow, m_RenWindow);
     m_Renderer = vtkRenderer::New();
     m_Iren = vtkRenderWindowInteractor::New();
+    m_EventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
 
     (*m_RenWin)->AddRenderer(m_Renderer);
     m_Iren->SetRenderWindow(*m_RenWin);
@@ -47,6 +50,8 @@ void mafViewVTK::create() {
     m_Renderer->SetBackground(0.1, 0.1, 0.1);
     (*m_RenWin)->SetSize(640, 480);
     (*m_RenWin)->SetPosition(400,0);
+
+    m_EventBridge->setInteractor(m_Iren);
 }
 
 void mafViewVTK::removeVME(mafVME *vme) {
@@ -80,6 +85,7 @@ void mafViewVTK::showVME(mafVME *vme, bool show, const mafString visualPipeType)
         }
         (*actor)->SetVisibility(show);
         (*m_RenWin)->Render();
+        //m_Iren->Start();
     }
 }
 

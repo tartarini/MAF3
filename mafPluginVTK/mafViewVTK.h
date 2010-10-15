@@ -14,15 +14,19 @@
 
 // Includes list
 #include "mafPluginVTKDefinitions.h"
+#include "mafEventBridgeVTK.h"
 #include <mafView.h>
 #include <mafContainer.h>
 #include <mafContainerInterface.h>
 #include <mafVME.h>
 
+
 // Class forwarding list
+class mafEventBridgeVTK;
 class vtkRenderWindow;
 class vtkRenderer;
 class vtkRenderWindowInteractor;
+
 
 namespace mafPluginVTK {
 
@@ -53,6 +57,7 @@ private:
     mafCore::mafContainer<vtkRenderWindow> *m_RenWin;  ///< VTK rendering window.
     vtkRenderer *m_Renderer; ///< VTK render.
     vtkRenderWindowInteractor *m_Iren; ///< VTK renderer interactor.
+    mafEventBridgeVTK *m_EventBridge; ///< Bridge between VTK events and Qt.
 
 };
 
