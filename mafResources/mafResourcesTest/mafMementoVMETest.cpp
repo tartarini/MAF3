@@ -225,7 +225,7 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
     ////Create the VME Memento that stores dataSetCollection and dataPipe
     ////of the VME.
     mafMemento *m = m_VME->mafResource::createMemento();
-    m_MementoVME = new mafMementoVME(m_VME, m_VME->dataSetCollection(), m_VME->dataPipe(), mafCodeLocation);
+    m_MementoVME = new mafMementoVME(m_VME, true, mafCodeLocation);
     //! </snippet>
     QVERIFY(m_MementoVME != NULL);
     m->setParent(m_MementoVME);
