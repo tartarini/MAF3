@@ -82,7 +82,7 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.resources.view.vmeShow", this, "vmeShow(mafCore::mafObjectBase *, bool)");
 
     // Register callback to allows settings serialization.
-    mafRegisterLocalCallback("maf.local.logic.settings.view.store", this, "createMemento() const");
+    mafRegisterLocalCallback("maf.local.logic.settings.viewmanager.store", this, "createMemento() const");
     mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "setMemento(mafCore::mafMemento *, bool)");
 }
 
