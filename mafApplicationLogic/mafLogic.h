@@ -25,6 +25,9 @@ namespace mafApplicationLogic {
  It allows to instantiate all the managers, and use initialization of mafLogicLight.
  This logic class can be used with those applications that needs of a complete version of the framework
  using plugin and resources.
+ mafLogic defines also the topic:
+ - maf.local.logic.settings.store that allows to ask the observer to store their settings into a memento that will be serialized.
+ - maf.local.logic.settings.restore that allows to restore a previous saved state of the application's settings.
  */
 class MAFAPPLICATIONLOGICSHARED_EXPORT mafLogic : public mafLogicLight {
     Q_OBJECT
