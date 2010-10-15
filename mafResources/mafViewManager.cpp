@@ -10,6 +10,7 @@
  */
 
 #include "mafViewManager.h"
+#include "mafMementoViewManager.h"
 #include "mafView.h"
 #include "mafVME.h"
 
@@ -35,6 +36,14 @@ mafViewManager::~mafViewManager() {
         mafDEL(v);
     }
     m_CreatedViewList.clear();
+}
+
+mafMemento *mafViewManager::createMemento() const {
+    return new mafMementoViewManager(this, &m_CreatedViewList, mafCodeLocation);
+}
+
+void mafViewManager::setMemento(mafCore::mafMemento *memento, bool deep_memento) {
+    Q_UNUSED(deep_memento);
 }
 
 void mafViewManager::initializeConnections() {
