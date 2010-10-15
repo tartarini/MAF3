@@ -14,7 +14,8 @@ SOURCES += mafDataPipeSurface.cpp \
     mafViewVTK.cpp \
     mafDataPipeImageThreshold.cpp \
     mafExternalDataCodecVTK.cpp \
-    mafInteractorVTK.cpp
+    mafInteractorVTK.cpp \
+    mafEventBridgeVTK.cpp
 HEADERS += mafPluginVTK_global.h \
     mafPluginVTKDefinitions.h \
     mafDataPipeSurface.h \
@@ -23,7 +24,8 @@ HEADERS += mafPluginVTK_global.h \
     mafViewVTK.h \
     mafDataPipeImageThreshold.h \
     mafExternalDataCodecVTK.h \
-    mafInteractorVTK.h
+    mafInteractorVTK.h \
+    mafEventBridgeVTK.h
 include(../mafInstallModule.pri)
 include(../mafImportVXL.pri)
 include(../mafImportVTK.pri)
