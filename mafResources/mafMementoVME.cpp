@@ -23,7 +23,7 @@ mafMementoVME::mafMementoVME(const mafString code_location) : mafMemento(code_lo
 }
 
 mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const mafString code_location)  : mafMemento(obj, code_location) {
-    mafVME *vme = dynamic_cast<mafResources::mafVME*>(obj);
+    mafVME *vme = dynamic_cast<mafResources::mafVME*>((mafObject *)obj);
     REQUIRE(vme);
 
     mafMementoPropertyList *list = mementoPropertyList();
@@ -60,10 +60,10 @@ mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const mafString 
         list->append(item);
 
         int i = 0;
-        int num = meta->propertyCount();
+        int num = obj->metaObject()->propertyCount();
         for ( ; i < num; ++i) {
             mafMementoPropertyItem item;
-            const QMetaProperty qmp = meta->property(i);
+            const QMetaProperty qmp = obj->metaObject()->property(i);
             mafString propName = qmp.name();
             mafVariant value = obj->property(propName.toAscii());
             item.m_Multiplicity = 1;
