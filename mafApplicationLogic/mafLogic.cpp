@@ -57,6 +57,17 @@ void mafLogic::initialize() {
     // Call the ionitialization of the superclass.
     Superclass::initialize();
 
+    mafIdProvider *provider = mafIdProvider::instance();
+    provider->createNewId("maf.local.logic.settings.viewmanager.store");
+    provider->createNewId("maf.local.logic.settings.vmemanager.store");
+    provider->createNewId("maf.local.logic.settings.restore");
+
+    // Signal registration.
+    mafRegisterLocalSignal("maf.local.logic.settings.viewmanager.store", this, "settingsViewManagerStore()");
+    mafRegisterLocalSignal("maf.local.logic.settings.vmemanager.store", this, "settingsVmeManagerStore()");
+    mafRegisterLocalSignal("maf.local.logic.settings.viewmanager.restore", this, "settingsViewManagerRestore()");
+    mafRegisterLocalSignal("maf.local.logic.settings.vmemanager.restore", this, "settingsVmeManagerRestore()");
+
     // Load the module related to the resources and managers and initialize it.
     bool module_initialized(false);
     module_initialized = mafInitializeModule(RESOURCES_LIBRARY_NAME);
