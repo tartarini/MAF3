@@ -18,10 +18,7 @@ using namespace mafCore;
 mafMementoObject::mafMementoObject(const mafString code_location) : mafMemento(code_location) {
 }
 
-mafMementoObject::mafMementoObject(const mafObject *obj, const mafTagList *tagList, mafDictionary *dic, const mafString code_location) : mafMemento(code_location) {
-    const QMetaObject* meta = obj->metaObject();
-    setObjectClassType(meta->className());
-
+mafMementoObject::mafMementoObject(const mafObject *obj, const mafTagList *tagList, mafDictionary *dic, const mafString code_location) : mafMemento(obj, code_location) {
     mafMementoPropertyList *list = mementoPropertyList();
     int i = 0;
     int num = meta->propertyCount();
