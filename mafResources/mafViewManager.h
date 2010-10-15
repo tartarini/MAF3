@@ -45,7 +45,7 @@ public:
 public slots:
     /// Create a memento class used to save the status of opened views. The caller has to delete the allocated memory he asked.
     /** This method allows to save the status of opened views when logic
-    emits the signal maf.local.logic.status.store.
+    emits the signal maf.local.logic.settings.store.
     The manager save the number and types of opened views, their position and size.
     Then each view save its settings depending on the view itselfs.*/
     mafCore::mafMemento *createMemento() const;
