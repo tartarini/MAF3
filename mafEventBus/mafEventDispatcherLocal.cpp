@@ -48,6 +48,9 @@ void mafEventDispatcherLocal::notifyEvent(const mafEvent &event_dictionary, mafE
             if(argList != NULL) {
                 if (returnArg == NULL || returnArg->data() == NULL) { //don't use return value
                     switch (argList->count()) {
+                        case 0:
+                            this->metaObject()->invokeMethod(obj, signal_to_emit.toAscii());
+                            break;
                         case 1:
                             this->metaObject()->invokeMethod(obj, signal_to_emit.toAscii(), \
                             argList->at(0));
@@ -97,6 +100,9 @@ void mafEventDispatcherLocal::notifyEvent(const mafEvent &event_dictionary, mafE
                     } //switch
                  } else { //use return value
                     switch (argList->count()) {
+                        case 0:
+                            this->metaObject()->invokeMethod(obj, signal_to_emit.toAscii(), *returnArg);
+                            break;
                         case 1:
                             this->metaObject()->invokeMethod(obj, signal_to_emit.toAscii(), *returnArg,\
                             argList->at(0));
