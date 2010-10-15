@@ -10,8 +10,12 @@
 #
 
 MACRO(mafMacroFoundationLibraries)
+
 include(FindVXL)
 include(FindQtSOAP)
 include(FindQXMLRPC)
-#include(FindQscxml)  
+include(FindQScxml)
+
+set(MAF_FOUNDATION_LIBRARIES ${QXMLRPC_LIBRARY} ${VXL_LIBRARY} ${QTSOAP_LIBRARY} ${QSCXML_LIBRARY})
+
 ENDMACRO()

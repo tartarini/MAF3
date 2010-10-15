@@ -20,10 +20,7 @@ using namespace mafResources;
 mafMementoDataSet::mafMementoDataSet(const mafString code_location) : mafMemento(code_location) {
 }
 
-mafMementoDataSet::mafMementoDataSet(const mafObject *obj, mafPoseMatrix *matrix, mafContainerInterface *dataValue, bool binary, const mafString code_location)  : mafMemento(code_location) {
-    const QMetaObject* meta = obj->metaObject();
-    setObjectClassType(meta->className());
-
+mafMementoDataSet::mafMementoDataSet(const mafObject *obj, mafPoseMatrix *matrix, mafContainerInterface *dataValue, bool binary, const mafString code_location)  : mafMemento(obj, code_location) {
     mafMementoPropertyList *list = mementoPropertyList();
 
     if(matrix) {

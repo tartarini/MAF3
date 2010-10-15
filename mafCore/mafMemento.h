@@ -34,6 +34,9 @@ public:
     /// mafMemento constructor.
     mafMemento(const mafString code_location = "");
 
+    /// mafMemento constructor.
+    mafMemento(const mafObject *obj, const mafString code_location = "");
+
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
 

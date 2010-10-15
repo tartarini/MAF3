@@ -10,6 +10,7 @@
  */
 
 #include "mafViewManager.h"
+#include "mafMementoViewManager.h"
 #include "mafView.h"
 #include "mafVME.h"
 
@@ -24,6 +25,7 @@ mafViewManager* mafViewManager::instance() {
 }
 
 void mafViewManager::shutdown() {
+    destroyAllViews();
 }
 
 mafViewManager::mafViewManager(const mafString code_location) : mafObjectBase(code_location), m_SelectedView(NULL) {
@@ -31,10 +33,29 @@ mafViewManager::mafViewManager(const mafString code_location) : mafObjectBase(co
 }
 
 mafViewManager::~mafViewManager() {
-    foreach(mafResource *v, m_CreatedViewList) {
-        mafDEL(v);
+    destroyAllViews();
+//    foreach(mafResource *v, m_CreatedViewList) {
+//        mafDEL(v);
+//    }
+//    m_CreatedViewList.clear();
+}
+
+mafMemento *mafViewManager::createMemento() const {
+    return new mafMementoViewManager(this, &m_CreatedViewList, mafCodeLocation);
+}
+
+void mafViewManager::setMemento(mafMemento *memento, bool deep_memento) {
+    Q_UNUSED(deep_memento);
+
+    mafString viewType;
+    mafMementoPropertyList *list = memento->mementoPropertyList();
+    mafMementoPropertyItem item;
+    foreach(item, *list) {
+        if(item.m_Name == "ViewType") {
+            viewType = item.m_Value.toString();
+            createView(viewType);
+        }
     }
-    m_CreatedViewList.clear();
 }
 
 void mafViewManager::initializeConnections() {
@@ -59,6 +80,10 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.resources.view.select", this, "selectView(mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.view.selected", this, "selectedView()");
     mafRegisterLocalCallback("maf.local.resources.view.vmeShow", this, "vmeShow(mafCore::mafObjectBase *, bool)");
+
+    // Register callback to allows settings serialization.
+    mafRegisterLocalCallback("maf.local.logic.settings.viewmanager.store", this, "createMemento() const");
+    mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "setMemento(mafCore::mafMemento *, bool)");
 }
 
 void mafViewManager::selectView(mafCore::mafObjectBase *view) {
@@ -90,6 +115,7 @@ mafObjectBase *mafViewManager::createView(mafString view_type) {
     mafView *v = dynamic_cast<mafResources::mafView *>(obj);
     if(v != NULL) {
         addViewToCreatedList(v);
+        m_SelectedView = v;
         return v;
     } else {
         mafDEL(obj);
@@ -118,10 +144,18 @@ void mafViewManager::destroyView(mafCore::mafObjectBase *view) {
         bool view_is_present = m_CreatedViewList.contains(v);
         if(view_is_present) {
             removeView(v);
-            // Destroy the view .
+            // Destroy the view.
             mafDEL(v);
         }
     }
+}
+
+void mafViewManager::destroyAllViews() {
+    mafResourceList viewList = m_CreatedViewList;
+    foreach(mafResource *v, viewList) {
+        destroyView(v);
+    }
+    viewList.clear();
 }
 
 void mafViewManager::viewDestroyed() {
@@ -132,6 +166,14 @@ void mafViewManager::viewDestroyed() {
 void mafViewManager::removeView(mafView *view) {
     // Disconnect the manager from the view
     disconnect(view, SIGNAL(destroyed()),this, SLOT(viewDestroyed()));
+    // get the index of the view.
+    int idx = m_CreatedViewList.indexOf(view, 0);
     // Remove the view from the list.
-    m_CreatedViewList.removeOne(view);
+    if(m_CreatedViewList.removeOne(view)) {
+        if(idx > 0) {
+            m_SelectedView = (mafView *)m_CreatedViewList.at(idx - 1);
+        } else {
+            m_SelectedView = NULL;
+        }
+    }
 }

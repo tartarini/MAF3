@@ -18,6 +18,14 @@ mafMemento::mafMemento(const mafString code_location) : mafObjectBase(code_locat
     m_MementoPropertyList.clear();
 }
 
+mafMemento::mafMemento(const mafObject *obj, const mafString code_location) : mafObjectBase(code_location), m_ObjectClassType("") {
+    REQUIRE(obj);
+    const QMetaObject* meta = obj->metaObject();
+    setObjectClassType(meta->className());
+
+    m_MementoPropertyList.clear();
+}
+
 bool mafMemento::isEqual(const mafObjectBase *obj) const {
     // First check the isEqual for the parent class.
     if(Superclass::isEqual(obj)) {

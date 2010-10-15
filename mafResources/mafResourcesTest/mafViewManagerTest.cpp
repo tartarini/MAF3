@@ -50,9 +50,11 @@ private slots:
     void mafViewManagerAllocationTest();
     /// Test for createView.
     void createViewTest();
-
     /// Test select View method
     void selectViewTest();
+    /// Test memento (for store and retriev settings)
+    void mementoViewTest();
+
 
 private:
     mafViewManager *m_ViewManager; ///< View Manager test variable
@@ -75,14 +77,19 @@ void mafViewManagerTest::createViewTest() {
 
     // Return value should be not NULL.
     QVERIFY(m_View != NULL);
+
+    // Create another view...
+    mafObjectBase *second_view;
+    m_EventBus->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList, &mafEventReturnArgument(mafCore::mafObjectBase *, second_view));
+    QVERIFY(second_view != NULL);
 }
 
 void mafViewManagerTest::selectViewTest() {
-    // Ask for default selected view (should b NULL.
+    // Ask for default selected view.
     mafCore::mafObjectBase *sel_view;
     m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &mafEventReturnArgument(mafCore::mafObjectBase *, sel_view));
 
-    QVERIFY(sel_view == NULL);
+    QVERIFY(sel_view != m_View);
 
     // Ask the view manager to select the previous created view.
     mafEventArgumentsList argList;
@@ -93,6 +100,26 @@ void mafViewManagerTest::selectViewTest() {
     m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &mafEventReturnArgument(mafCore::mafObjectBase *, sel_view));
     QVERIFY(sel_view != NULL);
     QVERIFY(sel_view == m_View);
+}
+
+void mafViewManagerTest::mementoViewTest() {
+    // Should contains 1 view.
+    mafMemento *m = m_ViewManager->createMemento();
+
+    // Shutdown the manager => will destroy all view and will reset the created view list.
+    m_ViewManager->shutdown();
+    // Retrieve the selected view that should be NULL.
+    mafCore::mafObjectBase *sel_view;
+    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &mafEventReturnArgument(mafCore::mafObjectBase *, sel_view));
+    QVERIFY(sel_view == NULL);
+
+    // Restore the previous view manager state.
+    m_ViewManager->setMemento(m);
+    // Retrieve the selected view that should be not NULL.
+    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &mafEventReturnArgument(mafCore::mafObjectBase *, sel_view));
+    QVERIFY(sel_view != NULL);
+
+    mafDEL(m);
 }
 
 MAF_REGISTER_TEST(mafViewManagerTest);

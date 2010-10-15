@@ -23,7 +23,7 @@ class mafVME;
 
 /**
 Class name: mafViewManager
-This class provides the manager class for MAF3 views. The IDs are:
+This class provides the manager class for MAF3 views. The topics are:
 - maf.local.resources.view.create allows to create a new View.
 - maf.local.resources.view.destroy allows to destroy a given View.
 - maf.local.resources.view.select allows to select the active View on which show/hide VMEs.
@@ -42,8 +42,21 @@ public:
     /// Destroy the singleton instance. To be called at the end of the application.
     void shutdown();
 
-    /// Return the list of created views.
-//    mafResourceList *createdViewList();
+public slots:
+    /// Create a memento class used to save the status of opened views. The caller has to delete the allocated memory he asked.
+    /** This method allows to save the status of opened views when logic
+    emits the signal maf.local.logic.settings.view.store.
+    The manager save the number and types of opened views, their position and size.
+    Then each view save its settings depending on the view itselfs.*/
+    mafCore::mafMemento *createMemento() const;
+
+    /// Allows setting a previous saved object's state.
+    /**
+    This is used to implement a sort of undo mechanism for the object's state, but can be used also by the
+    serialization mechanism to serialize data into the selected storage type.
+    The 'deep_memento' flag is used to avoid the copy of the object unique hash in normal operation like
+    undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
+    void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
 signals:
     /// Return the selected view
@@ -95,6 +108,9 @@ private:
 
     /// Remove the given view from the created list
     void removeView(mafView *view);
+
+    /// Delete all created views
+    void destroyAllViews();
 
     mafResourceList m_CreatedViewList; ///< List of created views.
     mafView *m_SelectedView; ///< Keep trak of the current selected view.

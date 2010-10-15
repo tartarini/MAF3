@@ -19,12 +19,9 @@ using namespace mafResources;
 mafMementoResource::mafMementoResource(const mafString code_location)  : mafMemento(code_location) {
 }
 
-mafMementoResource::mafMementoResource(const mafObject *obj, const mafResourceList *inputList, const mafString code_location) : mafMemento(code_location) {
+mafMementoResource::mafMementoResource(const mafObject *obj, const mafResourceList *inputList, const mafString code_location) : mafMemento(obj, code_location) {
     REQUIRE(obj != NULL);
     REQUIRE(inputList != NULL);
-
-    const QMetaObject* meta = obj->metaObject();
-    setObjectClassType(meta->className());
 
     mafStringList hashLists;
     mafResource *o = NULL;

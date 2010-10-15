@@ -121,10 +121,19 @@ MACRO(mafMacroWrapTargetFiles)
     IF(EXISTS ${i_filepath})
       if(PYTHONLIBS_FOUND)
         mafMacroWrap(${PROJECT_NAME} ${PROJECT_NAME}_SOURCES_WRAP ${PROJECT_NAME} python ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i ${${PROJECT_NAME}_WRAP_DEPENDS})
+        SET(PROJECT_SRCS 
+          ${PROJECT_SRCS}
+          ${${PROJECT_NAME}_SOURCES_WRAP}
+        )
+
       endif(PYTHONLIBS_FOUND)
   
       if(TCL_FOUND)
         mafMacroWrap(${PROJECT_NAME} ${PROJECT_NAME}_SOURCES_WRAP ${PROJECT_NAME} tcl    ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i ${${PROJECT_NAME}_WRAP_DEPENDS})
+        SET(PROJECT_SRCS 
+          ${PROJECT_SRCS}
+          ${${PROJECT_NAME}_SOURCES_WRAP}
+        )
       endif(TCL_FOUND)
     ENDIF()
     
@@ -133,49 +142,50 @@ MACRO(mafMacroWrapTargetFiles)
 ENDMACRO()
 
 MACRO(mafMacroWrapBuild)
-
-  if(TCL_FOUND)
-    target_link_libraries(${PROJECT_NAME} ${TCL_LIBRARY})
-  endif(TCL_FOUND)
+  if(${WRAP_LIST_FOUND})
+    if(TCL_FOUND)
+      target_link_libraries(${PROJECT_NAME} ${TCL_LIBRARY})
+    endif(TCL_FOUND)
 	
-  if(PYTHONLIBS_FOUND)
-    target_link_libraries(${PROJECT_NAME} ${PYTHON_LIBRARIES})
-  endif(PYTHONLIBS_FOUND)
+    if(PYTHONLIBS_FOUND)
+      target_link_libraries(${PROJECT_NAME} ${PYTHON_LIBRARIES})
+    endif(PYTHONLIBS_FOUND)
 
-  ## #################################################################
-  ## Handling of generated script modules
-  ## #################################################################
+    ## #################################################################
+    ## Handling of generated script modules
+    ## #################################################################
 
-  set(${PROJECT_NAME}_MODULES)
+    set(${PROJECT_NAME}_MODULES)
 
-  if(SWIG_FOUND AND PYTHONLIBS_FOUND)
-    if(WIN32)
-      set(lib_ext ".dll")
-      set(lib_prefix )
-      set(wrap_lib_ext ".pyd")
-    else(WIN32)
-      set(lib_prefix "lib")
-      set(wrap_lib_ext ".so")
-      if(APPLE)
-        set(lib_ext ".dylib")
-      else(APPLE)
-        set(lib_ext ".so")
-      endif(APPLE)
-    endif(WIN32)
+    if(SWIG_FOUND AND PYTHONLIBS_FOUND)
+      if(WIN32)
+        set(lib_ext ".dll")
+        set(lib_prefix )
+        set(wrap_lib_ext ".pyd")
+      else(WIN32)
+        set(lib_prefix "lib")
+        set(wrap_lib_ext ".so")
+        if(APPLE)
+          set(lib_ext ".dylib")
+        else(APPLE)
+          set(lib_ext ".so")
+        endif(APPLE)
+      endif(WIN32)
 
-    set(lib_name ${lib_prefix}${PROJECT_NAME}${lib_ext})
-	set(wrap_lib_prefix "_")
-    set(wrap_lib_name ${wrap_lib_prefix}${PROJECT_NAME}${wrap_lib_ext})
+      set(lib_name ${lib_prefix}${PROJECT_NAME}${lib_ext})
+	  set(wrap_lib_prefix "_")
+      set(wrap_lib_name ${wrap_lib_prefix}${PROJECT_NAME}${wrap_lib_ext})
     
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i
-      COMMAND ${CMAKE_COMMAND} ARGS -E  make_directory ${CMAKE_BINARY_DIR}/modules
-      COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}.py ${CMAKE_BINARY_DIR}/modules
-      COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${LIBRARY_OUTPUT_PATH}${lib_name} ${CMAKE_BINARY_DIR}/modules/${wrap_lib_name}
-      COMMENT "-- Moving python modules to ${CMAKE_BINARY_DIR}/modules")
+      add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i
+        COMMAND ${CMAKE_COMMAND} ARGS -E  make_directory ${CMAKE_BINARY_DIR}/modules
+        COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}.py ${CMAKE_BINARY_DIR}/modules
+        COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${LIBRARY_OUTPUT_PATH}${lib_name} ${CMAKE_BINARY_DIR}/modules/${wrap_lib_name}
+        COMMENT "-- Moving python modules to ${CMAKE_BINARY_DIR}/modules")
 
-    set(${PROJECT_NAME}_MODULES ${CMAKE_BINARY_DIR}/modules/${PROJECT_NAME}.py)
+      set(${PROJECT_NAME}_MODULES ${CMAKE_BINARY_DIR}/modules/${PROJECT_NAME}.py)
 
-  endif(SWIG_FOUND AND PYTHONLIBS_FOUND)
-
+    endif(SWIG_FOUND AND PYTHONLIBS_FOUND)
+  endif(${WRAP_LIST_FOUND})
+  
 ENDMACRO()

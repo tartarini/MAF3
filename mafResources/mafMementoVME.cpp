@@ -14,6 +14,7 @@
 #include "mafDataPipe.h"
 #include "mafDataSetCollection.h"
 #include "mafDataSet.h"
+#include "mafVME.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -21,12 +22,12 @@ using namespace mafResources;
 mafMementoVME::mafMementoVME(const mafString code_location) : mafMemento(code_location) {
 }
 
-mafMementoVME::mafMementoVME(const mafObject *obj, mafDataSetCollection *collection, mafDataPipe *pipe, bool binary, const mafString code_location)  : mafMemento(code_location) {
-    const QMetaObject* meta = obj->metaObject();
-    setObjectClassType(meta->className());
+mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const mafString code_location)  : mafMemento(obj, code_location) {
+    mafVME *vme = dynamic_cast<mafResources::mafVME*>((mafObject *)obj);
+    REQUIRE(vme);
 
     mafMementoPropertyList *list = mementoPropertyList();
-
+    mafDataSetCollection *collection = vme->dataSetCollection();
     if(collection) {
         const mafDataSetMap *map = collection->collectionMap();
         mafMementoPropertyItem item;
@@ -49,6 +50,8 @@ mafMementoVME::mafMementoVME(const mafObject *obj, mafDataSetCollection *collect
             ++iter;
         }
     }
+
+    mafDataPipe *pipe = vme->dataPipe();
     if(pipe) {
         mafMementoPropertyItem item;
         item.m_Multiplicity = 1;
@@ -57,10 +60,10 @@ mafMementoVME::mafMementoVME(const mafObject *obj, mafDataSetCollection *collect
         list->append(item);
 
         int i = 0;
-        int num = meta->propertyCount();
+        int num = obj->metaObject()->propertyCount();
         for ( ; i < num; ++i) {
             mafMementoPropertyItem item;
-            const QMetaProperty qmp = meta->property(i);
+            const QMetaProperty qmp = obj->metaObject()->property(i);
             mafString propName = qmp.name();
             mafVariant value = obj->property(propName.toAscii());
             item.m_Multiplicity = 1;

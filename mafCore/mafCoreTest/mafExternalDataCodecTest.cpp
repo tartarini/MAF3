@@ -45,12 +45,14 @@ testExternalDataCodecCustom::testExternalDataCodecCustom(const mafString code_lo
 }
 
 void testExternalDataCodecCustom::decode(const char *input_string, bool binary) {
+    Q_UNUSED(binary);
     REQUIRE(input_string != NULL);
     m_CodecString.clear();
     m_CodecString.append(input_string);
 }
 
 char * testExternalDataCodecCustom::encode(bool binary) {
+    Q_UNUSED(binary);
     m_CodecString.clear();
     m_CodecString.append("Coded data");
     return m_CodecString.toAscii().data();

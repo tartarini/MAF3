@@ -14,14 +14,29 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(MAF)
 
 #############################################################################################
+### MAF3 Options
+#############################################################################################
+
+OPTION(BUILD_TEST_SUITE "Build Module's Tests" ON)
+OPTION(BUILD_EXAMPLES "Build Examples" ON)
+
+#############################################################################################
 ### where to search modules
 #############################################################################################
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
+
+include(mafMacroInitProject)
+include(mafMacroInstallProject)
 
 include(mafMacroSetupQt)
 include(mafMacroWrapTargetFiles)
 include(mafMacroTargetLibraries)
 
+#-----------------------------------------------------------------------------
+# MAF3 Foundation Libraries.
+#
+include(mafMacroFoundationLibraries)
+mafMacroFoundationLibraries()
 
 #-----------------------------------------------------------------------------
 # QT

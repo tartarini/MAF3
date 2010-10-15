@@ -37,7 +37,7 @@ public:
     /// object constructor.
     mafMementoVME(const mafString code_location = "");
     /// object overloaded constructor.
-    mafMementoVME(const mafCore::mafObject *obj, mafDataSetCollection *collection, mafDataPipe *pipe, bool binary = true, const mafString code_location = "");
+    mafMementoVME(const mafCore::mafObject *obj, bool binary = true, const mafString code_location = "");
 
 private:
     friend class mafVME;
