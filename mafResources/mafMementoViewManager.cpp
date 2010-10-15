@@ -25,16 +25,12 @@ mafMementoViewManager::mafMementoViewManager(const mafObjectBase *obj, const maf
     mafMementoPropertyList *list = mementoPropertyList();
     mafMementoPropertyItem item;
 
-    int created_views = vList->count();
     item.m_Name = "mafResourceList";
     item.m_Multiplicity = 1;
-    item.m_Value = mafVariant(created_views);
+    item.m_Value = mafVariant(vList->count());
     list->append(item);
 
-    mafResource *v;
-    int r = 0;
-    for(; r < created_views; r++) {
-        v = vList->at(r);
+    foreach(mafResource *v, *vList) {
         item.m_Name = "ViewType";
         item.m_Multiplicity = 1;
         item.m_Value = mafVariant(v->metaObject()->className());
