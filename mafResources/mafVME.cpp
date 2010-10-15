@@ -100,7 +100,7 @@ mafDataSet *mafVME::outputData() {
 
 mafMemento *mafVME::createMemento() const {
     mafMemento *m = Superclass::createMemento();
-    mafMementoVME *mementoVME = new mafMementoVME(this, m_DataSetCollection, m_DataPipe, mafCodeLocation);
+    mafMementoVME *mementoVME = new mafMementoVME(this, true, mafCodeLocation);
     m->setParent(mementoVME);
 
     return mementoVME;
