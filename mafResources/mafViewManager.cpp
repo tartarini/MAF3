@@ -42,7 +42,7 @@ mafMemento *mafViewManager::createMemento() const {
     return new mafMementoViewManager(this, &m_CreatedViewList, mafCodeLocation);
 }
 
-void mafViewManager::setMemento(mafCore::mafMemento *memento, bool deep_memento) {
+void mafViewManager::setMemento(mafMemento *memento, bool deep_memento) {
     Q_UNUSED(deep_memento);
 }
 
@@ -68,6 +68,10 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.resources.view.select", this, "selectView(mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.view.selected", this, "selectedView()");
     mafRegisterLocalCallback("maf.local.resources.view.vmeShow", this, "vmeShow(mafCore::mafObjectBase *, bool)");
+
+    // Register callback to allows settings serialization.
+    mafRegisterLocalCallback("maf.local.logic.settings.store", this, "createMemento() const");
+    mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "setMemento(mafCore::mafMemento *, bool)");
 }
 
 void mafViewManager::selectView(mafCore::mafObjectBase *view) {
