@@ -39,9 +39,62 @@ public:
     /// Destroy the singleton instance. To be called at the end of the application.
     void shutdown();
 
+signals:
+    /// left button pressed.
+    void leftButtonPressVTKSignal();
+
+    /// left button released.
+    void leftButtonReleaseVTKSignal();
+
+    /// middle button pressed.
+    void middleButtonPressVTKSignal();
+
+    /// middle button released.
+    void middleButtonReleaseVTKSignal();
+
+    /// right button pressed.
+    void rightButtonPressVTKSignal();
+
+    /// right button released.
+    void rightButtonReleaseVTKSignal();
+
+    /// enter..
+    void enterVTKSignal();
+
+    /// leave..
+    void leaveVTKSignal();
+
+    /// key pressed
+    void keyPressVTKSignal();
+
+    /// key released
+    void keyReleaseVTKSignal();
+
+    /// char..
+    void charVTKSignal();
+
+    /// timer..
+    void timerVTKSignal();
+
+    /// mouse moved.
+    void mouseMoveVTKSignal();
+
+    /// mouse wheel mouved forward.
+    void mouseWheelForwardVTKSignal();
+
+    /// mouse wheel mouved backward
+    void mouseWheelBackwardVTKSignal();
+
+    /// pisck..
+    void pickVTKSignal();
+
+
 private slots:
     /// called when a new VME has been selected.
     void vmeSelected(mafVME *vme);
+
+    /// called when left mouse button is pressed.
+    void leftButtonPress();
 
 private:
     /// Object constructor.
