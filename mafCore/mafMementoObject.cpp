@@ -21,6 +21,7 @@ mafMementoObject::mafMementoObject(const mafString code_location) : mafMemento(c
 mafMementoObject::mafMementoObject(const mafObject *obj, const mafTagList *tagList, mafDictionary *dic, const mafString code_location) : mafMemento(obj, code_location) {
     mafMementoPropertyList *list = mementoPropertyList();
     int i = 0;
+    const QMetaObject *meta = obj->metaObject();
     int num = meta->propertyCount();
     for ( ; i < num; ++i) {
         mafMementoPropertyItem item;
