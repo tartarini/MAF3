@@ -55,24 +55,6 @@ void mafEventBridgeVTK::initializeEventBridge() {
     connections->Connect(m_Interactor, vtkCommand::MouseWheelForwardEvent, this, SLOT(mouseWheelForwardEvent()), 0, 1.0);
     connections->Connect(m_Interactor, vtkCommand::MouseWheelBackwardEvent, this, SLOT(mouseWheelBackwardEvent()), 0, 1.0);
     connections->Connect(m_Interactor, vtkCommand::PickEvent, this, SLOT(pickEvent()), 0, 1.0);
-
-    mafIdProvider *provider = mafIdProvider::instance();
-    provider->createNewId("maf.local.resources.VTK.interaction.leftButtonPress");
-    provider->createNewId("maf.local.resources.VTK.interaction.leftButtonRelease");
-    provider->createNewId("maf.local.resources.VTK.interaction.middleButtonPress");
-    provider->createNewId("maf.local.resources.VTK.interaction.middleButtonRelease");
-    provider->createNewId("maf.local.resources.VTK.interaction.rightButtonPress");
-    provider->createNewId("maf.local.resources.VTK.interaction.rightButtonRelease");
-    provider->createNewId("maf.local.resources.VTK.interaction.enter");
-    provider->createNewId("maf.local.resources.VTK.interaction.leave");
-    provider->createNewId("maf.local.resources.VTK.interaction.keyPress");
-    provider->createNewId("maf.local.resources.VTK.interaction.keyRelease");
-    provider->createNewId("maf.local.resources.VTK.interaction.char");
-    provider->createNewId("maf.local.resources.VTK.interaction.timer");
-    provider->createNewId("maf.local.resources.VTK.interaction.mouseMove");
-    provider->createNewId("maf.local.resources.VTK.interaction.mouseWheelForward");
-    provider->createNewId("maf.local.resources.VTK.interaction.mouseWheelBackward");
-    provider->createNewId("maf.local.resources.VTK.interaction.pick");
 }
 
 void mafEventBridgeVTK::leftButtonPressEvent() {
