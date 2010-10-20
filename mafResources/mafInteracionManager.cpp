@@ -42,8 +42,7 @@ void mafInteracionManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.interaction.leave", this, "leaveSignal()");
     mafRegisterLocalSignal("maf.local.resources.interaction.keyPress", this, "keyPressSignal()");
     mafRegisterLocalSignal("maf.local.resources.interaction.keyRelease", this, "keyReleaseSignal()");
-    mafRegisterLocalSignal("maf.local.resources.interaction.char", this, "charSignal()");
-    mafRegisterLocalSignal("maf.local.resources.interaction.timer", this, "timerSignal()");
+    mafRegisterLocalSignal("maf.local.resources.interaction.keyChar", this, "charSignal()");
     mafRegisterLocalSignal("maf.local.resources.interaction.mouseMove", this, "mouseMoveSignal()");
     mafRegisterLocalSignal("maf.local.resources.interaction.mouseWheelForward", this, "mouseWheelForwardSignal()");
     mafRegisterLocalSignal("maf.local.resources.interaction.mouseWheelBackward", this, "mouseWheelBackwardSignal()");
@@ -60,8 +59,7 @@ void mafInteracionManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.resources.interaction.leave", this, "leave()");
     mafRegisterLocalCallback("maf.local.resources.interaction.keyPress", this, "keyPress()");
     mafRegisterLocalCallback("maf.local.resources.interaction.keyRelease", this, "keyRelease()");
-    mafRegisterLocalCallback("maf.local.resources.interaction.char", this, "char()");
-    mafRegisterLocalCallback("maf.local.resources.interaction.timer", this, "timer()");
+    mafRegisterLocalCallback("maf.local.resources.interaction.keyChar", this, "keyChar()");
     mafRegisterLocalCallback("maf.local.resources.interaction.mouseMove", this, "mouseMove()");
     mafRegisterLocalCallback("maf.local.resources.interaction.mouseWheelForward", this, "mouseWheelForward()");
     mafRegisterLocalCallback("maf.local.resources.interaction.mouseWheelBackward", this, "mouseWheelBackward()");
@@ -103,10 +101,7 @@ void mafInteracionManager::keyPress() {
 void mafInteracionManager::keyRelease() {
 }
 
-void mafInteracionManager::char() {
-}
-
-void mafInteracionManager::timer() {
+void mafInteracionManager::keyChar() {
 }
 
 void mafInteracionManager::mouseMove() {

@@ -73,9 +73,6 @@ signals:
     /// char..
     void charSignal();
 
-    /// timer..
-    void timerSignal();
-
     /// mouse moved.
     void mouseMoveSignal();
 
@@ -124,10 +121,7 @@ private slots:
     void keyRelease();
 
     /// called when left mouse button is pressed.
-    void char();
-
-    /// called when left mouse button is pressed.
-    void timer();
+    void keyChar();
 
     /// called when left mouse button is pressed.
     void mouseMove();
