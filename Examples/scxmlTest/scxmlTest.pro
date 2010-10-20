@@ -18,20 +18,20 @@ CONFIG(debug, debug|release) {
     win32:LIB_EXT = _d
     BUILD_DIR = Debug
 }
-TARGET = $$join(TARGET,,,$$LIB_EXT)
+
 win32 { 
-    INSTALLBASE = ..\..\Install
+    INSTALLBASE = ..\..\..\Install
     DESTDIR = $$INSTALLBASE\bin\\$$BUILD_DIR
     DEPENDPATH += $$INSTALLBASE\bin\\$$BUILD_DIR
 }
 unix { 
-    INSTALLBASE = $$PWD/../../Install
+    INSTALLBASE = ../../../Install
     DESTDIR = $$INSTALLBASE/bin/$$BUILD_DIR
     DEPENDPATH += $$INSTALLBASE/bin/$$BUILD_DIR
 }
 
+
 INCLUDEPATH += ../../mafCore
-include(../../mafImportUtility.pri)
 include(../../mafImportQScxml.pri)
 
 win32:system(copy testWorkflow.scxml $$DESTDIR)
