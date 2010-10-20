@@ -41,52 +41,52 @@ public:
 
 signals:
     /// left button pressed.
-    void leftButtonPressVTKSignal();
+    void leftButtonPressSignal();
 
     /// left button released.
-    void leftButtonReleaseVTKSignal();
+    void leftButtonReleaseSignal();
 
     /// middle button pressed.
-    void middleButtonPressVTKSignal();
+    void middleButtonPressSignal();
 
     /// middle button released.
-    void middleButtonReleaseVTKSignal();
+    void middleButtonReleaseSignal();
 
     /// right button pressed.
-    void rightButtonPressVTKSignal();
+    void rightButtonPressSignal();
 
     /// right button released.
-    void rightButtonReleaseVTKSignal();
+    void rightButtonReleaseSignal();
 
     /// enter..
-    void enterVTKSignal();
+    void enterSignal();
 
     /// leave..
-    void leaveVTKSignal();
+    void leaveSignal();
 
     /// key pressed
-    void keyPressVTKSignal();
+    void keyPressSignal();
 
     /// key released
-    void keyReleaseVTKSignal();
+    void keyReleaseSignal();
 
     /// char..
-    void charVTKSignal();
+    void charSignal();
 
     /// timer..
-    void timerVTKSignal();
+    void timerSignal();
 
     /// mouse moved.
-    void mouseMoveVTKSignal();
+    void mouseMoveSignal();
 
     /// mouse wheel mouved forward.
-    void mouseWheelForwardVTKSignal();
+    void mouseWheelForwardSignal();
 
     /// mouse wheel mouved backward
-    void mouseWheelBackwardVTKSignal();
+    void mouseWheelBackwardSignal();
 
-    /// pisck..
-    void pickVTKSignal();
+    /// pick..
+    void pickSignal();
 
 
 private slots:
@@ -95,6 +95,52 @@ private slots:
 
     /// called when left mouse button is pressed.
     void leftButtonPress();
+
+    /// called when left mouse button is released.
+    void leftButtonRelease();
+
+    /// called when middle mouse button is pressed.
+    void middleButtonPress();
+
+    /// called when middle mouse button is relesed.
+    void middleButtonRelease();
+
+    /// called when right mouse button is pressed.
+    void rightButtonPress();
+
+    /// called when right mouse button is released.
+    void rightButtonRelease();
+
+    /// called when left mouse button is pressed.
+    void enter();
+
+    /// called when left mouse button is pressed.
+    void leave();
+
+    /// called when left mouse button is pressed.
+    void keyPress();
+
+    /// called when left mouse button is pressed.
+    void keyRelease();
+
+    /// called when left mouse button is pressed.
+    void char();
+
+    /// called when left mouse button is pressed.
+    void timer();
+
+    /// called when left mouse button is pressed.
+    void mouseMove();
+
+    /// called when left mouse button is pressed.
+    void mouseWheelForward();
+
+    /// called when left mouse button is pressed.
+    void mouseWheelBackward();
+
+    /// called when left mouse button is pressed.
+    void pick();
+
 
 private:
     /// Object constructor.

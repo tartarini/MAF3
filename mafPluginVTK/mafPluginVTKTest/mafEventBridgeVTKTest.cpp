@@ -41,24 +41,34 @@ public:
 
 
 public slots:
-    /// observer needed to receive the 'maf.local.resources.VTK.interaction.leftButtonPress' signal
+    /// observer needed to receive the 'maf.local.resources.interaction.leftButtonPress' signal
     void leftButtonPress();
 
+    void mouseMove();
 
 signals:
     /// left button pressed.
     void leftButtonPressSignal();
 
+    void mouseMoveSignal();
+
 };
 
 testInteractionManagerCustom::testInteractionManagerCustom(QString code_location) : mafObjectBase(code_location) {
-    mafRegisterLocalSignal("maf.local.resources.VTK.interaction.leftButtonPress", this, "leftButtonPressSignal()");
-    mafRegisterLocalCallback("maf.local.resources.VTK.interaction.leftButtonPress", this, "leftButtonPress()");
+    mafRegisterLocalSignal("maf.local.resources.interaction.leftButtonPress", this, "leftButtonPressSignal()");
+    mafRegisterLocalCallback("maf.local.resources.interaction.leftButtonPress", this, "leftButtonPress()");
+
+    mafRegisterLocalSignal("maf.local.resources.interaction.mouseMove", this, "mouseMoveSignal()");
+    mafRegisterLocalCallback("maf.local.resources.interaction.mouseMove", this, "mouseMove()");
     m_Counter = 0;
 
 }
 
 void testInteractionManagerCustom::leftButtonPress() {
+    m_Counter++;
+}
+
+void testInteractionManagerCustom::mouseMove() {
     m_Counter++;
 }
 
@@ -120,7 +130,10 @@ void mafEventBridgeVTKTest::mafEventBridgeVTKConnectionTest() {
 
     m_EventBridge->setInteractor(iren);
     //Send some interaction events by VTK
+    iren->Initialize();
     iren->InvokeEvent(vtkCommand::LeftButtonPressEvent, NULL);
+    iren->Enable();
+    iren->InvokeEvent(vtkCommand::MouseMoveEvent, NULL);
 
     //Check if events has been captured by testInteractionManagerCustom
     QVERIFY(m_CustomManager->m_Counter == 1);
