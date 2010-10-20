@@ -72,9 +72,6 @@ public slots:
     void charEvent();
 
     /// Emit signal on VTKCommand event
-    void timerEvent();
-
-    /// Emit signal on VTKCommand event
     void mouseMoveEvent();
 
     /// Emit signal on VTKCommand event
