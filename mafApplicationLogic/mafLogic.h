@@ -14,6 +14,7 @@
 
 // Includes list
 #include "mafLogicLight.h"
+#include <mafMemento.h>
 
 namespace mafApplicationLogic {
 
@@ -61,10 +62,10 @@ signals:
     void settingsVmeManagerStore();
 
     /// Signal used to ask the view managers to restore their settings.
-    void settingsViewManagerRestore();
+    void settingsViewManagerRestore(mafCore::mafMemento *memento, bool deep);
 
     /// Signal used to ask the vme managers to restore their settings.
-    void settingsVmeManagerRestore();
+    void settingsVmeManagerRestore(mafCore::mafMemento *memento, bool deep);
 
 private:
     /// Allow to load plugins located into the 'plugins' folder located into the application's directory path.
