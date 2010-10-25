@@ -24,7 +24,8 @@ mafNetworkConnectorQXMLRPC::mafNetworkConnectorQXMLRPC() : mafNetworkConnector()
     //and parameters mafList<mafVariant>
 
     m_Protocol = "XMLRPC";
-    mafRegisterRemoteSignal("REMOTE_COMMUNICATION_XMLRPC", NULL, "remoteCommunication()");
+
+    mafRegisterRemoteSignal("maf.remote.eventBus.comunication.xmlrpc", NULL, "remoteCommunication()");
 }
 
 mafNetworkConnectorQXMLRPC::~mafNetworkConnectorQXMLRPC() {
@@ -44,11 +45,12 @@ mafNetworkConnector *mafNetworkConnectorQXMLRPC::clone() {
 }
 
 void mafNetworkConnectorQXMLRPC::createClient(const mafString hostName, const unsigned int port) {
+    bool result(false);
     if(m_Client == NULL) {
         m_Client = new xmlrpc::Client(NULL);
-        connect( m_Client, SIGNAL(done( int, QVariant )),
+        result = connect( m_Client, SIGNAL(done( int, QVariant )),
                  this, SLOT(processReturnValue( int, QVariant )) );
-        connect( m_Client, SIGNAL(failed( int, int, QString )),
+        result = connect( m_Client, SIGNAL(failed( int, int, QString )),
                  this, SLOT(processFault( int, int, QString )) );
     }
     m_Client->setHost( hostName, port );
@@ -78,10 +80,10 @@ void mafNetworkConnectorQXMLRPC::createServer(const unsigned int port) {
     parametersForRegisterteredFunction.append(mafVariant::List); //parameters to send, event control parameters
     parametersForRegisterteredFunction.append(mafVariant::List); //parameters to send, data parameters
 
-    //registration of the method REMOTE_COMMUNICATION_XMLRPC at XMLRPC level
+    //registration of the method maf.remote.eventBus.comunication.xmlrpc at XMLRPC level
     // the connect uses function name ad signature defined by parametersForRegisterteredFunction
     mafRegisterMethodsMap methodsMapping;
-    methodsMapping.insert("REMOTE_COMMUNICATION_XMLRPC", parametersForRegisterteredFunction);
+    methodsMapping.insert("maf.remote.eventBus.comunication.xmlrpc", parametersForRegisterteredFunction);
     registerServerMethod(methodsMapping);
 
     //if a user qant to register another method, it is important to know that mafEventDispatcherRemote allows

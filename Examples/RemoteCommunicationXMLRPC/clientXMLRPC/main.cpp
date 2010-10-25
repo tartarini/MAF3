@@ -27,13 +27,13 @@ int main(int argc, char *argv[]) {
 
     //event dictionary
     mafEventBus::mafEvent event_dictionary;
-    event_dictionary[TOPIC] = "REMOTE_COMMUNICATION_XMLRPC";
+    event_dictionary[TOPIC] = "maf.remote.eventBus.comunication.xmlrpc";
     event_dictionary[TYPE] = mafEventBus::mafEventTypeRemote;
 
     //remote event parameters
     mafEventBus::mafEventArgumentsList listToSend;
     mafList<mafVariant> eventParameters;
-    eventParameters.append("RESOURCES_OPERATION_EXECUTE_WITH_PARAMETERS");
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
     listToSend.append(Q_ARG(mafList<mafVariant>, eventParameters));
 
     //remote data parameters (need to send for operation < nameOfOperation , List of mafVariant arguments >
