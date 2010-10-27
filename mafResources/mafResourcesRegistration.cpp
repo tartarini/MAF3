@@ -15,7 +15,7 @@
 #include "mafVMEManager.h"
 #include "mafOperationManager.h"
 #include "mafPluginManager.h"
-#include "mafInteracionManager.h"
+#include "mafInteractionManager.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -62,6 +62,6 @@ void mafResources::initializeModule() {
     mafResources::mafViewManager::instance();
     mafResources::mafOperationManager::instance();
     mafResources::mafPluginManager::instance();
-    mafResources::mafInteracionManager::instance();
+    mafResources::mafInteractionManager::instance();
 }
 
