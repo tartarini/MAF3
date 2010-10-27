@@ -52,9 +52,9 @@ void mafVisualPipeVTKSurface::createPipe() {
 void mafVisualPipeVTKSurface::updatePipe(double t) {
     Q_UNUSED(t);
 
-    mafDataSetList *inputList = this->inputList();
+    mafVMEList *inputList = this->inputList();
 
-    mafDataSet *inputDataSet = inputList->at(0);
+    mafDataSet *inputDataSet = inputList->at(0)->dataSetCollection()->itemAtCurrentTime();
     if(inputDataSet == NULL) {
         return;
     }

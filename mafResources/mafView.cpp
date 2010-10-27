@@ -87,7 +87,7 @@ void mafView::showVME(mafVME *vme, bool show, const mafString visualPipeType) {
         mafDEL(v);
         if (node != NULL && show) {
             node->setVisualPipe(vp);
-            node->visualPipe()->setInput(vme->outputData());
+            node->visualPipe()->setInput(vme);
             node->visualPipe()->createPipe();
             node->visualPipe()->updatePipe();
         }

@@ -12,6 +12,8 @@
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafDataPipe.h>
+#include <mafResourcesRegistration.h>
+#include <mafVME.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -87,6 +89,8 @@ private slots:
     /// Test the data pipe decoration mechanism.
     void decorateTest();
 
+    void addRemoveInput();
+
 private:
     testDataPipeCustom *m_DataPipe; ///< Test var.
 };
@@ -117,6 +121,50 @@ void mafDataPipeTest::decorateTest() {
     m_DataPipe->updatePipe(1);
     QCOMPARE(dpDecorator->pipeline(), res);
     mafDEL(dpDecorator);
+}
+
+void mafDataPipeTest::addRemoveInput() {
+    int num = 0;
+
+    mafDataSet *data1 = mafNEW(mafResources::mafDataSet);
+    mafDataSet *data2 = mafNEW(mafResources::mafDataSet);
+
+    mafVME *vme1 = mafNEW(mafResources::mafVME);
+    vme1->dataSetCollection()->insertItem(data1);
+
+    mafVME *vme2 = mafNEW(mafResources::mafVME);
+    vme2->dataSetCollection()->insertItem(data2);
+
+    m_DataPipe->createPipe();
+
+    // Check if vme1 has been added.
+    m_DataPipe->addInput(vme1);
+    num = m_DataPipe->inputList()->length();
+    QVERIFY(num == 1);
+
+    // Check if vme2 has been added.
+    m_DataPipe->addInput(vme2);
+    num = m_DataPipe->inputList()->length();
+    QVERIFY(num == 2);
+
+    // Check if vme1 has been removed.
+    m_DataPipe->removeInput(0);
+    num = m_DataPipe->inputList()->length();
+    QVERIFY(num == 1);
+
+    // Get the vme2
+    mafVME *vme = m_DataPipe->inputList()->at(0);
+    QCOMPARE(vme, vme2);
+
+    // Delete VMEs: they will removed from inputList
+    mafDEL(data1);
+    mafDEL(data2);
+    mafDEL(vme1);
+    mafDEL(vme2);
+
+    num = m_DataPipe->inputList()->length();
+    QVERIFY(num == 0);
+
 }
 
 MAF_REGISTER_TEST(mafDataPipeTest);

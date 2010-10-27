@@ -40,6 +40,17 @@ public:
     /// Get output of the pipe.
     mafCore::mafContainerInterface *output();
 
+signals:
+    void vmePickSignal(double *pickPos, mafCore::mafContainerInterface *actor);
+
+
+private slots:
+    void vmePick(double *pickPos, mafCore::mafContainerInterface *actor);
+
+private:
+    void initializeConnections();
+
+
 protected:
     mafCore::mafContainerInterface *m_Output; ///< Output for visual pipe.
 };

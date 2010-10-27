@@ -101,15 +101,17 @@ private slots:
         m_PolyData.setDestructionFunction(&vtkPolyData::Delete);
 
         //// and give it to the mafDataSet.
-        m_DataSet = mafNEW(mafResources::mafDataSet);
-        m_DataSet->setDataValue(&m_PolyData);
+        m_VME = mafNEW(mafResources::mafVME);
+        mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
+        dataSet->setDataValue(&m_PolyData);
+        m_VME->dataSetCollection()->insertItem(dataSet);
         //! </snippet>
 
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        mafDEL(m_DataSet);
+        mafDEL(m_VME);
         mafEventBusManager::instance()->shutdown();
     }
 
@@ -120,7 +122,7 @@ private slots:
     void updatePipeTestFromPlugIn();
 
 private:
-    mafDataSet *m_DataSet; ///< Contain the only item vtkPolydata representing a surface.
+    mafVME *m_VME; ///< Contain the only item vtkPolydata representing a surface.
     mafContainer<vtkPolyData> m_PolyData; ///< Container of the vtkPolyData
 };
 
@@ -129,7 +131,7 @@ void mafVisualPipeVTKSurfaceTest::updatePipeTest() {
 
     mafVisualPipeVTKSurface *pipe;
     pipe = mafNEW(mafPluginVTK::mafVisualPipeVTKSurface);
-    pipe->setInput(m_DataSet);
+    pipe->setInput(m_VME);
     pipe->setProperty("scalarVisibility", 0);
     pipe->setProperty("immediateRendering", 1);
     pipe->createPipe();
@@ -188,7 +190,7 @@ void mafVisualPipeVTKSurfaceTest::updatePipeTestFromPlugIn() {
 
 
     mafStringList binding_class_list;
-    binding_class_list = mafResourcesRegistration::acceptObject(m_DataSet);
+    binding_class_list = mafResourcesRegistration::acceptObject(m_VME->dataSetCollection()->itemAtCurrentTime());
     int num = binding_class_list.count();
     QVERIFY(num == 1);
 
@@ -197,9 +199,8 @@ void mafVisualPipeVTKSurfaceTest::updatePipeTestFromPlugIn() {
 
     //! <snippet>
     mafVisualPipe *visualPipe = (mafVisualPipe *)mafNEWFromString(visualPipeType);
-
     visualPipe->setProperty("scalarVisibility", 1);
-    visualPipe->setInput(m_DataSet);
+    visualPipe->setInput(m_VME);
     visualPipe->createPipe();
     visualPipe->updatePipe();
     //! </snippet>

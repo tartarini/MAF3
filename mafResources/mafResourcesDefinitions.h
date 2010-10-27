@@ -24,6 +24,7 @@
 #include <mafCoreSingletons.h>
 #include <mafObject.h>
 
+
 // vnl includes
 #include <vnl/vnl_double_4x4.h>
 #include <vnl/vnl_vector_fixed.h>
@@ -36,6 +37,7 @@ namespace mafResources {
 class mafDataSet;
 class mafDataSetCollection;
 class mafResource;
+class mafVME;
 
 /// Type definition for MAF3 pose matrix.
 typedef vnl_double_4x4 mafPoseMatrix;
@@ -47,7 +49,10 @@ typedef mafList<mafResource *> mafResourceList;
 typedef mafMap<double, mafDataSet *> mafDataSetMap;
 
 /// List of dataset used as input list for mafPipe.
-typedef mafList<mafDataSet *> mafDataSetList;
+typedef mafList<mafDataSet *> mafDataSetList; //to be removed?
+
+/// List of VME used as input list for mafPipe.
+typedef mafList<mafVME *> mafVMEList;
 
 /** Structure representing the information about a plug-in library.*/
 struct MAFRESOURCESSHARED_EXPORT mafPluginInfo {

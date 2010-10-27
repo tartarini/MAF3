@@ -37,17 +37,29 @@ public:
     /// Object destructor.
     /* virtual */ ~mafDataPipe();
 
+    /// Append a new VME to the input list.
+    /** This method allows to add a VME to the input list. It returns the index of the last VME added.*/
+    int addInput(mafVME *vme);
+
     /// Allow to add mafDataPipe to extend the elaboration following the pattern decorator.
     /** This method allows to compose data pipes funcionalities according to the decorator pattern and
     return the pointer to the decorator pipe, so you can add another decorator pipe in cascade.*/
     mafDataPipe *decorateWithDataPipe(mafDataPipe *pipe);
 
+    /// Set to false, to create a new mafVME as output of the dataPipe
+    void setWorksInPlace(bool inPlace);
+
     /// Get output of the pipe.
-    mafDataSet *output();
+    mafVME *output();
+
+private slots:
+    /// Method called when an input mafVME has been destroyed (by someone else).
+    void inputDestroyed();
 
 protected:
     mafDataPipe *m_DecoratorPipe; ///< Pointer to the decorator data pipe class.
-    mafDataSet *m_Output; ///< Output Data.
+    mafVME *m_Output; ///< Output Data.
+    bool m_InPlace; ///< If false, dataPipe creates a new mafVME as output.
 };
 
 
@@ -60,7 +72,11 @@ inline mafDataPipe *mafDataPipe::decorateWithDataPipe(mafDataPipe *pipe) {
     return m_DecoratorPipe;
 }
 
-inline mafDataSet *mafDataPipe::output() {
+inline void mafDataPipe::setWorksInPlace(bool inPlace) {
+    m_InPlace = inPlace;
+}
+
+inline mafVME *mafDataPipe::output() {
     return m_Output;
 }
 

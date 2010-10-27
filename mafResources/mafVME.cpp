@@ -93,7 +93,7 @@ void mafVME::execute() {
 
 mafDataSet *mafVME::outputData() {
     if(m_DataPipe != NULL) {
-        return m_DataPipe->output();
+        return m_DataPipe->output()->dataSetCollection()->itemAtCurrentTime();
     }
     return m_DataSetCollection->itemAtCurrentTime();
 }

@@ -13,6 +13,7 @@
 #include <mafCoreSingletons.h>
 #include <mafResourcesRegistration.h>
 #include <mafPipe.h>
+#include <mafVME.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -107,55 +108,46 @@ void mafPipeTest::inputManagementTest() {
     mafDataSet *data1 = mafNEW(mafResources::mafDataSet);
     mafDataSet *data2 = mafNEW(mafResources::mafDataSet);
 
-    // try to set a 'bad' input number...
-    int idx = m_Pipe->setInput(data1, 50);
-    QVERIFY(idx == 0);
+    mafVME *vme1 = mafNEW(mafResources::mafVME);
+    vme1->dataSetCollection()->insertItem(data1);
+
+    mafVME *vme2 = mafNEW(mafResources::mafVME);
+    vme2->dataSetCollection()->insertItem(data2);
+
+    m_Pipe->setInput(vme1);
 
     int num = m_Pipe->inputList()->length();
     QVERIFY(num == 1);
 
-    // add another input
-    idx = m_Pipe->addInput(data2);
-    QVERIFY(idx == 1);
-    num = m_Pipe->inputList()->length();
-    QVERIFY(num == 2);
+    // Get the vme1
+    // Check if vme has been added
+    mafVME *vme = m_Pipe->inputList()->at(0);
+    QCOMPARE(vme, vme1);
 
     // remove the item at index 0
-    m_Pipe->removeInput(data1);
-    num = m_Pipe->inputList()->length();
-    QVERIFY(num == 1);
-
-    // Get the item at index 0
-    // After that the old item at index 0 has been removed,
-    // the item next to it should be moved at the index 0.
-    mafDataSet *data = m_Pipe->inputList()->at(0);
-    QCOMPARE(data, data2);
-
-    // substitute the data2 with the data1 at index 0
-    idx = m_Pipe->setInput(data1, 0);
-    QVERIFY(idx == 0);
-
-    // re-add the data1; will take the index 0 because it is already present.
-    idx = m_Pipe->addInput(data1);
-    QVERIFY(idx == 0);
-
-    // remove all the items
-    m_Pipe->removeInput(data1);
+    m_Pipe->removeInput(vme1);
     num = m_Pipe->inputList()->length();
     QVERIFY(num == 0);
 
-    // Create a collection
-    mafDataSetCollection collection;
-    collection.insertItem(data1, 0.0);
-    collection.insertItem(data2, 1.0);
-    idx = m_Pipe->addInputMulti(&collection);
+    m_Pipe->setInput(vme1);
+    // substitute the vme1 with the vme2
+    m_Pipe->setInput(vme2);
 
-    // The index returned is associated to the last data added.
-    QVERIFY(idx == 1);
+    // Get the vme2
+    // Check if vme has been added.
+    vme = m_Pipe->inputList()->at(0);
+    QCOMPARE(vme, vme2);
 
-    // destroy the data => will be removed also from the input list of the pipe.
+    // try to remove a vme not present in the list
+    m_Pipe->removeInput(vme1);
+    num = m_Pipe->inputList()->length();
+    QVERIFY(num == 1);
+
+    // destroy the VME => will be removed also from the input list of the pipe.
     mafDEL(data1);
     mafDEL(data2);
+    mafDEL(vme1);
+    mafDEL(vme2);
 
     // now the input list should be empty.
     num = m_Pipe->inputList()->length();
