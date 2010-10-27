@@ -13,7 +13,7 @@
 #define MAFGUIMANAGER_H
 
 // Includes list
-#include "mafGUI_global.h"
+#include "mafGUIDefinitions.h"
 #include <mafObjectBase.h>
 
 #include <QtGui>
@@ -43,13 +43,13 @@ public:
     /* virtual */ ~mafGUIManager();
 
     /// Create the actions associated with the menu items.
-    virtual void createActions();
+    virtual void createActions(QMainWindow *win);
 
     /// Create the menu for the vertical application.
-    virtual void createMenus();
+    virtual void createMenus(QMainWindow *win);
 
-    /// Create the toolbar for the vertical application.
-    virtual void createToolBars();
+    /// Create the toolbar for the vertical application and add them to the main window.
+    virtual void createToolBars(QMainWindow *win);
 
     /// Return the 'file' menu item created into the createMenus method.
     QMenu *fileMenu() const;
@@ -67,28 +67,27 @@ public:
     QMenu *helpMenu() const;
 
 private:
-    QMenu *m_FileMenu;
-    QMenu *m_EditMenu;
-    QMenu *m_ViewMenu;
-    QMenu *m_OpMenu;
-    QMenu *m_HelpMenu;
+    QMenu *m_FileMenu; ///< Reference to the 'File' menu.
+    QMenu *m_EditMenu; ///< Reference to the 'Edit' menu.
+    QMenu *m_ViewMenu; ///< Reference to the 'View' menu.
+    QMenu *m_OpMenu;   ///< Reference to the 'Operation' menu.
+    QMenu *m_HelpMenu; ///< Reference to the 'Help' menu.
 
-    QToolBar *m_FileToolBar;
-    QToolBar *m_EditToolBar;
+    QToolBar *m_FileToolBar; ///<
+    QToolBar *m_EditToolBar; ///<
 
-    QAction *m_NewAct;
-    QAction *m_CollaborateAct;
-    QAction *m_OpenAct;
-    QAction *m_SaveAct;
-    QAction *m_SaveAsAct;
-    QAction *m_ExitAct;
+    QAction *m_NewAct; ///< Reference to the action associated to the 'New' Item creation.
+    QAction *m_CollaborateAct; ///< Reference to the action associated to the 'Collaboration' chat Item.
+    QAction *m_OpenAct; ///< Reference to the action associated to the 'Open' existing data.
+    QAction *m_SaveAct; ///< Reference to the action associated to the 'Save' Items in a persistent way.
+    QAction *m_SaveAsAct; ///< Reference to the action associated to the 'Save As' Items in a persistent way by assigning a name.
+    QAction *m_ExitAct; ///< Reference to the action associated to the 'Exit'.
 
-    QAction *m_CutAct;
-    QAction *m_CopyAct;
-    QAction *m_PasteAct;
+    QAction *m_CutAct;  ///< Reference to the action associated to the 'Cut' of Items from actual loaded data.
+    QAction *m_CopyAct; ///< Reference to the action associated to the 'Copy' of Items from actual loaded data.
+    QAction *m_PasteAct; ///< Reference to the action associated to the 'Paste' of Items into actual loaded data.
 
-    QAction *m_AboutAct;
-
+    QAction *m_AboutAct; ///< Reference to the action associated to the 'About' informative dialog.
 };
 
 /////////////////////////////////////////////////////////////
