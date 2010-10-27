@@ -1,16 +1,20 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-09-21T13:47:18
 # -------------------------------------------------
+QT += webkit \
+    network
 TARGET = SimpleApp
 TEMPLATE = app
 CONFIG -= app_bundle
 SOURCES += main.cpp \
     mafMainWindow.cpp \
-    mafMementoApplication.cpp
+    mafMementoApplication.cpp \
+    googlechat.cpp
 HEADERS += mafMainWindow.h \
     mafMementoApplication.h \
-    mafGUIRegistration.h
-FORMS += mafMainWindow.ui
+    googlechat.h
+FORMS += mafMainWindow.ui \
+    form.ui
 BUILD_DIR = Release
 CONFIG(debug, debug|release) { 
     unix:LIB_EXT = _debug
@@ -27,13 +31,15 @@ unix {
     DESTDIR = $$INSTALLBASE/bin/$$BUILD_DIR
     DEPENDPATH += $$INSTALLBASE/bin/$$BUILD_DIR
 }
-INCLUDEPATH += ../../mafCore
-INCLUDEPATH += ../../mafEventBus
-INCLUDEPATH += ../../mafApplicationLogic
+INCLUDEPATH += ../../mafCore \
+    ../../mafEventBus \
+    ../../mafApplicationLogic \
+    ../../mafGUI
 LIBS += -L$$DESTDIR \
-    -lmafCore$$LIB_EXT
-LIBS += -lmafEventBus$$LIB_EXT
-LIBS += -lmafApplicationLogic$$LIB_EXT
+    -lmafCore$$LIB_EXT \
+    -lmafEventBus$$LIB_EXT \
+    -lmafApplicationLogic$$LIB_EXT \
+    -lmafGUI$$LIB_EXT
 RESOURCES += mafAppImages.qrc
 QMAKE_CLEAN += ./MakeFile
 include(../../mafImportVTK.pri)
