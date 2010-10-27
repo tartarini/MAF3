@@ -7,7 +7,7 @@ TEMPLATE = lib
 CONFIG += create_prl
 win32:CONFIG += dll
 DEFINES += mafCore_EXPORTS
-message($$DEFINES)
+
 HEADERS += mafCore_global.h \
     mafObjectBase.h \
     mafIdProvider.h \
