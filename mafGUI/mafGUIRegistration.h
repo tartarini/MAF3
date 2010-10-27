@@ -12,7 +12,6 @@
 #ifndef MAFGUIREGISTRATION_H
 #define MAFGUIREGISTRATION_H
 
-#include <mafCoreDefinitions.h>
 #include "mafGUIManager.h"
 
 namespace mafGUI {
