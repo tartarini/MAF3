@@ -15,6 +15,7 @@
 #include <mafDataPipeImageThreshold.h>
 #include <mafResourcesRegistration.h>
 #include <mafContainer.h>
+#include <mafVME.h>
 
 #include <vtkImageData.h>
 #include <vtkImageCanvasSource2D.h>
@@ -58,15 +59,17 @@ private slots:
 
         // and give it to the mafDataSet.
         //! <snippet>
-        m_DataSet = mafNEW(mafResources::mafDataSet);
-        m_DataSet->setDataValue(&m_ImageData);
+        m_VME = mafNEW(mafResources::mafVME);
+        mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
+        dataSet->setDataValue(&m_ImageData);
+        m_VME->dataSetCollection()->insertItem(dataSet);
         //! </snippet>
 
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        mafDEL(m_DataSet);
+        mafDEL(m_VME);
         mafEventBusManager::instance()->shutdown();
     }
 
@@ -74,7 +77,7 @@ private slots:
     void updatePipeTest();
 
 private:
-    mafDataSet *m_DataSet; ///< Contain the only item vtkImageData representing the test image.
+    mafVME *m_VME; ///< Contain the only item vtkImageData representing the test image.
     mafContainer<vtkImageData> m_ImageData; ///< Container of the vtkImageData
     vtkSmartPointer<vtkImageCanvasSource2D> m_ImageCanvas; ///< Image source.
 };
@@ -82,13 +85,13 @@ private:
 void mafDataPipeImageThresholdTest::updatePipeTest() {
     mafDataPipeImageThreshold *datapipe = mafNEW(mafPluginVTK::mafDataPipeImageThreshold);
     datapipe->createPipe();
-    datapipe->setInput(m_DataSet);
+    datapipe->setInput(m_VME);
     datapipe->updatePipe();
 
-    mafDataSet *output = datapipe->output();
+    mafVME *output = datapipe->output();
     QVERIFY(output != NULL);
 
-    mafContainer<vtkImageData> *image = mafContainerPointerTypeCast(vtkImageData, output->dataValue());
+    mafContainer<vtkImageData> *image = mafContainerPointerTypeCast(vtkImageData, output->dataSetCollection()->itemAtCurrentTime()->dataValue());
     mafString dt(image->externalDataType());
     mafString res("vtkImageData");
 
