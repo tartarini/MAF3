@@ -10,7 +10,6 @@
  */
 
 #include "mafGUIRegistration.h"
-#include <mafObjectFactory.h>
 
 using namespace mafGUI;
 
