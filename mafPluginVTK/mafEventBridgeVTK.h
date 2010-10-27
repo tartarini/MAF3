@@ -35,6 +35,9 @@ public:
     /// Set vtkInteractor
     void setInteractor(vtkRenderWindowInteractor *inter);
 
+    /// Check if VME has been picked
+    bool vmePickCheck();
+
 
 
 public slots:

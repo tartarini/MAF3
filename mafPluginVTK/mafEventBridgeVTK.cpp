@@ -19,7 +19,7 @@
 #include <mafContainer.h>
 #include <mafContainerInterface.h>
 
-
+#include <vtkSmartPointer.h>
 #include <vtkCellPicker.h>
 #include <vtkRendererCollection.h>
 #include <vtkRenderWindow.h>
@@ -64,17 +64,108 @@ void mafEventBridgeVTK::initializeEventBridge() {
     connections->Connect(m_Interactor, vtkCommand::PickEvent, this, SLOT(pickEvent()), 0, 1.0);
 }
 
+
+
 void mafEventBridgeVTK::leftButtonPressEvent() {
+    bool pick = vmePickCheck();
+    mafEventArgumentsList argList;
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.leftButtonPress", mafEventTypeLocal, &argList);
+}
+
+void mafEventBridgeVTK::leftButtonReleaseEvent() {
+    bool pick = vmePickCheck();
+    mafEventArgumentsList argList;
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.leftButtonRelease", mafEventTypeLocal, &argList);
+}
+
+void mafEventBridgeVTK::middleButtonPressEvent() {
+    bool pick = vmePickCheck();
+    mafEventArgumentsList argList;
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.middleButtonPress", mafEventTypeLocal, &argList);
+}
+
+void mafEventBridgeVTK::middleButtonReleaseEvent() {
+    bool pick = vmePickCheck();
+    mafEventArgumentsList argList;
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.middleButtonRelease", mafEventTypeLocal, &argList);
+}
+
+void mafEventBridgeVTK::rightButtonPressEvent() {
+    bool pick = vmePickCheck();
+    mafEventArgumentsList argList;
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.rightButtonPress", mafEventTypeLocal, &argList);
+}
+
+void mafEventBridgeVTK::rightButtonReleaseEvent() {
+    bool pick = vmePickCheck();
+    mafEventArgumentsList argList;
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.rightButtonRelease", mafEventTypeLocal, &argList);
+}
+
+void mafEventBridgeVTK::enterEvent() {
+    bool pick = vmePickCheck();
+    mafEventArgumentsList argList;
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.enter", mafEventTypeLocal, &argList);
+}
+
+void mafEventBridgeVTK::leaveEvent() {
+    bool pick = vmePickCheck();
+    mafEventArgumentsList argList;
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.leave", mafEventTypeLocal, &argList);
+}
+
+void mafEventBridgeVTK::keyPressEvent() {
+    bool pick = vmePickCheck();
+    mafEventArgumentsList argList;
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.keyPress", mafEventTypeLocal, &argList);
+}
+
+void mafEventBridgeVTK::keyReleaseEvent() {
+    bool pick = vmePickCheck();
+    mafEventArgumentsList argList;
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.keyRelease", mafEventTypeLocal, &argList);
+}
+
+void mafEventBridgeVTK::charEvent() {
+    bool pick = vmePickCheck();
+    mafEventArgumentsList argList;
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.keyChar", mafEventTypeLocal, &argList);
+}
+
+void mafEventBridgeVTK::mouseMoveEvent() {
+    bool pick = vmePickCheck();
+    mafEventArgumentsList argList;
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseMove", mafEventTypeLocal, &argList);
+}
+
+void mafEventBridgeVTK::mouseWheelForwardEvent() {
+    bool pick = vmePickCheck();
+    mafEventArgumentsList argList;
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseWheelForward", mafEventTypeLocal, &argList);
+}
+
+void mafEventBridgeVTK::mouseWheelBackwardEvent() {
+    bool pick = vmePickCheck();
+    mafEventArgumentsList argList;
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseWheelBackward", mafEventTypeLocal, &argList);
+}
+
+void mafEventBridgeVTK::pickEvent() {
+    bool pick = vmePickCheck();
+    mafEventArgumentsList argList;
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.pick", mafEventTypeLocal, &argList);
+}
+
+bool mafEventBridgeVTK::vmePickCheck() {
+    bool picked = false;
     int mousePosX = 0;
     int mousePosY = 0;
     double posPicked[3];
     mafCore::mafContainer<vtkActor> actor;
-    mafContainerInterface *picked;
+    mafContainerInterface *actorPicked;
 
     m_Interactor->GetEventPosition(mousePosX, mousePosY);
-
-    vtkCellPicker *cellPicker = vtkCellPicker::New();
-
+    vtkSmartPointer<vtkCellPicker> cellPicker = vtkSmartPointer<vtkCellPicker>::New();;
     vtkRendererCollection *rc = m_Interactor->GetRenderWindow()->GetRenderers();
     vtkRenderer *r = NULL;
     rc->InitTraversal();
@@ -85,90 +176,16 @@ void mafEventBridgeVTK::leftButtonPressEvent() {
             cellPicker->GetPickPosition(posPicked);
             actor = vtkActor::New();
             actor = cellPicker->GetActor();
-            picked = &(actor);
+            actorPicked = &(actor);
         }
     }
 
     if (actor != NULL) {
         mafEventArgumentsList argList;
-        argList.append(mafEventArgument(double, posPicked[0]));
-        argList.append(mafEventArgument(double, posPicked[1]));
-        argList.append(mafEventArgument(double, posPicked[2]));
-        argList.append(mafEventArgument(mafCore::mafContainerInterface *, picked));
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePicked", mafEventTypeLocal, &argList);
-    } else {
-        mafEventArgumentsList argList;
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.leftButtonPress", mafEventTypeLocal, &argList);
+        argList.append(mafEventArgument(double *, (double *)posPicked));
+        argList.append(mafEventArgument(mafCore::mafContainerInterface *, actorPicked));
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePick", mafEventTypeLocal, &argList);
+        picked = true;
     }
+    return picked;
 }
-
-void mafEventBridgeVTK::leftButtonReleaseEvent() {
-    mafEventArgumentsList argList;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.leftButtonRelease", mafEventTypeLocal, &argList);
-}
-
-void mafEventBridgeVTK::middleButtonPressEvent() {
-    mafEventArgumentsList argList;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.middleButtonPress", mafEventTypeLocal, &argList);
-}
-
-void mafEventBridgeVTK::middleButtonReleaseEvent() {
-    mafEventArgumentsList argList;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.middleButtonRelease", mafEventTypeLocal, &argList);
-}
-
-void mafEventBridgeVTK::rightButtonPressEvent() {
-    mafEventArgumentsList argList;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.rightButtonPress", mafEventTypeLocal, &argList);
-}
-
-void mafEventBridgeVTK::rightButtonReleaseEvent() {
-    mafEventArgumentsList argList;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.rightButtonRelease", mafEventTypeLocal, &argList);
-}
-
-void mafEventBridgeVTK::enterEvent() {
-    mafEventArgumentsList argList;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.enter", mafEventTypeLocal, &argList);
-}
-
-void mafEventBridgeVTK::leaveEvent() {
-    mafEventArgumentsList argList;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.leave", mafEventTypeLocal, &argList);
-}
-
-void mafEventBridgeVTK::keyPressEvent() {
-    mafEventArgumentsList argList;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.keyPress", mafEventTypeLocal, &argList);
-}
-
-void mafEventBridgeVTK::keyReleaseEvent() {
-    mafEventArgumentsList argList;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.keyRelease", mafEventTypeLocal, &argList);
-}
-
-void mafEventBridgeVTK::charEvent() {
-    mafEventArgumentsList argList;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.keyChar", mafEventTypeLocal, &argList);
-}
-
-void mafEventBridgeVTK::mouseMoveEvent() {
-    mafEventArgumentsList argList;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseMove", mafEventTypeLocal, &argList);
-}
-
-void mafEventBridgeVTK::mouseWheelForwardEvent() {
-    mafEventArgumentsList argList;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseWheelForward", mafEventTypeLocal, &argList);
-}
-
-void mafEventBridgeVTK::mouseWheelBackwardEvent() {
-    mafEventArgumentsList argList;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseWheelBackward", mafEventTypeLocal, &argList);
-}
-
-void mafEventBridgeVTK::pickEvent() {
-    mafEventArgumentsList argList;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.pick", mafEventTypeLocal, &argList);
-}
-
