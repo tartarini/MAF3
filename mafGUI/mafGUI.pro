@@ -9,7 +9,8 @@ SOURCES += mafGUIManager.cpp \
     mafGUIRegistration.cpp
 HEADERS += mafGUI_global.h \
     mafGUIManager.h \
-    mafGUIRegistration.h
+    mafGUIRegistration.h \
+    mafGUIDefinitions.h
 include(../mafInstallModule.pri)
 INCLUDEPATH += ../mafCore \
     ../mafEventBus \
@@ -18,3 +19,4 @@ LIBS += -L$$DESTDIR \
     -lmafCore$$LIB_EXT \
     -lmafEventBus$$LIB_EXT \
     -lmafApplicationLogic$$LIB_EXT
+RESOURCES += mafAppImages.qrc
