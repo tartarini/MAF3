@@ -33,7 +33,7 @@ SOURCES += mafResource.cpp \
     mafUndoStackCommand.cpp \
     mafMementoVME.cpp \
     mafMementoDataSet.cpp \
-    mafInteracionManager.cpp \
+    mafInteractionManager.cpp \
     mafInteractor.cpp \
     mafMementoViewManager.cpp
 HEADERS += mafResource.h \
@@ -64,7 +64,7 @@ HEADERS += mafResource.h \
     mafVisitorFindSceneNodeByVMEHash.h \
     mafMementoVME.h \
     mafMementoDataSet.h \
-    mafInteracionManager.h \
+    mafInteractionManager.h \
     mafInteractor.h \
     mafMementoViewManager.h
 include(../mafInstallModule.pri)
