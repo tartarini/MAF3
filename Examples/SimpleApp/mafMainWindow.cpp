@@ -1,6 +1,10 @@
 #include "mafMainWindow.h"
 #include "ui_mafMainWindow.h"
 
+#include "googlechat.h"
+
+#include <mafGUIRegistration.h>
+
 #include <vtkPolyDataMapper.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
@@ -17,12 +21,22 @@
     #endif
 #endif
 
+using namespace mafCore;
+using namespace mafGUI;
+
 mafMainWindow::mafMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::mafMainWindow), m_SettingsFilename("") {
     ui->setupUi(this);
 
-    createActions();
-    createMenus();
-    createToolBars();
+    mafCoreSingletons::mafSingletonsInitialize();
+
+    mafGUIRegistration::registerGUIObjects();
+    m_GUIManager = mafNEW(mafGUI::mafGUIManager);
+
+    googleChat = new GoogleChat();
+
+    m_GUIManager->createActions(this);
+    m_GUIManager->createMenus(this);
+    m_GUIManager->createToolBars(this);
 
     ui->statusBar->showMessage(mafTr("Ready!"));
     ui->centralWidget->setLayout(ui->gridLayout);
@@ -33,6 +47,8 @@ mafMainWindow::mafMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 }
 
 mafMainWindow::~mafMainWindow() {
+    mafDEL(m_GUIManager);
+    delete googleChat;
     delete ui;
 }
 
@@ -118,100 +134,10 @@ bool mafMainWindow::save() {
     return true;
 }
 
-void mafMainWindow::createActions() {
-    newAct = new QAction(QIcon(":/images/new.png"), mafTr("&New"), this);
-    newAct->setIconText(mafTr("New"));
-    newAct->setShortcuts(QKeySequence::New);
-    newAct->setStatusTip(mafTr("Create a new file"));
-    connect(newAct, SIGNAL(triggered()), this, SLOT(createViewWindow()));
-
-    openAct = new QAction(QIcon(":/images/open.png"), mafTr("&Open..."), this);
-    openAct->setIconText(mafTr("Open"));
-    openAct->setShortcuts(QKeySequence::Open);
-    openAct->setStatusTip(mafTr("Open an existing file"));
-//    connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
-
-    saveAct = new QAction(QIcon(":/images/save.png"), mafTr("&Save"), this);
-    saveAct->setIconText(mafTr("Save"));
-    saveAct->setShortcuts(QKeySequence::Save);
-    saveAct->setStatusTip(mafTr("Save the document to disk"));
-    connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
-
-    saveAsAct = new QAction(mafTr("Save &As..."), this);
-    saveAsAct->setIconText(mafTr("Save As"));
-    saveAsAct->setShortcuts(QKeySequence::SaveAs);
-    saveAsAct->setStatusTip(mafTr("Save the document under a new name"));
-//    connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
-
-    exitAct = new QAction(mafTr("E&xit"), this);
-    exitAct->setIconText(mafTr("Exit"));
-    exitAct->setShortcuts(QKeySequence::Quit);
-    exitAct->setStatusTip(mafTr("Exit the application"));
-    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
-
-    cutAct = new QAction(QIcon(":/images/cut.png"), mafTr("Cu&t"), this);
-    cutAct->setIconText(mafTr("Cut"));
-    cutAct->setShortcuts(QKeySequence::Cut);
-    cutAct->setStatusTip(mafTr("Cut the current selection's contents to the "
-                            "clipboard"));
-//    connect(cutAct, SIGNAL(triggered()), textEdit, SLOT(cut()));
-
-    copyAct = new QAction(QIcon(":/images/copy.png"), mafTr("&Copy"), this);
-    copyAct->setIconText(mafTr("Copy"));
-    copyAct->setShortcuts(QKeySequence::Copy);
-    copyAct->setStatusTip(mafTr("Copy the current selection's contents to the "
-                             "clipboard"));
-//    connect(copyAct, SIGNAL(triggered()), textEdit, SLOT(copy()));
-
-    pasteAct = new QAction(QIcon(":/images/paste.png"), tr("&Paste"), this);
-    pasteAct->setIconText(mafTr("Paste"));
-    pasteAct->setShortcuts(QKeySequence::Paste);
-    pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
-                              "selection"));
-//    connect(pasteAct, SIGNAL(triggered()), textEdit, SLOT(paste()));
-
-    aboutAct = new QAction(tr("&About"), this);
-    aboutAct->setIconText(mafTr("About"));
-    aboutAct->setStatusTip(tr("Show the application's About box"));
-//    connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
-}
-
-void mafMainWindow::createMenus() {
-    fileMenu = ui->menuBar->addMenu(tr("&File"));
-    fileMenu->addAction(newAct);
-    fileMenu->addAction(openAct);
-    fileMenu->addAction(saveAct);
-    fileMenu->addAction(saveAsAct);
-    fileMenu->addSeparator();
-    fileMenu->addAction(exitAct);
-
-    ui->menuBar->addSeparator();
-
-    editMenu = ui->menuBar->addMenu(tr("&Edit"));
-    editMenu->addAction(cutAct);
-    editMenu->addAction(copyAct);
-    editMenu->addAction(pasteAct);
-
-    ui->menuBar->addSeparator();
-
-    helpMenu = ui->menuBar->addMenu(tr("&Help"));
-    helpMenu->addAction(aboutAct);
-
-    //connect(ui->actionAdd_View, SIGNAL(triggered()), this, SLOT(createViewWindow()));
-}
-
-void mafMainWindow::createToolBars() {
-    fileToolBar = addToolBar(tr("File"));
-    fileToolBar->addAction(newAct);
-    fileToolBar->addAction(openAct);
-    fileToolBar->addAction(saveAct);
-    fileToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-
-    editToolBar = addToolBar(tr("Edit"));
-    editToolBar->addAction(cutAct);
-    editToolBar->addAction(copyAct);
-    editToolBar->addAction(pasteAct);
-    editToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+void mafMainWindow::openGoogleTalk() {
+    QMdiSubWindow *sub_win = ui->mdiArea->addSubWindow(googleChat);
+    //googleChat->show();
+    sub_win->show();
 }
 
 void mafMainWindow::createViewWindow() {

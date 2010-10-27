@@ -4,12 +4,15 @@
 #include <QtGui>
 #include <QVTKWidget.h>
 #include <QMainWindow>
-#include <mafCoreDefinitions.h>
 #include "mafMementoApplication.h"
+
+#include <mafGUIManager.h>
 
 namespace Ui {
     class mafMainWindow;
 }
+
+class GoogleChat;
 
 class mafMainWindow : public QMainWindow {
     Q_OBJECT
@@ -23,6 +26,9 @@ public:
 public slots:
     /// Create the MDI sub window to host the mafView.
     void createViewWindow();
+
+    /// Open the Google Talk interface.
+    void openGoogleTalk();
 
     /// Return the instance of the mafMainWindow's status. The caller has to delete the allocated memento memory he asked for.
     mafCore::mafMemento *createMemento() const;
@@ -46,15 +52,6 @@ protected:
 
     void mouseReleaseEvent ( QMouseEvent * event );
 
-    /// Create the actions associated with the menu items.
-    virtual void createActions();
-
-    /// Create the menu for the vertical application.
-    virtual void createMenus();
-
-    /// Create the toolbar for the vertical application.
-    virtual void createToolBars();
-
 private slots:
     /// Allow to call the code to save the user data through the logic module.
     bool save();
@@ -63,26 +60,9 @@ private:
     Ui::mafMainWindow *ui;
     mafString m_SettingsFilename; ///< Name of the settings file.
 
-    QMenu *fileMenu;
-    QMenu *editMenu;
-    QMenu *viewMenu;
-    QMenu *opMenu;
-    QMenu *helpMenu;
+    mafGUI::mafGUIManager *m_GUIManager; ///< Manager for the GUI widgets creation and initialization.
 
-    QToolBar *fileToolBar;
-    QToolBar *editToolBar;
-
-    QAction *newAct;
-    QAction *openAct;
-    QAction *saveAct;
-    QAction *saveAsAct;
-    QAction *exitAct;
-
-    QAction *cutAct;
-    QAction *copyAct;
-    QAction *pasteAct;
-
-    QAction *aboutAct;
+    GoogleChat *googleChat;
 
     /// Load application's settings
     void readSettings();
