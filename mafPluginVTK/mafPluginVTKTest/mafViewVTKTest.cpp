@@ -52,6 +52,7 @@ class mafViewVTKTest : public QObject {
     Q_OBJECT
 
 private slots:
+
     /// Initialize test variables
     void initTestCase() {
         mafResourcesRegistration::registerResourcesObjects();
@@ -175,6 +176,7 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     // Remove VME
     m_View->removeVME(m_VmeCube);
 }
+
 
 MAF_REGISTER_TEST(mafViewVTKTest);
 #include "mafViewVTKTest.moc"
