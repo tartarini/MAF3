@@ -41,7 +41,7 @@ namespace mafResources {
 /**
  Class name: mafResourcesRegistration
  This class allows object registration for all the classes present in mafResources module.
- @sa mafObjectFactory
+ @sa mafObjectFactory mafCoreRegistration mafSerializationRegistration mafGUIRegistration
  */
 class mafResourcesRegistration {
     public:
