@@ -26,9 +26,9 @@ mafDataPipeImageThreshold::~mafDataPipeImageThreshold() {
 }
 
 bool mafDataPipeImageThreshold::acceptObject(mafCore::mafObject *obj) {
-    mafDataSet *dataSet = dynamic_cast<mafDataSet*>(obj);
-    if(dataSet != NULL) {
-        mafString dataType = dataSet->dataValue()->externalDataType();
+    mafVME *vme = dynamic_cast<mafVME*>(obj);
+    if(vme != NULL) {
+        mafString dataType = vme->dataSetCollection()->itemAtCurrentTime()->dataValue()->externalDataType();
         if(dataType == "vtkImageData") {
             return true;
         }
@@ -43,9 +43,9 @@ void mafDataPipeImageThreshold::createPipe() {
 void mafDataPipeImageThreshold::updatePipe(double t) {
     Q_UNUSED(t); // Consider also to calculate the threshold for all the timestamp if the input is time varying
 
-    mafDataSetList *inputList = this->inputList();
+    mafVMEList *inputList = this->inputList();
 
-    mafDataSet *inputDataSet = inputList->at(0);
+    mafDataSet *inputDataSet = inputList->at(0)->dataSetCollection()->itemAtCurrentTime();
     if(inputDataSet == NULL) {
         return;
     }
@@ -70,12 +70,19 @@ void mafDataPipeImageThreshold::updatePipe(double t) {
     }
     m_ThresholdFilter->Update();
 
-    if(m_Output == NULL) {
-        m_Output = mafNEW(mafResources::mafDataSet);
+    if(m_OutputValue == NULL) {
         m_OutputValue = m_ThresholdFilter->GetOutput();
     }
 
-    m_Output->setDataValue(&m_OutputValue);
+    if (!m_InPlace) {
+        m_Output = mafNEW(mafResources::mafVME);
+        m_Output = inputList->at(0);
+        m_Output->dataSetCollection()->itemAtCurrentTime()->setDataValue(&m_OutputValue);
+    } else {
+        inputList->at(0)->dataSetCollection()->itemAtCurrentTime()->setDataValue(&m_OutputValue);
+        m_Output = inputList->at(0);
+    }
+
 }
 
 void mafDataPipeImageThreshold::setLowerThrehsold(double threshold) {
