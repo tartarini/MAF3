@@ -16,7 +16,7 @@ class mafGUIManagerTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        // Register all the creatable objects for the mafResources module.
+        // Register all the creatable objects for the mafGUI module.
         mafGUIRegistration::registerGUIObjects();
         m_GUIManager = mafNEW(mafGUI::mafGUIManager);
     }
