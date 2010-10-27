@@ -243,7 +243,7 @@ void mafSerializationRawBinaryExtDataTest::mafSerializationVTKSaveTest() {
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
 
     mafMemento *m = m_Vme->mafResource::createMemento();
-    mafMementoVME *mementoVME = new mafMementoVME(m_Vme, m_Vme->dataSetCollection(), m_Vme->dataPipe(), mafCodeLocation);
+    mafMementoVME *mementoVME = new mafMementoVME(m_Vme, mafCodeLocation);
     QVERIFY(mementoVME != NULL);
     m->setParent(mementoVME);
 

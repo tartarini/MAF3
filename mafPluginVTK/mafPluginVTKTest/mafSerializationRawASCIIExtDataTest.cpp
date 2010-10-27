@@ -252,7 +252,7 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
 
     //Save VME with ASCII dataSet
     mafMemento *m = m_Vme->mafResource::createMemento();
-    mafMementoVME *mementoVME = new mafMementoVME(m_Vme, m_Vme->dataSetCollection(), m_Vme->dataPipe(), false, mafCodeLocation);
+    mafMementoVME *mementoVME = new mafMementoVME(m_Vme, false, mafCodeLocation);
     QVERIFY(mementoVME != NULL);
     m->setParent(mementoVME);
 
