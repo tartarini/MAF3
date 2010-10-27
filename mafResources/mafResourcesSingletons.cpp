@@ -16,19 +16,19 @@ using namespace mafResources;
 
 void mafResourcesSingletons::mafSingletonsInitialize() {
         // Register all classes instantiable in mafResources module.
-//        mafResourcesRegistration::registerResourcesObjects();
+        mafResourcesRegistration::registerResourcesObjects();
         mafPluginManager::instance();
         mafViewManager::instance();
         mafVMEManager::instance();
-//        mafOperationManager::instance();
-//        mafInteractionManager::instance();
+        mafOperationManager::instance();
+        mafInteractionManager::instance();
 }
 
 void mafResourcesSingletons::mafSingletonsShutdown() {
         mafPluginManager::instance()->shutdown();
         mafViewManager::instance()->shutdown();
         mafVMEManager::instance()->shutdown();
-//        mafOperationManager::instance()->shutdown();
-//        mafInteractionManager::instance()->shutdown();
+        mafOperationManager::instance()->shutdown();
+        mafInteractionManager::instance()->shutdown();
 }
 

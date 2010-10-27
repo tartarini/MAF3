@@ -13,12 +13,12 @@
 #define MAFRESOURCESSINGLETONS_H
 
 #include "mafResources_global.h"
-//#include "mafResourcesRegistration.h"
+#include "mafResourcesRegistration.h"
 #include "mafPluginManager.h"
 #include "mafViewManager.h"
 #include "mafVMEManager.h"
-//#include "mafOperationManager.h"
-//#include "mafInteractionManager.h"
+#include "mafOperationManager.h"
+#include "mafInteractionManager.h"
 
 namespace mafResources {
 
