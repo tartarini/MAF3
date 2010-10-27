@@ -70,9 +70,8 @@ HEADERS += mafResource.h \
 include(../mafInstallModule.pri)
 include(../mafImportVXL.pri)
 include(../mafImportQtSoap.pri)
-INCLUDEPATH += ../mafEventBus
+INCLUDEPATH += ../mafEventBus \
+                ../mafCore
 LIBS += -L$$DESTDIR \
-    -lmafEventBus$$LIB_EXT
-INCLUDEPATH += ../mafCore
-LIBS += -L$$DESTDIR \
+    -lmafEventBus$$LIB_EXT \
     -lmafCore$$LIB_EXT
