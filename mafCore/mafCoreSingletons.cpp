@@ -20,6 +20,7 @@ void mafCoreSingletons::mafSingletonsInitialize() {
     mafIdProvider::instance();
     mafObjectFactory::instance();
     mafMessageHandler::instance();
+    mafCoreRegistration::registerCoreObjects();
 }
 
 void mafCoreSingletons::mafSingletonsShutdown() {
@@ -27,7 +28,6 @@ void mafCoreSingletons::mafSingletonsShutdown() {
     mafObjectRegistry::instance()->shutdown();
     mafObjectFactory::instance()->shutdown();
     mafIdProvider::instance()->shutdown();
-    mafCoreRegistration::registerCoreObjects();
 }
 
 bool mafInitializeModule(mafString module_library) {
