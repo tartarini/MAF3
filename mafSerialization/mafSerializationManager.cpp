@@ -26,6 +26,8 @@ mafSerializationManager* mafSerializationManager::instance() {
 }
 
 mafSerializationManager::mafSerializationManager(const mafString code_location) : mafObjectBase(code_location) {
+    mafSerializationRegistration::registerSerializationObjects();
+
     initializeConnections();
 
     plugCodec("*","RAW","mafSerialization::mafCodecRawBinary");
