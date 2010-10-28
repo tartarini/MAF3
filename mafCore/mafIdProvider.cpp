@@ -11,13 +11,11 @@
 
 #include "mafIdProvider.h"
 #include "mafObjectRegistry.h"
-#include "mafCoreRegistration.h"
 
 using namespace mafCore;
 
 
 mafIdProvider::mafIdProvider() {
-    mafCoreRegistration::registerCoreObjects();
     m_Id = 0;
 }
 

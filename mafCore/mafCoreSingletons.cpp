@@ -10,7 +10,7 @@
  */
 
 #include "mafCoreSingletons.h"
-
+#include "mafCoreRegistration.h"
 
 
 using namespace mafCore;
@@ -27,6 +27,7 @@ void mafCoreSingletons::mafSingletonsShutdown() {
     mafObjectRegistry::instance()->shutdown();
     mafObjectFactory::instance()->shutdown();
     mafIdProvider::instance()->shutdown();
+    mafCoreRegistration::registerCoreObjects();
 }
 
 bool mafInitializeModule(mafString module_library) {
