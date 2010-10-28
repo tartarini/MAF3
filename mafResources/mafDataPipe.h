@@ -52,6 +52,11 @@ public:
     /// Get output of the pipe.
     mafVME *output();
 
+public slots:
+    /// Allow to execute and update the pipeline when something change.
+    /** By default it simply initialize the output with the first element in the input list.*/
+    /*virtual*/ void updatePipe(double t = -1);
+
 private slots:
     /// Method called when an input mafVME has been destroyed (by someone else).
     void inputDestroyed();
@@ -74,10 +79,6 @@ inline mafDataPipe *mafDataPipe::decorateWithDataPipe(mafDataPipe *pipe) {
 
 inline void mafDataPipe::setWorksInPlace(bool inPlace) {
     m_InPlace = inPlace;
-}
-
-inline mafVME *mafDataPipe::output() {
-    return m_Output;
 }
 
 } //namespace mafResources

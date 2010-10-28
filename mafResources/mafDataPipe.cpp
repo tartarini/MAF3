@@ -44,3 +44,16 @@ void mafDataPipe::inputDestroyed() {
     removeInput(vme);
 }
 
+void mafDataPipe::updatePipe(double t) {
+    Q_UNUSED(t);
+    m_Output = inputList()->at(0);
+}
+
+mafVME *mafDataPipe::output() {
+    REQUIRE(inputList()->count() > 0);
+    if(m_Output == NULL) {
+        updatePipe();
+    }
+    ENSURE(m_Output != NULL);
+    return m_Output;
+}
