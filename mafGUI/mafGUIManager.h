@@ -29,6 +29,16 @@ namespace mafGUI {
  like the menu, the toolbar and the actions linked to them.
  The methods are virtuals and can be easyly redefined to create brand new toolbar or menu
  or extend the existing one by introducing new items.
+ The manager defines also the topics related to the actions linked to the menubar and toolbar:
+ - maf.local.gui.action.new
+ - maf.local.gui.action.open
+ - maf.local.gui.action.save
+ - maf.local.gui.action.saveas
+ - maf.local.gui.action.collaborate
+ - maf.local.gui.action.cut
+ - maf.local.gui.action.copy
+ - maf.local.gui.action.paste
+ - maf.local.gui.action.about
  */
 class MAFGUISHARED_EXPORT mafGUIManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -67,6 +77,9 @@ public:
     QMenu *helpMenu() const;
 
 private:
+    /// Initialize the topics and register the signals with the mafEventBus.
+    void registerSignals();
+
     QMenu *m_FileMenu; ///< Reference to the 'File' menu.
     QMenu *m_EditMenu; ///< Reference to the 'Edit' menu.
     QMenu *m_ViewMenu; ///< Reference to the 'View' menu.
