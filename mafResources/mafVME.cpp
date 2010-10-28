@@ -82,6 +82,9 @@ void mafVME::setDataPipe(const mafString &pipe_type) {
 void mafVME::setDataPipe(mafDataPipe *pipe) {
     mafDEL(m_DataPipe);
     m_DataPipe = pipe;
+    if(m_DataPipe) {
+        m_DataPipe->setInput(this);
+    }
     setModified();
 }
 
@@ -89,6 +92,13 @@ void mafVME::execute() {
     if(m_DataPipe) {
         m_DataPipe->updatePipe(dataSetCollection()->timeStamp());
     }
+}
+
+mafDataSetCollection *mafVME::dataSetCollection() {
+    if(m_DataSetCollection == NULL) {
+        m_DataSetCollection = new mafDataSetCollection(mafCodeLocation);
+    }
+    return m_DataSetCollection;
 }
 
 mafDataSet *mafVME::outputData() {

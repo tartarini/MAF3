@@ -104,13 +104,6 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline mafDataSetCollection *mafVME::dataSetCollection() {
-    if(m_DataSetCollection == NULL) {
-        m_DataSetCollection = new mafDataSetCollection(mafCodeLocation);
-    }
-    return m_DataSetCollection;
-}
-
 inline mafDataPipe *mafVME::dataPipe() {
     return m_DataPipe;
 }
