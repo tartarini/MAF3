@@ -71,6 +71,7 @@ class mafResourcesRegistrationTest: public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
     }
 
     /// Cleanup test variables memory allocation.

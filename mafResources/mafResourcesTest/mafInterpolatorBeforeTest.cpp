@@ -35,6 +35,8 @@ class mafInterpolatorBeforeTest: public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
+
         //! <snippet>
         m_Interpolator = mafNEW(mafResources::mafInterpolatorBefore);
         //! </snippet>

@@ -152,6 +152,7 @@ class mafMementoVMETest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
         mafRegisterObject(testExtDataCodecCustom);
         m_MementoVME = NULL;

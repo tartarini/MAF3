@@ -67,6 +67,7 @@ class mafHierarchyTest: public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         m_Hierarchy = mafNEW(mafCore::mafHierarchy);
         unbalancedTreeRandomCreation(3000); //Qt Creator gives problems in test machine with 10^5 nodes
 

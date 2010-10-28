@@ -29,6 +29,7 @@ class mafVMEManagerTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         // Register all the creatable objects for the mafResources module.
         mafResourcesRegistration::registerResourcesObjects();
         m_EventBus = mafEventBusManager::instance();

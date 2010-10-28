@@ -35,6 +35,7 @@ class mafMementoResourceTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
         m_MementoResource = NULL;
     }

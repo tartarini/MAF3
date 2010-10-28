@@ -63,6 +63,7 @@ class mafInterpolatorTest: public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         m_Interpolator = mafNEW(testInterpolatorCustom);
     }
 

@@ -36,6 +36,7 @@ class mafResourceTest: public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         mafEventBusManager::instance();
         m_Resource = mafNEW(mafResources::mafResource);
     }

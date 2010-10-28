@@ -37,6 +37,7 @@ class mafViewTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
         m_View = mafNEW(mafResources::mafView);
         m_View->create();

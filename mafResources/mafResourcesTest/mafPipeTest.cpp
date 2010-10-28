@@ -69,6 +69,7 @@ class mafPipeTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
         m_Pipe = mafNEW(testPipeCustom);
     }

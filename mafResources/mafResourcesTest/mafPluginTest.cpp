@@ -40,7 +40,7 @@ class mafPluginTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        mafResourcesRegistration::registerResourcesObjects();
+        mafMessageHandler::instance()->installMessageHandler();
         mafEventBusManager::instance();
         mafResourcesSingletons::mafSingletonsInitialize();
         // Initialize the plug-in name with prefix and extension.
