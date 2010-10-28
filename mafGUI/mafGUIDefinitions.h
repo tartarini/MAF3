@@ -19,4 +19,6 @@
 #include <mafCoreSingletons.h>
 #include <mafCoreRegistration.h>
 
+#include <mafEventBusManager.h>
+
 #endif // MAFGUIDEFINITIONS_H
