@@ -55,6 +55,7 @@ void testVMEDataPipeCustom::createPipe() {
 }
 
 void testVMEDataPipeCustom::updatePipe(double t) {
+    Superclass::updatePipe();
     m_PipeLine = "Updated";
     m_PipeLine.append(mafString::number(t));
 }
@@ -79,6 +80,7 @@ class mafVMETest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
         mafRegisterObject(testVMEDataPipeCustom);
         //! <snippet>
@@ -160,8 +162,9 @@ void mafVMETest::mafVMEInteractorTest() {
 void mafVMETest::mafVMEOutputDataTest() {
     // Ask the output data
     // datapipe exists => the output will be the output of the data pipe.
+    // Default output for datapipe is the input VME itself.
     mafDataSet *output = m_VME->outputData();
-    QVERIFY(output == NULL);
+    QVERIFY(output != NULL);
 
     // Delete the current data pipe.
     m_VME->setDataPipe(NULL);
