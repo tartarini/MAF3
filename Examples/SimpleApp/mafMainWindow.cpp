@@ -38,12 +38,20 @@ mafMainWindow::mafMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     m_GUIManager->createMenus(this);
     m_GUIManager->createToolBars(this);
 
+    connectCallbacks();
+
     ui->statusBar->showMessage(mafTr("Ready!"));
     ui->centralWidget->setLayout(ui->gridLayout);
 
     connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(viewSelected(QMdiSubWindow*)));
 
     setUnifiedTitleAndToolBarOnMac(true);
+}
+
+void mafMainWindow::connectCallbacks() {
+    mafRegisterLocalCallback("maf.local.gui.action.new", this, "createViewWindow()");
+    mafRegisterLocalCallback("maf.local.gui.action.collaborate", this, "openGoogleTalk()");
+    mafRegisterLocalCallback("maf.local.gui.action.save", this, "save()");
 }
 
 mafMainWindow::~mafMainWindow() {

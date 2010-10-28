@@ -64,6 +64,9 @@ private:
 
     GoogleChat *googleChat;
 
+    /// Connect the slots to the signal defined into the mafGUIManager through the mafEventBus
+    void connectCallbacks();
+
     /// Load application's settings
     void readSettings();
 
