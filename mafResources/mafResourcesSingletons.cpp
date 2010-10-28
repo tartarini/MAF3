@@ -32,3 +32,7 @@ void mafResourcesSingletons::mafSingletonsShutdown() {
         mafInteractionManager::instance()->shutdown();
 }
 
+void mafResources::initializeModule() {
+    mafResources::mafResourcesSingletons::mafSingletonsInitialize();
+}
+

@@ -35,6 +35,11 @@ class mafResourcesSingletons {
     MAFRESOURCESSHARED_EXPORT static void mafSingletonsShutdown();
 };
 
+extern "C" {
+    /// Initialize the module by instantiating the singletons and register all the classes with the mafObjectFactory.
+    MAFRESOURCESSHARED_EXPORT void initializeModule();
+}
+
 } // namespace mafResources
 
 #endif // MAFRESOURCESSINGLETONS_H
