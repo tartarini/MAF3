@@ -23,17 +23,19 @@ if __name__ == '__main__':
     #some system requirements
 
     suffix = "Test"
-    if(str(os.sys.platform).lower() != 'win32'):
+    if(str(os.sys.platform).lower() == 'linux2'):
         #os.system('export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH')
         os.environ['LD_LIBRARY_PATH'] = os.environ['LD_LIBRARY_PATH'] + ":" + execDir
         suffix = "Test_debug"
-    else:
-        suffix = "Test_d"
-        
-    if(str(os.sys.platform).lower() == 'linux2'):
-        #need to start XServer
+        #need to start X
         os.environ['DISPLAY'] = "localhost:0.0"
         os.system("Xvfb :0.0 &")
+    else if(str(os.sys.platform).lower() == 'darwin'):
+        #os.system('export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH')
+        os.environ['DYLD_LIBRARY_PATH'] = os.environ['DYLD_LIBRARY_PATH'] + ":" + execDir
+        suffix = "Test_debug"
+    else if(str(os.sys.platform).lower() == 'win32'):
+        suffix = "Test_d"
         
 
     for dir in dirList:
