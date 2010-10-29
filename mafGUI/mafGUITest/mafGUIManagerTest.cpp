@@ -16,6 +16,7 @@ class mafGUIManagerTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         // Register all the creatable objects for the mafGUI module.
         mafGUIRegistration::registerGUIObjects();
         m_GUIManager = mafNEW(mafGUI::mafGUIManager);
@@ -36,3 +37,6 @@ private:
 void mafGUIManagerTest::mafGUIManagerAllocationTest() {
     QVERIFY(m_GUIManager != NULL);
 }
+
+MAF_REGISTER_TEST(mafGUIManagerTest);
+#include "mafGUIManagerTest.moc"
