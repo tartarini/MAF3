@@ -15,6 +15,7 @@
 
 // Includes list
 #include "mafPluginVTKDefinitions.h"
+#include <vtkEventQtSlotConnect.h>
 
 // Class forwarding list
 class vtkRenderWindowInteractor;
@@ -32,6 +33,9 @@ public:
     /// Object constructor.
     mafEventBridgeVTK(vtkRenderWindowInteractor *inter, const mafString code_location = "");
 
+    /// Object destructor.
+    /* virtual */ ~mafEventBridgeVTK();
+
     /// Set vtkInteractor
     void setInteractor(vtkRenderWindowInteractor *inter);
 
@@ -41,6 +45,7 @@ public:
 
 
 public slots:
+
     /// Emit signal on VTKCommand event.
     void leftButtonPressEvent();
 
@@ -88,10 +93,15 @@ public slots:
 
 
 private:
-    /// Create connection between VTK and QT
+    /// Create connection between VTK and QT.
     void initializeEventBridge();
 
+    /// Get key modifiers.
+    void getModifiers();
+
+    vtkEventQtSlotConnect *m_Connections; ///< Creates a connection between VTK and Qt.
     vtkRenderWindowInteractor *m_Interactor; ///< Represent the vtkRenderWindowInteractor.
+    unsigned long m_Modifiers;  ///< Optional modifiers for the button.
 };
 
 } // namespace mafPluginVTK
