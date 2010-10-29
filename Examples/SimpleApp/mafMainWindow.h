@@ -46,12 +46,6 @@ protected:
     /// Method used to catch the close application's event
     void closeEvent(QCloseEvent *event);
 
-    void mousePressEvent( QMouseEvent * event );
-
-    void moveEvent ( QMoveEvent * event );
-
-    void mouseReleaseEvent ( QMouseEvent * event );
-
 private slots:
     /// Allow to call the code to save the user data through the logic module.
     bool save();

@@ -64,18 +64,6 @@ mafCore::mafMemento *mafMainWindow::createMemento() const {
     return new mafMementoApplication(this, mafCodeLocation);
 }
 
-void mafMainWindow::mousePressEvent( QMouseEvent * event ) {
-    mafMsgDebug() << "Mouse pressed....";
-}
-
-void mafMainWindow::moveEvent ( QMoveEvent * event ) {
-    mafMsgDebug() << "Mouse moving....";
-}
-
-void mafMainWindow::mouseReleaseEvent ( QMouseEvent * event ) {
-    mafMsgDebug() << "Mouse released....";
-}
-
 void mafMainWindow::changeEvent(QEvent *e) {
     QMainWindow::changeEvent(e);
     switch (e->type()) {

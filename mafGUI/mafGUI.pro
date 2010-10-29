@@ -6,11 +6,13 @@ TEMPLATE = lib
 win32:CONFIG += dll
 DEFINES += mafGUI_EXPORTS
 SOURCES += mafGUIManager.cpp \
-    mafGUIRegistration.cpp
+    mafGUIRegistration.cpp \
+    mafUILoader.cpp
 HEADERS += mafGUI_global.h \
     mafGUIManager.h \
     mafGUIRegistration.h \
-    mafGUIDefinitions.h
+    mafGUIDefinitions.h \
+    mafUILoader.h
 include(../mafInstallModule.pri)
 INCLUDEPATH += ../mafCore \
     ../mafEventBus \
