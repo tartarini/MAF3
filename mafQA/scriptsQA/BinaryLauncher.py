@@ -30,11 +30,11 @@ if __name__ == '__main__':
         #need to start X
         os.environ['DISPLAY'] = "localhost:0.0"
         os.system("Xvfb :0.0 &")
-    else if(str(os.sys.platform).lower() == 'darwin'):
+    elif(str(os.sys.platform).lower() == 'darwin'):
         #os.system('export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH')
         os.environ['DYLD_LIBRARY_PATH'] = os.environ['DYLD_LIBRARY_PATH'] + ":" + execDir
         suffix = "Test_debug"
-    else if(str(os.sys.platform).lower() == 'win32'):
+    elif(str(os.sys.platform).lower() == 'win32'):
         suffix = "Test_d"
         
 
