@@ -4,7 +4,8 @@
 CONFIG += qtestlib
 CONFIG += link_prl
 SOURCES += main.cpp \
-    mafGUIManagerTest.cpp
+    mafGUIManagerTest.cpp \
+    mafUILoaderTest.cpp
 include(../../mafInstallTest.pri)
 
 # Foundation libraries dependencies
