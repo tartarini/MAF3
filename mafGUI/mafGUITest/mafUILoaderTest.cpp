@@ -1,5 +1,6 @@
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
+#include <mafContainerInterface.h>
 #include <mafEventBusManager.h>
 #include <mafUILoader.h>
 #include <QDebug>
@@ -21,7 +22,7 @@ public:
     /// method for load the file
     /*virtual*/ void uiLoad(const mafString& fileName);
     /// check if gui is loaded
-    bool isUILoaded() {
+    bool isUILoaded(mafContainerInterfacePointer guiWidget) {
         return m_IsUILoaded;
     }
 
@@ -34,7 +35,7 @@ private:
 };
 
 testmafUILoaderCustom::testmafUILoaderCustom() : m_IsUILoaded(false) {
-    mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "uiLoaded()");
+    mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "uiLoaded(mafContainerInterfacePointer)");
 }
 
 void testmafUILoaderCustom::uiLoad(const mafString& fileName) {
@@ -86,7 +87,7 @@ void mafUILoaderTest::mafUILoaderAllocationTest() {
 
 void mafUILoaderTest::mafUILoaderUILoadTest() {
     m_UILoader->uiLoad("uiFileName");
-    QVERIFY(m_UILoader->isUILoaded() == true);
+    QVERIFY(m_UILoader->isUILoaded(NULL) == true);
 }
 
 MAF_REGISTER_TEST(mafUILoaderTest);
