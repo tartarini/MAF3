@@ -14,6 +14,10 @@
 
 #include "mafGUI_global.h"
 
+#include <QWidget>
+#include <QUiLoader>
+#define mafUiLoader QUiLoader
+
 #include <mafCoreDefinitions.h>
 #include <mafObjectFactory.h>
 #include <mafCoreSingletons.h>
