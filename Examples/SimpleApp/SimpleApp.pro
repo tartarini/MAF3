@@ -5,6 +5,7 @@ QT += webkit \
     network
 TARGET = SimpleApp
 TEMPLATE = app
+CONFIG += uitools
 CONFIG -= app_bundle
 SOURCES += main.cpp \
     mafMainWindow.cpp \
