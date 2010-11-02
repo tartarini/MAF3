@@ -18,5 +18,16 @@
 #include <mafResourcesRegistration.h>
 #include <mafResourcesDefinitions.h>
 
+namespace mafPluginVTK {
+
+///< Enumeration that define the key modifiers values.
+enum {
+    MAF_SHIFT_KEY = 0,
+    MAF_CTRL_KEY,
+    MAF_ALT_KEY
+};
+
+}
+
 
 #endif // MAFPLUGINVTKDEFINITIONS_H

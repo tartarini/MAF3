@@ -51,39 +51,44 @@ public:
 
 public slots:
     /// observer needed to receive the 'maf.local.resources.interaction.leftButtonPress' signal
-    void leftButtonPress();
+    void leftButtonPress(unsigned long modifiers);
 
     /// observer needed to receive the 'maf.local.resources.interaction.vmePick' signal
-    void pick(double *pos, mafCore::mafContainerInterface *interface);
+    void pick(double *pos, unsigned long modifiers, mafCore::mafContainerInterface *interface);
 
 signals:
     /// left button pressed.
-    void leftButtonPressSignal();
+    void leftButtonPressSignal(unsigned long modifiers);
 
     /// picked button pressed.
-    void pickSignal(double *pos, mafCore::mafContainerInterface *interface);
+    void pickSignal(double *pos, unsigned long modifiers, mafCore::mafContainerInterface *interface);
 
 };
 
 testInteractionManagerCustom::testInteractionManagerCustom(QString code_location) : mafObjectBase(code_location) {
     mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePick");
-    mafRegisterLocalSignal("maf.local.resources.interaction.leftButtonPress", this, "leftButtonPressSignal()");
-    mafRegisterLocalCallback("maf.local.resources.interaction.leftButtonPress", this, "leftButtonPress()");
+    mafRegisterLocalSignal("maf.local.resources.interaction.leftButtonPress", this, "leftButtonPressSignal(unsigned long)");
+    mafRegisterLocalCallback("maf.local.resources.interaction.leftButtonPress", this, "leftButtonPress(unsigned long)");
 
-    mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "pickSignal(double *,mafCore::mafContainerInterface *)");
-    mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "pick(double *, mafCore::mafContainerInterface *)");
+    mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "pickSignal(double *, unsigned long, mafCore::mafContainerInterface *)");
+    mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "pick(double *, unsigned long, mafCore::mafContainerInterface *)");
     m_Counter = 0;
 }
 
-void testInteractionManagerCustom::leftButtonPress() {
+void testInteractionManagerCustom::leftButtonPress(unsigned long modifiers) {
     m_Counter++;
 }
 
-void testInteractionManagerCustom::pick(double *pos, mafCore::mafContainerInterface *interface) {
+void testInteractionManagerCustom::pick(double *pos, unsigned long modifiers,  mafCore::mafContainerInterface *interface) {
      m_Counter++;
      m_Pos[0] = pos[0];
      m_Pos[1]= pos[1];
      m_Pos[2] = pos[2];
+
+     // check for ctrl and shift pressure
+     QVERIFY((modifiers&(1<<MAF_SHIFT_KEY))!=0);
+     QVERIFY((modifiers&(1<<MAF_CTRL_KEY))!=0);
+     QVERIFY((modifiers&(1<<MAF_ALT_KEY))==0);
 }
 double *testInteractionManagerCustom::position() {
     return m_Pos;
@@ -165,6 +170,8 @@ void mafEventBridgeVTKTest::mafEventBridgeVTKConnectionTest() {
 
     //Send some interaction events by VTK (left Button press picking the actor)
     iren->SetEventPosition(201,138);
+    iren->SetShiftKey(1);
+    iren->SetControlKey(1);
     iren->InvokeEvent(vtkCommand::LeftButtonPressEvent, NULL);
 
     //Create a sphere on the picking position
