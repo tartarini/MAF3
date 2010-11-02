@@ -18,7 +18,7 @@ using namespace mafGUI;
 mafUILoader::mafUILoader(const mafString code_location) : mafObjectBase(code_location) {
     mafIdProvider *provider = mafIdProvider::instance();
     provider->createNewId("maf.local.gui.uiloaded");
-    mafRegisterLocalSignal("maf.local.gui.uiloaded", this, "uiLoadedSignal()");
+    mafRegisterLocalSignal("maf.local.gui.uiloaded", this, "uiLoadedSignal(mafCore::mafContainerInterfacePointer)");
 }
 
 mafUILoader::~mafUILoader() {
