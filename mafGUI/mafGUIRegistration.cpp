@@ -10,10 +10,13 @@
  */
 
 #include "mafGUIRegistration.h"
+#include "mafGUIManager.h"
+#include "mafUILoaderQt.h"
 
 using namespace mafGUI;
 
 void mafGUIRegistration::registerGUIObjects() {
         mafRegisterObject(mafGUI::mafGUIManager);
+        mafRegisterObject(mafGUI::mafUILoaderQt);
 }
 
