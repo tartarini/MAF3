@@ -1,3 +1,14 @@
+/*
+ *  mafUILoaderTest.cpp
+ *  mafGUITest
+ *
+ *  Created by Paolo Quadrani on 26/10/10.
+ *  Copyright 2010 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
+ */
+
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafContainerInterface.h>
@@ -34,8 +45,8 @@ private:
      bool m_IsUILoaded;///< variable which represents if the ui is loaded
 };
 
-testmafUILoaderCustom::testmafUILoaderCustom() : m_IsUILoaded(false) {
-    mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "uiLoaded(mafContainerInterfacePointer)");
+testmafUILoaderCustom::testmafUILoaderCustom() : mafUILoader(), m_IsUILoaded(false) {
+    mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "uiLoaded(mafCore::mafContainerInterfacePointer)");
 }
 
 void testmafUILoaderCustom::uiLoad(const mafString& fileName) {
