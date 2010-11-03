@@ -17,7 +17,6 @@ using namespace mafEventBus;
 using namespace mafGUI;
 
 mafUILoaderQt::mafUILoaderQt(const mafString code_location) : mafUILoader(code_location) {
-    mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "uiLoaded(mafContainerInterfacePointer)");
 }
 
 mafUILoaderQt::~mafUILoaderQt() {
@@ -30,7 +29,8 @@ void mafUILoaderQt::uiLoad(const mafString &fileName) {
     *arg = m_UILoaderQt.load(&file);
     file.close();
 
+    mafContainerInterfacePointer gui = arg;
     mafEventArgumentsList list;
-    list.append(mafEventArgument(mafContainerInterfacePointer, arg));
+    list.append(mafEventArgument(mafCore::mafContainerInterfacePointer, gui));
     mafEventBusManager::instance()->notifyEvent("maf.local.gui.uiloaded", mafEventTypeLocal, &list);
 }
