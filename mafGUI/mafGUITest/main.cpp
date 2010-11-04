@@ -10,6 +10,6 @@
  */
 
 #include <mafTestSuite.h>
-#include <QCoreApplication>
+#include <QApplication>
 
-MAF_TESTSUITE_MAIN()
+MAF_GUI_TESTSUITE_MAIN()
