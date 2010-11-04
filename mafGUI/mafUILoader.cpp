@@ -20,9 +20,11 @@ mafUILoader::mafUILoader(const mafString code_location) : mafObjectBase(code_loc
     mafId ui_id = provider->idValue("maf.local.gui.uiloaded");
     if(ui_id == -1) {
         provider->createNewId("maf.local.gui.uiloaded");
-        mafRegisterLocalSignal("maf.local.gui.uiloaded", this, "uiLoadedSignal(mafCore::mafContainerInterfacePointer)");
+        mafRegisterLocalSignal("maf.local.gui.uiloaded", this, "uiLoadedSignal(mafCore::mafContainerInterface *)");
     }
 }
 
 mafUILoader::~mafUILoader() {
+    mafIdProvider *provider = mafIdProvider::instance();
+    provider->removeId("maf.local.gui.uiloaded");
 }
