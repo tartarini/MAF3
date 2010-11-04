@@ -33,29 +33,30 @@ public:
     /// method for load the file
     /*virtual*/ void uiLoad(const mafString& fileName);
     /// check if gui is loaded
-    bool isUILoaded(mafContainerInterfacePointer guiWidget) {
+    bool isUILoaded() {
         return m_IsUILoaded;
     }
 
 public slots:
    ///return a value when the gui is loaded
-   void uiLoaded();
+   void uiLoaded(mafCore::mafContainerInterface *widget);
 
 private:
      bool m_IsUILoaded;///< variable which represents if the ui is loaded
 };
 
 testmafUILoaderCustom::testmafUILoaderCustom() : mafUILoader(), m_IsUILoaded(false) {
-    mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "uiLoaded(mafCore::mafContainerInterfacePointer)");
 }
 
 void testmafUILoaderCustom::uiLoad(const mafString& fileName) {
     REQUIRE(!fileName.isEmpty());
-    mafMsgDebug() << "ui loader load method...";
-    mafEventBusManager::instance()->notifyEvent("maf.local.gui.uiloaded", mafEventTypeLocal);
+    mafContainerInterface *gui = NULL;
+    mafEventArgumentsList list;
+    list.append(mafEventArgument(mafCore::mafContainerInterface *, gui));
+    mafEventBusManager::instance()->notifyEvent("maf.local.gui.uiloaded", mafEventTypeLocal, &list);
 }
 
-void testmafUILoaderCustom::uiLoaded() {
+void testmafUILoaderCustom::uiLoaded(mafCore::mafContainerInterface  *widget) {
     mafMsgDebug() << "ui loaded";
     m_IsUILoaded = true;
 }
@@ -72,14 +73,14 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         m_UILoader = new testmafUILoaderCustom();
+        mafRegisterLocalCallback("maf.local.gui.uiloaded", m_UILoader, "uiLoaded(mafCore::mafContainerInterface *)");
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        if(m_UILoader) {
-            delete m_UILoader;
-            m_UILoader = NULL;
-        }
+        mafEventBusManager::instance()->removeSignal(m_UILoader);
+        delete m_UILoader;
+        m_UILoader = NULL;
     }
 
     /// mafUILoader allocation test case.
@@ -98,7 +99,7 @@ void mafUILoaderTest::mafUILoaderAllocationTest() {
 
 void mafUILoaderTest::mafUILoaderUILoadTest() {
     m_UILoader->uiLoad("uiFileName");
-    QVERIFY(m_UILoader->isUILoaded(NULL) == true);
+    QVERIFY(m_UILoader->isUILoaded() == true);
 }
 
 MAF_REGISTER_TEST(mafUILoaderTest);
