@@ -72,10 +72,23 @@ bool mafEventBusManager::addEventProperty(const mafEvent &props) const {
     return false;
 }
 
-bool mafEventBusManager::removeEventProperty(const mafEvent &props) const {
-    // Design by contract condition.
-    //REQUIRE(!props.eventTopic().isEmpty());
+void mafEventBusManager::removeObserver(const QObject *obj, const mafString topic) {
+    if(obj == NULL) {
+        return;
+    }
+    m_LocalDispatcher->removeObserver(obj, topic);
+    m_RemoteDispatcher->removeObserver(obj, topic);
+}
 
+void mafEventBusManager::removeSignal(const QObject *obj, mafString topic) {
+    if(obj == NULL) {
+        return;
+    }
+    m_LocalDispatcher->removeSignal(obj, topic);
+    m_RemoteDispatcher->removeSignal(obj, topic);
+}
+
+bool mafEventBusManager::removeEventProperty(const mafEvent &props) const {
     if(props.eventType() == mafEventTypeLocal) {
         // Local event dispatching.
         if(props[SIGTYPE].toInt() == mafSignatureTypeCallback) {

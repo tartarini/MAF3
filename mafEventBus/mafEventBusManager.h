@@ -40,6 +40,18 @@ public:
     /// Remove the event property from the event bus hash.
     bool removeEventProperty(const mafEvent &props) const;
 
+    /// Remove the object passed as argument from the observer's hash.
+    /** This method allows to remove from the observer's hash the object
+    passed as argument. If no topic is specified, the observer will be removed from all
+    the topic it was listening, otherwise it will be disconnected only from the given topic.*/
+    void removeObserver(const QObject *obj, const mafString topic = "");
+
+    /// Remove the object passed as argument from the signal emitter's hash.
+    /** This method allows to remove from the signal emitter's hash the object
+    passed as argument. If no topic is specified, the emitter will be removed from all
+    the topic it was emitting signals, otherwise it will be removed only from the given topic.*/
+    void removeSignal(const QObject *obj, mafString topic = "");
+
     /// Notify events associated to the given id locally to the application.
     void notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList = NULL, mafGenericReturnArgument *returnArg = NULL) const;
 
@@ -69,9 +81,6 @@ public:
 
     /// Retrieve if the signal has been registered previously.
     bool isSignalPresent(const mafString topic) const;
-
-    /// Retrieve if the signal has been registered previously.
-    //bool isSignalPresent(const mafString &id_name) const;
 
     /// Plug a new network connector into the connector hash for the given network protocol (protocol eg. "XMLRPC") (connector_type eg. "mafEventBus::mafNetworkConnectorQXMLRPC").
     void plugNetworkConnector(const mafString &protocol, mafNetworkConnector *connector);
