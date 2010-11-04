@@ -35,21 +35,21 @@ public:
 
 public slots:
     /// UI loader callback.
-    void uiQtLoaded(mafContainerInterfacePointer widget);
+    void uiQtLoaded(mafCore::mafContainerInterface *widget);
 
 private:
     QWidget *m_Widget; ///< Test var containing the loaded UI
 };
 
 testUILoaderRequestor::testUILoaderRequestor() : QObject(), m_Widget(NULL) {
-    mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "uiQtLoaded(mafCore::mafContainerInterfacePointer)");
+    mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "uiQtLoaded(mafCore::mafContainerInterface *)");
 }
 
 QWidget *testUILoaderRequestor::widgetLoaded() {
     return m_Widget;
 }
 
-void testUILoaderRequestor::uiQtLoaded(mafContainerInterfacePointer widget) {
+void testUILoaderRequestor::uiQtLoaded(mafCore::mafContainerInterface *widget) {
     mafContainer<QWidget> *w = mafContainerPointerTypeCast(QWidget, widget);
     m_Widget = *w;
 }
@@ -75,10 +75,8 @@ private slots:
     void cleanupTestCase() {
         delete m_LoadRequestor;
         m_LoadRequestor = NULL;
-        if(m_UILoader) {
-            delete m_UILoader;
-            m_UILoader = NULL;
-        }
+        delete m_UILoader;
+        m_UILoader = NULL;
     }
 
     /// mafUILoader allocation test case.
@@ -97,7 +95,7 @@ void mafUILoaderQtTest::mafUILoaderQtAllocationTest() {
 }
 
 void mafUILoaderQtTest::mafUILoaderQtUILoadTest() {
-    m_UILoader->uiLoad("testUIFile");
+    m_UILoader->uiLoad("testUIFile.ui");
     QVERIFY(m_LoadRequestor->widgetLoaded() != NULL);
 }
 
