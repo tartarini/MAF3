@@ -29,8 +29,8 @@ void mafUILoaderQt::uiLoad(const mafString &fileName) {
     *arg = m_UILoaderQt.load(&file);
     file.close();
 
-    mafContainerInterfacePointer gui = arg;
+    mafContainerInterface *gui = arg;
     mafEventArgumentsList list;
-    list.append(mafEventArgument(mafCore::mafContainerInterfacePointer, gui));
+    list.append(mafEventArgument(mafCore::mafContainerInterface *, gui));
     mafEventBusManager::instance()->notifyEvent("maf.local.gui.uiloaded", mafEventTypeLocal, &list);
 }
