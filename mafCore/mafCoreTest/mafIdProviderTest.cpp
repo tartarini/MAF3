@@ -53,6 +53,8 @@ private slots:
     void idNameTest();
     /// idValue test case
     void idValueTest();
+    /// idRemove test case
+    void idRemoveTest();
 
 private:
     mafId m_IdValue; ///< Id created
@@ -117,6 +119,19 @@ void mafIdProviderTest::setIdNameTest() {
     // Change name with acceptable string => succeded.
     result = m_IdProvider->setIdName(id, "TestCustomId");
     QVERIFY(result);
+}
+
+void mafIdProviderTest::idRemoveTest() {
+    // Check for a valid ID
+    mafId id = m_IdProvider->idValue("TestCustomId");
+    QVERIFY(id != -1);
+
+    // Remove the ID
+    m_IdProvider->removeId("TestCustomId");
+
+    // The ID should not be available anymore
+    id = m_IdProvider->idValue("TestCustomId");
+    QVERIFY(id == -1);
 }
 
 MAF_REGISTER_TEST(mafIdProviderTest);
