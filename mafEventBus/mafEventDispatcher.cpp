@@ -146,9 +146,6 @@ bool mafEventDispatcher::removeEventItem(const mafEvent &props) {
 }
 
 bool mafEventDispatcher::addObserver(const mafEvent &props) {
-    //QObject *obj = props[OBJECT].value<QObject *>();
-    //REQUIRE(obj != NULL);
-
     mafString topic = props[TOPIC].toString();
     // check if the object has been already registered with the same signature to avoid duplicates.
     if(m_CallbacksHash.contains(topic) && this->isSignaturePresent(props) == true) {
@@ -178,6 +175,66 @@ bool mafEventDispatcher::addObserver(const mafEvent &props) {
         return connect(objSignal, event_sig.toAscii(), objSlot, observer_sig.toAscii());
     }
     return false;
+}
+
+bool mafEventDispatcher::removeObserver(const QObject *obj, const mafString topic) {
+    if(obj == NULL) {
+        return false;
+    }
+
+    return removeFromHash(&m_CallbacksHash, obj, topic);
+}
+
+bool mafEventDispatcher::removeSignal(const QObject *obj, const mafString topic) {
+    if(obj == NULL) {
+        return false;
+    }
+
+    return removeFromHash(&m_SignalsHash, obj, topic);
+}
+
+bool mafEventDispatcher::removeFromHash(mafEventsHashType *hash, const QObject *obj, const mafString topic) {
+    bool disconnectItem = true;
+    if(topic.length() > 0 && hash->contains(topic)) {
+        // Remove the observer from the given topic.
+        mafEventsHashType::iterator i = hash->find(topic);
+        while(i != hash->end() && i.key() == topic) {
+            QObject *observer = (*(i.value()))[OBJECT].value<QObject *>();
+            if(observer == obj) {
+                mafEvent *prop = i.value();
+                if(*hash == m_CallbacksHash) {
+                    disconnectItem = disconnectItem && disconnectCallback(*prop);
+                } else {
+                    disconnectItem = disconnectItem && disconnectSignal(*prop);
+                }
+                delete i.value();
+                i = hash->erase(i);
+            } else {
+                ++i;
+            }
+        }
+        return disconnectItem;
+    }
+
+    if(topic.isEmpty()) {
+        mafEventsHashType::iterator i = hash->begin();
+        while(i != hash->end()) {
+            QObject *observer = (*(i.value()))[OBJECT].value<QObject *>();
+            if(observer == obj) {
+                mafEvent *prop = i.value();
+                if(*hash == m_CallbacksHash) {
+                    disconnectItem = disconnectItem && disconnectCallback(*prop);
+                } else {
+                    disconnectItem = disconnectItem && disconnectSignal(*prop);
+                }
+                delete i.value();
+                i = hash->erase(i);
+            } else {
+                ++i;
+            }
+        }
+        return disconnectItem;
+    }
 }
 
 bool mafEventDispatcher::removeObserver(const mafEvent &props) {
