@@ -29,6 +29,16 @@ using namespace mafQA;
 		mafCoreSingletons::mafSingletonsShutdown(); \
 		return result; \
 	}
+    #define MAF_GUI_TESTSUITE_MAIN() \
+    using namespace mafCore; \
+    int main(int argc, char *argv[]) \
+    { \
+        QApplication app(argc, argv); \
+        mafCoreSingletons::mafSingletonsInitialize(); \
+        int result= mafTestRegistry::instance()->runTests(argc, argv); \
+        mafCoreSingletons::mafSingletonsShutdown(); \
+        return result; \
+    }
 #else
 	#define MAF_TESTSUITE_MAIN() \
 	int main(int argc, char *argv[]) \
@@ -37,6 +47,13 @@ using namespace mafQA;
 		int result= mafTestRegistry::instance()->runTests(argc, argv); \
 		return result; \
 	}
+    #define MAF_GUI_TESTSUITE_MAIN() \
+    int main(int argc, char *argv[]) \
+    { \
+        QApplication app(argc, argv); \
+        int result= mafTestRegistry::instance()->runTests(argc, argv); \
+        return result; \
+    }
 #endif
 
 #endif // MAFTESTSUITE_
