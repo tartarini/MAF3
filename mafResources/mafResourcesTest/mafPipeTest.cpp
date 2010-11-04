@@ -140,7 +140,9 @@ void mafPipeTest::inputManagementTest() {
     QCOMPARE(vme, vme2);
 
     // try to remove a vme not present in the list
+    mafMessageHandler::instance()->testSuiteLogMode(true);
     m_Pipe->removeInput(vme1);
+    mafMessageHandler::instance()->testSuiteLogMode(false);
     num = m_Pipe->inputList()->length();
     QVERIFY(num == 1);
 

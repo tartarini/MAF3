@@ -202,13 +202,18 @@ bool mafEventDispatcher::removeFromHash(mafEventsHashType *hash, const QObject *
             QObject *observer = (*(i.value()))[OBJECT].value<QObject *>();
             if(observer == obj) {
                 mafEvent *prop = i.value();
+                bool currentDisconnetFlag = false;
                 if(*hash == m_CallbacksHash) {
-                    disconnectItem = disconnectItem && disconnectCallback(*prop);
+                    currentDisconnetFlag = disconnectCallback(*prop);
                 } else {
-                    disconnectItem = disconnectItem && disconnectSignal(*prop);
+                    currentDisconnetFlag = disconnectSignal(*prop);
                 }
-                delete i.value();
-                i = hash->erase(i);
+
+                disconnectItem = disconnectItem && currentDisconnetFlag;
+                if(currentDisconnetFlag) {
+                    delete i.value();
+                    i = hash->erase(i);
+                }
             } else {
                 ++i;
             }
@@ -222,19 +227,25 @@ bool mafEventDispatcher::removeFromHash(mafEventsHashType *hash, const QObject *
             QObject *observer = (*(i.value()))[OBJECT].value<QObject *>();
             if(observer == obj) {
                 mafEvent *prop = i.value();
+                bool currentDisconnetFlag = false;
                 if(*hash == m_CallbacksHash) {
-                    disconnectItem = disconnectItem && disconnectCallback(*prop);
+                    currentDisconnetFlag =  disconnectCallback(*prop);
                 } else {
-                    disconnectItem = disconnectItem && disconnectSignal(*prop);
+                    currentDisconnetFlag =  disconnectSignal(*prop);
                 }
-                delete i.value();
-                i = hash->erase(i);
+                disconnectItem = disconnectItem && currentDisconnetFlag;
+                if(currentDisconnetFlag) {
+                    delete i.value();
+                    i = hash->erase(i);
+                }
             } else {
                 ++i;
             }
         }
         return disconnectItem;
     }
+
+    return false; //need to enter in one of the conditions
 }
 
 bool mafEventDispatcher::removeObserver(const mafEvent &props) {
