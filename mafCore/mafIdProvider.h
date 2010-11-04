@@ -32,6 +32,9 @@ public:
     If you try to create a new ID by using an existing name, the previous defined ID is returned and no new ID is created.*/
     mafId createNewId(const mafString id_name = "");
 
+    /// Allow to remove a previously created Id.
+    bool removeId(const mafString id_name);
+
     /// Change (or allows to customize) the name associated to the ID. Return true on success, otherwise false.
     bool setIdName(const mafId id, const mafString id_name);
 

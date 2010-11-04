@@ -49,6 +49,15 @@ mafId mafIdProvider::createNewId(const mafString id_name) {
     return m_Id++;
 }
 
+bool mafIdProvider::removeId(const mafString id_name) {
+    int removed_items = 0;
+    mafId id_value = idValue(id_name);
+    if(m_IdHash.contains(id_value)) {
+        removed_items = m_IdHash.remove(id_value);
+    }
+    return removed_items != 0;
+}
+
 bool mafIdProvider::setIdName(const mafId id, const mafString id_name) {
     if(m_IdHash.contains(id) && idValue(id_name) == -1) {
         // id exists and name not yet used, so can be assigned to the id.
