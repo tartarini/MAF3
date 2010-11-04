@@ -4,6 +4,7 @@
 CONFIG += uitools
 CONFIG += qtestlib
 CONFIG += link_prl
+CONFIG -= app_bundle
 SOURCES += main.cpp \
     mafGUIManagerTest.cpp \
     mafUILoaderTest.cpp \
