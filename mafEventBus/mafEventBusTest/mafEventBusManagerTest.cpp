@@ -100,11 +100,13 @@ private slots:
     void initTestCase() {
         m_EventBus = mafEventBusManager::instance();
         m_ObjTestObserver = new testObjectCustom();
+        m_ObjTestObserver2 = new testObjectCustom();
     }
 
     /// Cleanup tes variables memory allocation.
     void cleanupTestCase() {
         delete m_ObjTestObserver;
+        delete m_ObjTestObserver2;
         m_EventBus->shutdown();
     }
 
@@ -125,6 +127,7 @@ private slots:
 
 private:
     testObjectCustom *m_ObjTestObserver; ///< Test variable.
+    testObjectCustom *m_ObjTestObserver2; ///< Test variable.
     mafEventBusManager *m_EventBus; ///< EventBus test variable instance.
 };
 
@@ -139,6 +142,9 @@ void mafEventBusManagerTest::eventBusRegistrationNotificationTest() {
     // Create new Event ID used for callback and event notification.
     mafString updateID = "maf.local.eventBus.globalUpdate";
     mafRegisterLocalCallback(updateID, m_ObjTestObserver, "updateObject()");
+
+    // Register also the second test observer to the global update event
+    mafRegisterLocalCallback(updateID, m_ObjTestObserver2, "updateObject()");
 
     // Notify the update event... (event logging is disabled)
     m_EventBus->notifyEvent("maf.local.eventBus.globalUpdate");
@@ -171,6 +177,8 @@ void mafEventBusManagerTest::eventBusRegistrationNotificationTest() {
 
     // Register the callback to update the object custom:
     mafRegisterLocalCallback(setValueID, m_ObjTestObserver, "setObjectValue(int)");
+    // Register also the second observer...
+    mafRegisterLocalCallback(setValueID, m_ObjTestObserver2, "setObjectValue(int)");
 
     //! <snippet>
     mafEventArgumentsList list;
