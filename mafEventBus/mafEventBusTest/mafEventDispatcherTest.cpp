@@ -76,7 +76,9 @@ private slots:
     /// Initialize test variables
     void initTestCase() {
         m_ObjTestObserver = new testObjectCustomForDispatcher;
+        m_ObjTestObserver->setObjectName("TestObserver");
         m_EventDispatcher = new mafEventBus::mafEventDispatcher;
+        m_EventDispatcher->setObjectName("EventDispatcher");
     }
 
     /// Cleanup test variables memory allocation.
@@ -190,7 +192,8 @@ void mafEventDispatcherTest::removeSignalTest() {
     mafString updateID = "maf.local.dispatcherTest.update";
 
     // remove the signal from the updateID topics...
-    QVERIFY(m_EventDispatcher->removeSignal(m_ObjTestObserver, updateID));
+    // ...but don't need to make a qt disconnect because all observer has been disconnected already on previous test case.
+    QVERIFY(m_EventDispatcher->removeSignal(m_ObjTestObserver, updateID, false));
 
     mafEvent *properties = new mafEventBus::mafEvent;
     (*properties)[TOPIC] =  updateID;
@@ -202,7 +205,7 @@ void mafEventDispatcherTest::removeSignalTest() {
     (*properties)[SIGNATURE] = "objectModify()";
     QVERIFY(m_EventDispatcher->registerSignal(*properties));
 
-    QVERIFY(m_EventDispatcher->removeSignal(m_ObjTestObserver));
+    QVERIFY(m_EventDispatcher->removeSignal(m_ObjTestObserver, "", false));
 }
 
 MAF_REGISTER_TEST(mafEventDispatcherTest);
