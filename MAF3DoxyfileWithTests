@@ -600,7 +600,9 @@ INPUT                  = . \
                          mafPluginVTK \
                          mafPluginVTK/mafPluginVTKTest \
                          mafApplicationLogic \
-                         mafApplicationLogic/mafApplicationLogicTest
+                         mafApplicationLogic/mafApplicationLogicTest \
+                         mafGUI \
+                         mafGUI/mafGUITest
 
 # This tag can be used to specify the character encoding of the source files 
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is 
