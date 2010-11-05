@@ -80,12 +80,11 @@ bool mafEventDispatcher::isSignaturePresent(const mafEvent &props) const {
 }
 
 bool mafEventDispatcher::disconnectSignal(const mafEvent &props) {
-    mafEventItemListType observerIdList = m_CallbacksHash.values(props[TOPIC].toString());
-    mafEvent *item;
-    bool result = true;
-    foreach(item, observerIdList) {
-        result = result && disconnectCallback(*item);
-    }
+    QObject *obj_signal = props[OBJECT].value<QObject*>();
+    mafString sig = props[SIGNATURE].toString();
+    mafString event_sig = SIGNAL_SIGNATURE;
+    event_sig.append(sig);
+    bool result = obj_signal->disconnect(obj_signal, event_sig.toAscii(), 0, 0);
     return result;
 }
 
@@ -177,42 +176,48 @@ bool mafEventDispatcher::addObserver(const mafEvent &props) {
     return false;
 }
 
-bool mafEventDispatcher::removeObserver(const QObject *obj, const mafString topic) {
+bool mafEventDispatcher::removeObserver(const QObject *obj, const mafString topic, bool qt_disconnect) {
     if(obj == NULL) {
         return false;
     }
 
-    return removeFromHash(&m_CallbacksHash, obj, topic);
+    return removeFromHash(&m_CallbacksHash, obj, topic, qt_disconnect);
 }
 
-bool mafEventDispatcher::removeSignal(const QObject *obj, const mafString topic) {
+bool mafEventDispatcher::removeSignal(const QObject *obj, const mafString topic, bool qt_disconnect) {
     if(obj == NULL) {
         return false;
     }
 
-    return removeFromHash(&m_SignalsHash, obj, topic);
+    return removeFromHash(&m_SignalsHash, obj, topic, qt_disconnect);
 }
 
-bool mafEventDispatcher::removeFromHash(mafEventsHashType *hash, const QObject *obj, const mafString topic) {
+bool mafEventDispatcher::removeFromHash(mafEventsHashType *hash, const QObject *obj, const mafString topic, bool qt_disconnect) {
     bool disconnectItem = true;
     if(topic.length() > 0 && hash->contains(topic)) {
         // Remove the observer from the given topic.
         mafEventsHashType::iterator i = hash->find(topic);
         while(i != hash->end() && i.key() == topic) {
-            QObject *observer = (*(i.value()))[OBJECT].value<QObject *>();
-            if(observer == obj) {
+            QObject *item = (*(i.value()))[OBJECT].value<QObject *>();
+            if(item == obj) {
                 mafEvent *prop = i.value();
                 bool currentDisconnetFlag = false;
-                if(*hash == m_CallbacksHash) {
-                    currentDisconnetFlag = disconnectCallback(*prop);
+                if(qt_disconnect) {
+                    if(*hash == m_CallbacksHash) {
+                        currentDisconnetFlag = disconnectCallback(*prop);
+                    } else {
+                        currentDisconnetFlag = disconnectSignal(*prop);
+                    }
                 } else {
-                    currentDisconnetFlag = disconnectSignal(*prop);
+                    currentDisconnetFlag = true;
                 }
-
                 disconnectItem = disconnectItem && currentDisconnetFlag;
                 if(currentDisconnetFlag) {
                     delete i.value();
                     i = hash->erase(i);
+                } else {
+                    qDebug() << mafTr("Unable to disconnect object %1 on topic %2").arg(obj->objectName(), topic);
+                    ++i;
                 }
             } else {
                 ++i;
@@ -224,19 +229,26 @@ bool mafEventDispatcher::removeFromHash(mafEventsHashType *hash, const QObject *
     if(topic.isEmpty()) {
         mafEventsHashType::iterator i = hash->begin();
         while(i != hash->end()) {
-            QObject *observer = (*(i.value()))[OBJECT].value<QObject *>();
-            if(observer == obj) {
+            QObject *item = (*(i.value()))[OBJECT].value<QObject *>();
+            if(item == obj) {
                 mafEvent *prop = i.value();
                 bool currentDisconnetFlag = false;
-                if(*hash == m_CallbacksHash) {
-                    currentDisconnetFlag =  disconnectCallback(*prop);
+                if(qt_disconnect) {
+                    if(*hash == m_CallbacksHash) {
+                        currentDisconnetFlag = disconnectCallback(*prop);
+                    } else {
+                        currentDisconnetFlag = disconnectSignal(*prop);
+                    }
                 } else {
-                    currentDisconnetFlag =  disconnectSignal(*prop);
+                    currentDisconnetFlag = true;
                 }
                 disconnectItem = disconnectItem && currentDisconnetFlag;
                 if(currentDisconnetFlag) {
                     delete i.value();
                     i = hash->erase(i);
+                } else {
+                    qDebug() << mafTr("Unable to disconnect object %1 from topic %2").arg(obj->objectName(), (*prop)[TOPIC].toString());
+                    ++i;
                 }
             } else {
                 ++i;
