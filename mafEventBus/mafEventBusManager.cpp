@@ -3,7 +3,7 @@
  *  mafEventBus
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2010 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -50,42 +50,51 @@ void mafEventBusManager::initializeNetworkConnectors() {
 }
 
 bool mafEventBusManager::addEventProperty(const mafEvent &props) const {
-    // Design by contract condition.
-    //REQUIRE(!props[TOPIC].toString().isEmpty());
+    bool result(false);
 
     if(props[TYPE].toInt() == mafEventTypeLocal) {
         // Local event dispatching.
         if(props[SIGTYPE].toInt() == mafSignatureTypeCallback) {
-            return m_LocalDispatcher->addObserver(props);
+            result = m_LocalDispatcher->addObserver(props);
         } else {
-            return m_LocalDispatcher->registerSignal(props);
+            result = m_LocalDispatcher->registerSignal(props);
         }
     } else {
         // Remote event dispatching.
         if(props[SIGTYPE].toInt() == mafSignatureTypeCallback) {
             mafMsgWarning("%s", mafTr("Local Observer can't register in Remote dispatcher").toAscii().data());
-            return false;
+            result = false;
         } else {
-            return m_RemoteDispatcher->registerSignal(props);
+            result = m_RemoteDispatcher->registerSignal(props);
         }
     }
-    return false;
+    if(result) {
+        QObject *obj = props[OBJECT].value<QObject*>();
+        result = connect(obj, SIGNAL(destroyed()), this, SLOT(detachObjectFromBus()));
+    }
+    return result;
 }
 
-void mafEventBusManager::removeObserver(const QObject *obj, const mafString topic) {
+void mafEventBusManager::detachObjectFromBus() {
+    QObject *obj = QObject::sender();
+    removeObserver(obj, "", false);
+    removeSignal(obj, "", false);
+}
+
+void mafEventBusManager::removeObserver(const QObject *obj, const mafString topic, bool qt_disconnect) {
     if(obj == NULL) {
         return;
     }
-    m_LocalDispatcher->removeObserver(obj, topic);
-    m_RemoteDispatcher->removeObserver(obj, topic);
+    m_LocalDispatcher->removeObserver(obj, topic, qt_disconnect);
+    m_RemoteDispatcher->removeObserver(obj, topic, qt_disconnect);
 }
 
-void mafEventBusManager::removeSignal(const QObject *obj, mafString topic) {
+void mafEventBusManager::removeSignal(const QObject *obj, mafString topic, bool qt_disconnect) {
     if(obj == NULL) {
         return;
     }
-    m_LocalDispatcher->removeSignal(obj, topic);
-    m_RemoteDispatcher->removeSignal(obj, topic);
+    m_LocalDispatcher->removeSignal(obj, topic, qt_disconnect);
+    m_RemoteDispatcher->removeSignal(obj, topic, qt_disconnect);
 }
 
 bool mafEventBusManager::removeEventProperty(const mafEvent &props) const {
@@ -107,19 +116,7 @@ bool mafEventBusManager::removeEventProperty(const mafEvent &props) const {
     return false;
 }
 
-/*void mafEventBusManager::notifyEvent(const mafString id, mafEventType ev_type, mafEventArgumentsList *argList, mafGenericReturnArgument *returnArg) const {
-    mafId numeric_id = mafIdProvider::instance()->idValue(id);
-    if(numeric_id != -1) {
-        notifyEvent(numeric_id, ev_type, argList, returnArg);
-    } else {
-        mafMsgWarning("%s", mafTr("ID named '%1' is not mapped into the mafIdProvider!!").arg(id).toAscii().data());
-    }
-}*/
-
 void mafEventBusManager::notifyEvent(const mafString topic, mafEventType ev_type, mafEventArgumentsList *argList, mafGenericReturnArgument *returnArg) const {
-    // Design by contract condition.
-    //REQUIRE(!topic.isEmpty());
-
     if(m_EnableEventLogging) {
         if(m_LogEventTopic == "*" || m_LogEventTopic == topic) {
             mafMsgDebug() << mafTr("Event notification for ID: ") << topic << mafTr(" named: ") << topic << "\n";
@@ -148,9 +145,6 @@ void mafEventBusManager::enableEventLogging(bool enable) {
 }
 
 void mafEventBusManager::logEventTopic(const mafString topic) {
-    // Design by contract condition.
-    //REQUIRE(!topic.isEmpty());
-
     m_LogEventTopic = topic;
 }
 
