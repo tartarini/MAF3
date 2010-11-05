@@ -10,6 +10,8 @@ SOURCES += main.cpp \
     mafUILoaderTest.cpp \
     mafUILoaderQtTest.cpp
 include(../../mafInstallTest.pri)
+include(../../mafImportQXMLRPC.pri)
+include(../../mafImportQtSoap.pri)
 
 # Foundation libraries dependencies
 INCLUDEPATH += ../../mafEventBus \
