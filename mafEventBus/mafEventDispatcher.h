@@ -39,10 +39,10 @@ public:
     bool removeObserver(const mafEvent &props);
 
     /// remove the callback from the observer's hash.
-    bool removeObserver(const QObject *obj, const mafString topic = "");
+    bool removeObserver(const QObject *obj, const mafString topic = "", bool qt_disconnect = true);
 
     /// Remove the signal from the signal's hash.
-    bool removeSignal(const QObject *obj, const mafString topic = "");
+    bool removeSignal(const QObject *obj, const mafString topic = "", bool qt_disconnect = true);
 
     /// register custom signals use by objects to raise them events.
     /** Return true if signal has beed added correctly, false otherwise.
@@ -91,7 +91,7 @@ private:
     bool disconnectCallback(const mafEvent &props);
 
     /// Remove the given object from the has passed as argument
-    bool removeFromHash(mafEventsHashType *hash, const QObject *obj, const mafString topic);
+    bool removeFromHash(mafEventsHashType *hash, const QObject *obj, const mafString topic, bool qt_disconnect = true);
 
     mafEventsHashType m_CallbacksHash; ///< Callbacks' hash for receiving events like updates or refreshes.
     mafEventsHashType m_SignalsHash; ///< Signals' hash for sending events.
