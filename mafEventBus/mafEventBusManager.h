@@ -3,7 +3,7 @@
  *  mafEventBus
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2010 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -27,7 +27,9 @@ namespace mafEventBus {
  This singletone provides the access point of the Communication Bus for MAF3 framework.
  mafEventBusManager defines also the mafId maf.local.eventBus.globalUpdate to be used as generic update notification mechanism that the event bus can send to all the observers.
  */
-class MAFEVENTBUSSHARED_EXPORT mafEventBusManager {
+class MAFEVENTBUSSHARED_EXPORT mafEventBusManager : public QObject {
+    Q_OBJECT
+
 public:
     /// Return an instance of the event bus.
     static mafEventBusManager *instance();
@@ -44,25 +46,19 @@ public:
     /** This method allows to remove from the observer's hash the object
     passed as argument. If no topic is specified, the observer will be removed from all
     the topic it was listening, otherwise it will be disconnected only from the given topic.*/
-    void removeObserver(const QObject *obj, const mafString topic = "");
+    void removeObserver(const QObject *obj, const mafString topic = "", bool qt_disconnect = true);
 
     /// Remove the object passed as argument from the signal emitter's hash.
     /** This method allows to remove from the signal emitter's hash the object
     passed as argument. If no topic is specified, the emitter will be removed from all
     the topic it was emitting signals, otherwise it will be removed only from the given topic.*/
-    void removeSignal(const QObject *obj, mafString topic = "");
+    void removeSignal(const QObject *obj, mafString topic = "", bool qt_disconnect = true);
 
     /// Notify events associated to the given id locally to the application.
     void notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList = NULL, mafGenericReturnArgument *returnArg = NULL) const;
 
     /// Notify event associated to the given id locally to the application.
-    //void notifyEvent(const mafString id, mafEventType ev_type = mafEventTypeLocal, mafEventArgumentsList *argList = NULL, mafGenericReturnArgument *returnArg = NULL) const;
-
-    /// Notify event associated to the given id locally to the application.
     void notifyEvent(const mafString topic, mafEventType ev_type = mafEventTypeLocal, mafEventArgumentsList *argList = NULL, mafGenericReturnArgument *returnArg = NULL) const;
-
-    /// Notify the event remotely by using the current active network connector given by the mafEventDispatcherRemote.
-   //void notifyEventRemote(const mafString id, mafList<mafVariant> *argList = NULL) const;
 
     /// Enable/Disable event logging to allow dumping events notification into the selected logging output stream.
     void enableEventLogging(bool enable = true);
@@ -94,6 +90,10 @@ public:
     /// Create the client for remote communication according to the given protocol, server host and port.
     bool createClient(const mafString &communication_protocol, const mafString &server_host, unsigned int port);
 
+public slots:
+    /// Intercepts objects deletation and detach them from the event bus.
+    void detachObjectFromBus();
+
 private:
     /// Object constructor.
     mafEventBusManager();
@@ -120,10 +120,6 @@ inline void mafEventBusManager::plugNetworkConnector(const mafString &protocol, 
 inline bool mafEventBusManager::isSignalPresent(const mafString topic) const {
     return m_LocalDispatcher->isSignalPresent(topic);
 }
-
-/*inline bool mafEventBusManager::isSignalPresent(const mafString &id_name) const {
-    return m_LocalDispatcher->isSignalPresent(id_name);
-}*/
 
 } // namespace mafEventBus
 
