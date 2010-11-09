@@ -114,18 +114,8 @@ void mafNetworkConnectorQXMLRPCTest::mafNetworkConnectorQXMLRPCCommunictionTest(
     m_NetWorkConnectorQXMLRPC->createServer(8000);
     m_NetWorkConnectorQXMLRPC->startListen();
 
-    //register the callback
-//    mafEventItemProperties propCallback;
-//    propCallback.m_EventId = customID;
-//    propCallback.m_EventItemType = mafEventTypeLocal;
-//    propCallback.m_SignatureType = mafSignatureTypeCallback;
-//    propCallback.m_Object = m_ObjectTest;
-//    propCallback.m_MethodSignature = "updateObject()";
-//    QVERIFY(m_EventBus->addEventProperty(propCallback));
-
     // Register callback (done by the remote object).
     mafRegisterLocalCallback("maf.local.eventBus.globalUpdate", m_ObjectTest, "updateObject()");
-
 
     m_NetWorkConnectorQXMLRPC->createClient("localhost", 8000);
 
