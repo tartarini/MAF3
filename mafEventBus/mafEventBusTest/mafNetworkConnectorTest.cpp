@@ -135,6 +135,7 @@ void mafNetworkConnectorTest::mafNetworkConnectorCreateClientAndServerTest() {
     m_NetworkConnector->createClient("localhost", 8000);
     QCOMPARE(m_NetworkConnector->connectorStatus(), res);
 }
+
 MAF_REGISTER_TEST(mafNetworkConnectorTest);
 #include "mafNetworkConnectorTest.moc"
 
