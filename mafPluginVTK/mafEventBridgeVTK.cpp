@@ -186,34 +186,25 @@ void mafEventBridgeVTK::pickEvent() {
 void mafEventBridgeVTK::getModifiers() {
     //check "shift" modifier.
     int flag = 1<<MAF_SHIFT_KEY;
-    if (m_Interactor->GetShiftKey())
-    {
+    if (m_Interactor->GetShiftKey()) {
         m_Modifiers=m_Modifiers|flag;
-    }
-    else
-    {
+    } else {
         m_Modifiers=m_Modifiers&(~flag);
     }
 
     //check "ctrl" modifier.
     flag = 1<<MAF_CTRL_KEY;
-    if (m_Interactor->GetControlKey())
-    {
+    if (m_Interactor->GetControlKey()) {
         m_Modifiers=m_Modifiers|flag;
-    }
-    else
-    {
+    } else {
         m_Modifiers=m_Modifiers&(~flag);
     }
 
     //check "alt" modifier.
     flag = 1<<MAF_ALT_KEY;
-    if (m_Interactor->GetAltKey())
-    {
+    if (m_Interactor->GetAltKey()) {
         m_Modifiers=m_Modifiers|flag;
-    }
-    else
-    {
+    } else {
         m_Modifiers=m_Modifiers&(~flag);
     }
 }
@@ -231,12 +222,10 @@ bool mafEventBridgeVTK::vmePickCheck() {
     vtkRendererCollection *rc = m_Interactor->GetRenderWindow()->GetRenderers();
     vtkRenderer *r = NULL;
     rc->InitTraversal();
-    while(r = rc->GetNextItem())
-    {
-        if(cellPicker->Pick(mousePosX,mousePosY,0,r))
-        {
+    while(r = rc->GetNextItem()) {
+        if(cellPicker->Pick(mousePosX,mousePosY,0,r)) {
             cellPicker->GetPickPosition(posPicked);
-            actor = vtkActor::New();
+            //actor = vtkActor::New(); // @@@@ Memory Leak ?!? @@@@
             actor = cellPicker->GetActor();
             actorPicked = &(actor);
         }
