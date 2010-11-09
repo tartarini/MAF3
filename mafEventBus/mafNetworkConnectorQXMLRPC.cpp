@@ -86,7 +86,7 @@ void mafNetworkConnectorQXMLRPC::createServer(const unsigned int port) {
     methodsMapping.insert("maf.remote.eventBus.comunication.xmlrpc", parametersForRegisterteredFunction);
     registerServerMethod(methodsMapping);
 
-    //if a user qant to register another method, it is important to know that mafEventDispatcherRemote allows
+    //if a user want to register another method, it is important to know that mafEventDispatcherRemote allows
     // the registration of function with mafList<mafVariant> parameter.
 }
 
