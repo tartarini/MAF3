@@ -25,7 +25,7 @@ mafNetworkConnectorQXMLRPC::mafNetworkConnectorQXMLRPC() : mafNetworkConnector()
 
     m_Protocol = "XMLRPC";
 
-    mafRegisterRemoteSignal("maf.remote.eventBus.comunication.xmlrpc", NULL, "remoteCommunication()");
+    mafRegisterRemoteSignal("maf.remote.eventBus.comunication.xmlrpc", this, "remoteCommunication()");
 }
 
 mafNetworkConnectorQXMLRPC::~mafNetworkConnectorQXMLRPC() {
@@ -67,7 +67,7 @@ void mafNetworkConnectorQXMLRPC::createServer(const unsigned int port) {
     m_Server->setProperty("port", port);
 
     // Create a new ID to allow methods registration on new server instance.
-    mafString id_name(mafTr("REGISTER_SERVER_METHODS_%1").arg(port));
+    mafString id_name(mafTr("maf.remote.eventbus.communication.xmlrpc.serverMethods%1").arg(port));
     //mafId register_methods_id = mafIdProvider::instance()->createNewId(id_name);
 
     // Register the signal to the event bus.
@@ -94,7 +94,7 @@ void mafNetworkConnectorQXMLRPC::stopServer() {
     unsigned int p = m_Server->property("port").toUInt();
     if(p != 0) {
         // get the ID for the previous server;
-        mafString old_id_name(mafTr("REGISTER_SERVER_METHODS_%1").arg(p));
+        mafString old_id_name(mafTr("maf.remote.eventbus.communication.xmlrpc.serverMethods%1").arg(p));
         //mafId old_register_methods_id = mafIdProvider::instance()->createNewId(old_id_name);
         // Remove the old signal.
         mafEvent props;
