@@ -50,7 +50,7 @@ void mafEventDispatcher::initializeGlobalEvents() {
     this->registerSignal(*remote_done);
 
     mafEvent *remote_failed = new mafEvent();
-    (*remote_failed)[TOPIC] = "maf.remote.eventBus.comunicationFalied";
+    (*remote_failed)[TOPIC] = "maf.remote.eventBus.comunicationFailed";
     (*remote_failed)[TYPE] = mafEventTypeLocal;
     (*remote_failed)[SIGTYPE] = mafSignatureTypeSignal;
     var.setValue((QObject*)this);
@@ -151,28 +151,38 @@ bool mafEventDispatcher::addObserver(const mafEvent &props) {
         return false;
     }
 
+    bool isSignalPresent(true);
     mafEvent *itemEventProp;
     itemEventProp = m_SignalsHash.value(topic);
     if(itemEventProp == NULL) {
         mafMsgDebug() << mafTr("Signal not present for topic %1").arg(topic);
-        return false;
+        isSignalPresent = false;
     }
-    mafVariant sigVariant = (*itemEventProp)[SIGNATURE];
-    mafString sig = sigVariant.toString();
-    if(sig.length() > 0) {
-        mafString observer_sig = CALLBACK_SIGNATURE;
-        observer_sig.append(props[SIGNATURE].toString());
 
-        mafString event_sig = SIGNAL_SIGNATURE;
-        event_sig.append(sig);
+    if(isSignalPresent) {
+        mafVariant sigVariant = (*itemEventProp)[SIGNATURE];
+        mafString sig = sigVariant.toString();
+        if(sig.length() > 0) {
+            mafString observer_sig = CALLBACK_SIGNATURE;
+            observer_sig.append(props[SIGNATURE].toString());
 
-        // Add the new observer to the Hash.
+            mafString event_sig = SIGNAL_SIGNATURE;
+            event_sig.append(sig);
+
+            // Add the new observer to the Hash.
+            mafEvent *dict = const_cast<mafEvent *>(&props);
+            this->m_CallbacksHash.insertMulti(topic, dict);
+            QObject *objSignal = (*itemEventProp)[OBJECT].value<QObject *>();
+            QObject *objSlot = props[OBJECT].value<QObject *>();
+            return connect(objSignal, event_sig.toAscii(), objSlot, observer_sig.toAscii());
+        }
+    } else {
         mafEvent *dict = const_cast<mafEvent *>(&props);
         this->m_CallbacksHash.insertMulti(topic, dict);
-        QObject *objSignal = (*itemEventProp)[OBJECT].value<QObject *>();
-        QObject *objSlot = props[OBJECT].value<QObject *>();
-        return connect(objSignal, event_sig.toAscii(), objSlot, observer_sig.toAscii());
+
+        return true;
     }
+
     return false;
 }
 
