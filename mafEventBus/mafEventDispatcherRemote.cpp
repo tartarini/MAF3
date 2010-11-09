@@ -31,6 +31,9 @@ void mafEventDispatcherRemote::initializeGlobalEvents() {
     mafString topic = "maf.local.eventBus.globalUpdate";
     (*properties)[TOPIC] = topic;
     (*properties)[TYPE] = mafEventTypeRemote;
+    mafVariant var;
+    var.setValue((QObject*)this);
+    (*properties)[OBJECT] = var;
     (*properties)[SIGTYPE] = mafSignatureTypeSignal;
     (*properties)[SIGNATURE] = "notifyDefaultEvent()";
     this->registerSignal(*properties);
