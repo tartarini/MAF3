@@ -128,10 +128,10 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     m_NetWorkConnectorQtSoap->setWSDL(WSDL_URL);
 
     // customize call
-    mafList<mafVariant> myList; // create list to send
+    mafEventArgumentsList myList; // create list to send
 
     //inside there is ONE hash which has name, value
-    mafHash<mafString, mafVariant> values;
+    mafEventHash values;
 
     //this is value 1
     mafString valueToSend = "EternoDolore";
@@ -143,7 +143,7 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
 
 
     //append inside the list
-    myList.push_back(values);
+    myList.push_back(mafEventArgument(mafEventHash, values));
 
     // send call
     m_NetWorkConnectorQtSoap->setAction("myEcho");
@@ -168,10 +168,10 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     m_NetWorkConnectorQtSoap->setWSDL("http://localhost:8280/services/echo?wsdl");
 
     // customize call
-    mafList<mafVariant> myList; // create list to send
+    mafEventArgumentsList myList; // create list to send
 
     //inside there is ONE hash which has name, value
-    mafHash<mafString, mafVariant> values;
+    mafEventHash values;
 
     //this is value 1
     mafString valueToSend = "IBM";
@@ -183,7 +183,7 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
 
 
     //append inside the list
-    myList.push_back(values);
+    myList.push_back(mafEventArgument(mafEventHash,values));
 
     QtSoapNamespaces &registry = QtSoapNamespaces::instance();
     registry.registerNamespace("ns", "http://echo.services.core.carbon.wso2.org");
@@ -212,10 +212,10 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     m_NetWorkConnectorQtSoap->setWSDL(WSDL_URL);
 
     // customize call
-    mafList<mafVariant> myList; // create list to send
+    mafEventArgumentsList myList; // create list to send
 
     //inside there is ONE hash which has name, value
-    mafHash<mafString, mafVariant> values;
+    mafEventHash values;
 
     //this is value 1
     mafList<mafString> list1;
@@ -237,7 +237,7 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     values.insert("arrData", v2);
 
     //append inside the list
-    myList.push_back(values);
+    myList.push_back(mafEventArgument(mafEventHash,values));
 
     // send call
     m_NetWorkConnectorQtSoap->setAction("testArray");
@@ -262,14 +262,14 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionWithGSO
     m_NetWorkConnectorQtSoap->setWSDL("http://ws.biomedtown.org/hello.wsdl");
 
     // customize call
-    mafList<mafVariant> myList; // create list to send
+    mafEventArgumentsList myList; // create list to send
 
     //inside there is ONE hash which has name, value
-    mafHash<mafString, mafVariant> values;
+    mafEventHash values;
     values.insert("input", "stringTest");
 
     //append inside the list
-    myList.push_back(values);
+    myList.push_back(mafEventArgument(mafEventHash,values));
 
     // send call
     m_NetWorkConnectorQtSoap->registerNamespace("h", "http://tempuri.org/h.xsd");
