@@ -46,10 +46,12 @@ void mafEventDispatcherRemote::initializeGlobalEvents() {
 void mafEventDispatcherRemote::setNetworkConnectorServer(mafNetworkConnector *connector) {
     if(m_NetworkConnectorServer == NULL) {
         m_NetworkConnectorServer = connector->clone();
+        m_NetworkConnectorServer->initializeForEventBus();
     } else {
         if(m_NetworkConnectorServer->protocol() != connector->protocol()) {
             delete m_NetworkConnectorServer; //if there will be multiprotocol , here there will be a problem for thread app
             m_NetworkConnectorServer = connector->clone();
+            m_NetworkConnectorServer->initializeForEventBus();
        }
    }
 }
@@ -57,10 +59,12 @@ void mafEventDispatcherRemote::setNetworkConnectorServer(mafNetworkConnector *co
 void mafEventDispatcherRemote::setNetworkConnectorClient(mafNetworkConnector *connector) {
      if(m_NetworkConnectorClient == NULL) {
          m_NetworkConnectorClient = connector->clone();
+         m_NetworkConnectorClient->initializeForEventBus();
      } else {
          if(m_NetworkConnectorClient->protocol() != connector->protocol()) {
              delete m_NetworkConnectorClient; //if there will be multiprotocol , here there will be a problem for thread app
              m_NetworkConnectorClient = connector->clone();
+             m_NetworkConnectorClient->initializeForEventBus();
         }
     }
 }
