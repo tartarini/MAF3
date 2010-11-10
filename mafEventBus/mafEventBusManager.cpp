@@ -68,10 +68,10 @@ bool mafEventBusManager::addEventProperty(const mafEvent &props) const {
             result = m_RemoteDispatcher->registerSignal(props);
         }
     }
-    if(result) {
-        QObject *obj = props[OBJECT].value<QObject*>();
-        result = connect(obj, SIGNAL(destroyed()), this, SLOT(detachObjectFromBus()));
-    }
+
+    QObject *obj = props[OBJECT].value<QObject*>();
+    result = connect(obj, SIGNAL(destroyed()), this, SLOT(detachObjectFromBus()));
+
     return result;
 }
 
@@ -119,7 +119,7 @@ bool mafEventBusManager::removeEventProperty(const mafEvent &props) const {
 void mafEventBusManager::notifyEvent(const mafString topic, mafEventType ev_type, mafEventArgumentsList *argList, mafGenericReturnArgument *returnArg) const {
     if(m_EnableEventLogging) {
         if(m_LogEventTopic == "*" || m_LogEventTopic == topic) {
-            mafMsgDebug() << mafTr("Event notification for ID: ") << topic << mafTr(" named: ") << topic << "\n";
+            mafMsgDebug() << mafTr("Event notification for TOPIC: %1").arg(topic);
         }
     }
 
