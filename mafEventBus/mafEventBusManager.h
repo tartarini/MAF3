@@ -107,6 +107,9 @@ private:
     bool m_EnableEventLogging; ///< Flag to enable/disable logging for event sent.
     mafString m_LogEventTopic; ///< Store the current Event_Id to track through the logger.
     mafNetworkConnectorHash m_NetworkConnectorHash; ///< Hash table used to store the association of network protocols and network connector types.
+
+    bool m_SkipDetach; ///< lifesafe variable to avoid the detach from eventbus.
+
 };
 
 /////////////////////////////////////////////////////////////
