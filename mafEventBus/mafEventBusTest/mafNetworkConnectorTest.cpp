@@ -33,7 +33,7 @@ public:
     /*virtual*/ void createServer(unsigned int port);
 
     /// Allow to send a network request.
-    /*virtual*/ void send(const mafString &event_id, mafEventArgumentsList *params);
+    /*virtual*/ void send(const mafString event_id, mafEventArgumentsList *params);
 
     /// Start the server.
     /*virtual*/ void startListen();
@@ -44,12 +44,19 @@ public:
     /// retrieve instance of object
     /*virtual*/ mafNetworkConnector *clone();
 
+    /// register all the signals and slots
+    /*virtual*/ void initializeForEventBus();
+
 private:
     mafString m_ConnectorStatus; ///< Test Var.
 };
 
 mafNetworkConnector *testNetworkConnectorCustom::clone() {
     return new testNetworkConnectorCustom();
+}
+
+void testNetworkConnectorCustom::initializeForEventBus() {
+
 }
 
 testNetworkConnectorCustom::testNetworkConnectorCustom() : mafNetworkConnector(), m_ConnectorStatus("") {
@@ -71,7 +78,7 @@ void testNetworkConnectorCustom::createClient(mafString hostName, unsigned int p
     m_ConnectorStatus.append(mafString::number(port));
 }
 
-void testNetworkConnectorCustom::send(const mafString &event_id, mafEventArgumentsList *params) {
+void testNetworkConnectorCustom::send(const mafString event_id, mafEventArgumentsList *params) {
     Q_UNUSED(params);
     m_ConnectorStatus = "Event sent with ID: ";
     m_ConnectorStatus.append(event_id);

@@ -125,6 +125,8 @@ private slots:
     /// Event notification benchmarks.
     void eventNotificationBenchmarkTest();
 
+    void remoteConnectionTest();
+
 private:
     testObjectCustom *m_ObjTestObserver; ///< Test variable.
     testObjectCustom *m_ObjTestObserver2; ///< Test variable.
@@ -217,6 +219,38 @@ void mafEventBusManagerTest::eventNotificationBenchmarkTest() {
         m_EventBus->notifyEvent(updateID);
     }
 }
+
+void mafEventBusManagerTest::remoteConnectionTest() {
+
+    m_EventBus->createServer("XMLRPC", 8000);
+    m_EventBus->startListen();
+
+    m_EventBus->createClient("XMLRPC", "localhost", 8000);
+
+    //create list to send from the client
+    //first parameter is a list which contains event properties
+    mafList<mafVariant> eventParameters;
+    eventParameters.append("maf.local.eventBus.globalUpdate");
+    eventParameters.append(mafEventTypeLocal);
+    eventParameters.append(mafSignatureTypeCallback);
+    eventParameters.append("updateObject()");
+
+    mafList<mafVariant> dataParameters;
+
+    mafEventArgumentsList listToSend;
+    listToSend.append(mafEventArgument(mafList<mafVariant>, eventParameters));
+    listToSend.append(mafEventArgument(mafList<mafVariant>, dataParameters));
+
+    //with eventbus
+    mafString topic = "maf.remote.eventBus.comunication.send.xmlrpc";
+    m_EventBus->notifyEvent(topic, mafEventTypeRemote , &listToSend);
+
+    QTime dieTime = QTime::currentTime().addSecs(3);
+    while(QTime::currentTime() < dieTime) {
+       QCoreApplication::processEvents(QEventLoop::AllEvents, 3);
+    }
+}
+
 
 MAF_REGISTER_TEST(mafEventBusManagerTest);
 #include "mafEventBusManagerTest.moc"
