@@ -48,10 +48,6 @@ public:
     /// Start the server.
     /*virtual*/ void startListen();
 
-    /// Allow to send a network request.
-    /** Contains the conversion between maf datatypes and qxmlrpc datatype based both on QVariant. */
-    /*virtual*/ void send(const mafString &event_id, mafList<mafVariant> *params);
-
     //retrieve an instance of the object
     /*virtual*/ mafNetworkConnector *clone();
 
@@ -62,6 +58,10 @@ signals:
 public slots:
     /// register methods on the server
     void registerServerMethod(mafRegisterMethodsMap registerMethodsList);
+
+    /// Allow to send a network request.
+    /** Contains the conversion between maf datatypes and qxmlrpc datatype based both on QVariant. */
+    /*virtual*/ void send(const mafString &event_id, mafEventArgumentsList *argList);
 
 private slots:
     /// callback for the client which retrieve the variable from the server

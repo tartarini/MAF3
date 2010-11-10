@@ -26,6 +26,7 @@ mafNetworkConnectorQXMLRPC::mafNetworkConnectorQXMLRPC() : mafNetworkConnector()
     m_Protocol = "XMLRPC";
 
     mafRegisterRemoteSignal("maf.remote.eventBus.comunication.xmlrpc", this, "remoteCommunication()");
+    //mafRegisterRemoteCallback("maf.remote.eventBus.comunication.xmlrpc", this, "send(mafList<mafVariant> *)");
 }
 
 mafNetworkConnectorQXMLRPC::~mafNetworkConnectorQXMLRPC() {
@@ -150,18 +151,37 @@ void mafNetworkConnectorQXMLRPC::startListen() {
     }
 }
 
-void mafNetworkConnectorQXMLRPC::send(const mafString &event_id, mafList<mafVariant> *params) {
-   //conversion between MAF datatypes and qxmlrpc datatypes based on QVariant
-   mafList<xmlrpc::Variant> convertedParams;
+void mafNetworkConnectorQXMLRPC::send(const mafString &event_id, mafEventArgumentsList *argList) {
+    mafList<xmlrpc::Variant> *vl = NULL;
+    if(argList != NULL) {
+        vl = new mafList<xmlrpc::Variant>();
 
-   int i=0, size = params->count();
-   for(;i<size;i++) {
-       xmlrpc::Variant varQ;
-       varQ.setValue(params->at(i));
-       convertedParams.push_back(varQ);
-   }
+        int i=0, size = argList->count();
+        for(;i<size;i++) {
+            mafString typeArgument;
+            typeArgument = argList->at(i).name();
+            if(typeArgument != "mafList<mafVariant>") {
+                mafMsgWarning("%s", mafTr("Remote Dispatcher need to have arguments that are mafList<mafVariant>").toAscii().data());
+                delete vl;
+                return;
+            }
 
-   xmlrpcSend(event_id, convertedParams);
+            void *vp = argList->at(i).data();
+            mafList<mafVariant> *l;
+            l = (mafList<mafVariant> *)vp;
+            xmlrpc::Variant var;
+            var.setValue(*l);
+
+            vl->push_back(var); //only the first parameter represent the whole list of arguments
+        }
+        if(size == 0) {
+            mafMsgWarning("%s", mafTr("Remote Dispatcher need to have at least one argument that is a mafList<mafVariant>").toAscii().data());
+            return;
+        }
+    }
+
+   xmlrpcSend(event_id, *vl);
+   delete vl;
 }
 
 void mafNetworkConnectorQXMLRPC::xmlrpcSend(const mafString &methodName, mafList<xmlrpc::Variant> parameters) {

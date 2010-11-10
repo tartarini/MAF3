@@ -203,14 +203,19 @@ mafSoapType *mafNetworkConnectorQtSoap::marshall(const mafString name, const maf
     return returnValue;
 }
 
-void mafNetworkConnectorQtSoap::send(const mafString &methodName, mafList<mafVariant> *params) {
+void mafNetworkConnectorQtSoap::send(const mafString &methodName, mafEventArgumentsList *argList) {
     //REQUIRE(!params->at(0).isNull());
     //REQUIRE(params->at(0).canConvert(mafVariant::Hash) == true);
 
+    mafString type = argList->at(0).name();
+    if(argList == NULL || type != "mafEventHash") {
+        mafMsgDebug() << "NULL or invalid argument, nothing to send!";
+        return;
+    }
     m_Request.clear();
     m_Request.setMethod(methodName);
-    mafHash<mafString, mafVariant> *values;
-    values = &(params->at(0).toHash());
+    mafEventHash *values;
+    values = reinterpret_cast<mafEventHash *> (argList->at(0).data());
     int i = 0, size = values->size();
     for(;i<size;i++) {
         m_Request.addMethodArgument(marshall(values->keys().at(i), values->values().at(i)));
@@ -221,7 +226,6 @@ void mafNetworkConnectorQtSoap::send(const mafString &methodName, mafList<mafVar
     // Submit the request the the web service.
     m_Http->setAction(m_Action);
     m_Http->submitRequest(m_Request, m_Path);
-
 
 }
 
