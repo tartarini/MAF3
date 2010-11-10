@@ -24,9 +24,11 @@ mafNetworkConnectorQXMLRPC::mafNetworkConnectorQXMLRPC() : mafNetworkConnector()
     //and parameters mafList<mafVariant>
 
     m_Protocol = "XMLRPC";
+}
 
-    mafRegisterRemoteSignal("maf.remote.eventBus.comunication.xmlrpc", this, "remoteCommunication()");
-    //mafRegisterRemoteCallback("maf.remote.eventBus.comunication.xmlrpc", this, "send(mafList<mafVariant> *)");
+void mafNetworkConnectorQXMLRPC::initializeForEventBus() {
+    mafRegisterRemoteSignal("maf.remote.eventBus.comunication.send.xmlrpc", this, "remoteCommunication(const mafString, mafEventArgumentsList *)");
+    mafRegisterRemoteCallback("maf.remote.eventBus.comunication.send.xmlrpc", this, "send(const mafString, mafEventArgumentsList *)");
 }
 
 mafNetworkConnectorQXMLRPC::~mafNetworkConnectorQXMLRPC() {
@@ -68,12 +70,12 @@ void mafNetworkConnectorQXMLRPC::createServer(const unsigned int port) {
     m_Server->setProperty("port", port);
 
     // Create a new ID to allow methods registration on new server instance.
-    mafString id_name(mafTr("maf.remote.eventbus.communication.xmlrpc.serverMethods%1").arg(port));
+    mafString id_name(mafTr("maf.remote.eventbus.communication.send.xmlrpc.serverMethods%1").arg(port));
 
     // Register the signal to the event bus.
-    mafRegisterLocalSignal(id_name, this, "registerMethodsServer(mafRegisterMethodsMap)");
+    /*mafRegisterRemoteSignal(id_name, this, "registerMethodsServer(mafRegisterMethodsMap)");
     connect(this, SIGNAL(registerMethodsServer(mafRegisterMethodsMap)),
-            this, SLOT(registerServerMethod(mafRegisterMethodsMap)));
+            this, SLOT(registerServerMethod(mafRegisterMethodsMap)));*/
 
     mafList<mafVariant::Type> parametersForRegisterteredFunction;
     parametersForRegisterteredFunction.append(mafVariant::String); //return argument
@@ -83,7 +85,7 @@ void mafNetworkConnectorQXMLRPC::createServer(const unsigned int port) {
     //registration of the method maf.remote.eventBus.comunication.xmlrpc at XMLRPC level
     // the connect uses function name ad signature defined by parametersForRegisterteredFunction
     mafRegisterMethodsMap methodsMapping;
-    methodsMapping.insert("maf.remote.eventBus.comunication.xmlrpc", parametersForRegisterteredFunction);
+    methodsMapping.insert("maf.remote.eventBus.comunication.send.xmlrpc", parametersForRegisterteredFunction);
     registerServerMethod(methodsMapping);
 
     //if a user want to register another method, it is important to know that mafEventDispatcherRemote allows
@@ -94,13 +96,13 @@ void mafNetworkConnectorQXMLRPC::stopServer() {
     unsigned int p = m_Server->property("port").toUInt();
     if(p != 0) {
         // get the ID for the previous server;
-        mafString old_id_name(mafTr("maf.remote.eventbus.communication.xmlrpc.serverMethods%1").arg(p));
+        /*mafString old_id_name(mafTr("maf.remote.eventbus.communication.send.xmlrpc.serverMethods%1").arg(p));
         // Remove the old signal.
         mafEvent props;
         props[TOPIC] = old_id_name;
-        props[TYPE] = mafEventTypeLocal;
+        props[TYPE] = mafEventTypeRemote;
         props[SIGNATURE] = "registerMethodsServer(mafRegisterMethodsMap)";
-        mafEventBusManager::instance()->removeEventProperty(props);
+        mafEventBusManager::instance()->removeEventProperty(props);*/
         // Delete (and stop) the previous instance of the server.
         if(m_Server) {
             delete m_Server;
@@ -151,7 +153,7 @@ void mafNetworkConnectorQXMLRPC::startListen() {
     }
 }
 
-void mafNetworkConnectorQXMLRPC::send(const mafString &event_id, mafEventArgumentsList *argList) {
+void mafNetworkConnectorQXMLRPC::send(const mafString event_id, mafEventArgumentsList *argList) {
     mafList<xmlrpc::Variant> *vl = NULL;
     if(argList != NULL) {
         vl = new mafList<xmlrpc::Variant>();
@@ -208,13 +210,13 @@ void mafNetworkConnectorQXMLRPC::processReturnValue( int requestId, QVariant val
     Q_UNUSED( requestId );
     Q_ASSERT( value.canConvert( QVariant::String ) );
     mafMsgDebug("%s", value.toString().toAscii().data());
-    mafEventBusManager::instance()->notifyEvent("maf.remote.eventBus.comunicationDone", mafEventTypeLocal);
+    mafEventBusManager::instance()->notifyEvent("maf.local.eventBus.comunicationDone", mafEventTypeLocal);
 }
 
 void mafNetworkConnectorQXMLRPC::processFault( int requestId, int errorCode, QString errorString ) {
     // Log the error.
     mafMsgDebug("%s", mafTr("Process Fault for requestID %1 with error %2 - %3").arg(mafString::number(requestId), mafString::number(errorCode), errorString).toAscii().data());
-    mafEventBusManager::instance()->notifyEvent("maf.remote.eventBus.comunicationFailed", mafEventTypeLocal);
+    mafEventBusManager::instance()->notifyEvent("maf.local.eventBus.comunicationFailed", mafEventTypeLocal);
 }
 
 void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodName, QList<xmlrpc::Variant> parameters ) {

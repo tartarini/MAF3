@@ -29,6 +29,12 @@ mafNetworkConnector *mafNetworkConnectorQtSoap::clone() {
     return copy;
 }
 
+void mafNetworkConnectorQtSoap::initializeForEventBus() {
+    mafRegisterRemoteSignal("maf.remote.eventBus.comunication.soap", this, "remoteCommunication(const mafString, mafEventArgumentsList *)");
+    mafRegisterRemoteCallback("maf.remote.eventBus.comunication.soap", this, "send(const mafString, mafEventArgumentsList *)");
+}
+
+
 void mafNetworkConnectorQtSoap::registerServerMethod(mafString methodName, mafList<mafVariant::Type> types) {
    m_RegisterMethodsMap.insert(methodName, types);
 }
@@ -203,7 +209,7 @@ mafSoapType *mafNetworkConnectorQtSoap::marshall(const mafString name, const maf
     return returnValue;
 }
 
-void mafNetworkConnectorQtSoap::send(const mafString &methodName, mafEventArgumentsList *argList) {
+void mafNetworkConnectorQtSoap::send(const mafString methodName, mafEventArgumentsList *argList) {
     //REQUIRE(!params->at(0).isNull());
     //REQUIRE(params->at(0).canConvert(mafVariant::Hash) == true);
 
@@ -251,13 +257,13 @@ void mafNetworkConnectorQtSoap::processReturnValue( int requestId, QVariant valu
     Q_UNUSED( requestId );
     Q_ASSERT( value.canConvert( QVariant::String ) );
     mafMsgDebug("%s", value.toString().toAscii().data());
-    mafEventBusManager::instance()->notifyEvent("maf.remote.eventBus.comunicationDone", mafEventTypeLocal);
+    mafEventBusManager::instance()->notifyEvent("maf.local.eventBus.comunicationDone", mafEventTypeLocal);
 }
 
 void mafNetworkConnectorQtSoap::processFault( int requestId, int errorCode, QString errorString ) {
     // Log the error.
     mafMsgDebug("%s", mafTr("Process Fault for requestID %1 with error %2 - %3").arg(mafString::number(requestId), mafString::number(errorCode), errorString).toAscii().data());
-    mafEventBusManager::instance()->notifyEvent("maf.remote.eventBus.comunicationFailed", mafEventTypeLocal);
+    mafEventBusManager::instance()->notifyEvent("maf.local.eventBus.comunicationFailed", mafEventTypeLocal);
 }
 
 void mafNetworkConnectorQtSoap::processRequest( int requestId, QString methodName, QList<xmlrpc::Variant> parameters ) {

@@ -51,6 +51,9 @@ public:
     //retrieve an instance of the object
     /*virtual*/ mafNetworkConnector *clone();
 
+    /// register all the signals and slots
+    /*virtual*/ void initializeForEventBus();
+
 signals:
     /// signal for the registration of the functions with parameters
     void registerMethodsServer(mafRegisterMethodsMap registerMethodsList);
@@ -61,7 +64,7 @@ public slots:
 
     /// Allow to send a network request.
     /** Contains the conversion between maf datatypes and qxmlrpc datatype based both on QVariant. */
-    /*virtual*/ void send(const mafString &event_id, mafEventArgumentsList *argList);
+    /*virtual*/ void send(const mafString event_id, mafEventArgumentsList *argList);
 
 private slots:
     /// callback for the client which retrieve the variable from the server
