@@ -23,6 +23,10 @@ mafEventDispatcher::mafEventDispatcher() {
 }
 
 mafEventDispatcher::~mafEventDispatcher() {
+
+}
+
+void mafEventDispatcher::resetHashes() {
     // delete all lists present into the hash.
     mafHash<mafString, mafEvent *>::iterator i;
     for (i = m_CallbacksHash.begin(); i != m_CallbacksHash.end(); ++i) {
@@ -38,7 +42,7 @@ mafEventDispatcher::~mafEventDispatcher() {
 
 void mafEventDispatcher::initializeGlobalEvents() {
     mafEvent *remote_done = new mafEvent();
-    mafString eventId = "maf.remote.eventBus.comunicationDone";
+    mafString eventId = "maf.local.eventBus.comunicationDone";
 
     (*remote_done)[TOPIC] = eventId;
     (*remote_done)[TYPE] = mafEventTypeLocal;
@@ -50,7 +54,7 @@ void mafEventDispatcher::initializeGlobalEvents() {
     this->registerSignal(*remote_done);
 
     mafEvent *remote_failed = new mafEvent();
-    (*remote_failed)[TOPIC] = "maf.remote.eventBus.comunicationFailed";
+    (*remote_failed)[TOPIC] = "maf.local.eventBus.comunicationFailed";
     (*remote_failed)[TYPE] = mafEventTypeLocal;
     (*remote_failed)[SIGTYPE] = mafSignatureTypeSignal;
     var.setValue((QObject*)this);
@@ -275,15 +279,6 @@ bool mafEventDispatcher::removeFromHash(mafEventsHashType *hash, const QObject *
 }
 
 bool mafEventDispatcher::removeObserver(const mafEvent &props) {
-    QObject *objSlot = props[OBJECT].value<QObject *>();
-    if (objSlot == NULL) {
-        // remove all observer for that 'id'
-        bool result = disconnectSignal(props);
-
-        int num = m_CallbacksHash.remove(props[TOPIC].toString());
-        return result && num > 0;
-    }
-
     return removeEventItem(props);
 }
 
@@ -347,13 +342,6 @@ bool mafEventDispatcher::registerSignal(const mafEvent &props) {
 }
 
 bool mafEventDispatcher::removeSignal(const mafEvent &props) {
-    QObject *obj = props[OBJECT].value<QObject *>();
-    if(obj == NULL) {
-        // Remove all events corresponding to particular id
-        int num = m_SignalsHash.remove(props[TOPIC].toString());
-        return num > 0;
-    }
-
     return removeEventItem(props);
 }
 

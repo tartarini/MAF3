@@ -28,7 +28,7 @@ public:
     mafEventDispatcher();
 
     /// object destructor.
-    /*virtual*/ ~mafEventDispatcher();
+    virtual ~mafEventDispatcher();
 
     /// Add the observer to the events.
     /** Return true if observer has beed added correctly, false otherwise.
@@ -59,6 +59,9 @@ public:
     /// Emit event corresponding to the given id (present into the event_dictionary) locally to the application.
     virtual void notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList = NULL, mafGenericReturnArgument *returnArg = NULL) const;
 
+    /// clean the signal and callback hashes.
+    /** This method is used when the destructor is called. The destructor of the dispatcher is called by the mafEventBusManager destructor.*/
+    void resetHashes();
 signals:
     /// Default notification signals for default events.
     void notifyDefaultEvent();
