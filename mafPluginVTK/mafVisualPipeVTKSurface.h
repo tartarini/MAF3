@@ -14,7 +14,6 @@
 
 // Includes list
 #include "mafPluginVTKDefinitions.h"
-#include <mafContainer.h>
 #include <mafVisualPipe.h>
 
 // Foundation Class forwarding list
@@ -60,7 +59,7 @@ public:
     /// Return the flag to activate immediate rendering mode.
     int immediateRendering();
 
- public slots:
+public slots:
     /// Allow to execute and update the pipeline when something change.
     /*virtual*/ void updatePipe(double t = -1);
 
