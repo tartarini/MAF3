@@ -39,7 +39,7 @@ public:
     bool removeObserver(const mafEvent &props);
 
     /// remove the callback from the observer's hash.
-    bool removeObserver(const QObject *obj, const mafString topic = "", bool qt_disconnect = true);
+    bool removeObserver(const QObject *obj, const mafString topic, bool qt_disconnect = true);
 
     /// Remove the signal from the signal's hash.
     bool removeSignal(const QObject *obj, const mafString topic = "", bool qt_disconnect = true);
@@ -54,7 +54,7 @@ public:
     bool removeSignal(const mafEvent &props);
 
     /// method used to check if the given signal has been already registered for the given id.
-    bool isSignalPresent(const mafString topic) const;
+    bool isLocalSignalPresent(const mafString topic) const;
 
     /// Emit event corresponding to the given id (present into the event_dictionary) locally to the application.
     virtual void notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList = NULL, mafGenericReturnArgument *returnArg = NULL) const;
@@ -108,7 +108,7 @@ inline mafEventItemListType mafEventDispatcher::signalItemProperty(const mafStri
     return m_SignalsHash.values(topic);
 }
 
-inline bool mafEventDispatcher::isSignalPresent(const mafString topic) const {
+inline bool mafEventDispatcher::isLocalSignalPresent(const mafString topic) const {
     return m_SignalsHash.contains(topic);
 }
 

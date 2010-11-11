@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     mafEventDispatcherRemoteTest.cpp \
     mafEventDispatcherTest.cpp \
     mafNetworkConnectorQtSoapTest.cpp \
-    mafNetworkConnectorQXMLRPCTest.cpp
+    mafNetworkConnectorQXMLRPCTest.cpp \
+    mafEventTest.cpp
 include(../../mafInstallTest.pri)
 include(../../mafImportQXMLRPC.pri)
 include(../../mafImportQtSoap.pri)

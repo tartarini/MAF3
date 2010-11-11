@@ -12,6 +12,7 @@
 #include <mafTestSuite.h>
 #include <mafEventBusManager.h>
 #include <mafEventDefinitions.h>
+#include <mafNetworkConnector.h>
 
 using namespace mafEventBus;
 
@@ -61,6 +62,79 @@ int testObjectCustom::returnObjectValue() {
     return value;
 }
 
+//------------------------------------------------------------------------------------------
+/**
+ Class name: testNetworkConnectorForEventBus
+ This class implements the network connector to be tested.
+ */
+class  testNetworkConnectorForEventBus : public  mafNetworkConnector {
+    Q_OBJECT
+
+public:
+    /// Object constructor.
+    testNetworkConnectorForEventBus();
+
+    /// Create and initialize client
+    /*virtual*/ void createClient(mafString hostName, unsigned int port);
+
+    /// Return the string variable initializated and updated from the data pipe.
+    /*virtual*/ void createServer(unsigned int port);
+
+    /// Allow to send a network request.
+    /*virtual*/ void send(const mafString event_id, mafEventArgumentsList *params);
+
+    /// Start the server.
+    /*virtual*/ void startListen();
+
+    /// Return connector status.
+    mafString connectorStatus();
+
+    /// retrieve instance of object
+    /*virtual*/ mafNetworkConnector *clone();
+
+    /// register all the signals and slots
+    /*virtual*/ void initializeForEventBus();
+
+private:
+    mafString m_ConnectorStatus; ///< Test Var.
+};
+
+mafNetworkConnector *testNetworkConnectorForEventBus::clone() {
+    return new testNetworkConnectorForEventBus();
+}
+
+void testNetworkConnectorForEventBus::initializeForEventBus() {
+}
+
+testNetworkConnectorForEventBus::testNetworkConnectorForEventBus() : mafNetworkConnector(), m_ConnectorStatus("") {
+     m_Protocol = "FakeProtocol";
+}
+
+void testNetworkConnectorForEventBus::createServer(unsigned int port) {
+    m_ConnectorStatus = "Server Created - Port: ";
+    m_ConnectorStatus.append(mafString::number(port));
+}
+
+void testNetworkConnectorForEventBus::startListen() {
+    m_ConnectorStatus = "Server Listening";
+}
+
+void testNetworkConnectorForEventBus::createClient(mafString hostName, unsigned int port) {
+    m_ConnectorStatus = "Client Created - Host: ";
+    m_ConnectorStatus.append(hostName);
+    m_ConnectorStatus.append(" Port: ");
+    m_ConnectorStatus.append(mafString::number(port));
+}
+
+void testNetworkConnectorForEventBus::send(const mafString event_id, mafEventArgumentsList *params) {
+    Q_UNUSED(params);
+    m_ConnectorStatus = "Event sent with ID: ";
+    m_ConnectorStatus.append(event_id);
+}
+
+mafString testNetworkConnectorForEventBus::connectorStatus() {
+    return m_ConnectorStatus;
+}
 //-------------------------------------------------------------------------
 
 /**
@@ -125,7 +199,14 @@ private slots:
     /// Event notification benchmarks.
     void eventNotificationBenchmarkTest();
 
+    /// Test eventbus with remote connection (xmlrpc test)
     void remoteConnectionTest();
+
+    /// test plugNetworkConnector
+    void plugNetworkConnectorTest();
+
+    /// test method for check if the signal is present.
+    void isLocalSignalPresentTest();
 
 private:
     testObjectCustom *m_ObjTestObserver; ///< Test variable.
@@ -221,7 +302,6 @@ void mafEventBusManagerTest::eventNotificationBenchmarkTest() {
 }
 
 void mafEventBusManagerTest::remoteConnectionTest() {
-
     m_EventBus->createServer("XMLRPC", 8000);
     m_EventBus->startListen();
 
@@ -249,6 +329,14 @@ void mafEventBusManagerTest::remoteConnectionTest() {
     while(QTime::currentTime() < dieTime) {
        QCoreApplication::processEvents(QEventLoop::AllEvents, 3);
     }
+}
+
+void mafEventBusManagerTest::plugNetworkConnectorTest() {
+    m_EventBus->plugNetworkConnector("CUSTOM_CONNECTOR", new testNetworkConnectorForEventBus());
+}
+
+void mafEventBusManagerTest::isLocalSignalPresentTest() {
+    QVERIFY(m_EventBus->isLocalSignalPresent("maf.paf.naf.daf") == false);
 }
 
 

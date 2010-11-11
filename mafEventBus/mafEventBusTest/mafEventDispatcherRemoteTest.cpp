@@ -35,23 +35,31 @@ class mafEventDispatcherRemoteTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        m_EventDispatcherLocal = new mafEventDispatcherRemote;
+        m_EventDispatcherRemote = new mafEventDispatcherRemote();
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        delete m_EventDispatcherLocal;
+        delete m_EventDispatcherRemote;
     }
 
     /// mafEventDispatcherRemote allocation test case.
     void mafEventDispatcherRemoteAllocationTest();
 
+    /// mafEventDispatcherRemote accessors test case: test client and server pointers.
+    void mafEventDispatcherRemoteAccessorsTest();
+
 private:
-    mafEventDispatcherRemote *m_EventDispatcherLocal; ///< Test var.
+    mafEventDispatcherRemote *m_EventDispatcherRemote; ///< Test var.
 };
 
 void mafEventDispatcherRemoteTest::mafEventDispatcherRemoteAllocationTest() {
-    QVERIFY(m_EventDispatcherLocal != NULL);
+    QVERIFY(m_EventDispatcherRemote != NULL);
+}
+
+void mafEventDispatcherRemoteTest::mafEventDispatcherRemoteAccessorsTest() {
+    QVERIFY(m_EventDispatcherRemote->networkConnectorClient() == NULL);
+    QVERIFY(m_EventDispatcherRemote->networkConnectorServer() == NULL);
 }
 
 MAF_REGISTER_TEST(mafEventDispatcherRemoteTest);

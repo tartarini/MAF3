@@ -76,7 +76,7 @@ public:
     void initializeNetworkConnectors();
 
     /// Retrieve if the signal has been registered previously.
-    bool isSignalPresent(const mafString topic) const;
+    bool isLocalSignalPresent(const mafString topic) const;
 
     /// Plug a new network connector into the connector hash for the given network protocol (protocol eg. "XMLRPC") (connector_type eg. "mafEventBus::mafNetworkConnectorQXMLRPC").
     void plugNetworkConnector(const mafString &protocol, mafNetworkConnector *connector);
@@ -120,8 +120,8 @@ inline void mafEventBusManager::plugNetworkConnector(const mafString &protocol, 
     m_NetworkConnectorHash.insert(protocol, connector);
 }
 
-inline bool mafEventBusManager::isSignalPresent(const mafString topic) const {
-    return m_LocalDispatcher->isSignalPresent(topic);
+inline bool mafEventBusManager::isLocalSignalPresent(const mafString topic) const {
+    return m_LocalDispatcher->isLocalSignalPresent(topic);
 }
 
 } // namespace mafEventBus

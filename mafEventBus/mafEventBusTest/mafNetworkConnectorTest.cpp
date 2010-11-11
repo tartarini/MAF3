@@ -56,10 +56,10 @@ mafNetworkConnector *testNetworkConnectorCustom::clone() {
 }
 
 void testNetworkConnectorCustom::initializeForEventBus() {
-
 }
 
 testNetworkConnectorCustom::testNetworkConnectorCustom() : mafNetworkConnector(), m_ConnectorStatus("") {
+     m_Protocol = "FakeProtocol";
 }
 
 void testNetworkConnectorCustom::createServer(unsigned int port) {
@@ -122,6 +122,8 @@ private slots:
     void mafNetworkConnectorAllocationTest();
     /// Test the creation of client and server.
     void mafNetworkConnectorCreateClientAndServerTest();
+    /// test the function that retrive protocol type
+    void retrieveProtocolTest();
 
 private:
     testNetworkConnectorCustom *m_NetworkConnector; ///< Test var.
@@ -142,6 +144,13 @@ void mafNetworkConnectorTest::mafNetworkConnectorCreateClientAndServerTest() {
     m_NetworkConnector->createClient("localhost", 8000);
     QCOMPARE(m_NetworkConnector->connectorStatus(), res);
 }
+
+void mafNetworkConnectorTest::retrieveProtocolTest() {
+    mafString res = "FakeProtocol";
+    mafString check = m_NetworkConnector->protocol();
+    QCOMPARE(check, res);
+}
+
 
 MAF_REGISTER_TEST(mafNetworkConnectorTest);
 #include "mafNetworkConnectorTest.moc"

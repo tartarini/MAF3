@@ -301,7 +301,7 @@ void mafNetworkConnectorQtSoap::processRequest( int requestId, QString methodNam
         argList->push_back(Q_ARG(mafList<mafVariant>, *p));
     }
 
-    if ( mafEventBusManager::instance()->isSignalPresent(id_name) ) {
+    if ( mafEventBusManager::instance()->isLocalSignalPresent(id_name) ) {
         mafEvent dictionary;
         mafCore::mafId id = mafCore::mafIdProvider::instance()->idValue(id_name);
         dictionary.setEventId(id);
