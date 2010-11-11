@@ -17,6 +17,7 @@
 #include "mafPluginVTK_global.h"
 #include <mafResourcesRegistration.h>
 #include <mafResourcesDefinitions.h>
+#include <mafContainer.h>
 
 namespace mafPluginVTK {
 
