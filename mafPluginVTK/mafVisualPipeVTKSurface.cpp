@@ -31,9 +31,9 @@ mafVisualPipeVTKSurface::~mafVisualPipeVTKSurface() {
 }
 
 bool mafVisualPipeVTKSurface::acceptObject(mafCore::mafObject *obj) {
-    mafDataSet *dataSet = dynamic_cast<mafDataSet*>(obj);
-    if(dataSet != NULL) {
-        mafString dataType = dataSet->dataValue()->externalDataType();
+    mafVME *vme = dynamic_cast<mafVME*>(obj);
+    if(vme != NULL) {
+        mafString dataType = vme->dataSetCollection()->itemAtCurrentTime()->dataValue()->externalDataType();
         if(dataType == "vtkPolyData") {
             return true;
         }

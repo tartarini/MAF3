@@ -10,8 +10,8 @@
  */
 
 #include "mafDataPipeImageThreshold.h"
-#include <mafDataSet.h>
 
+#include <vtkDataSet.h>
 #include <vtkImageThreshold.h>
 #include <vtkImageData.h>
 
@@ -38,14 +38,13 @@ bool mafDataPipeImageThreshold::acceptObject(mafCore::mafObject *obj) {
 
 void mafDataPipeImageThreshold::createPipe() {
     m_ThresholdFilter = vtkSmartPointer<vtkImageThreshold>::New();
+    m_Output = this->inputList()->at(0);
 }
 
 void mafDataPipeImageThreshold::updatePipe(double t) {
-    Q_UNUSED(t); // Consider also to calculate the threshold for all the timestamp if the input is time varying
+    mafVME *inputVME = this->inputList()->at(0);
 
-    mafVMEList *inputList = this->inputList();
-
-    mafDataSet *inputDataSet = inputList->at(0)->dataSetCollection()->itemAtCurrentTime();
+    mafDataSet *inputDataSet = inputVME->dataSetCollection()->itemAt(t);
     if(inputDataSet == NULL) {
         return;
     }
@@ -53,8 +52,8 @@ void mafDataPipeImageThreshold::updatePipe(double t) {
     //Get data contained in the mafContainer
     mafContainer<vtkImageData> *image = mafContainerPointerTypeCast(vtkImageData, inputDataSet->dataValue());
 
-    double sr[2];
-    (*image)->GetScalarRange(sr);
+//    double sr[2];
+//    (*image)->GetScalarRange(sr);
 
     m_ThresholdFilter->SetInputConnection((*image)->GetProducerPort());
     switch(m_ThresholdMode) {
@@ -74,15 +73,7 @@ void mafDataPipeImageThreshold::updatePipe(double t) {
         m_OutputValue = m_ThresholdFilter->GetOutput();
     }
 
-    if (!m_InPlace) {
-        m_Output = mafNEW(mafResources::mafVME);
-        m_Output = inputList->at(0);
-        m_Output->dataSetCollection()->itemAtCurrentTime()->setDataValue(&m_OutputValue);
-    } else {
-        inputList->at(0)->dataSetCollection()->itemAtCurrentTime()->setDataValue(&m_OutputValue);
-        m_Output = inputList->at(0);
-    }
-
+    m_Output->dataSetCollection()->itemAtCurrentTime()->setDataValue(&m_OutputValue);
 }
 
 void mafDataPipeImageThreshold::setLowerThrehsold(double threshold) {
