@@ -14,7 +14,9 @@ SOURCES += main.cpp \
     mafSerializationRawBinaryExtDataTest.cpp \
     mafSerializationRawASCIIExtDataTest.cpp \
     mafEventBridgeVTKTest.cpp \
-    mafVisualPipeSelectionTest.cpp
+    mafVisualPipeSelectionTest.cpp \
+    mafDataBoundaryAlgorithmVTKTest.cpp
+
 include(../../mafInstallTest.pri)
 include(../../mafImportVXL.pri)
 include(../../mafImportVTK.pri)
