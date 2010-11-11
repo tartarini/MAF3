@@ -12,10 +12,10 @@
 #include "mafVisualPipeSelection.h"
 
 #include <vtkSmartPointer.h>
-#include <vtkDataSet.h>
+#include <vtkAlgorithmOutput.h>
 #include <vtkOutlineCornerFilter.h>
 #include <vtkCompositeDataPipeline.h>
-#include <vtkHierarchicalPolyDataMapper.h>
+#include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
 
 using namespace mafCore;
@@ -32,7 +32,7 @@ bool mafVisualPipeSelection::acceptObject(mafCore::mafObject *obj) {
     mafVME *vme = dynamic_cast<mafVME*>(obj);
     if(vme != NULL) {
         mafString dataType = vme->dataSetCollection()->itemAtCurrentTime()->dataValue()->externalDataType();
-        if(dataType.startsWith("vtk", Qt::CaseSensitive)) {
+        if(dataType.startsWith("vtkAlgorithmOutput", Qt::CaseSensitive)) {
             return true;
         }
     }
@@ -42,19 +42,20 @@ bool mafVisualPipeSelection::acceptObject(mafCore::mafObject *obj) {
 void mafVisualPipeSelection::createPipe() {
     mafVME *inputVME = this->inputList()->at(0);
     mafDataSet *data = inputVME->dataSetCollection()->itemAtCurrentTime();
-    mafContainer<vtkDataSet> *dataSet = mafContainerPointerTypeCast(vtkDataSet, data->dataValue());
+    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
 
     vtkSmartPointer<vtkCompositeDataPipeline> compositeDataPipeline;
 
     m_OutlineCornerFilter = vtkOutlineCornerFilter::New();
     m_OutlineCornerFilter->SetExecutive(compositeDataPipeline);
-    m_OutlineCornerFilter->SetInput(*dataSet);
+    m_OutlineCornerFilter->SetInputConnection(*dataSet);
 
-    vtkSmartPointer<vtkHierarchicalPolyDataMapper> mapper;
+    vtkPolyDataMapper *mapper = vtkPolyDataMapper::New();
     mapper->SetInputConnection(0, m_OutlineCornerFilter->GetOutputPort(0));
     m_Actor = vtkActor::New();
     m_Actor.setDestructionFunction(&vtkActor::Delete);
     m_Actor->SetMapper(mapper);
+    mapper->Delete();
     m_Output = &m_Actor;
 }
 
@@ -65,7 +66,7 @@ void mafVisualPipeSelection::updatePipe(double t) {
         return;
     }
 
-    mafContainer<vtkDataSet> *dataSet = mafContainerPointerTypeCast(vtkDataSet, data->dataValue());
-    m_OutlineCornerFilter->SetInput(*dataSet);
+    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
+    m_OutlineCornerFilter->SetInputConnection(*dataSet);
     m_OutlineCornerFilter->Update();
 }
