@@ -112,7 +112,6 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_VME);
-        mafEventBusManager::instance()->shutdown();
     }
 
     /// Test the creation of the vtkActor
@@ -127,8 +126,6 @@ private:
 };
 
 void mafVisualPipeVTKSurfaceTest::updatePipeTest() {
-
-
     mafVisualPipeVTKSurface *pipe;
     pipe = mafNEW(mafPluginVTK::mafVisualPipeVTKSurface);
     pipe->setInput(m_VME);
