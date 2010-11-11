@@ -38,6 +38,10 @@ bool mafDataPipeImageThreshold::acceptObject(mafCore::mafObject *obj) {
 
 void mafDataPipeImageThreshold::createPipe() {
     m_ThresholdFilter = vtkSmartPointer<vtkImageThreshold>::New();
+    if(inputList()->size() == 0) {
+        mafMsgWarning(mafTr("Assign an input VME before asking the creation of the data pipe!!").toAscii());
+        return;
+    }
     m_Output = this->inputList()->at(0);
 }
 
