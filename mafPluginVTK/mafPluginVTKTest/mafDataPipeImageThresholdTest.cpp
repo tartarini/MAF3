@@ -84,14 +84,16 @@ private:
 
 void mafDataPipeImageThresholdTest::updatePipeTest() {
     mafDataPipeImageThreshold *datapipe = mafNEW(mafPluginVTK::mafDataPipeImageThreshold);
-    datapipe->createPipe();
     datapipe->setInput(m_VME);
+    datapipe->createPipe();
     datapipe->updatePipe();
 
     mafVME *output = datapipe->output();
     QVERIFY(output != NULL);
 
-    mafContainer<vtkImageData> *image = mafContainerPointerTypeCast(vtkImageData, output->dataSetCollection()->itemAtCurrentTime()->dataValue());
+    mafDataSetCollection *collection = output->dataSetCollection();
+    mafDataSet *dataSet = collection->itemAtCurrentTime();
+    mafContainer<vtkImageData> *image = mafContainerPointerTypeCast(vtkImageData, dataSet->dataValue());
     mafString dt(image->externalDataType());
     mafString res("vtkImageData");
 
