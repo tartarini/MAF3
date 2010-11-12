@@ -248,10 +248,11 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
     int size = parameters.count();
 
     mafEventArgumentsList *argList = NULL;
-    mafList<mafVariant> *p = & (parameters.at(1).value< mafList<mafVariant> >());
-    if(size > 1 && p->count() != 0) {
+    mafList<mafVariant> p;
+    p.append((parameters.at(1).value< mafList<mafVariant> >()));
+    if(size > 1 && p.count() != 0) {
         argList = new mafEventArgumentsList();
-        argList->push_back(Q_ARG(mafList<mafVariant>, *p));
+        argList->push_back(Q_ARG(mafList<mafVariant>, p));
     }
 
     if ( mafEventBusManager::instance()->isLocalSignalPresent(id_name) ) {
