@@ -128,6 +128,7 @@ private:
 
 void mafVisualPipeSelectionTest::allocationTest() {
     QVERIFY(m_VisualPipeSelection != NULL);
+    QVERIFY(mafVisualPipeSelection::acceptObject(m_VME));
     m_VisualPipeSelection->setInput(m_VME);
 }
 
