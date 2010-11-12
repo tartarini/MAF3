@@ -15,7 +15,6 @@
 #include "mafEvent.h"
 
 using namespace mafEventBus;
-//using namespace mafCore;
 
 mafNetworkConnectorQXMLRPC::mafNetworkConnectorQXMLRPC() : mafNetworkConnector(), m_Client(NULL), m_Server(NULL), m_RequestId(0) {
     //generate remote signal, this signal must map in the
@@ -221,7 +220,7 @@ void mafNetworkConnectorQXMLRPC::processFault( int requestId, int errorCode, QSt
 
 void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodName, QList<xmlrpc::Variant> parameters ) {
     Q_UNUSED( methodName );
-    //REQUIRE(parameters.count() >= 2);
+
     //first parameter is mafEventBus message
     enum {
       EVENT_PARAMETERS,
@@ -241,7 +240,6 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
 
     //here eventually can be used a filter for events
 
-
     //first argument regards local signal to be called.
     mafString id_name = parameters.at(EVENT_PARAMETERS).toList().at(EVENT_ID).toString();
 
@@ -256,7 +254,6 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
 
     if ( mafEventBusManager::instance()->isLocalSignalPresent(id_name) ) {
         mafEvent dictionary;
-        //mafCore::mafId id = mafCore::mafIdProvider::instance()->idValue(id_name);
         dictionary.setEventTopic(id_name);
         dictionary.setEventType(mafEventTypeLocal);
         mafEventBusManager::instance()->notifyEvent(dictionary, argList);
