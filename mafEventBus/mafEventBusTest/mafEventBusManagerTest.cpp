@@ -285,7 +285,8 @@ void mafEventBusManagerTest::eventBusWithReturnArgumentTest() {
 
     //Notify event with return argument
     int returnValue = 0;
-    m_EventBus->notifyEvent(returnValueID, mafEventTypeLocal, NULL, &mafEventReturnArgument(int,returnValue));
+    mafGenericReturnArgument ret_val = mafEventReturnArgument(int,returnValue);
+    m_EventBus->notifyEvent(returnValueID, mafEventTypeLocal, NULL, &ret_val);
 
     QVERIFY(returnValue == 5);
     delete ObjTestSender;

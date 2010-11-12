@@ -74,21 +74,24 @@ void mafViewManagerTest::createViewTest() {
     // Send the message through the vent bus to create it.
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafString, vt));
-    m_EventBus->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList, &mafEventReturnArgument(mafCore::mafObjectBase *, m_View));
+    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, m_View);
+    m_EventBus->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList, &ret_val);
 
     // Return value should be not NULL.
     QVERIFY(m_View != NULL);
 
     // Create another view...
     mafObjectBase *second_view;
-    m_EventBus->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList, &mafEventReturnArgument(mafCore::mafObjectBase *, second_view));
+    ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, second_view);
+    m_EventBus->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList, &ret_val);
     QVERIFY(second_view != NULL);
 }
 
 void mafViewManagerTest::selectViewTest() {
     // Ask for default selected view.
     mafCore::mafObjectBase *sel_view;
-    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &mafEventReturnArgument(mafCore::mafObjectBase *, sel_view));
+    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_view);
+    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
 
     QVERIFY(sel_view != m_View);
 
@@ -98,7 +101,7 @@ void mafViewManagerTest::selectViewTest() {
     m_EventBus->notifyEvent("maf.local.resources.view.select", mafEventTypeLocal, &argList);
 
     // Retrieve the selected view that now should be not NULL and equal to the previous created view.
-    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &mafEventReturnArgument(mafCore::mafObjectBase *, sel_view));
+    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
     QVERIFY(sel_view != NULL);
     QVERIFY(sel_view == m_View);
 }
@@ -111,13 +114,14 @@ void mafViewManagerTest::mementoViewTest() {
     m_ViewManager->shutdown();
     // Retrieve the selected view that should be NULL.
     mafCore::mafObjectBase *sel_view;
-    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &mafEventReturnArgument(mafCore::mafObjectBase *, sel_view));
+    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_view);
+    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
     QVERIFY(sel_view == NULL);
 
     // Restore the previous view manager state.
     m_ViewManager->setMemento(m);
     // Retrieve the selected view that should be not NULL.
-    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &mafEventReturnArgument(mafCore::mafObjectBase *, sel_view));
+    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
     QVERIFY(sel_view != NULL);
 
     mafDEL(m);

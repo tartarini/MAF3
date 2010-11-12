@@ -115,7 +115,8 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
             if (url.isValid()) {
                 mafString urlString = url.toString();
                 argList.append(mafEventArgument(mafString, urlString));
-                mafEventBusManager::instance()->notifyEvent("maf.local.serialization.loadExternalData", mafEventTypeLocal, &argList, &mafEventReturnArgument(mafByteArray,stringArray));
+                mafGenericReturnArgument ret_val = mafEventReturnArgument(mafByteArray, stringArray);
+                mafEventBusManager::instance()->notifyEvent("maf.local.serialization.loadExternalData", mafEventTypeLocal, &argList, &ret_val);
                 value = (char*)stringArray.constData();
             } else {
                 value = (char*)item.m_Value.toByteArray().constData();
