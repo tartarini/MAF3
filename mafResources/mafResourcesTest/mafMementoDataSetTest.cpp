@@ -79,6 +79,7 @@ testExternalDataCodecCustom::testExternalDataCodecCustom(const mafString code_lo
 }
 
 void testExternalDataCodecCustom::decode(const char *input_string, bool binary) {
+    Q_UNUSED(binary);
     REQUIRE(input_string != NULL);
     m_Cont = new mafContainer<mafString>();
     *m_Cont = new mafString;
@@ -87,6 +88,7 @@ void testExternalDataCodecCustom::decode(const char *input_string, bool binary) 
 }
 
 char *testExternalDataCodecCustom::encode(bool binary) {
+    Q_UNUSED(binary);
     mafContainer<mafString> *dataSet = mafContainerPointerTypeCast(mafString, this->externalData());
     mafString dataString = dataSet->externalData()->toAscii();
     char *output_string = new char[dataString.size()+1];
