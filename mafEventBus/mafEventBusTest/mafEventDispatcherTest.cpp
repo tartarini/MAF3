@@ -32,6 +32,7 @@ public:
 public slots:
     /// Test slot that will increment the value of m_Var when an UPDATE_OBJECT event is raised.
     void updateObject();
+    void updateObject2();
     void setObjectValue(int v);
 
 signals:
@@ -47,6 +48,10 @@ testObjectCustomForDispatcher::testObjectCustomForDispatcher() : QObject(), m_Va
 
 void testObjectCustomForDispatcher::updateObject() {
     m_Var++;
+}
+
+void testObjectCustomForDispatcher::updateObject2() {
+
 }
 
 void testObjectCustomForDispatcher::setObjectValue(int v) {
@@ -208,7 +213,21 @@ void mafEventDispatcherTest::removeItemTest() {
     QVERIFY(m_EventDispatcher->addObserver(*propCallback));
 
     // remove the observer from all the topics...
+
+    mafEvent *propCallback2 = new mafEventBus::mafEvent;
+    (*propCallback2)[TOPIC] =  updateID;
+    (*propCallback2)[TYPE] = mafEventTypeLocal;
+    (*propCallback2)[SIGTYPE] = mafSignatureTypeCallback;
+    (*propCallback2)[OBJECT] = varobserver;
+    (*propCallback2)[SIGNATURE] = "updateObject2()";
+    QVERIFY(m_EventDispatcher->addObserver(*propCallback2));
+
+    //this will be removed
     QVERIFY(m_EventDispatcher->removeObserver(*propCallback));
+
+    // this will be removed and will cover the code of iterator which simple go to the next element
+    QVERIFY(m_EventDispatcher->removeObserver(*propCallback2));
+
 }
 
 void mafEventDispatcherTest::removeSignalTest() {
