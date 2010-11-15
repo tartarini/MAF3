@@ -251,7 +251,7 @@ void mafEventDispatcherTest::removeSignalTest() {
 }
 
 void mafEventDispatcherTest::isLocalSignalPresentTest() {
-    QVERIFY(m_EventDispatcher->isLocalSignalPresent("maf.paf.naf.daf") == false);
+    QVERIFY(m_EventDispatcher->isLocalSignalPresent("maf.wrong.topic") == false);
 }
 
 MAF_REGISTER_TEST(mafEventDispatcherTest);

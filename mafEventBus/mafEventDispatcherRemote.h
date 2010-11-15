@@ -58,17 +58,6 @@ private:
     mafNetworkConnector *m_NetworkConnectorClient; ///< Class used to manage the communication with the remote event bus.
 };
 
-/////////////////////////////////////////////////////////////
-// Inline methods
-/////////////////////////////////////////////////////////////
-
-inline mafNetworkConnector *mafEventDispatcherRemote::networkConnectorServer() {
-    return m_NetworkConnectorServer;
-}
-
-inline mafNetworkConnector *mafEventDispatcherRemote::networkConnectorClient() {
-    return m_NetworkConnectorClient;
-}
 
 } //namespace mafEventBus
 
