@@ -189,7 +189,7 @@ void mafVME::updateBounds() {
             double b[6];
             boundary->bounds(b);
             int i = 0;
-            for(i; i < 6; i++) {
+            for(; i < 6; i++) {
                 m_Bounds.append(b[i]);
             }
         }
