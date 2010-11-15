@@ -224,6 +224,7 @@ bool mafDataSetCollection::insertItem(mafDataSet *item, double t) {
 
     if(result) {
         m_CollectionMap->insert(ts, item);
+        emit(modifiedObject());
         connect(item, SIGNAL(destroyed()), this, SLOT(itemDestroyed()));
     }
 
@@ -242,6 +243,11 @@ bool mafDataSetCollection::setDataSet(mafDataSet *data, double t) {
             item->setDataValue(data->dataValue());
             item->setPoseMatrix(data->poseMatrix());
             mafDEL(data);
+
+            //check where to emit!!!
+            emit(modifiedObject());
+
+
             return true;
         } else {
             mafMsgWarning("%s", mafTr("Item at timestamp %1 can not be modified, because it doesn't exist! Try 'insertItem' before").arg(t).toAscii().data());
@@ -308,6 +314,7 @@ bool mafDataSetCollection::removeItem(mafDataSet *item, bool keep_alive) {
     if(timestamp != -1) {
         disconnect(item, SIGNAL(destroyed()),this, SLOT(itemDestroyed()));
         int removed_items = m_CollectionMap->remove(timestamp);
+        emit(modifiedObject());
         if(!keep_alive) {
             mafDEL(item);
         }

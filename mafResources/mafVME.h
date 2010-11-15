@@ -26,6 +26,7 @@ class mafDataPipe;
 class mafMementoDataSet;
 class mafInteractor;
 
+
 /**
 Class name: mafVME
 This class defines the base class for the VMEs in MAF3. The VME is also observer for the TIME_SET signal to be
@@ -34,6 +35,7 @@ notified when new timestamp has been assigned to the system.
 class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_OBJECT
     Q_PROPERTY(bool modified READ modified WRITE setModified)
+    Q_PROPERTY(QVariantList bounds READ bounds WRITE setBounds)
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
 
@@ -49,6 +51,12 @@ public:
 
     /// Return the modified state of the VME.
     bool modified() const;
+
+    /// Set the bounds of the bounding box of the VME.
+    void setBounds(mafVariantList bounds);
+
+    /// Return the bounds of the bounding box of the VME.
+    mafVariantList bounds();
 
     /// Return the collection of mafDataSet.
     mafDataSetCollection *dataSetCollection();
@@ -89,6 +97,9 @@ public slots:
     /// Load dataSet.
     void updateData();
 
+    /// Update bounds of the bounding box.
+    /*virtual*/ void updateBounds();
+
     /// Execute the resource algorithm.
     /*virtual*/ void execute();
 
@@ -98,6 +109,7 @@ private:
     mafDataSetCollection *m_DataSetCollection; ///< Collection of timestamped data posed on homogeneous matrices.
     mafDataPipe *m_DataPipe; ///< Data pipe associated with the VME and used to elaborate new data.
     mafHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
+    QVariantList m_Bounds; ///< List of bounds value of the binding box.
 };
 
 /////////////////////////////////////////////////////////////
@@ -114,6 +126,10 @@ inline mafInteractor *mafVME::interactor() {
 
 inline bool mafVME::modified() const {
     return m_Modified;
+}
+
+inline QVariantList mafVME::bounds()  {
+    return m_Bounds;
 }
 
 } // mafResources

@@ -33,6 +33,9 @@ public:
     /// Algorithm that will be used to extract the boundary from the given data value and pose matrix.
     /*virtual*/ mafContainerInterface *calculateBoundary(mafContainerInterface *data, mafPoseMatrix *matrix);
 
+    /// Return bounds of the bounding box.
+    /*virtual*/ void bounds(double bounds[6]);
+
     /// Return the m_BoundaryItem.
     mafString boundaryItem();
 
@@ -53,6 +56,9 @@ mafContainerInterface *testDataBoundaryAlgorithmCustom::calculateBoundary(mafCon
 
     m_BoundaryItem = "BoundaryCalculated";
     return NULL;
+}
+
+void testDataBoundaryAlgorithmCustom::bounds(double bounds[6]) {
 }
 //------------------------------------------------------------------------------------------
 

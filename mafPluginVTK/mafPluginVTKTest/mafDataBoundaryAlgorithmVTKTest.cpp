@@ -11,10 +11,7 @@
 
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
-#include <mafEventBusManager.h>
 #include <mafDataBoundaryAlgorithmVTK.h>
-#include <mafResourcesRegistration.h>
-#include <mafVisualPipe.h>
 #include <mafContainer.h>
 #include <vtkPolyData.h>
 #include <vtkActor.h>
@@ -22,18 +19,13 @@
 #include <vtkFloatArray.h>
 #include <vtkCellArray.h>
 #include <vtkPointData.h>
-#include <vtkOutlineCornerFilter.h>
+#include <vtkAlgorithmOutput.h>
 #include <mafPluginManager.h>
 #include <mafPlugin.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkSmartPointer.h>
 
-// render window stuff
-#include <vtkRenderer.h>
-#include <vtkRenderWindow.h>
-#include <vtkRenderWindowInteractor.h>
-
-
-using namespace mafCore;
-using namespace mafEventBus;
+using namespace mafCore;;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
@@ -118,10 +110,14 @@ void mafDataBoundaryAlgorithmVTKTest::calculateBoundaryTest() {
     mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
     boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
     m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
-    mafContainer<vtkOutlineCornerFilter> *boundingBox = mafContainerPointerTypeCast(vtkOutlineCornerFilter, m_DataSetCube->dataBoundary());
+    mafContainer<vtkAlgorithmOutput> *boundingBox = mafContainerPointerTypeCast(vtkAlgorithmOutput, m_DataSetCube->dataBoundary());
 
+
+    vtkPolyDataMapper *box = vtkPolyDataMapper::New();
+    box->SetInputConnection(*boundingBox);
+    box->Update();
     double boundsOut[6];
-    (*boundingBox)->GetOutput()->GetBounds(boundsOut);
+    box->GetBounds(boundsOut);
 
     double boundsIn[6] = {5,11,2,8,4,9};
     QCOMPARE(boundsIn[0], boundsOut[0]);
@@ -130,6 +126,7 @@ void mafDataBoundaryAlgorithmVTKTest::calculateBoundaryTest() {
     QCOMPARE(boundsIn[3], boundsOut[3]);
     QCOMPARE(boundsIn[4], boundsOut[4]);
     QCOMPARE(boundsIn[5], boundsOut[5]);
+    box->Delete();
 }
 
 
