@@ -185,9 +185,8 @@ void mafVisualPipeVTKSurfaceTest::updatePipeTestFromPlugIn() {
     mafMsgDebug() << "Vendor: " << info.m_Vendor;
     mafMsgDebug() << "Description: " << info.m_Description;
 
-
     mafStringList binding_class_list;
-    binding_class_list = mafResourcesRegistration::acceptObject(m_VME->dataSetCollection()->itemAtCurrentTime());
+    binding_class_list = mafResourcesRegistration::acceptObject(m_VME);
     int num = binding_class_list.count();
     QVERIFY(num == 1);
 
