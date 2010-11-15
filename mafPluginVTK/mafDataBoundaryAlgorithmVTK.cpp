@@ -18,59 +18,77 @@
 #include <vtkPolyData.h>
 #include <vtkTransform.h>
 #include <vtkTransformPolyDataFilter.h>
+#include <vtkAlgorithmOutput.h>
 
-#include <vtkOutlineSource.h>
-#include <vtkOutlineCornerFilter.h>
+#include <vtkCubeSource.h>
 
 using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafDataBoundaryAlgorithmVTK::mafDataBoundaryAlgorithmVTK(const mafString code_location) : mafResources::mafDataBoundaryAlgorithm(code_location) {
+mafDataBoundaryAlgorithmVTK::mafDataBoundaryAlgorithmVTK(const mafString code_location) : mafResources::mafDataBoundaryAlgorithm(code_location), m_Box(NULL), m_Ptf(NULL) {
 }
 
 mafDataBoundaryAlgorithmVTK::~mafDataBoundaryAlgorithmVTK() {
+    if(m_Box != NULL) {
+        m_Box->Delete();
+    }
+    if(m_Ptf != NULL) {
+        m_Ptf->Delete();
+    }
 }
 
 mafCore::mafContainerInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(mafCore::mafContainerInterface *data, mafResources::mafPoseMatrix *matrix) {
-    vtkSmartPointer<vtkOutlineSource> box = vtkSmartPointer<vtkOutlineSource>::New();
-    vtkSmartPointer<vtkOutlineSource> boxTranformed = vtkSmartPointer<vtkOutlineSource>::New();
-
     mafContainer<vtkDataSet> *dataSet = mafContainerPointerTypeCast(vtkDataSet, data);
 
     double b[6];
     (*dataSet)->GetBounds(b);
-    box->SetBounds(b);
-
-    //Transform box with the mafPoseMatrix
-    vtkTransform *t = vtkTransform::New();
-    vtkMatrix4x4 *mat = vtkMatrix4x4::New();
-    mat->Identity();
-    for(int i=0;i<3;i++)
-        mat->SetElement(i,0,matrix->get(i,0));
-    for(int i=0;i<3;i++)
-        mat->SetElement(i,1,matrix->get(i,1));
-    for(int i=0;i<3;i++)
-        mat->SetElement(i,2,matrix->get(i,2));
-    for(int i=0;i<3;i++)
-        mat->SetElement(i,3,matrix->get(i,3));
-
-    t->SetMatrix(mat);
-    t->Update();
-    vtkTransformPolyDataFilter *ptf = vtkTransformPolyDataFilter::New();
-    ptf->SetInput(box->GetOutput());
-    ptf->SetTransform(t);
-    ptf->Update();
-    t->Delete();
-
-    boxTranformed->SetBounds(ptf->GetOutput()->GetBounds());
-    boxTranformed->Update();
-    ptf->Delete();
-
-    mafCore::mafContainer<vtkOutlineCornerFilter> boundary;
-    boundary = vtkOutlineCornerFilter::New();
-    boundary->SetInput(boxTranformed->GetOutput());
-    boundary->Update();
-
-    return &boundary;
+    return this->calculateBoundary(b, matrix);
 }
+
+mafCore::mafContainerInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(double bounds[6], mafResources::mafPoseMatrix *matrix) {
+    m_Box = vtkCubeSource::New();
+    m_Box->SetBounds(bounds);
+    m_Box->Update();
+
+    //Apply mafPoseMatrix??
+    if(matrix != NULL){
+        //Transform box with the mafPoseMatrix
+        vtkTransform *t = vtkTransform::New();
+        vtkMatrix4x4 *mat = vtkMatrix4x4::New();
+        mat->Identity();
+        for(int i=0;i<3;i++)
+            mat->SetElement(i,0,matrix->get(i,0));
+        for(int i=0;i<3;i++)
+            mat->SetElement(i,1,matrix->get(i,1));
+        for(int i=0;i<3;i++)
+            mat->SetElement(i,2,matrix->get(i,2));
+        for(int i=0;i<3;i++)
+            mat->SetElement(i,3,matrix->get(i,3));
+
+        t->SetMatrix(mat);
+        t->Update();
+        m_Ptf = vtkTransformPolyDataFilter::New();
+        m_Ptf->SetInputConnection(m_Box->GetOutputPort(0));
+        m_Ptf->SetTransform(t);
+        m_Ptf->Update();
+        t->Delete();
+
+        m_OutputBoundary = m_Ptf->GetOutputPort(0);
+        m_Ptf->GetOutput()->GetBounds(m_Bounds);
+
+    } else {
+        m_OutputBoundary = m_Box->GetOutputPort(0);
+        m_Box->GetOutput()->GetBounds(m_Bounds);
+    }
+
+    return &m_OutputBoundary;
+
+}
+void mafDataBoundaryAlgorithmVTK::bounds(double bounds[6]) {
+    int i = 0;
+    for(i; i < 6; i++){
+        bounds[i] = m_Bounds[i];
+    }
+}
+
