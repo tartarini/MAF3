@@ -119,6 +119,12 @@ private:
 
 void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapConstructorTest() {
     QVERIFY(m_NetWorkConnectorQtSoap != NULL);
+
+
+    //delete and recreate instance in order to cover different branch inside destructor
+    delete m_NetWorkConnectorQtSoap;
+    m_NetWorkConnectorQtSoap = NULL;
+    m_NetWorkConnectorQtSoap = new mafEventBus::mafNetworkConnectorQtSoap;
 }
 
 
