@@ -32,6 +32,7 @@ public:
 public slots:
     /// Test slot that will increment the value of m_Var when an UPDATE_OBJECT event is raised.
     void updateObject();
+    void updateObject2();
     void setObjectValue(int v);
 
 signals:
@@ -47,6 +48,10 @@ testObjectCustomForDispatcher::testObjectCustomForDispatcher() : QObject(), m_Va
 
 void testObjectCustomForDispatcher::updateObject() {
     m_Var++;
+}
+
+void testObjectCustomForDispatcher::updateObject2() {
+
 }
 
 void testObjectCustomForDispatcher::setObjectValue(int v) {
@@ -97,8 +102,12 @@ private slots:
     void isSignalPresentTest();
     /// Remove observer given a pointer.
     void removeObserverTest();
+    /// Remove item from the dispatcher.
+    void removeItemTest();
     /// Remove signal given a pointer.
     void removeSignalTest();
+    /// test if the local signal is present
+    void isLocalSignalPresentTest();
 
 private:
     mafEventDispatcher *m_EventDispatcher; ///< Test var.
@@ -164,7 +173,7 @@ void mafEventDispatcherTest::mafEventDispatcherRegisterAndRemoveSignalAndNotifyE
 void mafEventDispatcherTest::isSignalPresentTest() {
     mafString updateID = "maf.local.dispatcherTest.update";
     // Register the callback to update the object custom:
-    QVERIFY(m_EventDispatcher->isSignalPresent(updateID));
+    QVERIFY(m_EventDispatcher->isLocalSignalPresent(updateID));
 }
 
 void mafEventDispatcherTest::removeObserverTest() {
@@ -185,7 +194,40 @@ void mafEventDispatcherTest::removeObserverTest() {
     QVERIFY(m_EventDispatcher->addObserver(*propCallback));
 
     // remove the observer from all the topics...
-    QVERIFY(m_EventDispatcher->removeObserver(m_ObjTestObserver));
+    QVERIFY(m_EventDispatcher->removeObserver(m_ObjTestObserver, ""));
+}
+
+void mafEventDispatcherTest::removeItemTest() {
+    mafString updateID = "maf.local.dispatcherTest.update";
+
+
+    // Add again the test object as observer...
+    mafEvent *propCallback = new mafEventBus::mafEvent;
+    (*propCallback)[TOPIC] =  updateID;
+    (*propCallback)[TYPE] = mafEventTypeLocal;
+    (*propCallback)[SIGTYPE] = mafSignatureTypeCallback;
+    QVariant varobserver;
+    varobserver.setValue((QObject*)m_ObjTestObserver);
+    (*propCallback)[OBJECT] = varobserver;
+    (*propCallback)[SIGNATURE] = "updateObject()";
+    QVERIFY(m_EventDispatcher->addObserver(*propCallback));
+
+    // remove the observer from all the topics...
+
+    mafEvent *propCallback2 = new mafEventBus::mafEvent;
+    (*propCallback2)[TOPIC] =  updateID;
+    (*propCallback2)[TYPE] = mafEventTypeLocal;
+    (*propCallback2)[SIGTYPE] = mafSignatureTypeCallback;
+    (*propCallback2)[OBJECT] = varobserver;
+    (*propCallback2)[SIGNATURE] = "updateObject2()";
+    QVERIFY(m_EventDispatcher->addObserver(*propCallback2));
+
+    //this will be removed
+    QVERIFY(m_EventDispatcher->removeObserver(*propCallback));
+
+    // this will be removed and will cover the code of iterator which simple go to the next element
+    QVERIFY(m_EventDispatcher->removeObserver(*propCallback2));
+
 }
 
 void mafEventDispatcherTest::removeSignalTest() {
@@ -206,6 +248,10 @@ void mafEventDispatcherTest::removeSignalTest() {
     QVERIFY(m_EventDispatcher->registerSignal(*properties));
 
     QVERIFY(m_EventDispatcher->removeSignal(m_ObjTestObserver, "", false));
+}
+
+void mafEventDispatcherTest::isLocalSignalPresentTest() {
+    QVERIFY(m_EventDispatcher->isLocalSignalPresent("maf.paf.naf.daf") == false);
 }
 
 MAF_REGISTER_TEST(mafEventDispatcherTest);

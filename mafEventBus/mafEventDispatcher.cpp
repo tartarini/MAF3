@@ -23,6 +23,10 @@ mafEventDispatcher::mafEventDispatcher() {
 }
 
 mafEventDispatcher::~mafEventDispatcher() {
+
+}
+
+void mafEventDispatcher::resetHashes() {
     // delete all lists present into the hash.
     mafHash<mafString, mafEvent *>::iterator i;
     for (i = m_CallbacksHash.begin(); i != m_CallbacksHash.end(); ++i) {
@@ -38,7 +42,7 @@ mafEventDispatcher::~mafEventDispatcher() {
 
 void mafEventDispatcher::initializeGlobalEvents() {
     mafEvent *remote_done = new mafEvent();
-    mafString eventId = "maf.remote.eventBus.comunicationDone";
+    mafString eventId = "maf.local.eventBus.remoteCommunicationDone";
 
     (*remote_done)[TOPIC] = eventId;
     (*remote_done)[TYPE] = mafEventTypeLocal;
@@ -50,7 +54,7 @@ void mafEventDispatcher::initializeGlobalEvents() {
     this->registerSignal(*remote_done);
 
     mafEvent *remote_failed = new mafEvent();
-    (*remote_failed)[TOPIC] = "maf.remote.eventBus.comunicationFailed";
+    (*remote_failed)[TOPIC] = "maf.local.eventBus.remoteCommunicationFailed";
     (*remote_failed)[TYPE] = mafEventTypeLocal;
     (*remote_failed)[SIGTYPE] = mafSignatureTypeSignal;
     var.setValue((QObject*)this);
@@ -151,38 +155,42 @@ bool mafEventDispatcher::addObserver(const mafEvent &props) {
         return false;
     }
 
-    bool isSignalPresent(true);
-    mafEvent *itemEventProp;
-    itemEventProp = m_SignalsHash.value(topic);
-    if(itemEventProp == NULL) {
-        mafMsgDebug() << mafTr("Signal not present for topic %1").arg(topic);
-        isSignalPresent = false;
-    }
+    mafVariant sigVariant = props[SIGNATURE];
+    mafString sig = sigVariant.toString();
 
-    if(isSignalPresent) {
-        mafVariant sigVariant = (*itemEventProp)[SIGNATURE];
-        mafString sig = sigVariant.toString();
-        if(sig.length() > 0) {
-            mafString observer_sig = CALLBACK_SIGNATURE;
-            observer_sig.append(props[SIGNATURE].toString());
+    QObject *objSlot = props[OBJECT].value<QObject *>();
 
-            mafString event_sig = SIGNAL_SIGNATURE;
-            event_sig.append(sig);
+    if(sig.length() > 0 && objSlot != NULL) {
 
-            // Add the new observer to the Hash.
+        mafEvent *itemEventProp;
+        itemEventProp = m_SignalsHash.value(topic);
+        if(itemEventProp == NULL) {
+            mafMsgDebug() << mafTr("Signal not present for topic %1, create only the entry in CallbacksHash").arg(topic);
+
             mafEvent *dict = const_cast<mafEvent *>(&props);
             this->m_CallbacksHash.insertMulti(topic, dict);
-            QObject *objSignal = (*itemEventProp)[OBJECT].value<QObject *>();
-            QObject *objSlot = props[OBJECT].value<QObject *>();
-            return connect(objSignal, event_sig.toAscii(), objSlot, observer_sig.toAscii());
+
+            return true;
         }
-    } else {
+
+        mafString observer_sig = CALLBACK_SIGNATURE;
+        observer_sig.append(props[SIGNATURE].toString());
+        
+        mafString event_sig = SIGNAL_SIGNATURE;
+        event_sig.append((*itemEventProp)[SIGNATURE].toString());
+        
+        // Add the new observer to the Hash.
         mafEvent *dict = const_cast<mafEvent *>(&props);
         this->m_CallbacksHash.insertMulti(topic, dict);
+        QObject *objSignal = (*itemEventProp)[OBJECT].value<QObject *>();
 
-        return true;
+        return connect(objSignal, event_sig.toAscii(), objSlot, observer_sig.toAscii());
     }
-
+    
+    mafMsgDebug() << mafTr("Signal not valid for topic: %1").arg(topic);
+    mafString objValid = objSlot ? "YES":"NO";
+    mafMsgDebug() << mafTr("Object valid Address: %1").arg(objValid);
+    mafMsgDebug() << mafTr("Signature: %1").arg(sig);
     return false;
 }
 
@@ -271,15 +279,6 @@ bool mafEventDispatcher::removeFromHash(mafEventsHashType *hash, const QObject *
 }
 
 bool mafEventDispatcher::removeObserver(const mafEvent &props) {
-    QObject *objSlot = props[OBJECT].value<QObject *>();
-    if (objSlot == NULL) {
-        // remove all observer for that 'id'
-        bool result = disconnectSignal(props);
-
-        int num = m_CallbacksHash.remove(props[TOPIC].toString());
-        return result && num > 0;
-    }
-
     return removeEventItem(props);
 }
 
@@ -305,20 +304,44 @@ bool mafEventDispatcher::registerSignal(const mafEvent &props) {
         return false;
     }
 
-    // Add the new signal to the Hash.
-    mafEvent *dict = const_cast<mafEvent *>(&props);
-    this->m_SignalsHash.insert(topic, dict);
-    return true;
+
+    mafEventItemListType itemEventPropList;
+    itemEventPropList = m_CallbacksHash.values(topic);
+    if(itemEventPropList.count() == 0) {
+        mafMsgDebug() << mafTr("Callbacks not present for topic %1, create only the entry in SignalsHash").arg(topic);
+
+        // Add the new signal to the Hash.
+        mafEvent *dict = const_cast<mafEvent *>(&props);
+        this->m_SignalsHash.insert(topic, dict);
+        return true;
+    }
+
+    QObject *objSignal = props[OBJECT].value<QObject *>();
+    mafVariant sigVariant = props[SIGNATURE];
+    mafString sig = sigVariant.toString();
+
+    mafEvent *currentEvent;
+    bool cumulativeConnect = true;
+     if(sig.length() > 0 && objSignal != NULL) {
+         foreach(currentEvent, itemEventPropList) {
+
+             mafString observer_sig = CALLBACK_SIGNATURE;
+             observer_sig.append(props[SIGNATURE].toString());
+
+             mafString event_sig = SIGNAL_SIGNATURE;
+             event_sig.append(sig);
+
+             QObject *objSlot = (*currentEvent)[OBJECT].value<QObject *>();
+             cumulativeConnect = cumulativeConnect && connect(objSignal, event_sig.toAscii(), objSlot, observer_sig.toAscii());
+         }
+         mafEvent *dict = const_cast<mafEvent *>(&props);
+         this->m_SignalsHash.insert(topic, dict);
+    }
+
+    return cumulativeConnect;
 }
 
 bool mafEventDispatcher::removeSignal(const mafEvent &props) {
-    QObject *obj = props[OBJECT].value<QObject *>();
-    if(obj == NULL) {
-        // Remove all events corresponding to particular id
-        int num = m_SignalsHash.remove(props[TOPIC].toString());
-        return num > 0;
-    }
-
     return removeEventItem(props);
 }
 

@@ -58,13 +58,16 @@ public:
 
     /// Allow to send a network request.
     /** Need to convert the parameter list into another list of basic type to string which are used in QtSoap.*/
-    /*virtual*/ void send(const mafString &methodName, mafList<mafVariant> *params);
+    /*virtual*/ void send(const mafString methodName, mafEventArgumentsList *argList);
 
     /// Marshalling of the datatypes
     mafSoapType *marshall(const mafString name, const mafVariant &parameter);
 
     /// return the response retrieved from the service
     mafSoapType *response();
+
+    /// register all the signalsand slots
+    /*virtual*/ void initializeForEventBus();
 
     //retrieve an instance of the object
     virtual mafNetworkConnector *clone();

@@ -71,14 +71,15 @@ void mafVMEManagerTest::vmeManagingTest() {
     m_EventBus->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 
     mafCore::mafObjectBase *sel_vme;
-    m_EventBus->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme));
+    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
+    m_EventBus->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
 
     QVERIFY(sel_vme == NULL);
 
     argList.clear();
     argList.append(mafEventArgument(mafCore::mafObjectBase *, vme2));
     m_EventBus->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
-    m_EventBus->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme));
+    m_EventBus->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
     QVERIFY(sel_vme == vme2);
 
     mafDEL(vme1);

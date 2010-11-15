@@ -225,7 +225,6 @@ bool mafEventBridgeVTK::vmePickCheck() {
     while(r = rc->GetNextItem()) {
         if(cellPicker->Pick(mousePosX,mousePosY,0,r)) {
             cellPicker->GetPickPosition(posPicked);
-            //actor = vtkActor::New(); // @@@@ Memory Leak ?!? @@@@
             actor = cellPicker->GetActor();
             actorPicked = &(actor);
         }

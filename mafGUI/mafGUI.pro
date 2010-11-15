@@ -6,6 +6,7 @@ TEMPLATE = lib
 CONFIG += uitools
 win32:CONFIG += dll
 DEFINES += mafGUI_EXPORTS
+
 SOURCES += mafGUIManager.cpp \
     mafGUIRegistration.cpp \
     mafUILoader.cpp \

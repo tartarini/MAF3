@@ -169,7 +169,8 @@ void mafPluginManagerTest::mafPluginManagerLoadPluginTest() {
     mafString baseClassType("mafResources::mafDataPipe");
     argList.append(mafEventArgument(mafString, baseClassType));
     mafPluggedObjectInformationList *pluggedObjectList = NULL;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.resourcesQuery", mafEventTypeLocal, &argList, &mafEventReturnArgument(mafCore::mafPluggedObjectInformationList *, pluggedObjectList));
+    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafPluggedObjectInformationList *, pluggedObjectList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.resourcesQuery", mafEventTypeLocal, &argList, &ret_val);
 
     QVERIFY(pluggedObjectList != NULL);
 

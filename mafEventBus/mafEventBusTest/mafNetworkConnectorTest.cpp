@@ -33,7 +33,7 @@ public:
     /*virtual*/ void createServer(unsigned int port);
 
     /// Allow to send a network request.
-    /*virtual*/ void send(const mafString &event_id, mafList<mafVariant> *params);
+    /*virtual*/ void send(const mafString event_id, mafEventArgumentsList *params);
 
     /// Start the server.
     /*virtual*/ void startListen();
@@ -44,6 +44,9 @@ public:
     /// retrieve instance of object
     /*virtual*/ mafNetworkConnector *clone();
 
+    /// register all the signals and slots
+    /*virtual*/ void initializeForEventBus();
+
 private:
     mafString m_ConnectorStatus; ///< Test Var.
 };
@@ -52,7 +55,11 @@ mafNetworkConnector *testNetworkConnectorCustom::clone() {
     return new testNetworkConnectorCustom();
 }
 
+void testNetworkConnectorCustom::initializeForEventBus() {
+}
+
 testNetworkConnectorCustom::testNetworkConnectorCustom() : mafNetworkConnector(), m_ConnectorStatus("") {
+     m_Protocol = "FakeProtocol";
 }
 
 void testNetworkConnectorCustom::createServer(unsigned int port) {
@@ -71,7 +78,7 @@ void testNetworkConnectorCustom::createClient(mafString hostName, unsigned int p
     m_ConnectorStatus.append(mafString::number(port));
 }
 
-void testNetworkConnectorCustom::send(const mafString &event_id, mafList<mafVariant> *params) {
+void testNetworkConnectorCustom::send(const mafString event_id, mafEventArgumentsList *params) {
     Q_UNUSED(params);
     m_ConnectorStatus = "Event sent with ID: ";
     m_ConnectorStatus.append(event_id);
@@ -115,6 +122,8 @@ private slots:
     void mafNetworkConnectorAllocationTest();
     /// Test the creation of client and server.
     void mafNetworkConnectorCreateClientAndServerTest();
+    /// test the function that retrive protocol type
+    void retrieveProtocolTest();
 
 private:
     testNetworkConnectorCustom *m_NetworkConnector; ///< Test var.
@@ -135,6 +144,13 @@ void mafNetworkConnectorTest::mafNetworkConnectorCreateClientAndServerTest() {
     m_NetworkConnector->createClient("localhost", 8000);
     QCOMPARE(m_NetworkConnector->connectorStatus(), res);
 }
+
+void mafNetworkConnectorTest::retrieveProtocolTest() {
+    mafString res = "FakeProtocol";
+    mafString check = m_NetworkConnector->protocol();
+    QCOMPARE(check, res);
+}
+
 
 MAF_REGISTER_TEST(mafNetworkConnectorTest);
 #include "mafNetworkConnectorTest.moc"

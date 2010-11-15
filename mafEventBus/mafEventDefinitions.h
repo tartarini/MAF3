@@ -92,6 +92,16 @@
         }\
     }
 
+#define mafRegisterRemoteCallback(topic, sender, signature) \
+    {\
+        mafEventBus::mafEvent *properties = new mafEventBus::mafEvent(topic, mafEventBus::mafEventTypeRemote, mafEventBus::mafSignatureTypeCallback, static_cast<QObject*>(sender), signature); \
+        bool ok =  mafEventBus::mafEventBusManager::instance()->addEventProperty(*properties);\
+        if(!ok) {\
+            mafMsgWarning("%s", mafTr("Some problem occourred during the callback registration with ID '%1'.").arg(topic).toAscii().data());\
+            if(properties) {delete properties; properties = NULL;} \
+        }\
+    }
+
 
 namespace mafEventBus {
 //forward classes

@@ -16,7 +16,7 @@
 using namespace mafEventBus;
 
 
-mafEventBusManager::mafEventBusManager() : m_EnableEventLogging(false), m_LogEventTopic("*") {
+mafEventBusManager::mafEventBusManager() : m_EnableEventLogging(false), m_LogEventTopic("*"), m_SkipDetach(false) {
     // Create local event dispatcher.
     m_LocalDispatcher = new mafEventDispatcherLocal();
     m_LocalDispatcher->setObjectName("Local Event Dispatcher");
@@ -32,8 +32,19 @@ mafEventBusManager::~mafEventBusManager() {
         delete i.value();
         ++i;
     }
-    if(m_LocalDispatcher) delete m_LocalDispatcher;
-    if(m_RemoteDispatcher) delete m_RemoteDispatcher;
+    m_NetworkConnectorHash.clear();
+
+    //disconnet detachFromEventBus
+    m_SkipDetach = true;
+
+    if(m_LocalDispatcher) {
+        m_LocalDispatcher->resetHashes();
+        delete m_LocalDispatcher;
+    }
+    if(m_RemoteDispatcher) {
+        m_RemoteDispatcher->resetHashes();
+        delete m_RemoteDispatcher;
+    }
 }
 
 mafEventBusManager* mafEventBusManager::instance() {
@@ -62,20 +73,23 @@ bool mafEventBusManager::addEventProperty(const mafEvent &props) const {
     } else {
         // Remote event dispatching.
         if(props[SIGTYPE].toInt() == mafSignatureTypeCallback) {
-            mafMsgWarning("%s", mafTr("Local Observer can't register in Remote dispatcher").toAscii().data());
-            result = false;
+            result = m_RemoteDispatcher->addObserver(props);
         } else {
             result = m_RemoteDispatcher->registerSignal(props);
         }
     }
-    if(result) {
-        QObject *obj = props[OBJECT].value<QObject*>();
-        result = connect(obj, SIGNAL(destroyed()), this, SLOT(detachObjectFromBus()));
-    }
+
+    QObject *obj = props[OBJECT].value<QObject*>();
+    result = connect(obj, SIGNAL(destroyed()), this, SLOT(detachObjectFromBus()));
+
     return result;
 }
 
 void mafEventBusManager::detachObjectFromBus() {
+    if(m_SkipDetach) {
+        return;
+    }
+
     QObject *obj = QObject::sender();
     removeObserver(obj, "", false);
     removeSignal(obj, "", false);
@@ -119,7 +133,7 @@ bool mafEventBusManager::removeEventProperty(const mafEvent &props) const {
 void mafEventBusManager::notifyEvent(const mafString topic, mafEventType ev_type, mafEventArgumentsList *argList, mafGenericReturnArgument *returnArg) const {
     if(m_EnableEventLogging) {
         if(m_LogEventTopic == "*" || m_LogEventTopic == topic) {
-            mafMsgDebug() << mafTr("Event notification for ID: ") << topic << mafTr(" named: ") << topic << "\n";
+            mafMsgDebug() << mafTr("Event notification for TOPIC: %1").arg(topic);
         }
     }
 

@@ -114,14 +114,17 @@ void mafNetworkConnectorQXMLRPCTest::mafNetworkConnectorQXMLRPCCommunictionTest(
     m_NetWorkConnectorQXMLRPC->createServer(8000);
     m_NetWorkConnectorQXMLRPC->startListen();
 
+
     // Register callback (done by the remote object).
     mafRegisterLocalCallback("maf.local.eventBus.globalUpdate", m_ObjectTest, "updateObject()");
 
+    //m_EventBus->createClient("XMLRPC", "localhost", 8000);
     m_NetWorkConnectorQXMLRPC->createClient("localhost", 8000);
 
     //create list to send from the client
     //first parameter is a list which contains event prperties
-    mafList<mafVariant> listToSend;
+
+
     mafList<mafVariant> eventParameters;
     eventParameters.append("maf.local.eventBus.globalUpdate");
     eventParameters.append(mafEventTypeLocal);
@@ -129,10 +132,13 @@ void mafNetworkConnectorQXMLRPCTest::mafNetworkConnectorQXMLRPCCommunictionTest(
     eventParameters.append("updateObject()");
 
     mafList<mafVariant> dataParameters;
-    listToSend.push_back(eventParameters);
-    listToSend.push_back(dataParameters);
 
-    m_NetWorkConnectorQXMLRPC->send("maf.remote.eventBus.comunication.xmlrpc", &listToSend);
+    mafEventArgumentsList listToSend;
+    listToSend.append(mafEventArgument(mafList<mafVariant>, eventParameters));
+    listToSend.append(mafEventArgument(mafList<mafVariant>, dataParameters));
+
+    m_NetWorkConnectorQXMLRPC->send("maf.remote.eventBus.comunication.send.xmlrpc", &listToSend);
+
 
     QTime dieTime = QTime::currentTime().addSecs(3);
     while(QTime::currentTime() < dieTime) {
