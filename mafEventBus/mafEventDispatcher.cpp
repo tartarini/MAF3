@@ -26,6 +26,10 @@ mafEventDispatcher::~mafEventDispatcher() {
 
 }
 
+bool mafEventDispatcher::isLocalSignalPresent(const mafString topic) const {
+    return m_SignalsHash.values(topic).size() != 0;
+}
+
 void mafEventDispatcher::resetHashes() {
     // delete all lists present into the hash.
     mafHash<mafString, mafEvent *>::iterator i;
@@ -163,6 +167,7 @@ bool mafEventDispatcher::addObserver(const mafEvent &props) {
     if(sig.length() > 0 && objSlot != NULL) {
 
         mafEvent *itemEventProp;
+        //bool testRes = this->isLocalSignalPresent(topic);
         itemEventProp = m_SignalsHash.value(topic);
         if(itemEventProp == NULL) {
             mafMsgDebug() << mafTr("Signal not present for topic %1, create only the entry in CallbacksHash").arg(topic);
