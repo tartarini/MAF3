@@ -59,14 +59,6 @@ protected:
     mafString m_Protocol; ///< define the protocol of the connector (xmlrpc, soap, etc...)
 };
 
-/////////////////////////////////////////////////////////////
-// Inline methods
-/////////////////////////////////////////////////////////////
-
-inline mafString mafNetworkConnector::protocol() {
-    return m_Protocol;
-}
-
 } //namespace mafEventBus
 
 #endif // MAFNETWORKCONNECTOR_H
