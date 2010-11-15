@@ -28,9 +28,6 @@ public:
     /// object constructor.
     mafEventDispatcherLocal();
 
-    /// object destructor.
-    /*virtual*/ ~mafEventDispatcherLocal();
-
     /// Emit event corresponding to the given id locally to the application.
     virtual void notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList = NULL, mafGenericReturnArgument *returnArg = NULL) const;
 

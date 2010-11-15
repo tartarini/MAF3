@@ -18,10 +18,6 @@ mafEventDispatcherLocal::mafEventDispatcherLocal() : mafEventDispatcher() {
     this->initializeGlobalEvents();
 }
 
-mafEventDispatcherLocal::~mafEventDispatcherLocal() {
-
-}
-
 void mafEventDispatcherLocal::initializeGlobalEvents() {
     mafEvent *properties = new mafEvent();
     mafString topic = "maf.local.eventBus.globalUpdate";
