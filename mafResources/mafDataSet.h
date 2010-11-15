@@ -65,6 +65,9 @@ public:
     /// Set the boundary algorithm function to be used to calculate the data value boundary according also to its pose matrix.
     void setBoundaryAlgorithm(mafDataBoundaryAlgorithm *algorithm);
 
+    /// Return the boundary algorithm function used to calculate the data value boundary
+    mafDataBoundaryAlgorithm *boundaryAlgorithm() const;
+
     /// Return the instance of the resource's status. The caller has to delete the allocated memory he asked.
     /*virtual*/ mafCore::mafMemento *createMemento() const;
 
@@ -93,6 +96,10 @@ inline mafCore::mafContainerInterface *mafDataSet::dataValue() {
 
 inline mafPoseMatrix *mafDataSet::poseMatrix() const {
     return m_Matrix;
+}
+
+inline mafDataBoundaryAlgorithm *mafDataSet::boundaryAlgorithm() const {
+    return m_DataBoundaryAlgorithm;
 }
 
 } //mafResources
