@@ -60,6 +60,9 @@ public:
     /// Boundary algorithm.
     /*virtual*/ mafContainerInterface *calculateBoundary(mafContainerInterface *data, mafPoseMatrix *m);
 
+    /// Return bounds of the bounding box.
+    /*virtual*/ void bounds(double bounds[6]);
+
 private:
     mafContainer<testExternalBoundary> m_Boundary; ///< boundary data.
 };
@@ -82,6 +85,9 @@ mafContainerInterface *testDataBoundaryCustom::calculateBoundary(mafContainerInt
         if(v > m_Boundary->m_Range[1]) m_Boundary->m_Range[1] = v;
     }
     return &m_Boundary;
+}
+
+void testDataBoundaryCustom::bounds(double bounds[6]) {
 }
 
 //------------------------------------------------------------------------------------------
