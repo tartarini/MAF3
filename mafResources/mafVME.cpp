@@ -14,6 +14,7 @@
 #include "mafDataSet.h"
 #include "mafMementoDataSet.h"
 #include "mafInteractor.h"
+#include "mafDataBoundaryAlgorithm.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -53,6 +54,12 @@ void mafVME::setModified(bool m) {
     // like the mafDataPipe or mafVisualPipe
     emit(modifiedObject());
 }
+
+void mafVME::setBounds(QVariantList bounds) {
+    m_Bounds.clear();
+    m_Bounds.append(bounds);
+}
+
 
 void mafVME::setTimestamp(double t) {
     dataSetCollection()->setTimestamp(t);
@@ -97,6 +104,9 @@ void mafVME::execute() {
 mafDataSetCollection *mafVME::dataSetCollection() {
     if(m_DataSetCollection == NULL) {
         m_DataSetCollection = new mafDataSetCollection(mafCodeLocation);
+
+        //connect the data collection modified to the updateBounds slot
+        connect(m_DataSetCollection, SIGNAL(modifiedObject()), this, SLOT(updateBounds()));
     }
     return m_DataSetCollection;
 }
@@ -169,4 +179,20 @@ void mafVME::updateData() {
         iter++;
     }
     this->setDataLoaded(true);
+    this->updateBounds();
+}
+
+void mafVME::updateBounds() {
+    if (this->dataSetCollection()->itemAtCurrentTime() != NULL){
+        mafDataBoundaryAlgorithm *boundary = this->dataSetCollection()->itemAtCurrentTime()->boundaryAlgorithm();
+        if(boundary != NULL){
+            double b[6];
+            boundary->bounds(b);
+            int i = 0;
+            for(i; i < 6; i++) {
+                m_Bounds.append(b[i]);
+            }
+        }
+    }
+
 }
