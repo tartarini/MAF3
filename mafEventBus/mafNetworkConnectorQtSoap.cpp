@@ -21,7 +21,9 @@ mafNetworkConnectorQtSoap::mafNetworkConnectorQtSoap() : mafNetworkConnector(), 
 }
 
 mafNetworkConnectorQtSoap::~mafNetworkConnectorQtSoap() {
-    if(m_Http) delete m_Http;
+    if(m_Http) {
+        delete m_Http;
+    }
 }
 
 mafNetworkConnector *mafNetworkConnectorQtSoap::clone() {
