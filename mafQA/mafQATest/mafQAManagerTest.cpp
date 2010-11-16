@@ -126,15 +126,28 @@ void mafQAManagerTest::pollUrlTest() {
 }
 
 void mafQAManagerTest::runPythonScriptTest() {
+    //create temporary script
+    QFile file("temporaryPythonScript.py");
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        return;
+    }
+    QTextStream out(&file);
+    out << "import os" << "\n";
+    out << "print \"Test Python Script\"" << "\n";
+
+    file.close();
+
     mafMsgDebug() << "Asynchronous:";
     mafStringList argList;
-    int res = m_QAManager->runPythonScript("../../../MAF/mafQA/scriptsQA/GeneratorQA.py",argList);
+    int res = m_QAManager->runPythonScript("temporaryPythonScript.py",argList);
     QVERIFY(res == 0);
 
     //launch sync
     mafMsgDebug() << "Synchronous:";
-    res = m_QAManager->runPythonScript("../../../MAF/mafQA/scriptsQA/GeneratorQA.py",argList, true);
+    res = m_QAManager->runPythonScript("temporaryPythonScript.py",argList, true);
     QVERIFY(res == 0);
+
+    QFile::remove("temporaryPythonScript.py");
 }
 
 void mafQAManagerTest::runScriptTest() {
