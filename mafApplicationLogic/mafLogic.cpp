@@ -14,8 +14,6 @@
 #include <mafCoreSingletons.h>
 #include <mafEventDefinitions.h>
 
-#include <QDir>
-
 using namespace mafEventBus;
 
 #ifdef WIN32
@@ -53,7 +51,7 @@ mafLogic::mafLogic(const mafString code_location) : mafLogicLight(code_location)
 mafLogic::~mafLogic() {
 }
 
-void mafLogic::initialize() {
+bool mafLogic::initialize() {
     // Call the ionitialization of the superclass.
     Superclass::initialize();
 
@@ -78,6 +76,7 @@ void mafLogic::initialize() {
 
     // Perform design by contract check.
     ENSURE(module_initialized);
+    return module_initialized;
 }
 
 void mafLogic::loadPlugins() {

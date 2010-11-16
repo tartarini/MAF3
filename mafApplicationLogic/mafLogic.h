@@ -16,6 +16,8 @@
 #include "mafLogicLight.h"
 #include <mafMemento.h>
 
+#include <QDir>
+
 namespace mafApplicationLogic {
 
 // Class forwarding list
@@ -46,7 +48,7 @@ public:
     /*virtual*/ ~mafLogic();
 
     /// Allows to initialize all the singletons and register all the objects to the factory.
-    virtual void initialize();
+    virtual bool initialize();
 
     /// Allows to assign the application's working directory.
     void setWorkingDirectory(const mafString wd);
@@ -59,13 +61,13 @@ signals:
     void settingsViewManagerStore();
 
     /// Signal used to ask the vme manager to store its settings.
-    void settingsVmeManagerStore();
+//    void settingsVmeManagerStore();
 
     /// Signal used to ask the view managers to restore their settings.
     void settingsViewManagerRestore(mafCore::mafMemento *memento, bool deep);
 
     /// Signal used to ask the vme managers to restore their settings.
-    void settingsVmeManagerRestore(mafCore::mafMemento *memento, bool deep);
+//    void settingsVmeManagerRestore(mafCore::mafMemento *memento, bool deep);
 
 private:
     /// Allow to load plugins located into the 'plugins' folder located into the application's directory path.
@@ -76,7 +78,10 @@ private:
 };
 
 inline void mafLogic::setWorkingDirectory(const mafString wd) {
-    m_WorkingDirectory = wd;
+    m_WorkingDirectory =  QDir::toNativeSeparators(wd);
+#ifndef WIN32
+    m_WorkingDirectory.replace('\\','/');
+#endif
 }
 
 inline mafString mafLogic::workingDirectory() const {
