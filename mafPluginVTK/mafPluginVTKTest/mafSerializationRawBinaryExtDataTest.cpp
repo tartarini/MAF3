@@ -15,6 +15,7 @@
 #include <mafMementoVME.h>
 #include <mafExternalDataCodecVTK.h>
 #include <mafEventBusManager.h>
+#include <mafDataBoundaryAlgorithmVTK.h>
 
 
 #include <vtkDataSet.h>
@@ -77,7 +78,7 @@ void testExtRawCustomManager::createdMemento(mafCore::mafMemento *memento) {
     returnVME->updateData();
 
 
-    mafDataSet *data = returnVME->dataSetCollection()->itemAt(1);
+    mafDataSet *data = returnVME->dataSetCollection()->itemAt(0);
 
     mafContainer<vtkPolyData> *dataSet = mafContainerPointerTypeCast(vtkPolyData, data->dataValue());
 
@@ -190,8 +191,18 @@ private slots:
         mafDataSet *dataSetMoved = mafNEW(mafResources::mafDataSet);
         dataSetMoved->setDataValue(&m_ContainerMoved);
 
-        m_Vme->dataSetCollection()->insertItem(dataSetCube, 1);
-        m_Vme->dataSetCollection()->insertItem(dataSetMoved, 2);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+        boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+        dataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
+        mafCore::mafContainerInterface *b = dataSetCube->dataBoundary();
+        m_Vme->dataSetCollection()->insertItem(dataSetCube, 0);
+
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm1;
+        boundaryAlgorithm1 = mafNEW(mafDataBoundaryAlgorithmVTK);
+        dataSetMoved->setBoundaryAlgorithm(boundaryAlgorithm1);
+        mafCore::mafContainerInterface *b1 = dataSetMoved->dataBoundary();
+        m_Vme->dataSetCollection()->insertItem(dataSetMoved, 1);
+
     }
 
     /// Cleanup test variables memory allocation.
