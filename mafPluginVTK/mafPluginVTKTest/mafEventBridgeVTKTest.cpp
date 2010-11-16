@@ -191,7 +191,7 @@ void mafEventBridgeVTKTest::mafEventBridgeVTKConnectionTest() {
 
 
     //Check if events has been captured by testInteractionManagerCustom
-    QVERIFY(m_CustomManager->m_Counter == 1);
+    QVERIFY(m_CustomManager->m_Counter == 2);
     mafDEL(m_CustomManager);
 }
 
