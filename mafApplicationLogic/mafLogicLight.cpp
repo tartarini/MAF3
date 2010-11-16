@@ -24,13 +24,14 @@ mafLogicLight::~mafLogicLight() {
     m_EventBus->shutdown();
 }
 
-void mafLogicLight::initialize() {
+bool mafLogicLight::initialize() {
     // Register all the core objects into the object factory.
     mafCoreRegistration::registerCoreObjects();
 
     // Initialize the event bus by asking its instance.
     m_EventBus = mafEventBusManager::instance();
 
+    return m_EventBus != NULL;
 }
 
 bool mafLogicLight::startServer(const mafString &communication_protocol, unsigned int listen_port) {

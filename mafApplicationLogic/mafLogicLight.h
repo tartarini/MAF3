@@ -51,7 +51,7 @@ public:
     void sendRequestToServer(mafEventBus::mafEvent *event_dict, mafEventBus::mafEventArgumentsList *argList = NULL);
 
     /// Allows to initialize all the singletons and register all the objects to the factory.
-    virtual void initialize();
+    virtual bool initialize();
 
 protected:
     mafEventBus::mafEventBusManager *m_EventBus; ///< Reference to the communication's event bus
