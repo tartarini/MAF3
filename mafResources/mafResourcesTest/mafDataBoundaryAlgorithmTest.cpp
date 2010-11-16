@@ -33,6 +33,9 @@ public:
     /// Algorithm that will be used to extract the boundary from the given data value and pose matrix.
     /*virtual*/ mafContainerInterface *calculateBoundary(mafContainerInterface *data, mafPoseMatrix *matrix);
 
+    /// Algorithm that will be used to extract the boundary from the given bounds and pose matrix.
+    /*virtual*/ mafCore::mafContainerInterface *calculateBoundary(double bounds[6], mafPoseMatrix *matrix = NULL);
+
     /// Return bounds of the bounding box.
     /*virtual*/ void bounds(double bounds[6]);
 
@@ -56,6 +59,9 @@ mafContainerInterface *testDataBoundaryAlgorithmCustom::calculateBoundary(mafCon
 
     m_BoundaryItem = "BoundaryCalculated";
     return NULL;
+}
+
+mafCore::mafContainerInterface *testDataBoundaryAlgorithmCustom::calculateBoundary(double bounds[6], mafPoseMatrix *matrix){
 }
 
 void testDataBoundaryAlgorithmCustom::bounds(double bounds[6]) {
@@ -96,7 +102,7 @@ void mafDataBoundaryAlgorithmTest::mafBoundaryAlgorithmAllocationTest() {
 
 void mafDataBoundaryAlgorithmTest::mafBoundaryAlgorithmStrategyTest() {
     mafString res("BoundaryCalculated");
-    m_BoundaryAlgorithm->calculateBoundary(NULL, NULL);
+    m_BoundaryAlgorithm->calculateBoundary(NULL);
     QCOMPARE(m_BoundaryAlgorithm->boundaryItem(), res);
 }
 
