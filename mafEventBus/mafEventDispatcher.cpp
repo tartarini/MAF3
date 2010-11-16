@@ -302,9 +302,9 @@ bool mafEventDispatcher::registerSignal(const mafEvent &props) {
         // Only one signal for a given id can be registered!!
         QObject *obj = props[OBJECT].value<QObject *>();
         if(obj != NULL) {
-            mafMsgWarning("%s", mafTr("Object %1 is trying to register a signal with ID '%2' that has been already registered!!").arg(obj->metaObject()->className(), topic).toAscii().data());
+            mafMsgWarning("%s", mafTr("Object %1 is trying to register a signal with Topic '%2' that has been already registered!!").arg(obj->metaObject()->className(), topic).toAscii().data());
         } else {
-            mafMsgWarning("%s", mafTr("NULL is trying to register a signal with ID '%2' that has been already registered!!").arg(topic).toAscii().data());
+            mafMsgWarning("%s", mafTr("NULL is trying to register a signal with Topic '%2' that has been already registered!!").arg(topic).toAscii().data());
         }
         return false;
     }
