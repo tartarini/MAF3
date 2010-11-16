@@ -112,18 +112,6 @@ private:
 
 };
 
-/////////////////////////////////////////////////////////////
-// Inline methods
-/////////////////////////////////////////////////////////////
-
-inline void mafEventBusManager::plugNetworkConnector(const mafString &protocol, mafNetworkConnector *connector) {
-    m_NetworkConnectorHash.insert(protocol, connector);
-}
-
-inline bool mafEventBusManager::isLocalSignalPresent(const mafString topic) const {
-    return m_LocalDispatcher->isLocalSignalPresent(topic);
-}
-
 } // namespace mafEventBus
 
 #endif // MAFEVENTBUS_H

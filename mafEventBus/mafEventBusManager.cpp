@@ -47,6 +47,14 @@ mafEventBusManager::~mafEventBusManager() {
     }
 }
 
+void mafEventBusManager::plugNetworkConnector(const mafString &protocol, mafNetworkConnector *connector) {
+    m_NetworkConnectorHash.insert(protocol, connector);
+}
+
+bool mafEventBusManager::isLocalSignalPresent(const mafString topic) const {
+    return m_LocalDispatcher->isLocalSignalPresent(topic);
+}
+
 mafEventBusManager* mafEventBusManager::instance() {
     static mafEventBusManager instanceEventBus;
     return &instanceEventBus;

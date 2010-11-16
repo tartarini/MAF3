@@ -108,10 +108,6 @@ inline mafEventItemListType mafEventDispatcher::signalItemProperty(const mafStri
     return m_SignalsHash.values(topic);
 }
 
-inline bool mafEventDispatcher::isLocalSignalPresent(const mafString topic) const {
-    return m_SignalsHash.contains(topic);
-}
-
 } // namespace mafEventBus
 
 #endif // MAFEVENTDISPATCHER_H

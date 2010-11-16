@@ -126,7 +126,7 @@ private slots:
     void retrieveProtocolTest();
 
 private:
-    testNetworkConnectorCustom *m_NetworkConnector; ///< Test var.
+    mafNetworkConnector *m_NetworkConnector; ///< Test var.
 };
 
 void mafNetworkConnectorTest::mafNetworkConnectorAllocationTest() {
@@ -138,11 +138,12 @@ void mafNetworkConnectorTest::mafNetworkConnectorCreateClientAndServerTest() {
     res = "Server Created - Port: 8000";
     m_NetworkConnector->createServer(8000);
 
-    QCOMPARE(m_NetworkConnector->connectorStatus(), res);
+    testNetworkConnectorCustom *conn = (testNetworkConnectorCustom *)m_NetworkConnector;
+    QCOMPARE(conn->connectorStatus(), res);
 
     res = "Client Created - Host: localhost Port: 8000";
     m_NetworkConnector->createClient("localhost", 8000);
-    QCOMPARE(m_NetworkConnector->connectorStatus(), res);
+    QCOMPARE(conn->connectorStatus(), res);
 }
 
 void mafNetworkConnectorTest::retrieveProtocolTest() {

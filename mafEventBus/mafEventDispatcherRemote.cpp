@@ -26,6 +26,14 @@ mafEventDispatcherRemote::~mafEventDispatcherRemote() {
     m_NetworkConnectorClient = NULL;
 }
 
+mafNetworkConnector *mafEventDispatcherRemote::networkConnectorServer() {
+    return m_NetworkConnectorServer;
+}
+
+mafNetworkConnector *mafEventDispatcherRemote::networkConnectorClient() {
+    return m_NetworkConnectorClient;
+}
+
 void mafEventDispatcherRemote::initializeGlobalEvents() {
     mafEvent *properties = new mafEvent();
     mafString topic = "maf.remote.eventBus.globalUpdate";

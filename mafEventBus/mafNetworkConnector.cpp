@@ -16,3 +16,7 @@ using namespace mafEventBus;
 mafNetworkConnector::mafNetworkConnector() {
 
 }
+
+mafString mafNetworkConnector::protocol() {
+    return m_Protocol;
+}

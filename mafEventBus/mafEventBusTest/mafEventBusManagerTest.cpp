@@ -280,7 +280,8 @@ void mafEventBusManagerTest::eventBusWithReturnArgumentTest() {
 
     // Create new Event ID used for callback and event notification.
     mafString returnValueID = "RETURNVALUE_SIGNAL";
-    mafRegisterLocalSignal(returnValueID, ObjTestSender, "returnObjectValue()");
+    mafRegisterLocalSignal(returnValueID, ObjTestSender, "returnObjectValueSignal()");
+    mafRegisterLocalCallback(returnValueID, ObjTestSender, "returnObjectValue()");
 
 
     //Notify event with return argument
@@ -333,7 +334,7 @@ void mafEventBusManagerTest::remoteConnectionTest() {
 }
 
 void mafEventBusManagerTest::plugNetworkConnectorTest() {
-    m_EventBus->plugNetworkConnector("CUSTOM_CONNECTOR", new testNetworkConnectorForEventBus());
+    m_EventBus->plugNetworkConnector("CUSTOM_CONNECTOR", NULL);
 }
 
 void mafEventBusManagerTest::isLocalSignalPresentTest() {

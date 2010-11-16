@@ -33,3 +33,41 @@ mafEvent::~mafEvent() {
     m_EventHash->clear();
     delete m_EventHash;
 }
+
+mafEventHash *mafEvent::entries() {
+    return m_EventHash;
+}
+
+mafEventHash *mafEvent::entries() const {
+    return m_EventHash;
+}
+
+mafVariant &mafEvent::operator[](mafString key) const{
+    return (*m_EventHash)[key];
+}
+
+mafEventType mafEvent::eventType() const {
+    return static_cast<mafEventType>(entries()->value(TYPE).toInt());
+}
+
+mafString mafEvent::eventTopic() const {
+    return entries()->value(TOPIC).toString();
+}
+
+bool mafEvent::isEventLocal() const {
+    int et = entries()->value(TYPE).toInt();
+    return et == mafEventTypeLocal;
+}
+
+void mafEvent::setEventType(mafEventType et) {
+    entries()->insert(TYPE, static_cast<int>(et));
+}
+
+void mafEvent::setEventTopic(mafString topic) {
+    entries()->insert(TOPIC, topic);
+}
+
+/*mafString mafEvent::eventIdName() const {
+    mafId id = eventId();
+    return mafIdProvider::instance()->idName(id);
+}*/
