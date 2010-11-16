@@ -51,6 +51,9 @@ private slots:
     /// Check the existence of the mafLogicLight allocation.
     void mafLogicLightAllocationTest();
 
+    /// mafLogicLight initialization test
+    void initializeTest();
+
 private:
     mafLogicLight *m_LogicLight; ///< Test variable.
 };
@@ -59,6 +62,10 @@ void mafLogicLightTest::mafLogicLightAllocationTest() {
     QVERIFY(m_LogicLight != NULL);
 }
 
+void mafLogicLightTest::initializeTest() {
+    bool result = m_LogicLight->initialize();
+    QVERIFY(result);
+}
 
 MAF_REGISTER_TEST(mafLogicLightTest);
 #include "mafLogicLightTest.moc"
