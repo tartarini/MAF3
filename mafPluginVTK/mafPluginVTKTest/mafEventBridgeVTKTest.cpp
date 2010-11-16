@@ -191,11 +191,8 @@ void mafEventBridgeVTKTest::mafEventBridgeVTKConnectionTest() {
     renWin->Render();
     QTest::qSleep(2000);
 
-
-
-
     //Check if events has been captured by testInteractionManagerCustom
-    QVERIFY(m_CustomManager->m_Counter == 2);
+    QVERIFY(m_CustomManager->m_Counter == 1);
     mafDEL(bridge);
 }
 
