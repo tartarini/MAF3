@@ -113,7 +113,6 @@ private slots:
 
     /// Initialize test variables
     void initTestCase() {
-        mafResourcesRegistration::registerResourcesObjects();
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
         m_CustomManager = mafNEW(testInteractionManagerCustom);
         m_EventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
@@ -144,7 +143,6 @@ void mafEventBridgeVTKTest::mafEventBridgeVTKAllocationTest() {
 void mafEventBridgeVTKTest::mafEventBridgeVTKConnectionTest() {
     QVERIFY(m_EventBridge != NULL);
 
-    testInteractionManagerCustom *bridge = new testInteractionManagerCustom();
     vtkRenderWindow *renWin = vtkRenderWindow::New();
     vtkRenderer *renderer = vtkRenderer::New();
     vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
@@ -181,10 +179,10 @@ void mafEventBridgeVTKTest::mafEventBridgeVTKConnectionTest() {
     vtkSmartPointer<vtkActor> pickSphereActor = vtkSmartPointer<vtkActor>::New();
     pickSphereActor->SetMapper(pickSphereMapper);
     double *pos;
-    pos = bridge->position();
+    pos = m_CustomManager->position();
 
     pickSphereActor->GetProperty()->SetColor(1,0,0);
-    pickSphere->SetCenter(bridge->position());
+    pickSphere->SetCenter(m_CustomManager->position());
     pickSphere->SetRadius(1);
     pickSphere->Update();
     renderer->AddActor(pickSphereActor);
@@ -192,11 +190,9 @@ void mafEventBridgeVTKTest::mafEventBridgeVTKConnectionTest() {
     QTest::qSleep(2000);
 
 
-
-
     //Check if events has been captured by testInteractionManagerCustom
-    QVERIFY(m_CustomManager->m_Counter == 2);
-    mafDEL(bridge);
+    QVERIFY(m_CustomManager->m_Counter == 1);
+    mafDEL(m_CustomManager);
 }
 
 MAF_REGISTER_TEST(mafEventBridgeVTKTest);
