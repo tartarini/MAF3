@@ -4,7 +4,8 @@
 CONFIG += qtestlib
 CONFIG += link_prl
 SOURCES += main.cpp \
-    mafLogicLightTest.cpp
+    mafLogicLightTest.cpp \
+    mafLogicTest.cpp
 include(../../mafInstallTest.pri)
 unix:LIB_EXT = _debug
 win32:LIB_EXT = _d
