@@ -14,14 +14,14 @@
 
 #ifdef WIN32
     #define TEST_LIBRARY_NAME "mafPluginTest_d.dll"
-    #define TEST_SCRIPT_NAME "../../../MAF/mafQA/mafQATest/AppExample.bat"
+    #define TEST_SCRIPT_NAME "dir"
 #else
     #ifdef __APPLE__
         #define TEST_LIBRARY_NAME "libmafPluginTest_debug.dylib"
-        #define TEST_SCRIPT_NAME "../../../MAF/mafQA/mafQATest/AppExample"
+        #define TEST_SCRIPT_NAME "whoami"
     #else
         #define TEST_LIBRARY_NAME "libmafPluginTest_debug.so"
-        #define TEST_SCRIPT_NAME "../../../MAF/mafQA/mafQATest/AppExample.sh"
+        #define TEST_SCRIPT_NAME "whoami"
     #endif
 #endif
 
