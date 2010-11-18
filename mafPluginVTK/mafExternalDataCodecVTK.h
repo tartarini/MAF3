@@ -18,7 +18,7 @@
 #include <mafContainer.h>
 
 // Class forwarding list
-class vtkDataSet;
+class vtkAlgorithmOutput;
 class vtkDataSetReader;
 
 namespace mafPluginVTK {
@@ -47,7 +47,7 @@ public:
 
 private:
     vtkDataSetReader *m_Reader; ///< Reader of the vtkDataSet
-    mafCore::mafContainer<vtkDataSet> *m_Data; ///< External data type do be coded/encoded.
+    mafCore::mafContainer<vtkAlgorithmOutput> *m_Data; ///< External data type do be coded/encoded.
 };
 
 } // mafPluginVTK

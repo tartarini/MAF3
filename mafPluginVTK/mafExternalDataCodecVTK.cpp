@@ -14,7 +14,7 @@
 #include <vtkDataSetReader.h>
 #include <vtkDataSetWriter.h>
 #include <vtkDataSet.h>
-#include <vtkPolyData.h>
+#include <vtkAlgorithmOutput.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -35,16 +35,14 @@ char *mafExternalDataCodecVTK::encode(bool binary) {
         writer->SetFileTypeToBinary();
     }
 
-
-    mafContainer<vtkDataSet> *dataSet = mafContainerPointerTypeCast(vtkDataSet, this->m_ExternalData);
-    writer->SetInput(dataSet->externalData());
+    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, this->m_ExternalData);
+    writer->SetInputConnection(*dataSet);
     writer->Write();
     writer->Update();
     vtk_err = writer->GetErrorCode();
     if (vtk_err == VTK_ERROR) {
       return "";
     }
-
     this->m_StringSize = writer->GetOutputStringLength();
     char *output_string = new char[this->m_StringSize+1];
     if (binary) {
@@ -75,8 +73,7 @@ void mafExternalDataCodecVTK::decode(const char *input_string, bool binary) {
 
     m_Reader->Update();
 
-    m_Data = new mafContainer<vtkDataSet>();
-    *m_Data = m_Reader->GetOutput();
-    (*m_Data)->Update();
+    m_Data = new mafContainer<vtkAlgorithmOutput>();
+    *m_Data = m_Reader->GetOutputPort(0);
     this->m_ExternalData = m_Data;
 }
