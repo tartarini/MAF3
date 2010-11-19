@@ -155,7 +155,6 @@ void mafEventBridgeVTKTest::mafEventBridgeVTKConnectionTest() {
     sphereMapper->SetInputConnection(sphereSource->GetOutputPort());
     vtkSmartPointer<vtkActor> sphereActor = vtkSmartPointer<vtkActor>::New();
     sphereActor->SetMapper(sphereMapper);
-
     renderer->AddActor(sphereActor);
     renWin->AddRenderer(renderer);
     iren->SetRenderWindow(renWin);
@@ -188,7 +187,6 @@ void mafEventBridgeVTKTest::mafEventBridgeVTKConnectionTest() {
     renderer->AddActor(pickSphereActor);
     renWin->Render();
     QTest::qSleep(2000);
-
 
     //Check if events has been captured by testInteractionManagerCustom
     QVERIFY(m_CustomManager->m_Counter == 2);
