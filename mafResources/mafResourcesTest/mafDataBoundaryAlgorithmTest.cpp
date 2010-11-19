@@ -62,6 +62,10 @@ mafContainerInterface *testDataBoundaryAlgorithmCustom::calculateBoundary(mafCon
 }
 
 mafCore::mafContainerInterface *testDataBoundaryAlgorithmCustom::calculateBoundary(double bounds[6], mafPoseMatrix *matrix){
+    Q_UNUSED(bounds);
+    Q_UNUSED(matrix);
+
+    m_BoundaryItem = "BoundaryCalculated";
     return NULL;
 }
 
