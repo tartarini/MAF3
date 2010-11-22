@@ -48,7 +48,6 @@ char *mafExternalDataCodecVTK::encode(bool binary) {
     if (binary) {
         unsigned char *binaryOutput = writer->GetBinaryOutputString();
         memcpy(output_string,binaryOutput,this->m_StringSize+1);
-
     } else {
         mafString output = writer->GetOutputString();
         //vtkDataSetWriter write some junk character at the end of the string,
@@ -72,7 +71,6 @@ void mafExternalDataCodecVTK::decode(const char *input_string, bool binary) {
     }
 
     m_Reader->Update();
-
     m_Data = new mafContainer<vtkAlgorithmOutput>();
     *m_Data = m_Reader->GetOutputPort(0);
     this->m_ExternalData = m_Data;

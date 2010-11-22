@@ -17,11 +17,9 @@
 #include <mafEventBusManager.h>
 
 #include <vtkDataSet.h>
-#include <vtkPolyData.h>
-#include <vtkPoints.h>
-#include <vtkFloatArray.h>
-#include <vtkCellArray.h>
-#include <vtkPointData.h>
+#include <vtkCubeSource.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkAlgorithmOutput.h>
 
 #ifdef WIN32
     #define SERIALIZATION_LIBRARY_NAME "mafSerialization_d.dll"
@@ -65,11 +63,15 @@ void testCustomManager::createdExtData(mafCore::mafContainerInterface *data) {
     mafMsgDebug("%s", mafTr("External data loaded!!").toAscii().data());
     QVERIFY(data != NULL);
 
-    mafContainer<vtkPolyData> *dataSet = mafContainerPointerTypeCast(vtkPolyData, data);
 
-    double boundsIn[6] = {0,6,0,6,0,5};
+    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, data);
+    vtkPolyDataMapper *sphereMapper = vtkPolyDataMapper::New();
+    sphereMapper->SetInputConnection(*dataSet);
+
+
+    double boundsIn[6] = {-2.5,2.5,-1.5,1.5,-4,4};
     double boundsOut[6];
-    (*dataSet)->GetBounds(boundsOut);
+    sphereMapper->GetBounds(boundsOut);
     QCOMPARE(boundsIn[0], boundsOut[0]);
     QCOMPARE(boundsIn[1], boundsOut[1]);
     QCOMPARE(boundsIn[2], boundsOut[2]);
@@ -77,17 +79,7 @@ void testCustomManager::createdExtData(mafCore::mafContainerInterface *data) {
     QCOMPARE(boundsIn[4], boundsOut[4]);
     QCOMPARE(boundsIn[5], boundsOut[5]);
 
-
-    int i;
-    double x[8][3]={{0,0,0}, {5,0,0}, {5,5,0}, {0,5,0},
-                        {0,0,5}, {5,0,1}, {6,5,2}, {0,6,5}};
-    vtkPoints *points =(*dataSet)->GetPoints();
-    for (i=0; i<8; i++) {
-        double p[3];
-        points->GetPoint(i, p);
-        QVERIFY(p[0] == x[i][0] && p[1] == x[i][1] && p[2] == x[i][2]);
-    }
-
+    sphereMapper->Delete();
     mafDEL(data);
 }
 
@@ -115,41 +107,18 @@ private slots:
         m_Codec = mafNEW(mafPluginVTK::mafExternalDataCodecVTK);
 
         // Create a polydata.
-        vtkPolyData *surface = vtkPolyData::New();
-        vtkPoints *points = vtkPoints::New();
-        vtkCellArray *polys = vtkCellArray::New();
-        vtkFloatArray *scalars = vtkFloatArray::New();
-
-        int i;
-        static float x[8][3]={{0,0,0}, {5,0,0}, {5,5,0}, {0,5,0},
-                        {0,0,5}, {5,0,1}, {6,5,2}, {0,6,5}};
-        static vtkIdType pts[6][4]={{0,1,2,3}, {4,5,6,7}, {0,1,5,4},
-                        {1,2,6,5}, {2,3,7,6}, {3,0,4,7}};
-        for (i=0; i<8; i++) points->InsertPoint(i,x[i]);
-        for (i=0; i<6; i++) polys->InsertNextCell(4,pts[i]);
-        for (i=0; i<8; i++) scalars->InsertTuple1(i,i);
-
-        // We now assign the pieces to the vtkPolyData.
-        surface->SetPoints(points);
-        surface->SetPolys(polys);
-        surface->GetPointData()->SetScalars(scalars);
-        points->Delete();
-        polys->Delete();
-        scalars->Delete();
-
-        m_Container.setDestructionFunction(&vtkPolyData::Delete);
-        m_Container.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
-        m_Container.setExternalDataType("vtkPolydata");
-        m_Container = surface;
-        mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
-        dataSet->setDataValue(&m_Container);
-        mafDEL(dataSet);
+        m_DataSource = vtkCubeSource::New();
+        m_DataSource->SetXLength(5);
+        m_DataSource->SetYLength(3);
+        m_DataSource->SetZLength(8);
+        m_DataSourceContainer = m_DataSource->GetOutputPort(0);
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_CustomManager);
         mafDEL(m_Codec);
+        m_DataSource->Delete();
         mafCoreSingletons::mafSingletonsShutdown();
         mafEventBusManager::instance()->shutdown();
     }
@@ -162,9 +131,11 @@ private slots:
 
 private:
     mafExternalDataCodecVTK *m_Codec; ///< Test var.
-    mafContainer<vtkPolyData> m_Container; ///< Test var.
     mafDataStream m_OutputStream; ///< Test var.
     testCustomManager *m_CustomManager; ///< Manager test var
+
+    vtkCubeSource *m_DataSource; ///< Source data for the test suite.
+    mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
 };
 
 void mafSerializationVTKTest::mafSerializationVTKAllocationTest() {
@@ -185,7 +156,7 @@ void mafSerializationVTKTest::mafSerializationVTKSaveTest() {
 
     //mafId plug_codec_id = mafIdProvider::instance()->idValue("maf.local.serialization.plugCodec");
     mafString plug_codec_id = "maf.local.serialization.plugCodec";
-    mafString obj_type("vtkPolyData");
+    mafString obj_type("vtkAlgorithmOutput");
     mafString vtk = "VTK";
     mafString codecVTK = "mafPluginVTK::mafExternalDataCodecVTK";
 
@@ -197,7 +168,7 @@ void mafSerializationVTKTest::mafSerializationVTKSaveTest() {
 
     mafString encodeType = "VTK";
     argList.clear();
-    argList.append(mafEventArgument(mafCore::mafContainerInterface *, &m_Container));
+    argList.append(mafEventArgument(mafCore::mafContainerInterface *, &m_DataSourceContainer));
     argList.append(mafEventArgument(mafString, test_file));
     argList.append(mafEventArgument(mafString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.export", mafEventTypeLocal, &argList);

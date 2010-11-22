@@ -9,20 +9,20 @@
  *
  */
 
-#include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
+#include <mafTestSuite.h>
 #include <mafContainer.h>
 #include <mafMementoVME.h>
 #include <mafExternalDataCodecVTK.h>
 #include <mafEventBusManager.h>
+#include <mafDataBoundaryAlgorithmVTK.h>
 
 
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>
-#include <vtkPoints.h>
-#include <vtkFloatArray.h>
-#include <vtkCellArray.h>
-#include <vtkPointData.h>
+#include <vtkCubeSource.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkAlgorithmOutput.h>
 
 #include <vtkSphereSource.h>
 #include <vtkTransform.h>
@@ -63,7 +63,6 @@ public slots:
 
 testExtRawASCIICustomManager::testExtRawASCIICustomManager(QString code_location) : mafObjectBase(code_location) {
     mafRegisterLocalCallback("maf.local.serialization.mementoLoaded", this, "createdMemento(mafCore::mafMemento *)");
-
 }
 
 void testExtRawASCIICustomManager::createdMemento(mafCore::mafMemento *memento) {
@@ -76,31 +75,21 @@ void testExtRawASCIICustomManager::createdMemento(mafCore::mafMemento *memento) 
     //Now load dataValue
     returnVME->updateData();
 
+    mafDataSet *data = returnVME->dataSetCollection()->itemAt(0);
 
-    mafDataSet *data = returnVME->dataSetCollection()->itemAt(1);
+    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
+    vtkPolyDataMapper *sphereMapper = vtkPolyDataMapper::New();
+    sphereMapper->SetInputConnection(*dataSet);
 
-    mafContainer<vtkPolyData> *dataSet = mafContainerPointerTypeCast(vtkPolyData, data->dataValue());
-
-    double boundsIn[6] = {0,6,0,6,0,5};
+    double boundsIn[6] = {-2.5,2.5,-1.5,1.5,-4,4};
     double boundsOut[6];
-    (*dataSet)->GetBounds(boundsOut);
+    sphereMapper->GetBounds(boundsOut);
     QCOMPARE(boundsIn[0], boundsOut[0]);
     QCOMPARE(boundsIn[1], boundsOut[1]);
     QCOMPARE(boundsIn[2], boundsOut[2]);
     QCOMPARE(boundsIn[3], boundsOut[3]);
     QCOMPARE(boundsIn[4], boundsOut[4]);
     QCOMPARE(boundsIn[5], boundsOut[5]);
-
-
-    int i;
-    double x[8][3]={{0,0,0}, {5,0,0}, {5,5,0}, {0,5,0},
-                        {0,0,5}, {5,0,1}, {6,5,2}, {0,6,5}};
-    vtkPoints *points =(*dataSet)->GetPoints();
-    for (i=0; i<8; i++) {
-        double p[3];
-        points->GetPoint(i, p);
-        QVERIFY(p[0] == x[i][0] && p[1] == x[i][1] && p[2] == x[i][2]);
-    }
 
     mafDEL(data);
     mafDEL(memento);
@@ -132,73 +121,52 @@ private slots:
         m_Codec = mafNEW(mafPluginVTK::mafExternalDataCodecVTK);
 
         // Create a polydata.
-        vtkPolyData *surface = vtkPolyData::New();
-        vtkPoints *points = vtkPoints::New();
-        vtkCellArray *polys = vtkCellArray::New();
-        vtkFloatArray *scalars = vtkFloatArray::New();
+        m_DataSource = vtkCubeSource::New();
+        m_DataSource->SetXLength(5);
+        m_DataSource->SetYLength(3);
+        m_DataSource->SetZLength(8);
 
-        int i;
-        static float x[8][3]={{0,0,0}, {5,0,0}, {5,5,0}, {0,5,0},
-                        {0,0,5}, {5,0,1}, {6,5,2}, {0,6,5}};
-        static vtkIdType pts[6][4]={{0,1,2,3}, {4,5,6,7}, {0,1,5,4},
-                        {1,2,6,5}, {2,3,7,6}, {3,0,4,7}};
-        for (i=0; i<8; i++) points->InsertPoint(i,x[i]);
-        for (i=0; i<6; i++) polys->InsertNextCell(4,pts[i]);
-        for (i=0; i<8; i++) scalars->InsertTuple1(i,i);
+        m_DataSourceContainer.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
+        m_DataSourceContainer.setExternalDataType("vtkAlgorithmOutput");
+        m_DataSourceContainer = m_DataSource->GetOutputPort(0);
 
-        // We now assign the pieces to the vtkPolyData.
-        surface->SetPoints(points);
-        surface->SetPolys(polys);
-        surface->GetPointData()->SetScalars(scalars);
-        points->Delete();
-        polys->Delete();
-        scalars->Delete();
-
-        m_Container.setDestructionFunction(&vtkPolyData::Delete);
-        m_Container.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
-        m_Container.setExternalDataType("vtkPolydata");
-        m_Container = surface;
         //Insert data into VME
         m_Vme = mafNEW(mafResources::mafVME);
-        mafDataSet *dataSetCube = mafNEW(mafResources::mafDataSet);
-        dataSetCube->setDataValue(&m_Container);
+        m_DataSetCube = mafNEW(mafResources::mafDataSet);
+        m_DataSetCube->setDataValue(&m_DataSourceContainer);
 
         // Second test VME
-        vtkPolyData *surfaceMoved = vtkPolyData::New();
-        surfaceMoved->DeepCopy(surface);
-        surfaceMoved->Update();
+        m_DataSourceMoved = vtkCubeSource::New();
+        m_DataSourceMoved->SetXLength(5);
+        m_DataSourceMoved->SetYLength(3);
+        m_DataSourceMoved->SetZLength(8);
 
         vtkTransform *t = vtkTransform::New();
         t->RotateZ(50);
         t->RotateX(50);
         t->Update();
 
-        vtkTransformPolyDataFilter *ptf = vtkTransformPolyDataFilter::New();
-        ptf->SetTransform(t);
-        ptf->SetInput(surfaceMoved);
-        ptf->Update();
+        m_PDataFilter = vtkTransformPolyDataFilter::New();
+        m_PDataFilter->SetTransform(t);
+        m_PDataFilter->SetInputConnection(m_DataSourceMoved->GetOutputPort(0));
+        m_PDataFilter->Update();
         t->Delete();
 
-        surfaceMoved->DeepCopy(ptf->GetOutput());
-        surfaceMoved->Update();
-        ptf->Delete();
+        m_DataSourceContainerMoved.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
+        m_DataSourceContainerMoved.setExternalDataType("vtkAlgorithmOutput");
+        m_DataSourceContainerMoved = m_PDataFilter->GetOutputPort(0);
+        m_DataSetCubeMoved = mafNEW(mafResources::mafDataSet);
+        m_DataSetCubeMoved->setDataValue(&m_DataSourceContainerMoved);
 
-        m_ContainerMoved.setDestructionFunction(&vtkPolyData::Delete);
-        m_ContainerMoved.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
-        m_ContainerMoved.setExternalDataType("vtkPolydata");
-        m_ContainerMoved = surfaceMoved;
-        mafDataSet *dataSetMoved = mafNEW(mafResources::mafDataSet);
-        dataSetMoved->setDataValue(&m_ContainerMoved);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+        boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+        m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
+        m_Vme->dataSetCollection()->insertItem(m_DataSetCube, 0);
 
-        m_Vme->dataSetCollection()->insertItem(dataSetCube, 1);
-        m_Vme->dataSetCollection()->insertItem(dataSetMoved, 2);
-        m_Vme->setObjectName("Test Object");
-
-        mafList<mafVariant> m_List;
-        m_List.push_back("one");
-        m_List.push_back("two");
-        m_List.push_back("three");
-        m_Vme->setTagList(m_List);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm1;
+        boundaryAlgorithm1 = mafNEW(mafDataBoundaryAlgorithmVTK);
+        m_DataSetCubeMoved->setBoundaryAlgorithm(boundaryAlgorithm1);
+        m_Vme->dataSetCollection()->insertItem(m_DataSetCubeMoved, 1);
 
     }
 
@@ -206,7 +174,12 @@ private slots:
     void cleanupTestCase() {
         mafDEL(m_CustomManager);
         mafDEL(m_Codec);
+        mafDEL(m_DataSetCube);
+        mafDEL(m_DataSetCubeMoved);
         mafDEL(m_Vme);
+        m_PDataFilter->Delete();
+        m_DataSource->Delete();
+        m_DataSourceMoved->Delete();
         mafCoreSingletons::mafSingletonsShutdown();
         mafEventBusManager::instance()->shutdown();
     }
@@ -219,11 +192,16 @@ private slots:
 
 private:
     mafExternalDataCodecVTK *m_Codec; ///< Test var.
-    mafContainer<vtkPolyData> m_Container; ///< Test var.
-    mafContainer<vtkPolyData> m_ContainerMoved;///< Test var.
+    vtkCubeSource *m_DataSource;
+    vtkCubeSource *m_DataSourceMoved;
     mafDataStream m_OutputStream; ///< Test var.
     testExtRawASCIICustomManager *m_CustomManager; ///< Manager test var
     mafVME *m_Vme; ///< Test var.
+    mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
+    mafContainer<vtkAlgorithmOutput> m_DataSourceContainerMoved; ///< Container of the Data Source
+    vtkTransformPolyDataFilter *m_PDataFilter; ///< Filter used to transform the bounding box.
+    mafResources::mafDataSet *m_DataSetCube;
+    mafResources::mafDataSet *m_DataSetCubeMoved;
 };
 
 void mafSerializationRawASCIIExtDataTest::mafSerializationVTKAllocationTest() {
@@ -273,6 +251,7 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
     argList.append(mafEventArgument(mafString, test_file));
     argList.append(mafEventArgument(mafString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal, &argList);
+
     mafDEL(mementoVME);
 
     QDir log_dir(test_dir);
@@ -287,6 +266,7 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
         fileName.append(list.at(i));
         mafFile::remove(fileName);
     }
+
 }
 
 MAF_REGISTER_TEST(mafSerializationRawASCIIExtDataTest);

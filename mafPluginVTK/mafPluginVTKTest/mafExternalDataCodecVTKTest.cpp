@@ -17,12 +17,10 @@
 #include <mafVME.h>
 
 #include <vtkDataSet.h>
+#include <vtkCubeSource.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkAlgorithmOutput.h>
 #include <vtkPolyData.h>
-#include <vtkPoints.h>
-#include <vtkFloatArray.h>
-#include <vtkCellArray.h>
-#include <vtkPointData.h>
-
 
 using namespace mafCore;
 using namespace mafResources;
@@ -52,36 +50,18 @@ private slots:
         m_CodecOut = mafNEW(mafPluginVTK::mafExternalDataCodecVTK);
 
         // Create a polydata.
-        vtkPolyData *surface = vtkPolyData::New();
-        vtkPoints *points = vtkPoints::New();
-        vtkCellArray *polys = vtkCellArray::New();
-        vtkFloatArray *scalars = vtkFloatArray::New();
-
-        int i;
-        static float x[8][3]={{0,0,0}, {5,0,0}, {5,5,0}, {0,5,0},
-                        {0,0,5}, {5,0,1}, {6,5,2}, {0,6,5}};
-        static vtkIdType pts[6][4]={{0,1,2,3}, {4,5,6,7}, {0,1,5,4},
-                        {1,2,6,5}, {2,3,7,6}, {3,0,4,7}};
-        for (i=0; i<8; i++) points->InsertPoint(i,x[i]);
-        for (i=0; i<6; i++) polys->InsertNextCell(4,pts[i]);
-        for (i=0; i<8; i++) scalars->InsertTuple1(i,i);
-
-        // We now assign the pieces to the vtkPolyData.
-        surface->SetPoints(points);
-        surface->SetPolys(polys);
-        surface->GetPointData()->SetScalars(scalars);
-        points->Delete();
-        polys->Delete();
-        scalars->Delete();
-
-        m_Container.setDestructionFunction(&vtkPolyData::Delete);
-        m_Container = surface;
+        m_DataSource = vtkCubeSource::New();
+        m_DataSource->SetXLength(5);
+        m_DataSource->SetYLength(3);
+        m_DataSource->SetZLength(8);
+        m_DataSourceContainer = m_DataSource->GetOutputPort(0);
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_CodecIn);
         mafDEL(m_CodecOut);
+        m_DataSource->Delete();
         mafCoreSingletons::mafSingletonsShutdown();
     }
 
@@ -97,8 +77,10 @@ private slots:
 private:
     mafExternalDataCodecVTK *m_CodecIn; ///< Test var.
     mafExternalDataCodecVTK *m_CodecOut; ///< Test var.
-    mafContainer<vtkPolyData> m_Container; ///< Test var.
     mafDataStream m_OutputStream; ///< Test var.
+
+    vtkCubeSource *m_DataSource; ///< Source data for the test suite.
+    mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
 };
 
 void mafExternalDataCodecVTKTest::mafCodecVTKAllocationTest() {
@@ -107,9 +89,11 @@ void mafExternalDataCodecVTKTest::mafCodecVTKAllocationTest() {
 }
 
 void mafExternalDataCodecVTKTest::mafCodecVTKEncodeDecodeBinaryTest() {
+    vtkPolyDataMapper *sphereMapper = vtkPolyDataMapper::New();
+
     //Pass data to be encode to the codec
     //! <snippet>
-    m_CodecIn->setExternalData(&m_Container);
+    m_CodecIn->setExternalData(&m_DataSourceContainer);
     //! </snippet>
 
     //The codec will ecnode the data into the string "outputString"
@@ -120,12 +104,14 @@ void mafExternalDataCodecVTKTest::mafCodecVTKEncodeDecodeBinaryTest() {
     //Decode data encoded
     m_CodecOut->setStringSize(m_CodecIn->stringSize());
     m_CodecOut->decode(outputString);
-    mafContainer<vtkPolyData> *dataSet = mafContainerPointerTypeCast(vtkPolyData, m_CodecOut->externalData());
+    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, m_CodecOut->externalData());
+
+    sphereMapper->SetInputConnection(*dataSet);
 
     double boundsIn[6];
     double boundsOut[6];
-    m_Container->GetBounds(boundsIn);
-    (*dataSet)->GetBounds(boundsOut);
+    m_DataSource->GetOutput()->GetBounds(boundsIn);
+    sphereMapper->GetBounds(boundsOut);
 
     QCOMPARE(boundsIn[0], boundsOut[0]);
     QCOMPARE(boundsIn[1], boundsOut[1]);
@@ -134,21 +120,15 @@ void mafExternalDataCodecVTKTest::mafCodecVTKEncodeDecodeBinaryTest() {
     QCOMPARE(boundsIn[4], boundsOut[4]);
     QCOMPARE(boundsIn[5], boundsOut[5]);
 
-    int i;
-    double x[8][3]={{0,0,0}, {5,0,0}, {5,5,0}, {0,5,0},
-                        {0,0,5}, {5,0,1}, {6,5,2}, {0,6,5}};
-    vtkPoints *points =(*dataSet)->GetPoints();
-    for (i=0; i<8; i++) {
-        double p[3];
-        points->GetPoint(i, p);
-        QVERIFY(p[0] == x[i][0] && p[1] == x[i][1] && p[2] == x[i][2]);
-    }
+    sphereMapper->Delete();
 }
 
 void mafExternalDataCodecVTKTest::mafCodecVTKEncodeDecodeTest() {
+    vtkPolyDataMapper *sphereMapper = vtkPolyDataMapper::New();
+
     //Pass data to be encode to the codec
     //! <snippet>
-    m_CodecIn->setExternalData(&m_Container);
+    m_CodecIn->setExternalData(&m_DataSourceContainer);
     //! </snippet>
 
     //The codec will ecnode the data into the NOT binary string "outputString"
@@ -159,12 +139,14 @@ void mafExternalDataCodecVTKTest::mafCodecVTKEncodeDecodeTest() {
     //Decode data encoded
     m_CodecOut->setStringSize(m_CodecIn->stringSize());
     m_CodecOut->decode(outputString, false);
-    mafContainer<vtkPolyData> *dataSet = mafContainerPointerTypeCast(vtkPolyData, m_CodecOut->externalData());
+    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, m_CodecOut->externalData());
+
+    sphereMapper->SetInputConnection(*dataSet);
 
     double boundsIn[6];
     double boundsOut[6];
-    m_Container->GetBounds(boundsIn);
-    (*dataSet)->GetBounds(boundsOut);
+    m_DataSource->GetOutput()->GetBounds(boundsIn);
+    sphereMapper->GetBounds(boundsOut);
 
     QCOMPARE(boundsIn[0], boundsOut[0]);
     QCOMPARE(boundsIn[1], boundsOut[1]);
@@ -173,15 +155,7 @@ void mafExternalDataCodecVTKTest::mafCodecVTKEncodeDecodeTest() {
     QCOMPARE(boundsIn[4], boundsOut[4]);
     QCOMPARE(boundsIn[5], boundsOut[5]);
 
-    int i;
-    double x[8][3]={{0,0,0}, {5,0,0}, {5,5,0}, {0,5,0},
-                        {0,0,5}, {5,0,1}, {6,5,2}, {0,6,5}};
-    vtkPoints *points =(*dataSet)->GetPoints();
-    for (i=0; i<8; i++) {
-        double p[3];
-        points->GetPoint(i, p);
-        QVERIFY(p[0] == x[i][0] && p[1] == x[i][1] && p[2] == x[i][2]);
-    }
+    sphereMapper->Delete();
 }
 
 MAF_REGISTER_TEST(mafExternalDataCodecVTKTest);

@@ -26,15 +26,15 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafDataBoundaryAlgorithmVTK::mafDataBoundaryAlgorithmVTK(const mafString code_location) : mafResources::mafDataBoundaryAlgorithm(code_location), m_Box(NULL), m_Ptf(NULL) {
+mafDataBoundaryAlgorithmVTK::mafDataBoundaryAlgorithmVTK(const mafString code_location) : mafResources::mafDataBoundaryAlgorithm(code_location), m_Box(NULL), m_PDataFilter(NULL) {
 }
 
 mafDataBoundaryAlgorithmVTK::~mafDataBoundaryAlgorithmVTK() {
     if(m_Box != NULL) {
         m_Box->Delete();
     }
-    if(m_Ptf != NULL) {
-        m_Ptf->Delete();
+    if(m_PDataFilter != NULL) {
+        m_PDataFilter->Delete();
     }
 }
 
@@ -51,7 +51,6 @@ mafCore::mafContainerInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(d
     m_Box->SetBounds(bounds);
     m_Box->Update();
 
-    //Apply mafPoseMatrix??
     if(matrix != NULL){
         //Transform box with the mafPoseMatrix
         vtkTransform *t = vtkTransform::New();
@@ -68,14 +67,14 @@ mafCore::mafContainerInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(d
 
         t->SetMatrix(mat);
         t->Update();
-        m_Ptf = vtkTransformPolyDataFilter::New();
-        m_Ptf->SetInputConnection(m_Box->GetOutputPort(0));
-        m_Ptf->SetTransform(t);
-        m_Ptf->Update();
+        m_PDataFilter = vtkTransformPolyDataFilter::New();
+        m_PDataFilter->SetInputConnection(m_Box->GetOutputPort(0));
+        m_PDataFilter->SetTransform(t);
+        m_PDataFilter->Update();
         t->Delete();
 
-        m_OutputBoundary = m_Ptf->GetOutputPort(0);
-        m_Ptf->GetOutput()->GetBounds(m_Bounds);
+        m_OutputBoundary = m_PDataFilter->GetOutputPort(0);
+        m_PDataFilter->GetOutput()->GetBounds(m_Bounds);
 
     } else {
         m_OutputBoundary = m_Box->GetOutputPort(0);
