@@ -20,7 +20,8 @@
 #include <vtkTransformPolyDataFilter.h>
 #include <vtkAlgorithmOutput.h>
 
-#include <vtkCubeSource.h>
+#include <vtkSmartPointer.h>
+#include <vtkDataSetMapper.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -39,10 +40,13 @@ mafDataBoundaryAlgorithmVTK::~mafDataBoundaryAlgorithmVTK() {
 }
 
 mafCore::mafContainerInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(mafCore::mafContainerInterface *data, mafResources::mafPoseMatrix *matrix) {
-    mafContainer<vtkDataSet> *dataSet = mafContainerPointerTypeCast(vtkDataSet, data);
+    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, data);
 
+    vtkSmartPointer<vtkDataSetMapper> box = vtkSmartPointer<vtkDataSetMapper>::New();
+    box->SetInputConnection(*dataSet);
+    box->Update();
     double b[6];
-    (*dataSet)->GetBounds(b);
+    box->GetBounds(b);
     return this->calculateBoundary(b, matrix);
 }
 
@@ -75,14 +79,14 @@ mafCore::mafContainerInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(d
 
         m_OutputBoundary = m_PDataFilter->GetOutputPort(0);
         m_PDataFilter->GetOutput()->GetBounds(m_Bounds);
+        int i = 0;
 
     } else {
         m_OutputBoundary = m_Box->GetOutputPort(0);
         m_Box->GetOutput()->GetBounds(m_Bounds);
+        int i = 0;
     }
-
     return &m_OutputBoundary;
-
 }
 void mafDataBoundaryAlgorithmVTK::bounds(double bounds[6]) {
     int i = 0;

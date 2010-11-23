@@ -76,6 +76,12 @@ private slots:
     /// Test the creation of the vtkActor
     void updatePipeTest();
 
+    /// Test setLowerThrehsold function
+    void setLowerThrehsoldTest();
+
+    /// Test setUpperThrehsold function
+    void setUpperThrehsoldTest();
+
 private:
     mafVME *m_VME; ///< Contain the only item vtkImageData representing the test image.
     mafContainer<vtkImageData> m_ImageData; ///< Container of the vtkImageData
@@ -98,6 +104,24 @@ void mafDataPipeImageThresholdTest::updatePipeTest() {
     mafString res("vtkImageData");
 
     QCOMPARE(dt, res);
+
+    mafDEL(datapipe);
+}
+
+void mafDataPipeImageThresholdTest::setLowerThrehsoldTest() {
+    mafDataPipeImageThreshold *datapipe = mafNEW(mafPluginVTK::mafDataPipeImageThreshold);
+    datapipe->setLowerThrehsold(5);
+    int low = datapipe->lowerThrehsold();
+    QVERIFY(low == 5);
+
+    mafDEL(datapipe);
+}
+
+void mafDataPipeImageThresholdTest::setUpperThrehsoldTest() {
+    mafDataPipeImageThreshold *datapipe = mafNEW(mafPluginVTK::mafDataPipeImageThreshold);
+    datapipe->setUpperThrehsold(60);
+    int up = datapipe->upperThrehsold();
+    QVERIFY(up == 60);
 
     mafDEL(datapipe);
 }

@@ -92,6 +92,7 @@ void testExtRawASCIICustomManager::createdMemento(mafCore::mafMemento *memento) 
     QCOMPARE(boundsIn[5], boundsOut[5]);
 
     mafDEL(data);
+    sphereMapper->Delete();
     mafDEL(memento);
     mafDEL(returnVME);
 }
@@ -158,16 +159,13 @@ private slots:
         m_DataSetCubeMoved = mafNEW(mafResources::mafDataSet);
         m_DataSetCubeMoved->setDataValue(&m_DataSourceContainerMoved);
 
+        m_Vme->dataSetCollection()->insertItem(m_DataSetCube, 0);
         mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
         boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
         m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
-        m_Vme->dataSetCollection()->insertItem(m_DataSetCube, 0);
+        mafContainerInterface *boundary0 = m_Vme->dataSetCollection()->itemAt(0)->dataBoundary();
 
-        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm1;
-        boundaryAlgorithm1 = mafNEW(mafDataBoundaryAlgorithmVTK);
-        m_DataSetCubeMoved->setBoundaryAlgorithm(boundaryAlgorithm1);
         m_Vme->dataSetCollection()->insertItem(m_DataSetCubeMoved, 1);
-
     }
 
     /// Cleanup test variables memory allocation.
