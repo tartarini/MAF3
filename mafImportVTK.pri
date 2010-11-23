@@ -2,9 +2,18 @@
 
 COMPILER = $$QMAKE_CC
 
-LIB_DIR = Release
-CONFIG(debug, debug|release) {
-    LIB_DIR = Debug
+!contains(COMPILER, gcc) {
+    LIB_DIR = Release
+    CONFIG(debug, debug|release) {
+        LIB_DIR = Debug
+    }
+}
+
+win32 {
+    LIB_DIR = Release
+    CONFIG(debug, debug|release) {
+        LIB_DIR = Debug
+    }
 }
 
 unix:LIB_CHECK = $$(MAF3_FOUNDATION_LIB_DIR)/vtk-5.6/lib/lib*
