@@ -180,7 +180,9 @@ void mafDataSetCollectionTest::collectionDataSetTest() {
 
     // Trying to set this new data type to the same VME should fail because the mafVME
     // has been initialized with a different data type.
+    mafMessageHandler::instance()->testSuiteLogMode(true);
     result = m_Collection->setDataSet(another_data);
+    mafMessageHandler::instance()->testSuiteLogMode(false);
     if(!result) {
         mafDEL(another_data);
     }

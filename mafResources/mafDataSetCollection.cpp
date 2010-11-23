@@ -265,9 +265,13 @@ bool mafDataSetCollection::acceptData(mafDataSet *data) {
     mafContainerInterface *new_data_value = data->dataValue();
     mafString new_data_type = new_data_value->externalDataType();
     if(m_DataTypeAccepted == "") {
+        // the collection doesn't contain yet any data; initialize the acceptable
+        // data type with that one contained in the current mafDataSet.
         m_DataTypeAccepted = new_data_type;
     } else {
-        result = m_DataTypeAccepted == new_data_type;
+        // if the collection contains data and now is inserting a dataset with
+        // only a pose matrix, the data is again acceptable.
+        result = new_data_type.isEmpty() ? true : m_DataTypeAccepted == new_data_type;
     }
     return result;
 }

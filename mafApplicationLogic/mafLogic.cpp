@@ -72,20 +72,20 @@ bool mafLogic::initialize() {
     module_initialized = mafInitializeModule(RESOURCES_LIBRARY_NAME);
 
     // load the plugins (if any)
-    loadPlugins();
+//    loadPlugins();
 
     // Perform design by contract check.
     ENSURE(module_initialized);
     return module_initialized;
 }
 
-void mafLogic::loadPlugins() {
+void mafLogic::loadPlugins(mafString plugin_dir) {
     // Build the plugin absolute directory.
-    mafString plugin_dir = m_ApplicationDirectory + QDir::toNativeSeparators("/plugins");
-    plugin_dir = QDir::cleanPath(plugin_dir);
+    mafString pluginDir = plugin_dir.isEmpty() ? (m_ApplicationDirectory + QDir::toNativeSeparators("/plugins")) : plugin_dir;
+    pluginDir = QDir::cleanPath(pluginDir);
 
     // Check for plugins to load
-    QDir dir(plugin_dir);
+    QDir dir(pluginDir);
     mafStringList filters;
     filters << PLUGIN_EXTENSION_FILTER;
     mafStringList plugin_list = dir.entryList(filters);

@@ -16,12 +16,8 @@ HEADERS += mafPluginTest_global.h \
     mafPluginRegistrator.h
 include(../../mafInstallTest.pri)
 include(../../mafImportVXL.pri)
-INCLUDEPATH += ../../mafResources
+INCLUDEPATH += ../../mafResources \
+                        ../../mafEventBus \
+                        ../../mafCore
 LIBS += -L$$DESTDIR \
-    -lmafResources$$LIB_EXT
-INCLUDEPATH += ../../mafEventBus
-LIBS += -L$$DESTDIR \
-    -lmafEventBus$$LIB_EXT
-INCLUDEPATH += ../../mafCore
-LIBS += -L$$DESTDIR \
-    -lmafCore$$LIB_EXT
+    -lmafResources$$LIB_EXT -lmafEventBus$$LIB_EXT -lmafCore$$LIB_EXT

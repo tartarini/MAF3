@@ -50,11 +50,17 @@ public:
     /// Allows to initialize all the singletons and register all the objects to the factory.
     virtual bool initialize();
 
-    /// Allows to assign the application's working directory.
-    void setWorkingDirectory(const mafString wd);
-
     /// Allows to retrieve the application's working directory.
     mafString workingDirectory() const;
+
+    /// Allow to load plugins located into the 'plugins' folder located into the application's directory path.
+    /** The optional argument allows logic to load a plugin from a given directory. By default the
+    plugin directory will be ApplicationDirectory/plugins.*/
+    void loadPlugins(mafString plugin_dir = "");
+
+public slots:
+    /// Allows to assign the application's working directory.
+    void setWorkingDirectory(const mafString wd);
 
 signals:
     /// Signal used to ask the view manager to store its settings.
@@ -70,9 +76,6 @@ signals:
 //    void settingsVmeManagerRestore(mafCore::mafMemento *memento, bool deep);
 
 private:
-    /// Allow to load plugins located into the 'plugins' folder located into the application's directory path.
-    void loadPlugins();
-
     mafString m_WorkingDirectory; ///< Contains the root directory of the application's data.
     mafString m_ApplicationDirectory; ///< Contains the application's working directory.
 };
