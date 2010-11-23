@@ -65,7 +65,7 @@ struct MAFRESOURCESSHARED_EXPORT mafPluginInfo {
 };
 
 /// Hash of plugged objects coming from plig-ins.
-typedef mafHash<mafString, mafCore::mafPluggedObjectInformation> mafPluggedObjectsHash;
+//typedef mafHash<mafString, mafCore::mafPluggedObjectInformation> mafPluggedObjectsHash;
 
 ///< Enumeration that define the Cartesian Axis.
 enum {

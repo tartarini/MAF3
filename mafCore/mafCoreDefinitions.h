@@ -136,6 +136,9 @@ typedef struct mafPluggedObjectInformation {
 /// Typedef that defines the list of information related to the same extended base MAF class type. It is used through the mafPluggedObjectsHash defined in mafPluginManager.
 typedef mafList<mafPluggedObjectInformation> mafPluggedObjectInformationList;
 
+/// Hash of plugged objects coming from plig-ins.
+typedef mafHash<mafString, mafPluggedObjectInformation> mafPluggedObjectsHash;
+
 /// Define the property list vector that hold properties to be serialized through mafCodec.
 typedef QVector<mafMementoPropertyItem> mafMementoPropertyList;
 
