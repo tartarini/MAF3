@@ -331,7 +331,7 @@ bool mafEventDispatcher::registerSignal(const mafEvent &props) {
          foreach(currentEvent, itemEventPropList) {
 
              mafString observer_sig = CALLBACK_SIGNATURE;
-             observer_sig.append(props[SIGNATURE].toString());
+             observer_sig.append((*currentEvent)[SIGNATURE].toString());
 
              mafString event_sig = SIGNAL_SIGNATURE;
              event_sig.append(sig);
