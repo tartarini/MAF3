@@ -34,10 +34,6 @@ mafViewManager::mafViewManager(const mafString code_location) : mafObjectBase(co
 
 mafViewManager::~mafViewManager() {
     destroyAllViews();
-//    foreach(mafResource *v, m_CreatedViewList) {
-//        mafDEL(v);
-//    }
-//    m_CreatedViewList.clear();
 }
 
 mafMemento *mafViewManager::createMemento() const {
@@ -71,14 +67,13 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(mafString)");
     mafRegisterLocalSignal("maf.local.resources.view.destroy", this, "destroyViewSignal(mafCore::mafObjectBase *)");
     mafRegisterLocalSignal("maf.local.resources.view.select", this, "selectViewSignal(mafCore::mafObjectBase *)");
-    mafRegisterLocalSignal("maf.local.resources.view.selected", this, "selectedViewSignal()");
+    mafRegisterLocalSignal("maf.local.resources.view.selected", this, "selectedViewSignal(mafCore::mafObjectBase *)");
     mafRegisterLocalSignal("maf.local.resources.view.vmeShow", this, "vmeShowSignal(mafCore::mafObjectBase *, bool)");
 
     // Register private callbacks to the instance of the manager..
     mafRegisterLocalCallback("maf.local.resources.view.create", this, "createView(mafString)");
     mafRegisterLocalCallback("maf.local.resources.view.destroy", this, "destroyView(mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.view.select", this, "selectView(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("maf.local.resources.view.selected", this, "selectedView()");
     mafRegisterLocalCallback("maf.local.resources.view.vmeShow", this, "vmeShow(mafCore::mafObjectBase *, bool)");
 
     // Register callback to allows settings serialization.
@@ -96,6 +91,11 @@ void mafViewManager::selectView(mafCore::mafObjectBase *view) {
         }
         m_SelectedView = v;
         m_SelectedView->select(true);
+
+        // Notify the view selection.
+        mafEventArgumentsList argList;
+        argList.append(mafEventArgument(mafCore::mafObjectBase*, m_SelectedView));
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, &argList);
     }
 }
 
@@ -108,19 +108,18 @@ void mafViewManager::vmeShow(mafCore::mafObjectBase *vme, bool show) {
     }
 }
 
-mafObjectBase *mafViewManager::createView(mafString view_type) {
+void mafViewManager::createView(mafString view_type) {
     REQUIRE(view_type.length() > 0);
 
     mafObjectBase *obj = mafNEWFromString(view_type);
     mafView *v = dynamic_cast<mafResources::mafView *>(obj);
     if(v != NULL) {
         addViewToCreatedList(v);
-        m_SelectedView = v;
-        return v;
+        //m_SelectedView = v;
+        selectView(obj);
     } else {
         mafDEL(obj);
     }
-    return NULL;
 }
 
 void mafViewManager::addViewToCreatedList(mafView *v) {
