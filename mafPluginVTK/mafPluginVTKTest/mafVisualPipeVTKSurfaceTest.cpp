@@ -16,14 +16,13 @@
 #include <mafResourcesRegistration.h>
 #include <mafVisualPipe.h>
 #include <mafContainer.h>
-#include <vtkPolyData.h>
-#include <vtkActor.h>
-#include <vtkPoints.h>
-#include <vtkFloatArray.h>
-#include <vtkCellArray.h>
-#include <vtkPointData.h>
 #include <mafPluginManager.h>
 #include <mafPlugin.h>
+
+#include <vtkPolyData.h>
+#include <vtkActor.h>
+#include <vtkSphereSource.h>
+#include <vtkAlgorithmOutput.h>
 
 // render window stuff
 #include <vtkRenderer.h>
@@ -48,7 +47,7 @@ using namespace mafPluginVTK;
 
 /**
  Class name: mafVisualPipeVTKSurfaceTest
- This class creates a vtkPolyData and visualizes it trough the mafVisualPipeVTKSurface
+ This class creates a vtkSphereSource and visualizes it trough the mafVisualPipeVTKSurface
  */
 
 //! <title>
@@ -69,48 +68,30 @@ private slots:
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
 
         // Create a polydata.
-        vtkPolyData *surface = vtkPolyData::New();
-        vtkPoints *points = vtkPoints::New();
-        vtkCellArray *polys = vtkCellArray::New();
-        vtkFloatArray *scalars = vtkFloatArray::New();
-
-        int i;
-        static float x[8][3]={{0,0,0}, {1,0,0}, {1,1,0}, {0,1,0},
-                        {0,0,1}, {1,0,1}, {1,1,1}, {0,1,1}};
-        static vtkIdType pts[6][4]={{0,1,2,3}, {4,5,6,7}, {0,1,5,4},
-                        {1,2,6,5}, {2,3,7,6}, {3,0,4,7}};
-        for (i=0; i<8; i++) points->InsertPoint(i,x[i]);
-        for (i=0; i<6; i++) polys->InsertNextCell(4,pts[i]);
-        for (i=0; i<8; i++) scalars->InsertTuple1(i,i);
-
-        // We now assign the pieces to the vtkPolyData.
-        surface->SetPoints(points);
-        surface->SetPolys(polys);
-        surface->GetPointData()->SetScalars(scalars);
-        points->Delete();
-        polys->Delete();
-        scalars->Delete();
+        m_DataSource = vtkSphereSource::New();
+        m_DataSource->SetRadius(5);
+        m_DataSource->SetPhiResolution(20);
+        m_DataSource->SetThetaResolution(20);
 
         //! <snippet>
-        //// Create a container with a vtkPolyData
-        //// m_PolyData is the container of type vtkPolyData
-        //// to "wrap" the 'surface' of type vtkPolyData just simply use the code below.
-        m_PolyData = surface;
-        //// Assign the destruction function that will be used to delete the external data
-        //// by the mafContainer when destroyed.
-        m_PolyData.setDestructionFunction(&vtkPolyData::Delete);
+        //// Create a container with the outputPort of a vtkCubeSource
+        //// m_DataSourceContainer is the container of type vtkAlgorithmOutput
+        //// to "wrap" the 'vtkCubeSource' of type vtkPolyData just simply use the code below.
+        m_DataSourceContainer = m_DataSource->GetOutputPort(0);;
 
-        //// and give it to the mafDataSet.
+        //Insert data into VME
         m_VME = mafNEW(mafResources::mafVME);
-        mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
-        dataSet->setDataValue(&m_PolyData);
-        m_VME->dataSetCollection()->insertItem(dataSet);
+        m_DataSetSphere = mafNEW(mafResources::mafDataSet);
+        m_DataSetSphere->setDataValue(&m_DataSourceContainer);
+        m_VME->dataSetCollection()->insertItem(m_DataSetSphere, 0);
         //! </snippet>
 
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
+        mafDEL(m_DataSetSphere);
+        m_DataSource->Delete();
         mafDEL(m_VME);
     }
 
@@ -122,7 +103,9 @@ private slots:
 
 private:
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a surface.
-    mafContainer<vtkPolyData> m_PolyData; ///< Container of the vtkPolyData
+    vtkSphereSource *m_DataSource;
+    mafResources::mafDataSet *m_DataSetSphere;
+    mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
 };
 
 void mafVisualPipeVTKSurfaceTest::updatePipeTest() {
@@ -176,7 +159,6 @@ void mafVisualPipeVTKSurfaceTest::updatePipeTestFromPlugIn() {
     // Load the library containing the visual pipe that I want to plug-in.
     pluginManager->loadPlugin(pluginName);
 
-
     // Dump the plug-in information.
     mafPluginInfo info = pluginManager->pluginInformation(pluginName);
     mafMsgDebug() << "Plug-in Information:";
@@ -188,9 +170,9 @@ void mafVisualPipeVTKSurfaceTest::updatePipeTestFromPlugIn() {
     mafStringList binding_class_list;
     binding_class_list = mafResourcesRegistration::acceptObject(m_VME);
     int num = binding_class_list.count();
-    QVERIFY(num == 1);
+    QVERIFY(num == 2);
 
-    mafString visualPipeType = binding_class_list.at(0);
+    mafString visualPipeType = binding_class_list.at(1);
     QCOMPARE(visualPipeType,mafString("mafPluginVTK::mafVisualPipeVTKSurface"));
 
     //! <snippet>

@@ -16,7 +16,6 @@
 #include <vtkDataArray.h>
 #include <vtkPointData.h>
 #include <vtkActor.h>
-#include <vtkPolyData.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -34,7 +33,7 @@ bool mafVisualPipeVTKSurface::acceptObject(mafCore::mafObject *obj) {
     mafVME *vme = dynamic_cast<mafVME*>(obj);
     if(vme != NULL) {
         mafString dataType = vme->dataSetCollection()->itemAtCurrentTime()->dataValue()->externalDataType();
-        if(dataType == "vtkPolyData") {
+        if(dataType == "vtkAlgorithmOutput") {
             return true;
         }
     }
@@ -52,23 +51,12 @@ void mafVisualPipeVTKSurface::createPipe() {
 void mafVisualPipeVTKSurface::updatePipe(double t) {
     Q_UNUSED(t);
 
-    mafVMEList *inputList = this->inputList();
-
-    mafDataSet *inputDataSet = inputList->at(0)->dataSetCollection()->itemAtCurrentTime();
-    if(inputDataSet == NULL) {
-        return;
-    }
+    mafVME *inputVME = this->inputList()->at(0);
+    mafDataSet *data = inputVME->dataSetCollection()->itemAtCurrentTime();
+    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
 
     //Get data contained in the mafContainer
-    mafContainer<vtkPolyData> *poly = mafContainerPointerTypeCast(vtkPolyData, inputDataSet->dataValue());
-    m_Mapper->SetInput(*poly);
-
-    vtkDataArray *scalars = (*poly)->GetPointData()->GetScalars();
-    double sr[2] = {0,1};
-    if(scalars != NULL) {
-        scalars->GetRange(sr);
-    }
-    m_Mapper->SetScalarRange(sr);
+    m_Mapper->SetInputConnection(*dataSet);
 
     m_Mapper->SetScalarVisibility(m_ScalarVisibility);
     m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
