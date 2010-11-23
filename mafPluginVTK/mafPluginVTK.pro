@@ -8,13 +8,13 @@ CONFIG += create_prl
 CONFIG += link_prl
 win32:CONFIG += dll
 DEFINES += MAFPLUGIN_VTK
-SOURCES += mafDataPipeSurface.cpp \
+SOURCES += #mafDataPipeSurface.cpp \
     mafPluginRegistrator.cpp \
     mafVisualPipeVTKSurface.cpp \
     mafViewVTK.cpp \
     mafDataPipeImageThreshold.cpp \
     mafExternalDataCodecVTK.cpp \
-    mafInteractorVTK.cpp \
+    #mafInteractorVTK.cpp \
     mafEventBridgeVTK.cpp \
     mafVisualPipeSelection.cpp \
     mafDataBoundaryAlgorithmVTK.cpp
@@ -22,13 +22,13 @@ SOURCES += mafDataPipeSurface.cpp \
 
 HEADERS += mafPluginVTK_global.h \
     mafPluginVTKDefinitions.h \
-    mafDataPipeSurface.h \
+    #mafDataPipeSurface.h \
     mafPluginRegistrator.h \
     mafVisualPipeVTKSurface.h \
     mafViewVTK.h \
     mafDataPipeImageThreshold.h \
     mafExternalDataCodecVTK.h \
-    mafInteractorVTK.h \
+    #mafInteractorVTK.h \
     mafEventBridgeVTK.h \
     mafVisualPipeSelection.h \
     mafDataBoundaryAlgorithmVTK.h
