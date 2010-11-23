@@ -31,6 +31,9 @@ public:
     /// Return tha var's value.
     int var() {return m_Var;}
 
+    /// register a custom callback
+    void registerCustomCallback();
+
 public slots:
     /// Test slot that will increment the value of m_Var when an UPDATE_OBJECT event is raised.
     void updateObject();
@@ -60,6 +63,10 @@ void testObjectCustom::setObjectValue(int v) {
 int testObjectCustom::returnObjectValue() {
     int value = 5;
     return value;
+}
+
+void testObjectCustom::registerCustomCallback() {
+    mafRegisterLocalCallback("maf.local.custom.topic", this, "updateObject()");
 }
 
 //------------------------------------------------------------------------------------------
@@ -208,6 +215,9 @@ private slots:
     /// test method for check if the signal is present.
     void isLocalSignalPresentTest();
 
+    /// test registration reversing the order of signal and callback
+    void reverseOrderRegistrationTest();
+
 private:
     testObjectCustom *m_ObjTestObserver; ///< Test variable.
     testObjectCustom *m_ObjTestObserver2; ///< Test variable.
@@ -339,6 +349,26 @@ void mafEventBusManagerTest::plugNetworkConnectorTest() {
 
 void mafEventBusManagerTest::isLocalSignalPresentTest() {
     QVERIFY(m_EventBus->isLocalSignalPresent("maf.paf.naf.daf") == false);
+}
+
+void mafEventBusManagerTest::reverseOrderRegistrationTest() {
+    testObjectCustom *ObjTestSender = new testObjectCustom();
+    int startValue = 42;
+    m_ObjTestObserver->setObjectValue(startValue);
+
+    //register a custom callback
+    m_ObjTestObserver->registerCustomCallback();
+
+    //register custom signal
+    mafRegisterLocalSignal("maf.local.custom.topic", ObjTestSender, "objectModified()");
+
+    //notify event
+    m_EventBus->notifyEvent("maf.local.custom.topic");
+
+    startValue++; //notify will update the value adding 1
+    int check = m_ObjTestObserver->var();
+    QVERIFY(startValue == check);
+    delete ObjTestSender;
 }
 
 
