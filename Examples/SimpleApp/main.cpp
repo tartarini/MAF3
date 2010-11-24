@@ -11,8 +11,8 @@ int main(int argc, char *argv[])
     a.setApplicationName("SimpleApp");
     a.setApplicationVersion("1.0");
 
-    mafApplicationLogic::mafLogic l;
-    l.initialize();
+    mafApplicationLogic::mafLogic logic;
+    logic.initialize();
 
     mafMainWindow w;
     w.setSettingsFilename("./SimpleAppSettings");
