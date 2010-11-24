@@ -74,13 +74,15 @@ void mafGUIManagerTest::mafGUIManagerCreateMenuTest() {
 
     menu = m_GUIManager->operationMenu();
     QVERIFY(menu != NULL);
-    int num_items = menu->children().count();
-    QVERIFY(num_items == 1);
+    mafList<QAction*> items = menu->actions();
+    int num_items = items.count();
+    QVERIFY(num_items == 0);
 
     menu = m_GUIManager->viewMenu();
     QVERIFY(menu != NULL);
-    num_items = menu->children().count();
-    QVERIFY(num_items == 1);
+    items = menu->actions();
+    num_items = items.count();
+    QVERIFY(num_items == 0);
 }
 
 void mafGUIManagerTest::mafGUIManagerFillMenuTest() {
@@ -99,15 +101,15 @@ void mafGUIManagerTest::mafGUIManagerFillMenuTest() {
 
     QMenu *menu = m_GUIManager->operationMenu();
     QVERIFY(menu != NULL);
-    int num_items = menu->children().count();
-    // Temporarily disabled
-    //QVERIFY(num_items == 2);
+    mafList<QAction*> items = menu->actions();
+    int num_items = items.count();
+    QVERIFY(num_items == 1);
 
     menu = m_GUIManager->viewMenu();
     QVERIFY(menu != NULL);
-    num_items = menu->children().count();
-    // Temporarily disabled
-    //QVERIFY(num_items == 2);
+    items = menu->actions();
+    num_items = items.count();
+    QVERIFY(num_items == 1);
 }
 
 MAF_REGISTER_TEST(mafGUIManagerTest);
