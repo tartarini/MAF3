@@ -3,6 +3,7 @@ import sys
 import getopt
 
 extensionToAvoid = [".dll",".prl", ".a",".lib", ".dylib",".so", ".0", ".1"] # necessary to insert .N because of symbolic link of linux
+currentPathScript = os.path.split(os.path.realpath(__file__))[0]
 param = {}
 
 def find_executable(executable, path=None):
@@ -15,9 +16,8 @@ def find_executable(executable, path=None):
             return fullPathName
 
 def execute():
-    scriptsDir = os.getcwd()
-    os.chdir("../..")
-    modulesDir = os.getcwd()
+    scriptsDir = currentPathScript
+    modulesDir = os.path.join(currentPathScript, "..", "..")
     dirList = [ name for name in os.listdir(modulesDir) if (name[0:3] == "maf" and os.path.isdir(os.path.join(modulesDir, name))) ] 
     print modulesDir, dirList
     #execDir = modulesDir + "/../Install/bin/Debug"
@@ -72,7 +72,7 @@ def main():
     
     for o, a in opts:
         if o in ("-d", "--directory"):
-            param['directory'] = os.path.normpath(a)
+            param['directory'] = os.path.abspath(os.path.normpath(a))
         else:
             assert False, "unhandled option"
     
