@@ -49,22 +49,21 @@ public:
 
 public slots:
     /// Slots that will receive the REGISTER_PLUGIN event.
-    void pluggedObject(mafPluggedObjectsHash pluginHash);
+    void pluggedObject(mafCore::mafPluggedObjectsHash pluginHash);
 
 private:
     mafDataPipe *m_PluggedPipe; ///< Test var.
 };
 
 testPluginObserver::testPluginObserver(const mafString code_location) : mafObjectBase(code_location), m_PluggedPipe(NULL) {
-    mafIdProvider::instance()->idValue("maf.local.resources.plugin.registerLibrary");
-    mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "pluggedObject(mafPluggedObjectsHash)");
+    mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "pluggedObject(mafCore::mafPluggedObjectsHash)");
 }
 
 testPluginObserver::~testPluginObserver() {
     mafDEL(m_PluggedPipe);
 }
 
-void testPluginObserver::pluggedObject(mafPluggedObjectsHash pluginHash) {
+void testPluginObserver::pluggedObject(mafCore::mafPluggedObjectsHash pluginHash) {
     mafString base_class("");
     mafPluggedObjectInformation objInfo;
     mafPluggedObjectsHash::iterator iter = pluginHash.begin();

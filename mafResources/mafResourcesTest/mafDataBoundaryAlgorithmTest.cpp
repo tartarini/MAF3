@@ -70,6 +70,7 @@ mafCore::mafContainerInterface *testDataBoundaryAlgorithmCustom::calculateBounda
 }
 
 void testDataBoundaryAlgorithmCustom::bounds(double bounds[6]) {
+    Q_UNUSED(bounds);
 }
 //------------------------------------------------------------------------------------------
 

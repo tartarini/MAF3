@@ -29,6 +29,9 @@ public:
     /// Return the var's value.
     int var() {return m_Var;}
 
+    /// register a custom callback
+    void registerCustomCallback();
+
 public slots:
     /// Test slot that will increment the value of m_Var when an UPDATE_OBJECT event is raised.
     void updateObject();
@@ -57,6 +60,11 @@ void testObjectCustomForDispatcher::updateObject2() {
 void testObjectCustomForDispatcher::setObjectValue(int v) {
     m_Var = v;
 }
+
+void testObjectCustomForDispatcher::registerCustomCallback() {
+    mafRegisterLocalCallback("maf.local.custom.topic", this, "updateObject()");
+}
+
 
 //-------------------------------------------------------------------------
 
@@ -108,6 +116,8 @@ private slots:
     void removeSignalTest();
     /// test if the local signal is present
     void isLocalSignalPresentTest();
+    /// reverse order registration test
+    void reverseOrderRegistrationTest();
 
 private:
     mafEventDispatcher *m_EventDispatcher; ///< Test var.
@@ -248,6 +258,32 @@ void mafEventDispatcherTest::removeSignalTest() {
     QVERIFY(m_EventDispatcher->registerSignal(*properties));
 
     QVERIFY(m_EventDispatcher->removeSignal(m_ObjTestObserver, "", false));
+}
+
+
+void mafEventDispatcherTest::reverseOrderRegistrationTest() {
+    mafString updateID = "maf.local.dispatcherTest.custom";
+
+    // Register the callback to update the object custom:
+    mafEvent *propCallback = new mafEventBus::mafEvent;
+    (*propCallback)[TOPIC] =  updateID;
+    (*propCallback)[TYPE] = mafEventTypeLocal;
+    (*propCallback)[SIGTYPE] = mafSignatureTypeCallback;
+    QVariant varobserver;
+    varobserver.setValue((QObject*)m_ObjTestObserver);
+    (*propCallback)[OBJECT] = varobserver;
+    (*propCallback)[SIGNATURE] = "updateObject()";
+    QVERIFY(m_EventDispatcher->addObserver(*propCallback));
+
+    mafEvent *properties = new mafEventBus::mafEvent;
+    (*properties)[TOPIC] =  updateID;
+    (*properties)[TYPE] = mafEventTypeLocal;
+    (*properties)[SIGTYPE] = mafSignatureTypeSignal;
+    QVariant var;
+    var.setValue((QObject*)m_ObjTestObserver);
+    (*properties)[OBJECT] = var;
+    (*properties)[SIGNATURE] = "objectModify()";
+    QVERIFY(m_EventDispatcher->registerSignal(*properties));
 }
 
 void mafEventDispatcherTest::isLocalSignalPresentTest() {

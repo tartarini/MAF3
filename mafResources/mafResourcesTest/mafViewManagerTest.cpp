@@ -20,6 +20,40 @@ using namespace mafEventBus;
 using namespace mafResources;
 
 /**
+ Class name: testViewManagerObserver
+ This class implements the observer for the signals emitted by the mafViewManager.
+ */
+class testViewManagerObserver : public QObject {
+    Q_OBJECT
+
+public:
+    /// Cobject constructor
+    testViewManagerObserver();
+
+    /// Return the current value of m_View
+    mafObjectBase *viewSelected();
+
+public slots:
+    /// View Selected slot
+    void viewSelectedSlot(mafCore::mafObjectBase *view);
+
+private:
+    mafObjectBase *m_View; ///< Reference to the view object.
+};
+
+testViewManagerObserver::testViewManagerObserver() : m_View(NULL) {
+    mafRegisterLocalCallback("maf.local.resources.view.selected", this, "viewSelectedSlot(mafCore::mafObjectBase *)");
+}
+
+mafObjectBase *testViewManagerObserver::viewSelected() {
+    return m_View;
+}
+
+void testViewManagerObserver::viewSelectedSlot(mafCore::mafObjectBase *view) {
+    m_View = view;
+}
+
+/**
  Class name: mafViewManagerTest
  This class implements the test suite for mafViewManager.
  */
@@ -33,7 +67,7 @@ private slots:
         // Register all the creatable objects for the mafResources module.
         mafResourcesRegistration::registerResourcesObjects();
 
-        m_View = NULL;
+        m_Observer = new testViewManagerObserver();
 
         m_EventBus = mafEventBusManager::instance();
         m_ViewManager = mafViewManager::instance();
@@ -42,6 +76,8 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         m_ViewManager->shutdown();
+
+        delete m_Observer;
 
         // Shutdown eventbus singleton and core singletons.
         m_EventBus->shutdown();
@@ -56,11 +92,12 @@ private slots:
     /// Test memento (for store and retriev settings)
     void mementoViewTest();
 
-
 private:
     mafViewManager *m_ViewManager; ///< View Manager test variable
     mafEventBusManager *m_EventBus; ///< Reference to the event bus.
-    mafObjectBase *m_View; ///< Reference to the view object.
+    testViewManagerObserver *m_Observer; ///< test observer for view created and selected.
+    mafString m_Hash1;
+    mafString m_Hash2;
 };
 
 void mafViewManagerTest::mafViewManagerAllocationTest() {
@@ -74,36 +111,34 @@ void mafViewManagerTest::createViewTest() {
     // Send the message through the vent bus to create it.
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafString, vt));
-    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, m_View);
-    m_EventBus->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList, &ret_val);
+    m_EventBus->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList);
 
-    // Return value should be not NULL.
-    QVERIFY(m_View != NULL);
+    mafObjectBase *obj = m_Observer->viewSelected();
+    m_Hash1 = obj->objectHash();
+    QVERIFY(obj != NULL);
 
     // Create another view...
-    mafObjectBase *second_view;
-    ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, second_view);
-    m_EventBus->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList, &ret_val);
-    QVERIFY(second_view != NULL);
+    m_EventBus->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList);
+    obj = m_Observer->viewSelected();
+    QVERIFY(obj != NULL);
+    m_Hash2 = obj->objectHash();
+    QVERIFY(m_Hash1 != m_Hash2);
 }
 
 void mafViewManagerTest::selectViewTest() {
-    // Ask for default selected view.
-    mafCore::mafObjectBase *sel_view;
-    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_view);
-    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
+    mafObjectBase *obj = mafObjectRegistry::instance()->objectFromHash(m_Hash1);
+    QVERIFY(m_Observer->viewSelected() != obj);
 
-    QVERIFY(sel_view != m_View);
+    mafObjectBase *obj2 = mafObjectRegistry::instance()->objectFromHash(m_Hash2);
+    QVERIFY(m_Observer->viewSelected() == obj2);
 
     // Ask the view manager to select the previous created view.
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_View));
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, obj));
     m_EventBus->notifyEvent("maf.local.resources.view.select", mafEventTypeLocal, &argList);
 
-    // Retrieve the selected view that now should be not NULL and equal to the previous created view.
-    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
-    QVERIFY(sel_view != NULL);
-    QVERIFY(sel_view == m_View);
+    QVERIFY(m_Observer->viewSelected() != NULL);
+    QVERIFY(m_Observer->viewSelected() == obj);
 }
 
 void mafViewManagerTest::mementoViewTest() {
@@ -112,17 +147,19 @@ void mafViewManagerTest::mementoViewTest() {
 
     // Shutdown the manager => will destroy all view and will reset the created view list.
     m_ViewManager->shutdown();
-    // Retrieve the selected view that should be NULL.
-    mafCore::mafObjectBase *sel_view;
-    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_view);
-    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
-    QVERIFY(sel_view == NULL);
+
+    // Check that all views should be NULL.
+    mafObjectBase *obj1 = mafObjectRegistry::instance()->objectFromHash(m_Hash1);
+    mafObjectBase *obj2 = mafObjectRegistry::instance()->objectFromHash(m_Hash2);
+
+    QVERIFY(obj1 == NULL);
+    QVERIFY(obj2 == NULL);
 
     // Restore the previous view manager state.
     m_ViewManager->setMemento(m);
+
     // Retrieve the selected view that should be not NULL.
-    m_EventBus->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
-    QVERIFY(sel_view != NULL);
+    QVERIFY(m_Observer->viewSelected() != NULL);
 
     mafDEL(m);
 }

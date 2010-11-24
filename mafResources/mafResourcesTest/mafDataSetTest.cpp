@@ -91,9 +91,12 @@ mafContainerInterface *testDataBoundaryCustom::calculateBoundary(mafContainerInt
 }
 
 void testDataBoundaryCustom::bounds(double bounds[6]) {
+    Q_UNUSED(bounds);
 }
 
 mafCore::mafContainerInterface *testDataBoundaryCustom::calculateBoundary(double bounds[6], mafPoseMatrix *matrix) {
+    Q_UNUSED(bounds);
+    Q_UNUSED(matrix);
     return NULL;
 }
 

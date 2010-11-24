@@ -67,7 +67,7 @@ void mafInteractionManager::initializeConnections() {
 }
 
 void mafInteractionManager::vmeSelected(mafVME *vme) {
-
+    Q_UNUSED(vme);
 }
 
 void mafInteractionManager::leftButtonPress() {

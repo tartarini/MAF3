@@ -126,7 +126,7 @@ typedef struct {
 } mafMementoPropertyItem;
 
 /// Typedef that defines the information used by a plug-in that needs to plug new objects into MAF3 framework.
-typedef struct mafPluggedObjectInformation {
+struct mafPluggedObjectInformation{
     mafPluggedObjectInformation() : m_Label(""), m_ClassType("") {};
     mafPluggedObjectInformation(mafString label, mafString classtype) : m_Label(label), m_ClassType(classtype) {};
     mafString m_Label;      ///< String label associated to the plugged object; it will be shown in the user interface if no custom label is assigned by the user.
@@ -135,6 +135,9 @@ typedef struct mafPluggedObjectInformation {
 
 /// Typedef that defines the list of information related to the same extended base MAF class type. It is used through the mafPluggedObjectsHash defined in mafPluginManager.
 typedef mafList<mafPluggedObjectInformation> mafPluggedObjectInformationList;
+
+/// Hash of plugged objects coming from plig-ins.
+typedef mafHash<mafString, mafPluggedObjectInformation> mafPluggedObjectsHash;
 
 /// Define the property list vector that hold properties to be serialized through mafCodec.
 typedef QVector<mafMementoPropertyItem> mafMementoPropertyList;

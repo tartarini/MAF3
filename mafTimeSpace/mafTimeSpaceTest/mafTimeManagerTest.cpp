@@ -144,7 +144,8 @@ void mafTimeManagerTest::createTimerTest() {
     argList.append(mafEventArgument(int, interval));
     argList.append(mafEventArgument(bool, true));
 
-    m_EventBus->notifyEvent("maf.local.time.create", mafEventTypeLocal, &argList, &mafEventReturnArgument(mafCore::mafId, m_TimerId));
+    mafGenericReturnArgument value = mafEventReturnArgument(mafCore::mafId, m_TimerId);
+    m_EventBus->notifyEvent("maf.local.time.create", mafEventTypeLocal, &argList, &value);
     QVERIFY(m_TimerId != -1);
 
     // Register the callback with the timer ID. Later on will be used in the test suite.
@@ -157,7 +158,8 @@ void mafTimeManagerTest::createTimerTest() {
     argList.append(mafEventArgument(mafCore::mafId, m_TimerId));
 
     bool res(true);
-    m_EventBus->notifyEvent("maf.local.time.isRunning", mafEventTypeLocal, &argList, &mafEventReturnArgument(bool, res));
+    mafGenericReturnArgument return_value = mafEventReturnArgument(bool, res);
+    m_EventBus->notifyEvent("maf.local.time.isRunning", mafEventTypeLocal, &argList, &return_value);
 
     QVERIFY(res == false);
 }

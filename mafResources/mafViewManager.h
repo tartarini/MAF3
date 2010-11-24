@@ -60,7 +60,7 @@ public slots:
 
 signals:
     /// Return the selected view
-    mafCore::mafObjectBase *selectedViewSignal();
+    void selectedViewSignal(mafCore::mafObjectBase *view);
 
     /// Signal which allow to keep track of the selected view.
     void selectViewSignal(mafCore::mafObjectBase *view);
@@ -71,13 +71,13 @@ signals:
     /// Signal which allow to remove the view from the manager.
     void destroyViewSignal(mafCore::mafObjectBase *view);
 
-    /// Allow to cdreate a new mafView given the type name as string. Return the pointer to the created view on success.
+    /// Allow to cdreate a new mafView given the type name as string. Return the created view on success.
     mafCore::mafObjectBase *createViewSignal(mafString view_type);
 
-private slots:
-    /// Return the selected view
-    mafCore::mafObjectBase *selectedView();
+    /// Notify the view creation to all observers.
+    void viewCreatedSignal(mafCore::mafObjectBase *view);
 
+private slots:
     /// Allow to keep track of the selected view.
     void selectView(mafCore::mafObjectBase *view);
 
@@ -88,7 +88,7 @@ private slots:
     void destroyView(mafCore::mafObjectBase *view);
 
     /// Allow to cdreate a new mafView given the type name as string. Return the pointer to the created view on success.
-    mafCore::mafObjectBase *createView(mafString view_type);
+    void createView(mafString view_type);
 
     /// Method called when a view has been destroyed (by someone else).
     void viewDestroyed();
@@ -115,18 +115,6 @@ private:
     mafResourceList m_CreatedViewList; ///< List of created views.
     mafView *m_SelectedView; ///< Keep trak of the current selected view.
 };
-
-/////////////////////////////////////////////////////////////
-// Inline methods
-/////////////////////////////////////////////////////////////
-
-//inline mafResourceList *mafViewManager::createdViewList() {
-//    return &m_CreatedViewList;
-//}
-
-inline mafCore::mafObjectBase *mafViewManager::selectedView() {
-    return (mafCore::mafObjectBase *)m_SelectedView;
-}
 
 } // namespace mafResources
 

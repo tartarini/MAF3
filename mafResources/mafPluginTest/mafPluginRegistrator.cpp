@@ -37,6 +37,6 @@ void mafPluginRegistrator::registerObjects() {
 
 
     mafEventBus::mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafPluggedObjectsHash, pluginHash));
+    argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, pluginHash));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.registerLibrary", mafEventTypeLocal, &argList);
 }

@@ -3,7 +3,7 @@
  *  mafResources
  *
  *  Created by Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2010 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -22,12 +22,24 @@ class mafPlugin;
 
 /**
 Class name: mafPluginManager
-This class provides the engine for loading plug-ins and define the IDs:
+This class provides the engine for loading plug-ins and define the following topics:
 - maf.local.resources.plugin.loadLibrary which allows you to load a shared library.
 - maf.local.resources.plugin.registerLibrary which is used by external libraries to register their plugged objects.
 - maf.local.resources.plugin.resourcesQuery which allows you to query for plugged objects that extend the given base class.
 */
-/** mafPluginManager - The engine's system core.*/
+/** mafPluginManager - The engine's system core.
+To load a plug-in simply call the loadPlugin method by passing as argument the
+library name related to the plugin to load. Another way to load the plugin is to
+ask the mafEventBusManager to notify the maf.local.resources.plugin.loadLibrary
+event with one argument containing the library name to load. This will trigger the
+loading of the plugin library from the mafPluginManager.
+Each plugin library emits the event maf.local.resources.plugin.registerLibrary,
+which ask the plugin manager to register it.
+After that a plugin has been loaded and then registered, the plugin list can be
+queried through the event associated to the maf.local.resources.plugin.resourcesQuery
+topic. For and example of mafPluginManager usage take a look at the mafPluginManagerTest
+located into the mafResourcesTest directory.
+*/
 class MAFRESOURCESSHARED_EXPORT mafPluginManager : public mafCore::mafObjectBase {
     Q_OBJECT
     /// typedef macro.
@@ -45,7 +57,7 @@ public:
 
 signals:
     /// Signal emitted by the external library that wants to register its own objects.
-    void registerPluginToManager(mafPluggedObjectsHash pluginHash);
+    void registerPluginToManager(mafCore::mafPluggedObjectsHash pluginHash);
 
     /// Signal emitted by logic to load an external library containing plug-ins.
     void loadPluginLibrary(const mafString &pluginFilename);
@@ -64,7 +76,7 @@ public slots:
     /** This method is called by the REGISTER_PLUGIN signal and receive as parameter the hash containing the information on the class type of the base MAF class
     (mafResources::mafView, mafResources::mafOperation, mafResources::mafVisualPipe...), the type of the plugged object that extend the base class
     and the default label that you want to be shown at the user interface level.*/
-    void registerPlugin(mafPluggedObjectsHash pluginHash);
+    void registerPlugin(mafCore::mafPluggedObjectsHash pluginHash);
 
     /// Allow to query the list of plugged object according to the base MAF class type given as argument. The list given as parameter will be filled with the query result.
     mafCore::mafPluggedObjectInformationList *queryPluggedObjects(const mafString &baseMAFClassExtended);
@@ -83,8 +95,8 @@ private:
     typedef mafHash<mafString, mafPlugin *> mafPluginHash;
 
     mafPluginHash m_PluginsHash;  ///< Association of filenames with all plugins handlers.
-    mafPluggedObjectsHash m_PluggedObjectsHash; ///< Association of base MAF3 objects and the list of plugged objects.
-    mafPluggedObjectsHash m_ReverseObjectsHash; ///< Hash needed for reverse association of plugged objects type and base class extended.
+    mafCore::mafPluggedObjectsHash m_PluggedObjectsHash; ///< Association of base MAF3 objects and the list of plugged objects.
+    mafCore::mafPluggedObjectsHash m_ReverseObjectsHash; ///< Hash needed for reverse association of plugged objects type and base class extended.
 };
 
 } // mafResources

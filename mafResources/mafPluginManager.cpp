@@ -25,19 +25,21 @@ void mafPluginManager::shutdown() {
 }
 
 mafPluginManager::mafPluginManager(const mafString code_location) : mafObjectBase(code_location) {
-    // Create the ID needed to load the external library containing the plug-ins.
+    // Create the Topic needed to load the external library containing the plug-ins.
     mafId load_library_id = mafIdProvider::instance()->createNewId("maf.local.resources.plugin.loadLibrary");
     if(load_library_id != -1) {
         mafRegisterLocalSignal("maf.local.resources.plugin.loadLibrary", this, "loadPluginLibrary(const mafString &)");
         mafRegisterLocalCallback("maf.local.resources.plugin.loadLibrary", this, "loadPlugin(const mafString &)");
     }
 
-    // Create the ID needed to register plug-in objects.
+    // Create the Topic needed to register plug-in objects.
     mafId register_plugin_id = mafIdProvider::instance()->createNewId("maf.local.resources.plugin.registerLibrary");
     if(register_plugin_id != -1) {
-        mafRegisterLocalSignal("maf.local.resources.plugin.registerLibrary", this, "registerPluginToManager(mafPluggedObjectsHash)");
-        mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "registerPlugin(mafPluggedObjectsHash)");
+        mafRegisterLocalSignal("maf.local.resources.plugin.registerLibrary", this, "registerPluginToManager(mafCore::mafPluggedObjectsHash)");
+        mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "registerPlugin(mafCore::mafPluggedObjectsHash)");
     }
+
+    // Create the Topic to perform a query on the plugged libraries.
     mafId query_plugin_id = mafIdProvider::instance()->createNewId("maf.local.resources.plugin.resourcesQuery");
     if(query_plugin_id != -1) {
         mafRegisterLocalSignal("maf.local.resources.plugin.resourcesQuery", this, "queryPluggedObjectsSignal(const mafString &)");
@@ -73,7 +75,7 @@ mafPluginInfo mafPluginManager::pluginInformation(mafString plugin_name) {
 }
 
 //void mafPluginManager::registerPlugin(const mafString &baseClassExtended, const mafString &pluggedObjectType, const mafString &objectLabel) {
-void mafPluginManager::registerPlugin(mafPluggedObjectsHash pluginHash) {
+void mafPluginManager::registerPlugin(mafCore::mafPluggedObjectsHash pluginHash) {
     // Store plugin information to be queryed starting from base MAF class extended.
     // This is useful to show for example all the plugged mafView in the main menu.
 
