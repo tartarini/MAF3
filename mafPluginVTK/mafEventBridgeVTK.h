@@ -40,7 +40,7 @@ public:
     void setInteractor(vtkRenderWindowInteractor *inter);
 
     /// Check if VME has been picked
-    bool vmePickCheck();
+    void vmePickCheck();
 
 
 
