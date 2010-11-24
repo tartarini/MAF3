@@ -40,7 +40,7 @@ mafEventBridgeVTK::mafEventBridgeVTK(vtkRenderWindowInteractor *inter, const maf
 }
 
 mafEventBridgeVTK::~mafEventBridgeVTK() {
-    m_Connections->Delete();
+    if(m_Connections) m_Connections->Delete();
 }
 
 void mafEventBridgeVTK::setInteractor(vtkRenderWindowInteractor *inter) {
