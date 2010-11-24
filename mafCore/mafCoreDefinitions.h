@@ -117,7 +117,7 @@ typedef enum {
 
 #define TEST_SUITE_LOG_PREFIX " -- TestSuite Message -- "
 
-/** Typedef representing an item property of the memento that has to be encoded or decoded.*/
+/// Typedef representing an item property of the memento that has to be encoded or decoded.
 typedef struct {
     // Encoding valiables
     mafString m_Name; ///< Name for the encoded property.
@@ -125,7 +125,7 @@ typedef struct {
     int m_Multiplicity; ///< Multiplicity for the encoded property.
 } mafMementoPropertyItem;
 
-/// Typedef that defines the information used by a plug-in that needs to plug new objects into MAF3 framework.
+/// Struct that defines the information used by a plug-in that needs to plug new objects into MAF3 framework.
 struct mafPluggedObjectInformation{
     mafPluggedObjectInformation() : m_Label(""), m_ClassType("") {};
     mafPluggedObjectInformation(mafString label, mafString classtype) : m_Label(label), m_ClassType(classtype) {};
