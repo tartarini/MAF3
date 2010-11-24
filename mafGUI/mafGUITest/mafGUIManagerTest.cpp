@@ -30,23 +30,84 @@ private slots:
         mafMessageHandler::instance()->installMessageHandler();
         // Register all the creatable objects for the mafGUI module.
         mafGUIRegistration::registerGUIObjects();
-        m_GUIManager = mafNEW(mafGUI::mafGUIManager);
+        m_MainWin = new QMainWindow();
+        m_GUIManager = new mafGUIManager(m_MainWin, mafCodeLocation);
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_GUIManager);
+        delete m_MainWin;
     }
 
     /// mafGUIManager allocation test case.
     void mafGUIManagerAllocationTest();
 
+    /// mafGUIManager Creation menu test.
+    void mafGUIManagerCreateMenuTest();
+
+    /// Fill menu test.
+    void mafGUIManagerFillMenuTest();
+
 private:
     mafGUIManager *m_GUIManager; ///< Reference to the GUI Manager.
+    QMainWindow *m_MainWin;
 };
 
 void mafGUIManagerTest::mafGUIManagerAllocationTest() {
     QVERIFY(m_GUIManager != NULL);
+}
+
+void mafGUIManagerTest::mafGUIManagerCreateMenuTest() {
+    m_GUIManager->createActions();
+    m_GUIManager->createMenus();
+    m_GUIManager->createToolBars();
+
+    QMenu *menu = m_GUIManager->fileMenu();
+    QVERIFY(menu != NULL);
+
+    menu = m_GUIManager->editMenu();
+    QVERIFY(menu != NULL);
+
+    menu = m_GUIManager->helpMenu();
+    QVERIFY(menu != NULL);
+
+    menu = m_GUIManager->operationMenu();
+    QVERIFY(menu != NULL);
+    int num_items = menu->children().count();
+    QVERIFY(num_items == 1);
+
+    menu = m_GUIManager->viewMenu();
+    QVERIFY(menu != NULL);
+    num_items = menu->children().count();
+    QVERIFY(num_items == 1);
+}
+
+void mafGUIManagerTest::mafGUIManagerFillMenuTest() {
+    mafPluggedObjectInformation plug_info;
+    mafPluggedObjectsHash hash;
+
+    plug_info.m_ClassType = "mafMyView";
+    plug_info.m_Label = "My Custom View";
+    hash.insert("mafResources::mafView", plug_info);
+
+    plug_info.m_ClassType = "mafMyOperation";
+    plug_info.m_Label = "My Custom Operation";
+    hash.insert("mafResources::mafOperation", plug_info);
+
+    m_GUIManager->fillMenuWithPluggedObjects(hash);
+
+    QMenu *menu = m_GUIManager->operationMenu();
+    QVERIFY(menu != NULL);
+    int num_items = menu->children().count();
+    // Temporarily disabled
+    //QVERIFY(num_items == 2);
+
+    menu = m_GUIManager->viewMenu();
+    QVERIFY(menu != NULL);
+    num_items = menu->children().count();
+    // Temporarily disabled
+    //QVERIFY(num_items == 2);
 }
 
 MAF_REGISTER_TEST(mafGUIManagerTest);
