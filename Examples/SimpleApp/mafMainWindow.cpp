@@ -30,13 +30,13 @@ mafMainWindow::mafMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     mafCoreSingletons::mafSingletonsInitialize();
 
     mafGUIRegistration::registerGUIObjects();
-    m_GUIManager = mafNEW(mafGUI::mafGUIManager);
+    m_GUIManager = new mafGUIManager(this, mafCodeLocation);
 
     googleChat = new GoogleChat();
 
-    m_GUIManager->createActions(this);
-    m_GUIManager->createMenus(this);
-    m_GUIManager->createToolBars(this);
+    m_GUIManager->createActions();
+    m_GUIManager->createMenus();
+    m_GUIManager->createToolBars();
 
     connectCallbacks();
 
