@@ -1,5 +1,6 @@
 import os
 import sys
+import getopt
 
 extensionToAvoid = [".dll",".prl", ".a",".lib", ".dylib",".so", ".0", ".1"] # necessary to insert .N because of symbolic link of linux
 
