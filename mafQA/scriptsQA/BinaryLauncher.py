@@ -11,14 +11,15 @@ def find_executable(executable, path=None):
             return None
         else:
             return fullPathName
- 
-if __name__ == '__main__':
+
+def execute():
     scriptsDir = os.getcwd()
     os.chdir("../..")
     modulesDir = os.getcwd()
-    dirList = [ name for name in os.listdir(modulesDir) if (name[0:3] == "maf" and name[3:] != "TestSuiteEngine" and os.path.isdir(os.path.join(modulesDir, name))) ] 
+    dirList = [ name for name in os.listdir(modulesDir) if (name[0:3] == "maf" and os.path.isdir(os.path.join(modulesDir, name))) ] 
     print modulesDir, dirList
-    execDir = modulesDir + "/../Install/bin/Debug"
+    #execDir = modulesDir + "/../Install/bin/Debug"
+    execDir = param['directory']
     os.chdir(execDir)
     #some system requirements
 
@@ -54,3 +55,32 @@ if __name__ == '__main__':
         else:
             print "Executable %s Not Present in %s" % (executable , execDir)
     os.chdir(scriptsDir)
+
+def usage():
+    print "python BinaryLauncher.py -d directory"
+
+def main():
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "d:", ["directory="])
+    except getopt.GetoptError, err:
+        # print help information and exit:
+        print str(err) # will print something like "option -a not recognized"
+        usage()
+        sys.exit(2)
+    
+    for o, a in opts:
+        if o in ("-d", "--directory"):
+            param['directory'] = os.path.normpath(a)
+        else:
+            assert False, "unhandled option"
+    
+    if(len(param) == 0):
+        usage()
+        #print currentPathScript
+        return
+    
+    execute()
+    
+    
+if __name__ == '__main__':
+    main()
