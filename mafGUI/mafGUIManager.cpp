@@ -15,13 +15,14 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafGUI;
 
-mafGUIManager::mafGUIManager(const mafString code_location) : mafObjectBase(code_location) {
+mafGUIManager::mafGUIManager(QMainWindow *main_win, const mafString code_location) : mafObjectBase(code_location), m_MainWindow(main_win) {
+    mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)");
 }
 
 mafGUIManager::~mafGUIManager() {
 }
 
-void mafGUIManager::createActions(QMainWindow *win) {
+void mafGUIManager::createActions() {
     m_NewAct = new QAction(QIcon(":/images/new.png"), mafTr("&New"), this);
     m_NewAct->setIconText(mafTr("New"));
     m_NewAct->setShortcuts(QKeySequence::New);
@@ -50,7 +51,7 @@ void mafGUIManager::createActions(QMainWindow *win) {
     m_ExitAct->setIconText(mafTr("Exit"));
     m_ExitAct->setShortcuts(QKeySequence::Quit);
     m_ExitAct->setStatusTip(mafTr("Exit the application"));
-    connect(m_ExitAct, SIGNAL(triggered()), win, SLOT(close()));
+    connect(m_ExitAct, SIGNAL(triggered()), m_MainWindow, SLOT(close()));
 
     m_CutAct = new QAction(QIcon(":/images/cut.png"), mafTr("Cu&t"), this);
     m_CutAct->setIconText(mafTr("Cut"));
@@ -77,6 +78,31 @@ void mafGUIManager::createActions(QMainWindow *win) {
     registerSignals();
 }
 
+void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash) {
+    mafString base_class("");
+    mafPluggedObjectInformation objInfo;
+    mafPluggedObjectsHash::iterator iter = pluginHash.begin();
+    while(iter != pluginHash.end()) {
+        objInfo = iter.value();
+        base_class = iter.key();
+        if(base_class == "mafResources::mafOperation" || base_class == "mafResources::mafView") {
+            QAction *action = new QAction(mafTr(objInfo.m_Label.toAscii()), NULL);
+            QVariant data_type(objInfo.m_ClassType);
+            action->setData(data_type);
+            if(base_class == "mafResources::mafOperation") {
+                // Add a new item to the operation's menu.
+                m_OpMenu->addAction(action);
+                connect(action, SIGNAL(triggered()), this, SLOT(startOperation()));
+            } else if(base_class == "mafResources::mafView") {
+                // Add a new item to the view's menu.
+                m_ViewMenu->addAction(action);
+                connect(action, SIGNAL(triggered()), this, SLOT(createView()));
+            }
+        }
+        iter++;
+    }
+}
+
 void mafGUIManager::registerSignals() {
     mafIdProvider *provider = mafIdProvider::instance();
     provider->createNewId("maf.local.gui.action.new");
@@ -88,6 +114,7 @@ void mafGUIManager::registerSignals() {
     provider->createNewId("maf.local.gui.action.copy");
     provider->createNewId("maf.local.gui.action.paste");
     provider->createNewId("maf.local.gui.action.about");
+    provider->createNewId("maf.local.gui.pathSelected");
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.gui.action.new", m_NewAct, "triggered()");
@@ -99,10 +126,11 @@ void mafGUIManager::registerSignals() {
     mafRegisterLocalSignal("maf.local.gui.action.copy", m_CopyAct, "triggered()");
     mafRegisterLocalSignal("maf.local.gui.action.paste", m_PasteAct, "triggered()");
     mafRegisterLocalSignal("maf.local.gui.action.about", m_AboutAct, "triggered()");
+    mafRegisterLocalSignal("maf.local.gui.pathSelected", this, "pathSelected(const mafString)");
 }
 
-void mafGUIManager::createMenus(QMainWindow *win) {
-    QMenuBar *menuBar = win->menuBar();
+void mafGUIManager::createMenus() {
+    QMenuBar *menuBar = m_MainWindow->menuBar();
 
     m_FileMenu = menuBar->addMenu(tr("&File"));
     m_FileMenu->addAction(m_NewAct);
@@ -134,17 +162,37 @@ void mafGUIManager::createMenus(QMainWindow *win) {
     m_HelpMenu->addAction(m_AboutAct);
 }
 
-void mafGUIManager::createToolBars(QMainWindow *win) {
-    m_FileToolBar = win->addToolBar(tr("File"));
+void mafGUIManager::createToolBars() {
+    m_FileToolBar = m_MainWindow->addToolBar(tr("File"));
     m_FileToolBar->addAction(m_NewAct);
     m_FileToolBar->addAction(m_CollaborateAct);
     m_FileToolBar->addAction(m_OpenAct);
     m_FileToolBar->addAction(m_SaveAct);
     m_FileToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    m_EditToolBar = win->addToolBar(tr("Edit"));
+    m_EditToolBar = m_MainWindow->addToolBar(tr("Edit"));
     m_EditToolBar->addAction(m_CutAct);
     m_EditToolBar->addAction(m_CopyAct);
     m_EditToolBar->addAction(m_PasteAct);
     m_EditToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+}
+
+void mafGUIManager::startOperation() {
+    QAction *opAction = (QAction *)QObject::sender();
+    mafString op(opAction->data().toString());
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafString, op));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
+}
+
+void mafGUIManager::createView() {
+    QAction *viewAction = (QAction *)QObject::sender();
+    mafString view(viewAction->data().toString());
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafString, view));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList);
+}
+
+void mafGUIManager::chooseFileDialog(const mafString title, const mafString start_dir, const mafString wildcard) {
+    mafString fileName = QFileDialog::getOpenFileName(m_MainWindow, title, start_dir, wildcard);
 }

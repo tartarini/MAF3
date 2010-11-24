@@ -39,6 +39,9 @@ namespace mafGUI {
  - maf.local.gui.action.copy
  - maf.local.gui.action.paste
  - maf.local.gui.action.about
+
+ There is also a signal related to the notification of path selection through a dialog.
+ - maf.local.gui.pathSelected
  */
 class MAFGUISHARED_EXPORT mafGUIManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -47,19 +50,19 @@ class MAFGUISHARED_EXPORT mafGUIManager : public mafCore::mafObjectBase {
 
 public:
     /// Object constructor.
-    mafGUIManager(const mafString code_location = "");
+    mafGUIManager(QMainWindow *main_win, const mafString code_location = "");
 
     /// Object destructor.
     /* virtual */ ~mafGUIManager();
 
     /// Create the actions associated with the menu items.
-    virtual void createActions(QMainWindow *win);
+    virtual void createActions();
 
     /// Create the menu for the vertical application.
-    virtual void createMenus(QMainWindow *win);
+    virtual void createMenus();
 
     /// Create the toolbar for the vertical application and add them to the main window.
-    virtual void createToolBars(QMainWindow *win);
+    virtual void createToolBars();
 
     /// Return the 'file' menu item created into the createMenus method.
     QMenu *fileMenu() const;
@@ -76,6 +79,24 @@ public:
     /// Return the 'help' menu item created into the createMenus method.
     QMenu *helpMenu() const;
 
+    /// Show the file dialog to select the file path given a window title, a starting directory and an optional file wildcard
+    void chooseFileDialog(const mafString title, const mafString start_dir, const mafString wildcard = mafTr("All files (*.*)"));
+
+public slots:
+    /// Fill the operation and view menu with the plugged objects.
+    void fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash);
+
+signals:
+    /// Signals emitted on path selection using the dialog.
+    void pathSelected(const mafString path);
+
+private slots:
+    /// Start the operation associated with the operation's action activated.
+    void startOperation();
+
+    /// Create the view corresponding to the view's action activated.
+    void createView();
+
 private:
     /// Initialize the topics and register the signals with the mafEventBus.
     void registerSignals();
@@ -86,8 +107,8 @@ private:
     QMenu *m_OpMenu;   ///< Reference to the 'Operation' menu.
     QMenu *m_HelpMenu; ///< Reference to the 'Help' menu.
 
-    QToolBar *m_FileToolBar; ///<
-    QToolBar *m_EditToolBar; ///<
+    QToolBar *m_FileToolBar; ///< Toolbar related to File tasks
+    QToolBar *m_EditToolBar; ///< Toolbar related to Edit tasks
 
     QAction *m_NewAct; ///< Reference to the action associated to the 'New' Item creation.
     QAction *m_CollaborateAct; ///< Reference to the action associated to the 'Collaboration' chat Item.
@@ -101,6 +122,8 @@ private:
     QAction *m_PasteAct; ///< Reference to the action associated to the 'Paste' of Items into actual loaded data.
 
     QAction *m_AboutAct; ///< Reference to the action associated to the 'About' informative dialog.
+
+    QMainWindow *m_MainWindow; ///< Main window associated to the application.
 };
 
 /////////////////////////////////////////////////////////////
