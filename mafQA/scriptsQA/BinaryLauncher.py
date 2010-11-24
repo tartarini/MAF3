@@ -3,6 +3,7 @@ import sys
 import getopt
 
 extensionToAvoid = [".dll",".prl", ".a",".lib", ".dylib",".so", ".0", ".1"] # necessary to insert .N because of symbolic link of linux
+param = {}
 
 def find_executable(executable, path=None):
     fullPathName = path + "/" + executable
