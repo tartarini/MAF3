@@ -130,6 +130,8 @@ private slots:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
+        m_RenWin->Delete();
+        m_RenWin = NULL;
         mafDEL(m_View);
         mafDEL(m_VmeCube);
         mafDEL(m_VmeCubeMoved);
