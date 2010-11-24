@@ -53,12 +53,42 @@ public slots:
     /// observer needed to receive the 'maf.local.resources.interaction.leftButtonPress' signal
     void leftButtonPress(unsigned long modifiers);
 
+    /// observer needed to receive the 'maf.local.resources.interaction.leftButtonRelease' signal
+    void leftButtonRelease(unsigned long modifiers);
+
+    /// observer needed to receive the 'maf.local.resources.interaction.rightButtonRelease' signal
+    void rightButtonPress(unsigned long modifiers);
+
+    /// observer needed to receive the 'maf.local.resources.interaction.rightButtonRelease' signal
+    void rightButtonRelease(unsigned long modifiers);
+
+    /// observer needed to receive the 'maf.local.resources.interaction.middleButtonRelease' signal
+    void middleButtonPress(unsigned long modifiers);
+
+    /// observer needed to receive the 'maf.local.resources.interaction.middleButtonRelease' signal
+    void middleButtonRelease(unsigned long modifiers);
+
     /// observer needed to receive the 'maf.local.resources.interaction.vmePick' signal
     void pick(double *pos, unsigned long modifiers, mafCore::mafContainerInterface *interface);
 
 signals:
     /// left button pressed.
     void leftButtonPressSignal(unsigned long modifiers);
+
+    /// left button relesed.
+    void leftButtonReleaseSignal(unsigned long modifiers);
+
+    /// right button press.
+    void rightButtonPressSignal(unsigned long modifiers);
+
+    /// right button relesed.
+    void rightButtonReleaseSignal(unsigned long modifiers);
+
+    /// middle button press.
+    void middleButtonPressSignal(unsigned long modifiers);
+
+    /// middle button relesed.
+    void middleButtonReleaseSignal(unsigned long modifiers);
 
     /// picked button pressed.
     void pickSignal(double *pos, unsigned long modifiers, mafCore::mafContainerInterface *interface);
@@ -69,12 +99,47 @@ testInteractionManagerCustom::testInteractionManagerCustom(QString code_location
     mafRegisterLocalSignal("maf.local.resources.interaction.leftButtonPress", this, "leftButtonPressSignal(unsigned long)");
     mafRegisterLocalCallback("maf.local.resources.interaction.leftButtonPress", this, "leftButtonPress(unsigned long)");
 
+    mafRegisterLocalSignal("maf.local.resources.interaction.leftButtonRelease", this, "leftButtonReleaseSignal(unsigned long)");
+    mafRegisterLocalCallback("maf.local.resources.interaction.leftButtonRelease", this, "leftButtonRelease(unsigned long)");
+
+    mafRegisterLocalSignal("maf.local.resources.interaction.rightButtonPress", this, "rightButtonPressSignal(unsigned long)");
+    mafRegisterLocalCallback("maf.local.resources.interaction.rightButtonPress", this, "rightButtonPress(unsigned long)");
+
+    mafRegisterLocalSignal("maf.local.resources.interaction.rightButtonRelease", this, "rightButtonReleaseSignal(unsigned long)");
+    mafRegisterLocalCallback("maf.local.resources.interaction.rightButtonRelease", this, "rightButtonRelease(unsigned long)");
+
+    mafRegisterLocalSignal("maf.local.resources.interaction.middleButtonPress", this, "middleButtonPressSignal(unsigned long)");
+    mafRegisterLocalCallback("maf.local.resources.interaction.middleButtonPress", this, "middleButtonPress(unsigned long)");
+
+    mafRegisterLocalSignal("maf.local.resources.interaction.middleButtonRelease", this, "middleButtonReleaseSignal(unsigned long)");
+    mafRegisterLocalCallback("maf.local.resources.interaction.middleButtonRelease", this, "middleButtonRelease(unsigned long)");
+
     mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "pickSignal(double *, unsigned long, mafCore::mafContainerInterface *)");
     mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "pick(double *, unsigned long, mafCore::mafContainerInterface *)");
     m_Counter = 0;
 }
 
 void testInteractionManagerCustom::leftButtonPress(unsigned long modifiers) {
+    m_Counter++;
+}
+
+void testInteractionManagerCustom::leftButtonRelease(unsigned long modifiers) {
+    m_Counter++;
+}
+
+void testInteractionManagerCustom::rightButtonPress(unsigned long modifiers) {
+    m_Counter++;
+}
+
+void testInteractionManagerCustom::rightButtonRelease(unsigned long modifiers) {
+    m_Counter++;
+}
+
+void testInteractionManagerCustom::middleButtonPress(unsigned long modifiers) {
+    m_Counter++;
+}
+
+void testInteractionManagerCustom::middleButtonRelease(unsigned long modifiers) {
     m_Counter++;
 }
 
@@ -115,12 +180,10 @@ private slots:
     void initTestCase() {
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
         m_CustomManager = mafNEW(testInteractionManagerCustom);
-        m_EventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        mafDEL(m_EventBridge);
         mafDEL(m_CustomManager);
     }
 
@@ -130,18 +193,34 @@ private slots:
     /// mafEventBridgeVTKTest event connection test case.
     void mafEventBridgeVTKConnectionTest();
 
+    /// LeftButtonPress event connection test case.
+    void mafEventBridgeVTKLeftButtonReleaseTest();
+
+    /// RightButtonPres event connection test case.
+    void mafEventBridgeVTKRightButtonPressTest();
+
+    /// RightButtonPress event connection test case.
+    void mafEventBridgeVTKRightButtonReleaseTest();
+
+    /// MiddleButtonPres event connection test case.
+    void mafEventBridgeVTKMiddleButtonPressTest();
+
+    /// MiddleButtonPress event connection test case.
+    void mafEventBridgeVTKMiddleButtonReleaseTest();
+
 
 private:
-    mafEventBridgeVTK *m_EventBridge; ///< Test var.
+    mafEventBridgeVTK *eventBridge; ///< Test var.
     testInteractionManagerCustom *m_CustomManager; ///< Test var.
 };
 
 void mafEventBridgeVTKTest::mafEventBridgeVTKAllocationTest() {
-    QVERIFY(m_EventBridge != NULL);
+    mafEventBridgeVTK *eventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
+    QVERIFY(eventBridge != NULL);
 }
 
 void mafEventBridgeVTKTest::mafEventBridgeVTKConnectionTest() {
-    QVERIFY(m_EventBridge != NULL);
+    mafEventBridgeVTK *eventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
 
     vtkRenderWindow *renWin = vtkRenderWindow::New();
     vtkRenderer *renderer = vtkRenderer::New();
@@ -159,7 +238,7 @@ void mafEventBridgeVTKTest::mafEventBridgeVTKConnectionTest() {
     renWin->AddRenderer(renderer);
     iren->SetRenderWindow(renWin);
 
-    m_EventBridge->setInteractor(iren);
+    eventBridge->setInteractor(iren);
 
     renWin->Render();
     QTest::qSleep(2000);
@@ -190,8 +269,116 @@ void mafEventBridgeVTKTest::mafEventBridgeVTKConnectionTest() {
 
     //Check if events has been captured by testInteractionManagerCustom
     QVERIFY(m_CustomManager->m_Counter == 2);
-    mafDEL(m_CustomManager);
+    m_CustomManager->m_Counter = 0;
+
+    renWin->Delete();
+    renderer->Delete();
+    mafDEL(eventBridge);
+    iren->Delete();
+
 }
+
+void mafEventBridgeVTKTest::mafEventBridgeVTKLeftButtonReleaseTest() {
+    mafEventBridgeVTK *eventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
+    vtkRenderWindow *renWin = vtkRenderWindow::New();
+    vtkRenderer *renderer = vtkRenderer::New();
+    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
+    renWin->AddRenderer(renderer);
+    iren->SetRenderWindow(renWin);
+    eventBridge->setInteractor(iren);
+
+    iren->InvokeEvent(vtkCommand::LeftButtonReleaseEvent, NULL);
+
+    QVERIFY(m_CustomManager->m_Counter == 1);
+    m_CustomManager->m_Counter = 0;
+
+    renWin->Delete();
+    renderer->Delete();
+    mafDEL(eventBridge);
+    iren->Delete();
+}
+
+void mafEventBridgeVTKTest::mafEventBridgeVTKRightButtonPressTest() {
+    mafEventBridgeVTK *eventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
+    vtkRenderWindow *renWin = vtkRenderWindow::New();
+    vtkRenderer *renderer = vtkRenderer::New();
+    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
+    renWin->AddRenderer(renderer);
+    iren->SetRenderWindow(renWin);
+    eventBridge->setInteractor(iren);
+
+    iren->InvokeEvent(vtkCommand::RightButtonPressEvent, NULL);
+
+    QVERIFY(m_CustomManager->m_Counter == 1);
+    m_CustomManager->m_Counter = 0;
+
+    renWin->Delete();
+    renderer->Delete();
+    mafDEL(eventBridge);
+    iren->Delete();
+}
+
+void mafEventBridgeVTKTest::mafEventBridgeVTKRightButtonReleaseTest() {
+    mafEventBridgeVTK *eventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
+    vtkRenderWindow *renWin = vtkRenderWindow::New();
+    vtkRenderer *renderer = vtkRenderer::New();
+    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
+    renWin->AddRenderer(renderer);
+    iren->SetRenderWindow(renWin);
+    eventBridge->setInteractor(iren);
+
+    iren->InvokeEvent(vtkCommand::RightButtonReleaseEvent, NULL);
+
+    QVERIFY(m_CustomManager->m_Counter == 1);
+    m_CustomManager->m_Counter = 0;
+
+    renWin->Delete();
+    renderer->Delete();
+    mafDEL(eventBridge);
+    iren->Delete();
+}
+
+void mafEventBridgeVTKTest::mafEventBridgeVTKMiddleButtonPressTest() {
+    mafEventBridgeVTK *eventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
+    vtkRenderWindow *renWin = vtkRenderWindow::New();
+    vtkRenderer *renderer = vtkRenderer::New();
+    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
+    renWin->AddRenderer(renderer);
+    iren->SetRenderWindow(renWin);
+    eventBridge->setInteractor(iren);
+
+    iren->InvokeEvent(vtkCommand::MiddleButtonPressEvent, NULL);
+
+    QVERIFY(m_CustomManager->m_Counter == 1);
+    m_CustomManager->m_Counter = 0;
+
+    renWin->Delete();
+    renderer->Delete();
+    mafDEL(eventBridge);
+    iren->Delete();
+}
+
+void mafEventBridgeVTKTest::mafEventBridgeVTKMiddleButtonReleaseTest() {
+    mafEventBridgeVTK *eventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
+    vtkRenderWindow *renWin = vtkRenderWindow::New();
+    vtkRenderer *renderer = vtkRenderer::New();
+    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
+    renWin->AddRenderer(renderer);
+    iren->SetRenderWindow(renWin);
+    eventBridge->setInteractor(iren);
+
+    iren->InvokeEvent(vtkCommand::MiddleButtonReleaseEvent, NULL);
+
+    QVERIFY(m_CustomManager->m_Counter == 1);
+    m_CustomManager->m_Counter = 0;
+
+    renWin->Delete();
+    renderer->Delete();
+    mafDEL(eventBridge);
+    iren->Delete();
+}
+
+
 
 MAF_REGISTER_TEST(mafEventBridgeVTKTest);
 #include "mafEventBridgeVTKTest.moc"
