@@ -72,7 +72,7 @@ void mafEventBridgeVTK::initializeEventBridge() {
 
 void mafEventBridgeVTK::leftButtonPressEvent() {
     getModifiers();
-    bool pick = vmePickCheck();
+    vmePickCheck();
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.leftButtonPress", mafEventTypeLocal, &argList);
@@ -80,7 +80,7 @@ void mafEventBridgeVTK::leftButtonPressEvent() {
 
 void mafEventBridgeVTK::leftButtonReleaseEvent() {
     getModifiers();
-    bool pick = vmePickCheck();
+    vmePickCheck();
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.leftButtonRelease", mafEventTypeLocal, &argList);
@@ -88,7 +88,7 @@ void mafEventBridgeVTK::leftButtonReleaseEvent() {
 
 void mafEventBridgeVTK::middleButtonPressEvent() {
     getModifiers();
-    bool pick = vmePickCheck();
+    vmePickCheck();
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.middleButtonPress", mafEventTypeLocal, &argList);
@@ -96,7 +96,7 @@ void mafEventBridgeVTK::middleButtonPressEvent() {
 
 void mafEventBridgeVTK::middleButtonReleaseEvent() {
     getModifiers();
-    bool pick = vmePickCheck();
+    vmePickCheck();
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.middleButtonRelease", mafEventTypeLocal, &argList);
@@ -104,7 +104,7 @@ void mafEventBridgeVTK::middleButtonReleaseEvent() {
 
 void mafEventBridgeVTK::rightButtonPressEvent() {
     getModifiers();
-    bool pick = vmePickCheck();
+    vmePickCheck();
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.rightButtonPress", mafEventTypeLocal, &argList);
@@ -112,7 +112,7 @@ void mafEventBridgeVTK::rightButtonPressEvent() {
 
 void mafEventBridgeVTK::rightButtonReleaseEvent() {
     getModifiers();
-    bool pick = vmePickCheck();
+    vmePickCheck();
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.rightButtonRelease", mafEventTypeLocal, &argList);
@@ -140,7 +140,7 @@ void mafEventBridgeVTK::keyPressEvent() {
 }
 
 void mafEventBridgeVTK::keyReleaseEvent() {
-    bool pick = vmePickCheck();
+    vmePickCheck();
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.keyRelease", mafEventTypeLocal, &argList);
@@ -169,7 +169,7 @@ void mafEventBridgeVTK::mouseWheelForwardEvent() {
 
 void mafEventBridgeVTK::mouseWheelBackwardEvent() {
     getModifiers();
-    bool pick = vmePickCheck();
+    vmePickCheck();
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseWheelBackward", mafEventTypeLocal, &argList);
@@ -177,7 +177,7 @@ void mafEventBridgeVTK::mouseWheelBackwardEvent() {
 
 void mafEventBridgeVTK::pickEvent() {
     getModifiers();
-    bool pick = vmePickCheck();
+    vmePickCheck();
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.pick", mafEventTypeLocal, &argList);
@@ -209,8 +209,7 @@ void mafEventBridgeVTK::getModifiers() {
     }
 }
 
-bool mafEventBridgeVTK::vmePickCheck() {
-    bool picked = false;
+void mafEventBridgeVTK::vmePickCheck() {
     int mousePosX = 0;
     int mousePosY = 0;
     double posPicked[3];
@@ -236,7 +235,5 @@ bool mafEventBridgeVTK::vmePickCheck() {
         argList.append(mafEventArgument(unsigned long, m_Modifiers));
         argList.append(mafEventArgument(mafCore::mafContainerInterface *, actorPicked));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePick", mafEventTypeLocal, &argList);
-        picked = true;
     }
-    return picked;
 }
