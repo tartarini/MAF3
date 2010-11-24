@@ -12,7 +12,7 @@ def buildVS2008():
     module = param['module']
     suffix = 'Test'
     
-    flagTest = param['enable-test']
+    flagTest = param['test']
 
     if(flagTest):
         dirList = os.listdir(module)
@@ -86,7 +86,7 @@ def buildMingw():
     module = param['module']
     suffix = 'Test'
     
-    flagTest = param['enable-test']
+    flagTest = param['test']
 
     if(flagTest):
         dirList = os.listdir(module)
@@ -153,7 +153,7 @@ def buildGCC4():
     module = param['module']
     suffix = 'Test'
     
-    flagTest = param['enable-test']
+    flagTest = param['test']
     
     if(flagTest):
         dirList = os.listdir(module)
@@ -311,14 +311,14 @@ def usage():
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hm:c:d:t", ["help", "module=", "compiler=", "directory=", "enable-Test"])
+        opts, args = getopt.getopt(sys.argv[1:], "hm:c:d:t", ["help", "module=", "compiler=", "directory=", "test"])
     except getopt.GetoptError, err:
         # print help information and exit:
         print str(err) # will print something like "option -a not recognized"
         usage()
         sys.exit(2)
 
-    param['enable-test'] = False
+    param['test'] = False
     
     for o, a in opts:
         if o in ("-h", "--help"):
@@ -330,8 +330,8 @@ def main():
             param['module'] = a
         elif o in ("-d", "--directory"):
             param['directory'] = os.path.normpath(a)
-        elif o in ("-t", "--directory"):
-            param['enable-test'] = True
+        elif o in ("-t", "--test"):
+            param['test'] = True
         else:
             assert False, "unhandled option"
     
