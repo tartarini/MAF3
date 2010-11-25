@@ -97,7 +97,8 @@ void mafVME::setDataPipe(mafDataPipe *pipe) {
 
 void mafVME::execute() {
     if(m_DataPipe) {
-        m_DataPipe->updatePipe(dataSetCollection()->timeStamp());
+        double timeStamp = dataSetCollection()->timeStamp();
+        m_DataPipe->output(timeStamp);
     }
 }
 
