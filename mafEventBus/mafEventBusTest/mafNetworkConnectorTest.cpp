@@ -27,10 +27,10 @@ public:
     testNetworkConnectorCustom();
 
     /// Create and initialize client
-    /*virtual*/ void createClient(mafString hostName, unsigned int port);
+    /*virtual*/ void createClient(const mafString hostName, const unsigned int port);
 
     /// Return the string variable initializated and updated from the data pipe.
-    /*virtual*/ void createServer(unsigned int port);
+    /*virtual*/ void createServer(const unsigned int port);
 
     /// Allow to send a network request.
     /*virtual*/ void send(const mafString event_id, mafEventArgumentsList *params);
@@ -62,7 +62,7 @@ testNetworkConnectorCustom::testNetworkConnectorCustom() : mafNetworkConnector()
      m_Protocol = "FakeProtocol";
 }
 
-void testNetworkConnectorCustom::createServer(unsigned int port) {
+void testNetworkConnectorCustom::createServer(const unsigned int port) {
     m_ConnectorStatus = "Server Created - Port: ";
     m_ConnectorStatus.append(mafString::number(port));
 }
@@ -71,7 +71,7 @@ void testNetworkConnectorCustom::startListen() {
     m_ConnectorStatus = "Server Listening";
 }
 
-void testNetworkConnectorCustom::createClient(mafString hostName, unsigned int port) {
+void testNetworkConnectorCustom::createClient(const mafString hostName, const unsigned int port) {
     m_ConnectorStatus = "Client Created - Host: ";
     m_ConnectorStatus.append(hostName);
     m_ConnectorStatus.append(" Port: ");
