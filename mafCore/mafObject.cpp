@@ -16,7 +16,7 @@
 
 using namespace mafCore;
 
-mafObject::mafObject(const mafString code_location) : mafObjectBase(code_location), m_UIFilename(""), m_TagList(NULL), m_Dictionary(NULL) {
+mafObject::mafObject(const mafString code_location) : mafObjectBase(code_location), m_Modified(false), m_UIFilename(""), m_TagList(NULL), m_Dictionary(NULL) {
     m_TagList = new mafTagList();
     m_Dictionary = new mafDictionary;
 }
@@ -27,6 +27,9 @@ mafObject::~mafObject() {
     mafDEL(m_Dictionary);
 }
 
+void mafObject::setModified(bool m) {
+    m_Modified = m;
+}
 
 mafMemento *mafObject::createMemento() const {
     return new mafMementoObject(this, m_TagList, m_Dictionary, mafCodeLocation);
