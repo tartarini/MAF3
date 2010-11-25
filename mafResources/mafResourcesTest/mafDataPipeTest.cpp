@@ -110,11 +110,14 @@ void mafDataPipeTest::mafDataPipeCreationAndUpdateTest() {
     mafString res("Created");
     m_DataPipe->createPipe();
 
-    QCOMPARE(m_DataPipe->pipeline(), res);
+    mafString pipe = m_DataPipe->pipeline();
+    QCOMPARE(pipe, res);
 
     res = "Updated1";
+    m_DataPipe->setModified();
     m_DataPipe->output(1);
-    QCOMPARE(m_DataPipe->pipeline(), res);
+    pipe = m_DataPipe->pipeline();
+    QCOMPARE(pipe, res);
 }
 
 void mafDataPipeTest::decorateTest() {
