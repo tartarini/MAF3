@@ -77,9 +77,8 @@ void mafViewVTK::showVME(mafVME *vme, bool show, const mafString visualPipeType)
 
     if (node != NULL) {
         mafContainer<vtkActor> *actor = mafContainerPointerTypeCast(vtkActor, node->visualPipe()->output());
-
+        m_Renderer->AddActor(*actor);
         if ((*actor)->GetVisibility() == 0) {
-            m_Renderer->AddActor(*actor);
             // To be revised.
             //node->m_IsRendered = true;
         }
