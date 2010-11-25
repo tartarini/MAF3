@@ -21,11 +21,9 @@
 
 #include <vtkPolyData.h>
 #include <vtkActor.h>
-#include <vtkPoints.h>
-#include <vtkFloatArray.h>
-#include <vtkCellArray.h>
-#include <vtkPointData.h>
+#include <vtkCubeSource.h>
 #include <vtkRenderWindow.h>
+#include <vtkAlgorithmOutput.h>
 
 #include <vtkSphereSource.h>
 #include <vtkTransform.h>
@@ -68,75 +66,60 @@ private slots:
         m_View->setRenderingWindow(&m_RenWin);
         
         // Create a polydata.
-        vtkPolyData *surface = vtkPolyData::New();
-        vtkPoints *points = vtkPoints::New();
-        vtkCellArray *polys = vtkCellArray::New();
-        vtkFloatArray *scalars = vtkFloatArray::New();
+        m_DataSource = vtkCubeSource::New();
+        m_DataSource->SetXLength(5);
+        m_DataSource->SetYLength(3);
+        m_DataSource->SetZLength(8);
 
-        int i;
-        static float x[8][3]={{0,0,0}, {1,0,0}, {1,1,0}, {0,1,0},
-                        {0,0,1}, {1,0,1}, {1,1,1}, {0,1,1}};
-        static vtkIdType pts[6][4]={{0,1,2,3}, {4,5,6,7}, {0,1,5,4},
-                        {1,2,6,5}, {2,3,7,6}, {3,0,4,7}};
-        for (i=0; i<8; i++) points->InsertPoint(i,x[i]);
-        for (i=0; i<6; i++) polys->InsertNextCell(4,pts[i]);
-        for (i=0; i<8; i++) scalars->InsertTuple1(i,i);
+        m_DataSourceContainer.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
+        m_DataSourceContainer.setExternalDataType("vtkAlgorithmOutput");
+        m_DataSourceContainer = m_DataSource->GetOutputPort(0);
 
-        // We now assign the pieces to the vtkPolyData.
-        surface->SetPoints(points);
-        surface->SetPolys(polys);
-        surface->GetPointData()->SetScalars(scalars);
-        points->Delete();
-        polys->Delete();
-        scalars->Delete();
-        
-        // First test VME
-        m_VmeCube = mafNEW(mafResources::mafVME);
-        m_Container.setDestructionFunction(&vtkPolyData::Delete);
-        m_Container = surface;
-        mafDataSet *dataSetCube = mafNEW(mafResources::mafDataSet);
-        dataSetCube->setDataValue(&m_Container);
         //Insert data into VME
-        m_VmeCube->dataSetCollection()->insertItem(dataSetCube);
+        m_VmeCube = mafNEW(mafResources::mafVME);
+        m_DataSetCube = mafNEW(mafResources::mafDataSet);
+        m_DataSetCube->setDataValue(&m_DataSourceContainer);
+        m_VmeCube->dataSetCollection()->insertItem(m_DataSetCube, 0);
 
         // Second test VME
-        vtkPolyData *surfaceMoved = vtkPolyData::New();
-        surfaceMoved->DeepCopy(surface);
-        surfaceMoved->Update();
+        m_DataSourceMoved = vtkCubeSource::New();
+        m_DataSourceMoved->SetXLength(5);
+        m_DataSourceMoved->SetYLength(3);
+        m_DataSourceMoved->SetZLength(8);
 
         vtkTransform *t = vtkTransform::New();
         t->RotateZ(50);
         t->RotateX(50);
         t->Update();
 
-        vtkTransformPolyDataFilter *ptf = vtkTransformPolyDataFilter::New();
-        ptf->SetTransform(t);
-        ptf->SetInput(surfaceMoved);
-        ptf->Update();
+        m_PDataFilter = vtkTransformPolyDataFilter::New();
+        m_PDataFilter->SetTransform(t);
+        m_PDataFilter->SetInputConnection(m_DataSourceMoved->GetOutputPort(0));
+        m_PDataFilter->Update();
         t->Delete();
 
-        surfaceMoved->DeepCopy(ptf->GetOutput());
-        surfaceMoved->Update();
-        ptf->Delete();
+        m_DataSourceContainerMoved.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
+        m_DataSourceContainerMoved.setExternalDataType("vtkAlgorithmOutput");
+        m_DataSourceContainerMoved = m_PDataFilter->GetOutputPort(0);
+        m_DataSetCubeMoved = mafNEW(mafResources::mafDataSet);
+        m_DataSetCubeMoved->setDataValue(&m_DataSourceContainerMoved);
 
         m_VmeCubeMoved = mafNEW(mafResources::mafVME);
-        m_ContainerMoved.setDestructionFunction(&vtkPolyData::Delete);
-        m_ContainerMoved = surfaceMoved;
-        mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
-        dataSet->setDataValue(&m_ContainerMoved);
-        //Insert data into VME
-        m_VmeCubeMoved->dataSetCollection()->insertItem(dataSet);
+        m_VmeCubeMoved->dataSetCollection()->insertItem(m_DataSetCubeMoved, 0);
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
 
         // PROBLEM ON DESTRUCTION OF THE RENDERER!!!!!!
-
         mafDEL(m_View);
+        mafDEL(m_DataSetCube);
+        mafDEL(m_DataSetCubeMoved);
         mafDEL(m_VmeCube);
         mafDEL(m_VmeCubeMoved);
-
+        m_PDataFilter->Delete();
+        m_DataSource->Delete();
+        m_DataSourceMoved->Delete();
         mafCoreSingletons::mafSingletonsShutdown();
     }
 
@@ -151,19 +134,24 @@ private:
     mafCore::mafContainer<vtkRenderWindow> m_RenWin; ///< Test RenderWindow.
     mafVME *m_VmeCube; ///< Test var.
     mafVME *m_VmeCubeMoved; ///< Test var.
-    mafContainer<vtkPolyData> m_Container; ///< Test var.
-    mafContainer<vtkPolyData> m_ContainerMoved; ///< Test var.
+    vtkCubeSource *m_DataSource;
+    vtkCubeSource *m_DataSourceMoved;
+    vtkTransformPolyDataFilter *m_PDataFilter; ///< Filter used to transform the bounding box.
+    mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
+    mafContainer<vtkAlgorithmOutput> m_DataSourceContainerMoved; ///< Container of the Data S
+    mafResources::mafDataSet *m_DataSetCube;
+    mafResources::mafDataSet *m_DataSetCubeMoved;
 };
 
 void mafViewVTKTest::mafViewVTKAllocationTest() {
-    //QVERIFY(m_View != NULL);
+    QVERIFY(m_View != NULL);
 }
 
 void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     //! <snippet>
     m_View->create();
-    /*m_View->addVME(m_VmeCube);
-    m_View->plugVisualPipe("vtkPolyData","mafPluginVTK::mafVisualPipeVTKSurface");
+    m_View->addVME(m_VmeCube);
+    m_View->plugVisualPipe("vtkAlgorithmOutput","mafPluginVTK::mafVisualPipeVTKSurface");
     //! </snippet>
     // Visualize first cube
     m_View->showVME(m_VmeCube, true);
@@ -177,7 +165,7 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     QTest::qSleep(2000);
 
     // Remove VME
-    m_View->removeVME(m_VmeCube);*/
+    m_View->removeVME(m_VmeCube);
 }
 
 
