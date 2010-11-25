@@ -21,11 +21,12 @@ void mafCoreSingletons::mafSingletonsInitialize() {
     mafObjectFactory::instance();
     mafMessageHandler::instance();
     mafCoreRegistration::registerCoreObjects();
+    mafMessageHandler::instance()->installMessageHandler();
 }
 
 void mafCoreSingletons::mafSingletonsShutdown() {
-    mafMessageHandler::instance()->shutdown();
     mafObjectRegistry::instance()->shutdown();
+    mafMessageHandler::instance()->shutdown();
     mafObjectFactory::instance()->shutdown();
     mafIdProvider::instance()->shutdown();
 }

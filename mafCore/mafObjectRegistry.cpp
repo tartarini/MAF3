@@ -23,11 +23,10 @@ mafObjectRegistry* mafObjectRegistry::instance() {
 }
 
 void mafObjectRegistry::shutdown() {
-
+    mafObjectRegistry::instance()->dumpLiveObjects();
 }
 
 mafObjectRegistry::~mafObjectRegistry() {
-    mafObjectRegistry::instance()->dumpLiveObjects();
 }
 
 void mafObjectRegistry::addObject(mafObjectBase *obj, const mafString location) {
