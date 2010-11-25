@@ -119,7 +119,6 @@ private slots:
         mafDEL(m_CustomManager);
         mafDEL(m_Codec);
         m_DataSource->Delete();
-        mafCoreSingletons::mafSingletonsShutdown();
         mafEventBusManager::instance()->shutdown();
     }
 

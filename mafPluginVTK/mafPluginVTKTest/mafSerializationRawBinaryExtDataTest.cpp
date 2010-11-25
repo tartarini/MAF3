@@ -180,7 +180,6 @@ private slots:
         m_PDataFilter->Delete();
         m_DataSource->Delete();
         m_DataSourceMoved->Delete();
-        mafCoreSingletons::mafSingletonsShutdown();
         mafEventBusManager::instance()->shutdown();
     }
 
