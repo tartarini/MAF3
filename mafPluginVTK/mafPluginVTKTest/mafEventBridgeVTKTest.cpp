@@ -380,5 +380,5 @@ void mafEventBridgeVTKTest::mafEventBridgeVTKMiddleButtonReleaseTest() {
 
 
 
-//MAF_REGISTER_TEST(mafEventBridgeVTKTest);
+MAF_REGISTER_TEST(mafEventBridgeVTKTest);
 #include "mafEventBridgeVTKTest.moc"
