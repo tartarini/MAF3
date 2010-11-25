@@ -51,7 +51,7 @@ void mafViewVTK::create() {
     (*m_RenWin)->SetSize(640, 480);
     (*m_RenWin)->SetPosition(400,0);
 
-    //m_EventBridge->setInteractor(m_Iren);
+    m_EventBridge->setInteractor(m_Iren);
 }
 
 void mafViewVTK::removeVME(mafVME *vme) {
