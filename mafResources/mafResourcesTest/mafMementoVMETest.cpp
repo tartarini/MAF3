@@ -137,9 +137,7 @@ void testDataPipe::createPipe() {
 void testDataPipe::updatePipe(double t) {
     m_PipeLine = "Updated";
     m_PipeLine.append(mafString::number(t));
-    if(m_DecoratorPipe) {
-        m_DecoratorPipe->updatePipe(t);
-    }
+    m_Output = inputList()->at(0);
 }
 
 //------------------------------------------------------------------------------------------

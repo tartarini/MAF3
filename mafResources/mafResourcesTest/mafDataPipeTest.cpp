@@ -35,7 +35,7 @@ public:
     /// Initialize and create the pipeline
     /*virtual*/ void createPipe();
 
-    /// Return the string variable initializated and updated from the data pipe.
+    /// Return the string variable initialized and updated from the data pipe.
     mafString pipeline() {return m_PipeLine;}
 
 public slots:
@@ -56,9 +56,7 @@ void testDataPipeCustom::createPipe() {
 void testDataPipeCustom::updatePipe(double t) {
     m_PipeLine = "Updated";
     m_PipeLine.append(mafString::number(t));
-    if(m_DecoratorPipe) {
-        m_DecoratorPipe->updatePipe(t);
-    }
+    m_Output = inputList()->at(0);
 }
 
 //------------------------------------------------------------------------------------------
@@ -74,12 +72,15 @@ private slots:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
+        mafResourcesRegistration::registerResourcesObjects();
         m_DataPipe = mafNEW(testDataPipeCustom);
+        m_Vme = mafNEW(mafResources::mafVME);
+        m_Vme->setDataPipe(m_DataPipe);
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        mafDEL(m_DataPipe);
+        mafDEL(m_Vme);
     }
 
     /// mafDataPipe allocation test case.
@@ -90,10 +91,15 @@ private slots:
     /// Test the data pipe decoration mechanism.
     void decorateTest();
 
-    void addRemoveInput();
+    /// Test add and remove input
+    void addRemoveInputTest();
+
+    /// Test add and remove input
+    void outputTest();
 
 private:
     testDataPipeCustom *m_DataPipe; ///< Test var.
+    mafVME *m_Vme; ///< vme assigned to the data pipe
 };
 
 void mafDataPipeTest::mafDataPipeAllocationTest() {
@@ -107,24 +113,23 @@ void mafDataPipeTest::mafDataPipeCreationAndUpdateTest() {
     QCOMPARE(m_DataPipe->pipeline(), res);
 
     res = "Updated1";
-    m_DataPipe->updatePipe(1);
+    m_DataPipe->output(1);
     QCOMPARE(m_DataPipe->pipeline(), res);
 }
 
 void mafDataPipeTest::decorateTest() {
     // Instantiate and create the decorator data pipe.
     testDataPipeCustom *dpDecorator = mafNEW(testDataPipeCustom);
-    dpDecorator->createPipe();
+//    dpDecorator->createPipe();
     mafString res("Updated1");
-    mafDataPipe *dp = m_DataPipe->decorateWithDataPipe(dpDecorator);
-    QVERIFY(dp == dpDecorator);
-
-    m_DataPipe->updatePipe(1);
+    m_DataPipe->decorateWithDataPipe(dpDecorator);
+    
+    m_DataPipe->output(1);
     QCOMPARE(dpDecorator->pipeline(), res);
     mafDEL(dpDecorator);
 }
 
-void mafDataPipeTest::addRemoveInput() {
+void mafDataPipeTest::addRemoveInputTest() {
     int num = 0;
 
     mafDataSet *data1 = mafNEW(mafResources::mafDataSet);
@@ -141,20 +146,20 @@ void mafDataPipeTest::addRemoveInput() {
     // Check if vme1 has been added.
     m_DataPipe->addInput(vme1);
     num = m_DataPipe->inputList()->length();
-    QVERIFY(num == 1);
+    QVERIFY(num == 2);
 
     // Check if vme2 has been added.
     m_DataPipe->addInput(vme2);
     num = m_DataPipe->inputList()->length();
-    QVERIFY(num == 2);
+    QVERIFY(num == 3);
 
     // Check if vme1 has been removed.
-    m_DataPipe->removeInput(0);
+    m_DataPipe->removeInput(1);
     num = m_DataPipe->inputList()->length();
-    QVERIFY(num == 1);
+    QVERIFY(num == 2);
 
     // Get the vme2
-    mafVME *vme = m_DataPipe->inputList()->at(0);
+    mafVME *vme = m_DataPipe->inputList()->at(1);
     QCOMPARE(vme, vme2);
 
     // Delete VMEs: they will removed from inputList
@@ -164,8 +169,20 @@ void mafDataPipeTest::addRemoveInput() {
     mafDEL(vme2);
 
     num = m_DataPipe->inputList()->length();
-    QVERIFY(num == 0);
+    QVERIFY(num == 1);
+}
 
+void mafDataPipeTest::outputTest() {
+    // Instantiate and create the decorator data pipe.
+    mafVME *vme1 = mafNEW(mafResources::mafVME);
+    testDataPipeCustom *dp = mafNEW(testDataPipeCustom);
+    vme1->setDataPipe(dp);
+    dp->createPipe();
+    mafVME *out = dp->output();
+    
+    QCOMPARE(out, vme1);
+    //mafDEL(dp); //NEXT STEP IS TO USE SMART POINTER
+    mafDEL(vme1);
 }
 
 MAF_REGISTER_TEST(mafDataPipeTest);
