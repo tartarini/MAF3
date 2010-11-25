@@ -42,17 +42,17 @@ public:
     int addInput(mafVME *vme);
 
     /// Allow to add mafDataPipe to extend the elaboration following the pattern decorator.
-    /** This method allows to compose data pipes funcionalities according to the decorator pattern and
+    /** This method allows to compose data pipes functionalities according to the decorator pattern and
     return the pointer to the decorator pipe, so you can add another decorator pipe in cascade.*/
-    mafDataPipe *decorateWithDataPipe(mafDataPipe *pipe);
+    void decorateWithDataPipe(mafDataPipe *pipe);
 
     /// Set to false, to create a new mafVME as output of the dataPipe
     void setWorksInPlace(bool inPlace);
 
-    /// Get output of the pipe.
-    mafVME *output();
+    /// Get output of the pipe at a specific time
+    mafVME *output(double t = -1);
 
-public slots:
+protected slots:
     /// Allow to execute and update the pipeline when something change.
     /** By default it simply initialize the output with the first element in the input list.*/
     /*virtual*/ void updatePipe(double t = -1);
@@ -72,9 +72,10 @@ protected:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline mafDataPipe *mafDataPipe::decorateWithDataPipe(mafDataPipe *pipe) {
+inline void mafDataPipe::decorateWithDataPipe(mafDataPipe *pipe) {
+    pipe->createPipe();
+    pipe->setInput(this->output());
     m_DecoratorPipe = pipe;
-    return m_DecoratorPipe;
 }
 
 inline void mafDataPipe::setWorksInPlace(bool inPlace) {

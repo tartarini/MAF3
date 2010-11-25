@@ -46,14 +46,21 @@ void mafDataPipe::inputDestroyed() {
 
 void mafDataPipe::updatePipe(double t) {
     Q_UNUSED(t);
+    //here update local output
     m_Output = inputList()->at(0);
 }
 
-mafVME *mafDataPipe::output() {
+mafVME *mafDataPipe::output(double t) {
     REQUIRE(inputList()->count() > 0);
-    if(m_Output == NULL) {
-        updatePipe();
+    if(m_DecoratorPipe) {
+        updatePipe(t);
+        return m_DecoratorPipe->output(t); 
     }
+
+    if(m_Output == NULL) {
+        updatePipe(t);
+    }
+
     ENSURE(m_Output != NULL);
     return m_Output;
 }
