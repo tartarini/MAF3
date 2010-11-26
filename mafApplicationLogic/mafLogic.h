@@ -28,8 +28,9 @@ namespace mafApplicationLogic {
  It allows to instantiate all the managers, and use initialization of mafLogicLight.
  This logic class can be used with those applications that needs of a complete version of the framework
  using plugin and resources.
- mafLogic defines also the topic:
- - maf.local.logic.settings.viewmanager.store that allows to ask the mafViewManager to store its settings into a memento that will be serialized.
+ mafLogic defines also these topics:
+  - maf.local.logic.openFile that allow to notify the request to open the given filename passed ar argument.
+  - maf.local.logic.settings.viewmanager.store that allows to ask the mafViewManager to store its settings into a memento that will be serialized.
  - maf.local.logic.settings.viewmanager.restore that allows to ask the mafViewManager to restore a previous saved state of the application's settings.
  - maf.local.logic.settings.vmemanager.store that allows to ask the mafVmeManager to store its settings into a memento that will be serialized.
  - maf.local.logic.settings.vmemanager.restore that allows to ask the mafVmeManager to restore a previous saved state of the application's settings.
@@ -66,8 +67,8 @@ signals:
     /// Signal used to ask the view manager to store its settings.
     void settingsViewManagerStore();
 
-    /// Signal used to ask the vme manager to store its settings.
-//    void settingsVmeManagerStore();
+    /// Signal emitted when a recent file is asked to be opened. The argument of the signal contains the filename.
+    void openFile(const mafString filename);
 
     /// Signal used to ask the view managers to restore their settings.
     void settingsViewManagerRestore(mafCore::mafMemento *memento, bool deep);
