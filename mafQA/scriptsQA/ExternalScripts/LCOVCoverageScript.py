@@ -2,20 +2,21 @@ import sys
 import os
 #import time
 
+currentPathScript = os.path.split(os.path.realpath(__file__))[0]
+modulesDir = os.path.abspath(os.path.join(currentPathScript, "..", "..", ".."))
 currentModule = ""
 
 def usage():
     print "Usage:  python LCOVCoverageScript.py <moduleName>"
 
 def createCoverageReport():
-    extScriptDir = os.getcwd()
-    os.chdir("../../..")
-    baseDir = os.getcwd()
-    moduleDir = baseDir + "/" + currentModule
-    testDir = moduleDir + "/" + currentModule + "Test"
-    binDir = baseDir + "/../Install/bin/Debug"
-    qaResultsDir = baseDir + "/QAResults"
-    LCOVExternalCoverageDir = qaResultsDir + "/externalLCOVCoverage" 
+    extScriptDir = currentPathScript
+    baseDir = modulesDir
+    moduleDir = os.path.join(baseDir,currentModule)
+    testDir = os.path.join(moduleDir, currentModule + "Test")
+    binDir = os.path.join(baseDir, "..", "Install", "bin", "Debug")
+    qaResultsDir = os.path.join(baseDir, "QAResults")
+    LCOVExternalCoverageDir = os.path.join(qaResultsDir, "externalLCOVCoverage")
 
     if(os.path.exists(moduleDir) == False):
         print "Module Dir doesn't exist %s" % moduleDir
@@ -36,8 +37,7 @@ def createCoverageReport():
     if(os.path.exists(LCOVExternalCoverageDir) == False):
         os.mkdir(LCOVExternalCoverageDir);
 
-    moduleCoverageReportDir = LCOVExternalCoverageDir + "/" + currentModule +"Coverage" 
-        
+    moduleCoverageReportDir = os.path.join(LCOVExternalCoverageDir, currentModule +"Coverage")
 
     os.system("rm -fR "+ moduleCoverageReportDir)
     os.mkdir(moduleCoverageReportDir);
@@ -59,7 +59,7 @@ def createCoverageReport():
 
     dirList = os.listdir(moduleDir)
     for d in dirList:
-        fullPathD = moduleDir + "/" + d
+        fullPathD = os.path.join(moduleDir, d)
         if os.path.isdir(fullPathD) == True:
             os.chdir(fullPathD)
             os.system("find . -type f -name '*.gcno' -print | xargs /bin/rm -f")
