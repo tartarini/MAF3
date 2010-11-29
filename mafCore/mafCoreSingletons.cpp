@@ -21,7 +21,6 @@ void mafCoreSingletons::mafSingletonsInitialize() {
     mafObjectFactory::instance();
     mafMessageHandler::instance();
     mafCoreRegistration::registerCoreObjects();
-    mafMessageHandler::instance()->installMessageHandler();
 }
 
 void mafCoreSingletons::mafSingletonsShutdown() {
