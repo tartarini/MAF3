@@ -25,12 +25,6 @@ mafTimeManager::mafTimeManager(const mafString code_location) : mafObjectBase(co
 }
 
 mafTimeManager::~mafTimeManager() {
-    mafTimerHash::iterator i;
-    for (i = m_TimerHash.begin(); i != m_TimerHash.end(); ++i) {
-        mafThreadedTimer *threadedTimer = i.value();
-        mafDEL(threadedTimer);
-    }
-    m_TimerHash.clear();
 }
 
 void mafTimeManager::initializeConnections() {
@@ -64,6 +58,12 @@ mafTimeManager* mafTimeManager::instance() {
 }
 
 void mafTimeManager::shutdown() {
+    mafTimerHash::iterator i;
+    for (i = m_TimerHash.begin(); i != m_TimerHash.end(); ++i) {
+        mafThreadedTimer *threadedTimer = i.value();
+        mafDEL(threadedTimer);
+    }
+    m_TimerHash.clear();
 }
 
 mafId mafTimeManager::createTimer(int interval, bool one_shot) {
