@@ -12,4 +12,4 @@
 #include "mafTestSuite.h"
 #include <QCoreApplication>
 
-MAF_TESTSUITE_MAIN()
+MAF_GUI_TESTSUITE_MAIN()
