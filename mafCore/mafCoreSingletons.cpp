@@ -25,7 +25,6 @@ void mafCoreSingletons::mafSingletonsInitialize() {
 
 void mafCoreSingletons::mafSingletonsShutdown() {
     mafMessageHandler::instance()->shutdown();
-    mafObjectRegistry::instance()->shutdown();
     mafObjectFactory::instance()->shutdown();
     mafIdProvider::instance()->shutdown();
 }
