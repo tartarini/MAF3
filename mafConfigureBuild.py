@@ -323,9 +323,9 @@ def removeDocDirectories():
     
 def generateDoc():
     removeDocDirectories()
-    commandDoc = os.path.join(param[doxygenPath], "doxygen") + " " + "MAF3Doxyfile"
+    commandDoc = os.path.join(param['doxygenPath'], "doxygen") + " " + "MAF3Doxyfile"
     os.system(commandDoc)
-    commandDocWithTests = os.path.join(param[doxygenPath], "doxygen") + " " + "MAF3DoxyfileWithTests"
+    commandDocWithTests = os.path.join(param['doxygenPath'], "doxygen") + " " + "MAF3DoxyfileWithTests"
     os.system(commandDocWithTests)
     print "DOXY SUCCESSFUL"
         
