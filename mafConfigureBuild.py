@@ -382,7 +382,7 @@ def main():
     
     if(param['process'] == "code"):
          build()
-    elif (param['process'] == "doc")
+    elif (param['process'] == "doc"):
          generateDoc()
 
 if __name__ == "__main__":
