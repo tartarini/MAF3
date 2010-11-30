@@ -307,11 +307,8 @@ def removeDocDirectories():
     baseDir = param['directory']
     docDir = os.path.join(baseDir,"Doc")
     docWithTestsDir = os.path.join(baseDir, "DocWithTests")
-    qaResultDir = os.path.join(baseDir, "QAResult")
+    #qaResultDir = os.path.join(baseDir, "QAResult")
     
-    if os.path.exists(baseDir):
-        os.removedirs(baseDir)
-     
     if os.path.exists(docDir):
         os.removedirs(docDir)
      
