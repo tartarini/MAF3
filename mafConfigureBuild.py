@@ -224,25 +224,25 @@ def errhandler():
 
 def createBinDirectories():
     baseDir = param['directory']
-    binDir = baseDir + "/bin"
-    includeDir = baseDir + "/include"
-    debugDir = binDir + "/Debug"
-    releaseDir = binDir + "/Release"
+    binDir = os.path.join(baseDir,"bin")
+    includeDir = os.path.join(baseDir, "include")
+    debugDir = os.path.join(binDir, "Debug")
+    releaseDir = os.path.join(binDir, "Release")
     
     if not os.path.exists(baseDir):
-     os.makedirs(baseDir)
+        os.makedirs(baseDir)
      
     if not os.path.exists(binDir):
-     os.makedirs(binDir)
+        os.makedirs(binDir)
      
     if not os.path.exists(includeDir):
-     os.makedirs(includeDir)
+        os.makedirs(includeDir)
      
     if not os.path.exists(debugDir):
-     os.makedirs(debugDir)
+        os.makedirs(debugDir)
      
     if not os.path.exists(releaseDir):
-     os.makedirs(releaseDir)
+        os.makedirs(releaseDir)
      
     pass
 
@@ -251,10 +251,7 @@ def build():
     try:
         buildDir = param['directory']
     except:
-        if(param['compiler'] == 'gcc4'):
-            param['directory'] = currentPathScript + "/../Install"
-        else: 
-            param['directory'] = currentPathScript + "\\..\\Install"
+        param['directory'] = os.path.join(currentPathScript, ".." , "Install")
             
     #print param
     createBinDirectories()
@@ -305,13 +302,50 @@ def mafInstallTestCreate():
     new = currentPathScript.replace('\\','\\\\')
     f.write( re.sub(old,new,temp) )
     f.close()
+    
+def removeDocDirectories():
+    baseDir = param['directory']
+    docDir = os.path.join(baseDir,"Doc")
+    docWithTestsDir = os.path.join(baseDir, "DocWithTests")
+    qaResultDir = os.path.join(binDir, "QAResult")
+    
+    if os.path.exists(baseDir):
+        os.removedirs(baseDir)
+     
+    if os.path.exists(docDir):
+        os.removedirs(docDir)
+     
+    if os.path.exists(docWithTestsDir):
+        os.removedirs(docWithTestsDir)
+     
+    #if os.path.exists(qaResultDir):
+    #    os.removedirs(qaResultDir)
+      
+    pass
+    
+    
+def generateDoc():
+    removeDocDirectories()
+    commandDoc = os.path.join(param[doxygenPath], "doxygen") + " " + "MAF3Doxyfile"
+    os.system(commandDoc)
+    commandDocWithTests = os.path.join(param[doxygenPath], "doxygen") + " " + "MAF3DoxyfileWithTests"
+    os.system(commandDocWithTests)
+    print "DOXY SUCCESSFUL"
         
 def usage():
-    print "python mafBuild.py [-m moduleName] [-c vs2008 | mingw | gcc4] [-d directory]"
-
+    print "python mafBuild.py [-h] [-p code|doc] [-m moduleName] [-c vs2008 | mingw | gcc4] [-d directory] [-t] [-x doxygenPath]"
+    print "-h, --help				show help (this)"
+    print "-p, --process=	    	select modality of build, compile code or build documentation"
+    print "-m, --module=			select module to compile (used only if process is code)"
+    print "-c, --compiler=			select the compiler (used only if process is code)"
+    print "-d, --directory=			select output directory"
+    print "-t, --test				select if compile test of the selected module (used only if process is code)"
+    print "-x, --doxygen-path	set where the doxygen binary is present (used only if process is doc)"
+    print 
+    
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hm:c:d:t", ["help", "module=", "compiler=", "directory=", "test"])
+        opts, args = getopt.getopt(sys.argv[1:], "hp:m:c:d:tx:", ["help", "process=", "module=", "compiler=", "directory=", "test", "doxygen-path="])
     except getopt.GetoptError, err:
         # print help information and exit:
         print str(err) # will print something like "option -a not recognized"
@@ -319,11 +353,14 @@ def main():
         sys.exit(2)
 
     param['test'] = False
+    param['process'] = "code" #other option is doc
     
     for o, a in opts:
         if o in ("-h", "--help"):
             usage()
             sys.exit()
+        elif o in ("-p", "--process"):
+            param['process'] = a
         elif o in ("-c", "--compiler"):
             param['compiler'] = a
         elif o in ("-m", "--module"):
@@ -332,16 +369,21 @@ def main():
             param['directory'] = os.path.normpath(a)
         elif o in ("-t", "--test"):
             param['test'] = True
+        elif o in ("-x", "--doxygen-path"):
+            param['doxygenPath'] = os.path.normpath(a)
         else:
             assert False, "unhandled option"
     
+    #complete check of parameters needed    
     if(len(param) == 0):
         usage()
         #print currentPathScript
         return
     
-    
-    build()
+    if(param['process'] == "code"):
+         build()
+    elif (param['process'] == "doc")
+         generateDoc()
 
 if __name__ == "__main__":
   main()
