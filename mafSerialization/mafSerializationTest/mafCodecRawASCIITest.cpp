@@ -37,6 +37,7 @@ class mafCodecRawASCIITest: public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         m_ObjectTest = mafNEW(mafCore::mafObject);
         m_CodecRaw = mafNEW(mafSerialization::mafCodecRawASCII);
         m_List.push_back("one");

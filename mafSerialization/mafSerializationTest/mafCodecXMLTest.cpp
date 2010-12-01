@@ -36,6 +36,7 @@ class mafCodecXMLTest: public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         m_ObjectTest = mafNEW(mafCore::mafObject);
         m_CodecXML = mafNEW(mafSerialization::mafCodecXML);
         m_List.push_back("one");

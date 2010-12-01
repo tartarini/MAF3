@@ -36,6 +36,7 @@ class mafCodecRawBinaryTest: public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         m_ObjectTest = mafNEW(mafCore::mafObject);
         m_CodecRaw = mafNEW(mafSerialization::mafCodecRawBinary);
         m_List.push_back("one");
