@@ -95,6 +95,7 @@ class mafSerializationVTKTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         // Create before the instance of the Serialization manager, which will register signals.
         bool res(false);
         res = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
@@ -176,7 +177,6 @@ void mafSerializationVTKTest::mafSerializationVTKSaveTest() {
     QVERIFY(mafFile::exists(test_file));
     QFileInfo fInfo3(test_file);
     QVERIFY(fInfo3.size() > 0);
-
 
     encodeType = "VTK";
     argList.clear();

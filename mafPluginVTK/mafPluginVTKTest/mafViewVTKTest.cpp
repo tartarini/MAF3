@@ -53,6 +53,7 @@ private slots:
 
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
 
@@ -110,7 +111,6 @@ private slots:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-
         // PROBLEM ON DESTRUCTION OF THE RENDERER!!!!!!
         mafDEL(m_View);
         mafDEL(m_DataSetCube);
@@ -166,7 +166,6 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     // Remove VME
     m_View->removeVME(m_VmeCube);
 }
-
 
 MAF_REGISTER_TEST(mafViewVTKTest);
 #include "mafViewVTKTest.moc"

@@ -48,6 +48,7 @@ class mafDataBoundaryAlgorithmVTKTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
 
         // Create a polydata.

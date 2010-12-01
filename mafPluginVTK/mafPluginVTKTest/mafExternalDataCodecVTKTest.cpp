@@ -45,6 +45,7 @@ class mafExternalDataCodecVTKTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         //Create two codec
         m_CodecIn = mafNEW(mafPluginVTK::mafExternalDataCodecVTK);
         m_CodecOut = mafNEW(mafPluginVTK::mafExternalDataCodecVTK);
