@@ -3,6 +3,7 @@
 
 import os, sys
 import getopt
+import shutil
 
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
 param = {}
@@ -310,10 +311,10 @@ def removeDocDirectories():
     #qaResultDir = os.path.join(baseDir, "QAResult")
     
     if os.path.exists(docDir):
-        os.removedirs(docDir)
+        shutil.rmtree(docDir)
      
     if os.path.exists(docWithTestsDir):
-        os.removedirs(docWithTestsDir)
+        shutil.rmtree(docWithTestsDir)
      
     #if os.path.exists(qaResultDir):
     #    os.removedirs(qaResultDir)
@@ -325,7 +326,7 @@ def generateDoc():
     removeDocDirectories()
     commandDoc = "\"" + os.path.join(param['doxygenPath'], "doxygen") + "\" " + "MAF3Doxyfile"
     os.system(commandDoc)
-    commandDoc = "\"" + os.path.join(param['doxygenPath'], "doxygen") + "\" " + "MAF3DoxyfileWithTests"
+    commandDocWithTests = "\"" + os.path.join(param['doxygenPath'], "doxygen") + "\" " + "MAF3DoxyfileWithTests"
     os.system(commandDocWithTests)
     print "DOXY SUCCESSFUL"
         
