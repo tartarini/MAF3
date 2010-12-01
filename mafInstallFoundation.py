@@ -22,6 +22,14 @@ def createFoundationDirectories():
         os.makedirs(foundationDir)
     pass
 
+def downloadFromBiomedtown():
+    print "Download from biomedtown..."
+    pass
+
+def createEnvironmentVariables():
+    print "Create Environment variables..."
+    pass
+
 def gitDownloadFromCTKRepository():
     mafRootDir = currentPathScript
     eventBusDir = os.path.join(mafRootDir, "org.commontk.eventbus")
@@ -51,10 +59,12 @@ def extractFromLocalCTK():
         shutil.rmtree(mafEventBusDir)
     
     shutil.copytree(ctkEventBus, mafEventBusDir)
-    
+
     
 def install():
     createFoundationDirectories()
+    downloadFromBiomedtown()
+    createEnvironmentVariables()
     gitDownloadFromCTKRepository()
     extractFromLocalCTK()
           
