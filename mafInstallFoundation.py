@@ -31,6 +31,7 @@ def createEnvironmentVariables():
     pass
 
 def gitDownloadFromCTKRepository():
+    print "Download from CTK repository..."
     mafRootDir = currentPathScript
     eventBusDir = os.path.join(mafRootDir, "org.commontk.eventbus")
     ctkRepository = "git://github.com/dgiunchi/CTK.git"
@@ -51,10 +52,11 @@ def gitDownloadFromCTKRepository():
     
         
 def extractFromLocalCTK():
+    print "Extract module from CTK..."
     mafRootDir = currentPathScript
     mafEventBusDir = os.path.join(mafRootDir, "ctkEventBus")
     ctkLocalDir = os.path.join(param['foundation-output-dir'], "CTK")
-    ctkEventBus = os.path.join(ctkLocalDir, "Plugins", "org.commontk.eventbus")
+    ctkEventBus = os.path.join(ctkLocalDir, "Plugins", "org.commontk.eventbus", "mafEventBus")
     if os.path.exists(mafEventBusDir):
         shutil.rmtree(mafEventBusDir)
     
