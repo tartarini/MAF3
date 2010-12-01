@@ -53,7 +53,7 @@ public:
     bool enabled() const {return m_Enabled;}
 
     /// Method used to log the given message into the specific ouput stream.
-    void logMessage(const mafMsgType type, const mafString &msg);
+    void logMessage(const mafMsgType type, mafString &msg);
 
     /// Clear all the logged messages until now.
     virtual void clearLogHistory() = 0;
