@@ -28,6 +28,9 @@ void mafLogger::logMessage(const mafMsgType type, const mafString &msg) {
             type == mafMsgTypeFatal ||
             type == mafMsgTypeWarning);
 
+    if(type == mafMsgCritical) {
+        msg.prepend(mafTr("FAIL! "));
+    }
     loggedMessage(type, msg);
 }
 
