@@ -22,14 +22,15 @@ void mafLogger::setLogMode(const mafLogMode mode) {
     }
 }
 
-void mafLogger::logMessage(const mafMsgType type, const mafString &msg) {
+void mafLogger::logMessage(const mafMsgType type, mafString &msg) {
     REQUIRE(type == mafMsgTypeCritical ||
             type == mafMsgTypeDebug ||
             type == mafMsgTypeFatal ||
             type == mafMsgTypeWarning);
 
-    if(type == mafMsgCritical) {
-        msg.prepend(mafTr("FAIL! "));
+    if(type == mafMsgTypeCritical && m_LogMode != mafLogModeTestSuite) {
+        mafString failString(mafTr("FAIL! "));
+        msg.prepend(failString);
     }
     loggedMessage(type, msg);
 }
