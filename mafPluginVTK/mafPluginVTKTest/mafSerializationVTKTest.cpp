@@ -100,6 +100,7 @@ private slots:
         res = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
         QVERIFY(res);
 
+        mafMessageHandler::instance()->installMessageHandler();
         mafEventBusManager::instance();
         m_CustomManager = mafNEW(testCustomManager);
 
