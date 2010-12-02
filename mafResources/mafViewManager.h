@@ -50,7 +50,7 @@ public slots:
     Then each view save its settings depending on the view itselfs.*/
     mafCore::mafMemento *createMemento() const;
 
-    /// Allows setting a previous saved object's state.
+    /// Allows to rebuild a previous saved object's state.
     /**
     This is used to implement a sort of undo mechanism for the object's state, but can be used also by the
     serialization mechanism to serialize data into the selected storage type.
