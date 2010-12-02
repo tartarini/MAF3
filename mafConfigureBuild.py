@@ -344,11 +344,18 @@ def usage():
 def main():
     try:
         opts, args = getopt.getopt(sys.argv[1:], "hp:m:c:d:tx:", ["help", "process=", "module=", "compiler=", "directory=", "test", "doxygen-path="])
+        #complete check of parameters needed    
+        if(len(opts) == 0):
+            usage()
+            return
+    
     except getopt.GetoptError, err:
         # print help information and exit:
         print str(err) # will print something like "option -a not recognized"
         usage()
         sys.exit(2)
+        
+    
 
     param['test'] = False
     param['process'] = "code" #other option is doc
@@ -371,12 +378,6 @@ def main():
             param['doxygenPath'] = os.path.normpath(a)
         else:
             assert False, "unhandled option"
-    
-    #complete check of parameters needed    
-    if(len(param) == 0):
-        usage()
-        #print currentPathScript
-        return
     
     if(param['process'] == "code"):
          build()
