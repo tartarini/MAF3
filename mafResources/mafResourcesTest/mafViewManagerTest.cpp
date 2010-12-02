@@ -91,6 +91,8 @@ private slots:
     void selectViewTest();
     /// Test memento (for store and retriev settings)
     void mementoViewTest();
+    /// Test the view remove and destruction
+    void removeAndDestructionTest();
 
 private:
     mafViewManager *m_ViewManager; ///< View Manager test variable
@@ -162,6 +164,15 @@ void mafViewManagerTest::mementoViewTest() {
     QVERIFY(m_Observer->viewSelected() != NULL);
 
     mafDEL(m);
+}
+
+void mafViewManagerTest::removeAndDestructionTest() {
+    mafObjectBase *obj = m_Observer->viewSelected();
+    mafString hash1 = obj->objectHash();
+    mafDEL(obj);
+    obj = m_Observer->viewSelected();
+    mafString hash2 = obj->objectHash();
+    QVERIFY(hash1 != hash2);
 }
 
 MAF_REGISTER_TEST(mafViewManagerTest);
