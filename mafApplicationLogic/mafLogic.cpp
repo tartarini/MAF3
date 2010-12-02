@@ -57,17 +57,23 @@ bool mafLogic::initialize() {
 
     mafIdProvider *provider = mafIdProvider::instance();
     provider->createNewId("maf.local.logic.openFile");
-    provider->createNewId("maf.local.logic.settings.viewmanager.store");
-    provider->createNewId("maf.local.logic.settings.viewmanager.restore");
-    provider->createNewId("maf.local.logic.settings.vmemanager.store");
-    provider->createNewId("maf.local.logic.settings.vmemanager.restore");
+    provider->createNewId("maf.local.logic.status.viewmanager.store");
+    provider->createNewId("maf.local.logic.status.viewmanager.restore");
+    provider->createNewId("maf.local.logic.status.vmemanager.store");
+    provider->createNewId("maf.local.logic.status.vmemanager.restore");
+    provider->createNewId("maf.local.logic.settings.store");
+    provider->createNewId("maf.local.logic.settings.restore");
 
     // Signal registration.
     mafRegisterLocalSignal("maf.local.logic.openFile", this, "openFile(const mafString)");
-    mafRegisterLocalSignal("maf.local.logic.settings.viewmanager.store", this, "settingsViewManagerStore()");
-    mafRegisterLocalSignal("maf.local.logic.settings.vmemanager.store", this, "settingsVmeManagerStore()");
-    mafRegisterLocalSignal("maf.local.logic.settings.viewmanager.restore", this, "settingsViewManagerRestore(mafCore::mafMemento *, bool)");
-    mafRegisterLocalSignal("maf.local.logic.settings.vmemanager.restore", this, "settingsVmeManagerRestore(mafCore::mafMemento *, bool)");
+    mafRegisterLocalSignal("maf.local.logic.status.viewmanager.store", this, "statusViewManagerStore()");
+    mafRegisterLocalSignal("maf.local.logic.status.viewmanager.restore", this, "statusViewManagerRestore(mafCore::mafMemento *, bool)");
+    mafRegisterLocalSignal("maf.local.logic.status.vmemanager.store", this, "statusVmeManagerStore()");
+    mafRegisterLocalSignal("maf.local.logic.status.vmemanager.restore", this, "statusVmeManagerRestore(mafCore::mafMemento *, bool)");
+
+    // Slot registration.
+    mafRegisterLocalCallback("maf.local.logic.settings.store", this, "storeSettings()");
+    mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "restoreSettings()");
 
     // Load the module related to the resources and managers and initialize it.
     bool module_initialized(false);
@@ -100,4 +106,12 @@ void mafLogic::loadPlugins(mafString plugin_dir) {
         argList.append(mafEventArgument(mafString, file));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.loadLibrary", mafEventTypeLocal, &argList);
     }
+}
+
+void mafLogic::storeSettings() {
+
+}
+
+void mafLogic::restoreSettings() {
+
 }

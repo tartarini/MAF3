@@ -30,10 +30,14 @@ namespace mafApplicationLogic {
  using plugin and resources.
  mafLogic defines also these topics:
   - maf.local.logic.openFile that allow to notify the request to open the given filename passed ar argument.
-  - maf.local.logic.settings.viewmanager.store that allows to ask the mafViewManager to store its settings into a memento that will be serialized.
- - maf.local.logic.settings.viewmanager.restore that allows to ask the mafViewManager to restore a previous saved state of the application's settings.
- - maf.local.logic.settings.vmemanager.store that allows to ask the mafVmeManager to store its settings into a memento that will be serialized.
- - maf.local.logic.settings.vmemanager.restore that allows to ask the mafVmeManager to restore a previous saved state of the application's settings.
+  - maf.local.logic.settings.store allow to start the application's settings store.
+  - maf.local.logic.settings.restore allow to start the application's settings restore.
+  - maf.local.logic.settings.gui.store that allows to ask the mafGUIManager to store its settings.
+  - maf.local.logic.settings.gui.restore that allows to ask the mafGUIManager to restore a previous saved state of its settings.
+  - maf.local.logic.status.viewmanager.store that allows to ask the mafViewManager to store its status into a memento that will be serialized.
+  - maf.local.logic.status.viewmanager.restore that allows to ask the mafViewManager to restore a previous saved state.
+  - maf.local.logic.status.vmemanager.store that allows to ask the mafVmeManager to store its status into a memento that will be serialized.
+  - maf.local.logic.status.vmemanager.restore that allows to ask the mafVmeManager to restore a previous saved state.
  */
 class MAFAPPLICATIONLOGICSHARED_EXPORT mafLogic : public mafLogicLight {
     Q_OBJECT
@@ -63,18 +67,27 @@ public slots:
     /// Allows to assign the application's working directory.
     void setWorkingDirectory(const mafString wd);
 
-signals:
-    /// Signal used to ask the view manager to store its settings.
-    void settingsViewManagerStore();
+    /// Orchestrate the requests for the store the application's settings.
+    void storeSettings();
 
+    /// Orchestrate the requests for restoring the application's settings.
+    void restoreSettings();
+
+signals:
     /// Signal emitted when a recent file is asked to be opened. The argument of the signal contains the filename.
     void openFile(const mafString filename);
 
-    /// Signal used to ask the view managers to restore their settings.
-    void settingsViewManagerRestore(mafCore::mafMemento *memento, bool deep);
+    /// Signal used to ask the view manager to store its status.
+    void statusViewManagerStore();
 
-    /// Signal used to ask the vme managers to restore their settings.
-//    void settingsVmeManagerRestore(mafCore::mafMemento *memento, bool deep);
+    /// Signal used to ask the view manager to restore its status.
+    void statusViewManagerRestore(mafCore::mafMemento *memento, bool deep);
+
+    /// Signal used to ask the vme manager to store its status.
+    void statusVmeManagerStore();
+
+    /// Signal used to ask the vme manager to restore its status.
+    void statusVmeManagerRestore(mafCore::mafMemento *memento, bool deep);
 
 private:
     mafString m_WorkingDirectory; ///< Contains the root directory of the application's data.
