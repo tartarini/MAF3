@@ -29,7 +29,13 @@ mafMementoObject::mafMementoObject(const mafObject *obj, const mafTagList *tagLi
         mafString propName = qmp.name();
 
         mafVariant value = obj->property(propName.toAscii());
-        item.m_Multiplicity = 1;
+
+        if(value.canConvert<QVariantList>()){
+            item.m_Multiplicity = value.toList().count();
+        } else {
+            item.m_Multiplicity = 1;
+        }
+
         item.m_Name = qmp.name();
         item.m_Value = value;
         list->append(item);
