@@ -7,6 +7,7 @@ import shutil
 
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
 param = {}
+paramError = {}
 
 def buildVS2008():
     print "Starting to Build MAF with VS2008"
@@ -354,10 +355,6 @@ def main():
         print str(err) # will print something like "option -a not recognized"
         usage()
         sys.exit(2)
-        
-    
-    param = {}
-    paramError = {}
     
     #init
     param['test'] = False
