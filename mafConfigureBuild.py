@@ -332,13 +332,13 @@ def generateDoc():
         
 def usage():
     print "python mafBuild.py [-h] [-p code|doc] [-m moduleName] [-c vs2008 | mingw | gcc4] [-d directory] [-t] [-x doxygenPath]"
-    print "-h, --help				show help (this)"
-    print "-p, --process=	    	select modality of build, compile code or build documentation"
-    print "-m, --module=			select module to compile (used only if process is code)"
-    print "-c, --compiler=			select the compiler (used only if process is code)"
-    print "-d, --directory=			select output directory"
-    print "-t, --test				select if compile test of the selected module (used only if process is code)"
-    print "-x, --doxygen-path	set where the doxygen binary is present (used only if process is doc)"
+    print "-h, --help                 show help (this)"
+    print "-p, --process=             select modality of build, compile code or build documentation"
+    print "-m, --module=              select module to compile (used only if process is code)"
+    print "-c, --compiler=            select the compiler (used only if process is code)"
+    print "-d, --directory=           select output directory"
+    print "-t, --test                 select if compile test of the selected module (used only if process is code)"
+    print "-x, --doxygen-path         set where the doxygen binary is present (used only if process is doc)"
     print 
     
 def main():
@@ -356,7 +356,10 @@ def main():
         sys.exit(2)
         
     
-
+    param = {}
+    paramError = {}
+    
+    #init
     param['test'] = False
     param['process'] = "code" #other option is doc
     
@@ -365,11 +368,23 @@ def main():
             usage()
             sys.exit()
         elif o in ("-p", "--process"):
-            param['process'] = a
+            acceptance = ["doc","code"]
+            if(a in acceptance):
+                param['process'] = a
+            else:
+                paramError['process'] = a
         elif o in ("-c", "--compiler"):
-            param['compiler'] = a
+            acceptance = ["vs2008","mingw","gcc4"]
+            if(a in acceptance):
+                param['compiler'] = a
+            else:
+                paramError['compiler'] = a
         elif o in ("-m", "--module"):
-            param['module'] = a
+            acceptance = ["mafCore","mafQA","mafEventBus","mafTimeSpace","mafSerialization", "mafResources", "mafPluginVTK","mafApplicationLogic","mafGUI"]
+            if(a in acceptance):
+                param['module'] = a
+            else:
+                paramError['module'] = a
         elif o in ("-d", "--directory"):
             param['directory'] = os.path.normpath(a)
         elif o in ("-t", "--test"):
@@ -378,6 +393,15 @@ def main():
             param['doxygenPath'] = os.path.normpath(a)
         else:
             assert False, "unhandled option"
+            usage()
+            exit()
+
+    if(len(paramError) != 0 ):
+        for k, v in paramError.iteritems():
+            print v, " is not a valid " , k
+        usage()
+        exit()
+    
     
     if(param['process'] == "code"):
          build()
