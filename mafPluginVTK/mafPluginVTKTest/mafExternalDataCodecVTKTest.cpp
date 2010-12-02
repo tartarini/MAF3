@@ -62,7 +62,6 @@ private slots:
         mafDEL(m_CodecIn);
         mafDEL(m_CodecOut);
         m_DataSource->Delete();
-        mafCoreSingletons::mafSingletonsShutdown();
     }
 
     /// mafExternalDataCodecVTK allocation test case.
