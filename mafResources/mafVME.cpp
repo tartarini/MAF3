@@ -155,6 +155,8 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
 
         } else if(item.m_Name == "mafDataPipe") {
             this->setDataPipe(item.m_Value.toString());
+        } else if(item.m_Name == "vmeBounds") {
+            this->setBounds(item.m_Value.toList());
         }
     }
     setModified();
@@ -177,7 +179,8 @@ void mafVME::updateData() {
 
 void mafVME::updateBounds() {
     if (this->dataSetCollection()->itemAtCurrentTime() != NULL){
-        mafDataBoundaryAlgorithm *boundary = this->dataSetCollection()->itemAtCurrentTime()->boundaryAlgorithm();
+        mafDataBoundaryAlgorithm *boundary = NULL;
+        boundary = this->dataSetCollection()->itemAtCurrentTime()->boundaryAlgorithm();
         if(boundary != NULL){
             double b[6];
             boundary->bounds(b);

@@ -34,7 +34,6 @@ notified when new timestamp has been assigned to the system.
 */
 class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_OBJECT
-    Q_PROPERTY(QVariantList bounds READ bounds WRITE setBounds)
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
 

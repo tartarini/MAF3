@@ -125,7 +125,7 @@ mafMemento *mafCodecRawASCII::decode() {
         m_DataTextRead >> mementoTagSeparator;
         if(mementoTagSeparator != "MementoType") {
             item.m_Name = mementoTagSeparator;
-            if (mementoTagSeparator == "dataSetCollection" || mementoTagSeparator == "dataSet") {
+            if (mementoTagSeparator == "dataSetCollection" || mementoTagSeparator == "dataSet" || mementoTagSeparator.isEmpty()) {
                 continue;
             } else {
                 m_DataTextRead >> item.m_Multiplicity;
@@ -211,6 +211,9 @@ void mafCodecRawASCII::marshall(const mafVariant &value ){
                 foreach( mafVariant item, value.toList() ) {
                         marshall( item );
                     }
+                if(value.toList().count() == 0){
+                   m_DataTextWrite << endl;
+                }
                 break;
         }
         case mafVariant::Map: {
