@@ -72,4 +72,14 @@ mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const mafString 
             list->append(item);
         }
      }
+
+    QVariantList boundsList = vme->bounds();
+    if(!boundsList.empty()){
+        mafMementoPropertyItem item;
+        item.m_Multiplicity = 1;
+        item.m_Name = "vmeBounds";
+        item.m_Value = mafVariant(boundsList);
+        list->append(item);
+    }
 }
+
