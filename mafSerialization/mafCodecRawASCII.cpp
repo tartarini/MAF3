@@ -125,7 +125,7 @@ mafMemento *mafCodecRawASCII::decode() {
         m_DataTextRead >> mementoTagSeparator;
         if(mementoTagSeparator != "MementoType") {
             item.m_Name = mementoTagSeparator;
-            if (mementoTagSeparator == "dataSetCollection" || mementoTagSeparator == "dataSet") {
+            if (mementoTagSeparator == "dataSetCollection" || mementoTagSeparator == "dataSet" || mementoTagSeparator.isEmpty()) {
                 continue;
             } else {
                 m_DataTextRead >> item.m_Multiplicity;
