@@ -211,6 +211,9 @@ void mafCodecRawASCII::marshall(const mafVariant &value ){
                 foreach( mafVariant item, value.toList() ) {
                         marshall( item );
                     }
+                if(value.toList().count() == 0){
+                   m_DataTextWrite << endl;
+                }
                 break;
         }
         case mafVariant::Map: {
