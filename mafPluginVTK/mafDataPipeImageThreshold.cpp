@@ -56,9 +56,6 @@ void mafDataPipeImageThreshold::updatePipe(double t) {
     //Get data contained in the mafContainer
     mafContainer<vtkImageData> *image = mafContainerPointerTypeCast(vtkImageData, inputDataSet->dataValue());
 
-//    double sr[2];
-//    (*image)->GetScalarRange(sr);
-
     m_ThresholdFilter->SetInputConnection((*image)->GetProducerPort());
     switch(m_ThresholdMode) {
         case LOWER:
