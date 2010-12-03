@@ -155,6 +155,8 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
 
         } else if(item.m_Name == "mafDataPipe") {
             this->setDataPipe(item.m_Value.toString());
+        } else if(item.m_Name == "vmeBounds") {
+            this->setBounds(item.m_Value.toList());
         }
     }
     setModified();
