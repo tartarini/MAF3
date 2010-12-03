@@ -19,7 +19,7 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafVME::mafVME(const mafString code_location) : mafResource(code_location), m_Modified(false), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL) {
+mafVME::mafVME(const mafString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL) {
     mafId time_set_id = mafIdProvider::instance()->idValue("TIME_SET");
     if(time_set_id != -1) {
         mafRegisterLocalCallback("TIME_SET", this, "setTimestamp(double)");
@@ -43,18 +43,6 @@ mafVME::~mafVME() {
     m_MementoDataSetHash.clear();
 }
 
-void mafVME::setModified(bool m) {
-    m_Modified = m;
-
-    if(!m_Modified) {
-        return;
-    }
-
-    // Connect this modifiedObject signal with the class that should listen it
-    // like the mafDataPipe or mafVisualPipe
-    emit(modifiedObject());
-}
-
 void mafVME::setBounds(QVariantList bounds) {
     m_Bounds.clear();
     m_Bounds.append(bounds);
@@ -64,6 +52,7 @@ void mafVME::setBounds(QVariantList bounds) {
 void mafVME::setTimestamp(double t) {
     dataSetCollection()->setTimestamp(t);
     setModified();
+    execute();
 }
 
 void mafVME::setInteractor(mafInteractor *i) {
@@ -87,12 +76,14 @@ void mafVME::setDataPipe(const mafString &pipe_type) {
 }
 
 void mafVME::setDataPipe(mafDataPipe *pipe) {
-    mafDEL(m_DataPipe);
-    m_DataPipe = pipe;
-    if(m_DataPipe) {
-        m_DataPipe->setInput(this);
+    if(m_DataPipe == pipe) return;
+    if(pipe) {
+        pipe->setInput(this);
+        mafDEL(m_DataPipe);
+        m_DataPipe = pipe;
+        setModified();
+        execute();
     }
-    setModified();
 }
 
 void mafVME::execute() {
@@ -167,6 +158,7 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
         }
     }
     setModified();
+    execute();
 }
 
 void mafVME::updateData() {

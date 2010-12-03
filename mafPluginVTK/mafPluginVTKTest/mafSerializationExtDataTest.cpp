@@ -111,6 +111,7 @@ class mafSerializationExtDataTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
         // Create before the instance of the Serialization manager, which will register signals.
         bool res(false);
@@ -245,7 +246,6 @@ void mafSerializationExtDataTest::mafSerializationVTKSaveTest() {
     QFileInfo fInfo3(test_file);
     QVERIFY(fInfo3.size() > 0);
 
-
     encodeType = "XML";
     argList.clear();
     argList.append(mafEventArgument(mafString, test_file));
@@ -266,7 +266,6 @@ void mafSerializationExtDataTest::mafSerializationVTKSaveTest() {
         fileName.append(list.at(i));
         mafFile::remove(fileName);
     }
-
 }
 
 MAF_REGISTER_TEST(mafSerializationExtDataTest);

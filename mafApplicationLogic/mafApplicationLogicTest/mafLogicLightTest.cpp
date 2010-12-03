@@ -38,14 +38,12 @@ class mafLogicLightTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        mafCoreSingletons::mafSingletonsInitialize();
         m_LogicLight = mafNEW(mafApplicationLogic::mafLogicLight);
     }
 
     /// Cleanup tes variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_LogicLight);
-        mafCoreSingletons::mafSingletonsShutdown();
     }
 
     /// Check the existence of the mafLogicLight allocation.

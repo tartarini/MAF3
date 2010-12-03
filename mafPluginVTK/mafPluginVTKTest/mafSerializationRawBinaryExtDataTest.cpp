@@ -108,6 +108,7 @@ class mafSerializationRawBinaryExtDataTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
         // Create before the instance of the Serialization manager, which will register signals.
         bool res(false);
@@ -167,7 +168,6 @@ private slots:
         boundaryAlgorithm1 = mafNEW(mafDataBoundaryAlgorithmVTK);
         m_DataSetCubeMoved->setBoundaryAlgorithm(boundaryAlgorithm1);
         m_Vme->dataSetCollection()->insertItem(m_DataSetCubeMoved, 1);
-
     }
 
     /// Cleanup test variables memory allocation.
@@ -207,7 +207,6 @@ void mafSerializationRawBinaryExtDataTest::mafSerializationVTKAllocationTest() {
     QVERIFY(m_Codec != NULL);
 }
 
-
 void mafSerializationRawBinaryExtDataTest::mafSerializationVTKSaveTest() {
     // Create the temporary file into the temp directory of the current user.
     mafString test_dir;
@@ -243,7 +242,6 @@ void mafSerializationRawBinaryExtDataTest::mafSerializationVTKSaveTest() {
     QFileInfo fInfo3(test_file);
     QVERIFY(fInfo3.size() > 0);
 
-
     encodeType = "RAW";
     argList.clear();
     argList.append(mafEventArgument(mafString, test_file));
@@ -264,7 +262,6 @@ void mafSerializationRawBinaryExtDataTest::mafSerializationVTKSaveTest() {
         fileName.append(list.at(i));
         mafFile::remove(fileName);
     }
-
 }
 
 MAF_REGISTER_TEST(mafSerializationRawBinaryExtDataTest);

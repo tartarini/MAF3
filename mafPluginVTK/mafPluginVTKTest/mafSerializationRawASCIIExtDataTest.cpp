@@ -109,6 +109,7 @@ class mafSerializationRawASCIIExtDataTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
         // Create before the instance of the Serialization manager, which will register signals.
         bool res(false);

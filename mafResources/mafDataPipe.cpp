@@ -35,6 +35,7 @@ int mafDataPipe::addInput(mafVME *vme) {
     connect(vme, SIGNAL(destroyed()), this, SLOT(inputDestroyed()));
 
     this->inputList()->append(vme);
+    setModified();
     return this->inputList()->count() - 1;
 }
 
@@ -42,6 +43,7 @@ int mafDataPipe::addInput(mafVME *vme) {
 void mafDataPipe::inputDestroyed() {
     mafVME *vme = (mafVME *)QObject::sender();
     removeInput(vme);
+    setModified();
 }
 
 void mafDataPipe::updatePipe(double t) {
@@ -52,13 +54,16 @@ void mafDataPipe::updatePipe(double t) {
 
 mafVME *mafDataPipe::output(double t) {
     REQUIRE(inputList()->count() > 0);
+
     if(m_DecoratorPipe) {
         updatePipe(t);
         return m_DecoratorPipe->output(t); 
     }
 
-    if(m_Output == NULL) {
+    if(m_Output == NULL || modified()) {
         updatePipe(t);
+        emit(modifiedObject());
+        setModified(false);
     }
 
     ENSURE(m_Output != NULL);

@@ -27,6 +27,7 @@ class mafMemento;
  */
 class MAFCORESHARED_EXPORT mafObject : public mafObjectBase {
     Q_OBJECT
+    Q_PROPERTY(bool modified READ modified WRITE setModified)
     Q_PROPERTY(QString uiFile READ uiFilename)
 
     /// typedef macro.
@@ -50,6 +51,12 @@ public:
 
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
+
+    /// Set the modified state of the mafObject.
+    void setModified(bool m = true);
+
+    /// Return the modified state of the mafObject.
+    bool modified() const;
 
     /// Return the instance of the object's status. The caller has to delete the allocated memento memory he asked for.
     virtual mafMemento *createMemento() const;
@@ -92,6 +99,7 @@ protected:
     mafString m_UIFilename; ///< Filename that define the object's UI written into a XML file.
 
 private:
+    bool m_Modified; ///< Contains the modified state of the VME.
     mafTagList *m_TagList; ///< Tag list that categorize the object.
     mafDictionary* m_Dictionary; ///< Dictionary associated to the object.
 };
@@ -99,6 +107,10 @@ private:
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
+
+inline bool mafObject::modified() const {
+    return m_Modified;
+}
 
 inline const mafTagList *mafObject::tagList() const {
     return m_TagList;

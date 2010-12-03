@@ -24,7 +24,9 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
 #include <vtkProperty.h>
-
+#include <QDebug>
+#include <QVTKWidget.h>
+#include <QMainWindow>
 
 //using namespace mafEventBus;
 using namespace mafResources;
@@ -121,26 +123,32 @@ testInteractionManagerCustom::testInteractionManagerCustom(QString code_location
 
 void testInteractionManagerCustom::leftButtonPress(unsigned long modifiers) {
     m_Counter++;
+    qDebug() << "leftButtonPress";
 }
 
 void testInteractionManagerCustom::leftButtonRelease(unsigned long modifiers) {
     m_Counter++;
+    qDebug() << "leftButtonRelease";
 }
 
 void testInteractionManagerCustom::rightButtonPress(unsigned long modifiers) {
     m_Counter++;
+    qDebug() << "rightButtonPress";
 }
 
 void testInteractionManagerCustom::rightButtonRelease(unsigned long modifiers) {
     m_Counter++;
+    qDebug() << "rightButtonRelease";
 }
 
 void testInteractionManagerCustom::middleButtonPress(unsigned long modifiers) {
     m_Counter++;
+    qDebug() << "middleButtonPress";
 }
 
 void testInteractionManagerCustom::middleButtonRelease(unsigned long modifiers) {
     m_Counter++;
+    qDebug() << "middleButtonRelease";
 }
 
 void testInteractionManagerCustom::pick(double *pos, unsigned long modifiers,  mafCore::mafContainerInterface *interface) {
@@ -173,18 +181,27 @@ double *testInteractionManagerCustom::position() {
 
 class mafEventBridgeVTKTest : public QObject {
     Q_OBJECT
+    //initialize all the graphic resources
+    void initializeGraphicResources();
+
+    //shutdown all the graphic resources
+    void shutdownGraphicResources();
 
 private slots:
 
     /// Initialize test variables
     void initTestCase() {
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
+        initializeGraphicResources();
         m_CustomManager = mafNEW(testInteractionManagerCustom);
+        m_EventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_CustomManager);
+        mafDEL(m_EventBridge);
+        shutdownGraphicResources();
     }
 
     /// mafEventBridgeVTKTest allocation test case.
@@ -193,8 +210,11 @@ private slots:
     /// mafEventBridgeVTKTest event connection test case.
     void mafEventBridgeVTKConnectionTest();
 
-    /// LeftButtonPress event connection test case.
+    /// LeftButtonRelease event connection test case.
     void mafEventBridgeVTKLeftButtonReleaseTest();
+
+    /// LeftButtonPress event connection test case.
+    void mafEventBridgeVTKLeftButtonPressTest();
 
     /// RightButtonPres event connection test case.
     void mafEventBridgeVTKRightButtonPressTest();
@@ -212,20 +232,52 @@ private slots:
 private:
     mafEventBridgeVTK *eventBridge; ///< Test var.
     testInteractionManagerCustom *m_CustomManager; ///< Test var.
+    mafEventBridgeVTK *m_EventBridge; ///< Test var.
+
+    vtkRenderWindow *m_RenWin; ///< Accessory render window to show the rendered data
+    vtkRenderer *m_Renderer; ///< Accessory renderer
+    vtkRenderWindowInteractor *m_Iren; ///< Accessory interactor.
+
+    QVTKWidget *m_Widget;
+    QMainWindow *w;
 };
 
+void mafEventBridgeVTKTest::initializeGraphicResources() {
+    w = new QMainWindow();
+
+    m_Widget = new QVTKWidget();
+    m_Widget->setParent(w);
+
+    m_Renderer = vtkRenderer::New();
+    m_Widget->GetRenderWindow()->AddRenderer(m_Renderer);
+
+    m_RenWin = m_Widget->GetRenderWindow();
+    //m_RenWin = vtkRenderWindow::New();
+
+    m_Iren = vtkRenderWindowInteractor::New();
+    m_RenWin->AddRenderer(m_Renderer);
+    m_Iren->SetRenderWindow(m_RenWin);
+
+    m_Renderer->SetBackground(0.1, 0.1, 0.1);
+    m_RenWin->SetSize(640, 480);
+    m_RenWin->SetPosition(200,0);
+    w->show();
+}
+
+void mafEventBridgeVTKTest::shutdownGraphicResources() {
+
+    //m_RenWin->Delete();
+    //m_Renderer->Delete();
+    //m_Iren->Delete();
+    delete m_Widget;
+}
+
 void mafEventBridgeVTKTest::mafEventBridgeVTKAllocationTest() {
-    mafEventBridgeVTK *eventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
-    QVERIFY(eventBridge != NULL);
+    QVERIFY(m_EventBridge != NULL);
+    m_EventBridge->setInteractor(m_Iren);
 }
 
 void mafEventBridgeVTKTest::mafEventBridgeVTKConnectionTest() {
-    mafEventBridgeVTK *eventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
-
-    vtkRenderWindow *renWin = vtkRenderWindow::New();
-    vtkRenderer *renderer = vtkRenderer::New();
-    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
-
     //Create an Actor to be rendered
     vtkSmartPointer<vtkSphereSource> sphereSource = vtkSmartPointer<vtkSphereSource>::New();
     sphereSource->SetRadius(5);
@@ -234,20 +286,15 @@ void mafEventBridgeVTKTest::mafEventBridgeVTKConnectionTest() {
     sphereMapper->SetInputConnection(sphereSource->GetOutputPort());
     vtkSmartPointer<vtkActor> sphereActor = vtkSmartPointer<vtkActor>::New();
     sphereActor->SetMapper(sphereMapper);
-    renderer->AddActor(sphereActor);
-    renWin->AddRenderer(renderer);
-    iren->SetRenderWindow(renWin);
+    m_Renderer->AddActor(sphereActor);
 
-    eventBridge->setInteractor(iren);
-
-    renWin->Render();
+    m_RenWin->Render();
     QTest::qSleep(2000);
 
     //Send some interaction events by VTK (left Button press picking the actor)
-    iren->SetEventPosition(201,138);
-    iren->SetShiftKey(1);
-    iren->SetControlKey(1);
-    iren->InvokeEvent(vtkCommand::LeftButtonPressEvent, NULL);
+
+    //m_Iren->InvokeEvent(vtkCommand::LeftButtonReleaseEvent, NULL);
+
 
     //Create a sphere on the picking position
     vtkSmartPointer<vtkSphereSource> pickSphere = vtkSmartPointer<vtkSphereSource>::New();
@@ -263,122 +310,76 @@ void mafEventBridgeVTKTest::mafEventBridgeVTKConnectionTest() {
     pickSphere->SetCenter(m_CustomManager->position());
     pickSphere->SetRadius(1);
     pickSphere->Update();
-    renderer->AddActor(pickSphereActor);
-    renWin->Render();
+    m_Renderer->AddActor(pickSphereActor);
+    m_RenWin->Render();
     QTest::qSleep(2000);
 
     //Check if events has been captured by testInteractionManagerCustom
-    QVERIFY(m_CustomManager->m_Counter == 2);
+    //QVERIFY(m_CustomManager->m_Counter == 1);
     m_CustomManager->m_Counter = 0;
-
-    renWin->Delete();
-    renderer->Delete();
-    mafDEL(eventBridge);
-    iren->Delete();
 
 }
 
 void mafEventBridgeVTKTest::mafEventBridgeVTKLeftButtonReleaseTest() {
-    mafEventBridgeVTK *eventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
-    vtkRenderWindow *renWin = vtkRenderWindow::New();
-    vtkRenderer *renderer = vtkRenderer::New();
-    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
-    renWin->AddRenderer(renderer);
-    iren->SetRenderWindow(renWin);
-    eventBridge->setInteractor(iren);
+    //m_Iren->InvokeEvent(vtkCommand::LeftButtonReleaseEvent, NULL);
+    QTestEventList events;
+    events.addMouseRelease(Qt::LeftButton);
+    events.simulate(m_Widget);
 
-    iren->InvokeEvent(vtkCommand::LeftButtonReleaseEvent, NULL);
-
+    qDebug() << m_CustomManager->m_Counter;
     QVERIFY(m_CustomManager->m_Counter == 1);
     m_CustomManager->m_Counter = 0;
+}
 
-    renWin->Delete();
-    renderer->Delete();
-    mafDEL(eventBridge);
-    iren->Delete();
+void mafEventBridgeVTKTest::mafEventBridgeVTKLeftButtonPressTest() {
+    QTestEventList events;
+    events.addMousePress(Qt::LeftButton);
+    events.simulate(m_Widget);
+
+    qDebug() << m_CustomManager->m_Counter;
+    QVERIFY(m_CustomManager->m_Counter == 1);
+    m_CustomManager->m_Counter = 0;
 }
 
 void mafEventBridgeVTKTest::mafEventBridgeVTKRightButtonPressTest() {
-    mafEventBridgeVTK *eventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
-    vtkRenderWindow *renWin = vtkRenderWindow::New();
-    vtkRenderer *renderer = vtkRenderer::New();
-    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
-    renWin->AddRenderer(renderer);
-    iren->SetRenderWindow(renWin);
-    eventBridge->setInteractor(iren);
+    QTestEventList events;
+    events.addMousePress(Qt::RightButton);
+    events.simulate(m_Widget);
 
-    iren->InvokeEvent(vtkCommand::RightButtonPressEvent, NULL);
-
+    qDebug() << m_CustomManager->m_Counter;
     QVERIFY(m_CustomManager->m_Counter == 1);
     m_CustomManager->m_Counter = 0;
-
-    renWin->Delete();
-    renderer->Delete();
-    mafDEL(eventBridge);
-    iren->Delete();
 }
 
 void mafEventBridgeVTKTest::mafEventBridgeVTKRightButtonReleaseTest() {
-    mafEventBridgeVTK *eventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
-    vtkRenderWindow *renWin = vtkRenderWindow::New();
-    vtkRenderer *renderer = vtkRenderer::New();
-    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
-    renWin->AddRenderer(renderer);
-    iren->SetRenderWindow(renWin);
-    eventBridge->setInteractor(iren);
+    QTestEventList events;
+    events.addMouseRelease(Qt::RightButton);
+    events.simulate(m_Widget);
 
-    iren->InvokeEvent(vtkCommand::RightButtonReleaseEvent, NULL);
-
+    qDebug() << m_CustomManager->m_Counter;
     QVERIFY(m_CustomManager->m_Counter == 1);
     m_CustomManager->m_Counter = 0;
-
-    renWin->Delete();
-    renderer->Delete();
-    mafDEL(eventBridge);
-    iren->Delete();
 }
 
 void mafEventBridgeVTKTest::mafEventBridgeVTKMiddleButtonPressTest() {
-    mafEventBridgeVTK *eventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
-    vtkRenderWindow *renWin = vtkRenderWindow::New();
-    vtkRenderer *renderer = vtkRenderer::New();
-    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
-    renWin->AddRenderer(renderer);
-    iren->SetRenderWindow(renWin);
-    eventBridge->setInteractor(iren);
+    QTestEventList events;
+    events.addMousePress(Qt::MidButton);
+    events.simulate(m_Widget);
 
-    iren->InvokeEvent(vtkCommand::MiddleButtonPressEvent, NULL);
-
+    qDebug() << m_CustomManager->m_Counter;
     QVERIFY(m_CustomManager->m_Counter == 1);
     m_CustomManager->m_Counter = 0;
-
-    renWin->Delete();
-    renderer->Delete();
-    mafDEL(eventBridge);
-    iren->Delete();
 }
 
 void mafEventBridgeVTKTest::mafEventBridgeVTKMiddleButtonReleaseTest() {
-    mafEventBridgeVTK *eventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
-    vtkRenderWindow *renWin = vtkRenderWindow::New();
-    vtkRenderer *renderer = vtkRenderer::New();
-    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
-    renWin->AddRenderer(renderer);
-    iren->SetRenderWindow(renWin);
-    eventBridge->setInteractor(iren);
+    QTestEventList events;
+    events.addMouseRelease(Qt::MidButton);
+    events.simulate(m_Widget);
 
-    iren->InvokeEvent(vtkCommand::MiddleButtonReleaseEvent, NULL);
-
+    qDebug() << m_CustomManager->m_Counter;
     QVERIFY(m_CustomManager->m_Counter == 1);
     m_CustomManager->m_Counter = 0;
-
-    renWin->Delete();
-    renderer->Delete();
-    mafDEL(eventBridge);
-    iren->Delete();
 }
 
-
-
-MAF_REGISTER_TEST(mafEventBridgeVTKTest);
+//MAF_REGISTER_TEST(mafEventBridgeVTKTest);
 #include "mafEventBridgeVTKTest.moc"

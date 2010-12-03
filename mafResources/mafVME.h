@@ -34,7 +34,6 @@ notified when new timestamp has been assigned to the system.
 */
 class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_OBJECT
-    Q_PROPERTY(bool modified READ modified WRITE setModified)
     Q_PROPERTY(QVariantList bounds READ bounds WRITE setBounds)
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
@@ -45,12 +44,6 @@ public:
 
     /// Object destructor.
     /* virtual */ ~mafVME();
-
-    /// Set the modified state of the VME.
-    void setModified(bool m = true);
-
-    /// Return the modified state of the VME.
-    bool modified() const;
 
     /// Set the bounds of the bounding box of the VME.
     void setBounds(mafVariantList bounds);
@@ -104,7 +97,6 @@ public slots:
     /*virtual*/ void execute();
 
 private:
-    bool m_Modified; ///< Contains the modified state of the VME.
     mafInteractor *m_Interactor; ///< Custom interactor associated with the VME.
     mafDataSetCollection *m_DataSetCollection; ///< Collection of timestamped data posed on homogeneous matrices.
     mafDataPipe *m_DataPipe; ///< Data pipe associated with the VME and used to elaborate new data.
@@ -122,10 +114,6 @@ inline mafDataPipe *mafVME::dataPipe() {
 
 inline mafInteractor *mafVME::interactor() {
     return m_Interactor;
-}
-
-inline bool mafVME::modified() const {
-    return m_Modified;
 }
 
 inline QVariantList mafVME::bounds()  {

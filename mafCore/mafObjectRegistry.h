@@ -48,9 +48,6 @@ public:
     /// Engine of the 'find objects' that will be executed on separate thread if invoked from the findObjectsThreaded method.
     mafObjectsList *findObjects(mafVisitorFindObjects *v);
 
-    /// Destroy the singleton instance. To be called at the end of the application.
-    void shutdown();
-
 protected:
     friend class mafObjectBase;
 

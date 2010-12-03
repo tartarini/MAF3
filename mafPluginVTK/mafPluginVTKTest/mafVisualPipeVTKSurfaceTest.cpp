@@ -64,6 +64,7 @@ class mafVisualPipeVTKSurfaceTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
 
@@ -152,7 +153,6 @@ void mafVisualPipeVTKSurfaceTest::updatePipeTest() {
 }
 
 void mafVisualPipeVTKSurfaceTest::updatePipeTestFromPlugIn() {
-
     mafPluginManager *pluginManager = mafPluginManager::instance();
     mafString pluginName = TEST_LIBRARY_NAME;
 
@@ -215,7 +215,6 @@ void mafVisualPipeVTKSurfaceTest::updatePipeTestFromPlugIn() {
 
     pluginManager->shutdown();
 }
-
 
 MAF_REGISTER_TEST(mafVisualPipeVTKSurfaceTest);
 #include "mafVisualPipeVTKSurfaceTest.moc"

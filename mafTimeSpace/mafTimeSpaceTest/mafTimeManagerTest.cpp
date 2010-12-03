@@ -100,6 +100,7 @@ private slots:
         m_TimerId = -1;
         m_EventBus = mafEventBusManager::instance();
         m_ObjectTest = mafNEW(testObjectCustomListener);
+        m_TimeManager = mafTimeManager::instance();
     }
 
     /// Cleanup tes variables memory allocation.
@@ -134,7 +135,6 @@ void mafTimeManagerTest::mafTimeSpaceLibraryLoading() {
 }
 
 void mafTimeManagerTest::mafTimeManagerAllocationTest() {
-    m_TimeManager = mafTimeManager::instance();
     QVERIFY(m_TimeManager != NULL);
 }
 

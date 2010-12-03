@@ -85,6 +85,7 @@ private slots:
     /// Initialize test variables
     void initTestCase() {
         // Create before the instance of the Serialization manager, which will register signals.
+        mafMessageHandler::instance()->installMessageHandler();
         m_SerializationManager = mafSerializationManager::instance();
         mafEventBusManager::instance();
         m_CustomManager = mafNEW(testCustomManager);

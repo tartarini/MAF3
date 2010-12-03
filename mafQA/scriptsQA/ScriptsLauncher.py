@@ -2,9 +2,11 @@ import os
 import sys
 import getopt
 
+currentPathScript = os.path.split(os.path.realpath(__file__))[0]
+modulesDir = os.path.abspath(os.path.join(currentPathScript, "..", ".."))
 
 def run(param):
-    scriptsDir = os.getcwd()
+    scriptsDir = currentPathScript
     f = None
     try:
         f = open("TestListQA.txt")
@@ -18,7 +20,7 @@ def run(param):
     suffix = "QA.py"
     fileSuffix = "FilePattern.ini"
 
-    resultDir = "../../QAResults/xml/"
+    resultDir = os.path.abspath(os.path.join(modulesDir, "QAResults" , "xml"))
     if not os.path.exists(resultDir):
         os.makedirs(resultDir)
 
@@ -30,30 +32,28 @@ def run(param):
 
         filePattern = ruleGroup + fileSuffix
   
-        r = open("./Rules/" + filePattern)
+        rulesFile = os.path.join(currentPathScript, "Rules", filePattern)
+        r = open(rulesFile)
         linesRule = r.readlines()
         #  print linesRule
   
         sourceDir = str(linesRule[1]).rsplit("=")[1]
   
-        command = python + line + " " + sourceDir + " " + resultDir
+        command = python + line + " " + sourceDir + " " + resultDir + "/"
         os.system(command.replace("\"","").replace("\r", "").replace("\n", ""))
 
     print "QA SUCCESSFUL"
 
 
     if(param['LCOVCoverage']):
-        os.chdir("../../")
-        baseDir = os.getcwd()
-        externalScriptDirectory = scriptsDir + "/ExternalScripts"
+        baseDir = modulesDir
+        externalScriptFile = os.path.join(currentPathScript, "ExternalScripts", "LCOVCoverageScript.py")
 
         for item in os.listdir(baseDir):
             if (os.path.isfile(os.path.join(baseDir, item))==False):
                 if(item.find("maf") != -1):
-                    os.chdir(externalScriptDirectory)
-                    os.system("python " + externalScriptDirectory + "/LCOVCoverageScript.py "+ item)
+                    os.system("python " + externalScriptFile + " " + item)
 
-    os.chdir(scriptsDir)
           
 def usage():
     print "Usage: python ScriptLauncher.py [--enable-LCOVCoverage]"

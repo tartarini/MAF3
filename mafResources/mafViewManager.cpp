@@ -170,7 +170,8 @@ void mafViewManager::removeView(mafView *view) {
     // Remove the view from the list.
     if(m_CreatedViewList.removeOne(view)) {
         if(idx > 0) {
-            m_SelectedView = (mafView *)m_CreatedViewList.at(idx - 1);
+            mafObjectBase *obj = m_CreatedViewList.at(idx - 1);
+            selectView(obj);
         } else {
             m_SelectedView = NULL;
         }
