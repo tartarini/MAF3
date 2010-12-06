@@ -26,6 +26,11 @@ class mafLogicTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        // Calls needed to initialize settings' information.
+        qApp->setOrganizationName("SCS");
+        qApp->setOrganizationDomain("scsolutions.org");
+        qApp->setApplicationName("mafApplicationLogicTest");
+        // Create the instance of mafLogic.
         m_Logic = mafNEW(mafApplicationLogic::mafLogic);
     }
 
