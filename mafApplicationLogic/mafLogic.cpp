@@ -70,6 +70,8 @@ bool mafLogic::initialize() {
     mafRegisterLocalSignal("maf.local.logic.status.viewmanager.restore", this, "statusViewManagerRestore(mafCore::mafMemento *, bool)");
     mafRegisterLocalSignal("maf.local.logic.status.vmemanager.store", this, "statusVmeManagerStore()");
     mafRegisterLocalSignal("maf.local.logic.status.vmemanager.restore", this, "statusVmeManagerRestore(mafCore::mafMemento *, bool)");
+    mafRegisterLocalSignal("maf.local.logic.settings.store", this, "writeSettings()");
+    mafRegisterLocalSignal("maf.local.logic.settings.restore", this, "readSettings()");
 
     // Slot registration.
     mafRegisterLocalCallback("maf.local.logic.settings.store", this, "storeSettings()");
@@ -109,9 +111,13 @@ void mafLogic::loadPlugins(mafString plugin_dir) {
 }
 
 void mafLogic::storeSettings() {
-
+    mafMsgDebug() << "Writing mafLogic settings...";
+    mafSettings s;
+    s.setValue("workingDir", m_WorkingDirectory);
 }
 
 void mafLogic::restoreSettings() {
-
+    mafMsgDebug() << "Reading mafLogic settings...";
+    mafSettings s;
+    m_WorkingDirectory = s.value("workingDir").toString();
 }
