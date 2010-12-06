@@ -40,14 +40,14 @@ private slots:
         delete m_MainWin;
     }
 
-    /// mafGUIManager allocation test case.
+    /// allocation test case.
     void mafGUIManagerAllocationTest();
-
-    /// mafGUIManager Creation menu test.
+    /// Creation menu test.
     void mafGUIManagerCreateMenuTest();
-
     /// Fill menu test.
     void mafGUIManagerFillMenuTest();
+    /// Max recent file number test
+    void maxRecentFileTest();
 
 private:
     mafGUIManager *m_GUIManager; ///< Reference to the GUI Manager.
@@ -59,7 +59,6 @@ void mafGUIManagerTest::mafGUIManagerAllocationTest() {
 }
 
 void mafGUIManagerTest::mafGUIManagerCreateMenuTest() {
-    m_GUIManager->createActions();
     m_GUIManager->createMenus();
     m_GUIManager->createToolBars();
 
@@ -110,6 +109,16 @@ void mafGUIManagerTest::mafGUIManagerFillMenuTest() {
     items = menu->actions();
     num_items = items.count();
     QVERIFY(num_items == 1);
+}
+
+void mafGUIManagerTest::maxRecentFileTest() {
+    //  Default number of maximum recent files is 5
+    int m = m_GUIManager->maxRecentFiles();
+    QVERIFY(m == 5);
+    // Change the number to 10
+    m_GUIManager->setMaxRecentFiles(10);
+    m = m_GUIManager->maxRecentFiles();
+    QVERIFY(m == 10);
 }
 
 MAF_REGISTER_TEST(mafGUIManagerTest);
