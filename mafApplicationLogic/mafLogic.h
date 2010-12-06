@@ -77,6 +77,12 @@ signals:
     /// Signal emitted when a recent file is asked to be opened. The argument of the signal contains the filename.
     void openFile(const mafString filename);
 
+    /// Signal used to alert all observers to write the owned settings.
+    void writeSettings();
+
+    /// Signal used to alert all observer to read back saved settings.
+    void readSettings();
+
     /// Signal used to ask the view manager to store its status.
     void statusViewManagerStore();
 
