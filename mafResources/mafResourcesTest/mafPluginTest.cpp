@@ -17,13 +17,9 @@
 #include <mafPlugin.h>
 
 #ifdef WIN32
-    #define TEST_LIBRARY_NAME "mafPluginTest_d.dll"
+    #define TEST_LIBRARY_NAME "mafPluginTest_d.mafplugin"
 #else
-    #ifdef __APPLE__
-        #define TEST_LIBRARY_NAME "libmafPluginTest_debug.dylib"
-    #else
-        #define TEST_LIBRARY_NAME "libmafPluginTest_debug.so"
-    #endif
+    #define TEST_LIBRARY_NAME "libmafPluginTest_debug.mafplugin"
 #endif
 
 using namespace mafCore;

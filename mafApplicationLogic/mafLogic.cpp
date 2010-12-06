@@ -16,8 +16,9 @@
 
 using namespace mafEventBus;
 
+#define PLUGIN_EXTENSION_FILTER "*.mafplugin"
+
 #ifdef WIN32
-    #define PLUGIN_EXTENSION_FILTER "*.dll"
     #ifdef QT_DEBUG
         #define RESOURCES_LIBRARY_NAME "mafResources_d.dll"
     #else
@@ -25,14 +26,12 @@ using namespace mafEventBus;
     #endif
 #else
     #ifdef __APPLE__
-        #define PLUGIN_EXTENSION_FILTER "*.dylib"
         #ifdef QT_DEBUG
             #define RESOURCES_LIBRARY_NAME "libmafResources_debug.dylib"
         #else
             #define RESOURCES_LIBRARY_NAME "libmafResources.dylib"
         #endif
     #else
-        #define PLUGIN_EXTENSION_FILTER "*.so"
         #ifdef QT_DEBUG
             #define RESOURCES_LIBRARY_NAME "libmafResources_debug.so"
         #else
