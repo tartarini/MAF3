@@ -1,6 +1,8 @@
 #include "mafMainWindow.h"
 #include "ui_mafMainWindow.h"
 
+#include <mafEventBusManager.h>
+
 #include "googlechat.h"
 
 #include <mafGUIRegistration.h>
@@ -11,20 +13,10 @@
 #include <vtkSphereSource.h>
 #include <vtkSmartPointer.h>
 
-#ifdef WIN32
-    #define SETTINGS_EXTENSION ".ini"
-#else
-    #ifdef __APPLE__
-        #define SETTINGS_EXTENSION ".plist"
-    #else
-        #define SETTINGS_EXTENSION ".ini"
-    #endif
-#endif
-
 using namespace mafCore;
 using namespace mafGUI;
 
-mafMainWindow::mafMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::mafMainWindow), m_SettingsFilename("") {
+mafMainWindow::mafMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::mafMainWindow)/*, m_SettingsFilename("")*/ {
     ui->setupUi(this);
 
     mafCoreSingletons::mafSingletonsInitialize();
@@ -34,7 +26,6 @@ mafMainWindow::mafMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 
     googleChat = new GoogleChat();
 
-    m_GUIManager->createActions();
     m_GUIManager->createMenus();
     m_GUIManager->createToolBars();
 
@@ -46,22 +37,23 @@ mafMainWindow::mafMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(viewSelected(QMdiSubWindow*)));
 
     setUnifiedTitleAndToolBarOnMac(true);
+
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.logic.settings.restore");
 }
 
 void mafMainWindow::connectCallbacks() {
     mafRegisterLocalCallback("maf.local.gui.action.new", this, "createViewWindow()");
     mafRegisterLocalCallback("maf.local.gui.action.collaborate", this, "openGoogleTalk()");
     mafRegisterLocalCallback("maf.local.gui.action.save", this, "save()");
+
+    mafRegisterLocalCallback("maf.local.logic.settings.store", this, "writeSettings()");
+    mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "readSettings()");
 }
 
 mafMainWindow::~mafMainWindow() {
     mafDEL(m_GUIManager);
     delete googleChat;
     delete ui;
-}
-
-mafCore::mafMemento *mafMainWindow::createMemento() const {
-    return new mafMementoApplication(this, mafCodeLocation);
 }
 
 void mafMainWindow::changeEvent(QEvent *e) {
@@ -77,8 +69,16 @@ void mafMainWindow::changeEvent(QEvent *e) {
 
 void mafMainWindow::closeEvent(QCloseEvent *event) {
     releaseMouse();
-    if (maybeSave()) {
-        writeSettings();
+    mafCoreSingletons::mafSingletonsShutdown();
+    int ret = maybeSave();
+    if (ret == QMessageBox::Save) {
+        // Save settings
+        mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.logic.settings.store");
+        // .. and maybe should save also application's data.
+        // ToDo: Save the Application's data.
+        // Then accept the close of the application
+        event->accept();
+    } else if(ret == QMessageBox::Discard) {
         event->accept();
     } else {
         event->ignore();
@@ -86,13 +86,8 @@ void mafMainWindow::closeEvent(QCloseEvent *event) {
 }
 
 void mafMainWindow::readSettings() {
-    if(m_SettingsFilename.isEmpty()) {
-        return;
-    }
-    mafString settings_fullname = m_SettingsFilename;
-    settings_fullname.append(SETTINGS_EXTENSION);
-    mafSettings settings(settings_fullname,
-                    QSettings::NativeFormat);
+    mafMsgDebug() << "Reading mafMainWindows settings...";
+    mafSettings settings;
     QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
     QSize size = settings.value("size", QSize(600, 400)).toSize();
     resize(size);
@@ -100,30 +95,28 @@ void mafMainWindow::readSettings() {
 }
 
 void mafMainWindow::writeSettings() {
-    if(m_SettingsFilename.isEmpty()) {
-        return;
-    }
-    mafString settings_fullname = m_SettingsFilename;
-    settings_fullname.append(SETTINGS_EXTENSION);
-    mafSettings settings(settings_fullname,
-                    QSettings::NativeFormat);
+    mafMsgDebug() << "Writing mafMainWindows settings...";
+    mafSettings settings;
     settings.setValue("pos", pos());
     settings.setValue("size", size());
 }
 
-bool mafMainWindow::maybeSave() {
+int mafMainWindow::maybeSave() {
     if (true) {
         QMessageBox::StandardButton ret;
         ret = QMessageBox::warning(this, tr("Application"),
                      tr("The document has been modified.\n"
                         "Do you want to save your changes?"),
                      QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-        if (ret == QMessageBox::Save)
-            return save();
-        else if (ret == QMessageBox::Cancel)
-            return false;
+//        if (ret == QMessageBox::Save)
+//            return save();
+//        else if (ret == QMessageBox::Cancel)
+//            return false;
+//        else if(ret == QMessageBox::Discard)
+//            return false;
+        return ret;
     }
-    return true;
+    return QMessageBox::Save;
 }
 
 bool mafMainWindow::save() {
