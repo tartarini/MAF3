@@ -22,14 +22,9 @@ include(../../mafImportVXL.pri)
 include(../../mafImportVTK.pri)
 include(../../mafImportQXMLRPC.pri)
 include(../../mafImportQtSoap.pri)
+INCLUDEPATH += ../../mafResources \
+                        ../../mafEventBus \
+                        ../../mafCore
+
 LIBS += -L$$DESTDIR \
-    -lmafPluginVTK$$LIB_EXT
-INCLUDEPATH += ../../mafResources
-LIBS += -L$$DESTDIR \
-    -lmafResources$$LIB_EXT
-INCLUDEPATH += ../../mafEventBus
-LIBS += -L$$DESTDIR \
-    -lmafEventBus$$LIB_EXT
-INCLUDEPATH += ../../mafCore
-LIBS += -L$$DESTDIR \
-    -lmafCore$$LIB_EXT
+    -lmafResources$$LIB_EXT -lmafEventBus$$LIB_EXT -lmafCore$$LIB_EXT -lmafPluginVTK$${LIB_EXT}
