@@ -249,9 +249,9 @@ void mafVTKWidgetTest::initializeGraphicResources() {
 }
 
 void mafVTKWidgetTest::shutdownGraphicResources() {
-
-    //m_Renderer->Delete();
+    m_Renderer->Delete();
     delete m_VTKWidget;
+    delete w;
 }
 
 void mafVTKWidgetTest::mafEventBridgeVTKAllocationTest() {
