@@ -21,3 +21,5 @@ INCLUDEPATH += ../../mafResources \
                         ../../mafCore
 LIBS += -L$$DESTDIR \
     -lmafResources$$LIB_EXT -lmafEventBus$$LIB_EXT -lmafCore$$LIB_EXT
+
+QMAKE_EXTENSION_SHLIB = mafplugin

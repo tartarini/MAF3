@@ -6,13 +6,13 @@ QT += webkit \
 TARGET = SimpleApp
 TEMPLATE = app
 CONFIG += uitools
+
+# Removing the line below, uncomment the post link instruction at the end
 CONFIG -= app_bundle
 SOURCES += main.cpp \
     mafMainWindow.cpp \
-    mafMementoApplication.cpp \
     googlechat.cpp
 HEADERS += mafMainWindow.h \
-    mafMementoApplication.h \
     googlechat.h
 FORMS += mafMainWindow.ui \
     form.ui

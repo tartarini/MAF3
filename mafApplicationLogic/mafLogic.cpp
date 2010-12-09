@@ -16,8 +16,9 @@
 
 using namespace mafEventBus;
 
+#define PLUGIN_EXTENSION_FILTER "*.mafplugin"
+
 #ifdef WIN32
-    #define PLUGIN_EXTENSION_FILTER "*.dll"
     #ifdef QT_DEBUG
         #define RESOURCES_LIBRARY_NAME "mafResources_d.dll"
     #else
@@ -25,14 +26,12 @@ using namespace mafEventBus;
     #endif
 #else
     #ifdef __APPLE__
-        #define PLUGIN_EXTENSION_FILTER "*.dylib"
         #ifdef QT_DEBUG
             #define RESOURCES_LIBRARY_NAME "libmafResources_debug.dylib"
         #else
             #define RESOURCES_LIBRARY_NAME "libmafResources.dylib"
         #endif
     #else
-        #define PLUGIN_EXTENSION_FILTER "*.so"
         #ifdef QT_DEBUG
             #define RESOURCES_LIBRARY_NAME "libmafResources_debug.so"
         #else
@@ -57,17 +56,25 @@ bool mafLogic::initialize() {
 
     mafIdProvider *provider = mafIdProvider::instance();
     provider->createNewId("maf.local.logic.openFile");
-    provider->createNewId("maf.local.logic.settings.viewmanager.store");
-    provider->createNewId("maf.local.logic.settings.viewmanager.restore");
-    provider->createNewId("maf.local.logic.settings.vmemanager.store");
-    provider->createNewId("maf.local.logic.settings.vmemanager.restore");
+    provider->createNewId("maf.local.logic.status.viewmanager.store");
+    provider->createNewId("maf.local.logic.status.viewmanager.restore");
+    provider->createNewId("maf.local.logic.status.vmemanager.store");
+    provider->createNewId("maf.local.logic.status.vmemanager.restore");
+    provider->createNewId("maf.local.logic.settings.store");
+    provider->createNewId("maf.local.logic.settings.restore");
 
     // Signal registration.
     mafRegisterLocalSignal("maf.local.logic.openFile", this, "openFile(const mafString)");
-    mafRegisterLocalSignal("maf.local.logic.settings.viewmanager.store", this, "settingsViewManagerStore()");
-    mafRegisterLocalSignal("maf.local.logic.settings.vmemanager.store", this, "settingsVmeManagerStore()");
-    mafRegisterLocalSignal("maf.local.logic.settings.viewmanager.restore", this, "settingsViewManagerRestore(mafCore::mafMemento *, bool)");
-    mafRegisterLocalSignal("maf.local.logic.settings.vmemanager.restore", this, "settingsVmeManagerRestore(mafCore::mafMemento *, bool)");
+    mafRegisterLocalSignal("maf.local.logic.status.viewmanager.store", this, "statusViewManagerStore()");
+    mafRegisterLocalSignal("maf.local.logic.status.viewmanager.restore", this, "statusViewManagerRestore(mafCore::mafMemento *, bool)");
+    mafRegisterLocalSignal("maf.local.logic.status.vmemanager.store", this, "statusVmeManagerStore()");
+    mafRegisterLocalSignal("maf.local.logic.status.vmemanager.restore", this, "statusVmeManagerRestore(mafCore::mafMemento *, bool)");
+    mafRegisterLocalSignal("maf.local.logic.settings.store", this, "writeSettings()");
+    mafRegisterLocalSignal("maf.local.logic.settings.restore", this, "readSettings()");
+
+    // Slot registration.
+    mafRegisterLocalCallback("maf.local.logic.settings.store", this, "storeSettings()");
+    mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "restoreSettings()");
 
     // Load the module related to the resources and managers and initialize it.
     bool module_initialized(false);
@@ -100,4 +107,16 @@ void mafLogic::loadPlugins(mafString plugin_dir) {
         argList.append(mafEventArgument(mafString, file));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.loadLibrary", mafEventTypeLocal, &argList);
     }
+}
+
+void mafLogic::storeSettings() {
+    mafMsgDebug() << "Writing mafLogic settings...";
+    mafSettings s;
+    s.setValue("workingDir", m_WorkingDirectory);
+}
+
+void mafLogic::restoreSettings() {
+    mafMsgDebug() << "Reading mafLogic settings...";
+    mafSettings s;
+    m_WorkingDirectory = s.value("workingDir").toString();
 }

@@ -15,7 +15,11 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafGUI;
 
-mafGUIManager::mafGUIManager(QMainWindow *main_win, const mafString code_location) : mafObjectBase(code_location), m_MainWindow(main_win) {
+mafGUIManager::mafGUIManager(QMainWindow *main_win, const mafString code_location) : mafObjectBase(code_location)
+    , m_NewAct(NULL), m_CollaborateAct(NULL)
+    , m_OpenAct(NULL), m_SaveAct(NULL), m_SaveAsAct(NULL), m_RecentFilesSeparatorAct(NULL), m_ExitAct(NULL)
+    , m_CutAct(NULL), m_CopyAct(NULL), m_PasteAct(NULL), m_AboutAct(NULL)
+    , m_MaxRecentFiles(5), m_ActionsCreated(false), m_MainWindow(main_win) {
     mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)");
 }
 
@@ -47,6 +51,14 @@ void mafGUIManager::createActions() {
     m_SaveAsAct->setShortcuts(QKeySequence::SaveAs);
     m_SaveAsAct->setStatusTip(mafTr("Save the document under a new name"));
 
+    m_RecentFileActs.clear();
+    for (int i = 0; i < m_MaxRecentFiles; ++i) {
+        QAction *recentFileAction = new QAction(this);
+        recentFileAction->setVisible(false);
+        connect(recentFileAction, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+        m_RecentFileActs.append(recentFileAction);
+    }
+
     m_ExitAct = new QAction(mafTr("E&xit"), this);
     m_ExitAct->setIconText(mafTr("Exit"));
     m_ExitAct->setShortcuts(QKeySequence::Quit);
@@ -75,10 +87,17 @@ void mafGUIManager::createActions() {
     m_AboutAct->setIconText(mafTr("About"));
     m_AboutAct->setStatusTip(tr("Show the application's About box"));
 
+    m_ActionsCreated = true;
+
     registerSignals();
 }
 
 void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash) {
+    if(!m_ActionsCreated) {
+        // Actions has not been created, so neither the menu.
+        // Ask to create it which will crete also the actions.
+        createMenus();
+    }
     mafString base_class("");
     mafPluggedObjectInformation objInfo;
     mafPluggedObjectsHash::iterator iter = pluginHash.begin();
@@ -130,6 +149,10 @@ void mafGUIManager::registerSignals() {
 }
 
 void mafGUIManager::createMenus() {
+    if(!m_ActionsCreated) {
+        createActions();
+    }
+
     QMenuBar *menuBar = m_MainWindow->menuBar();
 
     m_FileMenu = menuBar->addMenu(tr("&File"));
@@ -138,6 +161,12 @@ void mafGUIManager::createMenus() {
     m_FileMenu->addAction(m_OpenAct);
     m_FileMenu->addAction(m_SaveAct);
     m_FileMenu->addAction(m_SaveAsAct);
+
+    m_RecentFilesSeparatorAct = m_FileMenu->addSeparator();
+    for (int i = 0; i < m_MaxRecentFiles; ++i) {
+        m_FileMenu->addAction(m_RecentFileActs.at(i));
+    }
+
     m_FileMenu->addSeparator();
     m_FileMenu->addAction(m_ExitAct);
 
@@ -163,6 +192,9 @@ void mafGUIManager::createMenus() {
 }
 
 void mafGUIManager::createToolBars() {
+    if(!m_ActionsCreated) {
+        createActions();
+    }
     m_FileToolBar = m_MainWindow->addToolBar(tr("File"));
     m_FileToolBar->addAction(m_NewAct);
     m_FileToolBar->addAction(m_CollaborateAct);
@@ -195,4 +227,36 @@ void mafGUIManager::createView() {
 
 void mafGUIManager::chooseFileDialog(const mafString title, const mafString start_dir, const mafString wildcard) {
     mafString fileName = QFileDialog::getOpenFileName(m_MainWindow, title, start_dir, wildcard);
+}
+
+void mafGUIManager::openRecentFile() {
+    QAction *action = qobject_cast<QAction *>(sender());
+    if (action) {
+        mafString file_to_open(action->data().toString());
+        mafEventArgumentsList argList;
+        argList.append(mafEventArgument(mafString, file_to_open));
+        mafEventBusManager::instance()->notifyEvent("maf.local.logic.openFile", mafEventTypeLocal, &argList);
+    }
+}
+
+void mafGUIManager::updateRecentFileActions() {
+    mafSettings settings;
+    QStringList files = settings.value("recentFileList").toStringList();
+
+    int numRecentFiles = qMin(files.size(), (int)m_MaxRecentFiles);
+
+    for (int i = 0; i < numRecentFiles; ++i) {
+        QString text = tr("&%1 %2").arg(i + 1).arg(strippedName(files[i]));
+        m_RecentFileActs.at(i)->setText(text);
+        m_RecentFileActs.at(i)->setData(files[i]);
+        m_RecentFileActs.at(i)->setVisible(true);
+    }
+    for (int j = numRecentFiles;  j < m_MaxRecentFiles; ++j)
+        m_RecentFileActs.at(j)->setVisible(false);
+
+    m_RecentFilesSeparatorAct->setVisible(numRecentFiles > 0);
+}
+
+mafString mafGUIManager::strippedName(const mafString &fullFileName) {
+    return QFileInfo(fullFileName).fileName();
 }

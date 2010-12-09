@@ -15,7 +15,6 @@ int main(int argc, char *argv[])
     logic.initialize();
 
     mafMainWindow w;
-    w.setSettingsFilename("./SimpleAppSettings");
     w.show();
 
     return a.exec();
