@@ -4,6 +4,8 @@
 import os, sys
 import getopt
 import shutil
+import httplib, urlparse, string
+from base64 import encodestring, decodestring
 
 currentPathScript = os.path.abspath(os.path.split(os.path.realpath(__file__))[0])
 param = {}
@@ -23,8 +25,37 @@ def createFoundationDirectories():
     pass
 
 def downloadFromBiomedtown():
+    h = httplib.HTTPSConnection("www.biomedtown.org")
+    library = ""
+    file = ""
     print "Download from biomedtown..."
-    pass
+    if(str(os.sys.platform).lower() == 'linux2'):
+        print "...Linux foundation libraries"
+        library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/macosx/foundation_libs_snowleopard'
+        file = 'MAF_Foundation_Libs.tar.gz'
+    elif(str(os.sys.platform).lower() == 'darwin'):
+        print "...MacOSX foundation libraries"
+        library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/macosx/foundation_libs_snowleopard'
+        file = 'MAF_Foundation_Libs.tar.gz'
+    elif(str(os.sys.platform).lower() == 'win32'):
+       print "...Windows foundation libraries"
+       library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/macosx/foundation_libs_snowleopard'
+       file = 'MAF_Foundation_Libs.zip'
+    else:
+        print "Operating system actually not supported."
+        return
+    
+    h.putrequest('POST', library)
+    h.putheader("AUTHORIZATION", "Basic %s" % string.replace(
+                                encodestring("%s:%s" % ('lhpparabuild', '2bf5ZM')),
+                               "\012", ""))
+    h.endheaders()
+        
+    f = open(file, 'w')
+    retr_response = h.getresponse()
+    print retr_response.read()
+    f.write(retr_response.read())
+    f.close()
 
 def createEnvironmentVariables():
     print "Create Environment variables..."
@@ -66,6 +97,7 @@ def extractFromLocalCTK():
 def install():
     createFoundationDirectories()
     downloadFromBiomedtown()
+    return
     createEnvironmentVariables()
     gitDownloadFromCTKRepository()
     extractFromLocalCTK()
