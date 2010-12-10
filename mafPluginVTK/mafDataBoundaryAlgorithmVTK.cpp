@@ -79,12 +79,10 @@ mafCore::mafContainerInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(d
 
         m_OutputBoundary = m_PDataFilter->GetOutputPort(0);
         m_PDataFilter->GetOutput()->GetBounds(m_Bounds);
-        int i = 0;
 
     } else {
         m_OutputBoundary = m_Box->GetOutputPort(0);
         m_Box->GetOutput()->GetBounds(m_Bounds);
-        int i = 0;
     }
     return &m_OutputBoundary;
 }
