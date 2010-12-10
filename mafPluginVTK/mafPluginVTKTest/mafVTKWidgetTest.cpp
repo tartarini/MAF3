@@ -203,25 +203,25 @@ private slots:
     }
 
     /// mafVTKWidgetTest allocation test case.
-    void mafEventBridgeVTKAllocationTest();
+    void mafVTKWidgetAllocationTest();
 
     /// mafVTKWidgetTest event connection test case.
-    void mafEventBridgeVTKConnectionTest();
+    void mafVTKWidgetConnectionTest();
 
     /// LeftButtonRelease event connection test case.
-    void mafEventBridgeVTKLeftButtonReleaseTest();
+    void mafVTKWidgetLeftButtonReleaseTest();
 
     /// RightButtonPres event connection test case.
-    void mafEventBridgeVTKRightButtonPressTest();
+    void mafVTKWidgetRightButtonPressTest();
 
     /// RightButtonPress event connection test case.
-    void mafEventBridgeVTKRightButtonReleaseTest();
+    void mafVTKWidgetRightButtonReleaseTest();
 
     /// MiddleButtonPres event connection test case.
-    void mafEventBridgeVTKMiddleButtonPressTest();
+    void mafVTKWidgetMiddleButtonPressTest();
 
     /// MiddleButtonPress event connection test case.
-    void mafEventBridgeVTKMiddleButtonReleaseTest();
+    void mafVTKWidgetMiddleButtonReleaseTest();
 
 
 private:
@@ -254,11 +254,11 @@ void mafVTKWidgetTest::shutdownGraphicResources() {
     delete w;
 }
 
-void mafVTKWidgetTest::mafEventBridgeVTKAllocationTest() {
+void mafVTKWidgetTest::mafVTKWidgetAllocationTest() {
     QVERIFY(m_VTKWidget != NULL);
 }
 
-void mafVTKWidgetTest::mafEventBridgeVTKConnectionTest() {
+void mafVTKWidgetTest::mafVTKWidgetConnectionTest() {
     //Create an Actor to be rendered
     vtkSmartPointer<vtkSphereSource> sphereSource = vtkSmartPointer<vtkSphereSource>::New();
     sphereSource->SetRadius(1);
@@ -303,7 +303,7 @@ void mafVTKWidgetTest::mafEventBridgeVTKConnectionTest() {
 
 }
 
-void mafVTKWidgetTest::mafEventBridgeVTKLeftButtonReleaseTest() {
+void mafVTKWidgetTest::mafVTKWidgetLeftButtonReleaseTest() {
     QTestEventList events;
     QPoint point = QPoint(120, 50);
     events.addMouseRelease(Qt::LeftButton, 0, point);
@@ -313,7 +313,7 @@ void mafVTKWidgetTest::mafEventBridgeVTKLeftButtonReleaseTest() {
     m_CustomManager->m_Counter = 0;
 }
 
-void mafVTKWidgetTest::mafEventBridgeVTKRightButtonPressTest() {
+void mafVTKWidgetTest::mafVTKWidgetRightButtonPressTest() {
     QTestEventList events;
     QPoint point = QPoint(120, 50);
     events.addMousePress(Qt::RightButton, 0, point);
@@ -323,7 +323,7 @@ void mafVTKWidgetTest::mafEventBridgeVTKRightButtonPressTest() {
     m_CustomManager->m_Counter = 0;
 }
 
-void mafVTKWidgetTest::mafEventBridgeVTKRightButtonReleaseTest() {
+void mafVTKWidgetTest::mafVTKWidgetRightButtonReleaseTest() {
     QTestEventList events;
     QPoint point = QPoint(120, 50);
     events.addMouseRelease(Qt::RightButton, 0, point);
@@ -333,7 +333,7 @@ void mafVTKWidgetTest::mafEventBridgeVTKRightButtonReleaseTest() {
     m_CustomManager->m_Counter = 0;
 }
 
-void mafVTKWidgetTest::mafEventBridgeVTKMiddleButtonPressTest() {
+void mafVTKWidgetTest::mafVTKWidgetMiddleButtonPressTest() {
     QTestEventList events;
     QPoint point = QPoint(120, 50);
     events.addMousePress(Qt::MidButton, 0, point);
@@ -343,7 +343,7 @@ void mafVTKWidgetTest::mafEventBridgeVTKMiddleButtonPressTest() {
     m_CustomManager->m_Counter = 0;
 }
 
-void mafVTKWidgetTest::mafEventBridgeVTKMiddleButtonReleaseTest() {
+void mafVTKWidgetTest::mafVTKWidgetMiddleButtonReleaseTest() {
     QTestEventList events;
     QPoint point = QPoint(120, 50);
     events.addMouseRelease(Qt::MidButton, 0, point);
