@@ -1,7 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-02-15T12:35:58
 # -------------------------------------------------
-QT -= gui
+#QT -= gui
 TARGET = mafPluginVTK
 TEMPLATE = lib
 CONFIG += create_prl
@@ -14,11 +14,11 @@ SOURCES += mafDataBoundaryAlgorithmVTK.cpp \
     mafViewVTK.cpp \
     mafDataPipeImageThreshold.cpp \
     mafExternalDataCodecVTK.cpp \
-    mafEventBridgeVTK.cpp \
-    mafVisualPipeSelection.cpp 
-    #mafDataPipeSurface.cpp \
-    #mafInteractorVTK.cpp \
-    
+    mafVisualPipeSelection.cpp \
+    mafVTKWidget.cpp
+
+# mafDataPipeSurface.cpp \
+# mafInteractorVTK.cpp \
 
 HEADERS += mafPluginVTK_global.h \
     mafPluginVTKDefinitions.h \
@@ -27,11 +27,12 @@ HEADERS += mafPluginVTK_global.h \
     mafViewVTK.h \
     mafDataPipeImageThreshold.h \
     mafExternalDataCodecVTK.h \
-    mafEventBridgeVTK.h \
     mafVisualPipeSelection.h \
-    mafDataBoundaryAlgorithmVTK.h
-    #mafDataPipeSurface.h \
-    #mafInteractorVTK.h \
+    mafDataBoundaryAlgorithmVTK.h \
+    mafVTKWidget.h
+
+# mafDataPipeSurface.h \
+# mafInteractorVTK.h \
 
 include(../mafInstallModule.pri)
 include(../mafImportVXL.pri)

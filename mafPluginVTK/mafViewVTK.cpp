@@ -26,11 +26,11 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafViewVTK::mafViewVTK(const mafString code_location) : mafView(code_location) , m_EventBridge(NULL) , m_Iren(NULL), m_Renderer(NULL){
+mafViewVTK::mafViewVTK(const mafString code_location) : mafView(code_location) ,m_Iren(NULL), m_Renderer(NULL){
 }
 
 mafViewVTK::~mafViewVTK() {
-    mafDEL(m_EventBridge);
+    //mafDEL(m_EventBridge);
     if(m_Iren) m_Iren->Delete();
     if(m_Renderer) m_Renderer->Delete();
 }
@@ -41,7 +41,6 @@ void mafViewVTK::create() {
     m_RenWin = mafContainerPointerTypeCast(vtkRenderWindow, m_RenWindow);
     m_Renderer = vtkRenderer::New();
     m_Iren = vtkRenderWindowInteractor::New();
-    m_EventBridge = mafNEW(mafPluginVTK::mafEventBridgeVTK);
 
     (*m_RenWin)->AddRenderer(m_Renderer);
     m_Iren->SetRenderWindow(*m_RenWin);
@@ -50,8 +49,6 @@ void mafViewVTK::create() {
     m_Renderer->SetBackground(0.1, 0.1, 0.1);
     (*m_RenWin)->SetSize(640, 480);
     (*m_RenWin)->SetPosition(400,0);
-
-    m_EventBridge->setInteractor(m_Iren);
 }
 
 void mafViewVTK::removeVME(mafVME *vme) {

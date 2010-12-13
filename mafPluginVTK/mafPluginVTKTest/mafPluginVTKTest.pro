@@ -13,7 +13,7 @@ SOURCES += main.cpp \
     mafSerializationExtDataTest.cpp \
     mafSerializationRawBinaryExtDataTest.cpp \
     mafSerializationRawASCIIExtDataTest.cpp \
-    mafEventBridgeVTKTest.cpp \
+    mafVTKWidgetTest.cpp \
     mafVisualPipeSelectionTest.cpp \
     mafDataBoundaryAlgorithmVTKTest.cpp
 
