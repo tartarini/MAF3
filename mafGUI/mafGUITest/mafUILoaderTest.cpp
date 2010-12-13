@@ -57,6 +57,7 @@ void testmafUILoaderCustom::uiLoad(const mafString& fileName) {
 }
 
 void testmafUILoaderCustom::uiLoaded(mafCore::mafContainerInterface  *widget) {
+    Q_UNUSED(widget);
     mafMsgDebug() << "ui loaded";
     m_IsUILoaded = true;
 }
