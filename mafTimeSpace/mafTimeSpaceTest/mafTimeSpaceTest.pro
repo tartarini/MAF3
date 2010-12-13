@@ -9,13 +9,8 @@ SOURCES += main.cpp \
 HEADERS += 
 include(../../mafInstallTest.pri)
 LIBS += -L$$DESTDIR \
-    -lmafTimeSpace$$LIB_EXT
-INCLUDEPATH += ../../mafCore
-LIBS += -L$$DESTDIR \
-    -lmafCore$$LIB_EXT
-INCLUDEPATH += ../../mafEventBus
-LIBS += -L$$DESTDIR \
-    -lmafEventBus$$LIB_EXT
+    -lmafTimeSpace$$BUILD_EXT -lmafCore$$BUILD_EXT -lmafEventBus$$BUILD_EXT
+INCLUDEPATH += ../../mafCore ../../mafEventBus
     
 include(../../mafImportQXMLRPC.pri)
 include(../../mafImportQtSoap.pri)
