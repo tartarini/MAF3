@@ -8,7 +8,6 @@ SOURCES += main.cpp \
     mafQAManagerTest.cpp
 include(../../mafInstallTest.pri)
 LIBS += -L$$DESTDIR \
-    -lmafQA$$LIB_EXT
+    -lmafQA$$BUILD_EXT -lmafCore$$BUILD_EXT
 INCLUDEPATH += ../../mafCore
-LIBS += -L$$DESTDIR \
-    -lmafCore$$LIB_EXT
+

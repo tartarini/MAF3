@@ -27,4 +27,4 @@ INCLUDEPATH += ../../mafResources \
                         ../../mafCore
 
 LIBS += -L$$DESTDIR \
-    -lmafResources$$LIB_EXT -lmafEventBus$$LIB_EXT -lmafCore$$LIB_EXT -lmafPluginVTK$${LIB_EXT}
+    -lmafResources$$BUILD_EXT -lmafEventBus$$BUILD_EXT -lmafCore$$BUILD_EXT -lmafPluginVTK$${BUILD_EXT}
