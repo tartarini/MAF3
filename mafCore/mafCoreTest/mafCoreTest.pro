@@ -31,5 +31,5 @@ SOURCES += main.cpp \
     mafCoreRegistrationTest.cpp
 include(../../mafInstallTest.pri)
 LIBS += -L$$DESTDIR \
-    -lmafCore$$LIB_EXT
+    -lmafCore$$BUILD_EXT
 HEADERS += 

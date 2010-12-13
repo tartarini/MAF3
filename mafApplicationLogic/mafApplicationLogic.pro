@@ -14,11 +14,10 @@ HEADERS += mafLogicLight.h \
     mafApplicationLogic_global.h \
     mafLogic.h
 include(../mafInstallModule.pri)
-INCLUDEPATH += ../mafEventBus
+INCLUDEPATH += ../mafEventBus \
+                        ../mafCore
 LIBS += -L$$DESTDIR \
-    -lmafEventBus$$LIB_EXT
-INCLUDEPATH += ../mafCore
-LIBS += -L$$DESTDIR \
-    -lmafCore$$LIB_EXT
+    -lmafEventBus$$BUILD_EXT -lmafCore$$BUILD_EXT
+
 include(../mafImportVXL.pri)
 include(../mafImportQtSoap.pri)
