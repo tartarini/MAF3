@@ -21,4 +21,4 @@ HEADERS += mafQA_global.h \
 include(../mafInstallModule.pri)
 INCLUDEPATH += ../mafCore
 LIBS += -L$$DESTDIR \
-    -lmafCore$$LIB_EXT
+    -lmafCore$$BUILD_EXT
