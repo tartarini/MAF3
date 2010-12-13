@@ -54,6 +54,7 @@ void mafOperationManager::initializeConnections() {
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.operation.start", this, "startOperationSignal(const mafString)");
+    mafRegisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(const mafCore::mafObjectBase *)");
     mafRegisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(mafList<mafVariant>)");
     mafRegisterLocalSignal("maf.local.resources.operation.execute", this, "executeOperationSignal()");
     mafRegisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(mafList<mafVariant>)");
