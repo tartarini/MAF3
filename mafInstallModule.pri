@@ -1,37 +1,17 @@
-# install
-# target.path is the directory used for the make install step
+###################################################
+# this file defines the variables and/or commands
+# used to create the framework libraries
+# it remove the definition of symbolic links to the
+# versioned library and rename it according to the name
+# assigned to the TARGET variable.
 
-BUILD_DIR = Release
+include(mafCommon.pri)
 
-CONFIG(debug, debug|release) {
-    unix{
-        LIB_EXT = _debug
-    }
-    win32{
-        LIB_EXT = _d
-    }
-    BUILD_DIR = Debug
-}
+# Remove the symbolic links
+#QMAKE_LN_SHLIB = :
 
-TARGET = $$join(TARGET,,,$$LIB_EXT)
-
-win32 {
-    INSTALLBASE = ..\..\Install
-    DESTDIR = $$INSTALLBASE\bin\\$$BUILD_DIR
-}
-unix {
-    INSTALLBASE = $$PWD/../Install
-    DESTDIR = $$INSTALLBASE/bin/$$BUILD_DIR
-}
-
-maf_use_lcov {
-    QMAKE_CXXFLAGS_DEBUG += -fprofile-arcs
-    QMAKE_CXXFLAGS_DEBUG += -ftest-coverage
-    QMAKE_LFLAGS_DEBUG += -fprofile-arcs
-    QMAKE_LFLAGS_DEBUG += -ftest-coverage
-}
-
-QMAKE_CLEAN += ./MakeFile
+# remove the version number
+#QMAKE_POST_LINK = $$MV_CMD $$DESTDIR/$${LIB_PREFIX}$${TARGET}.1.0.0.$$QMAKE_EXTENSION_SHLIB $$DESTDIR/$${LIB_PREFIX}$${TARGET}.$$QMAKE_EXTENSION_SHLIB
 
 # MAF3 deployment step.
 headers.files = $$HEADERS
