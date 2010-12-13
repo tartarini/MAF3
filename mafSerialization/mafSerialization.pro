@@ -32,7 +32,7 @@ HEADERS += mafSerializationManager.h \
 include(../mafInstallModule.pri)
 INCLUDEPATH += ../mafEventBus
 LIBS += -L$$DESTDIR \
-    -lmafEventBus$$LIB_EXT
+    -lmafEventBus$$BUILD_EXT
 INCLUDEPATH += ../mafCore
 LIBS += -L$$DESTDIR \
-    -lmafCore$$LIB_EXT
+    -lmafCore$$BUILD_EXT
