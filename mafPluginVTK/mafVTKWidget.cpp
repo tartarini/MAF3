@@ -11,8 +11,7 @@
 
 #include "mafVTKWidget.h"
 
-//#include <QVTKWidget.h>
-#include <QEvent.h>
+#include <QInputEvent>
 #include <mafContainer.h>
 #include <mafContainerInterface.h>
 #include <vtkRenderWindowInteractor.h>
