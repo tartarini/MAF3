@@ -8,4 +8,4 @@ COMPILER = $$QMAKE_CC
 
 INCLUDEPATH += $$quote($$(MAF3_FOUNDATION_LIB_DIR)/qtsoap/include/)
 LIBS += -L$$quote($$(MAF3_FOUNDATION_LIB_DIR)/qtsoap/lib) \
-    -lQtSolutions_SOAP-2.7$$LIB_EXT
+    -lQtSolutions_SOAP-2.7$$BUILD_EXT
