@@ -27,15 +27,6 @@
 #include "mafMementoVME.h"
 #include "mafInteractor.h"
 
-#define mafRegisterObjectAndAcceptBind(maf_object_type) \
-    mafRegisterObject(maf_object_type);\
-    mafResources::mafResourcesRegistration::registerBind<maf_object_type>(#maf_object_type);
-
-#define mafUnregisterObjectAndAcceptUnbind(maf_object_type) \
-    mafUnregisterObject(maf_object_type);\
-    mafResources::mafResourcesRegistration::unregisterUnbind(#maf_object_type);
-
-
 namespace mafResources {
 
 /**
@@ -48,32 +39,7 @@ class mafResourcesRegistration {
     /// Register all the concrete objects that can be instantiated by the mafObjectFactory.
     /** This registration is needed to instantiate object by using the mafNEWFromString macro present in objectFactory which needs as input the object type to instantiate as string.*/
     MAFRESOURCESSHARED_EXPORT static void registerResourcesObjects();
-
-    /// Register bind function for the acceptObject static method.
-    template<typename T> static void registerBind(const mafString &className);
-
-    /// Unregister and unbind function for the acceptObject static method.
-    MAFRESOURCESSHARED_EXPORT static void unregisterUnbind(const mafString &className);
-
-    /// Check the given object with the registered accept functions.
-    MAFRESOURCESSHARED_EXPORT static mafStringList acceptObject(mafCore::mafObject *obj);
-
-private:
-    typedef bool (*acceptObjectPointer)(mafCore::mafObject *);
-    typedef mafMap<mafString, acceptObjectPointer> mafBindingMap;
-    MAFRESOURCESSHARED_EXPORT static mafBindingMap m_BindingMap; ///< Map containing the pointers to the accept registered functions.
 };
-
-/////////////////////////////////////////////////////////////
-// Inline methods
-/////////////////////////////////////////////////////////////
-
-template <typename T>
-void mafResourcesRegistration::registerBind( const mafString& className ) {
-    if (!m_BindingMap.contains(className)) {
-        m_BindingMap.insert(className, &T::acceptObject);
-    }
-}
 
 } // namespace mafResources
 

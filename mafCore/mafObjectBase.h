@@ -27,6 +27,7 @@ class mafVisitor;
 class MAFCORESHARED_EXPORT mafObjectBase : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString objectHash READ objectHash WRITE setObjectHash)
+    Q_PROPERTY(QString uiFile READ uiFilename)
     /// typedef macro.
     mafSuperclassMacro(QObject);
 
@@ -61,6 +62,9 @@ public:
     /// Create the hash code given the string as argument. The hash is calculated using the SHA1 encryption algorithm.
 //    void createHashCode(mafString &token);
 
+    /// Return the filename associated to the object's UI.
+    const mafString uiFilename() const;
+
     /// Allows to accept a mafVisitor which will visit the object and will be executed the mafVisitor algorithm.
     virtual void acceptVisitor(mafVisitor *v);
 
@@ -70,6 +74,8 @@ protected:
     and by the serialization mechanism to restore the previous saved object's hash.*/
     void setObjectHash(const mafString obj_hash);
     
+    mafString m_UIFilename; ///< Filename that define the object's UI written into a XML file.
+
 signals:
     /// Signal emitted to alert all receivers that the object has been modified.
     void modifiedObject();
@@ -95,6 +101,10 @@ inline const mafString mafObjectBase::objectHash() const {
 
 inline void mafObjectBase::setObjectHash(const mafString obj_hash) {
     m_ObjectHash = mafUuid(obj_hash);
+}
+
+inline const mafString mafObjectBase::uiFilename() const {
+    return m_UIFilename;
 }
 
 inline bool mafObjectBase::operator ==(const mafObjectBase& obj) const {

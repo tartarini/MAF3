@@ -28,7 +28,6 @@ class mafMemento;
 class MAFCORESHARED_EXPORT mafObject : public mafObjectBase {
     Q_OBJECT
     Q_PROPERTY(bool modified READ modified WRITE setModified)
-    Q_PROPERTY(QString uiFile READ uiFilename)
 
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
@@ -85,18 +84,12 @@ public:
     /// Return the list of all tag inserted.
     const mafTagList *tagList() const;
 
-    /// Return the filename associated to the object's UI.
-    const mafString uiFilename() const;
-
     /// Return the dictionary associated to the object.
     mafDictionary *dictionary() const;
 
 public slots:
     /// Method used to initialize the object's tag list.
     void setTagList(const mafTagList &list);
-
-protected:
-    mafString m_UIFilename; ///< Filename that define the object's UI written into a XML file.
 
 private:
     bool m_Modified; ///< Contains the modified state of the VME.
@@ -114,10 +107,6 @@ inline bool mafObject::modified() const {
 
 inline const mafTagList *mafObject::tagList() const {
     return m_TagList;
-}
-
-inline const mafString mafObject::uiFilename() const {
-    return m_UIFilename;
 }
 
 inline mafDictionary *mafObject::dictionary() const {
