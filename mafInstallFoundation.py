@@ -31,6 +31,7 @@ def createFoundationDirectories():
     pass
 
 def download64BitLinux():
+    print "64 bit Linux Foundation libraries"
     library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/Linux_i386/foundation_linux_64'
     url = bt_home + library
     localFileName = 'MAF_Foundation_Libs.tar.gz'
@@ -38,6 +39,7 @@ def download64BitLinux():
     pass
     
 def download32BitLinux():
+    print "32 bit Linux Foundation libraries"
     library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/Linux_i386/foundation_libs'
     url = bt_home + library
     localFileName = 'MAF_Foundation_Libs.tar.gz'
@@ -45,6 +47,7 @@ def download32BitLinux():
     pass
     
 def download64BitMacOSX():
+    print "64 bit MacOSX Foundation libraries"
     library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/macosx/foundation_libs_snowleopard'
     url = bt_home + library
     localFileName = 'MAF_Foundation_Libs.tar.gz'
@@ -52,6 +55,7 @@ def download64BitMacOSX():
     pass
     
 def download32BitMacOSX():
+    print "32 bit MacOSX Foundation libraries"
     library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/macosx/foundation_libs'
     url = bt_home + library
     localFileName = 'MAF_Foundation_Libs.tar.gz'
@@ -59,6 +63,7 @@ def download32BitMacOSX():
     pass
 
 def download32BitWin32VS2008():
+    print "32 bit Windows Foundation libraries for Visual Studio 2008"
     library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/Win32/MAF3_Foundation_Libs.zip'
     url = bt_home + library
     localFileName = 'MAF_Foundation_Libs.zip'
@@ -66,6 +71,7 @@ def download32BitWin32VS2008():
     pass
 
 def download32BitWin32Mingw():
+    print "32 bit Windows Foundation libraries for Mingw"
     library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/Win32/foundation_libs'
     url = bt_home + library
     localFileName = 'MAF_Foundation_Libs.zip'
