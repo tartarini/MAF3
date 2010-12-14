@@ -27,27 +27,27 @@ mafVisualPipe::~mafVisualPipe() {
 
 void mafVisualPipe::initializeConnections() {
 
-    mafId vme_picked_id = mafIdProvider::instance()->idValue("maf.local.resources.interaction.vmePick");
+    mafId vme_picked_id = mafIdProvider::instance()->idValue("maf.local.resources.interaction.vmeSelect");
     if(vme_picked_id == -1) {
-        mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePick");
+        mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmeSelect");
 
         // Register API signals.
-        mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *)");
+        mafRegisterLocalSignal("maf.local.resources.interaction.vmeSelect", this, "vmeSelectSignal(double *, unsigned long, mafCore::mafContainerInterface *)");
 
         // Register private callbacks.
-        mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafContainerInterface *)");
+        mafRegisterLocalCallback("maf.local.resources.interaction.vmeSelect", this, "vmeSelect(double *, unsigned long, mafCore::mafContainerInterface *)");
     }
 }
 
-void mafVisualPipe::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafContainerInterface *actor) {
+void mafVisualPipe::vmeSelect(double *selectPos, unsigned long modifiers, mafCore::mafContainerInterface *actor) {
     if(actor == m_Output){
         mafVME *vme = this->inputList()->at(0);
         if (vme != NULL){
             mafEventArgumentsList argList;
-            argList.append(mafEventArgument(double *, pickPos));
+            argList.append(mafEventArgument(double *, selectPos));
             argList.append(mafEventArgument(unsigned long, modifiers));
             argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
-            mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePicked", mafEventTypeLocal, &argList);
+            mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmeSelected", mafEventTypeLocal, &argList);
         }
     }
 

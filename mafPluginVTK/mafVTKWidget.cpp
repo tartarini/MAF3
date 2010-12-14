@@ -248,7 +248,7 @@ void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren) {
         argList.append(mafEventArgument(double *, (double *)posPicked));
         argList.append(mafEventArgument(unsigned long, m_Modifiers));
         argList.append(mafEventArgument(mafCore::mafContainerInterface *, actorPicked));
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePick", mafEventTypeLocal, &argList);
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmeSelect", mafEventTypeLocal, &argList);
     }
 }
 
