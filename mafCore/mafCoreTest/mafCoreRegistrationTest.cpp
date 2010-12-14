@@ -28,16 +28,19 @@ public:
     testObjectCustomForCoreRegistration(const mafString code_location = "");
 
     /// Accept function
-    static bool acceptObject(mafCore::mafObject *obj);
+    static bool acceptObject(mafCore::mafObjectBase *obj);
 };
 
 testObjectCustomForCoreRegistration::testObjectCustomForCoreRegistration(const mafString code_location) : mafObject(code_location) {
 }
 
-bool testObjectCustomForCoreRegistration::acceptObject(mafCore::mafObject *obj) {
-    const mafTagList *tagList = obj->tagList();
-    if(tagList->size() > 0) {
-        return true;
+bool testObjectCustomForCoreRegistration::acceptObject(mafCore::mafObjectBase *obj) {
+    mafObject *object = dynamic_cast<mafCore::mafObject*>(obj);
+    if(object != NULL) {
+        const mafTagList *tagList = object->tagList();
+        if(tagList->size() > 0) {
+            return true;
+        }
     }
     return false;
 }
