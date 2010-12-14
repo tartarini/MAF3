@@ -25,7 +25,7 @@ mafDataPipeImageThreshold::mafDataPipeImageThreshold(const mafString code_locati
 mafDataPipeImageThreshold::~mafDataPipeImageThreshold() {
 }
 
-bool mafDataPipeImageThreshold::acceptObject(mafCore::mafObject *obj) {
+bool mafDataPipeImageThreshold::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = dynamic_cast<mafVME*>(obj);
     if(vme != NULL) {
         mafString dataType = vme->dataSetCollection()->itemAtCurrentTime()->dataValue()->externalDataType();

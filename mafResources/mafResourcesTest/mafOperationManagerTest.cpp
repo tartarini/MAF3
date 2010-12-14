@@ -11,9 +11,12 @@
 
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
+#include <mafCoreRegistration.h>
 #include <mafResourcesRegistration.h>
 #include <mafEventBusManager.h>
 #include <mafOperationManager.h>
+#include <mafOperation.h>
+#include <mafVME.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -33,7 +36,7 @@ public:
     testOperationforOperationManager(const mafString code_location = "");
 
     /// Accept function
-    static bool acceptObject(mafCore::mafObject *obj);
+    static bool acceptObject(mafCore::mafObjectBase *obj);
 
     /// Return the value of the int parameter
     int paramInt();
@@ -54,7 +57,7 @@ testOperationforOperationManager::testOperationforOperationManager(const mafStri
     m_CanUnDo = false;
 }
 
-bool testOperationforOperationManager::acceptObject(mafCore::mafObject *obj) {
+bool testOperationforOperationManager::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = dynamic_cast<mafVME*>(obj);
     if(vme != NULL) {
         return true;
@@ -89,7 +92,7 @@ public:
     testFirstUndoableOperationforOperationManager(const mafString code_location = "");
 
     /// Accept function
-    static bool acceptObject(mafCore::mafObject *obj);
+    static bool acceptObject(mafCore::mafObjectBase *obj);
 
     /// undo operation
     /*virtual*/ void unDo(); 
@@ -103,7 +106,7 @@ testFirstUndoableOperationforOperationManager::testFirstUndoableOperationforOper
     m_CanUnDo = true;
 }
 
-bool testFirstUndoableOperationforOperationManager::acceptObject(mafCore::mafObject *obj) {
+bool testFirstUndoableOperationforOperationManager::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = dynamic_cast<mafVME*>(obj);
     if(vme != NULL) {
         return true;
@@ -132,7 +135,7 @@ public:
     testSecondUndoableOperationforOperationManager(const mafString code_location = "");
 
     /// Accept function
-    static bool acceptObject(mafCore::mafObject *obj);
+    static bool acceptObject(mafCore::mafObjectBase *obj);
 
     /// undo operation
     /*virtual*/ void unDo();
@@ -145,7 +148,7 @@ testSecondUndoableOperationforOperationManager::testSecondUndoableOperationforOp
     m_CanUnDo = true;
 }
 
-bool testSecondUndoableOperationforOperationManager::acceptObject(mafCore::mafObject *obj) {
+bool testSecondUndoableOperationforOperationManager::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = dynamic_cast<mafVME*>(obj);
     if(vme != NULL) {
         return true;
@@ -278,12 +281,11 @@ void mafOperationManagerTest::vmeSelectedTest() {
     mafVME *vme = mafNEW(mafResources::mafVME);
 
     // Check that the 'obj' showld not be valid and 'vme' yes instead.
-    binding_class_list = mafResourcesRegistration::acceptObject(vme);
+    binding_class_list = mafCoreRegistration::acceptObject(vme);
     int num = binding_class_list.count();
     QVERIFY(num != 0);
     QVERIFY(binding_class_list.contains("testOperationforOperationManager"));
     mafDEL(vme);
-
 }
 
 void mafOperationManagerTest::executeOperationTest() {

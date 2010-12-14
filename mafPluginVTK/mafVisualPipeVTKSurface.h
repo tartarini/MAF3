@@ -42,7 +42,7 @@ public:
     /* virtual */ ~mafVisualPipeVTKSurface();
 
     /// Accept function
-    static bool acceptObject(mafCore::mafObject *obj);
+    static bool acceptObject(mafCore::mafObjectBase *obj);
 
     /// Initialize and create the pipeline.
     /*virtual*/ void createPipe();

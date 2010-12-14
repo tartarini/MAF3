@@ -16,7 +16,7 @@
 
 using namespace mafCore;
 
-mafObject::mafObject(const mafString code_location) : mafObjectBase(code_location), m_UIFilename(""), m_Modified(false), m_TagList(NULL), m_Dictionary(NULL) {
+mafObject::mafObject(const mafString code_location) : mafObjectBase(code_location), m_Modified(false), m_TagList(NULL), m_Dictionary(NULL) {
     m_TagList = new mafTagList();
     m_Dictionary = new mafDictionary;
 }

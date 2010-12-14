@@ -24,6 +24,15 @@
 #include "mafMonitorHardDisk.h"
 #include "mafOntology.h"
 
+#define mafRegisterObjectAndAcceptBind(maf_object_type) \
+    mafRegisterObject(maf_object_type);\
+    mafCore::mafCoreRegistration::registerBind<maf_object_type>(#maf_object_type);
+
+#define mafUnregisterObjectAndAcceptUnbind(maf_object_type) \
+    mafUnregisterObject(maf_object_type);\
+    mafCore::mafCoreRegistration::unregisterUnbind(#maf_object_type);
+
+
 namespace mafCore {
 
 /**
@@ -47,7 +56,32 @@ class MAFCORESHARED_EXPORT mafCoreRegistration {
         mafRegisterObject(mafCore::mafMonitorHardDisk);
         mafRegisterObject(mafCore::mafOntology);
     }
+
+    /// Register bind function for the acceptObject static method.
+    template<typename T> static void registerBind(const mafString &className);
+
+    /// Unregister and unbind function for the acceptObject static method.
+    MAFCORESHARED_EXPORT static void unregisterUnbind(const mafString &className);
+
+    /// Check the given object with the registered accept functions.
+    MAFCORESHARED_EXPORT static mafStringList acceptObject(mafObjectBase *obj);
+
+private:
+    typedef bool (*acceptObjectPointer)(mafObjectBase *);
+    typedef mafMap<mafString, acceptObjectPointer> mafBindingMap;
+    MAFCORESHARED_EXPORT static mafBindingMap m_BindingMap; ///< Map containing the pointers to the accept registered functions.
 };
+
+/////////////////////////////////////////////////////////////
+// Inline methods
+/////////////////////////////////////////////////////////////
+
+template <typename T>
+void mafCoreRegistration::registerBind( const mafString& className ) {
+    if (!m_BindingMap.contains(className)) {
+        m_BindingMap.insert(className, &T::acceptObject);
+    }
+}
 
 } // namespace mafCore
 

@@ -7,7 +7,6 @@ TEMPLATE = lib
 CONFIG += create_prl
 win32:CONFIG += dll
 DEFINES += mafCore_EXPORTS
-
 HEADERS += mafCore_global.h \
     mafObjectBase.h \
     mafIdProvider.h \
@@ -74,7 +73,8 @@ SOURCES += mafObjectBase.cpp \
     mafCommand.cpp \
     mafHierarchy.cpp \
     mafOntology.cpp \
-    mafExceptions.cpp
+    mafExceptions.cpp \
+    mafCoreRegistration.cpp
 include(../mafInstallModule.pri)
 include(../mafInstallFoundationLibraries.pri)
 OTHER_FILES += mafTree.tpp \

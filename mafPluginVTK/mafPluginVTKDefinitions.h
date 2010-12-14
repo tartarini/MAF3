@@ -15,6 +15,7 @@
 
 // Includes list
 #include "mafPluginVTK_global.h"
+#include <mafCoreRegistration.h>
 #include <mafResourcesRegistration.h>
 #include <mafResourcesDefinitions.h>
 #include <mafContainer.h>

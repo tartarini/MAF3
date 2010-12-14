@@ -104,7 +104,7 @@ private slots:
     void executeWithParameters(mafList<mafVariant> op_with_parameters);
 
     /// called when selected a vme
-    void vmeSelected(mafVME *vme);
+//    void vmeSelected(mafVME *vme);
 
     /// stop current operation
     void stopOperation();
@@ -140,8 +140,8 @@ private:
     mafOperation *m_LastExecutedOperation; ///< Last executed operation
     mafLinkedList<mafOperation *> m_UndoStack; ///< Undo stack which is a linked list of operations
     mafOperation *m_CurrentOperation; ///< Current operation handled by th manager
-    mafResourceList m_OperationsList; ///< List of plugged operations.
-    OperationAcceptVMEMap m_OperationAcceptCurentVMEMap; /// Map which determines if the current vme can be input of the operations
+//    mafResourceList m_OperationsList; ///< List of plugged operations.
+//    OperationAcceptVMEMap m_OperationAcceptCurentVMEMap; /// Map which determines if the current vme can be input of the operations
     mafVME *m_SelectedVME; ///< Vme that is currently selected
     mafCore::mafId m_ExecWithParameters; ///< Id associated with the EXECUTE_WITH_PARAMETERS event.
 };
