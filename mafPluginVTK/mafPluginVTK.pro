@@ -49,4 +49,5 @@ message("pippo")
 message("$$QMAKE_EXTENSION_SHLIB")
 message("pippo")
 # install the mafplugin library (but leaving the generated library for test suite linking pourposes)
-QMAKE_POST_LINK += $$CP_CMD $$DESTDIR/$${LIB_PREFIX}$${TARGET}.1.0.0.$$QMAKE_EXTENSION_SHLIB $$DESTDIR/lib$${TARGET}.mafplugin
+unix:QMAKE_POST_LINK += $$CP_CMD $$DESTDIR/$${LIB_PREFIX}$${TARGET}.$${QMAKE_EXTENSION_SHLIB}.1.0.0 $$DESTDIR/lib$${TARGET}.mafplugin
+macx:QMAKE_POST_LINK += $$CP_CMD $$DESTDIR/$${LIB_PREFIX}$${TARGET}.1.0.0.$$QMAKE_EXTENSION_SHLIB $$DESTDIR/lib$${TARGET}.mafplugin
