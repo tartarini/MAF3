@@ -5,10 +5,16 @@ import os, sys
 import getopt
 import shutil
 import httplib, urlparse, string
+import platform
+
+import urllib2
+
 from base64 import encodestring, decodestring
 
 currentPathScript = os.path.abspath(os.path.split(os.path.realpath(__file__))[0])
 param = {}
+paramError = {}
+bt_home = "http://www.biomedtown.org"
     
 def errhandler():
    print "Unrecognized compiler"
@@ -24,38 +30,114 @@ def createFoundationDirectories():
         os.makedirs(foundationDir)
     pass
 
-def downloadFromBiomedtown():
-    h = httplib.HTTPSConnection("www.biomedtown.org")
-    library = ""
-    file = ""
-    print "Download from biomedtown..."
-    if(str(os.sys.platform).lower() == 'linux2'):
-        print "...Linux foundation libraries"
-        library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/macosx/foundation_libs_snowleopard'
-        file = 'MAF_Foundation_Libs.tar.gz'
-    elif(str(os.sys.platform).lower() == 'darwin'):
-        print "...MacOSX foundation libraries"
-        library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/macosx/foundation_libs_snowleopard'
-        file = 'MAF_Foundation_Libs.tar.gz'
-    elif(str(os.sys.platform).lower() == 'win32'):
-       print "...Windows foundation libraries"
-       library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/macosx/foundation_libs_snowleopard'
-       file = 'MAF_Foundation_Libs.zip'
-    else:
-        print "Operating system actually not supported."
-        return
+def download64BitLinux():
+    library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/Linux_i386/foundation_linux_64'
+    url = bt_home + library
+    localFileName = 'MAF_Foundation_Libs.tar.gz'
+    downloadFromLink(url, localFileName)
+    pass
     
-    h.putrequest('POST', library)
-    h.putheader("AUTHORIZATION", "Basic %s" % string.replace(
-                                encodestring("%s:%s" % ('lhpparabuild', '2bf5ZM')),
-                               "\012", ""))
-    h.endheaders()
-        
-    f = open(file, 'w')
-    retr_response = h.getresponse()
-    print retr_response.read()
-    f.write(retr_response.read())
-    f.close()
+def download32BitLinux():
+    library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/Linux_i386/foundation_libs'
+    url = bt_home + library
+    localFileName = 'MAF_Foundation_Libs.tar.gz'
+    downloadFromLink(url, localFileName)
+    pass
+    
+def download64BitMacOSX():
+    library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/macosx/foundation_libs_snowleopard'
+    url = bt_home + library
+    localFileName = 'MAF_Foundation_Libs.tar.gz'
+    downloadFromLink(url, localFileName)
+    pass
+    
+def download32BitMacOSX():
+    library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/macosx/foundation_libs'
+    url = bt_home + library
+    localFileName = 'MAF_Foundation_Libs.tar.gz'
+    downloadFromLink(url, localFileName)
+    pass
+
+def download32BitWin32VS2008():
+    library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/Win32/MAF3_Foundation_Libs.zip'
+    url = bt_home + library
+    localFileName = 'MAF_Foundation_Libs.zip'
+    downloadFromLink(url, localFileName)
+    pass
+
+def download32BitWin32Mingw():
+    library = '/biomed_town/MAF/MAF3%20Floor/download/foundation_libraries/Win32/foundation_libs'
+    url = bt_home + library
+    localFileName = 'MAF_Foundation_Libs.zip'
+    downloadFromLink(url, localFileName)
+    pass
+
+def chunk_report(bytes_so_far, chunk_size, total_size):
+   percent = float(bytes_so_far) / total_size
+   percent = round(percent*100, 2)
+   sys.stdout.write("Downloaded %d of %d bytes (%0.2f%%)\r" % 
+       (bytes_so_far, total_size, percent))
+
+   if bytes_so_far >= total_size:
+      sys.stdout.write('\n')
+
+def chunk_read(response, chunk_size=8192, report_hook=None):
+   total_size = response.info().getheader('Content-Length').strip()
+   total_size = int(total_size)
+   bytes_so_far = 0
+
+   total = ""
+   while 1:
+      chunk = response.read(chunk_size)
+      total += chunk
+      bytes_so_far += len(chunk)
+
+      if not chunk:
+         break
+
+      if report_hook:
+         report_hook(bytes_so_far, chunk_size, total_size)
+
+   return total
+   
+def downloadFromLink(url, localFileName):
+   response = urllib2.urlopen(url);
+   data = chunk_read(response, report_hook=chunk_report)
+   f = open(localFileName, 'w')
+   f.write(data)
+   f.close()
+
+def errhandler():
+   print "Unrecognized system."
+
+def downloadFromBiomedtown():    
+    platformOS = {
+    "64bit-linux2": download64BitLinux,
+    "32bit-linux2": download32BitLinux,
+    "64bit-darwin": download64BitMacOSX,
+    "32bit-darwin": download32BitMacOSX,
+    "64bit-linux2-gcc4": download64BitLinux,
+    "32bit-linux2-gcc4": download32BitLinux,
+    "64bit-darwin-gcc4": download64BitMacOSX,
+    "32bit-darwin-gcc4": download32BitMacOSX,
+    #"64bit-win32" : download64BitWin32,
+    "32bit-win32" : download32BitWin32VS2008,
+    "32bit-win32-vs2008" : download32BitWin32VS2008,
+    "32bit-win32-mingw" : download32BitWin32Mingw,
+    }
+    
+    #construct variable
+    value = platform.architecture()[0] + "-" + str(os.sys.platform).lower()
+    key = 'compiler'
+    if(key in param):
+        value = value + "-" + param[key]
+    print "Detected System..." + value
+    try:
+        print "Download in Progress..."
+        platformOS.get(value,errhandler)()
+        print "Download Completed"
+    except Exception, e:
+        print "Error trying to launch the download from biomedtown..." , e
 
 def createEnvironmentVariables():
     print "Create Environment variables..."
@@ -97,21 +179,21 @@ def extractFromLocalCTK():
 def install():
     createFoundationDirectories()
     downloadFromBiomedtown()
-    return
     createEnvironmentVariables()
     gitDownloadFromCTKRepository()
     extractFromLocalCTK()
           
 def usage():
     print "python mafBuild.py [-h] [-f foundation-output-dir] [-g git-path]"
-    print "-h, --help							show help (this)"
-    print "-f, --foundation-output-dir			select where set foundation library"
-    print "-g, --git-path						set directory of git"
+    print "-h, --help                            show help (this)"
+    print "-f, --foundation-output-dir           select where set foundation library"
+    print "-c, --compiler=                       select the compiler (used only if process is code)"
+    print "-g, --git-path                        set directory of git"
     print 
     
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hf:g:", ["help", "foundation-output-dir=", "git-path="])
+        opts, args = getopt.getopt(sys.argv[1:], "hf:g:", ["help", "foundation-output-dir=", "compiler=", "git-path="])
     except getopt.GetoptError, err:
         # print help information and exit:
         print str(err) # will print something like "option -a not recognized"
@@ -122,6 +204,12 @@ def main():
         if o in ("-h", "--help"):
             usage()
             sys.exit()
+        elif o in ("-c", "--compiler"):
+            acceptance = ["vs2008","mingw","gcc4"]
+            if(a in acceptance):
+                param['compiler'] = a
+            else:
+                paramError['compiler'] = a
         elif o in ("-f", "--foundation-output-dir"):
             param['foundation-output-dir'] = os.path.abspath(os.path.normpath(a))
         elif o in ("-g", "--git-path"):
@@ -129,7 +217,11 @@ def main():
         else:
             assert False, "unhandled option"
     
-    #complete check of parameters needed
+    if(len(paramError) != 0 ):
+        for k, v in paramError.iteritems():
+            print v, " is not a valid " , k
+        usage()
+        exit()
     
     install()
     
