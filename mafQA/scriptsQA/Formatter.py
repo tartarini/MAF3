@@ -48,15 +48,16 @@ def run(param):
    if(os.path.exists(htmlDir + "/Styles")):
      shutil.rmtree(htmlDir + "/Styles")
      shutil.copytree(scriptsDir + "/Styles",htmlDir + "/Styles/")
-     for root, dirs, files in os.walk(htmlDir + "/Styles/.svn", topdown=False):
-       for name in files:
-           filename = os.path.join(root, name)
-           os.chmod(filename, stat.S_IWUSR)
-           os.remove(filename)
-       for name in dirs:
-           os.rmdir(os.path.join(root, name))
-     os.chmod(htmlDir + "/Styles/.svn", stat.S_IWUSR)
-     os.rmdir(htmlDir + "/Styles/.svn")
+     if(os.path.exists(htmlDir+ "/Styles/.svn")):
+       for root, dirs, files in os.walk(htmlDir + "/Styles/.svn", topdown=False):
+         for name in files:
+             filename = os.path.join(root, name)
+             os.chmod(filename, stat.S_IWUSR)
+             os.remove(filename)
+         for name in dirs:
+             os.rmdir(os.path.join(root, name))
+       os.chmod(htmlDir + "/Styles/.svn", stat.S_IWUSR)
+       os.rmdir(htmlDir + "/Styles/.svn")
      
    xmlList=os.listdir(xmlDir)
    htmlList=[file.replace(".xml", ".html") for file in os.listdir(xmlDir)]
