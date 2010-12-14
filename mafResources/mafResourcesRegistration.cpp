@@ -15,25 +15,6 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafMap<mafString, mafResourcesRegistration::acceptObjectPointer> mafResourcesRegistration::m_BindingMap = mafBindingMap();
-
-mafStringList mafResourcesRegistration::acceptObject(mafCore::mafObject *obj) {
-    mafBindingMap::iterator iter = m_BindingMap.begin();
-    mafBindingMap::iterator iter_end = m_BindingMap.end();
-    mafStringList res_list;
-    while(iter != iter_end) {
-        if(iter.value()(obj)) {
-            res_list.append(iter.key());
-        }
-        iter++;
-    }
-    return res_list;
-}
-
-void mafResourcesRegistration::unregisterUnbind( const mafString& className ) {
-    m_BindingMap.remove(className);
-}
-
 void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObject(mafResources::mafResource);
     mafRegisterObject(mafResources::mafVME);
