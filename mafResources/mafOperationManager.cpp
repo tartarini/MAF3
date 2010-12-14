@@ -16,9 +16,10 @@
 #include "mafVME.h"
 #include "mafUndoStackCommand.h"
 
+
 using namespace mafCore;
 using namespace mafResources;
-
+using namespace mafEventBus;
 
 mafOperationManager* mafOperationManager::instance() {
     // Create the instance of the VME manager.
@@ -82,7 +83,7 @@ void mafOperationManager::initializeConnections() {
 }
 
 
-void mafOperationManager::vmeSelected(mafVME *vme) {
+/*void mafOperationManager::vmeSelected(mafVME *vme) {
     if(vme) {
         // VME has been selected.
         m_SelectedVME = vme;
@@ -100,7 +101,7 @@ void mafOperationManager::vmeSelected(mafVME *vme) {
             m_OperationAcceptCurentVMEMap.insert(metaOp->className(), isAccepted);
         }
     }
-}
+}*/
 
 void mafOperationManager::executeWithParameters(mafList<mafVariant> op_with_parameters) {
     REQUIRE(op_with_parameters.count() == 2);
@@ -125,6 +126,10 @@ void mafOperationManager::startOperation(const mafString operation) {
 
     m_CurrentOperation = (mafOperation *)mafNEWFromString(operation);
     bool result = m_CurrentOperation->initialize();
+
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase*, m_CurrentOperation));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.started", mafEventTypeLocal, &argList);
 
     ENSURE(result);
 }
