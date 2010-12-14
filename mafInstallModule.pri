@@ -20,6 +20,6 @@ headers.files += ../mafImportQXMLRPC.pri
 headers.files += ../mafImportQScxml.pri
 headers.files += ../mafImportVXL.pri
 headers.files += ../mafImportVTK.pri
-headers.path = $$INSTALLBASE/include
+headers.path = $$(MAF3_INSTALL_DIR)/include
 INSTALLS += headers
 PRE_TARGETDEPS += install_headers

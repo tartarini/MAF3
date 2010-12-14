@@ -28,6 +28,8 @@ CONFIG(debug, debug|release) {
 
 TARGET = $$join(TARGET,,,$$BUILD_EXT)
 
+
+
 # Initialize the directory that will contains the binary
 # this directory takes in account of the definition of
 # the environment variable MAF3_INSTALL_DIR
