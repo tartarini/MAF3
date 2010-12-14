@@ -28,7 +28,7 @@ CONFIG(debug, debug|release) {
 
 TARGET = $$join(TARGET,,,$$BUILD_EXT)
 
-INSTALL_DIR = $$(MAF3_INSTALL_DIR)
+INSTALL_DIR = @@MAF_INSTALL_BASE@@
 
 # Initialize the directory that will contains the binary
 # this directory takes in account of the definition of
@@ -64,4 +64,5 @@ MAF_SERIALIZATION = $$DESTDIR/$${LIB_PREFIX}mafSerialization$${BUILD_EXT}.$$QMAK
 MAF_TIMESPACE = $$DESTDIR/$${LIB_PREFIX}mafTimeSpace$${BUILD_EXT}.$$QMAKE_EXTENSION_SHLIB
 MAF_APPLICATIONLOGIC = $$DESTDIR/$${LIB_PREFIX}mafApplicationLogic$${BUILD_EXT}.$$QMAKE_EXTENSION_SHLIB
 MAF_GUI = $$DESTDIR/$${LIB_PREFIX}mafGUI$${BUILD_EXT}.$$QMAKE_EXTENSION_SHLIB
+
 
