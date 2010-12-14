@@ -22,7 +22,7 @@ INCLUDEPATH += ../mafCore \
     ../mafEventBus \
     ../mafApplicationLogic
 LIBS += -L$$DESTDIR \
-    -lmafCore$$LIB_EXT \
-    -lmafEventBus$$LIB_EXT \
-    -lmafApplicationLogic$$LIB_EXT
+    -lmafCore$$BUILD_EXT \
+    -lmafEventBus$$BUILD_EXT \
+    -lmafApplicationLogic$$BUILD_EXT
 RESOURCES += mafAppImages.qrc

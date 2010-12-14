@@ -1,40 +1,24 @@
-# install
-# target.path is the directory used for the make install step
+###################################################
+# this file defines the variables and/or commands
+# used to create the test suite executables
 
+include(mafCommon.pri)
+
+# for Mac OSX Operative system create a unix executable.
 mac: CONFIG-=app_bundle
 
-BUILD_DIR = Release
+# Add library dependencies path to the destdir (where all the libraries are generated)
+DEPENDPATH += $$DESTDIR
 
-CONFIG(debug, debug|release) {
-    unix:LIB_EXT = _debug
-    win32:LIB_EXT = _d
-	BUILD_DIR = Debug
-}
-
-TARGET = $$join(TARGET,,,$$LIB_EXT)
-
+# Add the mafQA library to the include path
 win32 {
-    INSTALLBASE = ..\..\..\Install
     INCLUDEPATH += ..\..\mafQA
-    DESTDIR = $$INSTALLBASE\bin\\$$BUILD_DIR
-    DEPENDPATH += $$INSTALLBASE\bin\\$$BUILD_DIR
 }
 unix {
-    INSTALLBASE = $$PWD/../Install
     INCLUDEPATH += ../../mafQA
-    DESTDIR = $$INSTALLBASE/bin/$$BUILD_DIR
-    DEPENDPATH += $$INSTALLBASE/bin/$$BUILD_DIR
 }
+
+# Add the tested library directory to the include path
 INCLUDEPATH += ..
 
-LIBS += -L$$DESTDIR -lmafQA$$LIB_EXT
-
-maf_use_lcov {
-    message("adding lcov compiler flags")
-    QMAKE_CXXFLAGS_DEBUG += -fprofile-arcs
-    QMAKE_CXXFLAGS_DEBUG += -ftest-coverage
-    QMAKE_LFLAGS_DEBUG += -fprofile-arcs
-    QMAKE_LFLAGS_DEBUG += -ftest-coverage
-}
-
-QMAKE_CLEAN += ./MakeFile
+LIBS += -L$$DESTDIR -lmafQA$$BUILD_EXT

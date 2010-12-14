@@ -7,16 +7,11 @@ SOURCES += main.cpp \
     mafLogicLightTest.cpp \
     mafLogicTest.cpp
 include(../../mafInstallTest.pri)
-unix:LIB_EXT = _debug
-win32:LIB_EXT = _d
+
 LIBS += -L$$DESTDIR \
-    -lmafApplicationLogic$$LIB_EXT
-INCLUDEPATH += ../../mafEventBus
-LIBS += -L$$DESTDIR \
-    -lmafEventBus$$LIB_EXT
-INCLUDEPATH += ../../mafCore
-LIBS += -L$$DESTDIR \
-    -lmafCore$$LIB_EXT
+    -lmafApplicationLogic$$BUILD_EXT -lmafEventBus$$BUILD_EXT -lmafCore$$BUILD_EXT
+INCLUDEPATH += ../../mafEventBus ../../mafCore
+
 include(../../mafImportVXL.pri)
 include(../../mafImportQXMLRPC.pri)
 include(../../mafImportQtSoap.pri)

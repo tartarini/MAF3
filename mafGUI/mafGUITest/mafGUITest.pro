@@ -17,9 +17,9 @@ include(../../mafImportQtSoap.pri)
 INCLUDEPATH += ../../mafEventBus \
     ../../mafCore
 LIBS += -L$$DESTDIR \
-    -lmafEventBus$$LIB_EXT \
-    -lmafCore$$LIB_EXT \
-    -lmafGUI$$LIB_EXT
+    -lmafEventBus$$BUILD_EXT \
+    -lmafCore$$BUILD_EXT \
+    -lmafGUI$$BUILD_EXT
 
 win32:system(copy testUIFile.ui $$DESTDIR)
 unix:system(cp testUIFile.ui $$DESTDIR/)

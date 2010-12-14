@@ -3,4 +3,4 @@
 # Foundation libraries dependencies
 INCLUDEPATH += $$quote($$(MAF3_FOUNDATION_LIB_DIR)/qxmlrpc/include/)
 LIBS += -L$$quote($$(MAF3_FOUNDATION_LIB_DIR)/qxmlrpc/lib) \
-    -lqxmlrpc$$LIB_EXT
+    -lqxmlrpc$$BUILD_EXT

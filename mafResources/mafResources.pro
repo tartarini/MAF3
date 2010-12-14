@@ -73,5 +73,5 @@ include(../mafImportQtSoap.pri)
 INCLUDEPATH += ../mafEventBus \
                 ../mafCore
 LIBS += -L$$DESTDIR \
-    -lmafEventBus$$LIB_EXT \
-    -lmafCore$$LIB_EXT
+    -lmafEventBus$$BUILD_EXT \
+    -lmafCore$$BUILD_EXT

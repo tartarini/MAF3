@@ -146,6 +146,9 @@ void mafGUIManager::registerSignals() {
     mafRegisterLocalSignal("maf.local.gui.action.paste", m_PasteAct, "triggered()");
     mafRegisterLocalSignal("maf.local.gui.action.about", m_AboutAct, "triggered()");
     mafRegisterLocalSignal("maf.local.gui.pathSelected", this, "pathSelected(const mafString)");
+
+    // OperationManager's callback
+    mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(const mafCore::mafObjectBase *)");
 }
 
 void mafGUIManager::createMenus() {
@@ -215,6 +218,10 @@ void mafGUIManager::startOperation() {
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafString, op));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
+}
+
+void mafGUIManager::operationDidStart(const mafCore::mafObjectBase *operation) {
+//    mafString guiFilename = operation
 }
 
 void mafGUIManager::createView() {

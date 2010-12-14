@@ -20,6 +20,4 @@ include(../../mafImportQXMLRPC.pri)
 include(../../mafImportQtSoap.pri)
 INCLUDEPATH += ../../mafCore
 LIBS += -L$$DESTDIR \
-    -lmafCore$$LIB_EXT
-LIBS += -L$$DESTDIR \
-    -lmafEventBus$$LIB_EXT
+    -lmafEventBus$$BUILD_EXT -lmafCore$$BUILD_EXT

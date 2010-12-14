@@ -108,6 +108,9 @@ private slots:
     /// Allows to ask to open the selected recent file.
     void openRecentFile();
 
+    /// Slot needed to intercept the started operation and ask it for the GUI filename.
+    void operationDidStart(const mafCore::mafObjectBase *operation);
+
 private:
     /// Initialize the topics and register the signals with the mafEventBus.
     void registerSignals();

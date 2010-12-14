@@ -26,6 +26,7 @@ This class provides the manager class for MAF3 Operations.
 The mafOperationManager defines the SET_PARAMETERS id that allows to assign parameter to the operaiton to run.
 The manager defines these IDs:
 - maf.local.resources.operation.start create the instance and initialize the operation.
+- maf.local.resources.operation.started notify all the observer that the operation has started.
 - maf.local.resources.operation.setParameters asign the parameters to the current started operation.
 - maf.local.resources.operation.execute start the execution of operation.
 - maf.local.resources.operation.executeWithParameters start the execution of operation.
@@ -55,6 +56,9 @@ public:
 signals:
     /// start operation and set that operation as current one
     void startOperationSignal(const mafString operation);
+
+    /// Notification signal for started operation.
+    void operationDidStart(const mafCore::mafObjectBase *operation);
 
     /// set the parameters to the current started operation
     void setOperationParametersSignal(mafList<mafVariant> parameters);

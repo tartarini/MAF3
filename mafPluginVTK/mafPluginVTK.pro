@@ -19,6 +19,7 @@ SOURCES += mafDataBoundaryAlgorithmVTK.cpp \
 
 # mafDataPipeSurface.cpp \
 # mafInteractorVTK.cpp \
+
 HEADERS += mafPluginVTK_global.h \
     mafPluginVTKDefinitions.h \
     mafPluginRegistrator.h \
@@ -32,16 +33,17 @@ HEADERS += mafPluginVTK_global.h \
 
 # mafDataPipeSurface.h \
 # mafInteractorVTK.h \
+
 include(../mafInstallModule.pri)
 include(../mafImportVXL.pri)
 include(../mafImportVTK.pri)
 include(../mafImportQtSoap.pri)
-INCLUDEPATH += ../mafResources
+
+INCLUDEPATH += ../mafResources \
+                        ../mafEventBus \
+                        ../mafCore
 LIBS += -L$$DESTDIR \
-    -lmafResources$$LIB_EXT
-INCLUDEPATH += ../mafEventBus
-LIBS += -L$$DESTDIR \
-    -lmafEventBus$$LIB_EXT
-INCLUDEPATH += ../mafCore
-LIBS += -L$$DESTDIR \
-    -lmafCore$$LIB_EXT
+    -lmafResources$$BUILD_EXT -lmafEventBus$$BUILD_EXT -lmafCore$$BUILD_EXT
+
+# install the mafplugin library (but leaving the generated library for test suite linking pourposes)
+QMAKE_POST_LINK += $$CP_CMD $$DESTDIR/$${LIB_PREFIX}$${TARGET}.1.0.0.$$QMAKE_EXTENSION_SHLIB $$DESTDIR/lib$${TARGET}.mafplugin

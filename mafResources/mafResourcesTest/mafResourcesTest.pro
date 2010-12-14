@@ -34,12 +34,8 @@ include(../../mafImportVXL.pri)
 include(../../mafImportQXMLRPC.pri)
 include(../../mafImportQtSoap.pri)
 
-# Foundation libraries dependencies
+# libraries dependencies
+INCLUDEPATH += ../../mafEventBus \
+                        ../../mafCore
 LIBS += -L$$DESTDIR \
-    -lmafResources$$LIB_EXT
-INCLUDEPATH += ../../mafEventBus
-LIBS += -L$$DESTDIR \
-    -lmafEventBus$$LIB_EXT
-INCLUDEPATH += ../../mafCore
-LIBS += -L$$DESTDIR \
-    -lmafCore$$LIB_EXT
+    -lmafResources$$BUILD_EXT -lmafEventBus$$BUILD_EXT -lmafCore$$BUILD_EXT
