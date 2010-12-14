@@ -279,6 +279,7 @@ def mafCommonCreate():
     if(os.path.exists(fullPath)):
         os.remove(fullPath)
     directory = param['directory']
+    print directory
     f = open(fullPath, 'w')
     import re
     data = open(fullPathIn).read()
