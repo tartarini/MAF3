@@ -11,9 +11,12 @@
 
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
+#include <mafCoreRegistration.h>
 #include <mafResourcesRegistration.h>
 #include <mafEventBusManager.h>
 #include <mafOperationManager.h>
+#include <mafOperation.h>
+#include <mafVME.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -278,12 +281,11 @@ void mafOperationManagerTest::vmeSelectedTest() {
     mafVME *vme = mafNEW(mafResources::mafVME);
 
     // Check that the 'obj' showld not be valid and 'vme' yes instead.
-    binding_class_list = mafResourcesRegistration::acceptObject(vme);
+    binding_class_list = mafCoreRegistration::acceptObject(vme);
     int num = binding_class_list.count();
     QVERIFY(num != 0);
     QVERIFY(binding_class_list.contains("testOperationforOperationManager"));
     mafDEL(vme);
-
 }
 
 void mafOperationManagerTest::executeOperationTest() {
