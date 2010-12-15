@@ -214,6 +214,7 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
     test_dir.append("/maf3Logs");
     mafString test_file = test_dir;
     test_file.append("/testExtFile.raw");
+    mafMsgDebug() << test_file;
 
     mafString plug_codec_id = "maf.local.serialization.plugCodec";
     mafString obj_type("mafResources::mafVME");
