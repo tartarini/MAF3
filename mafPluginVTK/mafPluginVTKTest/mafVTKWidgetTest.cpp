@@ -305,7 +305,7 @@ void mafVTKWidgetTest::mafVTKWidgetConnectionTest() {
 
 void mafVTKWidgetTest::mafVTKWidgetLeftButtonReleaseTest() {
     QTestEventList events;
-    QPoint point = QPoint(120, 50);
+    QPoint point = QPoint(1200000, 50);
     events.addMouseRelease(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
 
@@ -315,7 +315,7 @@ void mafVTKWidgetTest::mafVTKWidgetLeftButtonReleaseTest() {
 
 void mafVTKWidgetTest::mafVTKWidgetRightButtonPressTest() {
     QTestEventList events;
-    QPoint point = QPoint(120, 50);
+    QPoint point = QPoint(1200000, 50);
     events.addMousePress(Qt::RightButton, 0, point);
     events.simulate(m_VTKWidget);
 
@@ -325,7 +325,7 @@ void mafVTKWidgetTest::mafVTKWidgetRightButtonPressTest() {
 
 void mafVTKWidgetTest::mafVTKWidgetRightButtonReleaseTest() {
     QTestEventList events;
-    QPoint point = QPoint(120, 50);
+    QPoint point = QPoint(12000000, 50);
     events.addMouseRelease(Qt::RightButton, 0, point);
     events.simulate(m_VTKWidget);
 
@@ -335,7 +335,7 @@ void mafVTKWidgetTest::mafVTKWidgetRightButtonReleaseTest() {
 
 void mafVTKWidgetTest::mafVTKWidgetMiddleButtonPressTest() {
     QTestEventList events;
-    QPoint point = QPoint(120, 50);
+    QPoint point = QPoint(1200000, 50);
     events.addMousePress(Qt::MidButton, 0, point);
     events.simulate(m_VTKWidget);
 
@@ -345,7 +345,7 @@ void mafVTKWidgetTest::mafVTKWidgetMiddleButtonPressTest() {
 
 void mafVTKWidgetTest::mafVTKWidgetMiddleButtonReleaseTest() {
     QTestEventList events;
-    QPoint point = QPoint(120, 50);
+    QPoint point = QPoint(1200000, 50);
     events.addMouseRelease(Qt::MidButton, 0, point);
     events.simulate(m_VTKWidget);
 
