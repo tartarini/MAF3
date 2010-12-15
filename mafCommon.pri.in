@@ -33,8 +33,13 @@ INSTALL_DIR = @@MAF_INSTALL_BASE@@
 # Initialize the directory that will contains the binary
 # this directory takes in account of the definition of
 # the environment variable MAF3_INSTALL_DIR
+
+# variable containing the library prefix
+LIB_PREFIX = lib
+
 win32 {
     DESTDIR = $$INSTALL_DIR\bin\\$$BUILD_DIR
+    LIB_PREFIX = ""
 }
 unix {
     DESTDIR = $$INSTALL_DIR/bin/$$BUILD_DIR
@@ -47,10 +52,6 @@ maf_use_lcov {
     QMAKE_LFLAGS_DEBUG += -fprofile-arcs
     QMAKE_LFLAGS_DEBUG += -ftest-coverage
 }
-
-# variable containing the library prefix
-LIB_PREFIX = ""
-!win32:LIB_PREFIX = lib
 
 # Add the Makefile to the clean command
 QMAKE_CLEAN += ./MakeFile
