@@ -168,7 +168,7 @@ void mafVisualPipeVTKSurfaceTest::updatePipeTestFromPlugIn() {
     mafMsgDebug() << "Description: " << info.m_Description;
 
     mafStringList binding_class_list;
-    binding_class_list = mafResourcesRegistration::acceptObject(m_VME);
+    binding_class_list = mafCoreRegistration::acceptObject(m_VME);
     int num = binding_class_list.count();
     QVERIFY(num == 2);
 

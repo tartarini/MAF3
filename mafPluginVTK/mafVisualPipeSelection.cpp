@@ -28,7 +28,7 @@ mafVisualPipeSelection::mafVisualPipeSelection(const mafString code_location) : 
 mafVisualPipeSelection::~mafVisualPipeSelection() {
 }
 
-bool mafVisualPipeSelection::acceptObject(mafCore::mafObject *obj) {
+bool mafVisualPipeSelection::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = dynamic_cast<mafVME*>(obj);
     if(vme != NULL) {
         mafString dataType = vme->dataSetCollection()->itemAtCurrentTime()->dataValue()->externalDataType();

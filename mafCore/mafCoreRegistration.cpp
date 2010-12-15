@@ -15,7 +15,7 @@ using namespace mafCore;
 
 mafMap<mafString, mafCoreRegistration::acceptObjectPointer> mafCoreRegistration::m_BindingMap = mafBindingMap();
 
-mafStringList mafCoreRegistration::acceptObject(mafCore::mafObject *obj) {
+mafStringList mafCoreRegistration::acceptObject(mafCore::mafObjectBase *obj) {
     mafBindingMap::iterator iter = m_BindingMap.begin();
     mafBindingMap::iterator iter_end = m_BindingMap.end();
     mafStringList res_list;

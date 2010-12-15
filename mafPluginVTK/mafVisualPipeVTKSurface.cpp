@@ -29,7 +29,7 @@ mafVisualPipeVTKSurface::~mafVisualPipeVTKSurface() {
     m_Mapper->Delete();
 }
 
-bool mafVisualPipeVTKSurface::acceptObject(mafCore::mafObject *obj) {
+bool mafVisualPipeVTKSurface::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = dynamic_cast<mafVME*>(obj);
     if(vme != NULL) {
         mafString dataType = vme->dataSetCollection()->itemAtCurrentTime()->dataValue()->externalDataType();

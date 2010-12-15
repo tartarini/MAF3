@@ -257,8 +257,9 @@ def build():
             
     #print param
     createBinDirectories()
-    mafInstallModuleCreate()
-    mafInstallTestCreate()
+    mafCommonCreate()
+    #mafInstallModuleCreate()
+    #mafInstallTestCreate()
 
     takeBuild = {
     "vs2008": buildVS2008,
@@ -270,6 +271,22 @@ def build():
         takeBuild.get(param['compiler'],errhandler)()
     except Exception, e:
         print "Error trying to launch the compiler." , e   
+
+def mafCommonCreate():
+    #to remove at the beginning
+    fullPath = os.path.abspath(currentPathScript  + "/mafCommon.pri")
+    fullPathIn = os.path.abspath(currentPathScript  + "/mafCommon.pri.in")
+    if(os.path.exists(fullPath)):
+        os.remove(fullPath)
+    directory = param['directory']
+    print directory
+    f = open(fullPath, 'w')
+    import re
+    data = open(fullPathIn).read()
+    old = '@@MAF_INSTALL_BASE@@'
+    new = directory.replace('\\','\\\\')
+    f.write( re.sub(old,new,data) )
+    f.close() 
 
         
 def mafInstallModuleCreate():

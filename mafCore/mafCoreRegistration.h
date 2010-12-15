@@ -64,10 +64,10 @@ class MAFCORESHARED_EXPORT mafCoreRegistration {
     MAFCORESHARED_EXPORT static void unregisterUnbind(const mafString &className);
 
     /// Check the given object with the registered accept functions.
-    MAFCORESHARED_EXPORT static mafStringList acceptObject(mafObject *obj);
+    MAFCORESHARED_EXPORT static mafStringList acceptObject(mafObjectBase *obj);
 
 private:
-    typedef bool (*acceptObjectPointer)(mafObject *);
+    typedef bool (*acceptObjectPointer)(mafObjectBase *);
     typedef mafMap<mafString, acceptObjectPointer> mafBindingMap;
     MAFCORESHARED_EXPORT static mafBindingMap m_BindingMap; ///< Map containing the pointers to the accept registered functions.
 };
