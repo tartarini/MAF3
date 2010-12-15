@@ -69,7 +69,7 @@ public slots:
     /// observer needed to receive the 'maf.local.resources.interaction.middleButtonRelease' signal
     void middleButtonRelease(unsigned long modifiers);
 
-    /// observer needed to receive the 'maf.local.resources.interaction.vmeSelect' signal
+    /// observer needed to receive the 'maf.local.resources.interaction.vmePick' signal
     void pick(double *pos, unsigned long modifiers, mafCore::mafContainerInterface *interface);
 
 signals:
@@ -115,8 +115,8 @@ testInteractionManagerCustom::testInteractionManagerCustom(QString code_location
     mafRegisterLocalSignal("maf.local.resources.interaction.middleButtonRelease", this, "middleButtonReleaseSignal(unsigned long)");
     mafRegisterLocalCallback("maf.local.resources.interaction.middleButtonRelease", this, "middleButtonRelease(unsigned long)");
 
-    mafRegisterLocalSignal("maf.local.resources.interaction.vmeSelect", this, "selectSignal(double *, unsigned long, mafCore::mafContainerInterface *)");
-    mafRegisterLocalCallback("maf.local.resources.interaction.vmeSelect", this, "select(double *, unsigned long, mafCore::mafContainerInterface *)");
+    mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "pickSignal(double *, unsigned long, mafCore::mafContainerInterface *)");
+    mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "pick(double *, unsigned long, mafCore::mafContainerInterface *)");
     m_Counter = 0;
 }
 
@@ -305,7 +305,7 @@ void mafVTKWidgetTest::mafVTKWidgetConnectionTest() {
 
 void mafVTKWidgetTest::mafVTKWidgetLeftButtonReleaseTest() {
     QTestEventList events;
-    QPoint point = QPoint(1200000, 50);
+    QPoint point = QPoint(120, 50);
     events.addMouseRelease(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
 
@@ -315,7 +315,7 @@ void mafVTKWidgetTest::mafVTKWidgetLeftButtonReleaseTest() {
 
 void mafVTKWidgetTest::mafVTKWidgetRightButtonPressTest() {
     QTestEventList events;
-    QPoint point = QPoint(1200000, 50);
+    QPoint point = QPoint(120, 50);
     events.addMousePress(Qt::RightButton, 0, point);
     events.simulate(m_VTKWidget);
 
@@ -325,7 +325,7 @@ void mafVTKWidgetTest::mafVTKWidgetRightButtonPressTest() {
 
 void mafVTKWidgetTest::mafVTKWidgetRightButtonReleaseTest() {
     QTestEventList events;
-    QPoint point = QPoint(1200000, 50);
+    QPoint point = QPoint(120, 50);
     events.addMouseRelease(Qt::RightButton, 0, point);
     events.simulate(m_VTKWidget);
 
@@ -335,7 +335,7 @@ void mafVTKWidgetTest::mafVTKWidgetRightButtonReleaseTest() {
 
 void mafVTKWidgetTest::mafVTKWidgetMiddleButtonPressTest() {
     QTestEventList events;
-    QPoint point = QPoint(1200000, 50);
+    QPoint point = QPoint(120, 50);
     events.addMousePress(Qt::MidButton, 0, point);
     events.simulate(m_VTKWidget);
 
@@ -345,7 +345,7 @@ void mafVTKWidgetTest::mafVTKWidgetMiddleButtonPressTest() {
 
 void mafVTKWidgetTest::mafVTKWidgetMiddleButtonReleaseTest() {
     QTestEventList events;
-    QPoint point = QPoint(1200000, 50);
+    QPoint point = QPoint(120, 50);
     events.addMouseRelease(Qt::MidButton, 0, point);
     events.simulate(m_VTKWidget);
 
