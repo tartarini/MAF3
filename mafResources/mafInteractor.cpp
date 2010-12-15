@@ -1,5 +1,5 @@
 /*
- *  mafInteractor.m
+ *  mafInteractor.cpp
  *  mafResources
  *
  *  Created by Paolo Quadrani on 07/10/10.
