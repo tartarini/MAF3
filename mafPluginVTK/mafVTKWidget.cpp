@@ -25,7 +25,7 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafPluginVTK;
 
-mafVTKWidget::mafVTKWidget() : QVTKWidget()
+mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f)
 {
 }
 
