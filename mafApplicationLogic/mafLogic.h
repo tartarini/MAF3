@@ -63,6 +63,13 @@ public:
     plugin directory will be ApplicationDirectory/plugins.*/
     void loadPlugins(mafString plugin_dir = "");
 
+    /// Method used to add custom object defined in vertical application.
+    /** This type of addition to the framework is the same of that one done by the plug-in
+    but is used to add a small number of objects without incapsulating them into a plug-in,
+    because for example are still in beta testing phase or because is needed to plug only one
+    custom class.*/
+    void plugObject(const mafString base_class, const mafString class_type, const mafString object_label);
+
 public slots:
     /// Allows to assign the application's working directory.
     void setWorkingDirectory(const mafString wd);
@@ -98,6 +105,8 @@ signals:
 private:
     mafString m_WorkingDirectory; ///< Contains the root directory of the application's data.
     mafString m_ApplicationDirectory; ///< Contains the application's working directory.
+    mafCore::mafPluggedObjectsHash m_CustomPluggedObjectsHash; ///< Hash containing operations, views and all the plugged custom objects.
+    mafHash<mafString, mafLibrary *> m_LibraryHandlersHash;
 };
 
 inline void mafLogic::setWorkingDirectory(const mafString wd) {

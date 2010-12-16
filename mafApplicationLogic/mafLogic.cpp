@@ -12,7 +12,7 @@
 #include "mafLogic.h"
 
 #include <mafCoreSingletons.h>
-#include <mafEventDefinitions.h>
+#include <mafEventBusManager.h>
 
 using namespace mafEventBus;
 
@@ -48,6 +48,12 @@ mafLogic::mafLogic(const mafString code_location) : mafLogicLight(code_location)
 }
 
 mafLogic::~mafLogic() {
+    // Unload the mafResourcesLibrary.
+    bool result(false);
+    result = mafShutdownModule(m_LibraryHandlersHash.value(RESOURCES_LIBRARY_NAME));
+    if(result) {
+        m_LibraryHandlersHash.remove(RESOURCES_LIBRARY_NAME);
+    }
 }
 
 bool mafLogic::initialize() {
@@ -76,20 +82,29 @@ bool mafLogic::initialize() {
     mafRegisterLocalCallback("maf.local.logic.settings.store", this, "storeSettings()");
     mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "restoreSettings()");
 
-    // Load the module related to the resources and managers and initialize it.
-    bool module_initialized(false);
-    module_initialized = mafInitializeModule(RESOURCES_LIBRARY_NAME);
+    m_CustomPluggedObjectsHash.clear();
 
-    // load the plugins (if any)
-//    loadPlugins();
+    // Load the module related to the resources and managers and initialize it.
+    mafLibrary *handler(NULL);
+    handler = mafInitializeModule(RESOURCES_LIBRARY_NAME);
+    if(handler) {
+        m_LibraryHandlersHash.insert(RESOURCES_LIBRARY_NAME, handler);
+    }
 
     // Perform design by contract check.
-    ENSURE(module_initialized);
-    return module_initialized;
+    ENSURE(handler);
+    return handler != NULL;
+}
+
+void mafLogic::plugObject(const mafString base_class, const mafString class_type, const mafString object_label) {
+    // Add information to the
+    mafPluggedObjectInformation objectInformation(object_label, class_type);
+    // add the plugged object to the hash
+    m_CustomPluggedObjectsHash.insertMulti(base_class, objectInformation);
 }
 
 void mafLogic::loadPlugins(mafString plugin_dir) {
-    // Build the plugin absolute directory.
+    // Compose the plugin absolute directory.
     mafString pluginDir = plugin_dir.isEmpty() ? (m_ApplicationDirectory + QDir::toNativeSeparators("/plugins")) : plugin_dir;
     pluginDir = QDir::cleanPath(pluginDir);
 
@@ -107,6 +122,11 @@ void mafLogic::loadPlugins(mafString plugin_dir) {
         argList.append(mafEventArgument(mafString, file));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.loadLibrary", mafEventTypeLocal, &argList);
     }
+
+    // Plug also the custom objects plugged from the vertical appliation.
+    argList.clear();;
+    argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, m_CustomPluggedObjectsHash));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.registerLibrary", mafEventTypeLocal, &argList);
 }
 
 void mafLogic::storeSettings() {
