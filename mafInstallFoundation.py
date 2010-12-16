@@ -109,7 +109,7 @@ def chunk_read(response, chunk_size=8192, report_hook=None):
 def downloadFromLink(url, localFileName):
    response = urllib2.urlopen(url);
    data = chunk_read(response, report_hook=chunk_report)
-   f = open(localFileName, 'w')
+   f = open(os.path.join(param['foundation-output-dir'],localFileName), 'wb')
    f.write(data)
    f.close()
 
