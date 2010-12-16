@@ -15,24 +15,29 @@
 using namespace mafResources;
 
 void mafResourcesSingletons::mafSingletonsInitialize() {
-        // Register all classes instantiable in mafResources module.
-        mafResourcesRegistration::registerResourcesObjects();
-        mafPluginManager::instance();
-        mafViewManager::instance();
-        mafVMEManager::instance();
-        mafOperationManager::instance();
-        mafInteractionManager::instance();
+    // Register all classes instantiable in mafResources module.
+    mafResourcesRegistration::registerResourcesObjects();
+    mafPluginManager::instance();
+    mafViewManager::instance();
+    mafVMEManager::instance();
+    mafOperationManager::instance();
+    mafInteractionManager::instance();
 }
 
 void mafResourcesSingletons::mafSingletonsShutdown() {
-        mafPluginManager::instance()->shutdown();
-        mafViewManager::instance()->shutdown();
-        mafVMEManager::instance()->shutdown();
-        mafOperationManager::instance()->shutdown();
-        mafInteractionManager::instance()->shutdown();
+    // Un-register objects from the factory.
+    mafResourcesRegistration::unregisterResourcesObjects();
+    mafPluginManager::instance()->shutdown();
+    mafViewManager::instance()->shutdown();
+    mafVMEManager::instance()->shutdown();
+    mafOperationManager::instance()->shutdown();
+    mafInteractionManager::instance()->shutdown();
 }
 
 void mafResources::initializeModule() {
     mafResources::mafResourcesSingletons::mafSingletonsInitialize();
 }
 
+void mafResources::shutdownModule() {
+    mafResources::mafResourcesSingletons::mafSingletonsShutdown();
+}

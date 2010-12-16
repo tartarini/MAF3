@@ -38,6 +38,9 @@ class mafResourcesSingletons {
 extern "C" {
     /// Initialize the module by instantiating the singletons and register all the classes with the mafObjectFactory.
     MAFRESOURCESSHARED_EXPORT void initializeModule();
+
+    /// Shutdown the module by shuting down the singletons and un-register all the classes from the mafObjectFactory.
+    MAFRESOURCESSHARED_EXPORT void shutdownModule();
 }
 
 } // namespace mafResources
