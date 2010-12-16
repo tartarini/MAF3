@@ -11,7 +11,7 @@
 
 #include "mafLogicLight.h"
 
-#include <mafCoreRegistration.h>
+#include <mafCoreSingletons.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -22,11 +22,12 @@ mafLogicLight::mafLogicLight(const mafString code_location) : mafObjectBase(code
 
 mafLogicLight::~mafLogicLight() {
     m_EventBus->shutdown();
+    mafCoreSingletons::mafSingletonsShutdown();
 }
 
 bool mafLogicLight::initialize() {
     // Register all the core objects into the object factory.
-    mafCoreRegistration::registerCoreObjects();
+    mafCoreSingletons::mafSingletonsInitialize();
 
     // Initialize the event bus by asking its instance.
     m_EventBus = mafEventBusManager::instance();
