@@ -39,6 +39,10 @@ class mafResourcesRegistration {
     /// Register all the concrete objects that can be instantiated by the mafObjectFactory.
     /** This registration is needed to instantiate object by using the mafNEWFromString macro present in objectFactory which needs as input the object type to instantiate as string.*/
     MAFRESOURCESSHARED_EXPORT static void registerResourcesObjects();
+
+    /// Un-Register all the concrete objects that can be instantiated by the mafObjectFactory.
+    /** This method is needed to remove objects from the objectFactory when the mafResources module is dynamically unloaded from the application.*/
+    MAFRESOURCESSHARED_EXPORT static void unregisterResourcesObjects();
 };
 
 } // namespace mafResources

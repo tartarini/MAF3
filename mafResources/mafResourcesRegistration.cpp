@@ -32,3 +32,19 @@ void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObject(mafResources::mafInteractor);
 }
 
+void mafResourcesRegistration::unregisterResourcesObjects() {
+    mafUnregisterObject(mafResources::mafResource);
+    mafUnregisterObject(mafResources::mafVME);
+    mafUnregisterObject(mafResources::mafDataSet);
+    mafUnregisterObject(mafResources::mafInterpolatorBefore);
+    mafUnregisterObject(mafResources::mafInterpolatorNearest);
+    mafUnregisterObject(mafResources::mafDataSet);
+    mafUnregisterObject(mafResources::mafDataSetCollection);
+    mafUnregisterObject(mafResources::mafOperation);
+    mafUnregisterObject(mafResources::mafView);
+    mafUnregisterObject(mafResources::mafMementoResource);
+    mafUnregisterObject(mafResources::mafMementoDataSet);
+    mafUnregisterObject(mafResources::mafMementoVME);
+    mafUnregisterObject(mafResources::mafSceneNode);
+    mafUnregisterObject(mafResources::mafInteractor);
+}
