@@ -29,7 +29,7 @@ void mafCoreSingletons::mafSingletonsShutdown() {
     mafIdProvider::instance()->shutdown();
 }
 
-bool mafInitializeModule(mafString module_library) {
+mafLibrary *mafInitializeModule(mafString module_library) {
     typedef void mafFnInitModule();
     mafFnInitModule *initModule;
 
@@ -47,10 +47,31 @@ bool mafInitializeModule(mafString module_library) {
     if(!initModule) {
         mafString err_msg(mafTr("'%1' module can not be initialized!!").arg(module_library));
         mafMsgCritical("%s", err_msg.toAscii().constData());
-        return false;
+        return NULL;
     }
 
     // ...and if no errors occourred, call the module initialization.
     initModule();
-    return true;
+    return libraryHandler;
+}
+
+bool mafShutdownModule(mafLibrary *libraryHandler) {
+    REQUIRE(libraryHandler);
+
+    typedef void mafFnShutdownModule();
+    mafFnShutdownModule *shutdownModule;
+
+    // Get the handle to the 'initializeModule' function
+    shutdownModule = reinterpret_cast<mafFnShutdownModule *>(libraryHandler->resolve("shutdownModule"));
+    if(!shutdownModule) {
+        mafString err_msg(mafTr("'%1' module can not shutdown!!").arg(libraryHandler->fileName()));
+        mafMsgCritical("%s", err_msg.toAscii().constData());
+        return false;
+    }
+
+    // ...and if no errors occourred, call the module shutdown.
+    shutdownModule();
+
+    // and then unload the library.
+    return libraryHandler->unload();
 }

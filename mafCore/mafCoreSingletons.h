@@ -40,7 +40,10 @@ extern "C" {
     /// Given the library name, it will load the library and will call the 'initModule' global function.
     /** This function will load the library name given as parameter, will search for the inner method 'initModule'
     and will call it so to initialize the module's singletones and register defined objects into the mafObjectFactory.*/
-    MAFCORESHARED_EXPORT bool mafInitializeModule(mafString module_library);
+    MAFCORESHARED_EXPORT mafLibrary *mafInitializeModule(mafString module_library);
+
+    /// Given the library handler, it will call the shutdown of the singletones defined in it and unload the library.
+    MAFCORESHARED_EXPORT bool mafShutdownModule(mafLibrary *libraryHandler);
 }
 
 #endif // MAFCORESINGLETONS_H
