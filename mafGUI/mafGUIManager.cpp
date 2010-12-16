@@ -10,6 +10,8 @@
  */
 
 #include "mafGUIManager.h"
+#include "mafUILoaderQt.h"
+
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -21,9 +23,12 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const mafString code_locatio
     , m_CutAct(NULL), m_CopyAct(NULL), m_PasteAct(NULL), m_AboutAct(NULL)
     , m_MaxRecentFiles(5), m_ActionsCreated(false), m_MainWindow(main_win) {
     mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)");
+    m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
+    connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafContainerInterface*)), this, SLOT(uiLoaded(mafCore::mafContainerInterface*)));
 }
 
 mafGUIManager::~mafGUIManager() {
+    mafDEL(m_UILoader);
 }
 
 void mafGUIManager::createActions() {
@@ -119,6 +124,18 @@ void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pl
             }
         }
         iter++;
+    }
+}
+
+void mafGUIManager::selectVme(mafCore::mafObjectBase *vme) {
+    mafStringList accepted_list;
+    accepted_list = mafCoreRegistration::acceptObject(vme);
+
+    mafList<QAction *> opActions = m_OpMenu->actions();
+    mafString op;
+    foreach(QAction *action, opActions) {
+        op = action->data().toString();
+        action->setEnabled(accepted_list.contains(op));
     }
 }
 
@@ -221,7 +238,20 @@ void mafGUIManager::startOperation() {
 }
 
 void mafGUIManager::operationDidStart(const mafCore::mafObjectBase *operation) {
-//    mafString guiFilename = operation
+    // Get the started operation
+    mafString guiFilename = operation->uiFilename();
+    // Set the current panel to the parent panel of operations.
+    // m_CurrentPanel = m_OperationPanel;
+    // Ask the UI Loader to load the operation's GUI.
+    m_UILoader->uiLoad(guiFilename);
+}
+
+void mafGUIManager::uiLoaded(mafCore::mafContainerInterface *guiWidget) {
+    // Get the widget from the container
+    mafContainer<QWidget> *w = mafContainerPointerTypeCast(QWidget, guiWidget);
+    QWidget *widget = *w;
+    // put the widget on the interface.
+    //widget->setParent(m_CurrentPanel);
 }
 
 void mafGUIManager::createView() {
