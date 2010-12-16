@@ -33,10 +33,10 @@ private slots:
     }
 
     /// mafResourcesRegistration registration test case.
-    void registrationTest();
+    void registrationAndUnregistrationTest();
 };
 
-void mafResourcesRegistrationTest::registrationTest() {
+void mafResourcesRegistrationTest::registrationAndUnregistrationTest() {
     // Register all the objects in the mafResources module.
     mafResourcesRegistration::registerResourcesObjects();
 
@@ -47,6 +47,8 @@ void mafResourcesRegistrationTest::registrationTest() {
     QVERIFY(obj != NULL);
     // free its memory.
     mafDEL(obj);
+
+    mafResourcesRegistration::unregisterResourcesObjects();
 }
 
 MAF_REGISTER_TEST(mafResourcesRegistrationTest);
