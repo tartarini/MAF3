@@ -22,7 +22,10 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const mafString code_locatio
     , m_OpenAct(NULL), m_SaveAct(NULL), m_SaveAsAct(NULL), m_RecentFilesSeparatorAct(NULL), m_ExitAct(NULL)
     , m_CutAct(NULL), m_CopyAct(NULL), m_PasteAct(NULL), m_AboutAct(NULL)
     , m_MaxRecentFiles(5), m_ActionsCreated(false), m_MainWindow(main_win) {
+
     mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)");
+    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateMenuForSelectedVme(mafCore::mafObjectBase *)");
+
     m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
     connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafContainerInterface*)), this, SLOT(uiLoaded(mafCore::mafContainerInterface*)));
 }
@@ -98,6 +101,10 @@ void mafGUIManager::createActions() {
 }
 
 void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash) {
+    mafCore::mafObjectBase *sel_vme;
+    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
+
     if(!m_ActionsCreated) {
         // Actions has not been created, so neither the menu.
         // Ask to create it which will crete also the actions.
@@ -125,9 +132,11 @@ void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pl
         }
         iter++;
     }
+
+    this->updateMenuForSelectedVme(sel_vme);
 }
 
-void mafGUIManager::selectVme(mafCore::mafObjectBase *vme) {
+void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
     mafStringList accepted_list;
     accepted_list = mafCoreRegistration::acceptObject(vme);
 

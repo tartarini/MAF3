@@ -111,7 +111,8 @@ private slots:
     void openRecentFile();
 
     /// Called when a VME has been selected.
-    void selectVme(mafCore::mafObjectBase *vme);
+    /** This method will update all the operation's menu items according to the new selected VME.*/
+    void updateMenuForSelectedVme(mafCore::mafObjectBase *vme);
 
     /// Slot needed to intercept the started operation and ask it for the GUI filename.
     void operationDidStart(const mafCore::mafObjectBase *operation);
