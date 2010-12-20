@@ -20,6 +20,7 @@ FORMS += mafMainWindow.ui \
     form.ui
 include(../../mafCommon.pri)
 include(../../mafImportVTK.pri)
+include(../../mafImportVXL.pri)
 DEPENDPATH += $$DESTDIR
 INCLUDEPATH += ../../mafCore \
     ../../mafEventBus \
