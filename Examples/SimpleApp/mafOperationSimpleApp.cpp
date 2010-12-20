@@ -18,6 +18,10 @@ mafOperationSimpleApp::mafOperationSimpleApp(const mafString code_location) : ma
 }
 
 bool mafOperationSimpleApp::acceptObject(mafCore::mafObjectBase *obj) {
-    mafVME *vme = dynamic_cast<mafVME*>(obj);
-    return vme != NULL;
+    if(obj == NULL) {
+        return false;
+    }
+    mafString ct(obj->metaObject()->className());
+//    mafObject *vme = dynamic_cast<mafObject*>(obj);
+    return ct == "mafResources::mafVME";
 }
