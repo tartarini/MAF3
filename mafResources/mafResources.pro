@@ -69,6 +69,7 @@ HEADERS += mafResource.h \
     mafMementoViewManager.h
 include(../mafInstallModule.pri)
 include(../mafImportVXL.pri)
+include(../mafImportQXMLRPC.pri)
 include(../mafImportQtSoap.pri)
 INCLUDEPATH += ../mafEventBus \
                 ../mafCore

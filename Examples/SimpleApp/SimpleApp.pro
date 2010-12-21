@@ -21,6 +21,8 @@ FORMS += mafMainWindow.ui \
 include(../../mafCommon.pri)
 include(../../mafImportVTK.pri)
 include(../../mafImportVXL.pri)
+include(../../mafImportQXMLRPC.pri)
+include(../../mafImportQtSoap.pri)
 DEPENDPATH += $$DESTDIR
 INCLUDEPATH += ../../mafCore \
     ../../mafEventBus \
