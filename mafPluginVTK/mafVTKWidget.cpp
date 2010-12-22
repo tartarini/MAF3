@@ -56,7 +56,7 @@ void mafVTKWidget::mousePressEvent(QMouseEvent* e){
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
     // Check if a VME has been picked
-    this->vmePickCheck(iren);
+    this->vmePickCheck(iren, e);
 
     // invoke appropriate vtk event
     switch(e->button())
@@ -103,7 +103,7 @@ void mafVTKWidget::mouseReleaseEvent(QMouseEvent* e){
   argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
   // Check if a VME has been picked
-  this->vmePickCheck(iren);
+  this->vmePickCheck(iren, e);
 
   // invoke appropriate vtk event
   switch(e->button())
@@ -151,7 +151,7 @@ void mafVTKWidget::wheelEvent(QWheelEvent* e){
   argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
   // Check if a VME has been picked
-  this->vmePickCheck(iren);
+  this->vmePickCheck(iren, e);
 
   // invoke vtk event
   // if delta is positive, it is a forward wheel event
@@ -189,7 +189,7 @@ void mafVTKWidget::mouseMoveEvent(QMouseEvent* e){
   argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
   // Check if a VME has been picked
-  this->vmePickCheck(iren);
+  this->vmePickCheck(iren, e);
 
   // invoke vtk event
   mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseMove", mafEventTypeLocal, &argList);
@@ -222,7 +222,7 @@ void mafVTKWidget::getModifiers(vtkRenderWindowInteractor* iren) {
     }
 }
 
-void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren) {
+void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e) {
     int mousePosX = 0;
     int mousePosY = 0;
     double posPicked[3];
@@ -244,10 +244,14 @@ void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren) {
     }
 
     if (actor != NULL) {
+        int m = e->type();
+
+
         mafEventArgumentsList argList;
         argList.append(mafEventArgument(double *, (double *)posPicked));
         argList.append(mafEventArgument(unsigned long, m_Modifiers));
         argList.append(mafEventArgument(mafCore::mafContainerInterface *, actorPicked));
+        argList.append(mafEventArgument(QEvent *, e));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePick", mafEventTypeLocal, &argList);
     }
 }

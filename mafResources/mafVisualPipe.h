@@ -41,11 +41,11 @@ public:
     mafCore::mafContainerInterface *output();
 
 signals:
-    void vmePickSignal(double *pickPos, unsigned long,  mafCore::mafContainerInterface *actor);
+    void vmePickSignal(double *pickPos, unsigned long,  mafCore::mafContainerInterface *actor, QEvent *);
 
 
 private slots:
-    void vmePick(double *pickPos, unsigned long, mafCore::mafContainerInterface *actor);
+    void vmePick(double *pickPos, unsigned long, mafCore::mafContainerInterface *actor, QEvent *);
 
 private:
     void initializeConnections();

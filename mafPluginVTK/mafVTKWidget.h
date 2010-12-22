@@ -42,7 +42,7 @@ private:
     void getModifiers(vtkRenderWindowInteractor* iren);
 
     /// Check if VME has been picked
-    void vmePickCheck(vtkRenderWindowInteractor* iren);
+    void vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e);
 
     unsigned long m_Modifiers;  ///< Optional modifiers for the button.
 };
