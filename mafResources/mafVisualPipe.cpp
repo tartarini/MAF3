@@ -35,7 +35,7 @@ void mafVisualPipe::initializeConnections() {
         mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
 
         // Register private callbacks.
-        mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePickSelect(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
+        mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
     }
 }
 
