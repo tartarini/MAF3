@@ -15,12 +15,14 @@
 // Includes list
 #include "mafGUIDefinitions.h"
 #include <mafObjectBase.h>
+#include <mafContainer.h>
 
 #include <QtGui>
 
 namespace mafGUI {
 
 // Class forwarding list
+class mafUILoaderQt;
 
 /**
  Class name: mafGUIManager
@@ -108,8 +110,15 @@ private slots:
     /// Allows to ask to open the selected recent file.
     void openRecentFile();
 
+    /// Called when a VME has been selected.
+    /** This method will update all the operation's menu items according to the new selected VME.*/
+    void updateMenuForSelectedVme(mafCore::mafObjectBase *vme);
+
     /// Slot needed to intercept the started operation and ask it for the GUI filename.
     void operationDidStart(const mafCore::mafObjectBase *operation);
+
+    /// Slot called when the UI is loaded from the mafUILoaderQt.
+    void uiLoaded(mafCore::mafContainerInterface *guiWidget);
 
 private:
     /// Initialize the topics and register the signals with the mafEventBus.
@@ -150,6 +159,7 @@ private:
     bool m_ActionsCreated; ///< Flag that store the actions' creation.
 
     QMainWindow *m_MainWindow; ///< Main window associated to the application.
+    mafUILoaderQt *m_UILoader; ///< Class in charge to load the GUI.
 };
 
 /////////////////////////////////////////////////////////////

@@ -1,7 +1,9 @@
 #include <QtGui/QApplication>
-#include <mafLogic.h>
 
 #include "mafMainWindow.h"
+#include "mafOperationSimpleApp.h"
+
+#include <mafLogic.h>
 
 int main(int argc, char *argv[])
 {
@@ -14,8 +16,20 @@ int main(int argc, char *argv[])
     mafApplicationLogic::mafLogic logic;
     logic.initialize();
 
-    mafMainWindow w;
-    w.show();
+    // Plug into the factory the new operation. This operation has also
+    // an acceptObject method defined, so call macro below.
+    // If the plugged object hasn't the acceptObject defined, the registration
+    // to the mafObjectFactory can be done using the following macro:
+    // mafRegisterObject(myClassCustom);
+    mafRegisterObjectAndAcceptBind(mafOperationSimpleApp);
+    // Plug the object's information into the framework
+    logic.plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
 
-    return a.exec();
+    mafMainWindow w;
+    logic.loadPlugins();
+
+    w.show();
+    int result = a.exec();
+
+    return result;
 }

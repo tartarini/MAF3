@@ -1,3 +1,14 @@
+/*
+ *  mafMainWindow.h
+ *  SimpleApp
+ *
+ *  Created by Paolo Quadrani on 14/12/10.
+ *  Copyright 2010 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
+ */
+
 #ifndef MAFMAINWINDOW_H
 #define MAFMAINWINDOW_H
 

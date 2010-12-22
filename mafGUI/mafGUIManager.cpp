@@ -10,6 +10,8 @@
  */
 
 #include "mafGUIManager.h"
+#include "mafUILoaderQt.h"
+
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -20,10 +22,16 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const mafString code_locatio
     , m_OpenAct(NULL), m_SaveAct(NULL), m_SaveAsAct(NULL), m_RecentFilesSeparatorAct(NULL), m_ExitAct(NULL)
     , m_CutAct(NULL), m_CopyAct(NULL), m_PasteAct(NULL), m_AboutAct(NULL)
     , m_MaxRecentFiles(5), m_ActionsCreated(false), m_MainWindow(main_win) {
+
     mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)");
+    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateMenuForSelectedVme(mafCore::mafObjectBase *)");
+
+    m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
+    connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafContainerInterface*)), this, SLOT(uiLoaded(mafCore::mafContainerInterface*)));
 }
 
 mafGUIManager::~mafGUIManager() {
+    mafDEL(m_UILoader);
 }
 
 void mafGUIManager::createActions() {
@@ -93,6 +101,10 @@ void mafGUIManager::createActions() {
 }
 
 void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash) {
+    mafCore::mafObjectBase *sel_vme;
+    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
+
     if(!m_ActionsCreated) {
         // Actions has not been created, so neither the menu.
         // Ask to create it which will crete also the actions.
@@ -119,6 +131,20 @@ void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pl
             }
         }
         iter++;
+    }
+
+    this->updateMenuForSelectedVme(sel_vme);
+}
+
+void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
+    mafStringList accepted_list;
+    accepted_list = mafCoreRegistration::acceptObject(vme);
+
+    mafList<QAction *> opActions = m_OpMenu->actions();
+    mafString op;
+    foreach(QAction *action, opActions) {
+        op = action->data().toString();
+        action->setEnabled(accepted_list.contains(op));
     }
 }
 
@@ -221,7 +247,20 @@ void mafGUIManager::startOperation() {
 }
 
 void mafGUIManager::operationDidStart(const mafCore::mafObjectBase *operation) {
-//    mafString guiFilename = operation
+    // Get the started operation
+    mafString guiFilename = operation->uiFilename();
+    // Set the current panel to the parent panel of operations.
+    // m_CurrentPanel = m_OperationPanel;
+    // Ask the UI Loader to load the operation's GUI.
+    m_UILoader->uiLoad(guiFilename);
+}
+
+void mafGUIManager::uiLoaded(mafCore::mafContainerInterface *guiWidget) {
+    // Get the widget from the container
+    mafContainer<QWidget> *w = mafContainerPointerTypeCast(QWidget, guiWidget);
+    QWidget *widget = *w;
+    // put the widget on the interface.
+    //widget->setParent(m_CurrentPanel);
 }
 
 void mafGUIManager::createView() {

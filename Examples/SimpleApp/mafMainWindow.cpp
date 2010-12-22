@@ -1,3 +1,14 @@
+/*
+ *  mafMainWindow.cpp
+ *  SimpleApp
+ *
+ *  Created by Paolo Quadrani on 14/12/10.
+ *  Copyright 2010 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
+ */
+
 #include "mafMainWindow.h"
 #include "ui_mafMainWindow.h"
 
@@ -18,8 +29,6 @@ using namespace mafGUI;
 
 mafMainWindow::mafMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::mafMainWindow)/*, m_SettingsFilename("")*/ {
     ui->setupUi(this);
-
-    mafCoreSingletons::mafSingletonsInitialize();
 
     mafGUIRegistration::registerGUIObjects();
     m_GUIManager = new mafGUIManager(this, mafCodeLocation);
