@@ -39,22 +39,25 @@ public:
     /* virtual */ ~mafHierarchy();
 
     /// Add a node to the tree.
-    void addHierarchyNode(mafCore::mafObjectBase *node);
+    void addHierarchyNode(QObject *node, QObject *parentNode = 0);
 
     /// Remove the current selected node from the tree.
     void removeCurrentHierarchyNode();
 
     /// Remove the current selected node from the tree.
-    void removeHierarchyNode(mafCore::mafObjectBase *node);
+    void removeHierarchyNode(QObject *node);
 
     /// Move the tree iterator to the parent of the current position pointed
     void moveTreeIteratorToParent();
 
     /// Move the tree iterator to the given node
-    void moveTreeIteratorToNode(mafCore::mafObjectBase *node);
+    void moveTreeIteratorToNode(QObject *node);
 
     /// Move the tree iterator to the indexed child of the current position pointed
     void moveTreeIteratorToNthChild(unsigned int childIndex = 0);
+
+    /// reterun the number of children of the current node
+    unsigned int currentNumberOfChildren();
 
     /// Move the tree iterator to the root.
     void moveTreeIteratorToRootNode();
@@ -62,12 +65,15 @@ public:
     /// Fill the parameter string with a text representation of the tree.
     void printInformation(mafString &string);
 
+    /// retrieve current data inside the node
+    QObject *currentData() { return m_TreeIterator.node()->m_data; }
+
     /// Remove all the nodes and delete them.
     void clear();
 
 private:
-    mafTree<mafCore::mafObjectBase *> *m_Tree; ///< tree variable which hosts mafSceneNode elements
-    mafTree<mafCore::mafObjectBase *>::iterator m_TreeIterator; ///< tree iterator variable which point the current node
+    mafTree<QObject *> *m_Tree; ///< tree variable which hosts mafSceneNode elements
+    mafTree<QObject *>::iterator m_TreeIterator; ///< tree iterator variable which point the current node
 };
 
 } //namespace mafCore
