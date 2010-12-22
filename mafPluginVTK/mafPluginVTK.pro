@@ -15,7 +15,8 @@ SOURCES += mafDataBoundaryAlgorithmVTK.cpp \
     mafDataPipeImageThreshold.cpp \
     mafExternalDataCodecVTK.cpp \
     mafVisualPipeSelection.cpp \
-    mafVTKWidget.cpp
+    mafVTKWidget.cpp \
+    mafVTKInteratorPicker.cpp
 
 # mafDataPipeSurface.cpp \
 # mafInteractorVTK.cpp \
@@ -29,7 +30,8 @@ HEADERS += mafPluginVTK_global.h \
     mafExternalDataCodecVTK.h \
     mafVisualPipeSelection.h \
     mafDataBoundaryAlgorithmVTK.h \
-    mafVTKWidget.h
+    mafVTKWidget.h \
+    mafVTKInteratorPicker.h
 
 # mafDataPipeSurface.h \
 # mafInteractorVTK.h \
