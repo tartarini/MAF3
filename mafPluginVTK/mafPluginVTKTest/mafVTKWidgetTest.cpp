@@ -70,7 +70,7 @@ public slots:
     void middleButtonRelease(unsigned long modifiers);
 
     /// observer needed to receive the 'maf.local.resources.interaction.vmePick' signal
-    void pick(double *pos, unsigned long modifiers, mafCore::mafContainerInterface *interface);
+    void pick(double *pos, unsigned long modifiers, mafCore::mafContainerInterface *interface, QEvent *e);
 
 signals:
     /// left button pressed.
@@ -92,7 +92,7 @@ signals:
     void middleButtonReleaseSignal(unsigned long modifiers);
 
     /// picked button pressed.
-    void pickSignal(double *pos, unsigned long modifiers, mafCore::mafContainerInterface *interface);
+    void pickSignal(double *pos, unsigned long modifiers, mafCore::mafContainerInterface *interface, QEvent * e);
 
 };
 
@@ -115,8 +115,8 @@ testInteractionManagerCustom::testInteractionManagerCustom(QString code_location
     mafRegisterLocalSignal("maf.local.resources.interaction.middleButtonRelease", this, "middleButtonReleaseSignal(unsigned long)");
     mafRegisterLocalCallback("maf.local.resources.interaction.middleButtonRelease", this, "middleButtonRelease(unsigned long)");
 
-    mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "pickSignal(double *, unsigned long, mafCore::mafContainerInterface *)");
-    mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "pick(double *, unsigned long, mafCore::mafContainerInterface *)");
+    mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "pickSignal(double *, unsigned long, mafCore::mafContainerInterface *,QEvent *)");
+    mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "pick(double *, unsigned long, mafCore::mafContainerInterface *,QEvent *)");
     m_Counter = 0;
 }
 
@@ -150,7 +150,8 @@ void testInteractionManagerCustom::middleButtonRelease(unsigned long modifiers) 
     qDebug() << "middleButtonRelease";
 }
 
-void testInteractionManagerCustom::pick(double *pos, unsigned long modifiers,  mafCore::mafContainerInterface *interface) {
+void testInteractionManagerCustom::pick(double *pos, unsigned long modifiers,  mafCore::mafContainerInterface *interface, QEvent * e) {
+    int i = e->type();
      m_Counter++;
      m_Pos[0] = pos[0];
      m_Pos[1]= pos[1];

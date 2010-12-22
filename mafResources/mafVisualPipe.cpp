@@ -32,14 +32,14 @@ void mafVisualPipe::initializeConnections() {
         mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePick");
 
         // Register API signals.
-        mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *)");
+        mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
 
         // Register private callbacks.
-        mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePickSelect(double *, unsigned long, mafCore::mafContainerInterface *)");
+        mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePickSelect(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
     }
 }
 
-void mafVisualPipe::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafContainerInterface *actor) {
+void mafVisualPipe::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafContainerInterface *actor, QEvent * e) {
     if(actor == m_Output){
         mafVME *vme = this->inputList()->at(0);
         if (vme != NULL){
