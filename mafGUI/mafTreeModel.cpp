@@ -1,13 +1,22 @@
+/*
+ *  mafTreeModel.cpp
+ *  mafGUI
+ *
+ *  Created by Daniele Giunchi on 26/10/10.
+ *  Copyright 2010 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
+ */
+
 #include "mafTreeModel.h"
 
 using namespace mafCore;
+using namespace mafGUI;
 
 mafTreeModel::mafTreeModel(QObject *parent)
     : QStandardItemModel(parent) , m_Hierarchy(NULL), m_CurrentItem(NULL){
 
-}
-
-mafTreeModel::mafTreeModel(int row, int col) : QStandardItemModel(row,col,NULL) {
 }
 
 void mafTreeModel::initialize()

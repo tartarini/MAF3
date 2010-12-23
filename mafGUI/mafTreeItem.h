@@ -1,31 +1,39 @@
+/*
+ *  mafTreeItem.h
+ *  mafGUI
+ *
+ *  Created by Daniele Giunchi on 26/10/10.
+ *  Copyright 2010 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
+ */
+
 #ifndef MAFTREEITEM_H
 #define MAFTREEITEM_H
 
-/*
-    Copyright (c) 2009-10 Qtrac Ltd. All rights reserved.
-
-    This program or module is free software: you can redistribute it
-    and/or modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation, either version 3 of
-    the License, or (at your option) any later version. It is provided
-    for educational purposes and is distributed in the hope that it will
-    be useful, but WITHOUT ANY WARRANTY; without even the implied
-    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
-    the GNU General Public License for more details.
-*/
-
+// Includes list
+#include "mafGUIDefinitions.h"
 #include <QStandardItem>
 
-class mafTreeItem : public QStandardItem
+namespace mafGUI {
+
+/**
+Class Name: mafTreeItem
+It represents the single item inside the mafTreeModel, it contains a QObject, and set initially the state
+(checked or not) because it will be visualized by a Tree View or a List View.
+*/
+class MAFGUISHARED_EXPORT mafTreeItem : public QStandardItem
 {
 public:
+    /// Object constructor.
     mafTreeItem(QObject *obj, bool done = false);
-
+    /// Retrieve the current data inside the item
     QObject *data() const { return m_Data; }
 
 private:
-    QObject * m_Data;
+    QObject * m_Data; ///< variable which point to the data inside item
 };
 
-
+} // end namespace
 #endif // MAFTREEITEM_H
