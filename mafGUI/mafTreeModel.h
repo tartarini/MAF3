@@ -47,6 +47,9 @@ public:
     /// insert a new item in the model
     mafTreeItem *insertNewItem(Insert insert, QObject *obj, const QModelIndex &index);
 
+    /// retrieve index of current element
+    QModelIndex currentIndex();
+
 signals:
     //void load();
     //void save();

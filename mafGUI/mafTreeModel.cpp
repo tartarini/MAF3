@@ -96,3 +96,11 @@ mafTreeItem *mafTreeModel::insertNewItem(Insert insert,
     }
     return createNewItem(parent, obj, false);
 }
+
+QModelIndex mafTreeModel::currentIndex() {
+    if(m_CurrentItem) {
+        return m_CurrentItem->index();
+    }
+
+    return QModelIndex();
+}
