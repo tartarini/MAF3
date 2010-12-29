@@ -9,11 +9,14 @@ SOURCES += main.cpp \
     mafGUIManagerTest.cpp \
     mafUILoaderTest.cpp \
     mafUILoaderQtTest.cpp \
-    mafTreeWidgetTest.cpp
+    mafTreeWidgetTest.cpp \
+    mafTreeItemTest.cpp \
+    mafTreeModelTest.cpp
 include(../../mafInstallTest.pri)
 include(../../mafImportQXMLRPC.pri)
 include(../../mafImportQtSoap.pri)
 include(../../mafImportVXL.pri)
+
 # Foundation libraries dependencies
 INCLUDEPATH += ../../mafEventBus \
     ../../mafCore \
