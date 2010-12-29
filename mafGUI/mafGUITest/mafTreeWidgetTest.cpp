@@ -28,8 +28,8 @@ using namespace mafGUI;
 using namespace mafResources;
 
 /**
- Class name: mafGUIManagerTest
- This class implements the test suite for mafGUIManager.
+ Class name: mafTreeWidgetTest
+ This class implements the test suite for mafTreeWidget.
  */
 class mafTreeWidgetTest : public QObject {
     Q_OBJECT
@@ -51,7 +51,7 @@ private slots:
     void mafTreeWidgetAllocationTest();
 
 private:
-    mafTreeWidget *m_TreeWidget; ///< Reference to the GUI Manager.
+    mafTreeWidget *m_TreeWidget; ///< Reference to the Tree Widget.
 
 };
 

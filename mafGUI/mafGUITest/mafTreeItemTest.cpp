@@ -1,6 +1,6 @@
 /*
- *  mafTreeWidgetTest.cpp
- *  mafTreeWidget
+ *  mafTreeItemTest.cpp
+ *  mafTreeItem
  *
  *  Created by Daniele Giunchi on 26/10/10.
  *  Copyright 2010 B3C. All rights reserved.
