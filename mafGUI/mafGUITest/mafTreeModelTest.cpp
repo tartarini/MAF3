@@ -46,11 +46,8 @@ private slots:
     /// allocation test case.
     void mafTreeModelAllocationTest();
 
-    /// hierarchy set/get Test case.
-    void hierarchyTest();
-
-    /// inserting item test
-    void insertNewItemTest();
+    /// hierarchy set/get Test case and insert Item in model.
+    void hierarchyAndInsertItemTest();
 
     /// clearing the model test
     void clearTest();
@@ -64,7 +61,7 @@ void mafTreeModelTest::mafTreeModelAllocationTest() {
 }
 
 
-void mafTreeModelTest::hierarchyTest() {
+void mafTreeModelTest::hierarchyAndInsertItemTest() {
     QVERIFY(m_TreeModel != NULL);
 
     mafHierarchy *m_HierarchyToManage = mafNEW(mafCore::mafHierarchy);
@@ -93,24 +90,24 @@ void mafTreeModelTest::hierarchyTest() {
     /// end hierarchy creation
 
     m_TreeModel->setHierarchy(m_HierarchyToManage);
+    int rows = m_TreeModel->rowCount();
+    QVERIFY(rows == 2);
 
+    mafVME* vmeChild2 = mafNEW(mafResources::mafVME);
+    vmeChild2->setObjectName("vmeChild2");
+    m_HierarchyToManage->addHierarchyNode(vmeChild2, vmeRoot); // maybe a signal is useful
 
-    mafVME* vmeChild1Child0 = mafNEW(mafResources::mafVME);
-    vmeChild1Child0->setObjectName("vmeChild1Child0");
-    m_HierarchyToManage->addHierarchyNode(vmeChild1Child0, vmeChild1); // maybe a signal is useful
+    m_TreeModel->insertNewItem(mafTreeModel::AsChild,vmeChild2, m_TreeModel->currentIndex()); //currentIndex is in root
+    rows = m_TreeModel->rowCount();
 
-    m_TreeModel->insertNewItem(mafTreeModel::AsChild,vmeChild1Child0, m_TreeModel->currentIndex());
+    QVERIFY(rows == 3);
 
     mafDEL(m_HierarchyToManage);
-    mafDEL(vmeChild1Child0);
+    mafDEL(vmeChild2);
     mafDEL(vmeChild1);
     mafDEL(vmeChild0Child0);
     mafDEL(vmeChild0);
     mafDEL(vmeRoot);
-}
-
-void mafTreeModelTest::insertNewItemTest() {
-
 }
 
 
