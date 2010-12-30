@@ -106,7 +106,7 @@ void mafTreeModelTest::hierarchyAndInsertItemTest() {
     rows = m_TreeModel->rowCount();
     QVERIFY(rows == 3);
 
-    m_TreeModel->selectItemFromData(vmeChild2);
+    m_TreeModel->selectItemFromData(vmeChild0);
     m_TreeModel->removeItem(m_TreeModel->currentIndex()); // trying to remove child 2
     rows = m_TreeModel->rowCount();
     QVERIFY(rows == 2);
