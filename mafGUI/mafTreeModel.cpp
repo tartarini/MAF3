@@ -104,25 +104,26 @@ mafTreeItem *mafTreeModel::insertNewItem(Insert insert,
 }
 
 void mafTreeModel::removeItem(const QModelIndex &index) {
-    mafTreeItem *temp = m_CurrentItem;
-    m_CurrentItem = (mafTreeItem *)this->itemFromIndex(index);
-    if(m_CurrentItem == temp) {
-        temp = (mafTreeItem*)temp->parent();
-    }
-    if(temp == NULL) {
+    mafTreeItem *temp = (mafTreeItem *)this->itemFromIndex(index);
+    if(temp->parent() == NULL) {
         mafMsgDebug() << tr("Impossible removing the root");
         return;
     }
 
+    int i=0, size=temp->rowCount();
+    for(;i<size;i++) {
+        removeItem(temp->index().child(i,0));
+    }
+    // remove also from the hierarchy?
+    m_CurrentItem = (mafTreeItem *)temp->parent();
+
     removeRow(index.row(), index.parent());
 
-    //need to be revised because when remve a node all the child are removed
-    setRowCount(rowCount()-1);
-    m_ItemsList.removeOne(m_CurrentItem);
-    //
+    if(m_CurrentItem->parent() == NULL) {
+        setRowCount(m_CurrentItem->rowCount());
+    }
 
-    // remove also from the hierarchy?
-    m_CurrentItem = temp;
+    m_ItemsList.removeOne(temp);
 }
 
 QModelIndex mafTreeModel::currentIndex() {
