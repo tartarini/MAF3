@@ -47,8 +47,16 @@ public:
     /// insert a new item in the model
     mafTreeItem *insertNewItem(Insert insert, QObject *obj, const QModelIndex &index);
 
+    /// remove item from the model
+    void removeItem(const QModelIndex &index);
+
+
     /// retrieve index of current element
     QModelIndex currentIndex();
+
+public slots:
+    /// select the object from the data, return true if selected, false otherwise.
+    void selectItem(QModelIndex index);
 
 signals:
     //void load();

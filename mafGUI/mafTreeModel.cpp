@@ -46,7 +46,7 @@ void mafTreeModel::buildModel(bool init) {
         mafString name = obj->objectName();
         mafTreeItem *item = new mafTreeItem(obj , false);
         m_CurrentItem->insertRow(index, item);
-        //setItem(index, 0, m_CurrentItem);
+        setItem(index, 0, m_CurrentItem);
         m_CurrentItem = item;
 
         buildModel(false);
@@ -71,10 +71,13 @@ mafTreeItem *mafTreeModel::createNewItem(mafTreeItem *root,
 {
     mafTreeItem *item = new mafTreeItem(obj,done);
     root->appendRow(item);
-
+    setItem(root->rowCount()-1, item);
     return item;
 }
 
+void mafTreeModel::selectItem(QModelIndex index) {
+    m_CurrentItem = (mafTreeItem *)this->itemFromIndex(index);
+}
 
 mafTreeItem *mafTreeModel::insertNewItem(Insert insert,
              QObject *obj, const QModelIndex &index)
@@ -95,6 +98,24 @@ mafTreeItem *mafTreeModel::insertNewItem(Insert insert,
             return 0;
     }
     return createNewItem(parent, obj, false);
+}
+
+void mafTreeModel::removeItem(const QModelIndex &index) {
+    mafTreeItem *temp = m_CurrentItem;
+    m_CurrentItem = (mafTreeItem *)this->itemFromIndex(index);
+    if(m_CurrentItem == temp) {
+        temp = (mafTreeItem*)temp->parent();
+    }
+    if(temp == NULL) {
+        mafMsgDebug() << tr("Impossible removing the root");
+        return;
+    }
+
+    this->removeItem(index);
+    delete m_CurrentItem;
+    // remove also from the hierarchy?
+    m_CurrentItem = temp;
+
 }
 
 QModelIndex mafTreeModel::currentIndex() {
