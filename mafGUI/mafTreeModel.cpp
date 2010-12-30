@@ -37,6 +37,7 @@ void mafTreeModel::buildModel(bool init) {
         m_Hierarchy->moveTreeIteratorToRootNode();
         m_CurrentItem = new mafTreeItem(m_Hierarchy->currentData() , false);
         setItem(0, 0, m_CurrentItem);
+        m_ItemsList.push_back(m_CurrentItem);
     }
 
     int index = 0, size = m_Hierarchy->currentNumberOfChildren();
@@ -48,7 +49,7 @@ void mafTreeModel::buildModel(bool init) {
         m_CurrentItem->insertRow(index, item);
         setItem(index, 0, m_CurrentItem);
         m_CurrentItem = item;
-
+        m_ItemsList.push_back(m_CurrentItem);
         buildModel(false);
         m_Hierarchy->moveTreeIteratorToParent();
         m_CurrentItem = (mafTreeItem *)m_CurrentItem->parent();
@@ -63,6 +64,7 @@ void mafTreeModel::setHierarchy(mafHierarchy *hierarchy) {
 void mafTreeModel::clear()
 {
     QStandardItemModel::clear();
+    m_ItemsList.clear();
     //initialize();
 }
 
@@ -72,6 +74,7 @@ mafTreeItem *mafTreeModel::createNewItem(mafTreeItem *root,
     mafTreeItem *item = new mafTreeItem(obj,done);
     root->appendRow(item);
     setItem(root->rowCount()-1, item);
+    m_ItemsList.push_back(item);
     return item;
 }
 
@@ -111,11 +114,15 @@ void mafTreeModel::removeItem(const QModelIndex &index) {
         return;
     }
 
-    this->removeItem(index);
-    delete m_CurrentItem;
+    removeRow(index.row(), index.parent());
+
+    //need to be revised because when remve a node all the child are removed
+    setRowCount(rowCount()-1);
+    m_ItemsList.removeOne(m_CurrentItem);
+    //
+
     // remove also from the hierarchy?
     m_CurrentItem = temp;
-
 }
 
 QModelIndex mafTreeModel::currentIndex() {
@@ -124,4 +131,18 @@ QModelIndex mafTreeModel::currentIndex() {
     }
 
     return QModelIndex();
+}
+
+void mafTreeModel::selectItemFromData(QObject *data) {
+    QListIterator<mafTreeItem *> it(m_ItemsList);
+    while (it.hasNext()) {
+        mafTreeItem *ci = it.next();
+         QObject *check = ci->data();
+         if(check == data) {
+             m_CurrentItem = ci;
+             return;
+         }
+     }
+
+    mafMsgDebug() << tr("Element not found");
 }

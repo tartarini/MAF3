@@ -50,6 +50,8 @@ public:
     /// remove item from the model
     void removeItem(const QModelIndex &index);
 
+    /// utility function. This function is useful in test phase for select a tree item from data inside
+    void selectItemFromData(QObject *data);
 
     /// retrieve index of current element
     QModelIndex currentIndex();
@@ -74,6 +76,8 @@ private:
 
     mafCore::mafHierarchy *m_Hierarchy; ///< hierarchy from which construct the model
     mafTreeItem *m_CurrentItem; ///< current item of the model
+
+    mafList<mafTreeItem *> m_ItemsList; ///< variable useful for rapid iteration between mafTreeItem
 };
 
 } //end namespace
