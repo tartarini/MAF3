@@ -1,6 +1,11 @@
-/* mafGUI.i --- GUI layer swig interface definition
- *MAFGUI * Author: Paolo Quadrani
- * Copyright (C) 2010 - BioComputing Competence Center - SCS
+/*
+ *  mafGUI.i
+ *
+ *  Created by Paolo Quadrani - Daniele Giunchi on 27/03/09.
+ *  Copyright 2009 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
  */
 
 #ifndef MAFGUI_I
