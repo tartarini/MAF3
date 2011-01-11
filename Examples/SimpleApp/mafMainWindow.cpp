@@ -170,8 +170,16 @@ void mafMainWindow::createViewWindow() {
     widget->setWindowTitle(mafTr("mafView %1").arg(windowCounter++));
     widget->GetRenderWindow()->AddRenderer(renderer);
     sub_win->setMinimumSize(200, 200);
+    sub_win->setGeometry(QRect(0, 0, 0, 0));
+
+    QPropertyAnimation *animation = new QPropertyAnimation(sub_win, "geometry");
+    animation->setDuration(500);
+    animation->setStartValue(QRect(0, 0, 0, 0));
+    animation->setEndValue(QRect(50, 50, 200, 200));
+    animation->setEasingCurve(QEasingCurve::InOutSine);
 
     sub_win->show();
+    animation->start();
 }
 
 void mafMainWindow::viewWillBeSelected() {
