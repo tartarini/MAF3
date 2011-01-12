@@ -22,7 +22,7 @@
 #include "mafLoggerConsole.h"
 #include "mafMonitorRAM.h"
 #include "mafMonitorHardDisk.h"
-#include "mafOntology.h"
+#include "mafHierarchy.h"
 
 #define mafRegisterObjectAndAcceptBind(maf_object_type) \
     mafRegisterObject(maf_object_type);\
@@ -54,7 +54,22 @@ class MAFCORESHARED_EXPORT mafCoreRegistration {
         mafRegisterObject(mafCore::mafLoggerConsole);
         mafRegisterObject(mafCore::mafMonitorRAM);
         mafRegisterObject(mafCore::mafMonitorHardDisk);
-        mafRegisterObject(mafCore::mafOntology);
+        mafRegisterObject(mafCore::mafHierarchy);
+    }
+
+    /// Register all the concrete objects that can be instantiated by the mafObjectFactory.
+    /** This registration is needed to instantiate object by using the mafNEWFromString macro present in objectFactory which needs as input the object type to instantiate as string.*/
+    static void unregisterCoreObjects() {
+        mafUnregisterObject(mafCore::mafObjectBase);
+        mafUnregisterObject(mafCore::mafObject);
+        mafUnregisterObject(mafCore::mafMemento);
+        mafUnregisterObject(mafCore::mafMementoObject);
+        mafUnregisterObject(mafCore::mafLoggerBuffer);
+        mafUnregisterObject(mafCore::mafLoggerFile);
+        mafUnregisterObject(mafCore::mafLoggerConsole);
+        mafUnregisterObject(mafCore::mafMonitorRAM);
+        mafUnregisterObject(mafCore::mafMonitorHardDisk);
+        mafUnregisterObject(mafCore::mafHierarchy);
     }
 
     /// Register bind function for the acceptObject static method.
