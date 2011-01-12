@@ -20,4 +20,5 @@ LIBS += -L$$DESTDIR \
     -lmafEventBus$$BUILD_EXT -lmafCore$$BUILD_EXT
 
 include(../mafImportVXL.pri)
+include(../mafImportQXMLRPC.pri)
 include(../mafImportQtSoap.pri)

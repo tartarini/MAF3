@@ -6,17 +6,22 @@ TEMPLATE = lib
 CONFIG += uitools
 win32:CONFIG += dll
 DEFINES += mafGUI_EXPORTS
-
 SOURCES += mafGUIManager.cpp \
     mafGUIRegistration.cpp \
     mafUILoader.cpp \
-    mafUILoaderQt.cpp
+    mafUILoaderQt.cpp \
+    mafTreeModel.cpp \
+    mafTreeItem.cpp \
+    mafTreeWidget.cpp
 HEADERS += mafGUI_global.h \
     mafGUIManager.h \
     mafGUIRegistration.h \
     mafGUIDefinitions.h \
     mafUILoader.h \
-    mafUILoaderQt.h
+    mafUILoaderQt.h \
+    mafTreeModel.h \
+    mafTreeItem.h \
+    mafTreeWidget.h
 include(../mafInstallModule.pri)
 INCLUDEPATH += ../mafCore \
     ../mafEventBus \
@@ -26,3 +31,4 @@ LIBS += -L$$DESTDIR \
     -lmafEventBus$$BUILD_EXT \
     -lmafApplicationLogic$$BUILD_EXT
 RESOURCES += mafAppImages.qrc
+FORMS += 

@@ -61,7 +61,7 @@
         <enum>QMdiArea::CreationOrder</enum>
        </property>
        <property name="viewMode">
-        <enum>QMdiArea::TabbedView</enum>
+        <enum>QMdiArea::SubWindowView</enum>
        </property>
        <property name="documentMode">
         <bool>false</bool>

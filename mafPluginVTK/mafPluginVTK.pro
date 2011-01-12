@@ -39,8 +39,8 @@ HEADERS += mafPluginVTK_global.h \
 include(../mafInstallModule.pri)
 include(../mafImportVXL.pri)
 include(../mafImportVTK.pri)
+include(../mafImportQXMLRPC.pri)
 include(../mafImportQtSoap.pri)
-
 INCLUDEPATH += ../mafResources \
                         ../mafEventBus \
                         ../mafCore

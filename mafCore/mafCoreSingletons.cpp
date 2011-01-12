@@ -25,6 +25,7 @@ void mafCoreSingletons::mafSingletonsInitialize() {
 
 void mafCoreSingletons::mafSingletonsShutdown() {
     mafMessageHandler::instance()->shutdown();
+    qInstallMsgHandler(0); ///< set the default logger of qt
     mafObjectFactory::instance()->shutdown();
     mafIdProvider::instance()->shutdown();
 }

@@ -1,6 +1,11 @@
-/* mafPluginVTK.i --- Quality Assurance layer swig interface definition
- *MAFPLUGINVTK * Author: Daniele Giunchi
- * Copyright (C) 2010 - BioComputing Competence Center - SCS
+/*
+ *  mafPluginVTK.i
+ *
+ *  Created by Paolo Quadrani - Daniele Giunchi on 27/03/09.
+ *  Copyright 2009 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
  */
 
 #ifndef MAFPLUGINVTK_I

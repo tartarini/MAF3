@@ -16,7 +16,7 @@ using namespace mafCore;
 
 mafHierarchy::mafHierarchy(const mafString code_location) : mafObjectBase(code_location), m_Tree(NULL) {
     //create Tree
-    m_Tree = new mafTree<mafObjectBase *>();
+    m_Tree = new mafTree<QObject *>();
     m_TreeIterator = m_Tree->root();
 }
 
@@ -24,22 +24,28 @@ mafHierarchy::~mafHierarchy() {
     mafDEL(m_Tree);
 }
 
-void mafHierarchy::addHierarchyNode(mafObjectBase* node) {
-    if(m_TreeIterator.node() == NULL) {
-        m_TreeIterator = m_Tree->insert(node);
+void mafHierarchy::addHierarchyNode(QObject* node, QObject *parentNode) {
+    if(parentNode == NULL) {
+        if(m_TreeIterator.node() == NULL) {
+            m_TreeIterator = m_Tree->insert(node);
+        } else {
+            int numberOfChildren = m_TreeIterator.node()->m_children.size();
+            m_TreeIterator = m_Tree->insert(m_TreeIterator, numberOfChildren, node);
+        }
     } else {
+        moveTreeIteratorToNode(parentNode);
         int numberOfChildren = m_TreeIterator.node()->m_children.size();
         m_TreeIterator = m_Tree->insert(m_TreeIterator, numberOfChildren, node);
     }
 }
 
 void mafHierarchy::removeCurrentHierarchyNode() {
-    mafTree<mafObjectBase *>::iterator temp_iterator = m_Tree->parent(m_TreeIterator);
+    mafTree<QObject *>::iterator temp_iterator = m_Tree->parent(m_TreeIterator);
 
-    mafTree<mafObjectBase *> cutTree;
+    mafTree<QObject *> cutTree;
     cutTree = m_Tree->cut(m_TreeIterator);
-    for (mafTree<mafObjectBase *>::prefix_iterator i = cutTree.prefix_begin(); i != cutTree.prefix_end(); i++) {
-        mafTreeNode<mafObjectBase *> *n = i.simplify().node();
+    for (mafTree<QObject *>::prefix_iterator i = cutTree.prefix_begin(); i != cutTree.prefix_end(); i++) {
+        mafTreeNode<QObject *> *n = i.simplify().node();
         if(n->m_data) {
            delete n->m_data;
            n->m_data = NULL;
@@ -49,7 +55,7 @@ void mafHierarchy::removeCurrentHierarchyNode() {
     m_TreeIterator = temp_iterator;
 }
 
-void mafHierarchy::removeHierarchyNode(mafObjectBase *node) {
+void mafHierarchy::removeHierarchyNode(QObject *node) {
     REQUIRE(node != NULL);
 
     moveTreeIteratorToNode(node);
@@ -66,11 +72,16 @@ void mafHierarchy::moveTreeIteratorToNthChild(unsigned int childIndex) {
     m_TreeIterator = m_Tree->child(m_TreeIterator, childIndex);
 }
 
-void mafHierarchy::moveTreeIteratorToNode(mafObjectBase *node) {
+unsigned int mafHierarchy::currentNumberOfChildren() {
+    return m_Tree->children(m_TreeIterator);
+}
+
+
+void mafHierarchy::moveTreeIteratorToNode(QObject *node) {
     REQUIRE(node != NULL);
 
-    for (mafTree<mafObjectBase *>::prefix_iterator i = m_Tree->prefix_begin(); i != m_Tree->prefix_end(); i++) {
-        mafTreeNode<mafObjectBase *> *n = i.simplify().node();
+    for (mafTree<QObject *>::prefix_iterator i = m_Tree->prefix_begin(); i != m_Tree->prefix_end(); i++) {
+        mafTreeNode<QObject *> *n = i.simplify().node();
         if(n->m_data == node) {
             m_TreeIterator =  i.simplify();
             break;
@@ -83,10 +94,10 @@ void mafHierarchy::moveTreeIteratorToRootNode() {
 }
 
 void mafHierarchy::clear() {
-    mafTree<mafObjectBase *>::prefix_iterator i = m_Tree->prefix_begin();
-    mafTree<mafObjectBase *>::prefix_iterator iterEnd = m_Tree->prefix_end();
+    mafTree<QObject *>::prefix_iterator i = m_Tree->prefix_begin();
+    mafTree<QObject *>::prefix_iterator iterEnd = m_Tree->prefix_end();
     for (; i != iterEnd; i++) {
-        mafTreeNode<mafObjectBase *> *n = i.simplify().node();
+        mafTreeNode<QObject *> *n = i.simplify().node();
         if(n->m_data) {
             delete n->m_data;
             n->m_data = NULL;
@@ -98,9 +109,9 @@ void mafHierarchy::clear() {
 }
 
 void mafHierarchy::printInformation(mafString &string) {
-    for (mafTree<mafObjectBase *>::prefix_iterator i = m_Tree->prefix_begin(); i != m_Tree->prefix_end(); i++) {
-        mafTreeNode<mafObjectBase *> *n = i.simplify().node();
-        mafObjectBase *obj = n->m_data;
+    for (mafTree<QObject *>::prefix_iterator i = m_Tree->prefix_begin(); i != m_Tree->prefix_end(); i++) {
+        mafTreeNode<QObject *> *n = i.simplify().node();
+        QObject *obj = n->m_data;
         if(obj != NULL) {
             string.append(obj->objectName());
             string.append("\n");
