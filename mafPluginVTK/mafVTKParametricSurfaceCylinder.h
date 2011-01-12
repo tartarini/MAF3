@@ -42,6 +42,11 @@ public:
     ~mafVTKParametricSurfaceCylinder();
 
 public slots:
+
+    /// Update surface with parameters.
+    /*virtual*/ void updateSurface();
+
+public slots:
     /// Set the height of the parametric cylinder.
     void setConeHeight(double cylinderHeight);
 
@@ -59,9 +64,6 @@ public slots:
 
     /// get the resolution of the parametric cylinder.
     double cylinderRes();
-
-    /// Update surface with parameters.
-    /*virtual*/ void updateSurface();
 
 private:
     vtkCylinderSource *m_CylinderSource; ///< Polydata representig a cylinder.

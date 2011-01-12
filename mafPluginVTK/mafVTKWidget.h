@@ -14,8 +14,12 @@
 
 // Includes list
 #include "mafPluginVTKDefinitions.h"
+#include <mafContainer.h>
+#include <vtkActor.h>
 #include <QVTKWidget.h>
 #include <qwidget.h>
+
+
 
 namespace mafPluginVTK {
 
@@ -29,12 +33,22 @@ class MAFPLUGINVTKSHARED_EXPORT mafVTKWidget : public QVTKWidget {
     /// typedef macro.
     mafSuperclassMacro(QVTKWidget);
 public:
+    /// Object constructor.
     mafVTKWidget(QWidget* parent = NULL, Qt::WFlags f = 0);
 
-    // overloaded mouse press handler
+    /// Object destructor.
+    ~mafVTKWidget();
+
+    /// Overloaded mouse press handler
     /*virtual*/ void mousePressEvent(QMouseEvent* event);
+
+    /// Overloaded mouse release handler
     /*virtual*/ void mouseReleaseEvent(QMouseEvent* event);
+
+    /// Overloaded mouse wheel handler
     /*virtual*/ void wheelEvent(QWheelEvent* event);
+
+    /// Overloaded mouse move handler
     /*virtual*/ void mouseMoveEvent(QMouseEvent* event);
 
 private:
@@ -43,6 +57,8 @@ private:
 
     /// Check if VME has been picked
     void vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e);
+
+    mafCore::mafContainer<vtkActor> *m_Actor; ///<  Container of the actor.
 
     unsigned long m_Modifiers;  ///< Optional modifiers for the button.
 };

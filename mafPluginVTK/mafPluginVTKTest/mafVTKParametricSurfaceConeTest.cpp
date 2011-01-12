@@ -112,7 +112,7 @@ void mafVTKParametricSurfaceConeTest::SetGetTest() {
 
     renWin->Render();
     //iren->Start();
-    QTest::qSleep(2000);
+    QTest::qSleep(1000);
 
     double newCenter[3];
     newCenter[0] = 10;
@@ -122,13 +122,14 @@ void mafVTKParametricSurfaceConeTest::SetGetTest() {
     //Change parameters of the sphere.
     m_ParametricCone->setCenter(newCenter);
     m_ParametricCone->setProperty("coneHeight", 20);
-    m_ParametricCone->setProperty("coneRadius", 10);
+    m_ParametricCone->setProperty("coneRadius", 1);
     m_ParametricCone->setProperty("coneRes", 10);
     m_ParametricCone->setProperty("coneCapping", 0);
+    m_ParametricCone->updateSurface();
 
     //Check if parameters had changed.
     QCOMPARE(m_ParametricCone->property("coneHeight").toDouble(), 20.0);
-    QCOMPARE(m_ParametricCone->property("coneRadius").toDouble(), 10.0);
+    QCOMPARE(m_ParametricCone->property("coneRadius").toDouble(), 1.0);
     QCOMPARE(m_ParametricCone->property("coneRes").toDouble(), 10.0);
     QCOMPARE(m_ParametricCone->property("coneCapping").toInt(), 0);
 

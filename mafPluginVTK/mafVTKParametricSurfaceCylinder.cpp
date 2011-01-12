@@ -28,6 +28,7 @@ mafVTKParametricSurfaceCylinder::mafVTKParametricSurfaceCylinder(const mafString
 
     m_CylinderSource = vtkCylinderSource::New();
     m_Output = m_CylinderSource->GetOutputPort();
+    this->updateSurface();
 }
 
 mafVTKParametricSurfaceCylinder::~mafVTKParametricSurfaceCylinder(){

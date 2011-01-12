@@ -46,6 +46,7 @@ mafVTKParametricSurfaceEllipsoid::mafVTKParametricSurfaceEllipsoid(const mafStri
 
     // Output is the outputPort of the vtkTransformPolyDataFilter
     m_Output = m_Ptf->GetOutputPort();
+    this->updateSurface();
 }
 
 mafVTKParametricSurfaceEllipsoid::~mafVTKParametricSurfaceEllipsoid(){

@@ -41,6 +41,11 @@ public:
     /// Object destructor.
     ~mafVTKParametricSurfaceSphere();
 
+public slots:
+
+    /// Update surface with parameters.
+    /*virtual*/ void updateSurface();
+
 protected slots:
     /// Set the radius for the parametric sphere.
     void setSphereRadius(double radius);
@@ -60,8 +65,6 @@ protected slots:
     /// Get the Theta resolution for the parametric sphere.
     double sphereThetaResolution();
 
-    /// Update surface with parameters.
-    /*virtual*/ void updateSurface();
 
 private:
     vtkSphereSource *m_SphereSource; ///< Polydata representig a sphere.
