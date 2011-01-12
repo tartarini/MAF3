@@ -15,16 +15,18 @@ SOURCES += main.cpp \
     mafSerializationRawASCIIExtDataTest.cpp \
     mafVTKWidgetTest.cpp \
     mafVisualPipeSelectionTest.cpp \
-    mafDataBoundaryAlgorithmVTKTest.cpp
-
+    mafDataBoundaryAlgorithmVTKTest.cpp \
+    mafVTKInteractorPickerTest.cpp
 include(../../mafInstallTest.pri)
 include(../../mafImportVXL.pri)
 include(../../mafImportVTK.pri)
 include(../../mafImportQXMLRPC.pri)
 include(../../mafImportQtSoap.pri)
 INCLUDEPATH += ../../mafResources \
-                        ../../mafEventBus \
-                        ../../mafCore
-
+    ../../mafEventBus \
+    ../../mafCore
 LIBS += -L$$DESTDIR \
-    -lmafResources$$BUILD_EXT -lmafEventBus$$BUILD_EXT -lmafCore$$BUILD_EXT -lmafPluginVTK$${BUILD_EXT}
+    -lmafResources$$BUILD_EXT \
+    -lmafEventBus$$BUILD_EXT \
+    -lmafCore$$BUILD_EXT \
+    -lmafPluginVTK$${BUILD_EXT}

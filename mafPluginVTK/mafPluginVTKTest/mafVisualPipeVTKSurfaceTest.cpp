@@ -18,6 +18,9 @@
 #include <mafContainer.h>
 #include <mafPluginManager.h>
 #include <mafPlugin.h>
+#include <vtkAppendPolyData.h>
+#include <vtkCubeSource.h>
+#include <vtkSmartPointer.h>
 
 #include <vtkPolyData.h>
 #include <vtkActor.h>
@@ -68,31 +71,44 @@ private slots:
         mafResourcesRegistration::registerResourcesObjects();
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
 
-        // Create a polydata.
-        m_DataSource = vtkSphereSource::New();
-        m_DataSource->SetRadius(5);
-        m_DataSource->SetPhiResolution(20);
-        m_DataSource->SetThetaResolution(20);
+        // Create a sphere.
+        vtkSmartPointer<vtkSphereSource> surfSphere = vtkSmartPointer<vtkSphereSource>::New();
+        surfSphere->SetRadius(5);
+        surfSphere->SetPhiResolution(10);
+        surfSphere->SetThetaResolution(10);
+        surfSphere->Update();
+
+        // Create a cube.
+        vtkSmartPointer<vtkCubeSource> surfCube = vtkSmartPointer<vtkCubeSource>::New();
+        surfCube->SetXLength(3);
+        surfCube->SetYLength(6);
+        surfCube->SetZLength(4);
+        surfCube->SetCenter(10,5,10);
+        surfCube->Update();
+
+        // Append the 2 surfaces in one polydata
+        m_AppendData = vtkAppendPolyData::New();
+        m_AppendData->AddInputConnection(surfSphere->GetOutputPort());
+        m_AppendData->AddInputConnection(surfCube->GetOutputPort());
 
         //! <snippet>
         //// Create a container with the outputPort of a vtkCubeSource
         //// m_DataSourceContainer is the container of type vtkAlgorithmOutput
         //// to "wrap" the 'vtkCubeSource' of type vtkPolyData just simply use the code below.
-        m_DataSourceContainer = m_DataSource->GetOutputPort(0);;
+        m_DataSourceContainer = m_AppendData->GetOutputPort(0);;
 
         //Insert data into VME
         m_VME = mafNEW(mafResources::mafVME);
-        m_DataSetSphere = mafNEW(mafResources::mafDataSet);
-        m_DataSetSphere->setDataValue(&m_DataSourceContainer);
-        m_VME->dataSetCollection()->insertItem(m_DataSetSphere, 0);
+        m_DataSet = mafNEW(mafResources::mafDataSet);
+        m_DataSet->setDataValue(&m_DataSourceContainer);
+        m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
         //! </snippet>
-
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        mafDEL(m_DataSetSphere);
-        m_DataSource->Delete();
+        mafDEL(m_DataSet);
+        m_AppendData->Delete();
         mafDEL(m_VME);
     }
 
@@ -104,9 +120,9 @@ private slots:
 
 private:
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a surface.
-    vtkSphereSource *m_DataSource;
-    mafResources::mafDataSet *m_DataSetSphere;
+    mafResources::mafDataSet *m_DataSet;
     mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
+    vtkAppendPolyData *m_AppendData; /// Bunch of surfaces.
 };
 
 void mafVisualPipeVTKSurfaceTest::updatePipeTest() {
