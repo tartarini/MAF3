@@ -23,6 +23,7 @@
 #include <vtkSmartPointer.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
+#include <vtkProperty.h>
 #include <vtkAppendPolyData.h>
 #include <vtkCellLocator.h>
 
@@ -97,6 +98,7 @@ void mafVTKInteractorPicker::createPipe() {
     m_Actor = vtkActor::New();
     m_Actor.setDestructionFunction(&vtkActor::Delete);
     m_Actor->SetMapper(m_Mapper);
+    m_Actor->GetProperty()->SetColor(1,0,0);
     m_Output = &m_Actor;
 
     m_AppendData = vtkAppendPolyData::New();
