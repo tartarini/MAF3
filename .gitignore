@@ -13,7 +13,7 @@
 
 # Exclude QtCreator files ...
 CMakeLists.txt.user
-*.pro.user
+*.pro.user*
 moc*
 *.app*
 *.moc

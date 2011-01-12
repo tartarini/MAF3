@@ -37,7 +37,7 @@ public:
     mafVisitorFindSceneNodeByVMEHash(const mafString code_location = "");
 
     /// overloaded object constructor
-    mafVisitorFindSceneNodeByVMEHash(const mafString hash_code, const mafString code_location = "");
+    mafVisitorFindSceneNodeByVMEHash(const mafString hash_code, const mafString code_location);
 
     /// Execute the defined operation on visited object passes as argument.
     /*virtual*/ void visit(mafObjectBase *object);
