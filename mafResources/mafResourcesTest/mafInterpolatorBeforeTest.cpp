@@ -54,6 +54,7 @@ private slots:
         m_ItemMap.clear();
         mafDEL(m_Interpolator);
         mafEventBus::mafEventBusManager::instance()->shutdown();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafInterpolatorBefore allocation test case.

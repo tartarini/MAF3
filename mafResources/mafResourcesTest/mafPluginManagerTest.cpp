@@ -122,6 +122,7 @@ private slots:
         m_PluginManager->shutdown();
         // Shutdown eventbus singleton and core singletons.
         mafEventBusManager::instance()->shutdown();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafPluginManager allocation test case.

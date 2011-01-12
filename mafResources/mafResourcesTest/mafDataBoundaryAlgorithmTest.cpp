@@ -91,6 +91,7 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_BoundaryAlgorithm);
+         mafMessageHandler::instance()->shutdown();
     }
 
     /// testDataBoundaryAlgorithmCustom allocation test case.

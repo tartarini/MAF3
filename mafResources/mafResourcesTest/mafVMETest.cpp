@@ -91,6 +91,7 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_VME);
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafVME allocation test case.

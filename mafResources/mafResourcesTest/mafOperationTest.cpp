@@ -44,6 +44,7 @@ private slots:
     void cleanupTestCase() {
         mafDEL(m_Operation);
         mafEventBus::mafEventBusManager::instance()->shutdown();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafOperation allocation test case.

@@ -30,6 +30,7 @@ private slots:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafResourcesRegistration registration test case.

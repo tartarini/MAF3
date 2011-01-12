@@ -79,6 +79,7 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_SceneNode);
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafSceneNode allocation test case.

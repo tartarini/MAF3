@@ -193,6 +193,7 @@ private slots:
 
         // Shutdown eventbus singleton and core singletons.
         mafEventBusManager::instance()->shutdown();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafOperationManager allocation test case.

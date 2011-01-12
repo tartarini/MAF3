@@ -48,6 +48,7 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_View);
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafView allocation test case.

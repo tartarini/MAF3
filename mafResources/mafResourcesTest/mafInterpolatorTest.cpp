@@ -70,6 +70,7 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_Interpolator);
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafInterpolatorBefore allocation test case.

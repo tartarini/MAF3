@@ -121,6 +121,7 @@ private slots:
     void cleanupTestCase() {
         mafDEL(m_MementoDataSet);
         mafDEL(m_DataSet);
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafMementoDataSet allocation test case.

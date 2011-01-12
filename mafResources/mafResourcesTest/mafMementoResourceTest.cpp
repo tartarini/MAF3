@@ -43,6 +43,7 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_MementoResource);
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafMementoResource allocation test case.

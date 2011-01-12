@@ -77,6 +77,7 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_Pipe);
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafPipe allocation test case.

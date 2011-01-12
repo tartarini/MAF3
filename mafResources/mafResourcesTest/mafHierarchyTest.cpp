@@ -80,6 +80,7 @@ private slots:
         mafDEL(m_Hierarchy);
         mafDEL(m_HierarchyToManage);
         mafEventBus::mafEventBusManager::instance()->shutdown();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafSceneGraph allocation test case.

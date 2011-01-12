@@ -80,6 +80,7 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_Collection);
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafDataSetCollection allocation test case.

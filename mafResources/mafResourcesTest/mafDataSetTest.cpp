@@ -171,6 +171,7 @@ private slots:
         mafDEL(m_Observer);
         // Shutdown eventbus singleton and core singletons.
         mafEventBusManager::instance()->shutdown();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafDataSet allocation test case.

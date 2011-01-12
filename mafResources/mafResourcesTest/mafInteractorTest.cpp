@@ -36,6 +36,7 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_Interactor);
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafInteractor allocation test case.
