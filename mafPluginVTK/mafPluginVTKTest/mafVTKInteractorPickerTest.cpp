@@ -196,7 +196,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     QTest::qSleep(1000);
 
     //Remove actor rendered
-    CleanRenderer(*actor1);
+    CleanRenderer(*actor2);
 
     //picking the actor in another point
     QTestEventList events3;
@@ -215,7 +215,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     mafEventBusManager::instance()->notifyEvent("maf.local.operation.VTK.nextPick", mafEventTypeLocal, &argList);
 
     //Remove actor rendered
-    CleanRenderer(*actor1);
+    CleanRenderer(*actor3);
 
     //picking the actor in another point
     QTestEventList events4;
