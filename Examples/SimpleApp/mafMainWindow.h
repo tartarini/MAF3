@@ -17,6 +17,7 @@
 #include <QMainWindow>
 
 #include <mafGUIManager.h>
+#include <mafMdiSubWindow.h>
 
 namespace Ui {
     class mafMainWindow;
@@ -24,10 +25,17 @@ namespace Ui {
 
 class GoogleChat;
 
+/**
+  Class Name: mafMainWindow
+  This class represent the Main Window of the vertical application.
+  */
 class mafMainWindow : public QMainWindow {
     Q_OBJECT
 public:
+    /// Object constructor
     mafMainWindow(QWidget *parent = 0);
+
+    /// Object destructor
     ~mafMainWindow();
 
 public slots:
