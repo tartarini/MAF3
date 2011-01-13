@@ -78,10 +78,6 @@ private slots:
     /// mafVTKInteractorPickerTest event connection test case.
     void mafVTKInteractorPickerEventsTest();
 
-    /// Remove acotor rendered
-    void CleanRenderer(vtkProp *p);
-
-
 private:
     mafVTKWidget *m_VTKWidget; ///< Test var.
     mafVTKInteractorPicker *m_Picker; ///< Test var.
@@ -159,23 +155,14 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
 
-    //Remove actor rendered
-    CleanRenderer(*actor);
-
     //picking the actor in another point
     events.clear();
     QPoint point = QPoint(200, 200);
     events.addMousePress(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
 
-    actor = mafContainerPointerTypeCast(vtkActor, m_Picker->output());
-    QVERIFY(actor != NULL);
-    m_Renderer->AddActor(*actor);
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
-
-    //Remove actor rendered
-    CleanRenderer(*actor);
 
     //Simulate operation event "Next pick".
     mafEventArgumentsList argList;
@@ -187,14 +174,8 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     events.addMousePress(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
 
-    actor = mafContainerPointerTypeCast(vtkActor, m_Picker->output());
-    QVERIFY(actor != NULL);
-    m_Renderer->AddActor(*actor);
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
-
-    //Remove actor rendered
-    CleanRenderer(*actor);
 
     //picking the actor in another point
     events.clear();
@@ -202,17 +183,11 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     events.addMousePress(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
 
-    actor = mafContainerPointerTypeCast(vtkActor, m_Picker->output());
-    QVERIFY(actor != NULL);
-    m_Renderer->AddActor(*actor);
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
 
     //Simulate operation event "Next pick".
     mafEventBusManager::instance()->notifyEvent("maf.local.operation.VTK.nextPick", mafEventTypeLocal, &argList);
-
-    //Remove actor rendered
-    CleanRenderer(*actor);
 
     //picking the actor in another point
     events.clear();
@@ -220,14 +195,8 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     events.addMousePress(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
 
-    actor = mafContainerPointerTypeCast(vtkActor, m_Picker->output());
-    QVERIFY(actor != NULL);
-    m_Renderer->AddActor(*actor);
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
-
-    //Remove actor rendered
-    CleanRenderer(*actor);
 
     //remove a pick marker picking the sphere with ctrl modifier
     events.clear();
@@ -235,17 +204,11 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     events.addMousePress(Qt::LeftButton, Qt::ControlModifier, point);
     events.simulate(m_VTKWidget);
 
-    actor = mafContainerPointerTypeCast(vtkActor, m_Picker->output());
-    QVERIFY(actor != NULL);
-    m_Renderer->AddActor(*actor);
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
 
     //Simulate operation event "Next pick".
     mafEventBusManager::instance()->notifyEvent("maf.local.operation.VTK.nextPick", mafEventTypeLocal, &argList);
-
-    //Remove actor rendered
-    CleanRenderer(*actor);
 
     //picking the actor in another point
     events.clear();
@@ -253,14 +216,8 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     events.addMousePress(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
 
-    actor = mafContainerPointerTypeCast(vtkActor, m_Picker->output());
-    QVERIFY(actor != NULL);
-    m_Renderer->AddActor(*actor);
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
-
-    //Remove actor rendered
-    CleanRenderer(*actor);
 
     //remove a pick marker picking the sphere with ctrl modifier
     events.clear();
@@ -268,14 +225,8 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     events.addMousePress(Qt::LeftButton, Qt::ControlModifier, point);
     events.simulate(m_VTKWidget);
 
-    actor = mafContainerPointerTypeCast(vtkActor, m_Picker->output());
-    QVERIFY(actor != NULL);
-    m_Renderer->AddActor(*actor);
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
-
-    //Remove actor rendered
-    CleanRenderer(*actor);
 
     //picking the actor in another point
     events.clear();
@@ -283,9 +234,6 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     events.addMousePress(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
 
-    actor = mafContainerPointerTypeCast(vtkActor, m_Picker->output());
-    QVERIFY(actor != NULL);
-    m_Renderer->AddActor(*actor);
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
 
@@ -299,12 +247,6 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     m_Renderer->AddActor(*actor6);
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);*/
-}
-
-void mafVTKInteractorPickerTest::CleanRenderer(vtkProp *p) {
-    m_Renderer->RemoveActor(p);
-    m_VTKWidget->GetRenderWindow()->Render();
-    QTest::qSleep(1000);
 }
 
 
