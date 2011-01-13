@@ -12,7 +12,8 @@ SOURCES += mafGUIManager.cpp \
     mafUILoaderQt.cpp \
     mafTreeModel.cpp \
     mafTreeItem.cpp \
-    mafTreeWidget.cpp
+    mafTreeWidget.cpp \
+    mafMdiSubWindow.cpp
 HEADERS += mafGUI_global.h \
     mafGUIManager.h \
     mafGUIRegistration.h \
@@ -21,7 +22,8 @@ HEADERS += mafGUI_global.h \
     mafUILoaderQt.h \
     mafTreeModel.h \
     mafTreeItem.h \
-    mafTreeWidget.h
+    mafTreeWidget.h \
+    mafMdiSubWindow.h
 include(../mafInstallModule.pri)
 INCLUDEPATH += ../mafCore \
     ../mafEventBus \
