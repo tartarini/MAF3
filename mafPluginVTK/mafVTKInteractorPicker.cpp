@@ -23,6 +23,7 @@
 #include <vtkSmartPointer.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
+#include <vtkProperty.h>
 #include <vtkAppendPolyData.h>
 #include <vtkCellLocator.h>
 
@@ -30,7 +31,7 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafPluginVTK;
 
-mafVTKInteractorPicker::mafVTKInteractorPicker(const mafString code_location) : mafResources::mafInteractor(code_location), m_MarkerOutput(NULL), m_TmpMarkerOutput(NULL), m_Mapper(NULL), m_Output(NULL) {
+mafVTKInteractorPicker::mafVTKInteractorPicker(const mafString code_location) : mafResources::mafInteractor(code_location), m_MarkerOutput(NULL), m_TmpMarkerOutput(NULL), m_LastMarkerOutput(NULL), m_Mapper(NULL), m_Output(NULL) {
     m_GeometryType = 0;
     m_SphereRadius = 1.0;
     m_SpherePhiRes = 10.0;
@@ -97,6 +98,7 @@ void mafVTKInteractorPicker::createPipe() {
     m_Actor = vtkActor::New();
     m_Actor.setDestructionFunction(&vtkActor::Delete);
     m_Actor->SetMapper(m_Mapper);
+    m_Actor->GetProperty()->SetColor(1,0,0);
     m_Output = &m_Actor;
 
     m_AppendData = vtkAppendPolyData::New();
@@ -129,6 +131,11 @@ void mafVTKInteractorPicker::vmePick(double *pickPos, unsigned long modifiers, m
         }
         m_AppendData->RemoveInputConnection(0,m_AppendData->GetInputConnection(0,closestMarkerIndex));
         m_PointList.removeAt(closestMarkerIndex);
+
+        if (closestMarkerIndex == InputNumber-1){
+            //then last marker has been deleted
+            m_IsFirstPick = true;
+        }
     } else {
         if(!m_IsFirstPick) {
             //Remove last pick surface
