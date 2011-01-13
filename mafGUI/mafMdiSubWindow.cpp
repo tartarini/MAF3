@@ -1,3 +1,14 @@
+/*
+ *  mafMdiSubWindow.cpp
+ *  mafGUI
+ *
+ *  Created by Paolo Quadrani on 13/01/11.
+ *  Copyright 2010 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
+ */
+
 #include "mafMdiSubWindow.h"
 #include <QPropertyAnimation>
 
