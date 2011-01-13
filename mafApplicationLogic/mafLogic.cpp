@@ -58,7 +58,7 @@ mafLogic::~mafLogic() {
 }
 
 bool mafLogic::initialize() {
-    // Call the ionitialization of the superclass.
+    // Call the initialization of the superclass.
     Superclass::initialize();
 
     mafIdProvider *provider = mafIdProvider::instance();
