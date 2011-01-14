@@ -23,6 +23,7 @@
 #include <mafEventBusManager.h>
 #include <mafCoreSingletons.h>
 #include <mafObject.h>
+#include <mafHierarchy.h>
 
 
 // vnl includes
