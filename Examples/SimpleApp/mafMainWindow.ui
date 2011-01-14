@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>674</width>
-    <height>418</height>
+    <width>821</width>
+    <height>527</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>821</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>mafMainWindow</string>
@@ -20,53 +26,18 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QWidget" name="horizontalLayoutWidget">
+   <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>671</width>
-      <height>331</height>
+      <width>821</width>
+      <height>451</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetMinimumSize</enum>
-     </property>
-     <item row="0" column="1">
-      <widget class="QTreeView" name="treeView">
-       <property name="minimumSize">
-        <size>
-         <width>200</width>
-         <height>0</height>
-        </size>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="0">
-      <widget class="QMdiArea" name="mdiArea">
-       <property name="minimumSize">
-        <size>
-         <width>400</width>
-         <height>300</height>
-        </size>
-       </property>
-       <property name="verticalScrollBarPolicy">
-        <enum>Qt::ScrollBarAsNeeded</enum>
-       </property>
-       <property name="horizontalScrollBarPolicy">
-        <enum>Qt::ScrollBarAsNeeded</enum>
-       </property>
-       <property name="activationOrder">
-        <enum>QMdiArea::CreationOrder</enum>
-       </property>
-       <property name="viewMode">
-        <enum>QMdiArea::SubWindowView</enum>
-       </property>
-       <property name="documentMode">
-        <bool>false</bool>
-       </property>
-      </widget>
+      <widget class="QMdiArea" name="mdiArea"/>
      </item>
     </layout>
    </widget>
@@ -76,7 +47,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>674</width>
+     <width>821</width>
      <height>22</height>
     </rect>
    </property>
@@ -96,6 +67,119 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="dockSideBar">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>200</width>
+     <height>449</height>
+    </size>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="sideBarDockContents">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <widget class="QWidget" name="gridLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>201</width>
+       <height>421</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayoutSideBar">
+      <item row="0" column="0">
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="tabTree">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <attribute name="title">
+          <string>Tree</string>
+         </attribute>
+         <widget class="QWidget" name="gridLayoutWidget_3">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>201</width>
+            <height>401</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayoutTree"/>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="tabProperties">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <attribute name="title">
+          <string>Properties</string>
+         </attribute>
+         <widget class="QWidget" name="gridLayoutWidget_4">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>191</width>
+            <height>391</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayoutProperties"/>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="tabOperation">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <attribute name="title">
+          <string>Operation</string>
+         </attribute>
+         <widget class="QWidget" name="gridLayoutWidget_5">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>191</width>
+            <height>391</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayoutOperation"/>
+         </widget>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
