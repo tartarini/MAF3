@@ -15,6 +15,7 @@
 // Includes list
 #include "mafLogicLight.h"
 #include <mafMemento.h>
+#include <mafHierarchy.h>
 
 #include <QDir>
 
@@ -38,7 +39,7 @@ namespace mafApplicationLogic {
   - maf.local.logic.status.viewmanager.restore that allows to ask the mafViewManager to restore a previous saved state.
   - maf.local.logic.status.vmemanager.store that allows to ask the mafVmeManager to store its status into a memento that will be serialized.
   - maf.local.logic.status.vmemanager.restore that allows to ask the mafVmeManager to restore a previous saved state.
- */
+*/
 class MAFAPPLICATIONLOGICSHARED_EXPORT mafLogic : public mafLogicLight {
     Q_OBJECT
     Q_PROPERTY(QString workingDir READ workingDirectory WRITE setWorkingDirectory);
@@ -57,6 +58,9 @@ public:
 
     /// Allows to retrieve the application's working directory.
     mafString workingDirectory() const;
+
+    /// Returns the VME Hierarchy.
+    mafCore::mafHierarchy *hierarchy();
 
     /// Allow to load plugins located into the 'plugins' folder located into the application's directory path.
     /** The optional argument allows logic to load a plugin from a given directory. By default the
@@ -106,7 +110,8 @@ private:
     mafString m_WorkingDirectory; ///< Contains the root directory of the application's data.
     mafString m_ApplicationDirectory; ///< Contains the application's working directory.
     mafCore::mafPluggedObjectsHash m_CustomPluggedObjectsHash; ///< Hash containing operations, views and all the plugged custom objects.
-    mafHash<mafString, mafLibrary *> m_LibraryHandlersHash;
+    mafHash<mafString, mafLibrary *> m_LibraryHandlersHash; ///< Hash containing  the loaded plugins.
+    mafCore::mafHierarchy *m_Hierarchy; ///< VME Hierarchy
 };
 
 inline void mafLogic::setWorkingDirectory(const mafString wd) {
@@ -118,6 +123,10 @@ inline void mafLogic::setWorkingDirectory(const mafString wd) {
 
 inline mafString mafLogic::workingDirectory() const {
     return m_WorkingDirectory;
+}
+
+inline mafCore::mafHierarchy *mafLogic::hierarchy() {
+    return m_Hierarchy;
 }
 
 } // namespace mafApplicationLogic
