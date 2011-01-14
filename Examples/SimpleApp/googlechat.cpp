@@ -69,7 +69,7 @@ void GoogleChat::doLogin() {
             form.progressBar, SLOT(setValue(int)));
     showStatus("Logging in...");
 
-    QString userEmail = userName + "@gmail.com";
+    QString userEmail = userName;
 
     document().findFirst("#Email").setAttribute("value", userEmail);
     document().findFirst("#Passwd").setAttribute("value", password);
