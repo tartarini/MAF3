@@ -38,7 +38,6 @@ class mafTreeModel;
  - maf.local.gui.action.open
  - maf.local.gui.action.save
  - maf.local.gui.action.saveas
- - maf.local.gui.action.collaborate
  - maf.local.gui.action.cut
  - maf.local.gui.action.copy
  - maf.local.gui.action.paste
@@ -92,6 +91,9 @@ public:
 
     /// Return the SideBar action
     QAction *sideBarAction();
+
+    /// Return the collaborate action
+    QAction *collaborateAction();
 
     /// Show the file dialog to select the file path given a window title, a starting directory and an optional file wildcard
     void chooseFileDialog(const mafString title, const mafString start_dir, const mafString wildcard = mafTr("All files (*.*)"));
@@ -206,6 +208,10 @@ inline QMenu *mafGUIManager::helpMenu() const {
 
 inline QAction *mafGUIManager::sideBarAction() {
     return m_SideBarAct;
+}
+
+inline QAction *mafGUIManager::collaborateAction() {
+    return m_CollaborateAct;
 }
 
 } // namespace mafGUI
