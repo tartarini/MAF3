@@ -11,7 +11,8 @@
 
 #include "mafGUIManager.h"
 #include "mafUILoaderQt.h"
-
+#include "mafTreeWidget.h"
+#include "mafTreeModel.h"
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -94,6 +95,10 @@ void mafGUIManager::createActions() {
     m_AboutAct = new QAction(tr("&About"), this);
     m_AboutAct->setIconText(mafTr("About"));
     m_AboutAct->setStatusTip(tr("Show the application's About box"));
+
+    m_SideBarAct = new QAction(tr("Sidebar"), this);
+    m_SideBarAct->setCheckable(true);
+    m_SideBarAct->setChecked(true);
 
     m_ActionsCreated = true;
 
@@ -216,6 +221,11 @@ void mafGUIManager::createMenus() {
 
     menuBar->addSeparator();
 
+    m_WindowMenu = menuBar->addMenu(tr("&Window"));
+    m_WindowMenu->addAction(m_SideBarAct);
+
+    menuBar->addSeparator();
+
     m_HelpMenu = menuBar->addMenu(tr("&Help"));
     m_HelpMenu->addAction(m_AboutAct);
 }
@@ -246,6 +256,25 @@ void mafGUIManager::startOperation() {
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
 }
 
+mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *parent) {
+    mafTreeWidget *w = new mafTreeWidget();
+    w->setGeometry(QRect(0, 0, 200, 400));
+    w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    w->setMinimumSize(200, 400);
+    w->setMaximumSize(16777215, 16777215);
+
+    if(parent) {
+        if(parent->layout()) {
+            parent->layout()->addWidget(w);
+        } else {
+            w->setParent(parent);
+        }
+    }
+
+    w->setModel( model );
+    return w;
+}
+
 void mafGUIManager::operationDidStart(const mafCore::mafObjectBase *operation) {
     // Get the started operation
     mafString guiFilename = operation->uiFilename();
@@ -258,7 +287,7 @@ void mafGUIManager::operationDidStart(const mafCore::mafObjectBase *operation) {
 void mafGUIManager::uiLoaded(mafCore::mafContainerInterface *guiWidget) {
     // Get the widget from the container
     mafContainer<QWidget> *w = mafContainerPointerTypeCast(QWidget, guiWidget);
-    QWidget *widget = *w;
+    QWidget *widget = *w; // TODO: finire il plug della GUI caricata dinamicamente nel pannello corrente delle operazioni.
     // put the widget on the interface.
     //widget->setParent(m_CurrentPanel);
 }

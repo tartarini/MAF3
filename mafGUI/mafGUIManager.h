@@ -23,6 +23,8 @@ namespace mafGUI {
 
 // Class forwarding list
 class mafUILoaderQt;
+class mafTreeWidget;
+class mafTreeModel;
 
 /**
  Class name: mafGUIManager
@@ -64,6 +66,9 @@ public:
     /// Create the toolbar for the vertical application and add them to the main window.
     virtual void createToolBars();
 
+    /// Create the tree widget according to the given model passed as argument.
+    virtual mafTreeWidget *createTreeWidget(mafTreeModel *model, QWidget *parent = 0);
+
     /// Return the number of maximum recent files.
     int maxRecentFiles();
 
@@ -84,6 +89,9 @@ public:
 
     /// Return the 'help' menu item created into the createMenus method.
     QMenu *helpMenu() const;
+
+    /// Return the SideBar action
+    QAction *sideBarAction();
 
     /// Show the file dialog to select the file path given a window title, a starting directory and an optional file wildcard
     void chooseFileDialog(const mafString title, const mafString start_dir, const mafString wildcard = mafTr("All files (*.*)"));
@@ -135,6 +143,7 @@ private:
     QMenu *m_EditMenu; ///< Reference to the 'Edit' menu.
     QMenu *m_ViewMenu; ///< Reference to the 'View' menu.
     QMenu *m_OpMenu;   ///< Reference to the 'Operation' menu.
+    QMenu *m_WindowMenu; ///< Reference to the 'Window' menu.
     QMenu *m_HelpMenu; ///< Reference to the 'Help' menu.
 
     QToolBar *m_FileToolBar; ///< Toolbar related to File tasks
@@ -153,6 +162,7 @@ private:
     QAction *m_PasteAct; ///< Reference to the action associated to the 'Paste' of Items into actual loaded data.
 
     QAction *m_AboutAct; ///< Reference to the action associated to the 'About' informative dialog.
+    QAction *m_SideBarAct; ///< Reference to the side bar close/show action.
 
     int m_MaxRecentFiles; ///< Number of maximum recent files.
     mafList<QAction *> m_RecentFileActs; ///< List of recent file's actions.
@@ -192,6 +202,10 @@ inline QMenu *mafGUIManager::operationMenu() const {
 
 inline QMenu *mafGUIManager::helpMenu() const {
     return m_HelpMenu;
+}
+
+inline QAction *mafGUIManager::sideBarAction() {
+    return m_SideBarAct;
 }
 
 } // namespace mafGUI
