@@ -93,7 +93,7 @@
        <item>
         <widget class="QLabel" name="userNameLabel">
          <property name="text">
-          <string>Google username:</string>
+          <string>Google username: (your email)</string>
          </property>
         </widget>
        </item>

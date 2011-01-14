@@ -23,12 +23,12 @@ mafVMEManager* mafVMEManager::instance() {
 void mafVMEManager::shutdown() {
 }
 
-mafVMEManager::mafVMEManager(const mafString code_location) : mafObjectBase(code_location), m_SelectedVME(NULL) {
+mafVMEManager::mafVMEManager(const mafString code_location) : mafObjectBase(code_location), m_SelectedVME(NULL), m_VMEHierarchy(NULL) {
     initializeConnections();
 }
 
 mafVMEManager::~mafVMEManager() {
-
+    // TODO: Check id m_VMEHierarchy has to be destroied.
 }
 
 void mafVMEManager::initializeConnections() {
@@ -38,18 +38,21 @@ void mafVMEManager::initializeConnections() {
     provider->createNewId("maf.local.resources.vme.remove");
     provider->createNewId("maf.local.resources.vme.select");
     provider->createNewId("maf.local.resources.vme.selected");
+    provider->createNewId("maf.local.resources.hierarchy.create");
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.vme.add", this, "attachVMEToHierarchy(mafCore::mafObjectBase *)");
     mafRegisterLocalSignal("maf.local.resources.vme.remove", this, "detachVMEFromHierarchy(mafCore::mafObjectBase *)");
     mafRegisterLocalSignal("maf.local.resources.vme.select", this, "selectVME(mafCore::mafObjectBase *)");
     mafRegisterLocalSignal("maf.local.resources.vme.selected", this, "selectedVMESignal()");
+    mafRegisterLocalSignal("maf.local.resources.hierarchy.create", this, "createVMEHierarchySignal()");
 
     // Register private callbacks to the instance of the manager..
     mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.vme.remove", this, "vmeRemove(mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.vme.selected", this, "selectedVME()");
+    mafRegisterLocalCallback("maf.local.resources.hierarchy.create", this, "createVMEHierarchy()");
 }
 
 void mafVMEManager::vmeSelect(mafObjectBase *vme) {
@@ -98,4 +101,17 @@ void mafVMEManager::removeVME(mafVME *vme) {
     if(vme->isEqual(m_SelectedVME)) {
         m_SelectedVME = NULL;
     }
+}
+
+mafCore::mafHierarchyPointer mafVMEManager::createVMEHierarchy() {
+     if(m_VMEHierarchy == NULL) {
+         m_VMEHierarchy = mafNEW(mafCore::mafHierarchy);
+
+         mafVME* vmeRoot = mafNEW(mafResources::mafVME);
+         vmeRoot->setObjectName("root"); // TODO: need yo destroy the root
+
+         m_VMEHierarchy->addHierarchyNode(vmeRoot);
+     }
+
+     return m_VMEHierarchy;
 }

@@ -16,8 +16,8 @@ win32 {
     }
 }
 
-unix:LIB_CHECK = $$(MAF3_FOUNDATION_LIB_DIR)/vtk-5.6/lib/lib*
-win32:LIB_CHECK = $$(MAF3_FOUNDATION_LIB_DIR)\vtk-5.6\lib\\$$LIB_DIR\*vtk*
+unix:LIB_CHECK = $$(MAF3_FOUNDATION_LIB_DIR)/vtk-5.6/lib/
+win32:LIB_CHECK = $$(MAF3_FOUNDATION_LIB_DIR)\vtk-5.6\lib\\$$LIB_DIR\
 
 # Foundation libraries dependencies
 exists( $$LIB_CHECK ) {

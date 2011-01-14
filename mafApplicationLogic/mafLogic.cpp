@@ -14,6 +14,7 @@
 #include <mafCoreSingletons.h>
 #include <mafEventBusManager.h>
 
+
 using namespace mafEventBus;
 
 #define PLUGIN_EXTENSION_FILTER "*.mafplugin"
@@ -90,6 +91,10 @@ bool mafLogic::initialize() {
     if(handler) {
         m_LibraryHandlersHash.insert(RESOURCES_LIBRARY_NAME, handler);
     }
+
+    // Initialize vme hierarchy
+    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, m_Hierarchy);
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.create", mafEventTypeLocal, NULL, &ret_val);
 
     // Perform design by contract check.
     ENSURE(handler);

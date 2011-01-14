@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     // Plug the object's information into the framework
     logic.plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
 
-    mafMainWindow w;
+    mafMainWindow w(&logic);
     logic.loadPlugins();
 
     w.show();

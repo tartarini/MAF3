@@ -27,6 +27,7 @@ a VME to/from the hierarchy tree and to select a vme. The IDs are:
 - maf.local.resources.vme.remove allows to remove a VME from the hierarchy.
 - maf.local.resources.vme.select allows to select the active VME on which operate.
 - maf.local.resources.vme.selected allows to retrieve the current selected VME.
+- maf.local.resources.hierarchy.create allows to create the hierarchy of the vmes
 */
 class MAFRESOURCESSHARED_EXPORT mafVMEManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -53,6 +54,9 @@ signals:
     /// Signal emitted when a VME has beed selected.
     void selectVME(mafCore::mafObjectBase *vme);
 
+    /// Create hierarchy of vmes.
+    mafCore::mafHierarchyPointer createVMEHierarchySignal();
+
 private slots:
     /// Return the current selected vme.
     mafCore::mafObjectBase *selectedVME() const;
@@ -69,6 +73,9 @@ private slots:
     /// Method called when a VME has been destroyed (by someone else).
     void vmeDestroyed();
 
+    /// Create a hierarchy of VMEs
+    mafCore::mafHierarchyPointer createVMEHierarchy();
+
 private:
     /// Object constructor.
     mafVMEManager(const mafString code_location = "");
@@ -83,6 +90,7 @@ private:
     void removeVME(mafVME *vme);
 
     mafVME *m_SelectedVME; ///< Keep track of the selected VME.
+    mafCore::mafHierarchy *m_VMEHierarchy; ///< Hierarchy indicizing the mafVME.
 };
 
 /////////////////////////////////////////////////////////////

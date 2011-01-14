@@ -75,7 +75,10 @@ private:
     mafTree<QObject *> *m_Tree; ///< tree variable which hosts mafSceneNode elements
     mafTree<QObject *>::iterator m_TreeIterator; ///< tree iterator variable which point the current node
 };
+typedef mafHierarchy * mafHierarchyPointer;
 
-} //namespace mafCore
+} // namespace mafCore
 
+// Type registered below can be substituted (or integrated) with this one:
+Q_DECLARE_METATYPE(mafCore::mafHierarchyPointer);
 #endif // MAFHIERARCHY_H
