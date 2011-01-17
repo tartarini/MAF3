@@ -68,7 +68,9 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_VTKWidget);
-        mafDEL(m_Picker);
+        //mafDEL(m_Picker); // WARNING-> Pattern RAII not followed when creating/destroying a interactor bounded with a vme
+                            // interactor has been created by a "generator" class that is not vme, but in the vme destructor
+                            // this interactor is deleted. @TODO, NEED TO BE STUDIED
         shutdownGraphicResources();
     }
 
@@ -192,7 +194,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //Simulate operation event "Next pick".
     mafEventBusManager::instance()->notifyEvent("maf.local.operation.VTK.nextPick", mafEventTypeLocal, &argList);
 
-   m_VTKWidget->GetRenderWindow()->Render();
+    m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
 
     //picking the actor in another point
@@ -246,6 +248,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
 
+    mafDEL(vme);
 
     //Simulate operation event "Undo pick".
     /*mafEventArgumentsList argList1;
@@ -256,6 +259,8 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     m_Renderer->AddActor(*actor6);
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);*/
+
+    //mafMsgDebug() << "Finished Interactor Picker Test";
 }
 
 
