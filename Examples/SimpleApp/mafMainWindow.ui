@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>821</width>
-    <height>527</height>
+    <height>628</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -82,6 +82,9 @@
    </property>
    <property name="allowedAreas">
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string/>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -177,6 +180,36 @@
        </widget>
       </item>
      </layout>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockLogBarWidget">
+   <property name="minimumSize">
+    <size>
+     <width>78</width>
+     <height>100</height>
+    </size>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::BottomDockWidgetArea|Qt::TopDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string/>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="logBarWidgetContents">
+    <widget class="QWidget" name="gridLayoutWidget_6">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>821</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayoutLogBar"/>
     </widget>
    </widget>
   </widget>

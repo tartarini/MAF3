@@ -16,6 +16,10 @@
 
 #include <QWidget>
 #include <QUiLoader>
+#include <QTextEdit>
+#include <QSyntaxHighlighter>
+#include <QTextCharFormat>
+
 #define mafUiLoader QUiLoader
 
 #include <mafCoreDefinitions.h>

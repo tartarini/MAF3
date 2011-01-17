@@ -28,22 +28,15 @@ class MAFGUISHARED_EXPORT mafTreeWidget : public QTreeView {
 public:
     /// Object Constructor
     mafTreeWidget(QWidget *parent = 0);
-    //void setHierarchy(QStandardItemModel * hierarchy);
 
 public slots:
     //void refresh(void);
 
 private slots:
-    //void updateItem(QTreeWidgetItem *item);
+    //void updateItem(...);
 
 private:
-    /*void updateChildItems(QTreeWidgetItem *parent);
-    QTreeWidgetItem *createItem(const QString &text, QTreeWidgetItem *parent, int index);
-    QTreeWidgetItem *childAt(QTreeWidgetItem *parent, int index);
-    int numberOfChildren(QTreeWidgetItem *parent);
-    int findChild(QTreeWidgetItem *parent, const QString &text, int startIndex);
 
-    QStandardItemModel *m_hierarchy;*/
 };
 
 } //end namespace

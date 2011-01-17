@@ -223,7 +223,6 @@ void mafVisualPipeVTKSurfaceTest::updatePipeTestFromPlugIn() {
     visualPipe->updatePipe();
     renWin->Render();
     QTest::qSleep(2000);
-
     renWin->Delete();
     renderer->Delete();
     iren->Delete();

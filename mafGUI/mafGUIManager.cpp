@@ -13,6 +13,8 @@
 #include "mafUILoaderQt.h"
 #include "mafTreeWidget.h"
 #include "mafTreeModel.h"
+#include "mafTextEditWidget.h"
+#include "mafTextHighlighter.h"
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -124,6 +126,12 @@ void mafGUIManager::createActions() {
     m_SideBarAct->setCheckable(true);
     m_SideBarAct->setChecked(true);
     m_ActionList.append(m_SideBarAct);
+
+    m_LogBarAct = new QAction(tr("LogBar"), this);
+    m_LogBarAct->setObjectName("LogBar");
+    m_LogBarAct->setCheckable(true);
+    m_LogBarAct->setChecked(true);
+    m_ActionList.append(m_LogBarAct);
 
     m_ActionsCreated = true;
 
@@ -260,6 +268,7 @@ void mafGUIManager::createMenus() {
 
     m_WindowMenu = menuBar->addMenu(tr("&Window"));
     m_WindowMenu->addAction(m_SideBarAct);
+    m_WindowMenu->addAction(m_LogBarAct);
 
     menuBar->addSeparator();
 
@@ -309,6 +318,23 @@ mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *par
     }
 
     w->setModel( model );
+    return w;
+}
+
+mafTextEditWidget *mafGUIManager::createLogWidget(QWidget *parent) {
+    //syntax highlighter
+    mafTextHighlighter *hl = new mafTextHighlighter();
+    mafTextEditWidget *w = new mafTextEditWidget(hl, parent);
+    w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    if(parent) {
+        if(parent->layout()) {
+            parent->layout()->addWidget(w);
+        } else {
+            w->setParent(parent);
+        }
+    }
+
     return w;
 }
 

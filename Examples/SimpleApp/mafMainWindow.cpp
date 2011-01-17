@@ -62,10 +62,12 @@ void mafMainWindow::initializeMainWindow() {
     // Connecting layouts (needed because from QtDesign is not managed automatically)
     ui->centralWidget->setLayout(ui->gridLayout);
     ui->sideBarDockContents->setLayout(ui->gridLayoutSideBar);
+    ui->logBarWidgetContents->setLayout(ui->gridLayoutLogBar);
     ui->tabTree->setLayout(ui->gridLayoutTree);
     ui->tabProperties->setLayout(ui->gridLayoutProperties);
     ui->tabOperation->setLayout(ui->gridLayoutOperation);
 
+    //tree widget in sidebar
     m_Model = new mafTreeModel();
 
     if(m_Logic) {
@@ -79,6 +81,12 @@ void mafMainWindow::initializeMainWindow() {
     QObject *sideBarAction = m_GUIManager->actionByName("SideBar");
     connect(ui->dockSideBar, SIGNAL(visibilityChanged(bool)), sideBarAction, SLOT(setChecked(bool)));
     connect(sideBarAction, SIGNAL(triggered(bool)), ui->dockSideBar, SLOT(setVisible(bool)));
+
+    // **** LogBar ****
+    QObject *logBarAction = m_GUIManager->actionByName("LogBar");
+    m_LogWidget = m_GUIManager->createLogWidget(ui->logBarWidgetContents);
+    connect(ui->dockLogBarWidget, SIGNAL(visibilityChanged(bool)), logBarAction, SLOT(setChecked(bool)));
+    connect(logBarAction, SIGNAL(triggered(bool)), ui->dockLogBarWidget, SLOT(setVisible(bool)));
 
     // **** Google chat ****
     QObject *collaborateAction = m_GUIManager->actionByName("Collaborate");

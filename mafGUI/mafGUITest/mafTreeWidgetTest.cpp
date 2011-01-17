@@ -59,8 +59,8 @@ void mafTreeWidgetTest::mafTreeWidgetAllocationTest() {
     QVERIFY(m_TreeWidget != NULL);
     /// create hierarchy of vmes
     mafHierarchy *m_HierarchyToManage = mafNEW(mafCore::mafHierarchy);
-/*int argc = 1;
-QApplication app(argc, NULL);*/
+//int argc = 1;
+//QApplication app(argc, NULL);
     mafVME* vmeRoot = mafNEW(mafResources::mafVME);
     vmeRoot->setObjectName("root");
 
@@ -87,8 +87,13 @@ QApplication app(argc, NULL);*/
     mafTreeModel model;
     model.setHierarchy(m_HierarchyToManage);
     m_TreeWidget->setModel( &model );
-/*m_TreeWidget->show();
-app.exec();*/
+
+
+    connect(m_TreeWidget, SIGNAL(clicked(QModelIndex)),
+             &model, SLOT(selectItem(QModelIndex)));
+
+//m_TreeWidget->show();
+//app.exec();
 
 
     mafDEL(m_HierarchyToManage);

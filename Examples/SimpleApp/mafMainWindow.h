@@ -19,6 +19,7 @@
 #include <mafGUIManager.h>
 #include <mafMdiSubWindow.h>
 #include <mafTreeWidget.h>
+#include <mafTextEditWidget.h>
 #include <mafLogic.h>
 
 namespace Ui {
@@ -85,6 +86,8 @@ private:
     mafGUI::mafGUIManager *m_GUIManager; ///< Manager for the GUI widgets creation and initialization.
     mafGUI::mafTreeWidget  *m_Tree; ///< Manage the resource's tree hierarchy.
     mafGUI::mafTreeModel  *m_Model; ///< Tree model of the mafResources.
+
+    mafGUI::mafTextEditWidget *m_LogWidget;
 
     mafApplicationLogic::mafLogic *m_Logic; ///< Application's logic.
 

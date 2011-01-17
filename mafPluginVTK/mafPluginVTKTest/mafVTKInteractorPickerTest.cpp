@@ -168,6 +168,9 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     mafEventArgumentsList argList;
     mafEventBusManager::instance()->notifyEvent("maf.local.operation.VTK.nextPick", mafEventTypeLocal, &argList);
 
+    m_VTKWidget->GetRenderWindow()->Render();
+    QTest::qSleep(1000);
+
     //picking the actor in another point after "Next Pick".
     events.clear();
     point = QPoint(200, 250);
@@ -189,6 +192,9 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //Simulate operation event "Next pick".
     mafEventBusManager::instance()->notifyEvent("maf.local.operation.VTK.nextPick", mafEventTypeLocal, &argList);
 
+   m_VTKWidget->GetRenderWindow()->Render();
+    QTest::qSleep(1000);
+
     //picking the actor in another point
     events.clear();
     point = QPoint(350, 250);
@@ -209,6 +215,9 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
 
     //Simulate operation event "Next pick".
     mafEventBusManager::instance()->notifyEvent("maf.local.operation.VTK.nextPick", mafEventTypeLocal, &argList);
+
+    m_VTKWidget->GetRenderWindow()->Render();
+    QTest::qSleep(1000);
 
     //picking the actor in another point
     events.clear();
