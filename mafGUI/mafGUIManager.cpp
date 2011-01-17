@@ -135,7 +135,7 @@ void mafGUIManager::createActions() {
 
     m_ActionsCreated = true;
 
-    registerSignals();
+    registerEvents();
 }
 
 void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash) {
@@ -200,7 +200,7 @@ void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
     }
 }
 
-void mafGUIManager::registerSignals() {
+void mafGUIManager::registerEvents() {
     mafIdProvider *provider = mafIdProvider::instance();
     provider->createNewId("maf.local.gui.action.new");
     provider->createNewId("maf.local.gui.action.open");
@@ -306,7 +306,7 @@ mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *par
     mafTreeWidget *w = new mafTreeWidget();
     w->setGeometry(QRect(0, 0, 200, 400));
     w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    w->setMinimumSize(200, 400);
+    w->setMinimumSize(200, 200);
     w->setMaximumSize(16777215, 16777215);
 
     if(parent) {
