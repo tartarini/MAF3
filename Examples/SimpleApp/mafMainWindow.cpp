@@ -76,15 +76,19 @@ void mafMainWindow::initializeMainWindow() {
     m_Tree = m_GUIManager->createTreeWidget(m_Model, ui->tabTree);
 
     // SideBar visibility management
-    connect(ui->dockSideBar, SIGNAL(visibilityChanged(bool)), m_GUIManager->sideBarAction(), SLOT(setChecked(bool)));
-    connect(m_GUIManager->sideBarAction(), SIGNAL(triggered(bool)), ui->dockSideBar, SLOT(setVisible(bool)));
+    QObject *sideBarAction = m_GUIManager->actionByName("SideBar");
+    connect(ui->dockSideBar, SIGNAL(visibilityChanged(bool)), sideBarAction, SLOT(setChecked(bool)));
+    connect(sideBarAction, SIGNAL(triggered(bool)), ui->dockSideBar, SLOT(setVisible(bool)));
 
     // **** Google chat ****
+    QObject *collaborateAction = m_GUIManager->actionByName("Collaborate");
     m_DockGoogleChat = new QDockWidget(tr("Google Chat"));
     m_DockGoogleChat->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     m_DockGoogleChat->setWidget(new GoogleChat());
-    connect(m_GUIManager->collaborateAction(), SIGNAL(triggered(bool)), this, SLOT(updateCollaborationDockVisibility(bool)));
-    connect(m_DockGoogleChat, SIGNAL(visibilityChanged(bool)), m_GUIManager->collaborateAction(), SLOT(setChecked(bool)));
+    if(collaborateAction) {
+        connect(collaborateAction, SIGNAL(triggered(bool)), this, SLOT(updateCollaborationDockVisibility(bool)));
+        connect(m_DockGoogleChat, SIGNAL(visibilityChanged(bool)), collaborateAction, SLOT(setChecked(bool)));
+    }
 
     connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(viewSelected(QMdiSubWindow*)));
 
