@@ -64,10 +64,12 @@ void mafMainWindow::initializeMainWindow() {
     // Connecting layouts (needed because from QtDesign is not managed automatically)
     ui->centralWidget->setLayout(ui->gridLayout);
     ui->sideBarDockContents->setLayout(ui->gridLayoutSideBar);
+    ui->logBarWidgetContents->setLayout(ui->gridLayoutLogBar);
     ui->tabTree->setLayout(ui->gridLayoutTree);
     ui->tabProperties->setLayout(ui->gridLayoutProperties);
     ui->tabOperation->setLayout(ui->gridLayoutOperation);
 
+    //tree widget in sidebar
     m_Model = new mafTreeModel();
 
     if(m_Logic) {
@@ -75,6 +77,9 @@ void mafMainWindow::initializeMainWindow() {
      }
 
     m_Tree = m_GUIManager->createTreeWidget(m_Model, ui->tabTree);
+
+    // text widget in log bar
+    m_LogWidget = m_GUIManager->createLogWidget(ui->logBarWidgetContents);
 
     connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(viewSelected(QMdiSubWindow*)));
 
