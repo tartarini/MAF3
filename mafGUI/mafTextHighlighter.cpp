@@ -1,4 +1,17 @@
+/*
+ *  mafTextHighlighter.cpp
+ *  mafGUI
+ *
+ *  Created by Daniele Giunchi on 26/10/10.
+ *  Copyright 2010 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
+ */
+
 #include "mafTextHighlighter.h"
+
+using namespace mafGUI;
 
 mafTextHighlighter::mafTextHighlighter(QTextDocument *parent)
     : QSyntaxHighlighter(parent)
