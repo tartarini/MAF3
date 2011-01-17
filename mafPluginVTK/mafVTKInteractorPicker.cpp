@@ -26,12 +26,18 @@
 #include <vtkProperty.h>
 #include <vtkAppendPolyData.h>
 #include <vtkCellLocator.h>
+#include <vtkPointData.h>
+#include <vtkDoubleArray.h>
+
+#define FIXED_MARKER_COLOR  0
+#define TMP_MARKER_COLOR    1
 
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafPluginVTK;
 
 mafVTKInteractorPicker::mafVTKInteractorPicker(const mafString code_location) : mafResources::mafInteractor(code_location), m_MarkerOutput(NULL), m_TmpMarkerOutput(NULL), m_LastMarkerOutput(NULL), m_Mapper(NULL), m_Output(NULL) {
+    m_MarkerIndex = 0;
     m_GeometryType = 0;
     m_SphereRadius = 1.0;
     m_SpherePhiRes = 10.0;
@@ -95,13 +101,13 @@ void mafVTKInteractorPicker::initializeConnections() {
 
 void mafVTKInteractorPicker::createPipe() {
     m_Mapper = vtkPolyDataMapper::New();
+    m_Mapper->SetScalarRange(FIXED_MARKER_COLOR, TMP_MARKER_COLOR);
     m_Actor = vtkActor::New();
     m_Actor.setDestructionFunction(&vtkActor::Delete);
     m_Actor->SetMapper(m_Mapper);
-    m_Actor->GetProperty()->SetColor(1,0,0);
     m_Output = &m_Actor;
-
     m_AppendData = vtkAppendPolyData::New();
+    m_Mapper->SetInputConnection(m_AppendData->GetOutputPort());
 }
 
 void mafVTKInteractorPicker::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafContainerInterface *actor, QEvent *e ) {
@@ -135,7 +141,10 @@ void mafVTKInteractorPicker::vmePick(double *pickPos, unsigned long modifiers, m
         if (closestMarkerIndex == InputNumber-1){
             //then last marker has been deleted
             m_IsFirstPick = true;
+        } else {
+            m_MarkerIndex--;
         }
+
     } else {
         if(!m_IsFirstPick) {
             //Remove last pick surface
@@ -145,7 +154,6 @@ void mafVTKInteractorPicker::vmePick(double *pickPos, unsigned long modifiers, m
         //Create a surface on the picking position
         m_Center = pickPos;
         this->internalUpdate();
-        m_Mapper->SetInputConnection(m_AppendData->GetOutputPort());
 
         //Show current pick surface
         m_TmpMarkerOutput = m_MarkerOutput;
@@ -155,9 +163,14 @@ void mafVTKInteractorPicker::vmePick(double *pickPos, unsigned long modifiers, m
 
 void mafVTKInteractorPicker::nextPick() {
     //Set last pick position as final
-    m_LastMarkerOutput = m_MarkerOutput;
     m_PointList.append(m_Center);
+    vtkPolyData *data = m_AppendData->GetInput(m_MarkerIndex);
+    this->setScalarValue(data, FIXED_MARKER_COLOR);
+
+    m_AppendData->Modified(); //to update scalar of input polydata
+    m_LastMarkerOutput = m_MarkerOutput;
     m_IsFirstPick = true;
+    m_MarkerIndex++;
 }
 
 void mafVTKInteractorPicker::OK() {
@@ -200,6 +213,8 @@ void mafVTKInteractorPicker::internalUpdate()
             surf->SetThetaResolution(m_SphereTheRes);
             surf->SetCenter(m_Center);
             surf->Update();
+
+            this->setScalarValue(surf->GetOutput(), TMP_MARKER_COLOR);
             m_MarkerOutput = surf->GetOutputPort();
             m_AppendData->AddInputConnection(m_MarkerOutput);
         }
@@ -213,6 +228,7 @@ void mafVTKInteractorPicker::internalUpdate()
             surf->SetResolution(m_ConeRes);
             surf->SetCenter(m_Center);
             surf->Update();
+            this->setScalarValue(surf->GetOutput(), TMP_MARKER_COLOR);
             vtkSmartPointer<vtkTransform> t = vtkSmartPointer<vtkTransform>::New();
             switch(m_ConeOrientationAxis)
             {
@@ -245,6 +261,7 @@ void mafVTKInteractorPicker::internalUpdate()
             surf->SetResolution(m_CylinderRes);
             surf->SetCenter(m_Center);
             surf->Update();
+            this->setScalarValue(surf->GetOutput(), TMP_MARKER_COLOR);
             vtkSmartPointer<vtkTransform> t = vtkSmartPointer<vtkTransform>::New();
             switch(m_CylinderOrientationAxis)
             {
@@ -277,6 +294,7 @@ void mafVTKInteractorPicker::internalUpdate()
             surf->SetZLength(m_CubeZLength);
             surf->SetCenter(m_Center);
             surf->Update();
+            this->setScalarValue(surf->GetOutput(), TMP_MARKER_COLOR);
             m_MarkerOutput = surf->GetOutputPort();
             m_AppendData->AddInputConnection(m_MarkerOutput);
         }
@@ -289,6 +307,7 @@ void mafVTKInteractorPicker::internalUpdate()
             surf->SetThetaResolution(m_EllipsoidTheRes);
             surf->SetCenter(m_Center);
             surf->Update();
+            this->setScalarValue(surf->GetOutput(), TMP_MARKER_COLOR);
             vtkSmartPointer<vtkTransform> t = vtkSmartPointer<vtkTransform>::New();
             switch(m_EllipsoidOrientationAxis)
             {
@@ -316,6 +335,15 @@ void mafVTKInteractorPicker::internalUpdate()
         }
         break;
     }
+}
+
+void mafVTKInteractorPicker::setScalarValue(vtkPolyData *data, double scalarValue){
+    int i=0, size = data->GetNumberOfPoints();
+    vtkSmartPointer<vtkDoubleArray> scalars = vtkSmartPointer<vtkDoubleArray>::New();
+    for(int x=0 ; x<data->GetPointData()->GetNumberOfTuples() ; x++){
+        scalars->InsertValue(x, scalarValue);
+    }
+  data->GetPointData()->SetScalars(scalars);
 }
 
 void mafVTKInteractorPicker::setSphereRadius(double sphereRadius){

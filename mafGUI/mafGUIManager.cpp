@@ -44,6 +44,8 @@ void mafGUIManager::createActions() {
     m_NewAct->setStatusTip(mafTr("Create a new file"));
 
     m_CollaborateAct = new QAction(QIcon(":/images/collaborate.png"), mafTr("Collaborate"), this);
+    m_CollaborateAct->setCheckable(true);
+    m_CollaborateAct->setChecked(false);
     m_CollaborateAct->setIconText(mafTr("Collaborate"));
     m_CollaborateAct->setStatusTip(mafTr("Collaborate with your conmtacts in gtalk."));
 
@@ -101,6 +103,10 @@ void mafGUIManager::createActions() {
     m_SideBarAct = new QAction(tr("Sidebar"), this);
     m_SideBarAct->setCheckable(true);
     m_SideBarAct->setChecked(true);
+
+    m_LogBarAct = new QAction(tr("LogBar"), this);
+    m_LogBarAct->setCheckable(true);
+    m_LogBarAct->setChecked(true);
 
     m_ActionsCreated = true;
 
@@ -161,7 +167,7 @@ void mafGUIManager::registerSignals() {
     provider->createNewId("maf.local.gui.action.open");
     provider->createNewId("maf.local.gui.action.save");
     provider->createNewId("maf.local.gui.action.saveas");
-    provider->createNewId("maf.local.gui.action.collaborate");
+//    provider->createNewId("maf.local.gui.action.collaborate");
     provider->createNewId("maf.local.gui.action.cut");
     provider->createNewId("maf.local.gui.action.copy");
     provider->createNewId("maf.local.gui.action.paste");
@@ -173,7 +179,7 @@ void mafGUIManager::registerSignals() {
     mafRegisterLocalSignal("maf.local.gui.action.open", m_OpenAct, "triggered()");
     mafRegisterLocalSignal("maf.local.gui.action.save", m_SaveAct, "triggered()");
     mafRegisterLocalSignal("maf.local.gui.action.saveas", m_SaveAsAct, "triggered()");
-    mafRegisterLocalSignal("maf.local.gui.action.collaborate", m_CollaborateAct, "triggered()");
+//    mafRegisterLocalSignal("maf.local.gui.action.collaborate", m_CollaborateAct, "triggered()");
     mafRegisterLocalSignal("maf.local.gui.action.cut", m_CutAct, "triggered()");
     mafRegisterLocalSignal("maf.local.gui.action.copy", m_CopyAct, "triggered()");
     mafRegisterLocalSignal("maf.local.gui.action.paste", m_PasteAct, "triggered()");
@@ -225,6 +231,7 @@ void mafGUIManager::createMenus() {
 
     m_WindowMenu = menuBar->addMenu(tr("&Window"));
     m_WindowMenu->addAction(m_SideBarAct);
+    m_WindowMenu->addAction(m_LogBarAct);
 
     menuBar->addSeparator();
 

@@ -52,8 +52,6 @@ void mafMainWindow::initializeMainWindow() {
     mafGUIRegistration::registerGUIObjects();
     m_GUIManager = new mafGUIManager(this, mafCodeLocation);
 
-    googleChat = new GoogleChat();
-
     m_GUIManager->createMenus();
     m_GUIManager->createToolBars();
 
@@ -76,16 +74,26 @@ void mafMainWindow::initializeMainWindow() {
         m_Model->setHierarchy(m_Logic->hierarchy());
      }
 
+    // **** SideBar ****
     m_Tree = m_GUIManager->createTreeWidget(m_Model, ui->tabTree);
-
-    // text widget in log bar
-    m_LogWidget = m_GUIManager->createLogWidget(ui->logBarWidgetContents);
-
-    connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(viewSelected(QMdiSubWindow*)));
 
     // SideBar visibility management
     connect(ui->dockSideBar, SIGNAL(visibilityChanged(bool)), m_GUIManager->sideBarAction(), SLOT(setChecked(bool)));
     connect(m_GUIManager->sideBarAction(), SIGNAL(triggered(bool)), ui->dockSideBar, SLOT(setVisible(bool)));
+
+    // **** LogBar ****
+    m_LogWidget = m_GUIManager->createLogWidget(ui->logBarWidgetContents);
+    connect(ui->dockLogBarWidget, SIGNAL(visibilityChanged(bool)), m_GUIManager->logBarAction(), SLOT(setChecked(bool)));
+    connect(m_GUIManager->logBarAction(), SIGNAL(triggered(bool)), ui->dockLogBarWidget, SLOT(setVisible(bool)));
+
+    // **** Google chat ****
+    m_DockGoogleChat = new QDockWidget(tr("Google Chat"));
+    m_DockGoogleChat->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    m_DockGoogleChat->setWidget(new GoogleChat());
+    connect(m_GUIManager->collaborateAction(), SIGNAL(triggered(bool)), this, SLOT(updateCollaborationDockVisibility(bool)));
+    connect(m_DockGoogleChat, SIGNAL(visibilityChanged(bool)), m_GUIManager->collaborateAction(), SLOT(setChecked(bool)));
+
+    connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(viewSelected(QMdiSubWindow*)));
 
     setUnifiedTitleAndToolBarOnMac(true);
 
@@ -94,7 +102,6 @@ void mafMainWindow::initializeMainWindow() {
 
 void mafMainWindow::connectCallbacks() {
     mafRegisterLocalCallback("maf.local.gui.action.new", this, "createViewWindow()");
-    mafRegisterLocalCallback("maf.local.gui.action.collaborate", this, "openGoogleTalk()");
     mafRegisterLocalCallback("maf.local.gui.action.save", this, "save()");
     mafRegisterLocalCallback("maf.local.gui.action.about", this, "showAbout()");
 
@@ -104,7 +111,6 @@ void mafMainWindow::connectCallbacks() {
 
 mafMainWindow::~mafMainWindow() {
     mafDEL(m_GUIManager);
-    delete googleChat;
     delete ui;
 }
 
@@ -179,10 +185,11 @@ bool mafMainWindow::save() {
     return true;
 }
 
-void mafMainWindow::openGoogleTalk() {
-    QMdiSubWindow *sub_win = ui->mdiArea->addSubWindow(googleChat);
-    //googleChat->show();
-    sub_win->show();
+void mafMainWindow::updateCollaborationDockVisibility(bool visible) {
+    if(m_DockGoogleChat->parent() == NULL) {
+        this->addDockWidget(Qt::LeftDockWidgetArea, m_DockGoogleChat);
+    }
+    m_DockGoogleChat->setVisible(visible);
 }
 
 void mafMainWindow::createViewWindow() {

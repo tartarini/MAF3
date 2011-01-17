@@ -17,6 +17,7 @@
 
 // Foundation Class forwarding list
 class vtkAlgorithmOutput;
+class vtkPolyData;
 class vtkPolyDataMapper;
 class vtkActor;
 class vtkAppendPolyData;
@@ -144,10 +145,14 @@ private:
     /// Initialize and create the pipeline.
     void createPipe();
 
+    /// Set scalar value to input vtkPolyData.
+    void setScalarValue(vtkPolyData *data, double scalarValue);
+
     vtkAlgorithmOutput *m_MarkerOutput;
     vtkAlgorithmOutput *m_TmpMarkerOutput;
     vtkAlgorithmOutput *m_LastMarkerOutput;
 
+    int m_MarkerIndex;
     int m_GeometryType;
     double m_SphereRadius;
     double m_SpherePhiRes;

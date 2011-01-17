@@ -39,7 +39,6 @@ class mafTextEditWidget;
  - maf.local.gui.action.open
  - maf.local.gui.action.save
  - maf.local.gui.action.saveas
- - maf.local.gui.action.collaborate
  - maf.local.gui.action.cut
  - maf.local.gui.action.copy
  - maf.local.gui.action.paste
@@ -96,6 +95,12 @@ public:
 
     /// Return the SideBar action
     QAction *sideBarAction();
+
+    /// Return the SideBar action
+    QAction *logBarAction();
+
+    /// Return the collaborate action
+    QAction *collaborateAction();
 
     /// Show the file dialog to select the file path given a window title, a starting directory and an optional file wildcard
     void chooseFileDialog(const mafString title, const mafString start_dir, const mafString wildcard = mafTr("All files (*.*)"));
@@ -167,6 +172,7 @@ private:
 
     QAction *m_AboutAct; ///< Reference to the action associated to the 'About' informative dialog.
     QAction *m_SideBarAct; ///< Reference to the side bar close/show action.
+    QAction *m_LogBarAct; ///< Reference to the action associated to the 'LogBar' Item.
 
     int m_MaxRecentFiles; ///< Number of maximum recent files.
     mafList<QAction *> m_RecentFileActs; ///< List of recent file's actions.
@@ -210,6 +216,14 @@ inline QMenu *mafGUIManager::helpMenu() const {
 
 inline QAction *mafGUIManager::sideBarAction() {
     return m_SideBarAct;
+}
+
+inline QAction *mafGUIManager::logBarAction() {
+    return m_LogBarAct;
+}
+
+inline QAction *mafGUIManager::collaborateAction() {
+    return m_CollaborateAct;
 }
 
 } // namespace mafGUI

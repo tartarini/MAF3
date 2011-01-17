@@ -51,8 +51,8 @@ public slots:
     /// Create the MDI sub window to host the mafView.
     void createViewWindow();
 
-    /// Open the Google Talk interface.
-    void openGoogleTalk();
+    /// Show/Hide the collaboration dock widget.
+    void updateCollaborationDockVisibility(bool visible);
 
     /// Called when the view is going to be selected by the mouse
     void viewWillBeSelected();
@@ -91,7 +91,7 @@ private:
 
     mafApplicationLogic::mafLogic *m_Logic; ///< Application's logic.
 
-    GoogleChat *googleChat;
+    QDockWidget *m_DockGoogleChat; ///< Dock widget containing the google chat widget.
 
     /// Connect the slots to the signal defined into the mafGUIManager through the mafEventBus
     void connectCallbacks();
