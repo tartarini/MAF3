@@ -154,7 +154,7 @@ void testInteractionManagerCustom::pick(double *pos, unsigned long modifiers,  m
     int i = e->type();
      m_Counter++;
      m_Pos[0] = pos[0];
-     m_Pos[1]= pos[1];
+     m_Pos[1] = pos[1];
      m_Pos[2] = pos[2];
 
      // check for ctrl and shift pressure

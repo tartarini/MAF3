@@ -70,7 +70,7 @@ void mafVTKInteractorPicker::initializeConnections() {
     this->createPipe();
 
     mafId vme_picked_id = mafIdProvider::instance()->idValue("maf.local.resources.interaction.vmePick");
-    if(vme_picked_id == -1) {
+    //if(vme_picked_id == -1) {
         mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePick");
 
         // Register API signals.
@@ -78,7 +78,7 @@ void mafVTKInteractorPicker::initializeConnections() {
 
         // Register private callbacks.
         mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
-    }
+    //}
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.operation.VTK.nextPick", this, "nextPickSignal()");

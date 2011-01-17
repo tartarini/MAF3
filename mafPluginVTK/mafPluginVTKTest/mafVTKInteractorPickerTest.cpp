@@ -27,6 +27,9 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
 #include <vtkProperty.h>
+#include <vtkRendererCollection.h>
+#include <vtkRenderer.h>
+#include <vtkCamera.h>
 #include <QDebug>
 #include <QVTKWidget.h>
 #include <QMainWindow>
@@ -144,6 +147,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     sphereActor->SetMapper(sphereMapper);
     m_Renderer->AddActor(sphereActor);
     m_VTKWidget->GetRenderWindow()->Render();
+    m_VTKWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCamera();
     QTest::qSleep(1000);
 
     //picking the actor
