@@ -13,6 +13,5 @@
 
 using namespace mafGUI;
 
-mafTreeWidget::mafTreeWidget(QWidget *parent) : QTreeView(parent)
-{
+mafTreeWidget::mafTreeWidget(QWidget *parent) : QTreeView(parent) {
 }

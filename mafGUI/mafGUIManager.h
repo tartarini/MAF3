@@ -25,6 +25,7 @@ namespace mafGUI {
 class mafUILoaderQt;
 class mafTreeWidget;
 class mafTreeModel;
+class mafTextEditWidget;
 
 /**
  Class name: mafGUIManager
@@ -68,6 +69,9 @@ public:
 
     /// Create the tree widget according to the given model passed as argument.
     virtual mafTreeWidget *createTreeWidget(mafTreeModel *model, QWidget *parent = 0);
+
+    /// Create the log widget according to the given highlighter passed as argument.
+    virtual mafTextEditWidget *createLogWidget(QWidget *parent = 0);
 
     /// Return the number of maximum recent files.
     int maxRecentFiles();
