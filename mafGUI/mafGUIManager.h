@@ -89,12 +89,6 @@ public:
     /// Return the 'help' menu item created into the createMenus method.
     QMenu *helpMenu() const;
 
-    /// Return the SideBar action
-    QAction *sideBarAction();
-
-    /// Return the collaborate action
-    QAction *collaborateAction();
-
     /// Show the file dialog to select the file path given a window title, a starting directory and an optional file wildcard
     void chooseFileDialog(const mafString title, const mafString start_dir, const mafString wildcard = mafTr("All files (*.*)"));
 
@@ -105,6 +99,9 @@ protected:
 public slots:
     /// Fill the operation and view menu with the plugged objects.
     void fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash);
+
+    /// Return the Action associated with the given name.
+    QObject *actionByName(mafString name);
 
 signals:
     /// Signal emitted on path selection using the dialog.
@@ -150,6 +147,8 @@ private:
 
     QToolBar *m_FileToolBar; ///< Toolbar related to File tasks
     QToolBar *m_EditToolBar; ///< Toolbar related to Edit tasks
+
+    mafList<QAction *> m_ActionList; ///< List of created actions.
 
     QAction *m_NewAct; ///< Reference to the action associated to the 'New' Item creation.
     QAction *m_CollaborateAct; ///< Reference to the action associated to the 'Collaboration' chat Item.
@@ -204,14 +203,6 @@ inline QMenu *mafGUIManager::operationMenu() const {
 
 inline QMenu *mafGUIManager::helpMenu() const {
     return m_HelpMenu;
-}
-
-inline QAction *mafGUIManager::sideBarAction() {
-    return m_SideBarAct;
-}
-
-inline QAction *mafGUIManager::collaborateAction() {
-    return m_CollaborateAct;
 }
 
 } // namespace mafGUI
