@@ -58,6 +58,7 @@ void mafViewManager::initializeConnections() {
     // Create the IDs required to add a resource to the management system.
     mafIdProvider *provider = mafIdProvider::instance();
     provider->createNewId("maf.local.resources.view.create");
+    provider->createNewId("maf.local.resources.view.created");
     provider->createNewId("maf.local.resources.view.destroy");
     provider->createNewId("maf.local.resources.view.select");
     provider->createNewId("maf.local.resources.view.selected");
@@ -65,6 +66,7 @@ void mafViewManager::initializeConnections() {
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(mafString)");
+    mafRegisterLocalSignal("maf.local.resources.view.created", this, "viewCreatedSignal(mafCore::mafObjectBase *)");
     mafRegisterLocalSignal("maf.local.resources.view.destroy", this, "destroyViewSignal(mafCore::mafObjectBase *)");
     mafRegisterLocalSignal("maf.local.resources.view.select", this, "selectViewSignal(mafCore::mafObjectBase *)");
     mafRegisterLocalSignal("maf.local.resources.view.selected", this, "selectedViewSignal(mafCore::mafObjectBase *)");
@@ -132,6 +134,11 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
             // add the new created view to the list.
             m_CreatedViewList.append(v);
             v->create();
+
+            // Notify the view creation.
+            mafEventArgumentsList argList;
+            argList.append(mafEventArgument(mafCore::mafObjectBase*, v));
+            mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.created", mafEventTypeLocal, &argList);
         }
     }
 }
