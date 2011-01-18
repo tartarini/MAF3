@@ -40,7 +40,7 @@ using namespace mafPluginVTK;
 
 /**
  Class name: mafVTKInteractorPickerTest
- This class implements the test suite for mafVTKWidget.
+ This class implements the test suite for mafVTKInteractorPicker.
  */
 
 //! <title>

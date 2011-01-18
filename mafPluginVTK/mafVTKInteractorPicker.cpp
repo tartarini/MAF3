@@ -69,16 +69,13 @@ mafVTKInteractorPicker::mafVTKInteractorPicker(const mafString code_location) : 
 void mafVTKInteractorPicker::initializeConnections() {
     this->createPipe();
 
-    mafId vme_picked_id = mafIdProvider::instance()->idValue("maf.local.resources.interaction.vmePick");
-    //if(vme_picked_id == -1) {
-        mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePick");
+    mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePick");
 
-        // Register API signals.
-        mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
+    // Register API signals.
+    mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
 
-        // Register private callbacks.
-        mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
-    //}
+    // Register private callbacks.
+    mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.operation.VTK.nextPick", this, "nextPickSignal()");
@@ -164,8 +161,11 @@ void mafVTKInteractorPicker::vmePick(double *pickPos, unsigned long modifiers, m
 void mafVTKInteractorPicker::nextPick() {
     //Set last pick position as final
     m_PointList.append(m_Center);
-    vtkPolyData *data = m_AppendData->GetInput(m_MarkerIndex);
-    this->setScalarValue(data, FIXED_MARKER_COLOR);
+    vtkPolyData *data = NULL;
+    data = m_AppendData->GetInput(m_MarkerIndex);
+    if(data != NULL){
+        this->setScalarValue(data, FIXED_MARKER_COLOR);
+    }
 
     m_AppendData->Modified(); //to update scalar of input polydata
     m_LastMarkerOutput = m_MarkerOutput;
