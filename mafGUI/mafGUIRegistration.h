@@ -21,7 +21,7 @@ namespace mafGUI {
  This class allows object rigisteration for all the classes present in mafGUI module.
  @sa mafObjectFactory mafCoreRegistration mafResourcesRegistration mafSerializationRegistration
  */
-class MAFGUISHARED_EXPORT mafGUIRegistration {
+class mafGUIRegistration {
     public:
     /// Register all the concrete objects that can be instantiated by the mafObjectFactory.
     /** This registration is needed to instantiate object by using the mafNEWFromString macro present in

@@ -100,16 +100,16 @@ protected:
     /// Create the actions associated with the menu items.
     virtual void createActions();
 
+signals:
+    /// Signal emitted on path selection using the dialog.
+    void pathSelected(const mafString path);
+
 public slots:
     /// Fill the operation and view menu with the plugged objects.
     void fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash);
 
     /// Return the Action associated with the given name.
     QObject *actionByName(mafString name);
-
-signals:
-    /// Signal emitted on path selection using the dialog.
-    void pathSelected(const mafString path);
 
 private slots:
     /// Start the operation associated with the operation's action activated.
@@ -133,7 +133,7 @@ private slots:
 
 private:
     /// Initialize the topics and register the signals with the mafEventBus.
-    void registerSignals();
+    void registerEvents();
 
     /// Update the recent file action with new recent file items.
     void updateRecentFileActions();

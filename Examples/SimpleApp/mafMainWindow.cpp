@@ -102,6 +102,8 @@ void mafMainWindow::initializeMainWindow() {
 
     setUnifiedTitleAndToolBarOnMac(true);
 
+    // Restore settings notification should be sent at the end of the initialization code, so to be sure that
+    // each GUI element has been created.
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.logic.settings.restore");
 }
 
@@ -155,17 +157,47 @@ void mafMainWindow::closeEvent(QCloseEvent *event) {
 void mafMainWindow::readSettings() {
     mafMsgDebug() << "Reading mafMainWindows settings...";
     mafSettings settings;
-    QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
-    QSize size = settings.value("size", QSize(600, 400)).toSize();
+    
+    // reastoring MainWindow
+    QPoint pos = settings.value("MainWindow/Position", QPoint(200, 200)).toPoint();
+    QSize size = settings.value("MainWindow/Size", QSize(600, 400)).toSize();
     resize(size);
     move(pos);
+    
+    // Restoring SideBar
+    ui->tabWidget->setCurrentIndex(settings.value("SideBar/ActiveTab", 0).toInt());
+    int docPos = settings.value("SideBar/DockPosition", Qt::RightDockWidgetArea).toInt();
+    this->addDockWidget((Qt::DockWidgetArea)docPos, ui->dockSideBar);
+    ui->dockSideBar->setFloating(settings.value("SideBar/isFloating", false).toBool());
+    ui->dockSideBar->setVisible(settings.value("SideBar/isVisible", true).toBool());
+    ui->dockSideBar->setGeometry(settings.value("SideBar/Geometry", QRect(0, 0, 200,400)).toRect());
+
+    // Restoring LogBar
+    docPos = settings.value("LogBar/DockPosition", Qt::BottomDockWidgetArea).toInt();
+    this->addDockWidget((Qt::DockWidgetArea)docPos, ui->dockLogBarWidget);
+    ui->dockLogBarWidget->setFloating(settings.value("LogBar/isFloating", false).toBool());
+    ui->dockLogBarWidget->setVisible(settings.value("LogBar/isVisible", true).toBool());
+    ui->dockLogBarWidget->setGeometry(settings.value("LogBar/Geometry", QRect(0, 0, 400, 200)).toRect());
 }
 
 void mafMainWindow::writeSettings() {
     mafMsgDebug() << "Writing mafMainWindows settings...";
     mafSettings settings;
-    settings.setValue("pos", pos());
-    settings.setValue("size", size());
+    settings.setValue("MainWindow/Position", pos());
+    settings.setValue("MainWindow/Size", size());
+
+    // Save the SideBar settings
+    settings.setValue("SideBar/Geometry", ui->dockSideBar->geometry());
+    settings.setValue("SideBar/ActiveTab", ui->tabWidget->currentIndex());
+    settings.setValue("SideBar/DockPosition", this->dockWidgetArea(ui->dockSideBar));
+    settings.setValue("SideBar/isFloating", ui->dockSideBar->isFloating());
+    settings.setValue("SideBar/isVisible", ui->dockSideBar->isVisible());
+
+    // Save the LogBar settings
+    settings.setValue("LogBar/Geometry", ui->dockLogBarWidget->geometry());
+    settings.setValue("LogBar/DockPosition", this->dockWidgetArea(ui->dockLogBarWidget));
+    settings.setValue("LogBar/isFloating", ui->dockLogBarWidget->isFloating());
+    settings.setValue("LogBar/isVisible", ui->dockLogBarWidget->isVisible());
 }
 
 int mafMainWindow::maybeSave() {

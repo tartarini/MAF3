@@ -1,3 +1,15 @@
+/*
+ *  mafTextHighlighter.h
+ *  mafGUI
+ *
+ *  Created by Daniele Giunchi on 26/10/10.
+ *  Copyright 2010 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
+ */
+
+
 #ifndef MAFTEXTHIGHLIGHTER_H
 #define MAFTEXTHIGHLIGHTER_H
 
@@ -7,9 +19,14 @@ QT_BEGIN_NAMESPACE
 class QTextDocument;
 QT_END_NAMESPACE
 
-//! [0]
-class mafTextHighlighter : public QSyntaxHighlighter
-{
+namespace mafGUI {
+
+/**
+ Class Name: mafTextHighlighter
+ Highlight the text inside a text editor or browser class.
+
+*/
+class MAFGUISHARED_EXPORT mafTextHighlighter : public QSyntaxHighlighter {
     Q_OBJECT
 
 public:
@@ -36,5 +53,7 @@ private:
     QTextCharFormat quotationFormat;
     QTextCharFormat functionFormat;
 };
+
+} // end namespace
 
 #endif // MAFTEXTHIGHLIGHTER_H
