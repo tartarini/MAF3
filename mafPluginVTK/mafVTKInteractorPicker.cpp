@@ -338,7 +338,6 @@ void mafVTKInteractorPicker::internalUpdate()
 }
 
 void mafVTKInteractorPicker::setScalarValue(vtkPolyData *data, double scalarValue){
-    int i=0, size = data->GetNumberOfPoints();
     vtkSmartPointer<vtkDoubleArray> scalars = vtkSmartPointer<vtkDoubleArray>::New();
     for(int x=0 ; x<data->GetPointData()->GetNumberOfTuples() ; x++){
         scalars->InsertValue(x, scalarValue);
