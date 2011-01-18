@@ -21,7 +21,7 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafView::mafView(const mafString code_location) : mafResource(code_location), m_RenWindow(NULL), m_Scenegraph(NULL)  {
+mafView::mafView(const mafString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL)  {
     m_CustomVisualPipeMap.clear();
     m_Selected = false;
 }

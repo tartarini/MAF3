@@ -25,6 +25,7 @@ class mafVME;
 Class name: mafViewManager
 This class provides the manager class for MAF3 views. The topics are:
 - maf.local.resources.view.create allows to create a new View.
+- maf.local.resources.view.created notify all the observers that a new View has been created.
 - maf.local.resources.view.destroy allows to destroy a given View.
 - maf.local.resources.view.select allows to select the active View on which show/hide VMEs.
 - maf.local.resources.view.selected allows to retrieve the current selected View.
@@ -72,7 +73,7 @@ signals:
     void destroyViewSignal(mafCore::mafObjectBase *view);
 
     /// Allow to cdreate a new mafView given the type name as string. Return the created view on success.
-    mafCore::mafObjectBase *createViewSignal(mafString view_type);
+    void createViewSignal(mafString view_type);
 
     /// Notify the view creation to all observers.
     void viewCreatedSignal(mafCore::mafObjectBase *view);
