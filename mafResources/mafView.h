@@ -65,13 +65,13 @@ public:
     void plugVisualPipe(mafString dataType, const mafString visualPipeType);
 
     /// Set rendering window used by the view.
-    void setRenderingWindow(mafCore::mafContainerInterface *renWindow);
+    void setRenderingWidget(mafCore::mafContainerInterface *renWidget);
 
-    /// Get rendering window used by the view.
-    mafCore::mafContainerInterface *renderingWindow();
+    /// Get the rendering widget used by the view to render its scene.
+    mafCore::mafContainerInterface *renderingWidget();
 
   protected:
-    mafCore::mafContainerInterface *m_RenWindow; ///< Rendering window for the view.
+    mafCore::mafContainerInterface *m_RenderWidget; ///< Rendering widget for the view.
     mafString m_DefaultVisualPipe; ///< Name of the default visual pipe.
     mafCore::mafHierarchy *m_Scenegraph; ///< Scenegraph
     mafMap<mafString, mafString> m_CustomVisualPipeMap; ///< Bind between dataType and Visual pipe.
@@ -91,12 +91,12 @@ inline bool mafView::isSelected() {
     return m_Selected;
 }
 
-inline void mafView::setRenderingWindow(mafCore::mafContainerInterface *renWindow) {
-    m_RenWindow = renWindow;
+inline void mafView::setRenderingWidget(mafCore::mafContainerInterface *renWidget) {
+    m_RenderWidget = renWidget;
 }
 
-inline mafCore::mafContainerInterface *mafView::renderingWindow() {
-    return m_RenWindow;
+inline mafCore::mafContainerInterface *mafView::renderingWidget() {
+    return m_RenderWidget;
 }
 
 } //namespace mafResources
