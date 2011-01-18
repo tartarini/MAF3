@@ -69,16 +69,13 @@ mafVTKInteractorPicker::mafVTKInteractorPicker(const mafString code_location) : 
 void mafVTKInteractorPicker::initializeConnections() {
     this->createPipe();
 
-    //mafId vme_picked_id = mafIdProvider::instance()->idValue("maf.local.resources.interaction.vmePick");
-    //if(vme_picked_id == -1) {
-        mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePick");
+    mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePick");
 
-        // Register API signals.
-        mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
+    // Register API signals.
+    mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
 
-        // Register private callbacks.
-        mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
-    //}
+    // Register private callbacks.
+    mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.operation.VTK.nextPick", this, "nextPickSignal()");
