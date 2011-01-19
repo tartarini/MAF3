@@ -60,6 +60,9 @@ private slots:
     /// mafView show VME test case.
     void mafViewPlugVisualPipeTest();
 
+    /// mafView setRenderingWidget test case.
+    void mafViewRenderingWidgetTest();
+
 private:
     mafView *m_View; ///< Test var.
 };
@@ -99,6 +102,31 @@ void mafViewTest::mafViewPlugVisualPipeTest() {
 
     m_View->plugVisualPipe("vtkPolyData","mafPipesLibrary::mafVisualPipeVTKSurface");
     mafDEL(vme);
+}
+
+void mafViewTest::mafViewRenderingWidgetTest() {
+    // Create a fake widget...
+    mafContainer<mafObject> w;
+    w = mafNEW(mafCore::mafObject);
+    w->setObjectName("My Widget");
+
+    // Assign the widget to the mafView.
+    mafVariant vw;
+    vw.setValue<mafContainerInterfacePointer>(&w);
+    m_View->setRenderingWidget(vw);
+
+    // Try to retrieve the widget through the properties API
+    mafObjectBase *v = m_View;
+    // Result variable.
+    mafContainerInterfacePointer resultWidget;
+
+    resultWidget = v->property("renderWidget").value<mafCore::mafContainerInterfacePointer>();
+
+    mafObject *resultObject = mafContainerPointerTypeCast(mafCore::mafObject, resultWidget)->externalData();
+
+    mafString name_result = resultObject->objectName();
+    QCOMPARE(name_result, mafString("My Widget"));
+
 }
 
 MAF_REGISTER_TEST(mafViewTest);
