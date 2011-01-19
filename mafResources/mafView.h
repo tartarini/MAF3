@@ -30,6 +30,8 @@ class mafVisualPipe;
 
 class MAFRESOURCESSHARED_EXPORT mafView : public mafResource {
     Q_OBJECT
+    Q_PROPERTY(QVariant renderWidget READ renderingWidget WRITE setRenderingWidget)
+
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
 
@@ -65,18 +67,17 @@ public:
     void plugVisualPipe(mafString dataType, const mafString visualPipeType);
 
     /// Set rendering window used by the view.
-    void setRenderingWidget(mafCore::mafContainerInterface *renWidget);
+    void setRenderingWidget(mafVariant renWidget);
 
     /// Get the rendering widget used by the view to render its scene.
-    mafCore::mafContainerInterface *renderingWidget();
+    mafVariant renderingWidget() const;
 
   protected:
     mafCore::mafContainerInterface *m_RenderWidget; ///< Rendering widget for the view.
     mafString m_DefaultVisualPipe; ///< Name of the default visual pipe.
     mafCore::mafHierarchy *m_Scenegraph; ///< Scenegraph
-    mafMap<mafString, mafString> m_CustomVisualPipeMap; ///< Bind between dataType and Visual pipe.
+    mafMap<mafString, mafString> m_VisualPipeMap; ///< Bind between dataType and Visual pipe.
     bool m_Selected; ///< Flag for active view.
-
 };
 
 /////////////////////////////////////////////////////////////
@@ -91,12 +92,14 @@ inline bool mafView::isSelected() {
     return m_Selected;
 }
 
-inline void mafView::setRenderingWidget(mafCore::mafContainerInterface *renWidget) {
-    m_RenderWidget = renWidget;
+inline void mafView::setRenderingWidget(mafVariant renWidget) {
+    m_RenderWidget = renWidget.value<mafCore::mafContainerInterfacePointer>();
 }
 
-inline mafCore::mafContainerInterface *mafView::renderingWidget() {
-    return m_RenderWidget;
+inline mafVariant mafView::renderingWidget() const {
+    mafVariant v;
+    v.setValue<mafCore::mafContainerInterfacePointer>(m_RenderWidget);
+    return v;
 }
 
 } //namespace mafResources

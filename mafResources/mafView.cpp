@@ -22,7 +22,7 @@ using namespace mafCore;
 using namespace mafResources;
 
 mafView::mafView(const mafString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL)  {
-    m_CustomVisualPipeMap.clear();
+    m_VisualPipeMap.clear();
     m_Selected = false;
 }
 
@@ -31,7 +31,6 @@ mafView::~mafView() {
         m_Scenegraph->clear();
     }
     mafDEL(m_Scenegraph);
-    m_CustomVisualPipeMap.clear();
 }
 
 void mafView::create() {
@@ -68,13 +67,13 @@ void mafView::selectVME(mafVME *vme, bool select) {
 void mafView::showVME(mafVME *vme, bool show, const mafString visualPipeType) {
     mafString vp(visualPipeType);
     if (vp == "") {
-        // Find custom visual pipe for this kind of data
+        // Find default visual pipe for this kind of data
         mafString dataType;
         mafDataSet *data = vme->outputData();
         if  (data != NULL) {
             dataType = data->dataValue()->externalDataType();
         }
-        vp = m_CustomVisualPipeMap.value(dataType);
+        vp = m_VisualPipeMap.value(dataType);
         if (vp == "") {
            mafMsgDebug("%s", mafTr("Visual pipe not found for '%1' of data!").arg(vp).toAscii().data());
            return;
@@ -96,6 +95,6 @@ void mafView::showVME(mafVME *vme, bool show, const mafString visualPipeType) {
 
 void mafView::plugVisualPipe(mafString dataType, mafString visualPipeType) {
     if (!dataType.isEmpty() && !visualPipeType.isEmpty()) {
-        m_CustomVisualPipeMap.insert(dataType, visualPipeType);
+        m_VisualPipeMap.insert(dataType, visualPipeType);
     }
 }
