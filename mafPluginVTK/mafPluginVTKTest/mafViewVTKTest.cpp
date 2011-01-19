@@ -60,12 +60,6 @@ private slots:
         /// Create the view...
         m_View = mafNEW(mafPluginVTK::mafViewVTK);
 
-        /// Create the render window on which render the objects.
-        m_RenWin = vtkRenderWindow::New();
-
-        // Assign the render window to the view.
-        m_View->setRenderingWindow(&m_RenWin);
-        
         // Create a polydata.
         m_DataSource = vtkCubeSource::New();
         m_DataSource->SetXLength(5);
@@ -111,7 +105,6 @@ private slots:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        // PROBLEM ON DESTRUCTION OF THE RENDERER!!!!!!
         mafDEL(m_View);
         mafDEL(m_DataSetCube);
         mafDEL(m_DataSetCubeMoved);
@@ -130,7 +123,6 @@ private slots:
 
 private:
     mafViewVTK *m_View; ///< Test var.
-    mafCore::mafContainer<vtkRenderWindow> m_RenWin; ///< Test RenderWindow.
     mafVME *m_VmeCube; ///< Test var.
     mafVME *m_VmeCubeMoved; ///< Test var.
     vtkCubeSource *m_DataSource;
@@ -149,11 +141,24 @@ void mafViewVTKTest::mafViewVTKAllocationTest() {
 void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     //! <snippet>
     m_View->create();
+
+    // Ask for the inner widget.
+    mafContainerInterfacePointer resultWidget;
+    resultWidget = m_View->property("renderWidget").value<mafCore::mafContainerInterfacePointer>();
+
+    QWidget *resultObject = mafContainerPointerTypeCast(QWidget, resultWidget)->externalData();
+    resultObject->resize(QSize(400, 400));
+    resultObject->show();
+
+    mafString name_result = resultObject->objectName();
+    QCOMPARE(name_result, mafString("VTKWidget"));
+
     m_View->addVME(m_VmeCube);
     m_View->plugVisualPipe("vtkAlgorithmOutput","mafPluginVTK::mafVisualPipeVTKSurface");
     //! </snippet>
     // Visualize first cube
     m_View->showVME(m_VmeCube, true);
+
     QTest::qSleep(2000);
     // Visualize also second cube (I could cutomize visualPipe)
     m_View->addVME(m_VmeCubeMoved);
