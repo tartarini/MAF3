@@ -11,12 +11,12 @@
 
 
 #include "mafViewVTK.h"
+#include "mafVTKWidget.h"
 #include <mafVisualPipe.h>
 #include <mafVME.h>
 #include <mafHierarchy.h>
 #include <mafSceneNode.h>
 #include <mafVisitorFindSceneNodeByVMEHash.h>
-
 
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
@@ -26,29 +26,28 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafViewVTK::mafViewVTK(const mafString code_location) : mafView(code_location) ,m_Iren(NULL), m_Renderer(NULL){
+mafViewVTK::mafViewVTK(const mafString code_location) : mafView(code_location), m_Renderer(NULL) {
 }
 
 mafViewVTK::~mafViewVTK() {
-    //mafDEL(m_EventBridge);
-    if(m_Iren) m_Iren->Delete();
-    if(m_Renderer) m_Renderer->Delete();
+    if(m_Renderer) {
+        m_Renderer->Delete();
+    }
 }
 
 void mafViewVTK::create() {
     Superclass::create();
 
-    m_RenWin = mafContainerPointerTypeCast(vtkRenderWindow, m_RenWindow);
+    // Craete the instance of the VTK Widget
+    m_Widget = new mafVTKWidget();
+    m_Widget->setObjectName("VTKWidget");
+    // Initialize the conteiner interface pointer of the base class
+    m_RenderWidget = &m_Widget;
+
+    // Create the renderer
     m_Renderer = vtkRenderer::New();
-    m_Iren = vtkRenderWindowInteractor::New();
-
-    (*m_RenWin)->AddRenderer(m_Renderer);
-    m_Iren->SetRenderWindow(*m_RenWin);
-    m_RenWin->setDestructionFunction(&vtkRenderWindow::Delete);
-
-    m_Renderer->SetBackground(0.1, 0.1, 0.1);
-    (*m_RenWin)->SetSize(640, 480);
-    (*m_RenWin)->SetPosition(400,0);
+    // and assign it to the widget.
+    m_Widget->GetRenderWindow()->AddRenderer(m_Renderer);
 }
 
 void mafViewVTK::removeVME(mafVME *vme) {
@@ -67,6 +66,7 @@ void mafViewVTK::removeVME(mafVME *vme) {
 
 void mafViewVTK::showVME(mafVME *vme, bool show, const mafString visualPipeType) {
     Superclass::showVME(vme, show, visualPipeType);
+
     mafVisitorFindSceneNodeByVMEHash *v = new mafVisitorFindSceneNodeByVMEHash(vme->objectHash(), mafCodeLocation);
     mafObjectRegistry::instance()->findObjectsThreaded(v);
     mafSceneNode *node = v->sceneNode();
@@ -80,7 +80,7 @@ void mafViewVTK::showVME(mafVME *vme, bool show, const mafString visualPipeType)
             //node->m_IsRendered = true;
         }
         (*actor)->SetVisibility(show);
-        (*m_RenWin)->Render();
+        m_Widget->GetRenderWindow()->Render();
         //m_Iren->Start();
     }
 }
