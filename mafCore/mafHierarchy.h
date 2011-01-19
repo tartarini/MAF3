@@ -59,6 +59,9 @@ public:
     /// reterun the number of children of the current node
     unsigned int currentNumberOfChildren();
 
+    /// Return the number of sub-tree items
+    unsigned int numberOfChildren(QObject *node);
+
     /// Move the tree iterator to the root.
     void moveTreeIteratorToRootNode();
 

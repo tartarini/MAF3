@@ -76,6 +76,10 @@ unsigned int mafHierarchy::currentNumberOfChildren() {
     return m_Tree->children(m_TreeIterator);
 }
 
+unsigned int mafHierarchy::numberOfChildren(QObject *node) {
+    moveTreeIteratorToNode(node);
+    return currentNumberOfChildren();
+}
 
 void mafHierarchy::moveTreeIteratorToNode(QObject *node) {
     REQUIRE(node != NULL);
