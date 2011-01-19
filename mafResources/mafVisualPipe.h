@@ -16,14 +16,14 @@
 #include "mafPipe.h"
 #include <mafContainerInterface.h>
 
-
 namespace mafResources {
 
 // Class forwarding list
 
 /**
  Class name: mafVisualPipe
- This is the base class for the MAF3 visual pipes.
+ This is the base class for the MAF3 visual pipes. The class defines the topic used to pick VMEs:
+ - maf.local.resources.interaction.vmePick
  */
 class MAFRESOURCESSHARED_EXPORT mafVisualPipe : public mafPipe {
     Q_OBJECT
@@ -40,16 +40,26 @@ public:
     /// Get output of the pipe.
     mafCore::mafContainerInterface *output();
 
+    /// Return the visibility status
+    bool visibility() const;
+
 signals:
+    /// Signal emitted when the pick hits the owned object.
     void vmePickSignal(double *pickPos, unsigned long,  mafCore::mafContainerInterface *actor, QEvent *);
 
+public slots:
+    /// Set the visibility of its rendering scene.
+    virtual void setVisibility(bool visible);
 
 private slots:
+    /// Forward the vmePick event if the pick hits the current visualized VME.
     void vmePick(double *pickPos, unsigned long, mafCore::mafContainerInterface *actor, QEvent *);
 
 private:
+    /// Register signals and slots connections with the event bus.
     void initializeConnections();
 
+    bool m_Visibility; ///< Contains the visibility status of the owned object/s
 
 protected:
     mafCore::mafContainerInterface *m_Output; ///< Output for visual pipe.
@@ -61,6 +71,10 @@ protected:
 
 inline mafCore::mafContainerInterface *mafVisualPipe::output() {
     return m_Output;
+}
+
+inline bool mafVisualPipe::visibility() const {
+    return m_Visibility;
 }
 
 } //namespace mafResources
