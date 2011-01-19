@@ -38,6 +38,7 @@ mafObjectBase *mafObjectFactory::instantiateObjectBase( const mafString &classNa
     if (isObjectRegistered(className)) {
         return m_ObjectMap.value(className)->make(location);
     } else {
+        mafMsgWarning() << mafTr("Can not create object instance of type: ") << className;
         return NULL;
     }
 }
