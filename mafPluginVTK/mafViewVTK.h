@@ -22,18 +22,16 @@
 
 // Class forwarding list
 class mafEventBridgeVTK;
-class vtkRenderWindow;
 class vtkRenderer;
-class vtkRenderWindowInteractor;
-
 
 namespace mafPluginVTK {
+
+class mafVTKWidget;
 
 /**
  Class name: mafViewVTK
  This is the VTK MAF3 views.
  */
-
 class MAFPLUGINVTKSHARED_EXPORT mafViewVTK : public mafResources::mafView {
     Q_OBJECT
     /// typedef macro.
@@ -53,10 +51,8 @@ public:
     /*virtual*/ void showVME(mafResources::mafVME *vme, bool show = true, const mafString visualPipeType = "");
 
 private:
-    mafCore::mafContainer<vtkRenderWindow> *m_RenWin;  ///< VTK rendering window.
+    mafCore::mafContainer<mafPluginVTK::mafVTKWidget> m_Widget; ///< VTK Widget on which will be rendered the scene.
     vtkRenderer *m_Renderer; ///< VTK render.
-    vtkRenderWindowInteractor *m_Iren; ///< VTK renderer interactor.
-
 };
 
 } //namespace mafPluginVTK

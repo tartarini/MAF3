@@ -129,7 +129,7 @@ void mafLogic::loadPlugins(mafString plugin_dir) {
     }
 
     // Plug also the custom objects plugged from the vertical appliation.
-    argList.clear();;
+    argList.clear();
     argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, m_CustomPluggedObjectsHash));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.registerLibrary", mafEventTypeLocal, &argList);
 }

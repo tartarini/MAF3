@@ -98,7 +98,7 @@ void mafMainWindow::initializeMainWindow() {
         connect(m_DockGoogleChat, SIGNAL(visibilityChanged(bool)), collaborateAction, SLOT(setChecked(bool)));
     }
 
-    connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(viewSelected(QMdiSubWindow*)));
+    connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(subWindowSelected(QMdiSubWindow*)));
 
     setUnifiedTitleAndToolBarOnMac(true);
 
@@ -108,12 +108,13 @@ void mafMainWindow::initializeMainWindow() {
 }
 
 void mafMainWindow::connectCallbacks() {
-    mafRegisterLocalCallback("maf.local.gui.action.new", this, "createViewWindow()");
     mafRegisterLocalCallback("maf.local.gui.action.save", this, "save()");
     mafRegisterLocalCallback("maf.local.gui.action.about", this, "showAbout()");
 
     mafRegisterLocalCallback("maf.local.logic.settings.store", this, "writeSettings()");
     mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "readSettings()");
+
+    mafRegisterLocalCallback("maf.local.resources.view.created", this, "viewCreated(mafCore::mafObjectBase *)");
 }
 
 mafMainWindow::~mafMainWindow() {
@@ -170,14 +171,16 @@ void mafMainWindow::readSettings() {
     this->addDockWidget((Qt::DockWidgetArea)docPos, ui->dockSideBar);
     ui->dockSideBar->setFloating(settings.value("SideBar/isFloating", false).toBool());
     ui->dockSideBar->setVisible(settings.value("SideBar/isVisible", true).toBool());
-    ui->dockSideBar->setGeometry(settings.value("SideBar/Geometry", QRect(0, 0, 200,400)).toRect());
+    m_Tree->setGeometry(settings.value("SideBar/Geometry", QRect(0, 0, 200,400)).toRect());
 
     // Restoring LogBar
     docPos = settings.value("LogBar/DockPosition", Qt::BottomDockWidgetArea).toInt();
     this->addDockWidget((Qt::DockWidgetArea)docPos, ui->dockLogBarWidget);
     ui->dockLogBarWidget->setFloating(settings.value("LogBar/isFloating", false).toBool());
     ui->dockLogBarWidget->setVisible(settings.value("LogBar/isVisible", true).toBool());
-    ui->dockLogBarWidget->setGeometry(settings.value("LogBar/Geometry", QRect(0, 0, 400, 200)).toRect());
+    QRect r = settings.value("LogBar/Geometry", QRect(0, 0, 800, 100)).toRect();
+    ui->logBarWidgetContents->setGeometry(r);
+    ui->logBarWidgetContents->resize(r.size());
 }
 
 void mafMainWindow::writeSettings() {
@@ -198,6 +201,8 @@ void mafMainWindow::writeSettings() {
     settings.setValue("LogBar/DockPosition", this->dockWidgetArea(ui->dockLogBarWidget));
     settings.setValue("LogBar/isFloating", ui->dockLogBarWidget->isFloating());
     settings.setValue("LogBar/isVisible", ui->dockLogBarWidget->isVisible());
+
+    settings.sync();
 }
 
 int mafMainWindow::maybeSave() {
@@ -229,54 +234,35 @@ void mafMainWindow::updateCollaborationDockVisibility(bool visible) {
     m_DockGoogleChat->setVisible(visible);
 }
 
-void mafMainWindow::createViewWindow() {
-    static int windowCounter = 1;
+void mafMainWindow::viewCreated(mafCore::mafObjectBase *view) {
+    mafContainerInterfacePointer widgetContainer;
+    widgetContainer = view->property("renderWidget").value<mafCore::mafContainerInterfacePointer>();
 
-    // sphere
-    vtkSmartPointer<vtkSphereSource> sphereSource =
-        vtkSmartPointer<vtkSphereSource>::New();
-    sphereSource->Update();
-    vtkSmartPointer<vtkPolyDataMapper> sphereMapper =
-        vtkSmartPointer<vtkPolyDataMapper>::New();
-    sphereMapper->SetInputConnection(sphereSource->GetOutputPort());
-    vtkSmartPointer<vtkActor> sphereActor =
-        vtkSmartPointer<vtkActor>::New();
-    sphereActor->SetMapper(sphereMapper);
-
-    // VTK Renderer
-    vtkSmartPointer<vtkRenderer> renderer =
-        vtkSmartPointer<vtkRenderer>::New();
-    renderer->AddActor(sphereActor);
-    QVTKWidget *widget = new QVTKWidget();
-
-//    QMdiSubWindow *subWindow1 = new QMdiSubWindow;
-//    subWindow1->setWidget(widget);
-//    subWindow1->setAttribute(Qt::WA_DeleteOnClose);
-//    subWindow1->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
+    QWidget *widget = mafContainerPointerTypeCast(QWidget, widgetContainer)->externalData();
     QMdiSubWindow *sub_win = ui->mdiArea->addSubWindow(widget);
+    sub_win->setAttribute(Qt::WA_DeleteOnClose);
+    sub_win->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     connect(sub_win, SIGNAL(aboutToActivate()), this, SLOT(viewWillBeSelected()));
 
     widget->setParent(sub_win);
-    widget->setWindowTitle(mafTr("mafView %1").arg(windowCounter++));
-    widget->GetRenderWindow()->AddRenderer(renderer);
+//    widget->setWindowTitle(mafTr("mafView %1").arg(windowCounter++));
     sub_win->setMinimumSize(200, 200);
-    sub_win->setGeometry(QRect(0, 0, 0, 0));
+//    sub_win->setGeometry(QRect(0, 0, 0, 0));
 
-    QPropertyAnimation *animation = new QPropertyAnimation(sub_win, "geometry");
-    animation->setDuration(500);
-    animation->setStartValue(QRect(0, 0, 0, 0));
-    animation->setEndValue(QRect(50, 50, 200, 200));
-    animation->setEasingCurve(QEasingCurve::InOutSine);
+//    QPropertyAnimation *animation = new QPropertyAnimation(sub_win, "geometry");
+//    animation->setDuration(500);
+//    animation->setStartValue(QRect(0, 0, 0, 0));
+//    animation->setEndValue(QRect(50, 50, 200, 200));
+//    animation->setEasingCurve(QEasingCurve::InOutSine);
 
     sub_win->show();
-    animation->start();
+//    animation->start();
 }
 
 void mafMainWindow::viewWillBeSelected() {
     mafMsgDebug() << "View will be selected!!";
 }
 
-void mafMainWindow::viewSelected(QMdiSubWindow *sub_win) {
+void mafMainWindow::subWindowSelected(QMdiSubWindow *sub_win) {
     mafMsgDebug() << "View selected!!";
 }

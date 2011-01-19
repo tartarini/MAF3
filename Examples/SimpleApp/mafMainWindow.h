@@ -48,9 +48,6 @@ public:
     void setLogic(mafApplicationLogic::mafLogic *logic);
 
 public slots:
-    /// Create the MDI sub window to host the mafView.
-    void createViewWindow();
-
     /// Show/Hide the collaboration dock widget.
     void updateCollaborationDockVisibility(bool visible);
 
@@ -58,7 +55,7 @@ public slots:
     void viewWillBeSelected();
 
     /// Called when the mouse start interacting with the view.
-    void viewSelected(QMdiSubWindow *sub_win);
+    void subWindowSelected(QMdiSubWindow *sub_win);
 
 private slots:
     /// Allow to call the code to save the user data through the logic module.
@@ -72,6 +69,9 @@ private slots:
 
     /// Shows the About dialog.
     void showAbout();
+
+    /// Observe the viewCreatedSignal emitted by the mafViewManager.
+    void viewCreated(mafCore::mafObjectBase *view);
 
 protected:
     /// Method used to catch events related to changes.

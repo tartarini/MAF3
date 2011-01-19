@@ -32,7 +32,6 @@ void mafSceneNode::setVisualPipe(mafString visualPipeType) {
     }
     mafString visualPipeName = this->m_VisualPipe->metaObject()->className();
     if (visualPipeType.compare(visualPipeName) != 0) {
-        // Delete old pipe??
         mafDEL(this->m_VisualPipe);
         this->m_VisualPipe = (mafVisualPipe *)mafNEWFromString(visualPipeType);
     }
