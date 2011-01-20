@@ -105,7 +105,7 @@
        <height>421</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="gridLayoutSideBar">
+     <layout class="QGridLayout" name="layoutSideBar">
       <item row="0" column="0">
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
@@ -118,6 +118,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="toolTip">
+          <string>Tab that shows data hierarchy and property panel</string>
+         </property>
          <attribute name="title">
           <string>Tree</string>
          </attribute>
@@ -126,22 +129,77 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>201</width>
-            <height>401</height>
+            <width>191</width>
+            <height>391</height>
            </rect>
           </property>
-          <layout class="QGridLayout" name="gridLayoutTree"/>
+          <layout class="QGridLayout" name="layoutTree">
+           <item row="1" column="0">
+            <widget class="QGroupBox" name="propertiesBoxContainer">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>200</height>
+              </size>
+             </property>
+             <property name="title">
+              <string>Properties</string>
+             </property>
+             <widget class="QWidget" name="gridLayoutWidget_8">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>9</y>
+                <width>191</width>
+                <height>191</height>
+               </rect>
+              </property>
+              <layout class="QGridLayout" name="layoutPropertiesBox"/>
+             </widget>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QWidget" name="hierarchyWidget" native="true">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <widget class="QWidget" name="gridLayoutWidget_7">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>191</width>
+                <height>201</height>
+               </rect>
+              </property>
+              <layout class="QGridLayout" name="layoutHierarchy"/>
+             </widget>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </widget>
-        <widget class="QWidget" name="tabProperties">
+        <widget class="QWidget" name="tabView">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="toolTip">
+          <string>Tab that shows View's GUI</string>
+         </property>
          <attribute name="title">
-          <string>Properties</string>
+          <string>View</string>
          </attribute>
          <widget class="QWidget" name="gridLayoutWidget_4">
           <property name="geometry">
@@ -152,7 +210,7 @@
             <height>391</height>
            </rect>
           </property>
-          <layout class="QGridLayout" name="gridLayoutProperties"/>
+          <layout class="QGridLayout" name="layoutView"/>
          </widget>
         </widget>
         <widget class="QWidget" name="tabOperation">
@@ -161,6 +219,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>Tab that shows Operation's GUI</string>
          </property>
          <attribute name="title">
           <string>Operation</string>
@@ -174,7 +235,7 @@
             <height>391</height>
            </rect>
           </property>
-          <layout class="QGridLayout" name="gridLayoutOperation"/>
+          <layout class="QGridLayout" name="layoutOperation"/>
          </widget>
         </widget>
        </widget>
@@ -193,7 +254,7 @@
    <property name="minimumSize">
     <size>
      <width>78</width>
-     <height>100</height>
+     <height>70</height>
     </size>
    </property>
    <property name="allowedAreas">
