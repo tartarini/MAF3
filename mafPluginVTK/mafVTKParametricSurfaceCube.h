@@ -44,33 +44,33 @@ public:
     ~mafVTKParametricSurfaceCube();
 
 public slots:
-    /// Set the radius for the parametric sphere.
+    /// Set the X lenght for the parametric cube.
     void setCubeXLength(double XLength);
 
-    /// Set the Phi resolution for the parametric sphere.
+    /// Set the Y lenght for the parametric cube.
     void setCubeYLength(double YLength);
 
-    /// Set the Theta resolution for the parametric sphere.
+    /// Set the Z lenght for the parametric cube.
     void setCubeZLength(double ZLength);
 
-    /// Get the radius for the parametric sphere.
+    /// Get the X lenght for the parametric cube.
     double cubeXLength();
 
-    /// Get the Phi resolution for the parametric sphere.
+    /// Get the Y lenght for the parametric cube.
     double cubeYLength();
 
-    /// Get the Theta resolution for the parametric sphere.
+    /// Get the Z lenght for the parametric cube.
     double cubeZLength();
 
     /// Update surface with parameters.
     /*virtual*/ void updateSurface();
 
 private:
-    vtkCubeSource *m_CubeSource; ///< Polydata representig a sphere.
+    vtkCubeSource *m_CubeSource; ///< Polydata representig a cube.
 
-    double m_CubeXLength; ///< Radius of the sphere;
-    double m_CubeYLength; ///< Sphere Phi resolution;
-    double m_CubeZLength; ///< Sphere Phi resolution;
+    double m_CubeXLength; ///< Lenght X of the cube;
+    double m_CubeYLength; ///< Lenght Y of the cube;
+    double m_CubeZLength; ///< Lenght Z of the cube;
 };
 
 /////////////////////////////////////////////////////////////
@@ -103,5 +103,5 @@ inline double mafVTKParametricSurfaceCube::cubeZLength(){
 
 }
 
-#endif // MAFVTKPARAMETRICSURFACESPHERE_H
+#endif // MAFVTKPARAMETRICSURFACECUBE_H
 
