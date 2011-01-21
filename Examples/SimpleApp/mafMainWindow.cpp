@@ -61,11 +61,16 @@ void mafMainWindow::initializeMainWindow() {
 
     // Connecting layouts (needed because from QtDesign is not managed automatically)
     ui->centralWidget->setLayout(ui->gridLayout);
-    ui->sideBarDockContents->setLayout(ui->gridLayoutSideBar);
-    ui->logBarWidgetContents->setLayout(ui->gridLayoutLogBar);
-    ui->tabTree->setLayout(ui->gridLayoutTree);
-    ui->tabProperties->setLayout(ui->gridLayoutProperties);
-    ui->tabOperation->setLayout(ui->gridLayoutOperation);
+	// SideBar Layout
+    ui->sideBarDockContents->setLayout(ui->layoutSideBar);
+    // View's tab
+    ui->tabView->setLayout(ui->layoutView);
+    // Operation's tab
+    ui->tabOperation->setLayout(ui->layoutOperation);
+    // Hierarchy tree's tab
+    ui->tabTree->setLayout(ui->layoutTree);
+    ui->hierarchyWidget->setLayout(ui->layoutHierarchy);
+    ui->propertiesBoxContainer->setLayout(ui->layoutPropertiesBox);
 
     //tree widget in sidebar
     m_Model = new mafTreeModel();
@@ -75,7 +80,14 @@ void mafMainWindow::initializeMainWindow() {
      }
 
     // **** SideBar ****
-    m_Tree = m_GUIManager->createTreeWidget(m_Model, ui->tabTree);
+    m_Tree = m_GUIManager->createTreeWidget(m_Model, ui->hierarchyWidget);
+
+    QSplitter *splitter = new QSplitter(Qt::Vertical);
+    splitter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    splitter->addWidget(ui->hierarchyWidget);
+    splitter->addWidget(ui->propertiesBoxContainer);
+    ui->layoutTree->addWidget(splitter);
+    splitter->setStretchFactor(1, 1);
 
     // SideBar visibility management
     QObject *sideBarAction = m_GUIManager->actionByName("SideBar");
@@ -83,6 +95,9 @@ void mafMainWindow::initializeMainWindow() {
     connect(sideBarAction, SIGNAL(triggered(bool)), ui->dockSideBar, SLOT(setVisible(bool)));
 
     // **** LogBar ****
+    // LogBar Layout
+    ui->logBarWidgetContents->setLayout(ui->gridLayoutLogBar);
+
     QObject *logBarAction = m_GUIManager->actionByName("LogBar");
     m_LogWidget = m_GUIManager->createLogWidget(ui->logBarWidgetContents);
     connect(ui->dockLogBarWidget, SIGNAL(visibilityChanged(bool)), logBarAction, SLOT(setChecked(bool)));
@@ -171,16 +186,16 @@ void mafMainWindow::readSettings() {
     this->addDockWidget((Qt::DockWidgetArea)docPos, ui->dockSideBar);
     ui->dockSideBar->setFloating(settings.value("SideBar/isFloating", false).toBool());
     ui->dockSideBar->setVisible(settings.value("SideBar/isVisible", true).toBool());
-    m_Tree->setGeometry(settings.value("SideBar/Geometry", QRect(0, 0, 200,400)).toRect());
+//    QRect rectSidebar = settings.value("SideBar/Geometry", QRect(0, 0, 200, 400)).toRect();
+//    ui->dockSideBar->resize(rectSidebar.size());
 
     // Restoring LogBar
     docPos = settings.value("LogBar/DockPosition", Qt::BottomDockWidgetArea).toInt();
     this->addDockWidget((Qt::DockWidgetArea)docPos, ui->dockLogBarWidget);
     ui->dockLogBarWidget->setFloating(settings.value("LogBar/isFloating", false).toBool());
     ui->dockLogBarWidget->setVisible(settings.value("LogBar/isVisible", true).toBool());
-    QRect r = settings.value("LogBar/Geometry", QRect(0, 0, 800, 100)).toRect();
-    ui->logBarWidgetContents->setGeometry(r);
-    ui->logBarWidgetContents->resize(r.size());
+//    QRect rectLog = settings.value("LogBar/Geometry", QRect(0, 0, 800, 100)).toRect();
+//    ui->dockLogBarWidget->resize(rectLog.size());
 }
 
 void mafMainWindow::writeSettings() {
