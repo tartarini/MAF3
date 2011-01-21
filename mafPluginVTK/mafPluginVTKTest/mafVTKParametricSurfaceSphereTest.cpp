@@ -71,8 +71,8 @@ private slots:
         mafDEL(m_ParametricSphere);
     }
 
-    /// Test the creation of the vtkActor
-    void createSphereTest();
+   /// Test Set/Get method of tparametric surface
+    void SetGetTest();
 
 
 private:
@@ -82,7 +82,7 @@ private:
     mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
 };
 
-void mafVTKParametricSurfaceSphereTest::createSphereTest() {
+void mafVTKParametricSurfaceSphereTest::SetGetTest() {
     mafVisualPipeVTKSurface *pipe;
     pipe = mafNEW(mafPluginVTK::mafVisualPipeVTKSurface);
     pipe->setInput(m_VME);

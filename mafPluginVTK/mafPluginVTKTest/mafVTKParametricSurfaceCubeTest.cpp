@@ -49,12 +49,12 @@ private slots:
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
 
         // Create the parametric sphere.
-        m_ParametricSphere = mafNEW(mafPluginVTK::mafVTKParametricSurfaceCube);
+        m_ParametricCube = mafNEW(mafPluginVTK::mafVTKParametricSurfaceCube);
 
         //! <snippet>
         //// m_DataSourceContainer is the container of type vtkAlgorithmOutput
         //// to "wrap" the vtkPolyData just simply use the code below.
-        m_DataSourceContainer = m_ParametricSphere->output();;
+        m_DataSourceContainer = m_ParametricCube->output();;
 
         //Insert data into VME
         m_VME = mafNEW(mafResources::mafVME);
@@ -68,21 +68,21 @@ private slots:
     void cleanupTestCase() {
         mafDEL(m_DataSet);
         mafDEL(m_VME);
-        mafDEL(m_ParametricSphere);
+        mafDEL(m_ParametricCube);
     }
 
-    /// Test the creation of the vtkActor
-    void createSphereTest();
+    /// Test Set/Get method of tparametric surface
+    void SetGetTest();
 
 
 private:
-    mafVTKParametricSurfaceCube *m_ParametricSphere; ///< Parametric sphere.
+    mafVTKParametricSurfaceCube *m_ParametricCube; ///< Parametric sphere.
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a surface.
     mafResources::mafDataSet *m_DataSet;
     mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
 };
 
-void mafVTKParametricSurfaceCubeTest::createSphereTest() {
+void mafVTKParametricSurfaceCubeTest::SetGetTest() {
     mafVisualPipeVTKSurface *pipe;
     pipe = mafNEW(mafPluginVTK::mafVisualPipeVTKSurface);
     pipe->setInput(m_VME);
@@ -118,23 +118,20 @@ void mafVTKParametricSurfaceCubeTest::createSphereTest() {
     newCenter[1] = 5;
     newCenter[2] = 20.5;
 
-    Q_PROPERTY(double cubeXLength READ cubeXLength WRITE setCubeXLength)
-    Q_PROPERTY(double cubeYLength READ cubeYLength WRITE setCubeYLength)
-
     //Change parameters of the cube.
-    m_ParametricSphere->setCenter(newCenter);
-    m_ParametricSphere->setProperty("cubeXLength", 15);
-    m_ParametricSphere->setProperty("cubeYLength", 20);
-    m_ParametricSphere->setProperty("cubeZLength", 5);
+    m_ParametricCube->setCenter(newCenter);
+    m_ParametricCube->setProperty("cubeXLength", 15);
+    m_ParametricCube->setProperty("cubeYLength", 20);
+    m_ParametricCube->setProperty("cubeZLength", 5);
 
     //Check if parameters had changed.
-    QCOMPARE(m_ParametricSphere->cubeXLength(), 15.0);
-    QCOMPARE(m_ParametricSphere->cubeYLength(), 20.0);
-    QCOMPARE(m_ParametricSphere->cubeZLength(), 5.0);
+    QCOMPARE(m_ParametricCube->cubeXLength(), 15.0);
+    QCOMPARE(m_ParametricCube->cubeYLength(), 20.0);
+    QCOMPARE(m_ParametricCube->cubeZLength(), 5.0);
 
-    QCOMPARE(m_ParametricSphere->center()[0], 10.0);
-    QCOMPARE(m_ParametricSphere->center()[1], 5.0);
-    QCOMPARE(m_ParametricSphere->center()[2], 20.5);
+    QCOMPARE(m_ParametricCube->center()[0], 10.0);
+    QCOMPARE(m_ParametricCube->center()[1], 5.0);
+    QCOMPARE(m_ParametricCube->center()[2], 20.5);
 
     renWin->Delete();
     renderer->Delete();
