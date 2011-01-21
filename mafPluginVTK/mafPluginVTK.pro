@@ -1,7 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-02-15T12:35:58
 # -------------------------------------------------
-#QT -= gui
+# QT -= gui
 TARGET = mafPluginVTK
 TEMPLATE = lib
 CONFIG += create_prl
@@ -16,11 +16,12 @@ SOURCES += mafDataBoundaryAlgorithmVTK.cpp \
     mafExternalDataCodecVTK.cpp \
     mafVisualPipeSelection.cpp \
     mafVTKWidget.cpp \
-    mafVTKInteractorPicker.cpp
+    mafVTKInteractorPicker.cpp \
+    mafVTKParametricSurface.cpp \
+    mafVTKParametricSurfaceSphere.cpp
 
 # mafDataPipeSurface.cpp \
 # mafInteractorVTK.cpp \
-
 HEADERS += mafPluginVTK_global.h \
     mafPluginVTKDefinitions.h \
     mafPluginRegistrator.h \
@@ -31,25 +32,32 @@ HEADERS += mafPluginVTK_global.h \
     mafVisualPipeSelection.h \
     mafDataBoundaryAlgorithmVTK.h \
     mafVTKWidget.h \
-    mafVTKInteractorPicker.h
+    mafVTKInteractorPicker.h \
+    mafVTKParametricSurface.h \
+    mafVTKParametricSurfaceSphere.h
 
 # mafDataPipeSurface.h \
 # mafInteractorVTK.h \
-
 include(../mafInstallModule.pri)
 include(../mafImportVXL.pri)
 include(../mafImportVTK.pri)
 include(../mafImportQXMLRPC.pri)
 include(../mafImportQtSoap.pri)
 INCLUDEPATH += ../mafResources \
-                        ../mafEventBus \
-                        ../mafCore
+    ../mafEventBus \
+    ../mafCore
 LIBS += -L$$DESTDIR \
-    -lmafResources$$BUILD_EXT -lmafEventBus$$BUILD_EXT -lmafCore$$BUILD_EXT
-
+    -lmafResources$$BUILD_EXT \
+    -lmafEventBus$$BUILD_EXT \
+    -lmafCore$$BUILD_EXT
 
 # install the mafplugin library (but leaving the generated library for test suite linking pourposes)
-win32:QMAKE_POST_LINK += $$CP_CMD $$DESTDIR\\$${LIB_PREFIX}$${TARGET}.dll $$DESTDIR\\$${LIB_PREFIX}$${TARGET}.mafplugin
-!macx:unix:QMAKE_POST_LINK += $$CP_CMD $$DESTDIR/$${LIB_PREFIX}$${TARGET}.so.1.0.0 $$DESTDIR/$${LIB_PREFIX}$${TARGET}.mafplugin
-macx:QMAKE_POST_LINK += $$CP_CMD $$DESTDIR/$${LIB_PREFIX}$${TARGET}.1.0.0.dylib $$DESTDIR/$${LIB_PREFIX}$${TARGET}.mafplugin
-
+win32:QMAKE_POST_LINK += $$CP_CMD \
+    $$DESTDIR\\$${LIB_PREFIX}$${TARGET}.dll \
+    $$DESTDIR\\$${LIB_PREFIX}$${TARGET}.mafplugin
+!macx:unix:QMAKE_POST_LINK += $$CP_CMD \
+    $$DESTDIR/$${LIB_PREFIX}$${TARGET}.so.1.0.0 \
+    $$DESTDIR/$${LIB_PREFIX}$${TARGET}.mafplugin
+macx:QMAKE_POST_LINK += $$CP_CMD \
+    $$DESTDIR/$${LIB_PREFIX}$${TARGET}.1.0.0.dylib \
+    $$DESTDIR/$${LIB_PREFIX}$${TARGET}.mafplugin
