@@ -18,7 +18,8 @@ SOURCES += mafDataBoundaryAlgorithmVTK.cpp \
     mafVTKWidget.cpp \
     mafVTKInteractorPicker.cpp \
     mafVTKParametricSurface.cpp \
-    mafVTKParametricSurfaceSphere.cpp
+    mafVTKParametricSurfaceSphere.cpp \
+    mafVTKParametricSurfaceCube.cpp
 
 # mafDataPipeSurface.cpp \
 # mafInteractorVTK.cpp \
@@ -34,7 +35,8 @@ HEADERS += mafPluginVTK_global.h \
     mafVTKWidget.h \
     mafVTKInteractorPicker.h \
     mafVTKParametricSurface.h \
-    mafVTKParametricSurfaceSphere.h
+    mafVTKParametricSurfaceSphere.h \
+    mafVTKParametricSurfaceCube.h
 
 # mafDataPipeSurface.h \
 # mafInteractorVTK.h \
