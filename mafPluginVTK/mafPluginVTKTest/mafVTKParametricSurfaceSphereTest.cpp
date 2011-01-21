@@ -12,32 +12,15 @@
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafResourcesRegistration.h>
-#include <mafVTKWidget.h>
 #include <mafVisualPipeVTKSurface.h>
-#include <mafVTKInteractorPicker.h>
 #include <mafVTKParametricSurfaceSphere.h>
-
-#include <mafPluginManager.h>
-#include <mafPlugin.h>
 
 #include <mafVTKParametricSurfaceSphere.h>
 #include <mafContainer.h>
-#include <vtkAlgorithmOutput.h>
-#include <vtkSphereSource.h>
-#include <vtkSmartPointer.h>
-#include <vtkRenderWindowInteractor.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
-#include <vtkCommand.h>
-#include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
-#include <vtkProperty.h>
-#include <vtkRendererCollection.h>
-#include <vtkRenderer.h>
-#include <vtkCamera.h>
 #include <QDebug>
-#include <QVTKWidget.h>
-#include <QMainWindow>
 
 #ifdef WIN32
     #define TEST_LIBRARY_NAME "mafPluginVTK_d.dll"
