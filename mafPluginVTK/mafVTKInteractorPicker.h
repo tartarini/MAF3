@@ -14,6 +14,7 @@
 
 // Includes list
 #include "mafPluginVTKDefinitions.h"
+#include "mafVTKParametricSurface.h"
 
 // Foundation Class forwarding list
 class vtkAlgorithmOutput;
@@ -36,25 +37,11 @@ class MAFPLUGINVTKSHARED_EXPORT mafVTKInteractorPicker : public mafResources::ma
 
 public:
 
-    enum PARAMETRIC_SURFACE_TYPE_ID
-      {
-        PARAMETRIC_SPHERE = 0,
-        PARAMETRIC_CONE,
-        PARAMETRIC_CYLINDER,
-        PARAMETRIC_CUBE,
-        PARAMETRIC_PLANE,
-        PARAMETRIC_ELLIPSOID,
-      };
-
-    enum ID_ORIENTATION_AXIS
-      {
-        ID_X_AXIS = 0,
-        ID_Y_AXIS,
-        ID_Z_AXIS,
-      };
-
     /// Object constructor.
     mafVTKInteractorPicker(const mafString code_location = "");
+
+    /// Object destructor.
+    ~mafVTKInteractorPicker();
 
     /// Get output of the pipe.
     mafCore::mafContainerInterface *output();
@@ -70,9 +57,9 @@ signals:
     void unDoPickSignal();
 
 public slots:
-    /// Set type of surface to create.
-    void setGeometryType(int parametricSurfaceTypeID);
 
+    /// Set type of parametric surface used as marker.
+    void setSurface(mafString parametricSurfaceType);
 
 private slots:
     /// Called when a VME has been picked.
@@ -81,58 +68,8 @@ private slots:
     /// Called when a new pick is required.
     void nextPick();
 
-    /// Called to remove the last pick.
-    //void unDoPick();
-
     /// Called when the operation terminates correctly.
     void OK();
-
-
-
-    /// Set the radius for the parametric sphere.
-    void setSphereRadius(double radius);
-
-    /// Set the Phi resolution for the parametric sphere.
-    void setSpherePhiResolution(double spherePhiRes);
-
-    /// Set the Theta resolution for the parametric sphere.
-    void setThetaResolution(double sphereTheRes);
-
-    /// Set the height of the parametric cone.
-    void setConeHeight(double coneHeight);
-
-    /// Set the radius for the base of the parametric cone.
-    void setConeRadius(double coneRadius);
-
-    /// Set the capping of the parametric cone.
-    void setConeCapping(int coneCapping);
-
-    /// Set the resolution of the parametric cone.
-    void setConeResolution(double coneRes);
-
-    /// Set the radius for the base of the parametric cylinder.  
-    void setCylinderHeight(double cylinderHeight);
-
-    /// Set the radius for the base of the parametric cylinder.
-    void setCylinderRadius(double cylinderRadius);
-
-    /// Set the radius for the base of the parametric cylinder.
-    void setCylinderResolution(double cylinderRes);
-
-    /// Set the radius for the base of the parametric cone.
-    void setCubeSide(double XLength, double YLength, double ZLength);
-
-    /// Set the radius for the base of the parametric ellipsoid.
-    void setEllipsoidRadius(double ellipsoidYLenght);
-
-    /// Set the radius for the base of the parametric ellipsoid.
-    void setEllipsoidPhiResolution(double ellipsoidPhiRes);
-
-    /// Set the radius for the base of the parametric ellipsoid.
-    void setEllipsoidThetaResolution(double ellipsoidTheRes);
-
-    /// Return the surface created.
-    vtkAlgorithmOutput *GetSurfaceOutput();
 
 
 private:
@@ -148,46 +85,15 @@ private:
     /// Set scalar value to input vtkPolyData.
     void setScalarValue(vtkPolyData *data, double scalarValue);
 
-    vtkAlgorithmOutput *m_MarkerOutput;
-    vtkAlgorithmOutput *m_TmpMarkerOutput;
-    vtkAlgorithmOutput *m_LastMarkerOutput;
-
-    int m_MarkerIndex;
-    int m_GeometryType;
-    double m_SphereRadius;
-    double m_SpherePhiRes;
-    double m_SphereTheRes;
-    double m_ConeHeight;
-    double m_ConeRadius;
-    int m_ConeCapping;
-    double m_ConeRes;
-    int m_ConeOrientationAxis;
-    double m_CylinderHeight;
-    double m_CylinderRadius;
-    double m_CylinderRes;
-    int m_CylinderOrientationAxis;
-    double m_CubeXLength;
-    double m_CubeYLength;
-    double m_CubeZLength;
-    double m_EllipsoidXLenght;
-    double m_EllipsoidYLenght;
-    double m_EllipsoidZLenght;
-    double m_EllipsoidPhiRes;
-    double m_EllipsoidTheRes;
     double *m_Center;
-    int m_EllipsoidOrientationAxis;
-    bool m_IsFirstPick;
 
-    vtkPolyDataMapper  *m_Mapper; ///< Class that maps polygonal data.
-
+    vtkPolyDataMapper *m_Mapper; ///< Class that maps polygonal data.
     vtkAppendPolyData *m_AppendData; /// Bunch of surfaces.
-
     mafCore::mafContainer<vtkActor> m_Actor; ///< Output container.
-
     mafList<double*> m_PointList;
-
     mafCore::mafContainerInterface *m_Output; ///< Output for visual pipe.
-
+    mafVTKParametricSurface *m_ParametricSurface; ///< Parametric surface used as marker.
+    mafString m_ParametricSurfaceType; ///< Type of parametric surface to be used as marker.
 
 };
 
@@ -195,13 +101,14 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline vtkAlgorithmOutput *mafVTKInteractorPicker::GetSurfaceOutput() {
-    return m_MarkerOutput;
-}
-
 inline mafCore::mafContainerInterface *mafVTKInteractorPicker::output() {
     return m_Output;
 }
+
+inline void mafVTKInteractorPicker::setSurface(mafString parametricSurfaceType){
+    m_ParametricSurfaceType = parametricSurfaceType;
+}
+
 
 } // namespace mafPluginVTK
 
