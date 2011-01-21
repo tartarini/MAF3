@@ -42,7 +42,3 @@ void mafVTKParametricSurfaceSphere::updateSurface(){
     m_SphereSource->SetRadius(m_SphereRadius);
     m_SphereSource->Update();
 }
-
-
-
-

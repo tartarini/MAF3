@@ -14,23 +14,13 @@
 #include <mafResourcesRegistration.h>
 #include <mafVisualPipeVTKSurface.h>
 #include <mafVTKParametricSurfaceSphere.h>
-
-#include <mafVTKParametricSurfaceSphere.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkAlgorithmOutput.h>
 #include <mafContainer.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkActor.h>
 #include <QDebug>
-
-#ifdef WIN32
-    #define TEST_LIBRARY_NAME "mafPluginVTK_d.dll"
-#else
-    #ifdef __APPLE__
-        #define TEST_LIBRARY_NAME "libmafPluginVTK_debug.dylib"
-    #else
-        #define TEST_LIBRARY_NAME "libmafPluginVTK_debug.so"
-    #endif
-#endif
 
 using namespace mafResources;
 using namespace mafEventBus;
