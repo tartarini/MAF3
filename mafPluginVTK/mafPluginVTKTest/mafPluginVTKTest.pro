@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     mafDataBoundaryAlgorithmVTKTest.cpp \
     mafVTKInteractorPickerTest.cpp \
     mafVTKParametricSurfaceSphereTest.cpp \
-    mafVTKParametricSurfaceCubeTest.cpp
+    mafVTKParametricSurfaceCubeTest.cpp \
+    mafVTKParametricSurfaceConeTest.cpp
 include(../../mafInstallTest.pri)
 include(../../mafImportVXL.pri)
 include(../../mafImportVTK.pri)
