@@ -3,7 +3,7 @@
  *  mafPluginVTK
  *
  *  Created by Roberto Mucci on 19/11/11.
- *  Copyright 2009 B3C.s All rights reserved.
+ *  Copyright 2011 B3C.s All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -43,16 +43,6 @@ void mafVTKParametricSurfaceSphere::updateSurface(){
     m_SphereSource->Update();
 }
 
-void mafVTKParametricSurfaceSphere::setSphereRadius(double sphereRadius){
-    m_SphereRadius = sphereRadius;
-}
 
-void mafVTKParametricSurfaceSphere::setSpherePhiResolution(double spherePhiRes){
-    m_SpherePhiRes = spherePhiRes;
-}
-
-void mafVTKParametricSurfaceSphere::setThetaResolution(double sphereTheRes){
-    m_SphereTheRes = sphereTheRes;
-}
 
 
