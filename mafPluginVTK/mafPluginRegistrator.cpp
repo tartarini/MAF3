@@ -16,6 +16,7 @@
 #include "mafVisualPipeSelection.h"
 #include "mafViewVTK.h"
 #include "mafExternalDataCodecVTK.h"
+#include "mafVTKParametricSurfaceSphere.h"
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -30,6 +31,7 @@ mafPluginRegistrator::mafPluginRegistrator() {
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeSelection);
     mafRegisterObject(mafPluginVTK::mafViewVTK);
     mafRegisterObject(mafPluginVTK::mafExternalDataCodecVTK);
+    mafRegisterObject(mafPluginVTK::mafVTKParametricSurfaceSphere);
 }
 
 mafPluginRegistrator::~mafPluginRegistrator() {
@@ -40,6 +42,7 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafVisualPipeSelection);
     mafUnregisterObject(mafPluginVTK::mafViewVTK);
     mafUnregisterObject(mafPluginVTK::mafExternalDataCodecVTK);
+    mafUnregisterObject(mafPluginVTK::mafVTKParametricSurfaceSphere);
 }
 
 void mafPluginRegistrator::registerObjects() {
