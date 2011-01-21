@@ -15,6 +15,7 @@
 #include <mafVTKWidget.h>
 #include <mafVisualPipeVTKSurface.h>
 #include <mafVTKInteractorPicker.h>
+#include <mafVTKParametricSurfaceSphere.h>
 
 #include <mafContainer.h>
 #include <vtkAlgorithmOutput.h>
@@ -140,6 +141,10 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     dataSetSphere->setDataValue(&dataSourceContainer);
     vme->dataSetCollection()->insertItem(dataSetSphere, 0);
     vme->setInteractor(m_Picker);
+
+    //Create parametric surface used by picker
+    mafString surfaceType = "mafPluginVTK::mafVTKParametricSurfaceSphere";
+    m_Picker->setSurface(surfaceType);
 
     vtkSmartPointer<vtkPolyDataMapper> sphereMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
     sphereMapper->SetInputConnection(dataSource->GetOutputPort());
