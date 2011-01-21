@@ -37,6 +37,9 @@ public:
     /// Set the center of the parametric surface.
     void setCenter(double *center);
 
+    /// Get the center of the parametric surface.
+    double *center();
+
     /// Return the output of the polydata created.
     virtual vtkAlgorithmOutput* output();
 
@@ -57,6 +60,10 @@ inline void mafVTKParametricSurface::setCenter(double *center) {
     for (i; i<3; i++){
         m_Center[i] = center[i];
     }
+}
+
+inline double* mafVTKParametricSurface::center() {
+    return m_Center;
 }
 
 }
