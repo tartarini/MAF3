@@ -17,6 +17,7 @@
 
 // Qt includes
 #include <QByteArray>
+#include <QVector>
 #include <QList>
 #include <QMap>
 #include <QDataStream>
@@ -60,6 +61,7 @@ typedef QtMsgHandler mafMsgHandlingFunction;
 #define mafFile QFile
 #define mafBuffer QBuffer
 
+#define mafVector QVector
 #define mafList QList
 #define mafLinkedList QLinkedList
 #define mafLinkedListIterator QLinkedListIterator
