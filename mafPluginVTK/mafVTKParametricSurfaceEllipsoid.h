@@ -20,6 +20,7 @@
 class vtkAlgorithmOutput;
 class vtkSphereSource;
 class vtkTransformPolyDataFilter;
+class vtkTransform;
 
 namespace mafPluginVTK {
 
@@ -91,6 +92,7 @@ public slots:
 private:
     vtkSphereSource *m_EllipsoidSource; ///< Polydata representig a ellipsoid.
     vtkTransformPolyDataFilter *m_Ptf; ///< Filter to scale sphere source.
+    vtkTransform *m_Transofrm; ///< Filter to transform sphere source.
 
     double m_EllipsoidRadius; ///< Radius of the ellipsoid.
     double m_EllipsoidPhiRes; ///< Ellipsoid resolution.

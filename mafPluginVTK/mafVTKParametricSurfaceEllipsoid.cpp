@@ -34,12 +34,12 @@ mafVTKParametricSurfaceEllipsoid::mafVTKParametricSurfaceEllipsoid(const mafStri
 
     m_EllipsoidSource = vtkSphereSource::New();
     m_Ptf = vtkTransformPolyDataFilter::New();
-    vtkSmartPointer<vtkTransform> t = vtkSmartPointer<vtkTransform>::New();
+    m_Transofrm = vtkTransform::New();
 
     // modify proportion of the sphere
-    t->Scale(m_EllipsoidXLenght/m_EllipsoidYLenght,1,m_EllipsoidZLenght/m_EllipsoidYLenght);
-    t->Update();
-    m_Ptf->SetTransform(t);
+    m_Transofrm->Scale(m_EllipsoidXLenght/m_EllipsoidYLenght,1,m_EllipsoidZLenght/m_EllipsoidYLenght);
+    m_Transofrm->Update();
+    m_Ptf->SetTransform(m_Transofrm);
 
     m_Ptf->SetInputConnection(m_EllipsoidSource->GetOutputPort());
     m_Ptf->Update();
@@ -49,8 +49,9 @@ mafVTKParametricSurfaceEllipsoid::mafVTKParametricSurfaceEllipsoid(const mafStri
 }
 
 mafVTKParametricSurfaceEllipsoid::~mafVTKParametricSurfaceEllipsoid(){
-    m_EllipsoidSource->Delete();
+    m_Transofrm->Delete();
     m_Ptf->Delete();
+    m_EllipsoidSource->Delete();
 }
 
 void mafVTKParametricSurfaceEllipsoid::updateSurface(){
@@ -59,8 +60,6 @@ void mafVTKParametricSurfaceEllipsoid::updateSurface(){
     m_EllipsoidSource->SetPhiResolution(m_EllipsoidPhiRes);
     m_EllipsoidSource->SetThetaResolution(m_EllipsoidTheRes);
     m_EllipsoidSource->SetCenter(m_Center);
+    m_Transofrm->Update();
     m_EllipsoidSource->Update();
-
-    vtkSmartPointer<vtkTransform> t = vtkSmartPointer<vtkTransform>::New();
-    t->Scale(m_EllipsoidXLenght/m_EllipsoidYLenght,1,m_EllipsoidZLenght/m_EllipsoidYLenght);
 }
