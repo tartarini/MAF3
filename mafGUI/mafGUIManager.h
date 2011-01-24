@@ -26,6 +26,8 @@ class mafUILoaderQt;
 class mafTreeWidget;
 class mafTreeModel;
 class mafTextEditWidget;
+class mafGUIApplicationSettingsDialog;
+class mafGUIApplicationSettingsPage;
 
 /**
  Class name: mafGUIManager
@@ -78,6 +80,9 @@ public:
     /// Allows to assign the maximum number of recent files. Canges of this number will be considered at the application's sturtup.
     void setMaxRecentFiles(int max_recent_files);
 
+    /// Return the application's settings dialog.
+    mafGUIApplicationSettingsDialog *settingsDialog() const;
+
     /// Return the 'file' menu item created into the createMenus method.
     QMenu *fileMenu() const;
 
@@ -121,6 +126,9 @@ private slots:
     /// Allows to ask to open the selected recent file.
     void openRecentFile();
 
+    /// Show the application's settings dialog.
+    void showSettingsDialog();
+
     /// Called when a VME has been selected.
     /** This method will update all the operation's menu items according to the new selected VME.*/
     void updateMenuForSelectedVme(mafCore::mafObjectBase *vme);
@@ -148,6 +156,7 @@ private:
     QMenu *m_OpMenu;   ///< Reference to the 'Operation' menu.
     QMenu *m_WindowMenu; ///< Reference to the 'Window' menu.
     QMenu *m_HelpMenu; ///< Reference to the 'Help' menu.
+    QMenu *m_OptionsMenu; ///< Reference to the 'Options' menu.
 
     QToolBar *m_FileToolBar; ///< Toolbar related to File tasks
     QToolBar *m_EditToolBar; ///< Toolbar related to Edit tasks
@@ -167,12 +176,15 @@ private:
     QAction *m_PasteAct; ///< Reference to the action associated to the 'Paste' of Items into actual loaded data.
 
     QAction *m_AboutAct; ///< Reference to the action associated to the 'About' informative dialog.
+    QAction *m_SettingsAction; ///< Reference to the action associated to the application's settings.
     QAction *m_SideBarAct; ///< Reference to the side bar close/show action.
     QAction *m_LogBarAct; ///< Reference to the action associated to the 'LogBar' Item.
 
     int m_MaxRecentFiles; ///< Number of maximum recent files.
     mafList<QAction *> m_RecentFileActs; ///< List of recent file's actions.
     bool m_ActionsCreated; ///< Flag that store the actions' creation.
+
+    mafGUIApplicationSettingsDialog *m_SettingsDialog; ///< Settings dialog
 
     QMainWindow *m_MainWindow; ///< Main window associated to the application.
     mafUILoaderQt *m_UILoader; ///< Class in charge to load the GUI.
@@ -208,6 +220,10 @@ inline QMenu *mafGUIManager::operationMenu() const {
 
 inline QMenu *mafGUIManager::helpMenu() const {
     return m_HelpMenu;
+}
+
+inline mafGUIApplicationSettingsDialog *mafGUIManager::settingsDialog() const {
+    return m_SettingsDialog;
 }
 
 } // namespace mafGUI

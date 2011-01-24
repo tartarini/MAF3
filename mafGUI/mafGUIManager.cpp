@@ -16,6 +16,8 @@
 #include "mafTextEditWidget.h"
 #include "mafTextHighlighter.h"
 
+#include "mafGUIApplicationSettingsDialog.h"
+
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafGUI;
@@ -25,6 +27,8 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const mafString code_locatio
     , m_OpenAct(NULL), m_SaveAct(NULL), m_SaveAsAct(NULL), m_RecentFilesSeparatorAct(NULL), m_ExitAct(NULL)
     , m_CutAct(NULL), m_CopyAct(NULL), m_PasteAct(NULL), m_AboutAct(NULL)
     , m_MaxRecentFiles(5), m_ActionsCreated(false), m_MainWindow(main_win) {
+
+    m_SettingsDialog = new mafGUIApplicationSettingsDialog();
 
     mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)");
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateMenuForSelectedVme(mafCore::mafObjectBase *)");
@@ -121,6 +125,13 @@ void mafGUIManager::createActions() {
     m_AboutAct->setStatusTip(tr("Show the application's About box"));
     m_ActionList.append(m_AboutAct);
 
+    m_SettingsAction = new QAction(mafTr("Settings"), this);
+    m_SettingsAction->setObjectName("Settings");
+    m_SettingsAction->setIconText(mafTr("Settings"));
+    m_SettingsAction->setStatusTip(tr("Show the application's Settings dialog"));
+    m_ActionList.append(m_SettingsAction);
+    connect(m_SettingsAction, SIGNAL(triggered()), SLOT(showSettingsDialog()));
+
     m_SideBarAct = new QAction(tr("Sidebar"), this);
     m_SideBarAct->setObjectName("SideBar");
     m_SideBarAct->setCheckable(true);
@@ -136,6 +147,10 @@ void mafGUIManager::createActions() {
     m_ActionsCreated = true;
 
     registerEvents();
+}
+
+void mafGUIManager::showSettingsDialog() {
+    m_SettingsDialog->show();
 }
 
 void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash) {
@@ -274,6 +289,9 @@ void mafGUIManager::createMenus() {
 
     m_HelpMenu = menuBar->addMenu(tr("&Help"));
     m_HelpMenu->addAction(m_AboutAct);
+
+    m_OptionsMenu = menuBar->addMenu(tr("Options"));
+    m_OptionsMenu->addAction(m_SettingsAction);
 }
 
 void mafGUIManager::createToolBars() {
