@@ -2,6 +2,7 @@
 
 #include "mafMainWindow.h"
 #include "mafOperationSimpleApp.h"
+#include "mafApplicationSettingsPageConfigurations.h"
 
 #include <mafLogic.h>
 
@@ -38,8 +39,13 @@ int main(int argc, char *argv[]) {
     // Copy the new one into the plugin directory.
     res = QFile::copy(pluginVTK, p);
 
+    // Create the application's logic instance
     mafApplicationLogic::mafLogic logic;
-    logic.initialize();
+    // and initialize it. This initialization will load dinamically the mafResources Library.
+    bool ok = logic.initialize();
+    if(!ok) {
+        exit(1);
+    }
 
     // Plug into the factory the new operation. This operation has also
     // an acceptObject method defined, so call macro below.
@@ -51,10 +57,20 @@ int main(int argc, char *argv[]) {
     logic.plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
     logic.plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View 3D");
 
+    // Create the instance of the main window and pass to it the application's logic.
+    // In this way the mafMainWondow class will also load the plug-ins present
+    // in the default 'plugins' directory.
     mafMainWindow w(&logic);
-    logic.loadPlugins();
 
-    w.show();
+    // plug custom application's setting page
+    mafApplicationSettingsPageConfigurations *page = new mafApplicationSettingsPageConfigurations();
+    w.plugApplicationSettingsPage(page);
+
+    // Eventually call the loadPlugins method with custom directory to allow the application
+    // load custom plugins located in custom directories.
+    //logic.loadPlugins(cusom_plugin_path);
+
+    w.setupMainWindow();
     int result = a.exec();
 
     return result;
