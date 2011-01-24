@@ -13,14 +13,37 @@
 
 using namespace mafGUI;
 
-mafTextHighlighter::mafTextHighlighter(QTextDocument *parent)
-    : QSyntaxHighlighter(parent)
-{
-    HighlightingRule rule;
+mafTextHighlighter::mafTextHighlighter(QTextDocument *parent):mafSyntaxHighlighter(parent) {
+    initialize();
+}
 
-    keywordFormat.setForeground(Qt::darkBlue);
-    keywordFormat.setFontWeight(QFont::Bold);
-    QStringList keywordPatterns;
+void mafTextHighlighter::initialize() {
+    //initialize several Formats
+    mafTextCharFormat format;
+    format.setForeground(Qt::darkBlue);
+    format.setFontWeight(QFont::Bold);
+    m_Formats.insert("keywords", format);
+
+    format.setFontWeight(QFont::Bold);
+    format.setForeground(Qt::darkMagenta);
+    m_Formats.insert("class", format);
+
+    format.setForeground(Qt::red);
+    m_Formats.insert("singleLineComment", format);
+
+    format.setForeground(Qt::red);
+    m_Formats.insert("multiLineComment", format);
+
+    format.setForeground(Qt::darkGreen);
+    m_Formats.insert("quotation", format);
+
+    format.setFontItalic(true);
+    format.setForeground(Qt::blue);
+    m_Formats.insert("function", format);
+
+
+    /*mafHighlightingRule rule;
+    mafStringList keywordPatterns;
     keywordPatterns << "\\bchar\\b" << "\\bclass\\b" << "\\bconst\\b"
                     << "\\bdouble\\b" << "\\benum\\b" << "\\bexplicit\\b"
                     << "\\bfriend\\b" << "\\binline\\b" << "\\bint\\b"
@@ -31,88 +54,92 @@ mafTextHighlighter::mafTextHighlighter(QTextDocument *parent)
                     << "\\btemplate\\b" << "\\btypedef\\b" << "\\btypename\\b"
                     << "\\bunion\\b" << "\\bunsigned\\b" << "\\bvirtual\\b"
                     << "\\bvoid\\b" << "\\bvolatile\\b";
+    int count = 0;
     foreach (const QString &pattern, keywordPatterns) {
-        rule.pattern = QRegExp(pattern);
-        rule.format = keywordFormat;
-        highlightingRules.append(rule);
-//! [0] //! [1]
+        rule.m_Pattern = mafRegExp(pattern);
+        rule.m_Format = m_Formats["keywords"];
+        m_HighlightingRules.insert(mafString::number(count++),rule);
     }
-//! [1]
 
-//! [2]
-    classFormat.setFontWeight(QFont::Bold);
-    classFormat.setForeground(Qt::darkMagenta);
-    rule.pattern = QRegExp("\\bQ[A-Za-z]+\\b");
-    rule.format = classFormat;
-    highlightingRules.append(rule);
-//! [2]
 
-//! [3]
-    singleLineCommentFormat.setForeground(Qt::red);
-    rule.pattern = QRegExp("//[^\n]*");
-    rule.format = singleLineCommentFormat;
-    highlightingRules.append(rule);
+    rule.m_Pattern = QRegExp("\\bQ[A-Za-z]+\\b");
+    rule.m_Format = m_ClassFormat;
+    m_HighlightingRules.insert("class",rule);
 
-    multiLineCommentFormat.setForeground(Qt::red);
-//! [3]
 
-//! [4]
-    quotationFormat.setForeground(Qt::darkGreen);
-    rule.pattern = QRegExp("\".*\"");
-    rule.format = quotationFormat;
-    highlightingRules.append(rule);
-//! [4]
+    rule.m_Pattern = QRegExp("//[^\n]*");
+    rule.m_Format = m_SingleLineCommentFormat;
+    m_HighlightingRules.insert("silgeComment", rule);
 
-//! [5]
-    functionFormat.setFontItalic(true);
-    functionFormat.setForeground(Qt::blue);
-    rule.pattern = QRegExp("\\b[A-Za-z0-9_]+(?=\\()");
-    rule.format = functionFormat;
-    highlightingRules.append(rule);
-//! [5]
+    rule.m_Pattern = mafRegExp("\".*\"");
+    rule.m_Format = m_QuotationFormat;
+    m_HighlightingRules.insert("quotation",rule);
 
-//! [6]
-    commentStartExpression = QRegExp("/\\*");
-    commentEndExpression = QRegExp("\\*/");
+    rule.m_Pattern = mafRegExp("\\b[A-Za-z0-9_]+(?=\\()");
+    rule.m_Format = m_FunctionFormat;
+    m_HighlightingRules.insert("function",rule);*/
+
+    m_CommentStartExpression = mafRegExp("/\\*");
+    m_CommentEndExpression = mafRegExp("\\*/");
 }
-//! [6]
 
-//! [7]
-void mafTextHighlighter::highlightBlock(const QString &text)
-{
-    foreach (const HighlightingRule &rule, highlightingRules) {
-        QRegExp expression(rule.pattern);
+void mafTextHighlighter::highlightBlock(const mafString &text) {
+    foreach (const mafHighlightingRule &rule, m_HighlightingRules) {
+        mafRegExp expression(rule.m_Pattern);
         int index = expression.indexIn(text);
         while (index >= 0) {
             int length = expression.matchedLength();
-            setFormat(index, length, rule.format);
+            setFormat(index, length, rule.m_Format);
             index = expression.indexIn(text, index + length);
         }
     }
-//! [7] //! [8]
-    setCurrentBlockState(0);
-//! [8]
 
-//! [9]
+    setCurrentBlockState(0);
+
+    //this code is applied when there is a comment
     int startIndex = 0;
     if (previousBlockState() != 1)
-        startIndex = commentStartExpression.indexIn(text);
+        startIndex = m_CommentStartExpression.indexIn(text);
 
-//! [9] //! [10]
     while (startIndex >= 0) {
-//! [10] //! [11]
-        int endIndex = commentEndExpression.indexIn(text, startIndex);
+
+        int endIndex = m_CommentEndExpression.indexIn(text, startIndex);
         int commentLength;
         if (endIndex == -1) {
             setCurrentBlockState(1);
             commentLength = text.length() - startIndex;
         } else {
             commentLength = endIndex - startIndex
-                            + commentEndExpression.matchedLength();
+                            + m_CommentEndExpression.matchedLength();
         }
-        setFormat(startIndex, commentLength, multiLineCommentFormat);
-        startIndex = commentStartExpression.indexIn(text, startIndex + commentLength);
+        setFormat(startIndex, commentLength, m_Formats["multiLineComment"]);
+        startIndex = m_CommentStartExpression.indexIn(text, startIndex + commentLength);
     }
 }
-//! [11]
 
+void mafTextHighlighter::insertRule(const mafString &name, mafHighlightingRule rule) {
+    m_HighlightingRules.insert(name, rule);
+}
+
+void mafTextHighlighter::insertRule(const mafString &name, mafRegExp pattern, mafTextCharFormat format) {
+    mafHighlightingRule rule;
+    rule.m_Pattern = pattern;
+    rule.m_Format = format;
+    insertRule(name, rule);
+}
+
+void mafTextHighlighter::removeRule(const mafString& name) {
+    m_HighlightingRules.remove(name);
+}
+
+void mafTextHighlighter::insertFormat(const mafString &name, mafTextCharFormat format) {
+    m_Formats.insert(name, format);
+}
+
+void mafTextHighlighter::removeFormat(const mafString& name) {
+    m_Formats.remove(name);
+}
+
+const mafTextCharFormat &mafTextHighlighter::format(const mafString &name) {
+    return m_Formats[name.toAscii()];
+}
