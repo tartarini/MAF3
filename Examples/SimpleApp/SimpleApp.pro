@@ -12,10 +12,12 @@ CONFIG -= app_bundle
 SOURCES += main.cpp \
     mafMainWindow.cpp \
     googlechat.cpp \
-    mafOperationSimpleApp.cpp
+    mafOperationSimpleApp.cpp \
+    mafApplicationSettingsPageConfigurations.cpp
 HEADERS += mafMainWindow.h \
     googlechat.h \
-    mafOperationSimpleApp.h
+    mafOperationSimpleApp.h \
+    mafApplicationSettingsPageConfigurations.h
 FORMS += mafMainWindow.ui \
     form.ui
 include(../../mafCommon.pri)
