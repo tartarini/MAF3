@@ -47,6 +47,15 @@ public:
     /// Allow to assign the application's logic.
     void setLogic(mafApplicationLogic::mafLogic *logic);
 
+    /// Return the mafGUIManager
+    mafGUI::mafGUIManager *guiManager() const;
+
+    /// Allows to add a settings page to the settings dialog.
+    void plugApplicationSettingsPage(mafGUI::mafGUIApplicationSettingsPage *page);
+
+    /// Performs all the necessary steps to setup settings and synchronize all GUI elements to get ready to start, then show the main window.
+    void setupMainWindow();
+
 public slots:
     /// Show/Hide the collaboration dock widget.
     void updateCollaborationDockVisibility(bool visible);
@@ -102,5 +111,9 @@ private:
     /// Check if the application needs to save data.
     int maybeSave();
 };
+
+inline mafGUI::mafGUIManager *mafMainWindow::guiManager() const {
+    return m_GUIManager;
+}
 
 #endif // MAFMAINWINDOW_H

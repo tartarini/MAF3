@@ -17,6 +17,7 @@
 #include "googlechat.h"
 
 #include <mafGUIRegistration.h>
+#include <mafGUIApplicationSettingsDialog.h>
 #include <mafTreeModel.h>
 
 #include <vtkPolyDataMapper.h>
@@ -34,6 +35,7 @@ mafMainWindow::mafMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 
 mafMainWindow::mafMainWindow(mafApplicationLogic::mafLogic *logic, QWidget *parent) :QMainWindow(parent), ui(new Ui::mafMainWindow), m_Logic(logic) {
     initializeMainWindow();
+    m_Logic->loadPlugins();
 }
 
 void mafMainWindow::setLogic(mafApplicationLogic::mafLogic *logic) {
@@ -135,6 +137,11 @@ void mafMainWindow::connectCallbacks() {
 mafMainWindow::~mafMainWindow() {
     mafDEL(m_GUIManager);
     delete ui;
+}
+
+void mafMainWindow::setupMainWindow() {
+    m_GUIManager->settingsDialog()->setupSettingsDialog();
+    this->show();
 }
 
 void mafMainWindow::showAbout() {
@@ -240,6 +247,10 @@ int mafMainWindow::maybeSave() {
 
 bool mafMainWindow::save() {
     return true;
+}
+
+void mafMainWindow::plugApplicationSettingsPage(mafGUIApplicationSettingsPage *page) {
+    m_GUIManager->settingsDialog()->addPage(page);
 }
 
 void mafMainWindow::updateCollaborationDockVisibility(bool visible) {
