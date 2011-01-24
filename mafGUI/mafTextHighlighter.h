@@ -15,43 +15,58 @@
 
 #include "mafGUIDefinitions.h"
 
-QT_BEGIN_NAMESPACE
-class QTextDocument;
-QT_END_NAMESPACE
-
 namespace mafGUI {
+
+// forward declaration
+class mafTextDocument;
 
 /**
  Class Name: mafTextHighlighter
  Highlight the text inside a text editor or browser class.
-
+ The format can be:
+   - KeywordFormat
+   - ClassFormat
+   - SingleLineCommentFormat
+   - MultiLineCommentFormat
+   - QuotationFormat
+   - FunctionFormat
 */
-class MAFGUISHARED_EXPORT mafTextHighlighter : public QSyntaxHighlighter {
+class MAFGUISHARED_EXPORT mafTextHighlighter : public mafSyntaxHighlighter {
     Q_OBJECT
-
 public:
+    /// Object constructor.
     mafTextHighlighter(QTextDocument *parent = 0);
 
+    /// Insert new rule
+    void insertRule(const mafString &name, mafHighlightingRule rule);
+
+    /// Insert new rule from a pattern and a format
+    void insertRule(const mafString &name, mafRegExp pattern, mafTextCharFormat format);
+
+    /// Remove rule
+    void removeRule(const mafString &name);
+
+    /// Insert new rule
+    void insertFormat(const mafString &name, mafTextCharFormat format);
+    /// Remove rule
+    void removeFormat(const mafString &name);
+
+    /// retrieve format from name
+    const mafTextCharFormat &format(const mafString &name);
 protected:
-    void highlightBlock(const QString &text);
+    /// Set the text which will be highlighted
+    /*virtual*/ void highlightBlock(const mafString &text);
 
 private:
-    struct HighlightingRule
-    {
-        QRegExp pattern;
-        QTextCharFormat format;
-    };
-    QVector<HighlightingRule> highlightingRules;
+    /// initialize several patterns
+    void initialize();
 
-    QRegExp commentStartExpression;
-    QRegExp commentEndExpression;
+    mafMap<mafString, mafHighlightingRule> m_HighlightingRules; ///< container with the entire list of rules
+    mafMap<mafString, mafTextCharFormat> m_Formats; ///< container with the entire list of rules
 
-    QTextCharFormat keywordFormat;
-    QTextCharFormat classFormat;
-    QTextCharFormat singleLineCommentFormat;
-    QTextCharFormat multiLineCommentFormat;
-    QTextCharFormat quotationFormat;
-    QTextCharFormat functionFormat;
+    //sample for multiline comment
+    mafRegExp m_CommentStartExpression;
+    mafRegExp m_CommentEndExpression;
 };
 
 } // end namespace
