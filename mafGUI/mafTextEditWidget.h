@@ -22,19 +22,33 @@ namespace mafGUI {
 */
 class MAFGUISHARED_EXPORT mafTextEditWidget : public QWidget {
 public:
+    /// Object constructor.
     mafTextEditWidget(QWidget *parent = 0);
 
-    mafTextEditWidget(QSyntaxHighlighter *highlighter, QWidget *parent = 0);
+    /// Overloaded object constructor
+    mafTextEditWidget(mafSyntaxHighlighter *highlighter, QWidget *parent = 0);
 
-    void setHighlighter(QSyntaxHighlighter *highlighter);
-
+    /// Object destructor.
     virtual ~mafTextEditWidget();
 
+    /// Set the highlighter to the text widget
+    void setHighlighter(mafSyntaxHighlighter *highlighter);
+
+    /// enable/disable editing
+    void enableEditing(bool enable);
+
+    /// load Highlight Dictionary from CSV file
+    void loadDictionaryFromCSV(const mafString &csvFile);
+
 private:
-    ///
+    /// set the layout of this composite widget
     void initialize();
-    QTextEdit *m_TextEditor;
-    QSyntaxHighlighter *m_Highlighter;
+
+    QTextEdit *m_TextEditor; ///< text editor widget in which browse or edit text.
+    mafSyntaxHighlighter *m_Highlighter; ///< syntax highlighter to apply on text editor.
+
+    // TO BE DONE
+    // QCompleter need to be used if we want to permit codecompletion
 };
 
 } // namespace mafGUI

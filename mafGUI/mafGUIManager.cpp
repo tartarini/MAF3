@@ -343,8 +343,23 @@ mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *par
 mafTextEditWidget *mafGUIManager::createLogWidget(QWidget *parent) {
     //syntax highlighter
     mafTextHighlighter *hl = new mafTextHighlighter();
+
+    // create some rules
+    mafStringList keywordPatterns;
+    keywordPatterns << "\\bvme\\b" << "\\bmatrix\\b" << "\\bpose\\b"
+                    << "\\btimestamp\\b" << "\\name\\b" << "\\bDataVector\\b";
+
+    //generate some rules
+    int count = 0;
+    foreach (const QString &pattern, keywordPatterns) {
+        mafString keywordName = "keyword";
+        keywordName.append(mafString::number(count++));
+        hl->insertRule(keywordName, mafRegExp(pattern), hl->format("keywords"));
+    }
+
     mafTextEditWidget *w = new mafTextEditWidget(hl, parent);
     w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    w->enableEditing(false);
 
     if(parent) {
         if(parent->layout()) {
