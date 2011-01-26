@@ -25,8 +25,10 @@ mafGUIApplicationSettingsDialog::mafGUIApplicationSettingsDialog() {
     m_ContentsWidget->setMaximumWidth(128);
     m_ContentsWidget->setMinimumWidth(84);
     m_ContentsWidget->setSpacing(12);
+    m_ContentsWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 
     m_PagesWidget = new QStackedWidget;
+    m_PagesWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 void mafGUIApplicationSettingsDialog::addPage(mafGUIApplicationSettingsPage *page) {
@@ -77,7 +79,7 @@ void mafGUIApplicationSettingsDialog::setupSettingsDialog() {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addLayout(horizontalLayout);
     mainLayout->addStretch(1);
-    mainLayout->addSpacing(12);
+    mainLayout->addSpacing(6);
     mainLayout->addLayout(buttonsLayout);
     setLayout(mainLayout);
 
