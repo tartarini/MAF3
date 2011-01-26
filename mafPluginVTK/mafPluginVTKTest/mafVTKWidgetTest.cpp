@@ -121,37 +121,44 @@ testInteractionManagerCustom::testInteractionManagerCustom(QString code_location
 }
 
 void testInteractionManagerCustom::leftButtonPress(unsigned long modifiers) {
+    Q_UNUSED(modifiers);
     m_Counter++;
     qDebug() << "leftButtonPress";
 }
 
 void testInteractionManagerCustom::leftButtonRelease(unsigned long modifiers) {
+    Q_UNUSED(modifiers);
     m_Counter++;
     qDebug() << "leftButtonRelease";
 }
 
 void testInteractionManagerCustom::rightButtonPress(unsigned long modifiers) {
+    Q_UNUSED(modifiers);
     m_Counter++;
     qDebug() << "rightButtonPress";
 }
 
 void testInteractionManagerCustom::rightButtonRelease(unsigned long modifiers) {
+    Q_UNUSED(modifiers);
     m_Counter++;
     qDebug() << "rightButtonRelease";
 }
 
 void testInteractionManagerCustom::middleButtonPress(unsigned long modifiers) {
+    Q_UNUSED(modifiers);
     m_Counter++;
     qDebug() << "middleButtonPress";
 }
 
 void testInteractionManagerCustom::middleButtonRelease(unsigned long modifiers) {
+    Q_UNUSED(modifiers);
     m_Counter++;
     qDebug() << "middleButtonRelease";
 }
 
 void testInteractionManagerCustom::pick(double *pos, unsigned long modifiers,  mafCore::mafContainerInterface *interface, QEvent * e) {
-    int i = e->type();
+    Q_UNUSED(interface);
+
      m_Counter++;
      m_Pos[0] = pos[0];
      m_Pos[1] = pos[1];
