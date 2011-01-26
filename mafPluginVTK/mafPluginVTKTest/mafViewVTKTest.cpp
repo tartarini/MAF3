@@ -13,6 +13,7 @@
 #include <mafCoreSingletons.h>
 #include <mafVisitorFindSceneNodeByVMEHash.h>
 #include <mafResourcesRegistration.h>
+#include <mafVMEManager.h>
 #include <mafView.h>
 #include <mafViewVTK.h>
 #include <mafVisualPipeVTKSurface.h>
@@ -57,6 +58,7 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
+        mafResources::mafVMEManager::instance();
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
 
         /// Create the view...
@@ -108,13 +110,11 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_View);
-        mafDEL(m_DataSetCube);
-        mafDEL(m_DataSetCubeMoved);
-        mafDEL(m_VmeCube);
         mafDEL(m_VmeCubeMoved);
         m_PDataFilter->Delete();
         m_DataSource->Delete();
         m_DataSourceMoved->Delete();
+        mafResources::mafVMEManager::instance()->shutdown();
     }
 
     /// mafViewVTK allocation test case.
@@ -161,12 +161,14 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
 
     m_View->plugVisualPipe("vtkAlgorithmOutput","mafPluginVTK::mafVisualPipeVTKSurface");
     //! </snippet>
+
     // Visualize first cube
-    mafVisitorFindSceneNodeByVMEHash *v = new mafVisitorFindSceneNodeByVMEHash(m_VmeCube->objectHash(), mafCodeLocation);
+    mafString h = m_VmeCube->objectHash();
+    mafVisitorFindSceneNodeByVMEHash *v = new mafVisitorFindSceneNodeByVMEHash(h, mafCodeLocation);
     mafObjectRegistry::instance()->findObjectsThreaded(v);
     mafSceneNode *cubeNode = v->sceneNode();
-    mafDEL(v);
     m_View->showSceneNode(cubeNode, true);
+    mafDEL(v);
 
     QTest::qSleep(2000);
     // Visualize also second cube (I could cutomize visualPipe)
