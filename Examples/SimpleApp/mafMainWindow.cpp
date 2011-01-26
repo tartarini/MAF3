@@ -269,6 +269,7 @@ void mafMainWindow::viewCreated(mafCore::mafObjectBase *view) {
     sub_win->setAttribute(Qt::WA_DeleteOnClose);
     sub_win->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     connect(sub_win, SIGNAL(aboutToActivate()), this, SLOT(viewWillBeSelected()));
+    connect(sub_win, SIGNAL(destroyed()), view, SLOT(deleteLater()));
 
     widget->setParent(sub_win);
 //    widget->setWindowTitle(mafTr("mafView %1").arg(windowCounter++));
