@@ -125,6 +125,7 @@ void mafOperationManager::startOperation(const mafString operation) {
     REQUIRE(m_CurrentOperation == NULL); //require also that there isn't running operation
 
     m_CurrentOperation = (mafOperation *)mafNEWFromString(operation);
+    // TODO: Perform a check on created operation; should be not NULL!!
     bool result = m_CurrentOperation->initialize();
 
     mafEventArgumentsList argList;
