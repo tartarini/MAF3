@@ -11,10 +11,12 @@
 
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
+#include <mafVisitorFindSceneNodeByVMEHash.h>
 #include <mafResourcesRegistration.h>
 #include <mafView.h>
 #include <mafViewVTK.h>
 #include <mafVisualPipeVTKSurface.h>
+#include <mafSceneNode.h>
 #include <mafVME.h>
 #include <mafContainer.h>
 #include <mafDataSet.h>
@@ -153,23 +155,38 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     mafString name_result = resultObject->objectName();
     QCOMPARE(name_result, mafString("VTKWidget"));
 
-    m_View->addVME(m_VmeCube);
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VmeCube));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+
     m_View->plugVisualPipe("vtkAlgorithmOutput","mafPluginVTK::mafVisualPipeVTKSurface");
     //! </snippet>
     // Visualize first cube
-    m_View->showVME(m_VmeCube, true);
+    mafVisitorFindSceneNodeByVMEHash *v = new mafVisitorFindSceneNodeByVMEHash(m_VmeCube->objectHash(), mafCodeLocation);
+    mafObjectRegistry::instance()->findObjectsThreaded(v);
+    mafSceneNode *cubeNode = v->sceneNode();
+    mafDEL(v);
+    m_View->showSceneNode(cubeNode, true);
 
     QTest::qSleep(2000);
     // Visualize also second cube (I could cutomize visualPipe)
-    m_View->addVME(m_VmeCubeMoved);
-    m_View->showVME(m_VmeCubeMoved, true,  "mafPluginVTK::mafVisualPipeVTKSurface");
+    argList.clear();
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VmeCubeMoved));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+
+    v = new mafVisitorFindSceneNodeByVMEHash(m_VmeCubeMoved->objectHash(), mafCodeLocation);
+    mafObjectRegistry::instance()->findObjectsThreaded(v);
+    mafSceneNode *cubeMovedNode = v->sceneNode();
+    mafDEL(v);
+    m_View->showSceneNode(cubeMovedNode, true,  "mafPluginVTK::mafVisualPipeVTKSurface");
     QTest::qSleep(2000);
+
     // Show off first cube
-    m_View->showVME(m_VmeCube, false);
+    m_View->showSceneNode(cubeNode, false);
     QTest::qSleep(2000);
 
     // Remove VME
-    m_View->removeVME(m_VmeCube);
+    mafDEL(m_VmeCube);
 }
 
 MAF_REGISTER_TEST(mafViewVTKTest);
