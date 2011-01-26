@@ -14,10 +14,12 @@ SOURCES += main.cpp \
     mafEventDispatcherTest.cpp \
     mafNetworkConnectorQtSoapTest.cpp \
     mafNetworkConnectorQXMLRPCTest.cpp \
-    mafEventTest.cpp
+    mafEventTest.cpp \
+    mafTopicRegistryTest.cpp
 include(../../mafInstallTest.pri)
 include(../../mafImportQXMLRPC.pri)
 include(../../mafImportQtSoap.pri)
 INCLUDEPATH += ../../mafCore
 LIBS += -L$$DESTDIR \
-    -lmafEventBus$$BUILD_EXT -lmafCore$$BUILD_EXT
+    -lmafEventBus$$BUILD_EXT \
+    -lmafCore$$BUILD_EXT
