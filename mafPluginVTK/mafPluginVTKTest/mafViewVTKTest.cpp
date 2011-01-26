@@ -109,6 +109,12 @@ private slots:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
+        //To close widget window
+        mafContainerInterfacePointer widgetContainer;
+        widgetContainer = m_View->property("renderWidget").value<mafCore::mafContainerInterfacePointer>();
+        QWidget *widget = mafContainerPointerTypeCast(QWidget, widgetContainer)->externalData();
+        widget->close();
+
         mafDEL(m_View);
         mafDEL(m_VmeCubeMoved);
         m_PDataFilter->Delete();
