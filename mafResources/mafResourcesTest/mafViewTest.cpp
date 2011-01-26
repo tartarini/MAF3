@@ -103,9 +103,9 @@ void mafViewTest::mafViewShowSceneNodeTest() {
 
     // search the scene node associated with the vme added.
     mafVisitorFindSceneNodeByVMEHash *v = new mafVisitorFindSceneNodeByVMEHash(vme->objectHash(), mafCodeLocation);
-     mafObjectRegistry::instance()->findObjectsThreaded(v);
+    mafObjectRegistry::instance()->findObjectsThreaded(v);
     node = v->sceneNode();
-     mafDEL(v);
+    mafDEL(v);
 
     m_View->showSceneNode(node, false,"mafPipesLibrary::mafVisualPipeVTKSurface");
 
