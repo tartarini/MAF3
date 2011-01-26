@@ -17,7 +17,8 @@ SOURCES += mafEventDispatcher.cpp \
     mafNetworkConnector.cpp \
     mafEvent.cpp \
     mafNetworkConnectorQtSoap.cpp \
-    mafNetworkConnectorQXMLRPC.cpp
+    mafNetworkConnectorQXMLRPC.cpp \
+    mafTopicRegistry.cpp
 HEADERS += mafEventBus_global.h \
     mafEventDispatcher.h \
     mafEventDefinitions.h \
@@ -27,7 +28,8 @@ HEADERS += mafEventBus_global.h \
     mafNetworkConnector.h \
     mafEvent.h \
     mafNetworkConnectorQtSoap.h \
-    mafNetworkConnectorQXMLRPC.h
+    mafNetworkConnectorQXMLRPC.h \
+    mafTopicRegistry.h
 include(../mafInstallModule.pri)
 include(../mafImportQXMLRPC.pri)
 include(../mafImportQtSoap.pri)
