@@ -29,7 +29,7 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafPluginVTK;
 
-mafVTKInteractorPicker::mafVTKInteractorPicker(const mafString code_location) : mafResources::mafInteractor(code_location), m_Mapper(NULL), m_AppendData(NULL), m_ParametricSurface(NULL), m_Output(NULL) {
+mafVTKInteractorPicker::mafVTKInteractorPicker(const mafString code_location) : mafResources::mafInteractor(code_location), m_Mapper(NULL), m_AppendData(NULL), m_Output(NULL), m_ParametricSurface(NULL) {
     m_Center = NULL;
     m_PointList.clear();
     this->initializeConnections();
@@ -78,6 +78,9 @@ void mafVTKInteractorPicker::createPipe() {
 }
 
 void mafVTKInteractorPicker::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafContainerInterface *actor, QEvent *e ) {
+    Q_UNUSED(actor);
+    Q_UNUSED(e);
+
     //Check if ctrl is pressed
     if((modifiers&(1<<MAF_CTRL_KEY))!=0){
         //Remove the nearest marker to the picked point.
@@ -90,7 +93,7 @@ void mafVTKInteractorPicker::vmePick(double *pickPos, unsigned long modifiers, m
         int closestMarkerIndex = 0;
         int i = 0;
 
-        for(i; i < InputNumber; i++){
+        for(; i < InputNumber; i++){
             vtkSmartPointer<vtkCellLocator> cellLocator = vtkSmartPointer<vtkCellLocator>::New();
             cellLocator->SetDataSet(m_AppendData->GetInput(i));
             cellLocator->BuildLocator();
