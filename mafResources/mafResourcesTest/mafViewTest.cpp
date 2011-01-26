@@ -120,8 +120,9 @@ void mafViewTest::mafViewPlugVisualPipeTest() {
 
 void mafViewTest::mafViewRenderingWidgetTest() {
     // Create a fake widget...
+    mafObject *obj = mafNEW(mafCore::mafObject);
     mafContainer<mafObject> w;
-    w = mafNEW(mafCore::mafObject);
+    w = obj;
     w->setObjectName("My Widget");
 
     // Assign the widget to the mafView.
@@ -140,6 +141,8 @@ void mafViewTest::mafViewRenderingWidgetTest() {
 
     mafString name_result = resultObject->objectName();
     QCOMPARE(name_result, mafString("My Widget"));
+
+    mafDEL(obj);
 
 }
 
