@@ -14,6 +14,8 @@
 #include <mafContainer.h>
 #include <mafView.h>
 #include <mafVME.h>
+#include <mafSceneNode.h>
+#include <mafVisitorFindSceneNodeByVMEHash.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -51,13 +53,13 @@ private slots:
     /// mafView allocation test case.
     void mafViewAllocationTest();
 
-    /// mafView add & remove VME test case.
-    void mafViewAddRemoveVMETest();
+    /// mafView add & remove mafSceneNode test case.
+    void mafViewAddRemoveSceneNodeTest();
 
-    /// mafView show VME test case.
-    void mafViewShowVMETest();
+    /// mafView show scene node test case.
+    void mafViewShowSceneNodeTest();
 
-    /// mafView show VME test case.
+    /// mafView show scene node test case.
     void mafViewPlugVisualPipeTest();
 
     /// mafView setRenderingWidget test case.
@@ -71,37 +73,49 @@ void mafViewTest::mafViewAllocationTest() {
     QVERIFY(m_View != NULL);
 }
 
-void mafViewTest::mafViewAddRemoveVMETest() {
-    mafVME *vme;
-    vme = mafNEW(mafResources::mafVME);
+void mafViewTest::mafViewAddRemoveSceneNodeTest() {
+    mafVME *vme = mafNEW(mafResources::mafVME);
 
     //add VME
-    m_View->addVME(vme);
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 
-    //remove VME
-    m_View->removeVME(vme);
+    // remove VME => authomatic will be removed the corresponding scene node
+    // from the view and destroyed the eventually created visual pipe.
     mafDEL(vme);
 }
 
-void mafViewTest::mafViewShowVMETest() {
-    mafVME *vme;
-    vme = mafNEW(mafResources::mafVME);
+void mafViewTest::mafViewShowSceneNodeTest() {
+    mafVME *vme = mafNEW(mafResources::mafVME);
+    mafSceneNode *node = new mafSceneNode(vme, NULL, mafCodeLocation);
 
-    //try to show a vme not added
-    m_View->showVME(vme, true,"mafPipesLibrary::mafVisualPipeVTKSurface");
+    //try to show a node not added with a fake visual pipe.
+    m_View->showSceneNode(node, true,"mafPipesLibrary::mafVisualPipeVTKSurface");
+
+    mafDEL(node);
 
     // add vme and show (can not show, thos is a base class)
-    m_View->addVME(vme);
-    m_View->showVME(vme, false,"mafPipesLibrary::mafVisualPipeVTKSurface");
+    //add VME
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+
+    // search the scene node associated with the vme added.
+    mafVisitorFindSceneNodeByVMEHash *v = new mafVisitorFindSceneNodeByVMEHash(vme->objectHash(), mafCodeLocation);
+     mafObjectRegistry::instance()->findObjectsThreaded(v);
+    node = v->sceneNode();
+     mafDEL(v);
+
+    m_View->showSceneNode(node, false,"mafPipesLibrary::mafVisualPipeVTKSurface");
+
+    // Remove the VME and its related classes.
     mafDEL(vme);
 }
 
 void mafViewTest::mafViewPlugVisualPipeTest() {
-    mafVME *vme;
-    vme = mafNEW(mafResources::mafVME);
-
+    // ?!?
     m_View->plugVisualPipe("vtkPolyData","mafPipesLibrary::mafVisualPipeVTKSurface");
-    mafDEL(vme);
 }
 
 void mafViewTest::mafViewRenderingWidgetTest() {
