@@ -57,7 +57,7 @@ protected:
 
 inline void mafVTKParametricSurface::setCenter(double *center) {
     int i = 0;
-    for (i; i<3; i++){
+    for (; i<3; i++) {
         m_Center[i] = center[i];
     }
 }
