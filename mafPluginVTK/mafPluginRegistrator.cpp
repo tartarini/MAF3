@@ -17,6 +17,10 @@
 #include "mafViewVTK.h"
 #include "mafExternalDataCodecVTK.h"
 #include "mafVTKParametricSurfaceSphere.h"
+#include "mafVTKParametricSurfaceCube.h"
+#include "mafVTKParametricSurfaceCone.h"
+#include "mafVTKParametricSurfaceCylinder.h"
+#include "mafVTKParametricSurfaceEllipsoid.h"
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -32,6 +36,10 @@ mafPluginRegistrator::mafPluginRegistrator() {
     mafRegisterObject(mafPluginVTK::mafViewVTK);
     mafRegisterObject(mafPluginVTK::mafExternalDataCodecVTK);
     mafRegisterObject(mafPluginVTK::mafVTKParametricSurfaceSphere);
+    mafRegisterObject(mafPluginVTK::mafVTKParametricSurfaceCube);
+    mafRegisterObject(mafPluginVTK::mafVTKParametricSurfaceCone);
+    mafRegisterObject(mafPluginVTK::mafVTKParametricSurfaceCylinder);
+    mafRegisterObject(mafPluginVTK::mafVTKParametricSurfaceEllipsoid);
 }
 
 mafPluginRegistrator::~mafPluginRegistrator() {
@@ -43,6 +51,10 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     mafUnregisterObject(mafPluginVTK::mafViewVTK);
     mafUnregisterObject(mafPluginVTK::mafExternalDataCodecVTK);
     mafUnregisterObject(mafPluginVTK::mafVTKParametricSurfaceSphere);
+    mafUnregisterObject(mafPluginVTK::mafVTKParametricSurfaceCube);
+    mafUnregisterObject(mafPluginVTK::mafVTKParametricSurfaceCone);
+    mafUnregisterObject(mafPluginVTK::mafVTKParametricSurfaceCylinder);
+    mafUnregisterObject(mafPluginVTK::mafVTKParametricSurfaceEllipsoid);
 }
 
 void mafPluginRegistrator::registerObjects() {
