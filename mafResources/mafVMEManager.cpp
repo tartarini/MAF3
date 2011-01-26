@@ -3,7 +3,7 @@
  *  mafResources
  *
  *  Created by Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -23,12 +23,14 @@ mafVMEManager* mafVMEManager::instance() {
 void mafVMEManager::shutdown() {
 }
 
-mafVMEManager::mafVMEManager(const mafString code_location) : mafObjectBase(code_location), m_SelectedVME(NULL), m_VMEHierarchy(NULL) {
+mafVMEManager::mafVMEManager(const mafString code_location) : mafObjectBase(code_location), m_SelectedVME(NULL), m_Root(NULL), m_VMEHierarchy(NULL) {
     initializeConnections();
 }
 
 mafVMEManager::~mafVMEManager() {
-    // TODO: Check id m_VMEHierarchy has to be destroied.
+    //m_VMEHierarchy->clear();
+    mafDEL(m_Root);
+    mafDEL(m_VMEHierarchy);
 }
 
 void mafVMEManager::initializeConnections() {
@@ -105,10 +107,13 @@ mafCore::mafHierarchyPointer mafVMEManager::createVMEHierarchy() {
      if(m_VMEHierarchy == NULL) {
          m_VMEHierarchy = mafNEW(mafCore::mafHierarchy);
 
-         mafVME* vmeRoot = mafNEW(mafResources::mafVME);
-         vmeRoot->setObjectName("root"); // TODO: need yo destroy the root
+         //Delete previous created root.
+         mafDEL(m_Root);
+         //Create a new root.
+         m_Root = mafNEW(mafResources::mafVME);
+         m_Root->setObjectName("root");
 
-         m_VMEHierarchy->addHierarchyNode(vmeRoot);
+         m_VMEHierarchy->addHierarchyNode(m_Root);
      }
 
      return m_VMEHierarchy;

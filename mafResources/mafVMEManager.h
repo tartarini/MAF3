@@ -3,7 +3,7 @@
  *  mafResources
  *
  *  Created by Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -90,6 +90,7 @@ private:
     void removeVME(mafVME *vme);
 
     mafVME *m_SelectedVME; ///< Keep track of the selected VME.
+    mafVME *m_Root; ///< Root of the tree.
     mafCore::mafHierarchy *m_VMEHierarchy; ///< Hierarchy indicizing the mafVME.
 };
 
