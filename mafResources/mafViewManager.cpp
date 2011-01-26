@@ -13,6 +13,7 @@
 #include "mafMementoViewManager.h"
 #include "mafView.h"
 #include "mafVME.h"
+#include "mafSceneNode.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -62,7 +63,7 @@ void mafViewManager::initializeConnections() {
     provider->createNewId("maf.local.resources.view.destroy");
     provider->createNewId("maf.local.resources.view.select");
     provider->createNewId("maf.local.resources.view.selected");
-    provider->createNewId("maf.local.resources.view.vmeShow");
+    provider->createNewId("maf.local.resources.view.sceneNodeShow");
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(mafString)");
@@ -70,13 +71,13 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.view.destroy", this, "destroyViewSignal(mafCore::mafObjectBase *)");
     mafRegisterLocalSignal("maf.local.resources.view.select", this, "selectViewSignal(mafCore::mafObjectBase *)");
     mafRegisterLocalSignal("maf.local.resources.view.selected", this, "selectedViewSignal(mafCore::mafObjectBase *)");
-    mafRegisterLocalSignal("maf.local.resources.view.vmeShow", this, "vmeShowSignal(mafCore::mafObjectBase *, bool)");
+    mafRegisterLocalSignal("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShowSignal(mafCore::mafObjectBase *, bool)");
 
     // Register private callbacks to the instance of the manager..
     mafRegisterLocalCallback("maf.local.resources.view.create", this, "createView(mafString)");
     mafRegisterLocalCallback("maf.local.resources.view.destroy", this, "destroyView(mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.view.select", this, "selectView(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("maf.local.resources.view.vmeShow", this, "vmeShow(mafCore::mafObjectBase *, bool)");
+    mafRegisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShow(mafCore::mafObjectBase *, bool)");
 
     // Register callback to allows settings serialization.
     mafRegisterLocalCallback("maf.local.logic.status.viewmanager.store", this, "createMemento()");
@@ -101,11 +102,11 @@ void mafViewManager::selectView(mafCore::mafObjectBase *view) {
     }
 }
 
-void mafViewManager::vmeShow(mafCore::mafObjectBase *vme, bool show) {
-    mafVME *vme_resource = dynamic_cast<mafResources::mafVME *>(vme);
-    if(vme_resource != NULL) {
+void mafViewManager::sceneNodeShow(mafCore::mafObjectBase *node, bool show) {
+    mafSceneNode *node_to_show = dynamic_cast<mafResources::mafSceneNode *>(node);
+    if(node_to_show != NULL) {
         if(m_SelectedView) {
-            m_SelectedView->showVME(vme_resource, show);
+            m_SelectedView->showSceneNode(node_to_show, show);
         }
     }
 }
@@ -117,7 +118,6 @@ void mafViewManager::createView(mafString view_type) {
     mafView *v = dynamic_cast<mafResources::mafView *>(obj);
     if(v != NULL) {
         addViewToCreatedList(v);
-        //m_SelectedView = v;
         selectView(obj);
     } else {
         mafDEL(obj);
@@ -129,6 +129,7 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
         // Check the presence of the view in the list
         bool view_is_present = m_CreatedViewList.contains(v);
         if(!view_is_present) {
+            // TODO: add to the new view all the created VME wrapped into the mafSceneNode each one.
             // Connect the manager to the view destryed signal
             connect(v, SIGNAL(destroyed()), this, SLOT(viewDestroyed()));
             // add the new created view to the list.
