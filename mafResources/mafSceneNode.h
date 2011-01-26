@@ -30,7 +30,7 @@ class MAFRESOURCESSHARED_EXPORT mafSceneNode : public mafCore::mafObject {
     mafSuperclassMacro(mafCore::mafObject);
 
 public:
-    /// Object constructor.
+    /// Object constructor. USE CONSTRUCTOR BELOW WHICH TAKES VME AS INPUT.
     mafSceneNode(const mafString code_location = "");
 
     /// Object constructor.
@@ -43,10 +43,18 @@ public:
     void setVisualPipe(mafString visualPipeType);
 
     /// Return the inner visual pipe.
-    mafVisualPipe *visualPipe();
+    mafVisualPipe *visualPipe() const;
 
     /// Return the inner vme.
-    mafVME *vme();
+    mafVME *vme() const;
+
+signals:
+    /// Alert the view that the node can be deleted because its inner vme has been destroyed.
+    void destroyNode();
+
+private slots:
+    /// monitor the visual pipe deletation.
+    void visualPipeDestroyed();
 
 private:
     mafVME *m_VME; ///< Represent the data object.
@@ -57,11 +65,11 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline mafVisualPipe *mafSceneNode::visualPipe() {
+inline mafVisualPipe *mafSceneNode::visualPipe() const {
     return m_VisualPipe;
 }
 
-inline mafVME *mafSceneNode::vme() {
+inline mafVME *mafSceneNode::vme() const {
     return m_VME;
 }
 

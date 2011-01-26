@@ -11,6 +11,7 @@
 
 #include "mafSceneNode.h"
 #include "mafVisualPipe.h"
+#include "mafVME.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -19,21 +20,28 @@ mafSceneNode::mafSceneNode(const mafString code_location) : mafObject(code_locat
 }
 
 mafSceneNode::mafSceneNode(mafVME *vme, mafVisualPipe *visual_pipe, const mafString code_location) : mafObject(code_location), m_VME(vme), m_VisualPipe(visual_pipe) {
+    connect(vme, SIGNAL(destroyed()), this, SIGNAL(destroyNode()));
+    connect(vme, SIGNAL(detatched()), this, SIGNAL(destroyNode()));
 }
 
 mafSceneNode::~mafSceneNode() {
     mafDEL(this->m_VisualPipe);
 }
 
+void mafSceneNode::visualPipeDestroyed() {
+    this->m_VisualPipe = NULL;
+}
+
 void mafSceneNode::setVisualPipe(mafString visualPipeType) {
-    if (this->m_VisualPipe == NULL) {
-        this->m_VisualPipe = (mafVisualPipe *)mafNEWFromString(visualPipeType);
-        return;
+    if(m_VisualPipe != NULL) {
+        mafString currentVisualPipeType = this->m_VisualPipe->metaObject()->className();
+        if (visualPipeType.compare(currentVisualPipeType) == 0) {
+            return;
+        }
     }
-    mafString visualPipeName = this->m_VisualPipe->metaObject()->className();
-    if (visualPipeType.compare(visualPipeName) != 0) {
-        mafDEL(this->m_VisualPipe);
-        this->m_VisualPipe = (mafVisualPipe *)mafNEWFromString(visualPipeType);
-    }
+
+    mafDEL(this->m_VisualPipe);
+    this->m_VisualPipe = (mafVisualPipe *)mafNEWFromString(visualPipeType);
+    connect(m_VisualPipe, SIGNAL(destroyed()), this, SLOT(visualPipeDestroyed()));
 }
 
