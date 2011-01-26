@@ -244,9 +244,6 @@ void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e) {
     }
 
     if (actor != NULL) {
-        int m = e->type();
-
-
         mafEventArgumentsList argList;
         argList.append(mafEventArgument(double *, (double *)posPicked));
         argList.append(mafEventArgument(unsigned long, m_Modifiers));
