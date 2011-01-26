@@ -22,8 +22,11 @@ using namespace mafCore;
 using namespace mafResources;
 
 mafView::mafView(const mafString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL)  {
-    m_VisualPipeMap.clear();
+    m_VisualPipeHash.clear();
     m_Selected = false;
+
+    // Callbacks related to the VME creation
+    mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)");
 }
 
 mafView::~mafView() {
@@ -37,64 +40,81 @@ void mafView::create() {
     m_Scenegraph = mafNEW(mafCore::mafHierarchy);
 }
 
-void mafView::addVME(mafVME *vme) {
-    if(m_Scenegraph != NULL) {
-//        mafSceneNode *node = m_Scenegraph->sceneNodeByVmeHash(vme->objectHash());
-//        if (node == NULL) {
-            mafSceneNode *node = new mafSceneNode(vme, NULL, mafCodeLocation);
+void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
+    mafVME *vme_to_add = dynamic_cast<mafResources::mafVME *>(vme);
+    if(vme_to_add != NULL) {
+        mafSceneNode *node = new mafSceneNode(vme_to_add, NULL, mafCodeLocation);
+        connect(node, SIGNAL(destroyNode()), this, SLOT(sceneNodeDestroy()));
+        if(m_Scenegraph != NULL) {
             m_Scenegraph->addHierarchyNode(node);
-//        }
-    }
-}
-
-void mafView::removeVME(mafVME *vme) {
-    if(m_Scenegraph != NULL) {
-        mafVisitorFindSceneNodeByVMEHash *v = new mafVisitorFindSceneNodeByVMEHash(vme->objectHash(), mafCodeLocation);
-        mafObjectRegistry::instance()->findObjectsThreaded(v);
-        mafSceneNode *node = v->sceneNode();
-        if (node != NULL) {
-            m_Scenegraph->removeHierarchyNode(node);
         }
-        mafDEL(v);
     }
 }
 
-void mafView::selectVME(mafVME *vme, bool select) {
-    Q_UNUSED(vme);
+void mafView::sceneNodeDestroy() {
+    mafSceneNode *node = (mafSceneNode *)QObject::sender();
+    removeSceneNode(node);
+}
+
+void mafView::removeSceneNode(mafSceneNode *node) {
+    REQUIRE(node!= NULL);
+
+    // Disconnect the view from the node
+    disconnect(node, SIGNAL(destroyNode()),this, SLOT(sceneNodeDestroyed()));
+
+    if(m_Scenegraph != NULL) {
+        m_Scenegraph->removeHierarchyNode(node);
+    }
+}
+
+void mafView::selectSceneNode(mafSceneNode *node, bool select) {
+    Q_UNUSED(node);
     Q_UNUSED(select);
 }
 
-void mafView::showVME(mafVME *vme, bool show, const mafString visualPipeType) {
+void mafView::showSceneNode(mafSceneNode *node, bool show, const mafString visualPipeType) {
+    REQUIRE(node != NULL);
+
+    if(node->vme() == NULL) {
+        return;
+    }
+
     mafString vp(visualPipeType);
     if (vp == "") {
-        // Find default visual pipe for this kind of data
+        // Find visual pipe for this kind of data
         mafString dataType;
-        mafDataSet *data = vme->outputData();
+        mafDataSet *data = node->vme()->outputData();
         if  (data != NULL) {
             dataType = data->dataValue()->externalDataType();
         }
-        vp = m_VisualPipeMap.value(dataType);
+        vp = m_VisualPipeHash.value(dataType);
         if (vp == "") {
            mafMsgDebug("%s", mafTr("Visual pipe not found for '%1' of data!").arg(vp).toAscii().data());
            return;
         }
     }
     if(m_Scenegraph != NULL) {
-        mafVisitorFindSceneNodeByVMEHash *v = new mafVisitorFindSceneNodeByVMEHash(vme->objectHash(), mafCodeLocation);
-        mafObjectRegistry::instance()->findObjectsThreaded(v);
-        mafSceneNode *node = v->sceneNode();
-        mafDEL(v);
-        if (node != NULL && show) {
+        if (show) {
             node->setVisualPipe(vp);
-            node->visualPipe()->setInput(vme);
-            node->visualPipe()->createPipe();
-            node->visualPipe()->updatePipe();
+            mafVisualPipe *pipe = node->visualPipe();
+            if(pipe == NULL) {
+                mafMsgWarning() << mafTr("No visual pipe type '") << vp << mafTr("'' registered!!");
+                return;
+            }
+            pipe->setInput(node->vme());
+            pipe->createPipe();
+            pipe->updatePipe();
+            // TODO: Connect the visivility property of the VME with the visibile
+            // slot of the visual pipe to put in synch both the opbjects.
+        } else {
+            // TODO: Implement the case the show is false => destroy the
+            // visualVipie?? Hide its actor ??
         }
     }
 }
 
 void mafView::plugVisualPipe(mafString dataType, mafString visualPipeType) {
     if (!dataType.isEmpty() && !visualPipeType.isEmpty()) {
-        m_VisualPipeMap.insert(dataType, visualPipeType);
+        m_VisualPipeHash.insert(dataType, visualPipeType);
     }
 }

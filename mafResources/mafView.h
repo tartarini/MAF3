@@ -20,14 +20,13 @@
 namespace mafResources {
 
 // Class forwarding list
-class mafVME;
+class mafSceneNode;
 class mafVisualPipe;
 
 /**
  Class name: mafView
  This is the base class for the MAF3 views.
  */
-
 class MAFRESOURCESSHARED_EXPORT mafView : public mafResource {
     Q_OBJECT
     Q_PROPERTY(QVariant renderWidget READ renderingWidget WRITE setRenderingWidget)
@@ -45,17 +44,14 @@ public:
     /// Create the view
     virtual void create();
 
-    /// Add a VME to the scenegraph.
-    void addVME(mafVME *vme);
+    /// Remove a scene node from the scengraph.
+    virtual void removeSceneNode(mafSceneNode *node);
 
-    /// Remove a VME from the scengraph.
-    virtual void removeVME(mafVME *vme);
+    /// Select a scene node.
+    virtual void selectSceneNode(mafSceneNode *node, bool select);
 
-    /// Select a VME.
-    void selectVME(mafVME *vme, bool select);
-
-    /// Called to show/hide VME.
-    virtual void showVME(mafVME *vme, bool show = true, const mafString visualPipeType = "");
+    /// Called to show/hide scene node.
+    virtual void showSceneNode(mafSceneNode *node, bool show = true, const mafString visualPipeType = "");
 
     /// Select this view.
     void select(bool select);
@@ -72,11 +68,18 @@ public:
     /// Get the rendering widget used by the view to render its scene.
     mafVariant renderingWidget() const;
 
+private slots:
+    /// Wrap the new VME into a mafSceneNode.
+    void vmeAdd(mafCore::mafObjectBase *vme);
+
+    /// Called when the scene node has been destroyed.
+    void sceneNodeDestroy();
+
   protected:
     mafCore::mafContainerInterface *m_RenderWidget; ///< Rendering widget for the view.
     mafString m_DefaultVisualPipe; ///< Name of the default visual pipe.
     mafCore::mafHierarchy *m_Scenegraph; ///< Scenegraph
-    mafMap<mafString, mafString> m_VisualPipeMap; ///< Bind between dataType and Visual pipe.
+    mafHash<mafString, mafString> m_VisualPipeHash; ///< Bind between dataType and Visual pipe.
     bool m_Selected; ///< Flag for active view.
 };
 
