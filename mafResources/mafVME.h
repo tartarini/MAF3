@@ -82,6 +82,13 @@ public:
     /// Return the interactor associated with the VME.
     mafInteractor *interactor();
 
+    /// Allow to emit the detached signal, so to alert all the observers that the vme is not more inside the tree.
+    void detatch();
+
+signals:
+    /// Alert observers that the VME has been detatched from the hierarchy tree.
+    void detatched();
+
 public slots:
     /// Set the current timestamp for the VME.
     void setTimestamp(double t);

@@ -93,6 +93,10 @@ void mafVME::execute() {
     }
 }
 
+void mafVME::detatch() {
+    emit(detatched());
+}
+
 mafDataSetCollection *mafVME::dataSetCollection() {
     if(m_DataSetCollection == NULL) {
         m_DataSetCollection = new mafDataSetCollection(mafCodeLocation);
