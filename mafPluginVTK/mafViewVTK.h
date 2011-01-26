@@ -17,8 +17,7 @@
 #include <mafView.h>
 #include <mafContainer.h>
 #include <mafContainerInterface.h>
-#include <mafVME.h>
-
+#include <mafSceneNode.h>
 
 // Class forwarding list
 class mafEventBridgeVTK;
@@ -46,9 +45,9 @@ public:
 
     /*virtual*/ void create();
 
-    /*virtual*/ void removeVME(mafResources::mafVME *vme);
+    /*virtual*/ void removeSceneNode(mafResources::mafSceneNode *node);
 
-    /*virtual*/ void showVME(mafResources::mafVME *vme, bool show = true, const mafString visualPipeType = "");
+    /*virtual*/ void showSceneNode(mafResources::mafSceneNode *node, bool show = true, const mafString visualPipeType = "");
 
 private:
     mafCore::mafContainer<mafPluginVTK::mafVTKWidget> m_Widget; ///< VTK Widget on which will be rendered the scene.

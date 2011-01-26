@@ -50,27 +50,18 @@ void mafViewVTK::create() {
     m_Widget->GetRenderWindow()->AddRenderer(m_Renderer);
 }
 
-void mafViewVTK::removeVME(mafVME *vme) {
-    mafVisitorFindSceneNodeByVMEHash *v = new mafVisitorFindSceneNodeByVMEHash(vme->objectHash(), mafCodeLocation);
-    mafObjectRegistry::instance()->findObjectsThreaded(v);
-    mafSceneNode *node = v->sceneNode();
+void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
     if (node != NULL) {
         mafContainer<vtkActor> *actor = mafContainerPointerTypeCast(vtkActor, node->visualPipe()->output());
         if ((*actor)->GetVisibility() != 0) {
             m_Renderer->RemoveActor(*actor);
         }
     }
-    mafDEL(v);
-    Superclass::removeVME(vme);
+    Superclass::removeSceneNode(node);
 }
 
-void mafViewVTK::showVME(mafVME *vme, bool show, const mafString visualPipeType) {
-    Superclass::showVME(vme, show, visualPipeType);
-
-    mafVisitorFindSceneNodeByVMEHash *v = new mafVisitorFindSceneNodeByVMEHash(vme->objectHash(), mafCodeLocation);
-    mafObjectRegistry::instance()->findObjectsThreaded(v);
-    mafSceneNode *node = v->sceneNode();
-    mafDEL(v);
+void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show, const mafString visualPipeType) {
+    Superclass::showSceneNode(node, show, visualPipeType);
 
     if (node != NULL) {
         mafContainer<vtkActor> *actor = mafContainerPointerTypeCast(vtkActor, node->visualPipe()->output());
@@ -84,5 +75,3 @@ void mafViewVTK::showVME(mafVME *vme, bool show, const mafString visualPipeType)
         //m_Iren->Start();
     }
 }
-
-
