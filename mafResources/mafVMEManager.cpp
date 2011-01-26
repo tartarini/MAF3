@@ -83,22 +83,20 @@ void mafVMEManager::vmeRemove(mafObjectBase *vme) {
         return;
     }
     // VME has been removed.
+    vme_to_remove->detatch();
     removeVME(vme_to_remove);
 }
 
 void mafVMEManager::vmeDestroyed() {
     mafVME *vme = (mafVME *)QObject::sender();
-    //removeVME(vme);
-    if (vme == m_SelectedVME) {
-        m_SelectedVME = NULL;
-    }
+    removeVME(vme);
 }
 
 void mafVMEManager::removeVME(mafVME *vme) {
     // Disconnect the manager from the vme
     disconnect(vme, SIGNAL(destroyed()),this, SLOT(vmeDestroyed()));
     // remove the VME from the managed resources and manage the active resource if the removed VME is the active one.
-    if(vme->isEqual(m_SelectedVME)) {
+    if (vme == m_SelectedVME) {
         m_SelectedVME = NULL;
     }
 }
