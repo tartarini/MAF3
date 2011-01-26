@@ -29,7 +29,7 @@ This class provides the manager class for MAF3 views. The topics are:
 - maf.local.resources.view.destroy allows to destroy a given View.
 - maf.local.resources.view.select allows to select the active View on which show/hide VMEs.
 - maf.local.resources.view.selected allows to retrieve the current selected View.
-- maf.local.resources.view.show allow to show/hide a given VME in the selected View.
+- maf.local.resources.view.sceneNodeShow allow to show/hide a given mafSceneNode in the selected View.
 */
 class MAFRESOURCESSHARED_EXPORT mafViewManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -42,6 +42,25 @@ public:
 
     /// Destroy the singleton instance. To be called at the end of the application.
     void shutdown();
+
+signals:
+    /// Return the selected view
+    void selectedViewSignal(mafCore::mafObjectBase *view);
+
+    /// Signal which allow to keep track of the selected view.
+    void selectViewSignal(mafCore::mafObjectBase *view);
+
+    /// Signal which allow to show/hide the given node passed as argument.
+    void sceneNodeShowSignal(mafCore::mafObjectBase *node, bool show = true);
+
+    /// Signal which allow to remove the view from the manager.
+    void destroyViewSignal(mafCore::mafObjectBase *view);
+
+    /// Allow to cdreate a new mafView given the type name as string. Return the created view on success.
+    void createViewSignal(mafString view_type);
+
+    /// Notify the view creation to all observers.
+    void viewCreatedSignal(mafCore::mafObjectBase *view);
 
 public slots:
     /// Create a memento class used to save the status of opened views. The caller has to delete the allocated memory he asked.
@@ -59,31 +78,12 @@ public slots:
     undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
     void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
-signals:
-    /// Return the selected view
-    void selectedViewSignal(mafCore::mafObjectBase *view);
-
-    /// Signal which allow to keep track of the selected view.
-    void selectViewSignal(mafCore::mafObjectBase *view);
-
-    /// Signal which allow to show/hide the given vme passed as argument.
-    void vmeShowSignal(mafCore::mafObjectBase *vme, bool show = true);
-
-    /// Signal which allow to remove the view from the manager.
-    void destroyViewSignal(mafCore::mafObjectBase *view);
-
-    /// Allow to cdreate a new mafView given the type name as string. Return the created view on success.
-    void createViewSignal(mafString view_type);
-
-    /// Notify the view creation to all observers.
-    void viewCreatedSignal(mafCore::mafObjectBase *view);
-
 private slots:
     /// Allow to keep track of the selected view.
     void selectView(mafCore::mafObjectBase *view);
 
-    /// Allow to show/hide the given vme passed as argument.
-    void vmeShow(mafCore::mafObjectBase *vme, bool show = true);
+    /// Allow to show/hide the given scene node passed as argument.
+    void sceneNodeShow(mafCore::mafObjectBase *node, bool show = true);
 
     /// Remove the view from the manager.
     void destroyView(mafCore::mafObjectBase *view);
