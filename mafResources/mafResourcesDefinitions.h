@@ -21,6 +21,7 @@
 #include <QUrl>
 #include <mafCoreDefinitions.h>
 #include <mafEventBusManager.h>
+#include <mafTopicRegistry.h>
 #include <mafCoreSingletons.h>
 #include <mafObject.h>
 #include <mafHierarchy.h>
