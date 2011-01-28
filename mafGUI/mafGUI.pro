@@ -17,7 +17,8 @@ SOURCES += mafGUIManager.cpp \
     mafTextEditWidget.cpp \
     mafTextHighlighter.cpp \
     mafGUIApplicationSettingsDialog.cpp \
-    mafGUIApplicationSettingsPage.cpp
+    mafGUIApplicationSettingsPage.cpp \
+    mafLoggerWidget.cpp
 HEADERS += mafGUI_global.h \
     mafGUIManager.h \
     mafGUIRegistration.h \
@@ -31,7 +32,8 @@ HEADERS += mafGUI_global.h \
     mafTextEditWidget.h \
     mafTextHighlighter.h \
     mafGUIApplicationSettingsDialog.h \
-    mafGUIApplicationSettingsPage.h
+    mafGUIApplicationSettingsPage.h \
+    mafLoggerWidget.h
 include(../mafInstallModule.pri)
 INCLUDEPATH += ../mafCore \
     ../mafEventBus \
