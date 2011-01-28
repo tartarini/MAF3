@@ -13,6 +13,7 @@
 #include "mafUILoaderQt.h"
 #include "mafTreeWidget.h"
 #include "mafTreeModel.h"
+#include "mafLoggerWidget.h"
 #include "mafTextEditWidget.h"
 #include "mafTextHighlighter.h"
 
@@ -30,6 +31,10 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const mafString code_locatio
 
     m_SettingsDialog = new mafGUIApplicationSettingsDialog();
 
+    m_Logger = new mafLoggerWidget(mafCodeLocation);
+
+    mafCore::mafMessageHandler::instance()->setActiveLogger(m_Logger);
+
     mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)");
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateMenuForSelectedVme(mafCore::mafObjectBase *)");
 
@@ -38,6 +43,7 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const mafString code_locatio
 }
 
 mafGUIManager::~mafGUIManager() {
+    mafDEL(m_Logger);
     mafDEL(m_UILoader);
 }
 
@@ -341,23 +347,9 @@ mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *par
 }
 
 mafTextEditWidget *mafGUIManager::createLogWidget(QWidget *parent) {
-    //syntax highlighter
-    mafTextHighlighter *hl = new mafTextHighlighter();
 
-    // create some rules
-    mafStringList keywordPatterns;
-    keywordPatterns << "\\bvme\\b" << "\\bmatrix\\b" << "\\bpose\\b"
-                    << "\\btimestamp\\b" << "\\name\\b" << "\\bDataVector\\b";
-
-    //generate some rules
-    int count = 0;
-    foreach (const QString &pattern, keywordPatterns) {
-        mafString keywordName = "keyword";
-        keywordName.append(mafString::number(count++));
-        hl->insertRule(keywordName, mafRegExp(pattern), hl->format("keywords"));
-    }
-
-    mafTextEditWidget *w = new mafTextEditWidget(hl, parent);
+    mafTextEditWidget *w = m_Logger->textWidgetLog();
+    w->setParent(parent);
     w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     w->enableEditing(false);
 
