@@ -36,13 +36,14 @@ mafVTKInteractorPicker::mafVTKInteractorPicker(const mafString code_location) : 
 }
 
 mafVTKInteractorPicker::~mafVTKInteractorPicker(){
+    mafEventBusManager::instance()->removeSignal(this, "maf.local.resources.interaction.vmePick");
     mafDEL(m_ParametricSurface);
 }
 
 void mafVTKInteractorPicker::initializeConnections() {
     this->createPipe();
 
-    mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePick");
+    //mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePick");
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
