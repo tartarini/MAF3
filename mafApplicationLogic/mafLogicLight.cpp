@@ -29,6 +29,9 @@ bool mafLogicLight::initialize() {
     // Register all the core objects into the object factory.
     mafCoreSingletons::mafSingletonsInitialize();
 
+    // install maf message handler
+    mafMessageHandler::instance()->installMessageHandler();
+
     // Initialize the event bus by asking its instance.
     m_EventBus = mafEventBusManager::instance();
 

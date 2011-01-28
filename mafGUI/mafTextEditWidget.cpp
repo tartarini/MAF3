@@ -39,16 +39,26 @@ void mafTextEditWidget::initialize() {
     }
 
     //sample test
-    m_TextEditor->setText("vme Path New! Don't hate us, matrix users. It turns out that the driver reported in millimeters, rather than the VRPN stated standard of meters. One of the users noticed this, so I've changed version 2.27 to be compliant to the standard. The good news is that it now matches all of the other trackers. The bad news is that you'll need to change your code if you relied on it being in mm.New! Version 7.27 switched to the new InterSense libraries. Previous versions used the old ones. The new code that was submitted is not backwards compatible with the old libraries. So you can (and must) upgrade your Intersense libraries for the new version");
+    //m_TextEditor->append("vme Path New! Don't hate us, matrix users. It turns out that the driver reported in millimeters, rather than the VRPN stated standard of meters. One of the users noticed this, so I've changed version 2.27 to be compliant to the standard. The good news is that it now matches all of the other trackers. The bad news is that you'll need to change your code if you relied on it being in mm.New! Version 7.27 switched to the new InterSense libraries. Previous versions used the old ones. The new code that was submitted is not backwards compatible with the old libraries. So you can (and must) upgrade your Intersense libraries for the new version");
     hboxLayout->addWidget(m_TextEditor);
 }
 
 mafTextEditWidget::~mafTextEditWidget() {
-    delete m_TextEditor;
+
+}
+
+void mafTextEditWidget::clear() {
+    m_TextEditor->clear();
+}
+
+void mafTextEditWidget::append(const mafString text) {
+    m_TextEditor->append(text);
 }
 
 void mafTextEditWidget::setHighlighter(QSyntaxHighlighter *highlighter) {
     REQUIRE(highlighter);
+
+    m_Highlighter = highlighter;
     m_Highlighter->setDocument(m_TextEditor->document());
 }
 

@@ -25,6 +25,7 @@ namespace mafGUI {
 class mafUILoaderQt;
 class mafTreeWidget;
 class mafTreeModel;
+class mafLoggerWidget;
 class mafTextEditWidget;
 class mafGUIApplicationSettingsDialog;
 class mafGUIApplicationSettingsPage;
@@ -185,6 +186,7 @@ private:
     bool m_ActionsCreated; ///< Flag that store the actions' creation.
 
     mafGUIApplicationSettingsDialog *m_SettingsDialog; ///< Settings dialog
+    mafLoggerWidget *m_Logger; ///< Logger
 
     QMainWindow *m_MainWindow; ///< Main window associated to the application.
     mafUILoaderQt *m_UILoader; ///< Class in charge to load the GUI.
