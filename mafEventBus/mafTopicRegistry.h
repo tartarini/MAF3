@@ -16,13 +16,12 @@
 // Includes list
 #include "mafEventDefinitions.h"
 
-/**
- Class name: mafTopicRegistry
- This singletone provides the registration of topic and topic owner in a hash.
- */
-
 namespace mafEventBus {
 
+/**
+  Class name: mafTopicRegistry
+  This singletone provides the registration of topic and topic owner in a hash.
+*/
 class MAFEVENTBUSSHARED_EXPORT mafTopicRegistry {
 public:
     /// Return an instance of the event bus.
