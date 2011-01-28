@@ -65,8 +65,8 @@ private:
     mafMap<mafString, mafTextCharFormat> m_Formats; ///< container with the entire list of rules
 
     //sample for multiline comment
-    mafRegExp m_CommentStartExpression;
-    mafRegExp m_CommentEndExpression;
+    mafRegExp m_CommentStartExpression; ///< variable which set the pattern for starting a comment
+    mafRegExp m_CommentEndExpression; ///< variable which set the pattern for ending a comment
 };
 
 } // end namespace
