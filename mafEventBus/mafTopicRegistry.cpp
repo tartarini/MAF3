@@ -31,11 +31,23 @@ bool mafTopicRegistry::registerTopic(const mafString topic, const QObject *owner
     }
     if(m_TopicHash.contains(topic)){
         //topic already registered
-        mafMsgWarning() << mafTr("Topic %1 already owned by %2").arg(topic, owner->metaObject()->className());
+        const QObject *obj = m_TopicHash.value(topic,NULL);
+        mafString className(obj->metaObject()->className());
+        mafMsgWarning() << mafTr("Topic %1 already owned by %2").arg(topic, className);
         return false;
     }
     m_TopicHash.insert(topic,owner);
     return true;
+}
+
+bool mafTopicRegistry::unregisterTopic(const mafString topic) {
+    bool result = false;
+    if(m_TopicHash.contains(topic)){
+        if (m_TopicHash.remove(topic) > 0) {
+            result = true;
+        }
+    }
+    return result;
 }
 
 const QObject *mafTopicRegistry::owner(const mafString topic) const {

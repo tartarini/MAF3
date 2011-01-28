@@ -10,6 +10,7 @@
  */
 
 #include "mafEventBusManager.h"
+#include "mafTopicRegistry.h"
 #include "mafNetworkConnectorQtSoap.h"
 #include "mafNetworkConnectorQXMLRPC.h"
 
@@ -70,12 +71,19 @@ void mafEventBusManager::initializeNetworkConnectors() {
 
 bool mafEventBusManager::addEventProperty(const mafEvent &props) const {
     bool result(false);
+    mafString topic = props[TOPIC].toString();
+    QObject *obj = props[OBJECT].value<QObject*>();
 
     if(props[TYPE].toInt() == mafEventTypeLocal) {
         // Local event dispatching.
         if(props[SIGTYPE].toInt() == mafSignatureTypeCallback) {
             result = m_LocalDispatcher->addObserver(props);
         } else {
+            //Add topic to the mafTopicRegistry
+            result = mafEventBus::mafTopicRegistry::instance()->registerTopic(topic, obj);
+            if(!result) {
+                return result;
+            }
             result = m_LocalDispatcher->registerSignal(props);
         }
     } else {
@@ -83,13 +91,16 @@ bool mafEventBusManager::addEventProperty(const mafEvent &props) const {
         if(props[SIGTYPE].toInt() == mafSignatureTypeCallback) {
             result = m_RemoteDispatcher->addObserver(props);
         } else {
+            //Add topic to the mafTopicRegistry
+            result = mafEventBus::mafTopicRegistry::instance()->registerTopic(topic, obj);
+            if(!result) {
+                return result;
+            }
             result = m_RemoteDispatcher->registerSignal(props);
         }
     }
 
-    QObject *obj = props[OBJECT].value<QObject*>();
     result = connect(obj, SIGNAL(destroyed()), this, SLOT(detachObjectFromBus()));
-
     return result;
 }
 
@@ -115,6 +126,12 @@ void mafEventBusManager::removeSignal(const QObject *obj, mafString topic, bool 
     if(obj == NULL) {
         return;
     }
+    //remove topic from the mafTopicRegistry
+    bool result = mafEventBus::mafTopicRegistry::instance()->unregisterTopic(topic);
+    if(result) {
+        return;
+    }
+
     m_LocalDispatcher->removeSignal(obj, topic, qt_disconnect);
     m_RemoteDispatcher->removeSignal(obj, topic, qt_disconnect);
 }

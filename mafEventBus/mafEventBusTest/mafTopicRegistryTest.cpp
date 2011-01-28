@@ -99,6 +99,16 @@ void mafTopicRegistryTest::mafTopicRegistryOwnerTest() {
     result = m_TopicRegistry->isTopicRegistered("maf.local.eventBus.TopicNotRegisterd");
     QVERIFY(!result);
 
+    // print 3 topic
+    m_TopicRegistry->dump();
+
+    result = m_TopicRegistry->unregisterTopic(topic);
+    QVERIFY(result);
+
+    result = m_TopicRegistry->unregisterTopic("maf.local.eventBus.TopicNotRegisterd");
+    QVERIFY(!result);
+
+    // print 2 topic
     m_TopicRegistry->dump();
 }
 
