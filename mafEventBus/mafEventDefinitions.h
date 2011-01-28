@@ -65,10 +65,7 @@
 #define mafRegisterLocalSignal(topic, sender, signature) \
     {\
         mafEventBus::mafEvent *properties = new mafEventBus::mafEvent(topic, mafEventBus::mafEventTypeLocal, mafEventBus::mafSignatureTypeSignal, static_cast<QObject*>(sender), signature); \
-        bool ok = mafEventBus::mafTopicRegistry::instance()->registerTopic(topic, sender);\
-        if(ok) {\
-            ok = mafEventBus::mafEventBusManager::instance()->addEventProperty(*properties);\
-             }\
+        bool ok = mafEventBus::mafEventBusManager::instance()->addEventProperty(*properties);\
         if(!ok) {\
             mafMsgWarning("%s", mafTr("Some problem occourred during the signal registration with ID '%1'.").arg(topic).toAscii().data());\
             if(properties) {delete properties; properties = NULL;} \
