@@ -282,6 +282,7 @@ void mafEventBusManagerTest::eventBusRegistrationNotificationTest() {
     int status = m_ObjTestObserver->var();
     QVERIFY(status == ObjTestSender->var());
     delete ObjTestSender;
+    mafEventBusManager::instance()->removeSignal(ObjTestSender, setValueID);
 }
 
 void mafEventBusManagerTest::eventBusWithReturnArgumentTest() {
