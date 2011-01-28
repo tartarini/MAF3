@@ -20,7 +20,7 @@ mafTextHighlighter::mafTextHighlighter(QTextDocument *parent):mafSyntaxHighlight
 void mafTextHighlighter::initialize() {
     //initialize several Formats
     mafTextCharFormat format;
-    format.setForeground(Qt::darkBlue);
+    format.setForeground(Qt::darkGreen);
     format.setFontWeight(QFont::Bold);
     m_Formats.insert("keywords", format);
 
