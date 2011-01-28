@@ -34,6 +34,9 @@ public:
     /// Register a new topic.
     bool registerTopic(const mafString topic, const QObject *owner);
 
+    /// Unregister a topic.
+    bool unregisterTopic(const mafString topic);
+
     /// Return the owner of a topic.
     const QObject *owner(const mafString topic) const;
 
