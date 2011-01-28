@@ -40,6 +40,12 @@ public:
     /// load Highlight Dictionary from CSV file
     void loadDictionaryFromCSV(const mafString &csvFile);
 
+    /// clear text area.
+    void clear();
+
+    /// append Text in the area.
+    void append(const mafString text);
+
 private:
     /// set the layout of this composite widget
     void initialize();
