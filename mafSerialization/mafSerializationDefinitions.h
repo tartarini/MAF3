@@ -53,6 +53,17 @@ typedef enum {
     mafSerializerOpenModeBidirectional
 } mafSerializerOpenMode;
 
+///< Enum that identify the data type
+typedef enum {
+    mafUnsignedChar,
+    mafChar,
+    mafUnsignedShort,
+    mafShort,
+    mafUnsignedInt,
+    mafInt,
+    mafFloat,
+    mafDouble
+} mafDataType;
 
 } // mafSerialization
 
