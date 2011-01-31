@@ -62,7 +62,9 @@ void mafTopicRegistry::dump() {
     mafHash<mafString, const QObject*>::const_iterator i = m_TopicHash.constBegin();
     while (i != m_TopicHash.constEnd()) {
         const QObject *obj = i.value();
-        mafMsgDebug() << "Topic: " << i.key() << "   Owner: " << obj->metaObject()->className();
+        mafString key =  i.key();
+        mafString name = obj->metaObject()->className();
+        mafMsgDebug() << "Topic: " << key << "   Owner: "  << name;
         ++i;
     }
 }
