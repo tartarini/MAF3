@@ -62,6 +62,7 @@ mafEventBusManager* mafEventBusManager::instance() {
 }
 
 void mafEventBusManager::shutdown() {
+    mafEventBus::mafTopicRegistry::instance()->shutdown();
 }
 
 void mafEventBusManager::initializeNetworkConnectors() {
