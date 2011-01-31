@@ -48,6 +48,8 @@ private slots:
     void mafVMEManagerAllocationTest();
     /// VME managing test.
     void vmeManagingTest();
+    /// create hierarchy Test
+    void createHierarchyTest();
 
 private:
     mafVMEManager *m_VMEManager;
@@ -84,6 +86,12 @@ void mafVMEManagerTest::vmeManagingTest() {
 
     mafDEL(vme1);
     mafDEL(vme2);
+}
+
+void mafVMEManagerTest::createHierarchyTest() {
+    // this test is a smke test for verifying that manager doesn't crash.
+    // createHierarchy is a private method
+    m_EventBus->notifyEvent("maf.local.resources.hierarchy.create", mafEventTypeLocal);
 }
 
 MAF_REGISTER_TEST(mafVMEManagerTest);
