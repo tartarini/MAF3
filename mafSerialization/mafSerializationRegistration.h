@@ -16,6 +16,8 @@
 #include "mafSerialization_global.h"
 #include "mafCodecRawBinary.h"
 #include "mafCodecRawASCII.h"
+#include "mafCodecVolume.h"
+#include "mafCodecBrickedVolume.h"
 #include "mafCodecXML.h"
 #include "mafSerializerFileSystem.h"
 
@@ -32,6 +34,8 @@ class MAFSERIALIZATIONSHARED_EXPORT mafSerializationRegistration {
     static void registerSerializationObjects() {
         mafRegisterObject(mafSerialization::mafCodecRawBinary);
         mafRegisterObject(mafSerialization::mafCodecRawASCII);
+        mafRegisterObject(mafSerialization::mafCodecVolume);
+        mafRegisterObject(mafSerialization::mafCodecBrickedVolume);
         mafRegisterObject(mafSerialization::mafCodecXML);
         mafRegisterObject(mafSerialization::mafSerializerFileSystem);
     }
