@@ -31,6 +31,8 @@ mafSerializationManager::mafSerializationManager(const mafString code_location) 
     initializeConnections();
 
     plugCodec("*","RAW","mafSerialization::mafCodecRawBinary");
+    plugCodec("*","VOLUME_LOD","mafSerialization::mafCodecRawVolume");
+    plugCodec("*","VOLUME_BRICKED_LOD","mafSerialization::mafCodecBrickedVolume");
     plugSerializer("file", "mafSerialization::mafSerializerFileSystem");
 }
 
