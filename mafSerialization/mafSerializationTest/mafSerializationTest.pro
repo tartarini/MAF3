@@ -11,12 +11,15 @@ SOURCES += main.cpp \
     mafCodecXMLTest.cpp \
     mafCodecTest.cpp \
     mafSerializerTest.cpp \
-    mafCodecRawASCIITest.cpp
+    mafCodecRawASCIITest.cpp \
+    mafCSVReaderTest.cpp
 HEADERS += 
 include(../../mafInstallTest.pri)
 LIBS += -L$$DESTDIR \
-    -lmafSerialization$$BUILD_EXT -lmafCore$$BUILD_EXT -lmafEventBus$$BUILD_EXT
-INCLUDEPATH += ../../mafCore ../../mafEventBus
-
+    -lmafSerialization$$BUILD_EXT \
+    -lmafCore$$BUILD_EXT \
+    -lmafEventBus$$BUILD_EXT
+INCLUDEPATH += ../../mafCore \
+    ../../mafEventBus
 include(../../mafImportQXMLRPC.pri)
 include(../../mafImportQtSoap.pri)
