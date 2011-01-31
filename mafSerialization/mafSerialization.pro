@@ -17,7 +17,9 @@ SOURCES += mafSerializationManager.cpp \
     mafSerializerFileSystem.cpp \
     mafSerializationRegistration.cpp \
     mafCodecRawASCII.cpp \
-    mafCodecRaw.cpp
+    mafCodecRaw.cpp \
+    mafCodecBrickedVolume.cpp \
+    mafCodecVolume.cpp
 HEADERS += mafSerializationManager.h \
     mafSerialization_global.h \
     mafSerializationDefinitions.h \
@@ -28,7 +30,9 @@ HEADERS += mafSerializationManager.h \
     mafSerializerFileSystem.h \
     mafSerializationRegistration.h \
     mafCodecRawASCII.h \
-    mafCodecRaw.h
+    mafCodecRaw.h \
+    mafCodecBrickedVolume.h \
+    mafCodecVolume.h
 include(../mafInstallModule.pri)
 INCLUDEPATH += ../mafEventBus
 LIBS += -L$$DESTDIR \
