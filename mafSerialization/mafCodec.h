@@ -22,7 +22,7 @@ namespace mafSerialization {
  Base class that define the interface for MAF3 codec.
  @sa mafCodecRawBinary, mafSerializationManager
  */
-class MAFSERIALIZATIONSHARED_EXPORT mafCodec : public mafCore::mafObjectBase {
+    class MAFSERIALIZATIONSHARED_EXPORT mafCodec : public mafCore::mafObjectBase {
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);

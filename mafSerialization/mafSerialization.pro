@@ -18,6 +18,8 @@ SOURCES += mafSerializationManager.cpp \
     mafSerializationRegistration.cpp \
     mafCodecRawASCII.cpp \
     mafCodecRaw.cpp \
+    mafCodecBrickedVolume.cpp \
+    mafCodecVolume.cpp \
     mafCSVReader.cpp \
     mafCodecCSV.cpp
 HEADERS += mafSerializationManager.h \
@@ -31,6 +33,8 @@ HEADERS += mafSerializationManager.h \
     mafSerializationRegistration.h \
     mafCodecRawASCII.h \
     mafCodecRaw.h \
+    mafCodecBrickedVolume.h \
+    mafCodecVolume.h \
     mafCSVReader.h \
     mafCodecCSV.h
 include(../mafInstallModule.pri)

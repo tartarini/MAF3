@@ -89,7 +89,7 @@ void mafQAManager::printOnConsole() {
 void mafQAManager::printOnFile(mafString filename) {
     mafFile f(filename);
     if(!f.open(QIODevice::WriteOnly)) {
-        mafMsgCritical("%s", mafTr("Unable to open file %1").arg(filename).toAscii().data());
+        mafMsgCritical("%s", mafTr("Unable to open file %1").arg(filename).toAscii().constData());
     }
     mafTextStream dataStream(&f);
     dataStream << *m_ResultBuffer;

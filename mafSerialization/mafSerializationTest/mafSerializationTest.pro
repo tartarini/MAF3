@@ -12,6 +12,8 @@ SOURCES += main.cpp \
     mafCodecTest.cpp \
     mafSerializerTest.cpp \
     mafCodecRawASCIITest.cpp \
+    mafCodecBrickedVolumeTest.cpp \
+    mafCodecVolumeTest.cpp \
     mafCSVReaderTest.cpp
 HEADERS += 
 include(../../mafInstallTest.pri)
