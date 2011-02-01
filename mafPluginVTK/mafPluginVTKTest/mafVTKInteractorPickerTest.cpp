@@ -134,6 +134,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //// to "wrap" the 'vtkCubeSource' of type vtkPolyData just simply use the code below.
     mafContainer<vtkAlgorithmOutput> dataSourceContainer;
     dataSourceContainer = dataSource->GetOutputPort(0);
+    //! </snippet>
 
     //Insert data into VME
     mafVME *vme = mafNEW(mafResources::mafVME);
