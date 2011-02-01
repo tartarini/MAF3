@@ -32,8 +32,8 @@ namespace mafSerialization {
  * 
  * To decode the bricked raw volume, the memory limit is first used to determine which level of the 
  * volume data to be loaded, and then check the meta information of the brick and obtain the brick 
- * position information. If the voxels in the bick are all equal, read only one voxel value from 
- * the bev file using the brick position and fill the bick with the read voxel value. Otherwise, 
+ * position information. If the voxels in the brick are all equal, read only one voxel value from
+ * the bev file using the brick position and fill the brick with the read voxel value. Otherwise,
  * read the whole voxels of the brick from the bv file using the brick position.
  * 
  * @sa mafCodec, mafSerializationManager
