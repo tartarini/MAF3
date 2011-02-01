@@ -26,9 +26,7 @@ namespace mafPluginVTK {
 Class name: mafVTKParametricSurfaceCube
 This class represent a VTK cube surface with modificable parametrs.
 */
-
-    class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceCube : public mafPluginVTK::mafVTKParametricSurface
-{
+class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceCube : public mafPluginVTK::mafVTKParametricSurface {
     Q_OBJECT
     Q_PROPERTY(double cubeXLength READ cubeXLength WRITE setCubeXLength)
     Q_PROPERTY(double cubeYLength READ cubeYLength WRITE setCubeYLength)
@@ -37,10 +35,10 @@ This class represent a VTK cube surface with modificable parametrs.
     mafSuperclassMacro(mafPluginVTK::mafVTKParametricSurface);
 
 public:
-    ///< Object constructor.
+    /// Object constructor.
     mafVTKParametricSurfaceCube(const mafString code_location = "");
 
-    ///< Object destructor.
+    /// Object destructor.
     ~mafVTKParametricSurfaceCube();
 
 public slots:

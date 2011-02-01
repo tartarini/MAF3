@@ -26,9 +26,7 @@ namespace mafPluginVTK {
 Class name: mafVTKParametricSurfaceSphere
 This class represent a VTK sphere surface with modificable parametrs.
 */
-
-    class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceSphere : public mafPluginVTK::mafVTKParametricSurface
-{
+class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceSphere : public mafPluginVTK::mafVTKParametricSurface {
     Q_OBJECT
     Q_PROPERTY(double sphereRadius READ sphereRadius WRITE setSphereRadius)
     Q_PROPERTY(double spherePhiRes READ spherePhiResolution WRITE setSpherePhiResolution)
@@ -37,10 +35,10 @@ This class represent a VTK sphere surface with modificable parametrs.
     mafSuperclassMacro(mafPluginVTK::mafVTKParametricSurface);
 
 public:
-    ///< Object constructor.
+    /// Object constructor.
     mafVTKParametricSurfaceSphere(const mafString code_location = "");
 
-    ///< Object destructor.
+    /// Object destructor.
     ~mafVTKParametricSurfaceSphere();
 
 public slots:

@@ -26,7 +26,6 @@ namespace mafPluginVTK {
 Class name: mafVTKParametricSurfaceCone
 This class represent a VTK cone surface with modificable parametrs.
 */
-
 class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceCone : public mafPluginVTK::mafVTKParametricSurface
 {
     Q_OBJECT
@@ -38,10 +37,10 @@ class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceCone : public mafPluginVT
     mafSuperclassMacro(mafPluginVTK::mafVTKParametricSurface);
 
 public:
-    ///< Object constructor.
+    /// Object constructor.
     mafVTKParametricSurfaceCone(const mafString code_location = "");
 
-    ///< Object destructor.
+    /// Object destructor.
     ~mafVTKParametricSurfaceCone();
 
 public slots:

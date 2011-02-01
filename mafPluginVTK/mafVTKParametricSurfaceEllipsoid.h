@@ -28,9 +28,7 @@ namespace mafPluginVTK {
 Class name: mafVTKParametricSurfaceEllipsoid
 This class represent a VTK ellipsoid surface with modificable parametrs.
 */
-
-class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceEllipsoid : public mafPluginVTK::mafVTKParametricSurface
-{
+class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceEllipsoid : public mafPluginVTK::mafVTKParametricSurface {
     Q_OBJECT
     Q_PROPERTY(double ellipsoidRadius READ ellipsoidRadius WRITE setEllipsoidRadius)
     Q_PROPERTY(double ellipsoidPhiRes READ ellipsoidPhiRes WRITE setEllipsoidPhiRes)
@@ -42,10 +40,10 @@ class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceEllipsoid : public mafPlu
     mafSuperclassMacro(mafPluginVTK::mafVTKParametricSurface);
 
 public:
-    ///< Object constructor.
+    /// Object constructor.
     mafVTKParametricSurfaceEllipsoid(const mafString code_location = "");
 
-    ///< Object destructor.
+    /// Object destructor.
     ~mafVTKParametricSurfaceEllipsoid();
 
 public slots:

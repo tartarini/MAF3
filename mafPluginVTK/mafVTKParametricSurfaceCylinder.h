@@ -26,9 +26,7 @@ namespace mafPluginVTK {
 Class name: mafVTKParametricSurfaceCylinder
 This class represent a VTK cylinder surface with modificable parametrs.
 */
-
-class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceCylinder : public mafPluginVTK::mafVTKParametricSurface
-{
+class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceCylinder : public mafPluginVTK::mafVTKParametricSurface {
     Q_OBJECT
     Q_PROPERTY(double cylinderHeight READ cylinderHeight WRITE setConeHeight)
     Q_PROPERTY(double cylinderRadius READ cylinderRadius WRITE setConeRadius)
@@ -37,10 +35,10 @@ class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceCylinder : public mafPlug
     mafSuperclassMacro(mafPluginVTK::mafVTKParametricSurface);
 
 public:
-    ///< Object constructor.
+    /// Object constructor.
     mafVTKParametricSurfaceCylinder(const mafString code_location = "");
 
-    ///< Object destructor.
+    /// Object destructor.
     ~mafVTKParametricSurfaceCylinder();
 
 public slots:
