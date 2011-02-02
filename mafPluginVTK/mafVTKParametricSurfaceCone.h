@@ -43,7 +43,7 @@ public:
     /// Object destructor.
     ~mafVTKParametricSurfaceCone();
 
-public slots:
+protected slots:
     /// Set the height of the parametric cone.
     void setConeHeight(double coneHeight);
 

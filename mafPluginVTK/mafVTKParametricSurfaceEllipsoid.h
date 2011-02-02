@@ -46,7 +46,7 @@ public:
     /// Object destructor.
     ~mafVTKParametricSurfaceEllipsoid();
 
-public slots:
+protected slots:
 
     /// Set the radius of the parametric ellipsoid.
     void setEllipsoidRadius(double ellipsoidRadius);

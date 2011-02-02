@@ -41,7 +41,7 @@ public:
     /// Object destructor.
     ~mafVTKParametricSurfaceSphere();
 
-public slots:
+protected slots:
     /// Set the radius for the parametric sphere.
     void setSphereRadius(double radius);
 

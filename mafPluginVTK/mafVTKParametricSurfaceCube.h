@@ -41,7 +41,7 @@ public:
     /// Object destructor.
     ~mafVTKParametricSurfaceCube();
 
-public slots:
+protected slots:
     /// Set the X lenght for the parametric cube.
     void setCubeXLength(double XLength);
 
