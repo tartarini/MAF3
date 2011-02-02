@@ -38,6 +38,7 @@ class mafLogicLightTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafCore::mafMessageHandler::instance()->installMessageHandler();
         m_LogicLight = mafNEW(mafApplicationLogic::mafLogicLight);
     }
 
