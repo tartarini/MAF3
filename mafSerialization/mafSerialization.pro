@@ -19,9 +19,9 @@ SOURCES += mafSerializationManager.cpp \
     mafCodecRawASCII.cpp \
     mafCodecRaw.cpp \
     mafCodecBrickedVolume.cpp \
-    mafCodecVolume.cpp \
-    mafCSVReader.cpp \
-    mafCodecCSV.cpp
+    mafCodecVolume.cpp
+    #mafCSVReader.cpp \
+    #mafCodecCSV.cpp
 HEADERS += mafSerializationManager.h \
     mafSerialization_global.h \
     mafSerializationDefinitions.h \
@@ -34,9 +34,9 @@ HEADERS += mafSerializationManager.h \
     mafCodecRawASCII.h \
     mafCodecRaw.h \
     mafCodecBrickedVolume.h \
-    mafCodecVolume.h \
-    mafCSVReader.h \
-    mafCodecCSV.h
+    mafCodecVolume.h
+   # mafCSVReader.h \
+   # mafCodecCSV.h
 include(../mafInstallModule.pri)
 INCLUDEPATH += ../mafEventBus
 LIBS += -L$$DESTDIR \
