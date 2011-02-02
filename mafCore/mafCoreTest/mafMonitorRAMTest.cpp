@@ -32,10 +32,12 @@ class mafMonitorRAMTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafCore::mafMessageHandler::instance()->installMessageHandler();
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
+        mafCore::mafMessageHandler::instance()->shutdown();
     }
 
     /// register new object in factory test case.
