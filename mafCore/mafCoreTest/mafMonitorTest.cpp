@@ -49,7 +49,6 @@ class mafMonitorTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
         m_Monitor = mafNEW(testMonitorImplement);
     }
 

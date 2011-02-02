@@ -34,7 +34,6 @@ class mafVisitorFindObjectsByHashCodeTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
         m_ObjTestVar1 = mafNEW(mafCore::mafObject);
         m_ObjTestVar2 = mafNEW(mafCore::mafObject);
     }

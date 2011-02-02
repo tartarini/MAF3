@@ -58,7 +58,6 @@ class mafCoreRegistrationTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
         mafCoreRegistration::registerCoreObjects();
         m_Object = NULL;
     }

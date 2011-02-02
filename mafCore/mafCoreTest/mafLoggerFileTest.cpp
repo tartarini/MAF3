@@ -37,18 +37,14 @@ class mafLoggerFileTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
         //! <snippet>
         m_Logger = mafNEW(mafCore::mafLoggerFile);
-        m_DefaultLogger = mafMessageHandler::instance()->activeLogger();
-        mafMessageHandler::instance()->setActiveLogger(m_Logger);
         //! </snippet>
     }
 
     /// Cleanup tes variables memory allocation.
     void cleanupTestCase() {
-        mafMessageHandler::instance()->setActiveLogger(m_DefaultLogger);
-        delete m_Logger;
+        mafDEL(m_Logger);
     }
 
     /// create new object and check that is not NULL test case.
@@ -58,7 +54,7 @@ private slots:
     void clearLogHistoryTest();
 
     /// log a string into the log file.
-    void logMesageTest();
+    void logMessageTest();
 
 private:
     mafLoggerFile *m_Logger; ///< Test variable
@@ -71,7 +67,7 @@ void mafLoggerFileTest::mafLoggerFileConstructorTest() {
     QVERIFY(QFile::exists(log_file));
 }
 
-void mafLoggerFileTest::logMesageTest() {
+void mafLoggerFileTest::logMessageTest() {
     mafString log_file = m_Logger->lastLogFile();
     QFileInfo fInfo(log_file);
     QVERIFY(fInfo.size() == 0); // Empty file at begin.

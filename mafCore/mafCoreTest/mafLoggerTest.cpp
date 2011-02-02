@@ -64,7 +64,6 @@ class mafLoggerTest : public QObject {
 private slots:
     ///!brief Initialize test variables
     void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
         m_Logger = mafNEW(testLoggerCustom);
     }
 

@@ -36,11 +36,8 @@ class mafLoggerBufferTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
         //! <snippet>
         m_Logger = mafNEW(mafCore::mafLoggerBuffer);
-        m_DefaultLogger = mafMessageHandler::instance()->activeLogger();
-        mafMessageHandler::instance()->setActiveLogger(m_Logger);
         //! </snippet>
     }
 
@@ -49,7 +46,6 @@ private slots:
     void cleanupTestCase() {
         //! <snippet>
         delete m_Logger;
-        mafMessageHandler::instance()->setActiveLogger(m_DefaultLogger);
         //! </snippet>
     }
 

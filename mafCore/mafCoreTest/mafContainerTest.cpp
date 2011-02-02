@@ -68,7 +68,6 @@ class mafContainerTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
     }
 
     /// Cleanup tes variables memory allocation.

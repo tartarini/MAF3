@@ -33,7 +33,6 @@ class mafObjectBaseTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
         m_ObjTestVar = mafNEW(mafCore::mafObjectBase);
     }
 

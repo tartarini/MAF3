@@ -43,6 +43,7 @@ private slots:
 
     /// Cleanup tes variables memory allocation.
     void cleanupTestCase() {
+        m_Handler->shutdown();
     }
 
     /// create new object and check that is not NULL test case.

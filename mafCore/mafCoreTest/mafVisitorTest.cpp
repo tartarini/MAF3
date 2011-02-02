@@ -47,7 +47,6 @@ class mafVisitorTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
         m_Object = mafNEW(mafCore::mafObject);
         m_Object->setObjectName("Test");
         m_VisitorImplement = mafNEW(testVisitorImplement);
