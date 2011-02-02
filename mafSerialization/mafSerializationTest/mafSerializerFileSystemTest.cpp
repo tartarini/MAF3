@@ -42,6 +42,7 @@ private slots:
     void cleanupTestCase() {
         mafFile::remove(m_TestURL);
         delete m_Serializer;
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafSerializerFileSystem allocation test case.

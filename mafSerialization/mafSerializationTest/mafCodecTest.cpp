@@ -84,6 +84,7 @@ private slots:
     /// Cleanup tes variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_Codec);
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafCodec allocation test case.

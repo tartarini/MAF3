@@ -49,6 +49,7 @@ private slots:
         mafDEL(m_ObjectTest);
         mafDEL(m_CodecXML);
         m_List.clear();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafCodecXML allocation test case.

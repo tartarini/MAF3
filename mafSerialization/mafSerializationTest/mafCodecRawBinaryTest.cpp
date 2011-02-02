@@ -50,6 +50,7 @@ private slots:
         mafDEL(m_ObjectTest);
         mafDEL(m_CodecRaw);
         m_List.clear();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafCodecRawBinary allocation test case.

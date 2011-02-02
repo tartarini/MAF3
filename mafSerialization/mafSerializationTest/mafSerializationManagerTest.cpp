@@ -96,6 +96,7 @@ private slots:
         mafDEL(m_CustomManager);
         m_SerializationManager->shutdown();
         mafEventBusManager::instance()->shutdown();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// Test library loading
