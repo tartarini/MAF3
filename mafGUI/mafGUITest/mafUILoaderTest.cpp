@@ -79,9 +79,9 @@ private slots:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        mafEventBusManager::instance()->shutdown();
         delete m_UILoader;
         m_UILoader = NULL;
+       mafEventBusManager::instance()->shutdown();
     }
 
     /// mafUILoader allocation test case.

@@ -38,6 +38,8 @@ private slots:
     void cleanupTestCase() {
         mafDEL(m_GUIManager);
         delete m_MainWin;
+        mafEventBus::mafEventBusManager::instance()->shutdown();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// allocation test case.
