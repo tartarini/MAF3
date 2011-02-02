@@ -20,7 +20,7 @@
 #include "mafCodecBrickedVolume.h"
 #include "mafCodecXML.h"
 #include "mafSerializerFileSystem.h"
-#include "mafCSVReader.h"
+//#include "mafCSVReader.h"
 
 namespace mafSerialization {
 
@@ -40,7 +40,7 @@ class MAFSERIALIZATIONSHARED_EXPORT mafSerializationRegistration {
         mafRegisterObject(mafSerialization::mafCodecXML);
         mafRegisterObject(mafSerialization::mafSerializerFileSystem);
 
-        mafRegisterObject(mafSerialization::mafCSVReader);
+        //mafRegisterObject(mafSerialization::mafCSVReader);
     }
 
 //    static void registerSerializationCustomObjects() {
