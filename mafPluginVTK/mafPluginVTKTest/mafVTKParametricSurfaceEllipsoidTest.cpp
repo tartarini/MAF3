@@ -69,6 +69,7 @@ private slots:
         mafDEL(m_DataSet);
         mafDEL(m_VME);
         mafDEL(m_ParametricEllipsoid);
+        mafMessageHandler::instance()->shutdown();
     }
 
    /// Test Set/Get method of parametric surface

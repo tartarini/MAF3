@@ -72,6 +72,7 @@ private slots:
     void cleanupTestCase() {
         mafDEL(m_VME);
         mafEventBusManager::instance()->shutdown();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// Test the creation of the vtkActor

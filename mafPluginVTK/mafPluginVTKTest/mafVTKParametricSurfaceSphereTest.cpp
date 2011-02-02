@@ -69,6 +69,7 @@ private slots:
         mafDEL(m_DataSet);
         mafDEL(m_VME);
         mafDEL(m_ParametricSphere);
+        mafMessageHandler::instance()->shutdown();
     }
 
    /// Test Set/Get method of tparametric surface

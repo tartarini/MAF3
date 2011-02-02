@@ -100,6 +100,7 @@ private slots:
 
         mafDEL(m_VME);
         mafDEL(m_VisualPipeSelection);
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// Allocation test for the mafVisualPipeSelection.

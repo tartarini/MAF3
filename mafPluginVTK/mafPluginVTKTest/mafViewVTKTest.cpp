@@ -121,6 +121,7 @@ private slots:
         m_DataSource->Delete();
         m_DataSourceMoved->Delete();
         mafResources::mafVMEManager::instance()->shutdown();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafViewVTK allocation test case.

@@ -78,6 +78,7 @@ private slots:
         delete m_UILoader;
         m_UILoader = NULL;
         mafEventBusManager::instance()->shutdown();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafUILoader allocation test case.
