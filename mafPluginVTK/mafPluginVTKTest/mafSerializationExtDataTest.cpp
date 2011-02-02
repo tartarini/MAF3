@@ -99,11 +99,11 @@ void testExtCustomManager::createdMemento(mafCore::mafMemento *memento) {
     mafDEL(returnVME);
 }
 
+
 /**
  Class name: mafSerializationExtDataTest
  This class implements the test suite to test serialization mechanism with VTK lib.
  */
-
 
 class mafSerializationExtDataTest : public QObject {
     Q_OBJECT
