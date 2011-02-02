@@ -19,13 +19,12 @@ void mafCoreSingletons::mafSingletonsInitialize() {
     mafObjectRegistry::instance();
     mafIdProvider::instance();
     mafObjectFactory::instance();
-    mafMessageHandler::instance();
+    mafMessageHandler::instance()->installMessageHandler();;
     mafCoreRegistration::registerCoreObjects();
 }
 
 void mafCoreSingletons::mafSingletonsShutdown() {
     mafMessageHandler::instance()->shutdown();
-    qInstallMsgHandler(0); ///< set the default logger of qt
     mafObjectFactory::instance()->shutdown();
     mafIdProvider::instance()->shutdown();
 }
