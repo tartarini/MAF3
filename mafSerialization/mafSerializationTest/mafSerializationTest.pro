@@ -13,8 +13,8 @@ SOURCES += main.cpp \
     mafSerializerTest.cpp \
     mafCodecRawASCIITest.cpp \
     mafCodecBrickedVolumeTest.cpp \
-    mafCodecVolumeTest.cpp \
-    mafCSVReaderTest.cpp
+    mafCodecVolumeTest.cpp
+    #mafCSVReaderTest.cpp
 HEADERS += 
 include(../../mafInstallTest.pri)
 LIBS += -L$$DESTDIR \
