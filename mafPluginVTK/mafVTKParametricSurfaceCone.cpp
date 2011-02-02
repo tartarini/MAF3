@@ -24,7 +24,7 @@ using namespace mafPluginVTK;
 mafVTKParametricSurfaceCone::mafVTKParametricSurfaceCone(const mafString code_location) : mafPluginVTK::mafVTKParametricSurface(code_location), m_ConeSource(NULL) {
     m_ConeHeight = 2.0;
     m_ConeRadius = 1.0;
-    m_ConeRes = 10.0;
+    m_ConeRes = 2.0;
     m_ConeCapping = 1;
 
     m_ConeSource = vtkConeSource::New();

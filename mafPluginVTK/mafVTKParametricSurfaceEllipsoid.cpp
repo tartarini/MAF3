@@ -25,8 +25,8 @@ using namespace mafPluginVTK;
 
 mafVTKParametricSurfaceEllipsoid::mafVTKParametricSurfaceEllipsoid(const mafString code_location) : mafPluginVTK::mafVTKParametricSurface(code_location), m_EllipsoidSource(NULL), m_Ptf(NULL) {
     m_EllipsoidRadius = 1.0;
-    m_EllipsoidPhiRes = 10.0;
-    m_EllipsoidTheRes = 10.0;
+    m_EllipsoidPhiRes = 20.0;
+    m_EllipsoidTheRes = 20.0;
 
     m_EllipsoidXLenght = 1.0;
     m_EllipsoidYLenght = 2.0;

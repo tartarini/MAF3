@@ -123,13 +123,13 @@ void mafVTKParametricSurfaceConeTest::SetGetTest() {
     m_ParametricCone->setCenter(newCenter);
     m_ParametricCone->setProperty("coneHeight", 20);
     m_ParametricCone->setProperty("coneRadius", 10);
-    m_ParametricCone->setProperty("coneRes", 5);
+    m_ParametricCone->setProperty("coneRes", 10);
     m_ParametricCone->setProperty("coneCapping", 0);
 
     //Check if parameters had changed.
     QCOMPARE(m_ParametricCone->property("coneHeight").toDouble(), 20.0);
     QCOMPARE(m_ParametricCone->property("coneRadius").toDouble(), 10.0);
-    QCOMPARE(m_ParametricCone->property("coneRes").toDouble(), 5.0);
+    QCOMPARE(m_ParametricCone->property("coneRes").toDouble(), 10.0);
     QCOMPARE(m_ParametricCone->property("coneCapping").toInt(), 0);
 
     QCOMPARE(m_ParametricCone->center()[0], 10.0);

@@ -121,15 +121,15 @@ void mafVTKParametricSurfaceSphereTest::SetGetTest() {
 
     //Change parameters of the sphere.
     m_ParametricSphere->setCenter(newCenter);
-    m_ParametricSphere->setProperty("sphereTheRes", 20);
-    m_ParametricSphere->setProperty("spherePhiRes", 20);
+    m_ParametricSphere->setProperty("sphereTheRes", 10);
+    m_ParametricSphere->setProperty("spherePhiRes", 10);
     m_ParametricSphere->setProperty("sphereRadius", 5);
 
 
     //Check if parameters had changed.
     QCOMPARE(m_ParametricSphere->property("sphereRadius").toDouble(), 5.0);
-    QCOMPARE(m_ParametricSphere->property("sphereTheRes").toDouble(), 20.0);
-    QCOMPARE(m_ParametricSphere->property("spherePhiRes").toDouble(), 20.0);
+    QCOMPARE(m_ParametricSphere->property("sphereTheRes").toDouble(), 10.0);
+    QCOMPARE(m_ParametricSphere->property("spherePhiRes").toDouble(), 10.0);
 
     QCOMPARE(m_ParametricSphere->center()[0], 10.0);
     QCOMPARE(m_ParametricSphere->center()[1], 5.0);
