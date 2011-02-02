@@ -19,7 +19,7 @@ void mafCoreSingletons::mafSingletonsInitialize() {
     mafObjectRegistry::instance();
     mafIdProvider::instance();
     mafObjectFactory::instance();
-    mafMessageHandler::instance()->installMessageHandler();;
+    mafMessageHandler::instance()->installMessageHandler();
     mafCoreRegistration::registerCoreObjects();
 }
 
