@@ -47,7 +47,6 @@ class mafLogicTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        mafCore::mafMessageHandler::instance()->installMessageHandler();
         // Calls needed to initialize settings' information.
         qApp->setOrganizationName("SCS");
         qApp->setOrganizationDomain("scsolutions.org");
