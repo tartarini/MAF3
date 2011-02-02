@@ -59,7 +59,7 @@ private:
     ~mafMessageHandler();
 
     mafLogMode m_LastLogMode; ///< Store the last log mode active for the current logger.
-    mafMsgHandlingFunction m_OldMsgHandler; ///< Message handler callback pointer.
+    mafStack<mafMsgHandlingFunction> m_OldMsgHandlerStack; ///< Stack of Message handler callback pointers.
     mafLogger *m_ActiveLogger; ///< Current active logging system to which will be forwarded all the incoming messages.
     mafLogger *m_DefaultLogger; ///< mafLoggerConsole is the default logger.
 };

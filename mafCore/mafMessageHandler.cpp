@@ -38,7 +38,7 @@ static void mafMessageHandlerOutput(mafMsgType type, const char *msg) {
 }
 
 
-mafMessageHandler::mafMessageHandler() : m_OldMsgHandler(0), m_ActiveLogger(NULL) {
+mafMessageHandler::mafMessageHandler() :  m_ActiveLogger(NULL) {
     m_DefaultLogger = mafNEW(mafCore::mafLoggerConsole);
     setActiveLogger(m_DefaultLogger);
 }
@@ -54,11 +54,16 @@ mafMessageHandler* mafMessageHandler::instance() {
 void mafMessageHandler::shutdown() {
     delete m_DefaultLogger;
     m_DefaultLogger = NULL;
-    qInstallMsgHandler(m_OldMsgHandler);
+    int numero = m_OldMsgHandlerStack.count();
+    if(!m_OldMsgHandlerStack.isEmpty()) {
+        qInstallMsgHandler(m_OldMsgHandlerStack.pop());
+    } else {
+        qInstallMsgHandler(0);
+    }
 }
 
 void mafMessageHandler::installMessageHandler() {
-    m_OldMsgHandler = qInstallMsgHandler(mafMessageHandlerOutput);
+    m_OldMsgHandlerStack.push(qInstallMsgHandler(mafMessageHandlerOutput));
 }
 
 void mafMessageHandler::testSuiteLogMode(bool on) {
