@@ -79,7 +79,7 @@ private slots:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        mafEventBusManager::instance()->removeSignal(m_UILoader);
+        mafEventBusManager::instance()->shutdown();
         delete m_UILoader;
         m_UILoader = NULL;
     }
