@@ -180,6 +180,7 @@ private slots:
         m_DataSource->Delete();
         m_DataSourceMoved->Delete();
         mafEventBusManager::instance()->shutdown();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafSerializationRawBinaryExtDataTest allocation test case.

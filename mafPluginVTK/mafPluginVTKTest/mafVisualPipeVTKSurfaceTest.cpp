@@ -110,6 +110,7 @@ private slots:
         mafDEL(m_DataSet);
         m_AppendData->Delete();
         mafDEL(m_VME);
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// Test the creation of the vtkActor

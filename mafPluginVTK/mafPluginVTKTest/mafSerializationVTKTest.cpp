@@ -101,7 +101,6 @@ private slots:
         res = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
         QVERIFY(res);
 
-        mafMessageHandler::instance()->installMessageHandler();
         mafEventBusManager::instance();
         m_CustomManager = mafNEW(testCustomManager);
 
@@ -122,6 +121,7 @@ private slots:
         mafDEL(m_Codec);
         m_DataSource->Delete();
         mafEventBusManager::instance()->shutdown();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// mafSerializationVTKTest allocation test case.

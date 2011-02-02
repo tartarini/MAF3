@@ -75,6 +75,7 @@ private slots:
     void cleanupTestCase() {
         mafDEL(m_DataSetCube);
         m_DataSource->Delete();
+        mafMessageHandler::instance()->shutdown();
     }
 
     /// Test calculation of VTK boundary.
