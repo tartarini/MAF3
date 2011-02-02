@@ -76,5 +76,5 @@ mafId mafIdProvider::idValue(const mafString id_name) const {
 }
 
 void mafIdProvider::shutdown() {
-
+    m_IdHash.clear();
 }
