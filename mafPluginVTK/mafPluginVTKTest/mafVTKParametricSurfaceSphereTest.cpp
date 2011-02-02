@@ -126,9 +126,9 @@ void mafVTKParametricSurfaceSphereTest::SetGetTest() {
 
 
     //Check if parameters had changed.
-    QCOMPARE(m_ParametricSphere->sphereRadius(), 5.0);
-    QCOMPARE(m_ParametricSphere->spherePhiResolution(), 20.0);
-    QCOMPARE(m_ParametricSphere->sphereThetaResolution(), 20.0);
+    QCOMPARE(m_ParametricSphere->property("sphereRadius").toDouble(), 5.0);
+    QCOMPARE(m_ParametricSphere->property("sphereTheRes").toDouble(), 20.0);
+    QCOMPARE(m_ParametricSphere->property("spherePhiRes").toDouble(), 20.0);
 
     QCOMPARE(m_ParametricSphere->center()[0], 10.0);
     QCOMPARE(m_ParametricSphere->center()[1], 5.0);
