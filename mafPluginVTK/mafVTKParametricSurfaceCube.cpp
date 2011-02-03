@@ -27,6 +27,7 @@ mafVTKParametricSurfaceCube::mafVTKParametricSurfaceCube(const mafString code_lo
 
     m_CubeSource = vtkCubeSource::New();
     m_Output = m_CubeSource->GetOutputPort();
+    this->updateSurface();
 }
 
 mafVTKParametricSurfaceCube::~mafVTKParametricSurfaceCube(){

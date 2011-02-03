@@ -43,6 +43,11 @@ public:
     /// Object destructor.
     ~mafVTKParametricSurfaceCone();
 
+public slots:
+
+    /// Update surface with parameters.
+    /*virtual*/ void updateSurface();
+
 protected slots:
     /// Set the height of the parametric cone.
     void setConeHeight(double coneHeight);
@@ -67,9 +72,6 @@ protected slots:
 
     /// Get cap flag of the parametric cone.
     int coneCapping();
-
-    /// Update surface with parameters.
-    /*virtual*/ void updateSurface();
 
 private:
     vtkConeSource *m_ConeSource; ///< Polydata representig a cone.

@@ -46,6 +46,11 @@ public:
     /// Object destructor.
     ~mafVTKParametricSurfaceEllipsoid();
 
+public slots:
+
+    /// Update surface with parameters.
+    /*virtual*/ void updateSurface();
+
 protected slots:
 
     /// Set the radius of the parametric ellipsoid.
@@ -84,8 +89,6 @@ protected slots:
     /// Get the Z lenght of the parametric ellipsoid.
     double ellipsoidZLenght();
 
-    /// Update surface with parameters.
-    /*virtual*/ void updateSurface();
 
 private:
     vtkSphereSource *m_EllipsoidSource; ///< Polydata representig a ellipsoid.

@@ -28,6 +28,7 @@ mafVTKParametricSurfaceSphere::mafVTKParametricSurfaceSphere(const mafString cod
 
     m_SphereSource = vtkSphereSource::New();
     m_Output = m_SphereSource->GetOutputPort();
+    this->updateSurface();
 }
 
 mafVTKParametricSurfaceSphere::~mafVTKParametricSurfaceSphere(){

@@ -41,6 +41,11 @@ public:
     /// Object destructor.
     ~mafVTKParametricSurfaceCube();
 
+public slots:
+
+    /// Update surface with parameters.
+    /*virtual*/ void updateSurface();
+
 protected slots:
     /// Set the X lenght for the parametric cube.
     void setCubeXLength(double XLength);
@@ -59,9 +64,6 @@ protected slots:
 
     /// Get the Z lenght for the parametric cube.
     double cubeZLength();
-
-    /// Update surface with parameters.
-    /*virtual*/ void updateSurface();
 
 private:
     vtkCubeSource *m_CubeSource; ///< Polydata representig a cube.
