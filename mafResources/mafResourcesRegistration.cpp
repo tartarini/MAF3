@@ -30,6 +30,7 @@ void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObject(mafResources::mafMementoVME);
     mafRegisterObject(mafResources::mafSceneNode);
     mafRegisterObject(mafResources::mafInteractor);
+    mafRegisterObject(mafResources::mafVisitorFindSceneNodeByVMEHash);
 }
 
 void mafResourcesRegistration::unregisterResourcesObjects() {
@@ -47,4 +48,5 @@ void mafResourcesRegistration::unregisterResourcesObjects() {
     mafUnregisterObject(mafResources::mafMementoVME);
     mafUnregisterObject(mafResources::mafSceneNode);
     mafUnregisterObject(mafResources::mafInteractor);
+    mafUnregisterObject(mafResources::mafVisitorFindSceneNodeByVMEHash);
 }
