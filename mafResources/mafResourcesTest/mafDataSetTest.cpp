@@ -218,6 +218,9 @@ void mafDataSetTest::mafDataSetBoundaryTest() {
     container = new testExternalDataType(3);
     m_DataSet->setDataValue(&container);
 
+    // Try to setDataValue again, nothing should happen..
+    m_DataSet->setDataValue(&container);
+
     // Retrieve the boundary (should be 0 - 3).
     mafContainerInterface *boundary_container = m_DataSet->dataBoundary();
     mafContainer<testExternalBoundary> *boundary = mafContainerPointerTypeCast(testExternalBoundary, boundary_container);
