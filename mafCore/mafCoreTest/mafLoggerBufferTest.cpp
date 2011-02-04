@@ -102,6 +102,6 @@ void mafLoggerBufferTest::clearLogHistoryTest() {
     QVERIFY(buf.isEmpty());
 }
 
-//MAF_REGISTER_TEST(mafLoggerBufferTest);
+MAF_REGISTER_TEST(mafLoggerBufferTest);
 #include "mafLoggerBufferTest.moc"
 
