@@ -11,6 +11,16 @@
 
 #include <mafTestSuite.h>
 
+#ifdef WIN32
+    #define TEST_LIBRARY_NAME "mafResources_d.dll"
+#else
+    #ifdef __APPLE__
+        #define TEST_LIBRARY_NAME "libmafResources_debug.dylib"
+    #else
+        #define TEST_LIBRARY_NAME "libmafResources_debug.so"
+    #endif
+#endif
+
 using namespace mafCore;
 
 /**
@@ -39,9 +49,17 @@ private:
 
 void mafCoreSingletonsTest::mafSingletonsInitializeTest() {
     QVERIFY(m_IdProvider != NULL);
+
+    //mafInitializeModule test
+    mafLibrary *module_initialized;
+    module_initialized = mafInitializeModule(TEST_LIBRARY_NAME);
+    QVERIFY(module_initialized != NULL);
+
+    //mafShutdownModule test
+    bool result = false;
+    result = mafShutdownModule(module_initialized);
+    QVERIFY(result);
 }
-
-
 
 
 MAF_REGISTER_TEST(mafCoreSingletonsTest);
