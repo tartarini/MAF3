@@ -62,6 +62,12 @@ void mafLoggerConsoleTest::logMesageTest() {
     mafString msg("Test for mafLoggerConsole");
     m_Logger->logMessage(mafMsgTypeDebug, msg);
     //! </snippet>
+
+    // Test mafMsgTypeWarning
+    m_Logger->logMessage(mafMsgTypeWarning, msg);
+
+    // Test mafMsgTypeCritical
+    m_Logger->logMessage(mafMsgTypeCritical, msg);
 }
 
 MAF_REGISTER_TEST(mafLoggerConsoleTest);

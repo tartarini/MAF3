@@ -67,8 +67,7 @@ private:
 
 void mafPluginTest::mafPluginAllocationTest() {
     // instantiate an unexisting library.
-    try
-    {
+    try {
          m_Plugin = new mafPlugin("myLibrary", mafCodeLocation);
     }
     catch(std::runtime_error error)
