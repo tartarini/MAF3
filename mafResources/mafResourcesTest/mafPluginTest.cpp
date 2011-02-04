@@ -66,6 +66,21 @@ private:
 };
 
 void mafPluginTest::mafPluginAllocationTest() {
+    // instantiate an unexisting library.
+    try
+    {
+         m_Plugin = new mafPlugin("myLibrary", mafCodeLocation);
+    }
+    catch(std::runtime_error error)
+    {
+        //prompt error message();
+        mafString errorMsg("Could not load 'myLibrary'");
+        QVERIFY(errorMsg.compare(error.what()) == 0);
+        QVERIFY(m_Plugin == NULL);
+    }
+
+
+
     // instantiate the plug in and load the library.
     m_Plugin = new mafPlugin(m_PluginName, mafCodeLocation);
     QVERIFY(m_Plugin != NULL);
