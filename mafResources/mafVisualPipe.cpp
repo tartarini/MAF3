@@ -24,6 +24,7 @@ mafVisualPipe::mafVisualPipe(const mafString code_location) : mafPipe(code_locat
 
 mafVisualPipe::~mafVisualPipe() {
     mafEventBusManager::instance()->removeSignal(this, "maf.local.resources.interaction.vmePick");
+    mafEventBusManager::instance()->removeSignal(this, "maf.local.resources.interaction.vmePicked");
 }
 
 void mafVisualPipe::initializeConnections() {
@@ -36,6 +37,9 @@ void mafVisualPipe::initializeConnections() {
 
     // Register private callbacks.
     mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
+
+    // Register API signals.
+    mafRegisterLocalSignal("maf.local.resources.interaction.vmePicked", this, "vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase *)");
 }
 
 void mafVisualPipe::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafContainerInterface *actor, QEvent * e) {
