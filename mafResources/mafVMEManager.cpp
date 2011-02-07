@@ -14,6 +14,7 @@
 
 using namespace mafCore;
 using namespace mafResources;
+using namespace mafEventBus;
 
 mafVMEManager* mafVMEManager::instance() {
     static mafVMEManager instanceVMEManager;
@@ -114,6 +115,11 @@ mafCore::mafHierarchyPointer mafVMEManager::createVMEHierarchy() {
          m_Root->setObjectName("root");
 
          m_VMEHierarchy->addHierarchyNode(m_Root);
+
+         // Select the root node.
+         mafEventArgumentsList argList;
+         argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Root));
+         mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
      }
 
      return m_VMEHierarchy;
