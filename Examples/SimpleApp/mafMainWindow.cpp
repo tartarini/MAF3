@@ -67,8 +67,10 @@ void mafMainWindow::initializeMainWindow() {
     ui->sideBarDockContents->setLayout(ui->layoutSideBar);
     // View's tab
     ui->tabView->setLayout(ui->layoutView);
+    m_GUIManager->setViewPropertyPanel(ui->tabView);
     // Operation's tab
     ui->tabOperation->setLayout(ui->layoutOperation);
+    m_GUIManager->setOperationPanel(ui->tabOperation);
     // Hierarchy tree's tab
     ui->tabTree->setLayout(ui->layoutTree);
     ui->hierarchyWidget->setLayout(ui->layoutHierarchy);
@@ -83,6 +85,10 @@ void mafMainWindow::initializeMainWindow() {
 
     // **** SideBar ****
     m_Tree = m_GUIManager->createTreeWidget(m_Model, ui->hierarchyWidget);
+    m_Tree->setSelectionBehavior(QAbstractItemView::SelectItems);
+    m_Tree->setSelectionMode(QAbstractItemView::SingleSelection);
+    QModelIndex index = m_Model->index(0, 0);
+    m_Tree->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
 
     QSplitter *splitter = new QSplitter(Qt::Vertical);
     splitter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
