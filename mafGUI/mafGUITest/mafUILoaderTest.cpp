@@ -72,7 +72,6 @@ class mafUILoaderTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
         m_UILoader = new testmafUILoaderCustom();
         mafRegisterLocalCallback("maf.local.gui.uiloaded", m_UILoader, "uiLoaded(mafCore::mafContainerInterface *)");
     }
@@ -82,7 +81,6 @@ private slots:
         delete m_UILoader;
         m_UILoader = NULL;
        mafEventBusManager::instance()->shutdown();
-       mafMessageHandler::instance()->shutdown();
     }
 
     /// mafUILoader allocation test case.
