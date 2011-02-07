@@ -245,7 +245,10 @@ void mafGUIManager::registerEvents() {
     mafRegisterLocalSignal("maf.local.gui.pathSelected", this, "pathSelected(const mafString)");
 
     // OperationManager's callback
-    mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(const mafCore::mafObjectBase *)");
+    mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
+
+    // ViewManager's callbacks.
+    mafRegisterLocalCallback("maf.local.resources.view.selected", this, "viewSelected(mafCore::mafObjectBase *)");
 }
 
 void mafGUIManager::createMenus() {
@@ -364,11 +367,14 @@ mafTextEditWidget *mafGUIManager::createLogWidget(QWidget *parent) {
     return w;
 }
 
-void mafGUIManager::operationDidStart(const mafCore::mafObjectBase *operation) {
+void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
     // Get the started operation
     mafString guiFilename = operation->uiFilename();
+    if(guiFilename.isEmpty()) {
+        return;
+    }
     // Set the current panel to the parent panel of operations.
-    // m_CurrentPanel = m_OperationPanel;
+    m_CurrentPanel = m_OperationPanel;
     // Ask the UI Loader to load the operation's GUI.
     m_UILoader->uiLoad(guiFilename);
 }
@@ -376,9 +382,10 @@ void mafGUIManager::operationDidStart(const mafCore::mafObjectBase *operation) {
 void mafGUIManager::uiLoaded(mafCore::mafContainerInterface *guiWidget) {
     // Get the widget from the container
     mafContainer<QWidget> *w = mafContainerPointerTypeCast(QWidget, guiWidget);
-    QWidget *widget = *w; // TODO: finire il plug della GUI caricata dinamicamente nel pannello corrente delle operazioni.
+    QWidget *widget = *w;
     // put the widget on the interface.
-    //widget->setParent(m_CurrentPanel);
+    m_CurrentPanel->layout()->addWidget(widget);
+    widget->show();
 }
 
 void mafGUIManager::createView() {
@@ -387,6 +394,19 @@ void mafGUIManager::createView() {
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafString, view));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList);
+}
+
+void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
+    REQUIRE(view != NULL);
+    // Get the selected view's UI file
+    mafString guiFilename = view->uiFilename();
+    if(guiFilename.isEmpty()) {
+        return;
+    }
+    // Set the current panel to the parent panel of view properties.
+    m_CurrentPanel = m_ViewPropertyPanel;
+    // Ask the UI Loader to load the view's GUI.
+    m_UILoader->uiLoad(guiFilename);
 }
 
 void mafGUIManager::chooseFileDialog(const mafString title, const mafString start_dir, const mafString wildcard) {

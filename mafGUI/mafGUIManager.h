@@ -75,6 +75,12 @@ public:
     /// Create the log widget according to the given highlighter passed as argument.
     virtual mafTextEditWidget *createLogWidget(QWidget *parent = 0);
 
+    /// Assign the panel on which put the GUI associated to the current executed operation.
+    void setOperationPanel(QWidget *op_panel);
+
+    /// Assign the panel on which put the GUI associated to the current selected view.
+    void setViewPropertyPanel(QWidget *view_panel);
+
     /// Return the number of maximum recent files.
     int maxRecentFiles();
 
@@ -124,6 +130,9 @@ private slots:
     /// Create the view corresponding to the view's action activated.
     void createView();
 
+    /// Update the GUI associated to the selected view.
+    void viewSelected(mafCore::mafObjectBase *view);
+
     /// Allows to ask to open the selected recent file.
     void openRecentFile();
 
@@ -135,7 +144,7 @@ private slots:
     void updateMenuForSelectedVme(mafCore::mafObjectBase *vme);
 
     /// Slot needed to intercept the started operation and ask it for the GUI filename.
-    void operationDidStart(const mafCore::mafObjectBase *operation);
+    void operationDidStart(mafCore::mafObjectBase *operation);
 
     /// Slot called when the UI is loaded from the mafUILoaderQt.
     void uiLoaded(mafCore::mafContainerInterface *guiWidget);
@@ -188,6 +197,10 @@ private:
     mafGUIApplicationSettingsDialog *m_SettingsDialog; ///< Settings dialog
     mafLoggerWidget *m_Logger; ///< Logger
 
+    QWidget *m_CurrentPanel;    ///< Current panel on which put the loaded GUI.
+    QWidget *m_OperationPanel;  ///< Operation's GUI panel.
+    QWidget *m_ViewPropertyPanel;   ///< View Property's GUI panel.
+
     QMainWindow *m_MainWindow; ///< Main window associated to the application.
     mafUILoaderQt *m_UILoader; ///< Class in charge to load the GUI.
 };
@@ -226,6 +239,14 @@ inline QMenu *mafGUIManager::helpMenu() const {
 
 inline mafGUIApplicationSettingsDialog *mafGUIManager::settingsDialog() const {
     return m_SettingsDialog;
+}
+
+inline void mafGUIManager::setOperationPanel(QWidget *op_panel) {
+    m_OperationPanel = op_panel;
+}
+
+inline void mafGUIManager::setViewPropertyPanel(QWidget *view_panel) {
+    m_ViewPropertyPanel = view_panel;
 }
 
 } // namespace mafGUI
