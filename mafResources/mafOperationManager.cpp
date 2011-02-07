@@ -55,7 +55,7 @@ void mafOperationManager::initializeConnections() {
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.operation.start", this, "startOperationSignal(const mafString)");
-    mafRegisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(const mafCore::mafObjectBase *)");
+    mafRegisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
     mafRegisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(mafList<mafVariant>)");
     mafRegisterLocalSignal("maf.local.resources.operation.execute", this, "executeOperationSignal()");
     mafRegisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(mafList<mafVariant>)");
@@ -66,7 +66,6 @@ void mafOperationManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.operation.sizeUndoStack", this, "undoStackSizeSignal()");
     mafRegisterLocalSignal("maf.local.resources.operation.currentRunning", this, "currentOperationSignal()");
     mafRegisterLocalSignal("maf.local.resources.operation.lastExecuted", this, "lastExecutedOperationSignal()");
-
 
     // Register private callbacks to the instance of the manager..
     mafRegisterLocalCallback("maf.local.resources.operation.start", this, "startOperation(const mafString)");
@@ -80,28 +79,31 @@ void mafOperationManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.resources.operation.sizeUndoStack", this, "undoStackSize()");
     mafRegisterLocalCallback("maf.local.resources.operation.currentRunning", this, "currentOperation()");
     mafRegisterLocalCallback("maf.local.resources.operation.lastExecuted", this, "lastExecutedOperation()");
+
+    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)");
 }
 
 
-/*void mafOperationManager::vmeSelected(mafVME *vme) {
-    if(vme) {
+void mafOperationManager::vmeSelect(mafCore::mafObjectBase *obj) {
+    mafVME *vme = dynamic_cast<mafResources::mafVME*>(obj);
+    if(vme && vme != m_SelectedVME) {
         // VME has been selected.
         m_SelectedVME = vme;
 
-        const QMetaObject* metaVme = vme->metaObject();
-
-        m_OperationAcceptCurentVMEMap.clear();
-        foreach(mafResource *v, m_OperationsList) {
-            const QMetaObject* metaOp = v->metaObject();
-            //need a check on all the operations for accept objects
-            mafStringList binding_class_list;
-            binding_class_list = mafResourcesRegistration::acceptObject(v);
-            bool isAccepted = binding_class_list.contains(metaVme->className());
-            // instead of name , put struct with label
-            m_OperationAcceptCurentVMEMap.insert(metaOp->className(), isAccepted);
-        }
+//        const QMetaObject* metaVme = vme->metaObject();
+//
+//        m_OperationAcceptCurentVMEMap.clear();
+//        foreach(mafResource *v, m_OperationsList) {
+//            const QMetaObject* metaOp = v->metaObject();
+//            //need a check on all the operations for accept objects
+//            mafStringList binding_class_list;
+//            binding_class_list = mafResourcesRegistration::acceptObject(v);
+//            bool isAccepted = binding_class_list.contains(metaVme->className());
+//            // instead of name , put struct with label
+//            m_OperationAcceptCurentVMEMap.insert(metaOp->className(), isAccepted);
+//        }
     }
-}*/
+}
 
 void mafOperationManager::executeWithParameters(mafList<mafVariant> op_with_parameters) {
     REQUIRE(op_with_parameters.count() == 2);
@@ -124,10 +126,20 @@ void mafOperationManager::startOperation(const mafString operation) {
     REQUIRE(!operation.isEmpty());
     REQUIRE(m_CurrentOperation == NULL); //require also that there isn't running operation
 
+    // Create the instance of the new operation to execute.
     m_CurrentOperation = (mafOperation *)mafNEWFromString(operation);
-    // TODO: Perform a check on created operation; should be not NULL!!
+
+    if(m_CurrentOperation == NULL) {
+        mafMsgWarning() << mafTr("Operation type '%1' not created. It needs to be register into the mafObjectFactory!!").arg(operation);
+        return;
+    }
+
+    // Assign as input the current selected VME.
+    m_CurrentOperation->setInput(m_SelectedVME);
+    // and ask the operation to initialize itself.
     bool result = m_CurrentOperation->initialize();
 
+    // Notify the observers that the new operation has started.
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase*, m_CurrentOperation));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.started", mafEventTypeLocal, &argList);
