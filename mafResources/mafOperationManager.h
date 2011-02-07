@@ -58,7 +58,7 @@ signals:
     void startOperationSignal(const mafString operation);
 
     /// Notification signal for started operation.
-    void operationDidStart(const mafCore::mafObjectBase *operation);
+    void operationDidStart(mafCore::mafObjectBase *operation);
 
     /// set the parameters to the current started operation
     void setOperationParametersSignal(mafList<mafVariant> parameters);
@@ -103,8 +103,8 @@ private slots:
     /// initialize the given operation (first element of the list), pass to it the given (optionals) parameters as second element of the list and start the execution of the operation.
     void executeWithParameters(mafList<mafVariant> op_with_parameters);
 
-    /// called when selected a vme
-//    void vmeSelected(mafVME *vme);
+    /// called when a vme has been selected.
+    void vmeSelect(mafCore::mafObjectBase *vme);
 
     /// stop current operation
     void stopOperation();
