@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>230</width>
+    <width>250</width>
     <height>300</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>230</width>
+    <width>250</width>
     <height>0</height>
    </size>
   </property>
@@ -24,26 +24,13 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>231</width>
+     <width>247</width>
      <height>301</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <spacer name="verticalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <widget class="QCheckBox" name="chkScalar">
+     <widget class="QCheckBox" name="checkScalar">
       <property name="toolTip">
        <string>Show the scalars associated with surface</string>
       </property>
@@ -53,7 +40,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="txtTest">
+     <widget class="QLineEdit" name="textTest">
       <property name="toolTip">
        <string>Insert your text here!</string>
       </property>
@@ -63,7 +50,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="btnTest">
+     <widget class="QPushButton" name="buttonTest">
       <property name="text">
        <string>Test</string>
       </property>
@@ -81,6 +68,24 @@
        </size>
       </property>
      </spacer>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="buttonOK">
+        <property name="text">
+         <string>Ok</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="buttonCancel">
+        <property name="text">
+         <string>Cancel</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
