@@ -45,7 +45,10 @@ public:
 
 signals:
     /// Signal emitted when the pick hits the owned object.
-    void vmePickSignal(double *pickPos, unsigned long,  mafCore::mafContainerInterface *actor, QEvent *);
+    void vmePickSignal(double *pickPos, unsigned long modifiers,  mafCore::mafContainerInterface *actor, QEvent *);
+
+    ///
+    void vmePickedSignal(double *pickPos, unsigned long modifiers , mafCore::mafObjectBase *vme);
 
 public slots:
     /// Set the visibility of its rendering scene.

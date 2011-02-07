@@ -37,6 +37,8 @@ mafVTKInteractorPicker::mafVTKInteractorPicker(const mafString code_location) : 
 
 mafVTKInteractorPicker::~mafVTKInteractorPicker(){
     mafEventBusManager::instance()->removeSignal(this, "maf.local.resources.interaction.vmePick");
+    mafEventBusManager::instance()->removeSignal(this, "maf.local.operation.VTK.nextPick");
+    mafEventBusManager::instance()->removeSignal(this, "maf.local.operation.VTK.OK");
     mafDEL(m_ParametricSurface);
 }
 

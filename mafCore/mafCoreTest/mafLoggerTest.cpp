@@ -81,8 +81,11 @@ private slots:
     /// Test the logger enable functionality.
     void setEnabledTest();
 
-    /// Test the logging
+    /// Test the logging.
     void logMessageTest();
+
+    /// Test isEqual function.
+    void isEqualTest();
 
 private:
     testLoggerCustom *m_Logger; ///< Test variable
@@ -116,6 +119,16 @@ void mafLoggerTest::logMessageTest() {
 
     m_Logger->clearLogHistory();
     QVERIFY(m_Logger->buffer().length() == 0);
+}
+
+void mafLoggerTest::isEqualTest() {
+    testLoggerCustom *myLogger = mafNEW(testLoggerCustom);
+    m_Logger->setEnabled(true);
+    QVERIFY(!myLogger->isEqual(m_Logger));
+
+    myLogger->setLogMode(mafLogModeCustom);
+    QVERIFY(myLogger->isEqual(m_Logger));
+    mafDEL(myLogger);
 }
 
 MAF_REGISTER_TEST(mafLoggerTest);
