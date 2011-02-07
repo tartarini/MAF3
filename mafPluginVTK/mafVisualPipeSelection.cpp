@@ -31,9 +31,12 @@ mafVisualPipeSelection::~mafVisualPipeSelection() {
 bool mafVisualPipeSelection::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = dynamic_cast<mafVME*>(obj);
     if(vme != NULL) {
-        mafString dataType = vme->dataSetCollection()->itemAtCurrentTime()->dataValue()->externalDataType();
-        if(dataType.startsWith("vtkAlgorithmOutput", Qt::CaseSensitive)) {
-            return true;
+        mafCore::mafContainerInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
+        if(data != NULL) {
+            mafString dataType = data->externalDataType();
+            if(dataType.startsWith("vtkAlgorithmOutput", Qt::CaseSensitive)) {
+                return true;
+            }
         }
     }
     return false;
