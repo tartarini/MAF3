@@ -92,7 +92,7 @@ bool mafLogic::initialize() {
         m_LibraryHandlersHash.insert(RESOURCES_LIBRARY_NAME, handler);
     }
 
-    // Initialize vme hierarchy
+    // Initialize data hierarchy
     mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, m_Hierarchy);
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.create", mafEventTypeLocal, NULL, &ret_val);
 
