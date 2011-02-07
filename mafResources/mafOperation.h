@@ -39,12 +39,6 @@ public:
     /// Return the operation type (can be: mafOperationTypeImporter, mafOperationTypeExporter or mafOperationTypeOperation).
     mafOperationType operationType() const;
 
-    /// Initialize the resource.
-    /*virtual*/ bool initialize();
-
-    /// Terminate the execution.
-    /*virtual*/ bool terminate();
-
     /// check if the operation is running.
     bool isRunning() const;
 
@@ -65,6 +59,9 @@ public slots:
     /// Execute the resource algorithm.
     virtual void execute();
 
+    /// Terminate the execution.
+    virtual bool terminate();
+
 protected:
     bool m_IsRunning; ///< Flag that check if the operation is running, i.e. the execution is started
     bool m_CanUnDo; ///< Flag that store the unDo capability of the operation.
@@ -74,7 +71,7 @@ protected:
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
-inline bool mafOperation::isRunning() const{
+inline bool mafOperation::isRunning() const {
     return m_IsRunning;
 }
 

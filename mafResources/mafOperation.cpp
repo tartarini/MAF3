@@ -23,10 +23,6 @@ mafOperation::mafOperation(const mafString code_location) : mafResource(code_loc
 //    }
 }
 
-bool mafOperation::initialize() {
-    return true;
-}
-
 void mafOperation::execute() {
     m_IsRunning = true;
 }
