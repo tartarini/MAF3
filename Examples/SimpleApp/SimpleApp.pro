@@ -38,3 +38,10 @@ LIBS += -L$$DESTDIR \
     -lmafApplicationLogic$$BUILD_EXT \
     -lmafGUI$$BUILD_EXT
 RESOURCES += mafAppImages.qrc
+
+#Copy the mafOperationSimpleApp.ui to DESTDIR
+win32:!exists( $$DESTDIR\mafOperationSimpleApp.ui ):QMAKE_PRE_LINK += copy \
+        $$quote(.\mafOperationSimpleApp.ui) \
+        $$DESTDIR
+
+unix:!exists( $$DESTDIR/mafOperationSimpleApp.ui ):QMAKE_PRE_LINK += -cp .\mafOperationSimpleApp.ui $$DESTDIR
