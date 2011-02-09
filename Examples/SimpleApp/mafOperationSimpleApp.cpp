@@ -13,8 +13,9 @@
 
 using namespace mafResources;
 
-mafOperationSimpleApp::mafOperationSimpleApp(const mafString code_location) : mafOperation(code_location) {
+mafOperationSimpleApp::mafOperationSimpleApp(const mafString code_location) : mafOperation(code_location), m_CheckScalar(false) {
     m_UIFilename = "mafOperationSimpleApp.ui";
+    m_CanUnDo = false;
 }
 
 bool mafOperationSimpleApp::acceptObject(mafCore::mafObjectBase *obj) {
@@ -24,4 +25,13 @@ bool mafOperationSimpleApp::acceptObject(mafCore::mafObjectBase *obj) {
     }
     mafString ct(obj->metaObject()->className());
     return ct == "mafResources::mafVME";
+}
+
+void mafOperationSimpleApp::setCheckScalar(bool s) {
+    mafMsgDebug() << mafTr("Assigning scalar...");
+    m_CheckScalar = s;
+}
+
+void mafOperationSimpleApp::execute() {
+    mafMsgDebug() << mafTr("Executing demo operation...");
 }

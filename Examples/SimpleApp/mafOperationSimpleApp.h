@@ -20,6 +20,7 @@
   */
 class mafOperationSimpleApp : public mafResources::mafOperation {
     Q_OBJECT
+    Q_PROPERTY(bool checkScalar READ checkScalar WRITE setCheckScalar)
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafOperation);
 
@@ -29,6 +30,21 @@ public:
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
+
+    void setCheckScalar(bool s);
+
+    bool checkScalar() const;
+
+public slots:
+    /// Execute the resource algorithm.
+    /*virtual*/ void execute();
+
+private:
+    bool m_CheckScalar;
 };
+
+inline bool mafOperationSimpleApp::checkScalar() const {
+    return m_CheckScalar;
+}
 
 #endif // MAFOPERATIONSIMPLEAPP_H
