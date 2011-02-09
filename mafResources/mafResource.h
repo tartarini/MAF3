@@ -98,9 +98,6 @@ public:
     /// Initialize the resource.
     virtual bool initialize();
 
-    /// Terminate the execution.
-    virtual bool terminate();
-
 public slots:
     /// Set value of m_DataLoaded.
     void setDataLoaded(bool dataLoaded);
@@ -110,6 +107,9 @@ public slots:
 
     /// Execute the resource algorithm.
     virtual void execute();
+
+    /// Terminate the execution.
+    virtual bool terminate();
 
 protected:
     bool m_Busy; ///< Indicates if resource is busy.
