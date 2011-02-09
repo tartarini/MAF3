@@ -18,7 +18,8 @@ SOURCES += mafGUIManager.cpp \
     mafTextHighlighter.cpp \
     mafGUIApplicationSettingsDialog.cpp \
     mafGUIApplicationSettingsPage.cpp \
-    mafLoggerWidget.cpp
+    mafLoggerWidget.cpp \
+    mafOperationWidget.cpp
 HEADERS += mafGUI_global.h \
     mafGUIManager.h \
     mafGUIRegistration.h \
@@ -33,7 +34,8 @@ HEADERS += mafGUI_global.h \
     mafTextHighlighter.h \
     mafGUIApplicationSettingsDialog.h \
     mafGUIApplicationSettingsPage.h \
-    mafLoggerWidget.h
+    mafLoggerWidget.h \
+    mafOperationWidget.h
 include(../mafInstallModule.pri)
 INCLUDEPATH += ../mafCore \
     ../mafEventBus \
@@ -43,4 +45,4 @@ LIBS += -L$$DESTDIR \
     -lmafEventBus$$BUILD_EXT \
     -lmafApplicationLogic$$BUILD_EXT
 RESOURCES += mafAppImages.qrc
-FORMS += 
+FORMS += mafOperationWidget.ui
