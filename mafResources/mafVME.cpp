@@ -18,6 +18,7 @@
 
 using namespace mafCore;
 using namespace mafResources;
+using namespace mafEventBus;
 
 mafVME::mafVME(const mafString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL) {
     mafId time_set_id = mafIdProvider::instance()->idValue("TIME_SET");
@@ -95,6 +96,18 @@ void mafVME::execute() {
 
 void mafVME::detatch() {
     emit(detatched());
+}
+
+void mafVME::setSelected(bool sel) {
+    if(m_Selected != sel) {
+        m_Selected = sel;
+        if(m_Selected) {
+            // notify the VME selection.
+            mafEventArgumentsList argList;
+            argList.append(mafEventArgument(mafCore::mafObjectBase *, this));
+            mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+        }
+    }
 }
 
 mafDataSetCollection *mafVME::dataSetCollection() {
