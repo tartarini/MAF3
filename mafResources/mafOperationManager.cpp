@@ -188,15 +188,13 @@ void mafOperationManager::executeOperation() {
 }
 
 void mafOperationManager::stopOperation() {
-    if(m_CurrentOperation != NULL) {
-        m_CurrentOperation->terminate();
-    }
+    REQUIRE(m_CurrentOperation != NULL);
 
+    m_CurrentOperation->terminate();
     if(m_CurrentOperation->canUnDo()) {
         m_UndoStack.pop_back();
     }
     mafDEL(m_CurrentOperation);
-
 }
 
 void mafOperationManager::undoOperation() {
