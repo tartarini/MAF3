@@ -28,6 +28,7 @@ class mafMemento;
 class MAFCORESHARED_EXPORT mafObject : public mafObjectBase {
     Q_OBJECT
     Q_PROPERTY(bool modified READ modified WRITE setModified)
+    Q_PROPERTY(bool selected READ selected WRITE setSelected)
 
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
@@ -56,6 +57,12 @@ public:
 
     /// Return the modified state of the mafObject.
     bool modified() const;
+
+    /// Allow to mark the object as selected.
+    virtual void setSelected(bool sel);
+
+    /// Return the selection state for the owned VME.
+    bool selected() const;
 
     /// Return the instance of the object's status. The caller has to delete the allocated memento memory he asked for.
     virtual mafMemento *createMemento() const;
@@ -91,6 +98,9 @@ public slots:
     /// Method used to initialize the object's tag list.
     void setTagList(const mafTagList &list);
 
+protected:
+    bool m_Selected; ///< Flag used to store the selection flag of the owned VME.
+
 private:
     bool m_Modified; ///< Contains the modified state of the VME.
     mafTagList *m_TagList; ///< Tag list that categorize the object.
@@ -103,6 +113,10 @@ private:
 
 inline bool mafObject::modified() const {
     return m_Modified;
+}
+
+inline bool mafObject::selected() const {
+    return m_Selected;
 }
 
 inline const mafTagList *mafObject::tagList() const {
