@@ -48,6 +48,9 @@ public:
     /// Return the inner vme.
     mafVME *vme() const;
 
+    /// Allow to send the selection event for the owned VME.
+    /*virtual*/ void setSelected(bool sel);
+
 signals:
     /// Alert the view that the node can be deleted because its inner vme has been destroyed.
     void destroyNode();
