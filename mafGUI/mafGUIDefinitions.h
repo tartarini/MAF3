@@ -26,6 +26,8 @@
 #include <mafObjectFactory.h>
 #include <mafCoreSingletons.h>
 #include <mafCoreRegistration.h>
+#include <mafObjectBase.h>
+#include <mafContainer.h>
 
 #include <mafEventBusManager.h>
 
@@ -40,6 +42,13 @@ struct mafHighlightingRule {
     mafRegExp m_Pattern; ///< pattern which represents the keyword need to be highlighted
     mafTextCharFormat m_Format; ///< which kind of highlight need to be applied
 };
+
+typedef enum {
+    mafGUILoadedTypeOperation,
+    mafGUILoadedTypeView,
+    mafGUILoadedTypeVisualPipe,
+    mafGUILoadedTypeVme
+} mafGUILoadedType;
 
 } //end namespace
 
