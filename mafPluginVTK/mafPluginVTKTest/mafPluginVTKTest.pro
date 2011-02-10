@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     mafVTKParametricSurfaceConeTest.cpp \
     mafVTKParametricSurfaceCylinderTest.cpp \
     mafVTKParametricSurfaceEllipsoidTest.cpp \
-    mafVTKParametricSurfaceTest.cpp
+    mafVTKParametricSurfaceTest.cpp \
+    mafOpParametricSurfaceTest.cpp
 include(../../mafInstallTest.pri)
 include(../../mafImportVXL.pri)
 include(../../mafImportVTK.pri)

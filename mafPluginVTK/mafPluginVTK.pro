@@ -22,7 +22,8 @@ SOURCES += mafDataBoundaryAlgorithmVTK.cpp \
     mafVTKParametricSurfaceCube.cpp \
     mafVTKParametricSurfaceCone.cpp \
     mafVTKParametricSurfaceCylinder.cpp \
-    mafVTKParametricSurfaceEllipsoid.cpp
+    mafVTKParametricSurfaceEllipsoid.cpp \
+    mafOpParametricSurface.cpp
 
 # mafDataPipeSurface.cpp \
 # mafInteractorVTK.cpp \
@@ -42,7 +43,8 @@ HEADERS += mafPluginVTK_global.h \
     mafVTKParametricSurfaceCube.h \
     mafVTKParametricSurfaceCone.h \
     mafVTKParametricSurfaceCylinder.h \
-    mafVTKParametricSurfaceEllipsoid.h
+    mafVTKParametricSurfaceEllipsoid.h \
+    mafOpParametricSurface.h
 
 # mafDataPipeSurface.h \
 # mafInteractorVTK.h \
