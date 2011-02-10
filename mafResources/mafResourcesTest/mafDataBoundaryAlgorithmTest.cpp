@@ -23,6 +23,7 @@ using namespace mafResources;
  This class implements the boundary algorithm to be tested.
  */
 class  testDataBoundaryAlgorithmCustom : public  mafDataBoundaryAlgorithm {
+    Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafDataBoundaryAlgorithm);
 

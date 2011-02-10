@@ -50,6 +50,7 @@ public:
 };
 
 class testDataBoundaryCustom : public mafDataBoundaryAlgorithm {
+    Q_OBJECT
 public:
     /// Object constructor.
     testDataBoundaryCustom(const mafString code_location = "");

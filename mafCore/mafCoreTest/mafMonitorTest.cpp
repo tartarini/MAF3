@@ -20,6 +20,7 @@ using namespace mafCore;
  Define a custom visitor for testing 'acceptVisitor' method.
  */
 class testMonitorImplement : public mafMonitor {
+    Q_OBJECT
 public:
     testMonitorImplement(const mafString code_location = "");
 
