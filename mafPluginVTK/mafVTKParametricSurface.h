@@ -44,7 +44,7 @@ public:
     virtual vtkAlgorithmOutput* output();
 
     /// Update surface with parameters.
-    virtual void updateSurface() = 0;
+    virtual void updateSurface();
 
 protected:
     double m_Center[3]; ///< Center of the parametric surface.

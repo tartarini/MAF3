@@ -11,8 +11,6 @@
 
 #include "mafVTKParametricSurface.h"
 
-
-
 using namespace mafCore;
 using namespace mafPluginVTK;
 
@@ -25,6 +23,9 @@ mafVTKParametricSurface::mafVTKParametricSurface(const mafString code_location) 
 
 vtkAlgorithmOutput* mafVTKParametricSurface::output(){
     return m_Output;
+}
+
+void mafVTKParametricSurface::updateSurface(){
 }
 
 
