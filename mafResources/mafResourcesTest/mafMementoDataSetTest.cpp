@@ -138,7 +138,7 @@ void mafMementoDataSetTest::mafMementoDataSetDefaultAllocationTest() {
     QVERIFY(m_DataSet != NULL);
     mafMemento *m = (mafMemento *)mafNEWFromString("mafResources::mafMementoDataSet");
     QVERIFY(m != NULL);
-    m_MementoDataSet = dynamic_cast<mafMementoDataSet*>(m);
+    m_MementoDataSet = qobject_cast<mafMementoDataSet*>(m);
     QVERIFY(m_MementoDataSet != NULL);
 }
 

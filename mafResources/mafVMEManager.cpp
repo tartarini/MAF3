@@ -59,7 +59,7 @@ void mafVMEManager::initializeConnections() {
 }
 
 void mafVMEManager::vmeSelect(mafObjectBase *vme) {
-    mafVME *vme_to_select = dynamic_cast<mafResources::mafVME *>(vme);
+    mafVME *vme_to_select = qobject_cast<mafResources::mafVME *>(vme);
     if(NULL == vme_to_select) {
         mafMsgWarning("%s", mafTr("Trying to select an object that not represent a mafVME.").toAscii().data());
         return;
@@ -69,7 +69,7 @@ void mafVMEManager::vmeSelect(mafObjectBase *vme) {
 }
 
 void mafVMEManager::vmeAdd(mafObjectBase *vme) {
-    mafVME *vme_to_add = dynamic_cast<mafResources::mafVME *>(vme);
+    mafVME *vme_to_add = qobject_cast<mafResources::mafVME *>(vme);
     if(NULL == vme_to_add) {
         mafMsgWarning("%s", mafTr("Trying to add an object that not represent a mafVME.").toAscii().data());
         return;
@@ -80,7 +80,7 @@ void mafVMEManager::vmeAdd(mafObjectBase *vme) {
 }
 
 void mafVMEManager::vmeRemove(mafObjectBase *vme) {
-    mafVME *vme_to_remove = dynamic_cast<mafResources::mafVME *>(vme);
+    mafVME *vme_to_remove = qobject_cast<mafResources::mafVME *>(vme);
     if(NULL == vme_to_remove) {
         mafMsgWarning("%s", mafTr("Trying to remove an object that not represent a mafVME.").toAscii().data());
         return;

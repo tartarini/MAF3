@@ -41,7 +41,7 @@ void mafView::create() {
 }
 
 void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
-    mafVME *vme_to_add = dynamic_cast<mafResources::mafVME *>(vme);
+    mafVME *vme_to_add = qobject_cast<mafResources::mafVME *>(vme);
     if(vme_to_add != NULL) {
         mafSceneNode *node = new mafSceneNode(vme_to_add, NULL, mafCodeLocation);
         connect(node, SIGNAL(destroyNode()), this, SLOT(sceneNodeDestroy()));

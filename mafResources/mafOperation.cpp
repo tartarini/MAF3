@@ -23,8 +23,12 @@ mafOperation::mafOperation(const mafString code_location) : mafResource(code_loc
 //    }
 }
 
-void mafOperation::execute() {
+bool mafOperation::initialize() {
     m_IsRunning = true;
+    return m_IsRunning;
+}
+
+void mafOperation::execute() {
 }
 
 bool mafOperation::terminate() {

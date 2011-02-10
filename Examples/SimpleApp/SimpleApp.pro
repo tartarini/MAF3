@@ -40,8 +40,4 @@ LIBS += -L$$DESTDIR \
 RESOURCES += mafAppImages.qrc
 
 #Copy the mafOperationSimpleApp.ui to DESTDIR
-win32:!exists( $$DESTDIR\mafOperationSimpleApp.ui ):QMAKE_PRE_LINK += $$CP_CMD \
-        $$quote(.\mafOperationSimpleApp.ui) \
-        $$DESTDIR
-
-unix:!exists( $$DESTDIR/mafOperationSimpleApp.ui ):QMAKE_PRE_LINK += $$CP_CMD ./mafOperationSimpleApp.ui $$DESTDIR
+system($$CP_CMD $$quote($$_PRO_FILE_PWD_/mafOperationSimpleApp.ui) $$DESTDIR)

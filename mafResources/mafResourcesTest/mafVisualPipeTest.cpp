@@ -139,6 +139,8 @@ void mafVisualPipeTest::mafVisualPipeVmePickTest() {
     argList.append(mafEventArgument(QEvent *, e));
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePick", mafEventBus::mafEventTypeLocal, &argList);
     QVERIFY(m_VisualPipe->m_RecivedPickEvent == true);
+
+    mafDEL(vme);
 }
 
 

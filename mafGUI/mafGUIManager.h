@@ -14,10 +14,10 @@
 
 // Includes list
 #include "mafGUIDefinitions.h"
-#include <mafObjectBase.h>
-#include <mafContainer.h>
-
 #include <QtGui>
+
+// Class forwarding list
+class mafOperationWidget;
 
 namespace mafGUI {
 
@@ -75,12 +75,6 @@ public:
     /// Create the log widget according to the given highlighter passed as argument.
     virtual mafTextEditWidget *createLogWidget(QWidget *parent = 0);
 
-    /// Assign the panel on which put the GUI associated to the current executed operation.
-    void setOperationPanel(QWidget *op_panel);
-
-    /// Assign the panel on which put the GUI associated to the current selected view.
-    void setViewPropertyPanel(QWidget *view_panel);
-
     /// Return the number of maximum recent files.
     int maxRecentFiles();
 
@@ -116,6 +110,12 @@ signals:
     /// Signal emitted on path selection using the dialog.
     void pathSelected(const mafString path);
 
+    /// Signal emitted when the GUI panel has been loaded.
+    void guiLoaded(int type, QWidget *w);
+
+    /// Signal emitted when a dynamic GUI element needs to be removed from the MainWindow
+    void guiTypeToRemove(int type);
+
 public slots:
     /// Fill the operation and view menu with the plugged objects.
     void fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash);
@@ -127,11 +127,17 @@ private slots:
     /// Start the operation associated with the operation's action activated.
     void startOperation();
 
+    /// Remove the Operation's GUI; the 'Ok' or 'Cancel' button has been pressed.
+    void removeOperationGUI();
+
     /// Create the view corresponding to the view's action activated.
     void createView();
 
     /// Update the GUI associated to the selected view.
     void viewSelected(mafCore::mafObjectBase *view);
+
+    /// Allow to send a vme selection request when an item has been clicked into the mafTreWidget.
+    void selectVME(QModelIndex);
 
     /// Allows to ask to open the selected recent file.
     void openRecentFile();
@@ -197,12 +203,11 @@ private:
     mafGUIApplicationSettingsDialog *m_SettingsDialog; ///< Settings dialog
     mafLoggerWidget *m_Logger; ///< Logger
 
-    QWidget *m_CurrentPanel;    ///< Current panel on which put the loaded GUI.
-    QWidget *m_OperationPanel;  ///< Operation's GUI panel.
-    QWidget *m_ViewPropertyPanel;   ///< View Property's GUI panel.
+    mafOperationWidget *m_OperationWidget; ///< Widget on whith will be visible the operation's GUI.
 
     QMainWindow *m_MainWindow; ///< Main window associated to the application.
     mafUILoaderQt *m_UILoader; ///< Class in charge to load the GUI.
+    mafGUILoadedType m_GUILoadedType; ///< Type of GUI loaded.
 };
 
 /////////////////////////////////////////////////////////////
@@ -239,14 +244,6 @@ inline QMenu *mafGUIManager::helpMenu() const {
 
 inline mafGUIApplicationSettingsDialog *mafGUIManager::settingsDialog() const {
     return m_SettingsDialog;
-}
-
-inline void mafGUIManager::setOperationPanel(QWidget *op_panel) {
-    m_OperationPanel = op_panel;
-}
-
-inline void mafGUIManager::setViewPropertyPanel(QWidget *view_panel) {
-    m_ViewPropertyPanel = view_panel;
 }
 
 } // namespace mafGUI

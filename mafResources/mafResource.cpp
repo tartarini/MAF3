@@ -40,7 +40,7 @@ bool mafResource::isObjectValid() const {
 }
 
 bool mafResource::isEqual(const mafObjectBase *obj) const {
-    mafResource *resource = dynamic_cast<mafResource *>((mafObjectBase *)obj);
+    mafResource *resource = qobject_cast<mafResource *>((mafObjectBase *)obj);
     if(resource == NULL) {
         return false;
     }
@@ -156,7 +156,7 @@ void mafResource::setMemento(mafMemento *memento, bool deep_memento) {
     mafResource *res;
     mafString hash;
     foreach(hash, hashLists) {
-        res = dynamic_cast<mafResource *>(reg->objectFromHash(hash));
+        res = qobject_cast<mafResource *>(reg->objectFromHash(hash));
         if(res != NULL) {
             addInput(res);
         }

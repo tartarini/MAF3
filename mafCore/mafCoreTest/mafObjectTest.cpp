@@ -121,6 +121,7 @@ void mafObjectTest::setMementoTest() {
  Define a custom visitor for testing 'acceptVisitor' method.
  */
 class testVisitorCustom : public mafVisitor {
+    Q_OBJECT
 public:
     testVisitorCustom(const mafString code_location = "");
     /*virtual*/ void visit(mafObjectBase *obj) {m_LabelVisited = obj->objectName();}

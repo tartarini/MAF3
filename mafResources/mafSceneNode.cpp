@@ -15,6 +15,7 @@
 
 using namespace mafCore;
 using namespace mafResources;
+using namespace mafEventBus;
 
 mafSceneNode::mafSceneNode(const mafString code_location) : mafObject(code_location), m_VisualPipe(NULL) {
 }
@@ -26,6 +27,18 @@ mafSceneNode::mafSceneNode(mafVME *vme, mafVisualPipe *visual_pipe, const mafStr
 
 mafSceneNode::~mafSceneNode() {
     mafDEL(this->m_VisualPipe);
+}
+
+void mafSceneNode::setSelected(bool sel) {
+    if(m_Selected != sel) {
+        m_Selected = sel;
+        if(m_Selected) {
+            // notify the VME selection.
+            mafEventArgumentsList argList;
+            argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
+            mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+        }
+    }
 }
 
 void mafSceneNode::visualPipeDestroyed() {

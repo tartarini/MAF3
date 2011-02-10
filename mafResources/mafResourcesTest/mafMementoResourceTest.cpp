@@ -58,7 +58,7 @@ private:
 void mafMementoResourceTest::mafMementoResourceDefaultAllocationTest() {
     mafMemento *m = (mafMemento *)mafNEWFromString("mafResources::mafMementoResource");
     QVERIFY(m != NULL);
-    m_MementoResource = dynamic_cast<mafMementoResource*>(m);
+    m_MementoResource = qobject_cast<mafMementoResource*>(m);
     QVERIFY(m_MementoResource != NULL);
 }
 

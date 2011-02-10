@@ -26,7 +26,7 @@ mafDataPipeImageThreshold::~mafDataPipeImageThreshold() {
 }
 
 bool mafDataPipeImageThreshold::acceptObject(mafCore::mafObjectBase *obj) {
-    mafVME *vme = dynamic_cast<mafVME*>(obj);
+    mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
         mafCore::mafContainerInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
         if(data != NULL) {

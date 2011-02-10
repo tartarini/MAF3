@@ -20,6 +20,7 @@ using namespace mafCore;
  Define a custom Logger.
  */
 class testLoggerCustom : public mafLogger {
+    Q_OBJECT
 public:
     /// Object constructor.
     testLoggerCustom(const mafString code_location = "");

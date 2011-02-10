@@ -23,7 +23,7 @@ mafVisitorFindSceneNodeByVMEHash::mafVisitorFindSceneNodeByVMEHash(const mafStri
 }
 
 void mafVisitorFindSceneNodeByVMEHash::visit(mafObjectBase *object) {
-    mafSceneNode *n = dynamic_cast<mafSceneNode *>(object);
+    mafSceneNode *n = qobject_cast<mafSceneNode *>(object);
     if(n != NULL) {
         mafVME *vme = n->vme();
         if(vme != NULL) {

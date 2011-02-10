@@ -57,6 +57,9 @@ void mafMainWindow::initializeMainWindow() {
     m_GUIManager->createMenus();
     m_GUIManager->createToolBars();
 
+    connect(m_GUIManager, SIGNAL(guiLoaded(int,QWidget*)), this, SLOT(loadedGUIAvailable(int,QWidget*)));
+    connect(m_GUIManager, SIGNAL(guiTypeToRemove(int)), this, SLOT(loadedGUIToRemove(int)));
+
     connectCallbacks();
 
     ui->statusBar->showMessage(mafTr("Ready!"));
@@ -67,10 +70,8 @@ void mafMainWindow::initializeMainWindow() {
     ui->sideBarDockContents->setLayout(ui->layoutSideBar);
     // View's tab
     ui->tabView->setLayout(ui->layoutView);
-    m_GUIManager->setViewPropertyPanel(ui->tabView);
     // Operation's tab
     ui->tabOperation->setLayout(ui->layoutOperation);
-    m_GUIManager->setOperationPanel(ui->tabOperation);
     // Hierarchy tree's tab
     ui->tabTree->setLayout(ui->layoutTree);
     ui->hierarchyWidget->setLayout(ui->layoutHierarchy);
@@ -183,6 +184,24 @@ void mafMainWindow::closeEvent(QCloseEvent *event) {
     }
 }
 
+void mafMainWindow::loadedGUIAvailable(int type, QWidget *w) {
+    switch(type) {
+    case mafGUILoadedTypeOperation:
+        ui->tabWidget->setCurrentIndex(2);
+        ui->layoutOperation->addWidget(w);
+        break;
+    case mafGUILoadedTypeView:
+        ui->tabWidget->setCurrentIndex(1);
+        ui->layoutView->addWidget(w);
+        break;
+    }
+    w->show();
+}
+
+void mafMainWindow::loadedGUIToRemove(int type) {
+    ui->tabWidget->setCurrentIndex(0);
+}
+
 void mafMainWindow::readSettings() {
     mafMsgDebug() << "Reading mafMainWindows settings...";
     mafSettings settings;
@@ -278,18 +297,8 @@ void mafMainWindow::viewCreated(mafCore::mafObjectBase *view) {
     connect(sub_win, SIGNAL(destroyed()), view, SLOT(deleteLater()));
 
     widget->setParent(sub_win);
-//    widget->setWindowTitle(mafTr("mafView %1").arg(windowCounter++));
     sub_win->setMinimumSize(200, 200);
-//    sub_win->setGeometry(QRect(0, 0, 0, 0));
-
-//    QPropertyAnimation *animation = new QPropertyAnimation(sub_win, "geometry");
-//    animation->setDuration(500);
-//    animation->setStartValue(QRect(0, 0, 0, 0));
-//    animation->setEndValue(QRect(50, 50, 200, 200));
-//    animation->setEasingCurve(QEasingCurve::InOutSine);
-
     sub_win->show();
-//    animation->start();
 }
 
 void mafMainWindow::viewWillBeSelected() {

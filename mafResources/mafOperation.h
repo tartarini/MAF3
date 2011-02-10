@@ -42,6 +42,9 @@ public:
     /// check if the operation is running.
     bool isRunning() const;
 
+    /// Initialize the operation. Put here the initialization of operation's parameters
+    virtual bool initialize();
+
 signals:
     /// Trigger the set parameters of the operation.
     //void setParametersSignal(mafList<mafVariant> parameters);

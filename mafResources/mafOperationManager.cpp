@@ -85,7 +85,7 @@ void mafOperationManager::initializeConnections() {
 
 
 void mafOperationManager::vmeSelect(mafCore::mafObjectBase *obj) {
-    mafVME *vme = dynamic_cast<mafResources::mafVME*>(obj);
+    mafVME *vme = qobject_cast<mafResources::mafVME*>(obj);
     if(vme && vme != m_SelectedVME) {
         // VME has been selected.
         m_SelectedVME = vme;
@@ -188,15 +188,13 @@ void mafOperationManager::executeOperation() {
 }
 
 void mafOperationManager::stopOperation() {
-    if(m_CurrentOperation != NULL) {
-        m_CurrentOperation->terminate();
-    }
+    REQUIRE(m_CurrentOperation != NULL);
 
+    m_CurrentOperation->terminate();
     if(m_CurrentOperation->canUnDo()) {
         m_UndoStack.pop_back();
     }
     mafDEL(m_CurrentOperation);
-
 }
 
 void mafOperationManager::undoOperation() {

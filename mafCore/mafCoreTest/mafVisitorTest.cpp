@@ -22,6 +22,7 @@ using namespace mafCore;
  Define a custom visitor for testing 'acceptVisitor' method.
  */
 class testVisitorImplement : public mafVisitor {
+    Q_OBJECT
 public:
     testVisitorImplement(const mafString code_location = "");
     /*virtual*/ void visit(mafObjectBase *obj) {m_LabelVisited = obj->objectName();}

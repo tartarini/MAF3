@@ -66,6 +66,16 @@ public slots:
     /// Called when the mouse start interacting with the view.
     void subWindowSelected(QMdiSubWindow *sub_win);
 
+protected slots:
+    /// Observe the viewCreatedSignal emitted by the mafViewManager.
+    virtual void viewCreated(mafCore::mafObjectBase *view);
+
+    /// Slot called when dynamic loaded GUI is available.
+    virtual void loadedGUIAvailable(int type, QWidget *w);
+
+    /// Slot called when a dynamic loaded GUI needs to be removed from the panel.
+    virtual void loadedGUIToRemove(int type);
+
 private slots:
     /// Allow to call the code to save the user data through the logic module.
     bool save();
@@ -78,9 +88,6 @@ private slots:
 
     /// Shows the About dialog.
     void showAbout();
-
-    /// Observe the viewCreatedSignal emitted by the mafViewManager.
-    void viewCreated(mafCore::mafObjectBase *view);
 
 protected:
     /// Method used to catch events related to changes.

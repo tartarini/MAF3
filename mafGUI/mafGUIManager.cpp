@@ -16,8 +16,9 @@
 #include "mafLoggerWidget.h"
 #include "mafTextEditWidget.h"
 #include "mafTextHighlighter.h"
-
 #include "mafGUIApplicationSettingsDialog.h"
+
+#include <mafOperationWidget.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -30,6 +31,8 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const mafString code_locatio
     , m_MaxRecentFiles(5), m_ActionsCreated(false), m_MainWindow(main_win) {
 
     m_SettingsDialog = new mafGUIApplicationSettingsDialog();
+    m_OperationWidget = new mafOperationWidget();
+    connect(m_OperationWidget, SIGNAL(operationDismissed()), this, SLOT(removeOperationGUI()));
 
     m_Logger = new mafLoggerWidget(mafCodeLocation);
 
@@ -246,6 +249,8 @@ void mafGUIManager::registerEvents() {
 
     // OperationManager's callback
     mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
+//    mafRegisterLocalCallback("maf.local.resources.operation.stop", this, "removeOperationGUI()");
+//    mafRegisterLocalCallback("maf.local.resources.operation.execute", this, "removeOperationGUI()");
 
     // ViewManager's callbacks.
     mafRegisterLocalCallback("maf.local.resources.view.selected", this, "viewSelected(mafCore::mafObjectBase *)");
@@ -323,10 +328,31 @@ void mafGUIManager::createToolBars() {
 
 void mafGUIManager::startOperation() {
     QAction *opAction = (QAction *)QObject::sender();
+    m_OperationWidget->setOperationName(opAction->text());
+
     mafString op(opAction->data().toString());
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafString, op));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
+}
+
+void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
+    // Get the started operation
+    mafString guiFilename = operation->uiFilename();
+    m_OperationWidget->setOperation(operation);
+
+    if(guiFilename.isEmpty()) {
+        return;
+    }
+    m_GUILoadedType = mafGUILoadedTypeOperation;
+
+    // Ask the UI Loader to load the operation's GUI.
+    m_UILoader->uiLoad(guiFilename);
+}
+
+void mafGUIManager::removeOperationGUI() {
+    m_GUILoadedType = mafGUILoadedTypeOperation;
+    emit guiTypeToRemove(m_GUILoadedType);
 }
 
 mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *parent) {
@@ -336,6 +362,7 @@ mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *par
     w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     w->setMinimumSize(200, 200);
     w->setMaximumSize(16777215, 16777215);
+    connect(w, SIGNAL(clicked(QModelIndex)), this, SLOT(selectVME(QModelIndex)));
 
     if(parent) {
         if(parent->layout()) {
@@ -367,25 +394,28 @@ mafTextEditWidget *mafGUIManager::createLogWidget(QWidget *parent) {
     return w;
 }
 
-void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
-    // Get the started operation
-    mafString guiFilename = operation->uiFilename();
-    if(guiFilename.isEmpty()) {
-        return;
-    }
-    // Set the current panel to the parent panel of operations.
-    m_CurrentPanel = m_OperationPanel;
-    // Ask the UI Loader to load the operation's GUI.
-    m_UILoader->uiLoad(guiFilename);
-}
 
 void mafGUIManager::uiLoaded(mafCore::mafContainerInterface *guiWidget) {
     // Get the widget from the container
     mafContainer<QWidget> *w = mafContainerPointerTypeCast(QWidget, guiWidget);
     QWidget *widget = *w;
-    // put the widget on the interface.
-    m_CurrentPanel->layout()->addWidget(widget);
-    widget->show();
+
+    switch(m_GUILoadedType) {
+        case mafGUILoadedTypeOperation:
+            m_OperationWidget->setOperationGUI(widget);
+        break;
+        case mafGUILoadedTypeView:
+        break;
+        case mafGUILoadedTypeVisualPipe:
+        break;
+        case mafGUILoadedTypeVme:
+        break;
+        default:
+            mafMsgWarning() << mafTr("type %1 not recognized...").arg(m_GUILoadedType);
+            return;
+        break;
+    }
+    emit guiLoaded(m_GUILoadedType, m_OperationWidget);
 }
 
 void mafGUIManager::createView() {
@@ -404,9 +434,18 @@ void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
         return;
     }
     // Set the current panel to the parent panel of view properties.
-    m_CurrentPanel = m_ViewPropertyPanel;
+    m_GUILoadedType = mafGUILoadedTypeView;
     // Ask the UI Loader to load the view's GUI.
     m_UILoader->uiLoad(guiFilename);
+}
+
+void mafGUIManager::selectVME(QModelIndex index) {
+    QTreeView *tree = (QTreeView *)QObject::sender();
+    mafTreeModel *model = (mafTreeModel *)tree->model();
+    mafTreeItem *item = (mafTreeItem *)model->itemFromIndex(index);
+    QObject *obj = item->data();
+    mafVariant sel(true);
+    obj->setProperty("selected", sel);
 }
 
 void mafGUIManager::chooseFileDialog(const mafString title, const mafString start_dir, const mafString wildcard) {

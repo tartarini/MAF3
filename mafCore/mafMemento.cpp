@@ -29,7 +29,7 @@ mafMemento::mafMemento(const mafObject *obj, const mafString code_location) : ma
 bool mafMemento::isEqual(const mafObjectBase *obj) const {
     // First check the isEqual for the parent class.
     if(Superclass::isEqual(obj)) {
-        const mafMemento *memento = dynamic_cast<const mafMemento *>(obj);
+        const mafMemento *memento = qobject_cast<const mafMemento *>(obj);
         if(memento == NULL) {
             return false;
         }
