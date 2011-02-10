@@ -24,7 +24,6 @@ namespace mafCore {
  mafVisitor lets you define a new operation without changing the classes of the elements on which it operates.
  */
 class MAFCORESHARED_EXPORT mafVisitor : public mafObjectBase {
-    Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
 
