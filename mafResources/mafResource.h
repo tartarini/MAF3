@@ -114,10 +114,10 @@ public slots:
 protected:
     bool m_Busy; ///< Indicates if resource is busy.
     bool m_DataLoaded; ///< Indicates if data has been loaded.
+    mafResource *m_Output; ///< Output of the resource.
 
 private:
     mafResourceList *m_InputList; ///< Resource input List
-    mafResource *m_Output; ///< Output of the resource.
 
 };
 
