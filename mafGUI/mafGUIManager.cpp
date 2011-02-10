@@ -404,6 +404,16 @@ void mafGUIManager::uiLoaded(mafCore::mafContainerInterface *guiWidget) {
         case mafGUILoadedTypeOperation:
             m_OperationWidget->setOperationGUI(widget);
         break;
+        case mafGUILoadedTypeView:
+        break;
+        case mafGUILoadedTypeVisualPipe:
+        break;
+        case mafGUILoadedTypeVme:
+        break;
+        default:
+            mafMsgWarning() << mafTr("type %1 not recognized...").arg(m_GUILoadedType);
+            return;
+        break;
     }
     emit guiLoaded(m_GUILoadedType, m_OperationWidget);
 }
