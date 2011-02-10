@@ -33,6 +33,7 @@ mafVTKInteractorPicker::mafVTKInteractorPicker(const mafString code_location) : 
     m_Center = NULL;
     m_PointList.clear();
     this->initializeConnections();
+    m_ParametricSurfaceType = "mafVTKParametricSurfaceSphere";
 }
 
 mafVTKInteractorPicker::~mafVTKInteractorPicker(){
