@@ -66,7 +66,7 @@ void mafVME::setInteractor(mafInteractor *i) {
 
 void mafVME::setDataPipe(const mafString &pipe_type) {
     mafObjectBase *obj = mafNEWFromString(pipe_type);
-    mafDataPipe *new_pipe = dynamic_cast<mafDataPipe *>(obj);
+    mafDataPipe *new_pipe = qobject_cast<mafDataPipe *>(obj);
     if(new_pipe) {
         setDataPipe(new_pipe);
         return;

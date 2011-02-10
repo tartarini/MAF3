@@ -180,7 +180,7 @@ void mafMementoVMETest::mafMementoVMEDefaultAllocationTest() {
     QVERIFY(m_VME != NULL);
     mafMemento *m = (mafMemento *)mafNEWFromString("mafResources::mafMementoVME");
     QVERIFY(m != NULL);
-    m_MementoVME = dynamic_cast<mafMementoVME*>(m);
+    m_MementoVME = qobject_cast<mafMementoVME*>(m);
     QVERIFY(m_MementoVME != NULL);
     mafDEL(m_MementoVME);
 }

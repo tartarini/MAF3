@@ -86,14 +86,14 @@ void mafViewManager::initializeConnections() {
 
 void mafViewManager::selectView(mafCore::mafObjectBase *view) {
     REQUIRE(view != NULL);
-    mafView *v = dynamic_cast<mafResources::mafView *>(view);
+    mafView *v = qobject_cast<mafResources::mafView *>(view);
     if(v != NULL) {
         // A new mafView has been selected; update the m_ActiveResource variable.
         if(m_SelectedView != NULL) {
             m_SelectedView->select(false);
         }
         m_SelectedView = v;
-        m_SelectedView->select(true);
+        m_SelectedView->select(true); // ?!?
 
         // Notify the view selection.
         mafEventArgumentsList argList;
@@ -103,7 +103,7 @@ void mafViewManager::selectView(mafCore::mafObjectBase *view) {
 }
 
 void mafViewManager::sceneNodeShow(mafCore::mafObjectBase *node, bool show) {
-    mafSceneNode *node_to_show = dynamic_cast<mafResources::mafSceneNode *>(node);
+    mafSceneNode *node_to_show = qobject_cast<mafResources::mafSceneNode *>(node);
     if(node_to_show != NULL) {
         if(m_SelectedView) {
             m_SelectedView->showSceneNode(node_to_show, show);
@@ -115,7 +115,7 @@ void mafViewManager::createView(mafString view_type) {
     REQUIRE(view_type.length() > 0);
 
     mafObjectBase *obj = mafNEWFromString(view_type);
-    mafView *v = dynamic_cast<mafResources::mafView *>(obj);
+    mafView *v = qobject_cast<mafResources::mafView *>(obj);
     if(v != NULL) {
         addViewToCreatedList(v);
         selectView(obj);
@@ -145,7 +145,7 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
 }
 
 void mafViewManager::destroyView(mafCore::mafObjectBase *view) {
-    mafView *v = dynamic_cast<mafResources::mafView *>(view);
+    mafView *v = qobject_cast<mafResources::mafView *>(view);
     if(v) {
         // Check if the view is present in the list
         bool view_is_present = m_CreatedViewList.contains(v);

@@ -106,7 +106,7 @@ T *mafObjectFactory::instantiateObject( const mafString& className, const mafStr
         this->registerObject<T>(className);
     }
     QObject *obj = m_ObjectMap.value(className)->make(location);
-    return dynamic_cast<T *>(obj);
+    return qobject_cast<T *>(obj);
 }
 
 template <typename T>
@@ -115,7 +115,7 @@ mafSmartPointer<T> mafObjectFactory::instantiateSmartObject( const mafString& cl
         this->registerObject<T>(className);
     }
     QObject *obj = m_ObjectMap.value(className)->make();
-    T *p = dynamic_cast<T *>(obj);
+    T *p = qobject_cast<T *>(obj);
     return mafSmartPointer<T>(p);
 }
 

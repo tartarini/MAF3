@@ -35,7 +35,7 @@ testObjectCustomForCoreRegistration::testObjectCustomForCoreRegistration(const m
 }
 
 bool testObjectCustomForCoreRegistration::acceptObject(mafCore::mafObjectBase *obj) {
-    mafObject *object = dynamic_cast<mafCore::mafObject*>(obj);
+    mafObject *object = qobject_cast<mafCore::mafObject*>(obj);
     if(object != NULL) {
         const mafTagList *tagList = object->tagList();
         if(tagList->size() > 0) {

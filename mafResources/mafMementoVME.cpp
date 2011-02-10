@@ -23,7 +23,7 @@ mafMementoVME::mafMementoVME(const mafString code_location) : mafMemento(code_lo
 }
 
 mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const mafString code_location)  : mafMemento(obj, code_location) {
-    mafVME *vme = dynamic_cast<mafResources::mafVME*>((mafObject *)obj);
+    mafVME *vme = qobject_cast<mafResources::mafVME*>((mafObject *)obj);
     REQUIRE(vme);
 
     mafMementoPropertyList *list = mementoPropertyList();

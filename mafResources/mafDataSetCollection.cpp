@@ -48,7 +48,7 @@ void mafDataSetCollection::setInterpolator(mafInterpolator *interpolator) {
 
 void mafDataSetCollection::setInterpolator(const mafString &interpolator_type) {
     mafObjectBase *obj = mafNEWFromString(interpolator_type);
-    mafInterpolator *new_interpolator = dynamic_cast<mafInterpolator *>(obj);
+    mafInterpolator *new_interpolator = qobject_cast<mafInterpolator *>(obj);
     if(new_interpolator) {
         setInterpolator(new_interpolator);
     } else {

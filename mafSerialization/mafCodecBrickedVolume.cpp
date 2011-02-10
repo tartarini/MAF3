@@ -26,7 +26,7 @@ mafCodecBrickedVolume::~mafCodecBrickedVolume() {
 }
 
 void mafCodecBrickedVolume::encode(mafMemento *memento) {
-    mafFile *file = dynamic_cast<mafFile *>(m_Device);
+    mafFile *file = qobject_cast<mafFile *>(m_Device);
     REQUIRE(memento != NULL);
     REQUIRE(m_Device != NULL);
     REQUIRE(file != NULL);

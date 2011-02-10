@@ -85,7 +85,7 @@ void mafOperationManager::initializeConnections() {
 
 
 void mafOperationManager::vmeSelect(mafCore::mafObjectBase *obj) {
-    mafVME *vme = dynamic_cast<mafResources::mafVME*>(obj);
+    mafVME *vme = qobject_cast<mafResources::mafVME*>(obj);
     if(vme && vme != m_SelectedVME) {
         // VME has been selected.
         m_SelectedVME = vme;

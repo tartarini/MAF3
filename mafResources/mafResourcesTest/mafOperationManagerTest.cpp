@@ -58,7 +58,7 @@ testOperationforOperationManager::testOperationforOperationManager(const mafStri
 }
 
 bool testOperationforOperationManager::acceptObject(mafCore::mafObjectBase *obj) {
-    mafVME *vme = dynamic_cast<mafVME*>(obj);
+    mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
         return true;
     }
@@ -107,7 +107,7 @@ testFirstUndoableOperationforOperationManager::testFirstUndoableOperationforOper
 }
 
 bool testFirstUndoableOperationforOperationManager::acceptObject(mafCore::mafObjectBase *obj) {
-    mafVME *vme = dynamic_cast<mafVME*>(obj);
+    mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
         return true;
     }
@@ -149,7 +149,7 @@ testSecondUndoableOperationforOperationManager::testSecondUndoableOperationforOp
 }
 
 bool testSecondUndoableOperationforOperationManager::acceptObject(mafCore::mafObjectBase *obj) {
-    mafVME *vme = dynamic_cast<mafVME*>(obj);
+    mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
         return true;
     }
