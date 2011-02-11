@@ -95,7 +95,7 @@
             </sizepolicy>
            </property>
            <property name="autoFillBackground">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <widget class="QWidget" name="verticalLayoutWidget_3">
             <property name="geometry">
@@ -129,72 +129,7 @@
   </widget>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonOkCancel</sender>
-   <signal>accepted()</signal>
-   <receiver>mafOperationWidget</receiver>
-   <slot>execute()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>181</x>
-     <y>295</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>184</x>
-     <y>319</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonOkCancel</sender>
-   <signal>rejected()</signal>
-   <receiver>mafOperationWidget</receiver>
-   <slot>cancel()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>98</x>
-     <y>293</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>97</x>
-     <y>318</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonOkCancel</sender>
-   <signal>accepted()</signal>
-   <receiver>mafOperationWidget</receiver>
-   <slot>hide()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>52</x>
-     <y>294</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>54</x>
-     <y>334</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonOkCancel</sender>
-   <signal>rejected()</signal>
-   <receiver>mafOperationWidget</receiver>
-   <slot>hide()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>160</x>
-     <y>293</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>164</x>
-     <y>331</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>execute()</slot>
   <slot>cancel()</slot>
