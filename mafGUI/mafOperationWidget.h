@@ -60,6 +60,8 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
+    void connectOperationSlotsByName(QObject *slot_object, QObject *signal_object);
+
     Ui::mafOperationWidget *ui; ///< Pointer to the associated UI file
     QObject *m_Operation;   ///< Pointer to the current running operation.
     QWidget *m_OperationGUI; ///< GUI associated to m_Operation.
