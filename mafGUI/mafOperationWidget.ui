@@ -129,8 +129,74 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonOkCancel</sender>
+   <signal>accepted()</signal>
+   <receiver>mafOperationWidget</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>85</x>
+     <y>295</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>86</x>
+     <y>315</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonOkCancel</sender>
+   <signal>rejected()</signal>
+   <receiver>mafOperationWidget</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>178</x>
+     <y>293</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>184</x>
+     <y>344</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonOkCancel</sender>
+   <signal>accepted()</signal>
+   <receiver>mafOperationWidget</receiver>
+   <slot>execute()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>61</x>
+     <y>289</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>61</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonOkCancel</sender>
+   <signal>rejected()</signal>
+   <receiver>mafOperationWidget</receiver>
+   <slot>cancel()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>198</x>
+     <y>300</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>198</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
+  <signal>operationDismissed()</signal>
   <slot>execute()</slot>
   <slot>cancel()</slot>
  </slots>
