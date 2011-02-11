@@ -39,6 +39,10 @@ public slots:
     /// Execute the resource algorithm.
     /*virtual*/ void execute();
 
+    void on_textTest_textEdited(QString text);
+
+    void on_checkScalar_clicked(bool state);
+
 private:
     bool m_CheckScalar;
 };

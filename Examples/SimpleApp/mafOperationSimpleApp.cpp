@@ -16,6 +16,7 @@ using namespace mafResources;
 mafOperationSimpleApp::mafOperationSimpleApp(const mafString code_location) : mafOperation(code_location), m_CheckScalar(false) {
     m_UIFilename = "mafOperationSimpleApp.ui";
     m_CanUnDo = false;
+    setObjectName("mafOperationSimpleApp");
 }
 
 bool mafOperationSimpleApp::acceptObject(mafCore::mafObjectBase *obj) {
@@ -34,4 +35,12 @@ void mafOperationSimpleApp::setCheckScalar(bool s) {
 
 void mafOperationSimpleApp::execute() {
     mafMsgDebug() << mafTr("Executing demo operation...");
+}
+
+void mafOperationSimpleApp::on_textTest_textEdited(QString text) {
+    mafMsgDebug() << "Text inserted: " << text;
+}
+
+void mafOperationSimpleApp::on_checkScalar_clicked(bool state) {
+    mafMsgDebug() << "Scalar State: " << state;
 }
