@@ -10,7 +10,6 @@
  */
 
 #include <mafTestSuite.h>
-#include <mafObject.h>
 #include <mafNetworkConnectorQXMLRPC.h>
 #include <mafEventBusManager.h>
 

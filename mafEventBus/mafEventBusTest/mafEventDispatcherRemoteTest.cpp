@@ -10,10 +10,8 @@
  */
 
 #include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
 #include <mafEventDispatcherRemote.h>
 
-using namespace mafCore;
 using namespace mafEventBus;
 
 /**

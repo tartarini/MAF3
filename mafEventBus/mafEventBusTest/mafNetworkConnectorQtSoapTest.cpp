@@ -10,11 +10,8 @@
  */
 
 #include "mafTestSuite.h"
-#include <mafCoreSingletons.h>
-#include <mafObjectFactory.h>
 #include <mafNetworkConnectorQtSoap.h>
 #include "mafEventDefinitions.h"
-#include <mafObject.h>
 #include <mafEventBusManager.h>
 
 #include <QApplication>
@@ -22,7 +19,6 @@
 #define WSDL_URL "http://localhost:7889/HelloWordService?wsdl"
 
 using namespace mafEventBus;
-using namespace mafCore;
 
 //-------------------------------------------------------------------------
 /**

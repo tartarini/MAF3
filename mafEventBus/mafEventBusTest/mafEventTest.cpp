@@ -11,10 +11,8 @@
  */
 
 #include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
 #include <mafEvent.h>
 
-using namespace mafCore;
 using namespace mafEventBus;
 
 /**
