@@ -22,6 +22,9 @@ mafVMEManager* mafVMEManager::instance() {
 }
 
 void mafVMEManager::shutdown() {
+    m_SelectedVME = NULL;
+    mafDEL(m_Root);
+    mafDEL(m_VMEHierarchy);
 }
 
 mafVMEManager::mafVMEManager(const mafString code_location) : mafObjectBase(code_location), m_SelectedVME(NULL), m_Root(NULL), m_VMEHierarchy(NULL) {
@@ -30,8 +33,7 @@ mafVMEManager::mafVMEManager(const mafString code_location) : mafObjectBase(code
 
 mafVMEManager::~mafVMEManager() {
     //m_VMEHierarchy->clear();
-    mafDEL(m_Root);
-    mafDEL(m_VMEHierarchy);
+
 }
 
 void mafVMEManager::initializeConnections() {
