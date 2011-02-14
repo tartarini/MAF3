@@ -14,6 +14,9 @@
 #include "mafObjectRegistry.h"
 #include "mafVisitor.h"
 
+#define CALLBACK_SIGNATURE "1"
+#define SIGNAL_SIGNATURE   "2"
+
 using namespace mafCore;
 
 mafObjectBase::mafObjectBase(const mafString code_location) : QObject(), m_UIFilename("") {
@@ -72,6 +75,90 @@ void mafObjectBase::acceptVisitor(mafVisitor *v) {
     REQUIRE(v != NULL);
 
     v->visit(this);
+}
+
+void mafObjectBase::connectObjectSlotsByName(QObject *signal_object) {
+    const QMetaObject *mo = this->metaObject();
+    Q_ASSERT(mo);
+    const QObjectList list = qFindChildren<QObject *>(signal_object, QString());
+    for (int i = 0; i < mo->methodCount(); ++i) {
+        QMetaMethod method_slot = mo->method(i);
+        if (method_slot.methodType() != QMetaMethod::Slot)
+            continue;
+        const char *slot = mo->method(i).signature();
+        if (slot[0] != 'o' || slot[1] != 'n' || slot[2] != '_')
+            continue;
+        bool foundIt = false;
+        for(int j = 0; j < list.count(); ++j) {
+            const QObject *co = list.at(j);
+            QByteArray objName = co->objectName().toAscii();
+            int len = objName.length();
+            if (!len || qstrncmp(slot + 3, objName.data(), len) || slot[len+3] != '_')
+                continue;
+            int sigIndex = -1; //co->metaObject()->signalIndex(slot + len + 4);
+            const QMetaObject *smo = co->metaObject();
+            if (sigIndex < 0) { // search for compatible signals
+                int slotlen = qstrlen(slot + len + 4) - 1;
+                for (int k = 0; k < co->metaObject()->methodCount(); ++k) {
+                    QMetaMethod method = smo->method(k);
+                    if (method.methodType() != QMetaMethod::Signal)
+                        continue;
+
+                    if (!qstrncmp(method.signature(), slot + len + 4, slotlen)) {
+                        const char *signal = method.signature();
+                        mafString event_sig = SIGNAL_SIGNATURE;
+                        event_sig.append(signal);
+
+                        mafString observer_sig = CALLBACK_SIGNATURE;
+                        observer_sig.append(slot);
+
+                        if(connect(co, event_sig.toAscii(), this, observer_sig.toAscii())) {
+                            mafMsgDebug() << mafTr("CONNECTED slot %1 with signal %2").arg(slot, signal);
+                            foundIt = true;
+                            break;
+                        } else {
+                            mafMsgWarning() << mafTr("Cannot connect slot %1 with signal %2").arg(slot, signal);
+                        }
+                    }
+                }
+            }
+        }
+        if (foundIt) {
+            // we found our slot, now skip all overloads
+            while (mo->method(i + 1).attributes() & QMetaMethod::Cloned)
+                  ++i;
+        } else if (!(mo->method(i).attributes() & QMetaMethod::Cloned)) {
+            qWarning("QMetaObject::connectSlotsByName: No matching signal for %s", slot);
+        }
+    }
+}
+
+
+void mafObjectBase::initializeUI(QObject *selfUI) {
+    mafList<QObject *> widgetList = qFindChildren<QObject *>(selfUI, QString());
+    int i = 0, size = widgetList.count();
+    for(; i<size; i++) {
+        QObject *widget = widgetList.at(i);
+        mafString widgetName = widget->objectName();
+
+        QVariant value = this->property(widgetName.toAscii());
+        if(!value.isValid()) {
+            //mafMsgWarning(mafTr("Property with name %1 doesn't exist").arg(widgetName).toAscii());
+            continue;
+        }
+
+        const QMetaObject *metaobject = widget->metaObject();
+        int count = metaobject->propertyCount();
+        for (int i=0; i<count; ++i) {
+            QMetaProperty metaproperty = metaobject->property(i);
+            if(!metaproperty.isUser()) {
+                continue;
+            }
+            const char *name = metaproperty.name();
+            widget->setProperty(name,value);
+            break;
+        }
+    }
 }
 
 //void mafObjectBase::createHashCode(mafString &token) {
