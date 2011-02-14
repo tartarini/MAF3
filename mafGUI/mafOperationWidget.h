@@ -21,6 +21,7 @@ namespace Ui {
 }
 
 // Class forwarding list
+class mafObjectBase;
 
 /**
     Class name: mafOperationWidget
@@ -34,7 +35,7 @@ public:
     ~mafOperationWidget();
 
     /// Assign the current operation
-    void setOperation(QObject *op);
+    void setOperation(mafCore::mafObjectBase *op);
 
     /// Assign the operation's name
     void setOperationName(mafString name);
@@ -54,16 +55,15 @@ public slots:
     void cancel();
 
     /// Update the operation's property.
-    void setParameter(QVariant var);
+    //void setParameter(QVariant var);
 
 protected:
     void changeEvent(QEvent *e);
 
 private:
-    void connectOperationSlotsByName(QObject *slot_object, QObject *signal_object);
 
     Ui::mafOperationWidget *ui; ///< Pointer to the associated UI file
-    QObject *m_Operation;   ///< Pointer to the current running operation.
+    mafCore::mafObjectBase *m_Operation;   ///< Pointer to the current running operation.
     QWidget *m_OperationGUI; ///< GUI associated to m_Operation.
 };
 
