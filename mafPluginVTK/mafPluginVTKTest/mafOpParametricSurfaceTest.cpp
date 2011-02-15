@@ -36,7 +36,7 @@ using namespace mafPluginVTK;
 //mafOpParametricSurface
 //! </title>
 //! <description>
-//mafOpParametricSurface represent a VTK sphere surface with modificable parametrs.
+//mafOpParametricSurface represent a VTK sphere surface with modificable parameters.
 //! </description>
 
 class mafOpParametricSurfaceTest : public QObject {
@@ -53,7 +53,6 @@ private slots:
         // Create the parametric operation.
         m_OpParametric = mafNEW(mafPluginVTK::mafOpParametricSurface);
 
-        //! <snippet>
         // execute the operation
         m_OpParametric->execute();
 
