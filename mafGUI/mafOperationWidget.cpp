@@ -42,7 +42,6 @@ void mafOperationWidget::setOperationName(mafString name) {
 
 void mafOperationWidget::setOperationGUI(QWidget *gui) {
     m_OperationGUI = gui;
-//    m_Operation->setParent(m_OperationGUI);
     connect(ui->buttonOkCancel, SIGNAL(accepted()), m_OperationGUI, SLOT(close()));
     connect(ui->buttonOkCancel, SIGNAL(rejected()), m_OperationGUI, SLOT(close()));
     ui->verticalLayoutOperation->addWidget(m_OperationGUI);
