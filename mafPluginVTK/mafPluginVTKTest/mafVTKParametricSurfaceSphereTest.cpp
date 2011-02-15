@@ -35,7 +35,7 @@ using namespace mafPluginVTK;
 //mafVTKParametricSurfaceSphere
 //! </title>
 //! <description>
-//mafVTKParametricSurfaceSphere represent a VTK sphere surface with modificable parametrs.
+//mafVTKParametricSurfaceSphere represent a VTK sphere surface with modificable parameters.
 //! </description>
 
 class mafVTKParametricSurfaceSphereTest : public QObject {
