@@ -14,6 +14,7 @@
 #include <mafCoreRegistration.h>
 #include <mafResourcesRegistration.h>
 #include <mafEventBusManager.h>
+#include <mafVMEManager.h>
 #include <mafOperationManager.h>
 #include <mafOperation.h>
 #include <mafVME.h>
@@ -178,7 +179,10 @@ private slots:
         // Register all the creatable objects for the mafResources module.
         mafResourcesRegistration::registerResourcesObjects();
         m_EventBus = mafEventBusManager::instance();
+        m_VMEManager = mafVMEManager::instance();
         m_OperationManager = mafOperationManager::instance();
+
+        m_Vme = mafNEWFromString("mafResources::mafVME");
 
         mafRegisterObjectAndAcceptBind(testOperationforOperationManager);
         mafRegisterObjectAndAcceptBind(testFirstUndoableOperationforOperationManager);
@@ -191,8 +195,11 @@ private slots:
         mafUnregisterObjectAndAcceptUnbind(testFirstUndoableOperationforOperationManager);
         mafUnregisterObjectAndAcceptUnbind(testSecondUndoableOperationforOperationManager);
 
+        mafDEL(m_Vme);
+
         // Shutdown eventbus singleton and core singletons.
         mafEventBusManager::instance()->shutdown();
+        m_VMEManager->shutdown();
         mafMessageHandler::instance()->shutdown();
     }
 
@@ -226,17 +233,27 @@ private slots:
 private:
     mafEventBusManager *m_EventBus; ///< Reference to the event bus.
     mafOperationManager *m_OperationManager;
+    mafVMEManager *m_VMEManager;
+    mafCore::mafObjectBase *m_Vme;
 };
 
 void mafOperationManagerTest::mafOperationManagerAllocationTest() {
     QVERIFY(m_OperationManager != NULL);
 }
 
-void mafOperationManagerTest::setParametersTest() {
+void mafOperationManagerTest::setParametersTest() {  
+
     // Create the event's parameters.
     mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Vme));
+
+    //Select m_VME
+    m_EventBus->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+
+    argList.clear();
     mafString op("testOperationforOperationManager");
     argList.append(mafEventArgument(mafString, op));
+
     // Notify the event.
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
 
