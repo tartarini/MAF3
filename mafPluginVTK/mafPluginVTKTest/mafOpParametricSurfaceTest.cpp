@@ -62,7 +62,7 @@ private slots:
         m_OpParametric->execute();
 
         // get output of the operation
-        m_VME = dynamic_cast<mafVME *>(m_OpParametric->output()); //qobject_cast
+        m_VME = qobject_cast<mafVME *>(m_OpParametric->output());
 
         QVERIFY(m_VmeAdded->isEqual(m_VME));
     }
@@ -127,7 +127,7 @@ void mafOpParametricSurfaceTest::SetGetTest() {
 
 void mafOpParametricSurfaceTest::vmeAdd(mafCore::mafObjectBase *vme){
     QVERIFY(vme != NULL);
-    m_VmeAdded = dynamic_cast<mafVME *>(vme); //qobject_cast
+    m_VmeAdded = qobject_cast<mafVME *>(vme);
     }
 
 
