@@ -15,6 +15,7 @@
 #include <mafVisualPipeVTKSurface.h>
 #include <mafOpParametricSurface.h>
 #include <mafPluginManager.h>
+#include <mafVMEManager.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkAlgorithmOutput.h>
 #include <mafContainer.h>
@@ -47,8 +48,12 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
+        m_VMEManager = mafVMEManager::instance();
 
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
+
+        // Callbacks related to the VME creation
+        mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)");
 
         // Create the parametric operation.
         m_OpParametric = mafNEW(mafPluginVTK::mafOpParametricSurface);
@@ -58,21 +63,29 @@ private slots:
 
         // get output of the operation
         m_VME = dynamic_cast<mafVME *>(m_OpParametric->output()); //qobject_cast
+
+        QVERIFY(m_VmeAdded->isEqual(m_VME));
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_OpParametric);
         mafMessageHandler::instance()->shutdown();
+        m_VMEManager->shutdown();
     }
 
    /// Test Set/Get method of tparametric surface
     void SetGetTest();
 
+public slots:
+    void vmeAdd(mafCore::mafObjectBase *vme);
+
 
 private:
     mafOpParametricSurface *m_OpParametric; ///< Parametric operation.
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a surface.
+    mafVME *m_VmeAdded; ///< test object.
+    mafResources::mafVMEManager *m_VMEManager; ///< instance of mafVMEManager.
 };
 
 void mafOpParametricSurfaceTest::SetGetTest() {
@@ -111,6 +124,11 @@ void mafOpParametricSurfaceTest::SetGetTest() {
     iren->Delete();
     mafDEL(pipe);
 }
+
+void mafOpParametricSurfaceTest::vmeAdd(mafCore::mafObjectBase *vme){
+    QVERIFY(vme != NULL);
+    m_VmeAdded = dynamic_cast<mafVME *>(vme); //qobject_cast
+    }
 
 
 MAF_REGISTER_TEST(mafOpParametricSurfaceTest);
