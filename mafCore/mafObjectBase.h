@@ -68,6 +68,12 @@ public:
     /// Allows to accept a mafVisitor which will visit the object and will be executed the mafVisitor algorithm.
     virtual void acceptVisitor(mafVisitor *v);
 
+    /// Allows the generic connection, using the Qt notation on_ObjectName1_signal with on_ObjectName2_slot.
+    void connectObjectSlotsByName(QObject *signal_object);
+
+    /// initialize ui widgets with properties, using USER flag in Q_PROPERTY.
+    void initializeUI(QObject *selfUI);
+
 protected:
     /// set the hash code for the current object.
     /** This method is used from the undo mechanism like memento pattern
