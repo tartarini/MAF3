@@ -83,7 +83,7 @@ void mafQAManagerTest::profilerTest() {
     // snippet of code to be monitored.
     long int m = 0;
     int i = 0;
-    for(; i < 500000000; i++) {
+    for(; i < 500000000; ++i) {
         m = calcToProfile(m);
     }
 
@@ -95,7 +95,7 @@ void mafQAManagerTest::profilerTest() {
     // snippet of code to be monitored.
     m = 0;
     i = 0;
-    for(; i < 100000000; i++) {
+    for(; i < 100000000; ++i) {
         m = calcToProfile(m);
     }
 

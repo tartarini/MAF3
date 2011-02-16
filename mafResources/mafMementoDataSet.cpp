@@ -27,9 +27,9 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, mafPoseMatrix *matrix
         QList<mafVariant> matrixList; //should I use double instead of mafVariant?
 
         int r = 0;
-        for ( ; r < 4; r++) {
+        for ( ; r < 4; ++r) {
             int c = 0;
-            for ( ; c < 4 ; c++ ) {
+            for ( ; c < 4 ; ++c ) {
                 matrixList.append(matrix->get(r, c));
             }
         }

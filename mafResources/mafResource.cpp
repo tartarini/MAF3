@@ -111,7 +111,7 @@ void mafResource::removeInput(mafResource *resource) {
 void mafResource::removeAllInputs() {
     int i = 0;
     int num = m_InputList->count();
-    for( ; i < num; i++) {
+    for( ; i < num; ++i) {
         removeInput(i);
     }
 }

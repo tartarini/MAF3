@@ -50,7 +50,7 @@ testObjectCustomForNetworkConnectorXMLRPC::testObjectCustomForNetworkConnectorXM
 }
 
 void testObjectCustomForNetworkConnectorXMLRPC::updateObject() {
-    m_Var++;
+    ++m_Var;
 }
 
 void testObjectCustomForNetworkConnectorXMLRPC::setObjectValue(int v) {

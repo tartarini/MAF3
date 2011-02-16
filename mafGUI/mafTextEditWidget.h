@@ -53,8 +53,8 @@ private:
     QTextEdit *m_TextEditor; ///< text editor widget in which browse or edit text.
     mafSyntaxHighlighter *m_Highlighter; ///< syntax highlighter to apply on text editor.
 
-    // TO BE DONE
-    // QCompleter need to be used if we want to permit codecompletion
+    // GUARDARE l'esempio qcompleter!!
+
 };
 
 } // namespace mafGUI

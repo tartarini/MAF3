@@ -304,7 +304,7 @@ mafVariant mafCodecRawBinary::demarshall( mafString typeName, int multiplicity )
         mafList<mafVariant> value;
 
         int i = 0;
-        for (; i < multiplicity; i++) {
+        for (; i < multiplicity; ++i) {
             mafString type;
             int multi = 0;
             m_DataStreamRead >> type;
@@ -317,7 +317,7 @@ mafVariant mafCodecRawBinary::demarshall( mafString typeName, int multiplicity )
         mafMap<mafString,mafVariant> stct;
 
         int i = 0;
-        for (; i < multiplicity; i++) {
+        for (; i < multiplicity; ++i) {
             mafString type;
             int multi = 0;
             m_DataStreamRead >> type;
@@ -333,7 +333,7 @@ mafVariant mafCodecRawBinary::demarshall( mafString typeName, int multiplicity )
         mafHash<mafString,mafVariant> hash;
 
         int i = 0;
-        for (; i < multiplicity; i++) {
+        for (; i < multiplicity; ++i) {
             mafString type;
             int multi = 0;
             m_DataStreamRead >> type;

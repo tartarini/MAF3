@@ -52,7 +52,7 @@ testObjectCustomForNetworkConnectorSoap::testObjectCustomForNetworkConnectorSoap
 }
 
 void testObjectCustomForNetworkConnectorSoap::updateObject() {
-    m_Var++;
+    ++m_Var;
 }
 
 void testObjectCustomForNetworkConnectorSoap::setObjectValue(int v) {

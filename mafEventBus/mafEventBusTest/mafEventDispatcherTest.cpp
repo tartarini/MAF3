@@ -50,7 +50,7 @@ testObjectCustomForDispatcher::testObjectCustomForDispatcher() : QObject(), m_Va
 }
 
 void testObjectCustomForDispatcher::updateObject() {
-    m_Var++;
+    ++m_Var;
 }
 
 void testObjectCustomForDispatcher::updateObject2() {

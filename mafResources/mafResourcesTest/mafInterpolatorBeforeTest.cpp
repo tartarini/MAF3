@@ -42,7 +42,7 @@ private slots:
         //! </snippet>
 
         double ts[10] = {0.5, 1.5, 10.5, 11.0, 12.8, 23.9, 52.1, 53.0, 53.1, 53.2};
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 10; ++i) {
             mafDataSet *item = mafNEW(mafResources::mafDataSet);
             m_ItemMap.insert(ts[i], item);
             delete item;

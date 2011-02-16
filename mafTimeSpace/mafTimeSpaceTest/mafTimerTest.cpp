@@ -69,7 +69,7 @@ testObjectCustom::testObjectCustom(const mafString code_location) : mafObject(co
 }
 
 void testObjectCustom::updateObject() {
-    m_Var++;
+    ++m_Var;
     mafMsgDebug() << m_Var;
     if(m_OneShot) {
         QVERIFY(m_Var == 1);

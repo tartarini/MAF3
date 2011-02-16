@@ -231,7 +231,7 @@ void mafEventDispatcherLocalTest::notifyEventWithoutReturnValueTest() {
     m_EventDispatcherLocal->notifyEvent(*propSignal0, &argList);
 
     int argCounter=1;
-    for( ; argCounter <= 10; argCounter++) {
+    for( ; argCounter <= 10; ++argCounter) {
         if(argCounter != 0) {
             argList.append(mafEventArgument(int, argCounter));
         }
@@ -364,7 +364,7 @@ void mafEventDispatcherLocalTest::notifyEventWitReturnValueTest() {
 
     int argCounter=0;
     bool ret(false);
-    for( ; argCounter <= 10; argCounter++) {
+    for( ; argCounter <= 10; ++argCounter) {
         returnValue = -1;
         int *toAppend = new int(argCounter);
         if(argCounter != 0) { 
@@ -379,7 +379,7 @@ void mafEventDispatcherLocalTest::notifyEventWitReturnValueTest() {
 
         m_EventDispatcherLocal->notifyEvent(*notEvent, &argList, &ret_val);
         int c = 0, size = argList.count(), tempSum = 0;
-        for(; c<size;c++) {
+        for(; c<size;++c) {
             tempSum += *((int*)(argList.at(c).data()));
         }
 
@@ -389,7 +389,7 @@ void mafEventDispatcherLocalTest::notifyEventWitReturnValueTest() {
         delete notEvent;
     }
 
-    for( ;argCounter < 10; argCounter++) {
+    for( ;argCounter < 10; ++argCounter) {
         int *i = (int *)(argList.at(argCounter).data());
         delete i;
     }

@@ -93,7 +93,7 @@ bool mafObject::isEqual(const mafObjectBase *obj) const {
     if(Superclass::isEqual(obj)) {
         bool result = true;
         int i=0, size = m_TagList->size();
-        for(; i < size; i++) {
+        for(; i < size; ++i) {
             if(m_TagList->at(i) != ((mafObject *)obj)->tagList()->at(i)) {
                 result = false;
                 break;

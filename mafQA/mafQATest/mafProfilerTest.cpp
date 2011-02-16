@@ -64,7 +64,7 @@ void mafProfilerTest::profilerTest() {
     //! <snippet>
     m_Profiler->profilerStart("profilerTest", "mafProfilerTest.cpp", "Test note");
     long int m = 0;
-    for(int i = 0; i < 100000; i++) {
+    for(int i = 0; i < 100000; ++i) {
         m = calculate(m);
     }
     m_Profiler->profilerStop("profilerTest", "mafProfilerTest.cpp");
@@ -72,7 +72,7 @@ void mafProfilerTest::profilerTest() {
 
     m_Profiler->profilerStart("profilerTest2", "mafProfilerTest.cpp", "Test note");
     m = 0;
-    for(int i = 0; i < 1000000; i++) {
+    for(int i = 0; i < 1000000; ++i) {
         m = calculate(m);
     }
     m_Profiler->profilerStop("profilerTest2", "mafProfilerTest.cpp");

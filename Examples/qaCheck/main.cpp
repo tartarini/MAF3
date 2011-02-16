@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     mafStringList argList;
     if(cmd == "run") {
         int i = 3;
-        for(; i < argc; i++) {
+        for(; i < argc; ++i) {
             argList.append(argv[i]);
         }
         checker.execute(param, argList);
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
         checker.validatePlugin(param);
     } else {
         int i = 3;
-        for(; i < argc; i++) {
+        for(; i < argc; ++i) {
             argList.append(argv[i]);
         }
         checker.executeAndProfile(param, argList);

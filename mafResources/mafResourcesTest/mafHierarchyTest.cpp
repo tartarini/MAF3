@@ -254,7 +254,7 @@ void mafHierarchyTest::unbalancedTreeRandomCreation(unsigned int numberOfElement
         }
 
         m_Hierarchy->addHierarchyNode(sceneNode);
-        count++;
+        ++count;
     }
 }
 

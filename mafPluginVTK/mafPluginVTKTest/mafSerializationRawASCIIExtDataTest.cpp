@@ -260,7 +260,7 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
     int i = 0;
 
     //remove files crested by test
-    for (; i < list.size(); i++) {
+    for (; i < list.size(); ++i) {
         mafString fileName = test_dir;
         fileName.append("/");
         fileName.append(list.at(i));

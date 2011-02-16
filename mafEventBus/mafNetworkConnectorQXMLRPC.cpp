@@ -158,7 +158,7 @@ void mafNetworkConnectorQXMLRPC::send(const mafString event_id, mafEventArgument
         vl = new mafList<xmlrpc::Variant>();
 
         int i=0, size = argList->count();
-        for(;i<size;i++) {
+        for(;i<size;++i) {
             mafString typeArgument;
             typeArgument = argList->at(i).name();
             if(typeArgument != "mafList<mafVariant>") {

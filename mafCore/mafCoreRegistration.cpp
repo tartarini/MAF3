@@ -23,7 +23,7 @@ mafStringList mafCoreRegistration::acceptObject(mafCore::mafObjectBase *obj) {
         if(iter.value()(obj)) {
             res_list.append(iter.key());
         }
-        iter++;
+        ++iter;
     }
     return res_list;
 }

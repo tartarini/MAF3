@@ -33,14 +33,14 @@ namespace mafCore
     void change_owner(const mafTree<T>* owner)
       {
         m_master.change_owner(owner);
-        for (TYPENAME std::vector<mafTreeNode<T>*>::iterator i = m_children.begin(); i != m_children.end(); i++)
+        for (TYPENAME std::vector<mafTreeNode<T>*>::iterator i = m_children.begin(); i != m_children.end(); ++i)
           (*i)->change_owner(owner);
       }
 
     ~mafTreeNode(void)
       {
         m_parent = 0;
-        for (TYPENAME std::vector<mafTreeNode<T>*>::iterator i = m_children.begin(); i != m_children.end(); i++)
+        for (TYPENAME std::vector<mafTreeNode<T>*>::iterator i = m_children.begin(); i != m_children.end(); ++i)
           delete *i;
       }
 
@@ -51,7 +51,7 @@ namespace mafCore
   {
     if (!root) return 0;
     mafTreeNode<T>* new_tree = new mafTreeNode<T>(new_owner, root->m_data);
-    for (TYPENAME std::vector<mafTreeNode<T>*>::iterator i = root->m_children.begin(); i != root->m_children.end(); i++)
+    for (TYPENAME std::vector<mafTreeNode<T>*>::iterator i = root->m_children.begin(); i != root->m_children.end(); ++i)
     {
       mafTreeNode<T>* new_child = mafTree_copy(new_owner, *i);
       new_tree->m_children.push_back(new_child);
@@ -65,7 +65,7 @@ namespace mafCore
   {
     if (!root) return 0;
     unsigned result = 1;
-    for (TYPENAME std::vector<mafTreeNode<T>*>::iterator i = root->m_children.begin(); i != root->m_children.end(); i++)
+    for (TYPENAME std::vector<mafTreeNode<T>*>::iterator i = root->m_children.begin(); i != root->m_children.end(); ++i)
       result += mafTree_size(*i);
     return result;
   }
@@ -75,7 +75,7 @@ namespace mafCore
   {
     unsigned depth = 0;
     for (mafTreeNode<T>* i = root; i; i = i->m_parent)
-      depth++;
+      ++depth;
     return depth;
   }
 
@@ -273,7 +273,7 @@ namespace mafCore
           TYPENAME std::vector<mafTreeNode<T>*>::iterator found =
             std::find(parent->m_children.begin(), parent->m_children.end(), old_node);
           // if this was found, then see if there is another and if so return that
-          found++;
+          ++found;
           if (found != parent->m_children.end())
           {
             // visit the next child
@@ -435,7 +435,7 @@ namespace mafCore
       TYPENAME std::vector<mafTreeNode<T>*>::iterator found =
         std::find(parent->m_children.begin(), parent->m_children.end(), old_node);
       // if this was found, then see if there is another
-      found++;
+      ++found;
       if (found != parent->m_children.end())
       {
         // if so traverse to it and walk down the leftmost child pointers to the bottom of the new sub-tree
