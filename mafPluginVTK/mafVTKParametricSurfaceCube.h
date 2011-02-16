@@ -47,30 +47,30 @@ public slots:
     /*virtual*/ void updateSurface();
 
 protected slots:
-    /// Set the X lenght for the parametric cube.
+    /// Set the X Length for the parametric cube.
     void setCubeXLength(double XLength);
 
-    /// Set the Y lenght for the parametric cube.
+    /// Set the Y Length for the parametric cube.
     void setCubeYLength(double YLength);
 
-    /// Set the Z lenght for the parametric cube.
+    /// Set the Z Length for the parametric cube.
     void setCubeZLength(double ZLength);
 
-    /// Get the X lenght for the parametric cube.
+    /// Get the X Length for the parametric cube.
     double cubeXLength();
 
-    /// Get the Y lenght for the parametric cube.
+    /// Get the Y Length for the parametric cube.
     double cubeYLength();
 
-    /// Get the Z lenght for the parametric cube.
+    /// Get the Z Length for the parametric cube.
     double cubeZLength();
 
 private:
     vtkCubeSource *m_CubeSource; ///< Polydata representig a cube.
 
-    double m_CubeXLength; ///< Lenght X of the cube;
-    double m_CubeYLength; ///< Lenght Y of the cube;
-    double m_CubeZLength; ///< Lenght Z of the cube;
+    double m_CubeXLength; ///< Length X of the cube;
+    double m_CubeYLength; ///< Length Y of the cube;
+    double m_CubeZLength; ///< Length Z of the cube;
 };
 
 /////////////////////////////////////////////////////////////
