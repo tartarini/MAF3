@@ -35,7 +35,7 @@ using namespace mafPluginVTK;
 //mafVTKParametricSurfaceCylinder
 //! </title>
 //! <description>
-//mafVTKParametricSurfaceCylinder represent a VTK cylinder cylinder with modificable parametrs.
+//mafVTKParametricSurfaceCylinder represent a VTK cylinder cylinder with modificable parameters.
 //! </description>
 
 class mafVTKParametricSurfaceCylinderTest : public QObject {

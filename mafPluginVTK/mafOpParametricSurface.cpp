@@ -16,6 +16,7 @@
 
 using namespace mafPluginVTK;
 using namespace mafResources;
+using namespace mafEventBus;
 using namespace mafCore;
 
 mafOpParametricSurface::mafOpParametricSurface(const mafString code_location) : mafOperation(code_location), m_VME(NULL), m_DataSet(NULL) {
@@ -95,6 +96,11 @@ void mafOpParametricSurface::execute() {
     m_DataSet->setDataValue(&m_ParametricContainer);
     m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
     this->m_Output = m_VME;
+
+    //Notify vme addd
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 }
 
 void mafOpParametricSurface::setParameters(mafList<mafVariant> parameters) {

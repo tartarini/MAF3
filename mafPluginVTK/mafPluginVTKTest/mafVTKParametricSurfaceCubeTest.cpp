@@ -35,7 +35,7 @@ using namespace mafPluginVTK;
 //mafVTKParametricSurfaceCube
 //! </title>
 //! <description>
-//mafVTKParametricSurfaceCube represent a VTK cube surface with modificable parametrs.
+//mafVTKParametricSurfaceCube represent a VTK cube surface with modificable parameters.
 //! </description>
 
 class mafVTKParametricSurfaceCubeTest : public QObject {

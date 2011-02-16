@@ -35,7 +35,7 @@ using namespace mafPluginVTK;
 //mafVTKParametricSurfaceEllipsoid
 //! </title>
 //! <description>
-//mafVTKParametricSurfaceEllipsoid represent a VTK ellipsoid surface with modificable parametrs.
+//mafVTKParametricSurfaceEllipsoid represent a VTK ellipsoid surface with modificable parameters.
 //! </description>
 
 class mafVTKParametricSurfaceEllipsoidTest : public QObject {
