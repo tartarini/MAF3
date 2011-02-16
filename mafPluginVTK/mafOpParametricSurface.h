@@ -31,6 +31,7 @@ namespace mafPluginVTK {
   */
 class MAFPLUGINVTKSHARED_EXPORT mafOpParametricSurface : public mafResources::mafOperation {
     Q_OBJECT
+    Q_PROPERTY(int parametricSurfaceType READ parametricSurfaceType WRITE setParametricSurfaceType)
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafOperation);
 
@@ -46,13 +47,77 @@ public:
 
 public slots:
     /// Set type of parametric surface used as marker.
-    void setSurfaceType(int parametricSurfaceType);
+    void setParametricSurfaceType(int parametricSurfaceType);
+
+    /// Return the type of parametric surface used as marker.
+    int parametricSurfaceType();
 
     /// Set parameters of operation.
     virtual void setParameters(mafList<mafVariant> parameters);
 
     /// Execute the resource algorithm.
     virtual void execute();
+
+    /// Select surface type.
+    void on_parametricSurfaceType_currentChanged(int index);
+
+    /// Set sphere radius.
+    void on_sphereRadius_valueChanged(double d);
+
+    /// Set sphere phi resolution.
+    void on_spherePhiRes_valueChanged(double d);
+
+    /// Set sphere theta resolution.
+    void on_sphereThetaRes_valueChanged(double d);
+
+    /// Set cube X length.
+    void on_cubeXLength_valueChanged(double d);
+
+    /// Set cube Y length.
+    void on_cubeYLength_valueChanged(double d);
+
+    /// Set cube Z length.
+    void on_cubeZLength_valueChanged(double d);
+
+    /// Set cone radius.
+    void on_coneRadius_valueChanged(double d);
+
+    /// Set cone height.
+    void on_coneHeight_valueChanged(double d);
+
+    /// Set cone res.
+    void on_coneRes_valueChanged(double d);
+
+    /// Set cone capping.
+    void on_coneCapping_stateChanged(int state);
+
+    /// Set cylinder radius.
+    void on_cylinderRadius_valueChanged(double d);
+
+    /// Set sphere height.
+    void on_cylinderHeight_valueChanged(double d);
+
+    /// Set sphere resolution.
+    void on_cylinderRes_valueChanged(double d);
+
+    /// Set ellipsoid radius.
+    void on_ellipsoidRadius_valueChanged(double d);
+
+    /// Set ellipsoid phi resolution.
+    void on_ellipsoidPhiRes_valueChanged(double d);
+
+    /// Set ellipsoid theta resolution.
+    void on_ellipsoidThetaRes_valueChanged(double d);
+
+    /// Set ellipsoid X length.
+    void on_ellipsoidXLength_valueChanged(double d);
+
+    /// Set ellipsoid Y length.
+    void on_ellipsoidYLength_valueChanged(double d);
+
+    /// Set ellipsoid Z length.
+    void on_ellipsoidZLength_valueChanged(double d);
+
 
     /// Terminate the execution.
     //virtual bool terminate();
