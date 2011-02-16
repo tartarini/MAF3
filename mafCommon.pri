@@ -30,6 +30,9 @@ TARGET = $$join(TARGET,,,$$BUILD_EXT)
 
 INSTALL_DIR = $$(MAF3_INSTALL_DIR)
 
+
+
+
 # Initialize the directory that will contains the binary
 # this directory takes in account of the definition of
 # the environment variable MAF3_INSTALL_DIR
@@ -39,10 +42,14 @@ LIB_PREFIX = lib
 
 win32 {
     DESTDIR = $$INSTALL_DIR\bin\\$$BUILD_DIR
+    OBJECTS_DIR = $$DESTDIR\\OBJ
+    MOC_DIR = $$DESTDIR\\MOC
     LIB_PREFIX = ""
 }
 unix {
     DESTDIR = $$INSTALL_DIR/bin/$$BUILD_DIR
+    OBJECTS_DIR = $$DESTDIR/OBJ
+    MOC_DIR = $$DESTDIR/MOC
 }
 
 # Definitions of gcov and lcov flags.
