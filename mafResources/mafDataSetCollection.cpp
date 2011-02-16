@@ -26,7 +26,7 @@ mafDataSetCollection::~mafDataSetCollection() {
     while(iter != m_CollectionMap->end()) {
         disconnect(iter.value(), SIGNAL(destroyed()),this, SLOT(itemDestroyed()));
         mafDEL(iter.value());
-        iter++;
+        ++iter;
     }
     m_CollectionMap->clear();
     mafDEL(m_CollectionMap);
@@ -129,7 +129,7 @@ void mafDataSetCollection::position(double pos[3], double t) {
     }
 
     // Extract the position vector from the matrix and write it into the array.
-    for(int i = 0; i < 3; i++) {
+    for(int i = 0; i < 3; ++i) {
         pos[i] = m->get(i,3);
     }
 }
@@ -194,7 +194,7 @@ void mafDataSetCollection::writeOrientation(double rx, double ry, double rz, maf
 
     // Store the old position for the matrix m
     double pos[3];
-    for(int i = 0; i < 3; i++) {
+    for(int i = 0; i < 3; ++i) {
         pos[i] = m->get(i,3);
     }
 

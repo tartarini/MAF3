@@ -41,7 +41,7 @@ void mafTreeModel::buildModel(bool init) {
     }
 
     int index = 0, size = m_Hierarchy->currentNumberOfChildren();
-    for(;index < size; index++) {
+    for(;index < size; ++index) {
         m_Hierarchy->moveTreeIteratorToNthChild(index);
         QObject *obj = m_Hierarchy->currentData();
         mafString name = obj->objectName();
@@ -111,7 +111,7 @@ void mafTreeModel::removeItem(const QModelIndex &index) {
     }
 
     int i=0, size=temp->rowCount();
-    for(;i<size;i++) {
+    for(;i<size;++i) {
         removeItem(temp->index().child(i,0));
     }
     // remove also from the hierarchy?

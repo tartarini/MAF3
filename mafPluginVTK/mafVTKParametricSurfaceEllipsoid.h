@@ -33,9 +33,9 @@ class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceEllipsoid : public mafPlu
     Q_PROPERTY(double ellipsoidRadius READ ellipsoidRadius WRITE setEllipsoidRadius)
     Q_PROPERTY(double ellipsoidPhiRes READ ellipsoidPhiRes WRITE setEllipsoidPhiRes)
     Q_PROPERTY(double ellipsoidTheRes READ ellipsoidTheRes WRITE setEllipsoidTheRes)
-    Q_PROPERTY(int ellipsoidXLenght READ ellipsoidXLenght WRITE setEllipsoidXLenght)
-    Q_PROPERTY(int ellipsoidYLenght READ ellipsoidYLenght WRITE setEllipsoidYLenght)
-    Q_PROPERTY(int ellipsoidZLenght READ ellipsoidZLenght WRITE setEllipsoidZLenght)
+    Q_PROPERTY(double ellipsoidXLength READ ellipsoidXLength WRITE setEllipsoidXLength)
+    Q_PROPERTY(double ellipsoidYLength READ ellipsoidYLength WRITE setEllipsoidYLength)
+    Q_PROPERTY(double ellipsoidZLength READ ellipsoidZLength WRITE setEllipsoidZLength)
     /// typedef macro.
     mafSuperclassMacro(mafPluginVTK::mafVTKParametricSurface);
 
@@ -62,14 +62,14 @@ protected slots:
     /// Set the resolution of the parametric ellipsoid.
     void setEllipsoidTheRes(double ellipsoidTheRes);
 
-    /// Set the X lenght of the parametric ellipsoid.
-    void setEllipsoidXLenght(double ellipsoidXLenght);
+    /// Set the X length of the parametric ellipsoid.
+    void setEllipsoidXLength(double ellipsoidXLength);
 
-    /// Set the X lenght of the parametric ellipsoid.
-    void setEllipsoidYLenght(double ellipsoidYLenght);
+    /// Set the X length of the parametric ellipsoid.
+    void setEllipsoidYLength(double ellipsoidYLength);
 
-    /// Set the X lenght of the parametric ellipsoid.
-    void setEllipsoidZLenght(double ellipsoidZLenght);
+    /// Set the X length of the parametric ellipsoid.
+    void setEllipsoidZLength(double ellipsoidZLength);
 
     /// Get the radius of the parametric ellipsoid.
     double ellipsoidRadius();
@@ -80,14 +80,14 @@ protected slots:
     /// get the resolution of the parametric ellipsoid.
     double ellipsoidTheRes();
 
-    /// Get the X lenght of the parametric ellipsoid.
-    double ellipsoidXLenght();
+    /// Get the X length of the parametric ellipsoid.
+    double ellipsoidXLength();
 
-    /// Get the Y lenght of the parametric ellipsoid.
-    double ellipsoidYLenght();
+    /// Get the Y length of the parametric ellipsoid.
+    double ellipsoidYLength();
 
-    /// Get the Z lenght of the parametric ellipsoid.
-    double ellipsoidZLenght();
+    /// Get the Z length of the parametric ellipsoid.
+    double ellipsoidZLength();
 
 
 private:
@@ -98,9 +98,9 @@ private:
     double m_EllipsoidRadius; ///< Radius of the ellipsoid.
     double m_EllipsoidPhiRes; ///< Ellipsoid resolution.
     double m_EllipsoidTheRes; ///< Ellipsoid resolution.
-    double m_EllipsoidXLenght; ///< X lenght of the ellipsoid.
-    double m_EllipsoidYLenght; ///< Y lenght of the ellipsoid.
-    double m_EllipsoidZLenght; ///< Z lenght of the ellipsoid.
+    double m_EllipsoidXLength; ///< X length of the ellipsoid.
+    double m_EllipsoidYLength; ///< Y length of the ellipsoid.
+    double m_EllipsoidZLength; ///< Z length of the ellipsoid.
 
 };
 
@@ -120,16 +120,16 @@ inline void mafVTKParametricSurfaceEllipsoid::setEllipsoidTheRes(double ellipsoi
     m_EllipsoidTheRes = ellipsoidThiRes;
 }
 
-inline void mafVTKParametricSurfaceEllipsoid::setEllipsoidXLenght(double ellipsoidXLenght){
-    m_EllipsoidXLenght = ellipsoidXLenght;
+inline void mafVTKParametricSurfaceEllipsoid::setEllipsoidXLength(double ellipsoidXLength){
+    m_EllipsoidXLength = ellipsoidXLength;
 }
 
-inline void mafVTKParametricSurfaceEllipsoid::setEllipsoidYLenght(double ellipsoidYLenght){
-    m_EllipsoidYLenght = ellipsoidYLenght;
+inline void mafVTKParametricSurfaceEllipsoid::setEllipsoidYLength(double ellipsoidYLength){
+    m_EllipsoidYLength = ellipsoidYLength;
 }
 
-inline void mafVTKParametricSurfaceEllipsoid::setEllipsoidZLenght(double ellipsoidZLenght){
-    m_EllipsoidZLenght = ellipsoidZLenght;
+inline void mafVTKParametricSurfaceEllipsoid::setEllipsoidZLength(double ellipsoidZLength){
+    m_EllipsoidZLength = ellipsoidZLength;
 }
 
 inline double mafVTKParametricSurfaceEllipsoid::ellipsoidRadius(){
@@ -144,16 +144,16 @@ inline double mafVTKParametricSurfaceEllipsoid::ellipsoidTheRes(){
     return m_EllipsoidTheRes;
 }
 
-inline double mafVTKParametricSurfaceEllipsoid::ellipsoidXLenght(){
-    return m_EllipsoidXLenght;
+inline double mafVTKParametricSurfaceEllipsoid::ellipsoidXLength(){
+    return m_EllipsoidXLength;
 }
 
-inline double mafVTKParametricSurfaceEllipsoid::ellipsoidYLenght(){
-    return m_EllipsoidYLenght;
+inline double mafVTKParametricSurfaceEllipsoid::ellipsoidYLength(){
+    return m_EllipsoidYLength;
 }
 
-inline double mafVTKParametricSurfaceEllipsoid::ellipsoidZLenght(){
-    return m_EllipsoidZLenght;
+inline double mafVTKParametricSurfaceEllipsoid::ellipsoidZLength(){
+    return m_EllipsoidZLength;
 }
 
 }

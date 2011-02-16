@@ -71,7 +71,7 @@ void testPluginObserver::pluggedObject(mafCore::mafPluggedObjectsHash pluginHash
             m_PluggedPipe->setObjectName(objInfo.m_Label);
             break;
         }
-        iter++;
+        ++iter;
     }
 }
 

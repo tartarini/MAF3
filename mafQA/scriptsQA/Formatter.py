@@ -10,6 +10,8 @@ import getopt
 
 def usage():
     print "Usage: python Formatter.py [--enable-LCOVCoverage]"
+    print "-l, --enable-LCOVCoverage=    enable LCOV coverage"
+    print "-c, --enable-cppcheck=       enable cppcheck tool"
 
 def search_file(filename, search_path):
    """Given a search path, find file
@@ -109,6 +111,13 @@ def run(param):
       os.chdir(scriptsDir);
       headString = headString[:pos] + "<li><a href=\"../externalLCOVCoverage/index.html\">LCOV Coverage</a></li>" + headString[pos:]
 
+   if(param['cppcheck']):
+      #generateExternalLink
+      externalScriptDirectory = scriptsDir + "/ExternalScripts"
+      os.chdir(externalScriptDirectory)
+      os.system("python " + externalScriptDirectory + "/cppcheckPublish.py")
+
+
    #remove placeholder for external scripting
    headString = headString.replace("@@@_EXTERNAL_TOOLS_REPORT_@@@", "")
 
@@ -181,25 +190,26 @@ def run(param):
    index.write(tailString)
    index.close()
 
-   
-
    os.chdir(scriptsDir)
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "l", ["enable-LCOVCoverage",])
+        opts, args = getopt.getopt(sys.argv[1:], "lc", ["enable-LCOVCoverage","enable-cppcheck"])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
         
     LCOVCoverageFlag = False
+    cppcheckFlag=False
     for o, a in opts:
         if o in ("-l", "--enable-LCOVCoverage"):
             LCOVCoverageFlag = True
+        elif o in ("-c", "--enable-cppcheck"):
+            cppcheckFlag = True
         else:
             assert False, "unhandled option"
 
-    param = {'LCOVCoverage':LCOVCoverageFlag}
+    param = {'LCOVCoverage':LCOVCoverageFlag, 'cppcheck':cppcheckFlag}
     run(param)
 
 

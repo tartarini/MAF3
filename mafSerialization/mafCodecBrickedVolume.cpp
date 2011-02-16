@@ -665,7 +665,7 @@ int mafCodecBrickedVolume::calcMultiresolutionLevel(int dataType, int componentN
         ySize = ySize >> 1;
         zSize = zSize >> 1;
         totalBytes = bytesPerVoxel * xSize * ySize * zSize / 1024;
-        levels++;
+        ++levels;
     }
     return levels;
 }

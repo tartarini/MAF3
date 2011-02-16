@@ -44,7 +44,7 @@ void mafHierarchy::removeCurrentHierarchyNode() {
 
     mafTree<QObject *> cutTree;
     cutTree = m_Tree->cut(m_TreeIterator);
-    for (mafTree<QObject *>::prefix_iterator i = cutTree.prefix_begin(); i != cutTree.prefix_end(); i++) {
+    for (mafTree<QObject *>::prefix_iterator i = cutTree.prefix_begin(); i != cutTree.prefix_end(); ++i) {
         mafTreeNode<QObject *> *n = i.simplify().node();
         if(n->m_data) {
            delete n->m_data;
@@ -84,7 +84,7 @@ unsigned int mafHierarchy::numberOfChildren(QObject *node) {
 void mafHierarchy::moveTreeIteratorToNode(QObject *node) {
     REQUIRE(node != NULL);
 
-    for (mafTree<QObject *>::prefix_iterator i = m_Tree->prefix_begin(); i != m_Tree->prefix_end(); i++) {
+    for (mafTree<QObject *>::prefix_iterator i = m_Tree->prefix_begin(); i != m_Tree->prefix_end(); ++i) {
         mafTreeNode<QObject *> *n = i.simplify().node();
         if(n->m_data == node) {
             m_TreeIterator =  i.simplify();
@@ -100,7 +100,7 @@ void mafHierarchy::moveTreeIteratorToRootNode() {
 void mafHierarchy::clear() {
     mafTree<QObject *>::prefix_iterator i = m_Tree->prefix_begin();
     mafTree<QObject *>::prefix_iterator iterEnd = m_Tree->prefix_end();
-    for (; i != iterEnd; i++) {
+    for (; i != iterEnd; ++i) {
         mafTreeNode<QObject *> *n = i.simplify().node();
         if(n->m_data) {
             delete n->m_data;
@@ -113,7 +113,7 @@ void mafHierarchy::clear() {
 }
 
 void mafHierarchy::printInformation(mafString &string) {
-    for (mafTree<QObject *>::prefix_iterator i = m_Tree->prefix_begin(); i != m_Tree->prefix_end(); i++) {
+    for (mafTree<QObject *>::prefix_iterator i = m_Tree->prefix_begin(); i != m_Tree->prefix_end(); ++i) {
         mafTreeNode<QObject *> *n = i.simplify().node();
         QObject *obj = n->m_data;
         if(obj != NULL) {

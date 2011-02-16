@@ -27,7 +27,7 @@ mafDataSet *mafInterpolatorNearest::itemAt(mafDataSetMap *collection, double t) 
     }
     int shift_idx = collection->size() / 2;
     iter_mid += shift_idx;
-    iter_up--;
+    --iter_up;
     double val_low = iter_low.key();
     double value_mid = iter_mid.key();
     double value_up = iter_up.key();
@@ -45,12 +45,12 @@ mafDataSet *mafInterpolatorNearest::itemAt(mafDataSetMap *collection, double t) 
     while(iter_low.key() < iter_up.key()) {
         if(t < value_mid) {
             iter_up = iter_mid;
-            iter_up--;
+            --iter_up;
             shift_idx /= 2;
             iter_mid -=shift_idx;
         } else if(t > value_mid) {
             iter_low = iter_mid;
-            iter_low++;
+            ++iter_low;
             shift_idx /= 2;
             iter_mid +=shift_idx;
         } else {

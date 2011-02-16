@@ -165,7 +165,7 @@ void mafOperationManager::executeOperation() {
                 clearUndoStack();
             } else {
                 bool found = false;
-                for(i = m_UndoStack.begin() ; i != m_UndoStack.end(); i++) {
+                for(i = m_UndoStack.begin() ; i != m_UndoStack.end(); ++i) {
                     if(found) {
                         mafDEL(*i);
                     }
@@ -202,7 +202,7 @@ void mafOperationManager::undoOperation() {
     usc.execute();
     //m_LastExecutedOperation->unDo();
     mafLinkedList<mafOperation*>::Iterator i;
-    for(i = m_UndoStack.begin() ; i != m_UndoStack.end(); i++) {
+    for(i = m_UndoStack.begin() ; i != m_UndoStack.end(); ++i) {
         if(*i == m_LastExecutedOperation) {
             if(i == m_UndoStack.begin()) {
                 m_LastExecutedOperation = NULL;
@@ -216,7 +216,7 @@ void mafOperationManager::undoOperation() {
 
 void mafOperationManager::redoOperation() {
     mafLinkedList<mafOperation*>::Iterator i;
-    for(i = m_UndoStack.begin() ; i != m_UndoStack.end(); i++) {
+    for(i = m_UndoStack.begin() ; i != m_UndoStack.end(); ++i) {
         if(m_LastExecutedOperation == NULL) { //keep separate from below condition only for undertanding better
             //means that with undo, user arrives at the beginning
             m_LastExecutedOperation = *(m_UndoStack.begin());

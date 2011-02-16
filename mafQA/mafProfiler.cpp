@@ -85,13 +85,13 @@ void mafProfiler::logResults( int index ) {
         m_LogStream << "Notes: " << m_ProfiledFunctions[index].Notes << "\n";
     }
 
-    double elapsed_time;
     if (m_ProfiledFunctions[index].MultipleCalls) {
         m_LogStream << mafString("Number of times called: ") << m_ProfiledFunctions[index].NumTimesCalled << "\n";
         double meanElapsedTime = static_cast< double >( m_ProfiledFunctions[index].TotalElapsedTime ) / m_ProfiledFunctions[index].NumTotalProfileTimes;
         m_LogStream << mafString("Avg. mSecs: ") << mafString::number(meanElapsedTime) << "\n";
         m_LogStream << mafString("Total mSecs: ") << mafString::number(m_ProfiledFunctions[index].TotalElapsedTime) << "\n";
     } else {
+        double elapsed_time;
         m_LogStream << "Call Number: " << m_ProfiledFunctions[index].NumTimesCalled << "\n";
         elapsed_time = static_cast< double >(m_ProfiledFunctions[index].ElapsedTime[m_ProfiledFunctions[index].NumTimesCalled - 1]);
         m_LogStream << "mSecs: " << mafString::number(elapsed_time) << "\n";

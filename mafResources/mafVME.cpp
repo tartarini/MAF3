@@ -39,7 +39,7 @@ mafVME::~mafVME() {
     while(iter != m_MementoDataSetHash.end()) {
         mafMementoDataSet *memento = iter.key();
         mafDEL(memento);
-        iter++;
+        ++iter;
     }
     m_MementoDataSetHash.clear();
 }
@@ -160,12 +160,12 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
             item = list->at(i+1);
             if (item.m_Name == "poseMatrix") {
                 propList->append(item);
-                i++; //
+                ++i; //
             }
             //append codecType, dataType, dataHash, dataSize and dataValue.
             int n = 0;
-            for ( ; n < 5; n++) {
-                i++;
+            for ( ; n < 5; ++n) {
+                ++i;
                 propList->append(list->at(i));
             }
             m_MementoDataSetHash.insert(mementoDataSet, time);
@@ -188,7 +188,7 @@ void mafVME::updateData() {
         memento->setObjectClassType(dataSet->metaObject()->className());
         dataSet->setMemento(memento);
         this->dataSetCollection()->insertItem(dataSet, iter.value());
-        iter++;
+        ++iter;
     }
     this->setDataLoaded(true);
     this->updateBounds();
@@ -202,7 +202,7 @@ void mafVME::updateBounds() {
             double b[6];
             boundary->bounds(b);
             int i = 0;
-            for(; i < 6; i++) {
+            for(; i < 6; ++i) {
                 m_Bounds.append(b[i]);
             }
         }

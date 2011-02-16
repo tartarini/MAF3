@@ -53,7 +53,7 @@ testObjectCustom::testObjectCustom() : m_Var(0) {
 }
 
 void testObjectCustom::updateObject() {
-    m_Var++;
+    ++m_Var;
 }
 
 void testObjectCustom::setObjectValue(int v) {
@@ -366,7 +366,7 @@ void mafEventBusManagerTest::reverseOrderRegistrationTest() {
     //notify event
     m_EventBus->notifyEvent("maf.local.custom.topic");
 
-    startValue++; //notify will update the value adding 1
+    ++startValue; //notify will update the value adding 1
     int check = m_ObjTestObserver->var();
     QVERIFY(startValue == check);
     delete ObjTestSender;

@@ -651,7 +651,7 @@ int mafCodecVolume::calcMultiresolutionLevel(int dataType, int componentNum, int
         ySize = ySize >> 1;
         zSize = zSize >> 1;
         totalBytes = xSize * ySize * zSize * bytesPerVoxel / 1024;
-        levels++;
+        ++levels;
     }
     return levels;
 }

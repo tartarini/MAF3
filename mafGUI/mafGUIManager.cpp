@@ -192,7 +192,7 @@ void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pl
                 connect(action, SIGNAL(triggered()), this, SLOT(createView()));
             }
         }
-        iter++;
+        ++iter;
     }
 
     this->updateMenuForSelectedVme(sel_vme);

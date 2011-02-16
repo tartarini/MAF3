@@ -161,7 +161,7 @@ mafSoapType *mafNetworkConnectorQtSoap::marshall(const mafString name, const maf
                 int index = 0;
                 foreach( mafVariant item, parameter.toList() ) {
                     arr->insert(index, marshall(mafString("Elem_").append(mafString::number(index)), item ));
-                    index++;
+                    ++index;
                     }
                 returnValue = arr;
                 break;
@@ -174,7 +174,7 @@ mafSoapType *mafNetworkConnectorQtSoap::marshall(const mafString name, const maf
             while( iter != map.end() ) {
                 arr->insert(index, marshall(iter.key(), *iter));
                 ++iter;
-                index++;
+                ++index;
             }
             returnValue = arr;
             break;
@@ -187,7 +187,7 @@ mafSoapType *mafNetworkConnectorQtSoap::marshall(const mafString name, const maf
             while( iter != hash.end() ) {
                 arr->insert(index, marshall(iter.key(), *iter));
                 ++iter;
-                index++;
+                ++index;
             }
             returnValue = arr;
             break;
@@ -225,7 +225,7 @@ void mafNetworkConnectorQtSoap::send(const mafString methodName, mafEventArgumen
     mafEventHash *values;
     values = reinterpret_cast<mafEventHash *> (argList->at(0).data());
     int i = 0, size = values->size();
-    for(;i<size;i++) {
+    for(;i<size;++i) {
         m_Request.addMethodArgument(marshall(values->keys().at(i), values->values().at(i)));
     }
 

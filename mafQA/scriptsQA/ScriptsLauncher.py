@@ -53,25 +53,39 @@ def run(param):
             if (os.path.isfile(os.path.join(baseDir, item))==False):
                 if(item.find("maf") != -1):
                     os.system("python " + externalScriptFile + " " + item)
-
+    if(param['cppcheck']):
+        baseDir = modulesDir
+        externalScriptFile = os.path.join(currentPathScript, "ExternalScripts", "cppcheckScript.py")
+        print baseDir
+        os.system("python " + externalScriptFile)
           
 def usage():
-    print "Usage: python ScriptLauncher.py [--enable-LCOVCoverage]"
+    print "Usage: python ScriptLauncher.py [-h] [-l] [-c]"
+    print "-h, --help                    show help (this)"
+    print "-l, --enable-LCOVCoverage=    enable LCOV coverage"
+    print "-c, --enable-cppcheck=       enable cppcheck tool"
+    print 
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "l", ["enable-LCOVCoverage",])
+        opts, args = getopt.getopt(sys.argv[1:], "hlc", ["help","enable-LCOVCoverage","enable-cppcheck"])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
     LCOVCoverageFlag = False
+    cppcheckFlag=False
     for o, a in opts:
-        if o in ("-l", "--enable-LCOVCoverage"):
+        if o in ("-h", "--help"):
+            usage()
+            return
+        elif o in ("-l", "--enable-LCOVCoverage"):
             LCOVCoverageFlag = True
+        elif o in ("-c", "--enable-cppcheck"):
+            cppcheckFlag = True
         else:
             assert False, "unhandled option"
 
-    param = {'LCOVCoverage':LCOVCoverageFlag}
+    param = {'LCOVCoverage':LCOVCoverageFlag, 'cppcheck':cppcheckFlag}
     run(param)
     
 if __name__ == "__main__":

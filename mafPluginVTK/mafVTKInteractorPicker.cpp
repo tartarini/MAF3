@@ -97,7 +97,7 @@ void mafVTKInteractorPicker::vmePick(double *pickPos, unsigned long modifiers, m
         int closestMarkerIndex = 0;
         int i = 0;
 
-        for(; i < InputNumber; i++){
+        for(; i < InputNumber; ++i){
             vtkSmartPointer<vtkCellLocator> cellLocator = vtkSmartPointer<vtkCellLocator>::New();
             cellLocator->SetDataSet(m_AppendData->GetInput(i));
             cellLocator->BuildLocator();
@@ -172,7 +172,7 @@ void mafVTKInteractorPicker::internalUpdate()
 
 void mafVTKInteractorPicker::setScalarValue(vtkPolyData *data, double scalarValue){
     vtkSmartPointer<vtkDoubleArray> scalars = vtkSmartPointer<vtkDoubleArray>::New();
-    for(int x=0 ; x<data->GetPointData()->GetNumberOfTuples() ; x++){
+    for(int x=0 ; x<data->GetPointData()->GetNumberOfTuples() ; ++x){
         scalars->InsertValue(x, scalarValue);
     }
   data->GetPointData()->SetScalars(scalars);

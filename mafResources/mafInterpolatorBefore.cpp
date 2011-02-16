@@ -20,12 +20,12 @@ mafInterpolatorBefore::mafInterpolatorBefore(const mafString code_location) : ma
 mafDataSet *mafInterpolatorBefore::itemAt(mafDataSetMap *collection, double t) {
     mafDataSetMap::const_iterator iter = collection->constBegin();
     while(iter != collection->constEnd() && iter.key() <= t) {
-        iter++;
+        ++iter;
     }
     // The iterator has to be different from the begin and the end of the iteration because the interpolation
     // mechanism is to return the item before the cuttent given timestamp.
     if(iter != collection->constBegin()) {
-        iter--;
+        --iter;
         return iter.value();
     }
     return NULL;

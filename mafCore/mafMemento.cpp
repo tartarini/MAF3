@@ -42,7 +42,7 @@ bool mafMemento::isEqual(const mafObjectBase *obj) const {
             return false;
         }
 
-        for(;i<size;i++) {
+        for(;i<size;++i) {
             mafMementoPropertyItem item = m_MementoPropertyList[i];
             mafMementoPropertyItem itemObject = memento->m_MementoPropertyList[i];
             if(item.m_Name != itemObject.m_Name || item.m_Multiplicity != itemObject.m_Multiplicity || item.m_Value != itemObject.m_Value) {

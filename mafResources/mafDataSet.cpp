@@ -88,12 +88,12 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
             mafPoseMatrix *mat = new mafPoseMatrix();
             int counter = 0;
             int r = 0;
-            for ( ; r < 4; r++) {
+            for ( ; r < 4; ++r) {
                 int c = 0;
-                for ( ; c < 4 ; c++) {
+                for ( ; c < 4 ; ++c) {
                     double val = item.m_Value.toList()[counter].toDouble();
                     mat->put(r,c,val);
-                    counter++;
+                    ++counter;
                 }
             }
             this->setPoseMatrix(mat);

@@ -68,7 +68,7 @@ testObjectCustomListener::testObjectCustomListener(const mafString code_location
 }
 
 void testObjectCustomListener::updateObject() {
-    m_Var++;
+    ++m_Var;
     mafMsgDebug() << m_Var;
     if(m_OneShot) {
         QVERIFY(m_Var == 1);

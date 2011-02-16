@@ -140,7 +140,7 @@ void mafCodecRawASCIITest::decodeTest() {
 
     //Check decoding of the list
     int i = 0;
-    for (; i < m_List.size(); i++) {
+    for (; i < m_List.size(); ++i) {
 //        mafString s = m_List.at(i).toString();
 //        mafString t = obj->tagList()->at(i).toString();
         QVERIFY(m_List.at(i).toString().compare(obj->tagList()->at(i).toString()) == 0);

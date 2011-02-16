@@ -34,7 +34,7 @@ void mafCodecXML::encode(mafMemento *memento) {
     mafString dataHash;
     mafString codecType;
 
-    m_MementoLevel++;
+    ++m_MementoLevel;
 
     if(m_MementoLevel == 0){
       m_XMLStreamWriter.setDevice(m_Device);
@@ -156,7 +156,7 @@ mafMemento *mafCodecXML::decode() {
            //collections, items or mementos
            mafDomNodeList childNodeList = m_CurrentNode.childNodes();
            int i=0, size = childNodeList.size();
-           for(;i<size;i++) {
+           for(;i<size;++i) {
                m_CurrentNode = childNodeList.at(i);
                mafDomElement eChild = m_CurrentNode.toElement();
                mafString childName = eChild.tagName();
@@ -164,7 +164,7 @@ mafMemento *mafCodecXML::decode() {
                    //Find all items in dataSetCollection
                    mafDomNodeList list = eChild.elementsByTagName("item");
                    int l=0, listsize = list.size();
-                   for(;l<listsize;l++) {
+                   for(;l<listsize;++l) {
                        mafDomNode node = list.at(l);
                        mafDomElement eChild = node.toElement();
                        mafMementoPropertyItem item = setPropertyItem(eChild);
@@ -191,7 +191,7 @@ mafMemento *mafCodecXML::decode() {
 mafMementoPropertyItem mafCodecXML::setPropertyItem(mafDomElement eChild){
     mafMementoPropertyItem item;
     mafString itemName;
-    int multiplicity;
+    int multiplicity = 1;
 
     mafDomNamedNodeMap attributes = eChild.attributes();
     if(attributes.contains("name")) {

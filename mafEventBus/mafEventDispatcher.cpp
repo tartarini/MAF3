@@ -136,12 +136,12 @@ bool mafEventDispatcher::removeEventItem(const mafEvent &props) {
             mafEventsHashType::iterator i = m_CallbacksHash.find(props[TOPIC].toString());
             while (i != m_CallbacksHash.end() && i.key() == props[TOPIC].toString()) {
                 delete i.value();
-                i++;
+                ++i;
             }
             i = m_SignalsHash.find(props[TOPIC].toString());
             while (i != m_SignalsHash.end() && i.key() == props[TOPIC].toString()) {
                 delete i.value();
-                i++;
+                ++i;
             }
             m_SignalsHash.remove(props[TOPIC].toString()); //in signal hash the id is unique
             m_CallbacksHash.remove(props[TOPIC].toString()); //remove also all the id associated in callback

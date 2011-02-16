@@ -53,7 +53,7 @@ mafPluginManager::~mafPluginManager() {
     while(iter != m_PluginsHash.end()) {
         mafPlugin *p = iter.value();
         mafDEL(p);
-        iter++;
+        ++iter;
     }
     m_PluginsHash.clear();
 }
@@ -95,7 +95,7 @@ void mafPluginManager::registerPlugin(mafCore::mafPluggedObjectsHash pluginHash)
             mafPluggedObjectInformation reverseObjectInfo(objInfo.m_Label, base_class);
             m_ReverseObjectsHash.insert(objInfo.m_ClassType, reverseObjectInfo);
         }
-        iter++;
+        ++iter;
     }
 }
 

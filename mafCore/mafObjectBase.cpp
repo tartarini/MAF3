@@ -137,7 +137,7 @@ void mafObjectBase::connectObjectSlotsByName(QObject *signal_object) {
 void mafObjectBase::initializeUI(QObject *selfUI) {
     mafList<QObject *> widgetList = qFindChildren<QObject *>(selfUI, QString());
     int i = 0, size = widgetList.count();
-    for(; i<size; i++) {
+    for(; i<size; ++i) {
         QObject *widget = widgetList.at(i);
         mafString widgetName = widget->objectName();
 

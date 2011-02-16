@@ -60,13 +60,13 @@ mafCore::mafContainerInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(d
         vtkTransform *t = vtkTransform::New();
         vtkMatrix4x4 *mat = vtkMatrix4x4::New();
         mat->Identity();
-        for(int i=0;i<3;i++)
+        for(int i=0;i<3;++i)
             mat->SetElement(i,0,matrix->get(i,0));
-        for(int i=0;i<3;i++)
+        for(int i=0;i<3;++i)
             mat->SetElement(i,1,matrix->get(i,1));
-        for(int i=0;i<3;i++)
+        for(int i=0;i<3;++i)
             mat->SetElement(i,2,matrix->get(i,2));
-        for(int i=0;i<3;i++)
+        for(int i=0;i<3;++i)
             mat->SetElement(i,3,matrix->get(i,3));
 
         t->SetMatrix(mat);
@@ -88,7 +88,7 @@ mafCore::mafContainerInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(d
 }
 void mafDataBoundaryAlgorithmVTK::bounds(double bounds[6]) {
     int i = 0;
-    for(i; i < 6; i++){
+    for(i; i < 6; ++i){
         bounds[i] = m_Bounds[i];
     }
 }
