@@ -28,16 +28,16 @@ mafVTKParametricSurfaceEllipsoid::mafVTKParametricSurfaceEllipsoid(const mafStri
     m_EllipsoidPhiRes = 20.0;
     m_EllipsoidTheRes = 20.0;
 
-    m_EllipsoidXLenght = 1.0;
-    m_EllipsoidYLenght = 2.0;
-    m_EllipsoidZLenght = 3.0;
+    m_EllipsoidXLength = 1.0;
+    m_EllipsoidYLength = 2.0;
+    m_EllipsoidZLength = 3.0;
 
     m_EllipsoidSource = vtkSphereSource::New();
     m_Ptf = vtkTransformPolyDataFilter::New();
     m_Transofrm = vtkTransform::New();
 
     // modify proportion of the sphere
-    m_Transofrm->Scale(m_EllipsoidXLenght/m_EllipsoidYLenght,1,m_EllipsoidZLenght/m_EllipsoidYLenght);
+    m_Transofrm->Scale(m_EllipsoidXLength/m_EllipsoidYLength,1,m_EllipsoidZLength/m_EllipsoidYLength);
     m_Transofrm->Update();
     m_Ptf->SetTransform(m_Transofrm);
 
