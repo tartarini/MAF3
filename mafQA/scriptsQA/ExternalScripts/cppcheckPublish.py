@@ -29,7 +29,7 @@ def publishReport():
        xml = fromstring(str(f.read()))
 
        #with lxml create html
-       absPathXslt = os.path.join(currentPathScript,"cppcheck.xsl")
+       absPathXslt = os.path.join(currentPathScript,"cppcheck.xslt")
        
        fileXslt = open(absPathXslt, 'r') 
        #print xsltH + headString + centerString + str(fileXslt.read()) + tailString + xsltT
