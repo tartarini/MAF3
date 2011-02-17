@@ -187,13 +187,15 @@ void mafVisualPipeVTKSurfaceTest::updatePipeTestFromPlugIn() {
     mafStringList binding_class_list;
     binding_class_list = mafCoreRegistration::acceptObject(m_VME);
     int num = binding_class_list.count();
-    QVERIFY(num == 2);
+    QVERIFY(num != 0);
 
-    mafString visualPipeType = binding_class_list.at(1);
-    QCOMPARE(visualPipeType,mafString("mafPluginVTK::mafVisualPipeVTKSurface"));
+    for(int i = 0; i < binding_class_list.size(); ++i) {
+        mafString visualPipeType = binding_class_list.at(i);
+        QVERIFY(visualPipeType.contains("mafPluginVTK::"));
+    }
 
     //! <snippet>
-    mafVisualPipe *visualPipe = (mafVisualPipe *)mafNEWFromString(visualPipeType);
+    mafVisualPipe *visualPipe = (mafVisualPipe *)mafNEWFromString("mafPluginVTK::mafVisualPipeVTKSurface");
     visualPipe->setProperty("scalarVisibility", 1);
     visualPipe->setInput(m_VME);
     visualPipe->createPipe();
