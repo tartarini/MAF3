@@ -53,9 +53,12 @@ mafMessageHandler* mafMessageHandler::instance() {
 
 void mafMessageHandler::shutdown() {
     if(!m_OldMsgHandlerStack.isEmpty()) {
-        qInstallMsgHandler(m_OldMsgHandlerStack.pop());
+        m_OldMsgHandlerStack.pop();
         if(m_OldMsgHandlerStack.isEmpty()) {
             mafDEL(m_DefaultLogger);
+            qInstallMsgHandler(0);
+        } else {
+            qInstallMsgHandler(m_OldMsgHandlerStack.top());
         }
     } else {
         mafDEL(m_DefaultLogger);
