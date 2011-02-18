@@ -43,7 +43,7 @@
         <enum>Qt::LeftToRight</enum>
        </property>
        <property name="currentIndex">
-        <number>4</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="spherePage">
         <property name="geometry">
@@ -108,8 +108,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>230</width>
-          <height>201</height>
+          <width>98</width>
+          <height>28</height>
          </rect>
         </property>
         <attribute name="label">
@@ -166,8 +166,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>230</width>
-          <height>201</height>
+          <width>98</width>
+          <height>28</height>
          </rect>
         </property>
         <attribute name="label">
@@ -243,8 +243,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>230</width>
-          <height>201</height>
+          <width>98</width>
+          <height>28</height>
          </rect>
         </property>
         <attribute name="label">
