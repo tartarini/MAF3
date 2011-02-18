@@ -32,14 +32,14 @@ mafOpParametricSurface::mafOpParametricSurface(const mafString code_location) : 
 }
 
 mafOpParametricSurface::~mafOpParametricSurface() {
-    mafDEL(m_DataSet);
-    mafDEL(m_VME);
-    m_ParametricSurfaceList.clear();
     mafDEL(m_ParametricSphere);
     mafDEL(m_ParametricCube);
     mafDEL(m_ParametricCone);
     mafDEL(m_ParametricCylinder);
     mafDEL(m_ParametricEllipsoid);
+    mafDEL(m_DataSet);
+    mafDEL(m_VME);
+    m_ParametricSurfaceList.clear();
     m_Output = NULL;
 }
 
