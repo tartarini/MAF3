@@ -30,7 +30,6 @@ mafVME::mafVME(const mafString code_location) : mafResource(code_location), m_In
 }
 
 mafVME::~mafVME() {
-    mafDEL(m_Interactor);
     mafDEL(m_DataSetCollection);
     mafDEL(m_DataPipe);
 
