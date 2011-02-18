@@ -215,7 +215,6 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_CustomManager);
-        mafDEL(m_VTKWidget);
         shutdownGraphicResources();
     }
 
@@ -267,8 +266,7 @@ void mafVTKWidgetTest::initializeGraphicResources() {
 
 void mafVTKWidgetTest::shutdownGraphicResources() {
     m_Renderer->Delete();
-    delete m_VTKWidget;
-    delete w;
+    w->close();
 }
 
 void mafVTKWidgetTest::mafVTKWidgetAllocationTest() {
