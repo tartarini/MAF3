@@ -37,8 +37,6 @@ mafOpParametricSurface::~mafOpParametricSurface() {
     mafDEL(m_ParametricCone);
     mafDEL(m_ParametricCylinder);
     mafDEL(m_ParametricEllipsoid);
-    mafDEL(m_DataSet);
-    mafDEL(m_VME);
     m_ParametricSurfaceList.clear();
     m_Output = NULL;
 }
@@ -50,7 +48,7 @@ bool mafOpParametricSurface::acceptObject(mafCore::mafObjectBase *obj) {
     mafString ct(obj->metaObject()->className());
     return ct == "mafResources::mafVME";
 }
-void mafOpParametricSurface::setParametricSurfaceType(int parametricSurfaceType){
+void mafOpParametricSurface::setParametricSurfaceType(int parametricSurfaceType) {
      //Creates different instances of parametric surface, in order to store parameters
     switch (parametricSurfaceType){
         case PARAMETRIC_SPHERE:
@@ -96,6 +94,7 @@ void mafOpParametricSurface::execute() {
 
     //Insert data into VME
     m_VME = mafNEW(mafResources::mafVME);
+    m_VME->setObjectName(mafTr("Parametric Surface"));
     m_DataSet = mafNEW(mafResources::mafDataSet);
     m_DataSet->setDataValue(&m_ParametricContainer);
     m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
