@@ -71,9 +71,6 @@ private slots:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        //mafDEL(m_Picker); // WARNING-> Pattern RAII not followed when creating/destroying a interactor bounded with a vme
-                            // interactor has been created by a "generator" class that is not vme, but in the vme destructor
-                            // this interactor is deleted. @TODO, NEED TO BE STUDIED
         shutdownGraphicResources();
         mafDEL(m_Picker);
     }
