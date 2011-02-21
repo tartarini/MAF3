@@ -40,17 +40,16 @@ void mafOperationWidget::setOperationName(mafString name) {
 
 void mafOperationWidget::setOperationGUI(QWidget *gui) {
     m_OperationGUI = gui;
+    // Connect the Ok/Cancel buttons with the GUI close.
     connect(ui->buttonOkCancel, SIGNAL(accepted()), m_OperationGUI, SLOT(close()));
     connect(ui->buttonOkCancel, SIGNAL(rejected()), m_OperationGUI, SLOT(close()));
+    // and add the widget to the mafOperationWidget's layout.
     ui->verticalLayoutOperation->addWidget(m_OperationGUI);
-    (m_Operation)->connectObjectSlotsByName((QObject *)m_OperationGUI);
-    (m_Operation)->initializeUI((QObject *)m_OperationGUI);
+    // Then connect automatically the signals of the GUI widgets to the Operation's slots.
+    m_Operation->connectObjectSlotsByName((QObject *)m_OperationGUI);
+    // and initialize the widgets value with those contained into the operation's properties.
+    m_Operation->initializeUI((QObject *)m_OperationGUI);
 }
-
-/*void mafOperationWidget::setParameter(QVariant var) {
-    QString name = QObject::sender()->objectName();
-//    m_Operation->setProperty(name, var);
-}*/
 
 void mafOperationWidget::changeEvent(QEvent *e) {
     QWidget::changeEvent(e);
