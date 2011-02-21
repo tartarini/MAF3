@@ -100,22 +100,27 @@ def run(param):
    tailString = "".join(open(htmlDir + "/Styles/tail.temp"))
    
    #check for external scripting
+   pos = 0
+   pos = headString.find("@@@_EXTERNAL_TOOLS_REPORT_@@@")-1
    if(param['LCOVCoverage']):
       #generateExternalLink
-      
       externalScriptDirectory = scriptsDir + "/ExternalScripts"
       os.chdir(externalScriptDirectory)
       os.system("python " + externalScriptDirectory + "/LCOVCoveragePublish.py")
-      pos = headString.find("@@@_EXTERNAL_TOOLS_REPORT_@@@")-1
       
       os.chdir(scriptsDir);
-      headString = headString[:pos] + "<li><a href=\"../externalLCOVCoverage/index.html\">LCOV Coverage</a></li>" + headString[pos:]
+      li = "<li><a href=\"../externalLCOVCoverage/index.html\">LCOV Coverage</a></li>";
+      headString = headString[:pos] + li + headString[pos:]
+      pos = pos + len(li)
 
    if(param['cppcheck']):
       #generateExternalLink
       externalScriptDirectory = scriptsDir + "/ExternalScripts"
       os.chdir(externalScriptDirectory)
       os.system("python " + externalScriptDirectory + "/cppcheckPublish.py")
+      li = "<li><a href=\"../externalcppcheck/index.html\">Static Analysis</a></li>"
+      headString = headString[:pos] + li + headString[pos:]
+      pos = pos + len(li)
 
 
    #remove placeholder for external scripting
