@@ -41,6 +41,8 @@ mafVTKInteractorPicker::~mafVTKInteractorPicker(){
     mafEventBusManager::instance()->removeSignal(this, "maf.local.operation.VTK.nextPick");
     mafEventBusManager::instance()->removeSignal(this, "maf.local.operation.VTK.OK");
     mafDEL(m_ParametricSurface);
+    m_AppendData->RemoveAllInputs();
+    m_AppendData->Delete();
 }
 
 void mafVTKInteractorPicker::initializeConnections() {
@@ -111,7 +113,7 @@ void mafVTKInteractorPicker::vmePick(double *pickPos, unsigned long modifiers, m
         }
         // If the last marker is removed, then delete the current parametric surface.
         if(m_ParametricSurface->output() == m_AppendData->GetInputConnection(0,closestMarkerIndex)){
-            mafDEL(m_ParametricSurface);
+             mafDEL(m_ParametricSurface);
         }
         // Remove marker frome the AppendPolyData.
         m_AppendData->RemoveInputConnection(0,m_AppendData->GetInputConnection(0,closestMarkerIndex));

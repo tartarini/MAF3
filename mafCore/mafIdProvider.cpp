@@ -46,8 +46,9 @@ mafId mafIdProvider::createNewId(const mafString id_name) {
             return id_value;
         }
     }
+    mafId returnValue = m_Id;
     ++m_Id;
-    return m_Id;
+    return returnValue;
 }
 
 bool mafIdProvider::removeId(const mafString id_name) {
