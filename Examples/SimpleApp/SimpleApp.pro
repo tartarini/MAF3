@@ -41,4 +41,3 @@ RESOURCES += mafAppImages.qrc
 
 #Copy the mafOperationSimpleApp.ui to DESTDIR
 system($$CP_CMD $$quote($$_PRO_FILE_PWD_/mafOperationSimpleApp.ui) $$DESTDIR)
-system($$CP_CMD $$quote($$_PRO_FILE_PWD_/mafOpParametricSurface.ui) $$DESTDIR)
