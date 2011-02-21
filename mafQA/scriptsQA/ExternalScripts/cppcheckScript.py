@@ -27,7 +27,8 @@ def run(param):
         
         report = os.path.join(CPPCheckStaticAnalisysDir, "report.xml")        
         cppcheck = param['cppcheckPath'] #find directly cppcheck absolute path
-        command = cppcheck + " --enable=style --enable=information --enable=unusedFunction --xml " + modulesDir + " 2>" + report
+        command = cppcheck + " --enable=style --xml " + modulesDir + " 2>" + report
+        # --enable=information --enable=unusedFunction
         os.system(command)
 
     except Exception, e:
