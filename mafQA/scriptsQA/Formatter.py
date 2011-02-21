@@ -100,29 +100,34 @@ def run(param):
    tailString = "".join(open(htmlDir + "/Styles/tail.temp"))
    
    #check for external scripting
+   pos = 0
+   pos = headString.find("@@@_EXTERNAL_TOOLS_REPORT_@@@")-1
    if(param['LCOVCoverage']):
       #generateExternalLink
-      
       externalScriptDirectory = scriptsDir + "/ExternalScripts"
       os.chdir(externalScriptDirectory)
       os.system("python " + externalScriptDirectory + "/LCOVCoveragePublish.py")
-      pos = headString.find("@@@_EXTERNAL_TOOLS_REPORT_@@@")-1
       
-      os.chdir(scriptsDir);
-      headString = headString[:pos] + "<li><a href=\"../externalLCOVCoverage/index.html\">LCOV Coverage</a></li>" + headString[pos:]
+      li = "<li><a href=\"../externalLCOVCoverage/index.html\">LCOV Coverage</a></li>";
+      headString = headString[:pos] + li + headString[pos:]
+      pos = pos + len(li)
+      os.chdir(scriptsDir)
 
    if(param['cppcheck']):
       #generateExternalLink
       externalScriptDirectory = scriptsDir + "/ExternalScripts"
       os.chdir(externalScriptDirectory)
       os.system("python " + externalScriptDirectory + "/cppcheckPublish.py")
-
+      li = "<li><a href=\"../externalcppcheck/index.html\">Static Analysis</a></li>"
+      headString = headString[:pos] + li + headString[pos:]
+      pos = pos + len(li)
+      os.chdir(scriptsDir)
 
    #remove placeholder for external scripting
    headString = headString.replace("@@@_EXTERNAL_TOOLS_REPORT_@@@", "")
 
 
-   result = True
+   success = True
    for xmlFile in xmlList:
      try:
        filename = os.path.splitext(xmlFile)[0]
@@ -149,13 +154,13 @@ def run(param):
        html = open(htmlDir + "/" + filename + ".html", 'w')
        print >> html , style.tostring(result)
      except Exception, e:
-       result = False
-       print "!!!!!!Bad Formatted XML on ", filename , "!!!!!!!"
+       success = False
+       print "!!!!!!Bad Formatted XML on ", filename, "!!!!!!!"
        print e
        os.chdir(scriptsDir)
-       
-   #if(result == true):
-   print "PUBLISH SUCCESSFUL"
+   
+   if(success == True):
+       print "PUBLISH SUCCESSFUL"
    
    index = open(htmlDir + "/index.html", 'w')
    

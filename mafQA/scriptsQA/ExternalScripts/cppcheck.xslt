@@ -5,10 +5,10 @@ xmlns:str="http://exslt.org/strings" extension-element-prefixes="str">
 <xsl:template match="/">
 <html>
 <!-- **** layout stylesheet **** -->
-<link rel="stylesheet" type="text/css" href="mafQA/ScriptsQA/Styles/style.css" />
+<link rel="stylesheet" type="text/css" href="../html/Styles/style.css" />
 
 <!-- **** colour scheme stylesheet **** -->
-<link rel="stylesheet" type="text/css" href="mafQA/ScriptsQA/Styles/colour.css" />
+<link rel="stylesheet" type="text/css" href="../html/Styles/colour.css" />
 <head><title>cppcheck Report</title>
 </head>
 <body>
@@ -22,9 +22,7 @@ xmlns:str="http://exslt.org/strings" extension-element-prefixes="str">
     <div id="content">
       <div id="menu">
         <ul>
-          <li><a href="index.html">Introduction</a></li>
-          <!-- **** INSERT ADDITIONAL EXTERNAL TOOLS REPORT_LINK HERE **** -->
-          @@@_EXTERNAL_TOOLS_REPORT_@@@
+          <li><a href="../html/index.html">Introduction</a></li>
         </ul>
       </div>
 
