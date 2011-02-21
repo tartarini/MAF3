@@ -37,6 +37,7 @@ void mafHierarchy::addHierarchyNode(QObject* node, QObject *parentNode) {
         int numberOfChildren = m_TreeIterator.node()->m_children.size();
         m_TreeIterator = m_Tree->insert(m_TreeIterator, numberOfChildren, node);
     }
+    emit itemAttached(node, parentNode);
 }
 
 void mafHierarchy::removeCurrentHierarchyNode() {
@@ -58,7 +59,11 @@ void mafHierarchy::removeCurrentHierarchyNode() {
 void mafHierarchy::removeHierarchyNode(QObject *node) {
     REQUIRE(node != NULL);
 
+    // Move the iterator to the node to remove.
     moveTreeIteratorToNode(node);
+    // notify the observer that a node is going to be detached.
+    emit itemDetached(node);
+    // Remove the node from the hierarchy => the item will be deleted !!
     removeCurrentHierarchyNode();
 }
 
