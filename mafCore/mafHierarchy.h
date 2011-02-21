@@ -41,10 +41,10 @@ public:
     /// Add a node to the tree.
     void addHierarchyNode(QObject *node, QObject *parentNode = 0);
 
-    /// Remove the current selected node from the tree.
+    /// Remove the current selected node from the tree. The current node will be deleted.
     void removeCurrentHierarchyNode();
 
-    /// Remove the current selected node from the tree.
+    /// Remove the current selected node from the tree. The node will be deleted.
     void removeHierarchyNode(QObject *node);
 
     /// Move the tree iterator to the parent of the current position pointed
@@ -73,6 +73,13 @@ public:
 
     /// Remove all the nodes and delete them.
     void clear();
+
+signals:
+    /// Signal emitted when a new item is attached to the hierarchy.
+    void itemAttached(QObject *item, QObject *parent);
+
+    /// Signal emitted when an item is removed form the hierarchy.
+    void itemDetached(QObject *item);
 
 private:
     mafTree<QObject *> *m_Tree; ///< tree variable which hosts mafSceneNode elements
