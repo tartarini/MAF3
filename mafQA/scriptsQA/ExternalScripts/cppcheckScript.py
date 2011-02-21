@@ -14,7 +14,18 @@ def usage():
 def run(param):
     print "cppcheck working..."
     try:
-        report = os.path.join(modulesDir, "report.xml")        
+        baseDir = modulesDir
+        qaResultsDir = os.path.join(baseDir, "QAResults")
+        CPPCheckStaticAnalisysDir = os.path.join(qaResultsDir, "externalcppcheck") #need to parametrize this?
+        
+        if(os.path.exists(qaResultsDir) == False):
+          print "QA Results Dir doesn't exist %s" % qaResultsDir
+          exit()
+
+        if(os.path.exists(CPPCheckStaticAnalisysDir) == False):
+          os.mkdir(CPPCheckStaticAnalisysDir);
+        
+        report = os.path.join(CPPCheckStaticAnalisysDir, "report.xml")        
         cppcheck = param['cppcheckPath'] #find directly cppcheck absolute path
         command = cppcheck + " --enable=style --enable=information --enable=unusedFunction --xml " + modulesDir + " 2>" + report
         os.system(command)
