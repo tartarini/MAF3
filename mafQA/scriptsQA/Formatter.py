@@ -108,10 +108,10 @@ def run(param):
       os.chdir(externalScriptDirectory)
       os.system("python " + externalScriptDirectory + "/LCOVCoveragePublish.py")
       
-      os.chdir(scriptsDir);
       li = "<li><a href=\"../externalLCOVCoverage/index.html\">LCOV Coverage</a></li>";
       headString = headString[:pos] + li + headString[pos:]
       pos = pos + len(li)
+      os.chdir(scriptsDir)
 
    if(param['cppcheck']):
       #generateExternalLink
@@ -121,7 +121,7 @@ def run(param):
       li = "<li><a href=\"../externalcppcheck/index.html\">Static Analysis</a></li>"
       headString = headString[:pos] + li + headString[pos:]
       pos = pos + len(li)
-
+      os.chdir(scriptsDir)
 
    #remove placeholder for external scripting
    headString = headString.replace("@@@_EXTERNAL_TOOLS_REPORT_@@@", "")
@@ -155,12 +155,12 @@ def run(param):
        print >> html , style.tostring(result)
      except Exception, e:
        result = False
-       print "!!!!!!Bad Formatted XML on ", filename , "!!!!!!!"
+       print "!!!!!!Bad Formatted XML on ", filename, "!!!!!!!"
        print e
        os.chdir(scriptsDir)
        
-   #if(result == true):
-   print "PUBLISH SUCCESSFUL"
+   if(result == True):
+       print "PUBLISH SUCCESSFUL"
    
    index = open(htmlDir + "/index.html", 'w')
    
