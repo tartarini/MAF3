@@ -127,7 +127,7 @@ def run(param):
    headString = headString.replace("@@@_EXTERNAL_TOOLS_REPORT_@@@", "")
 
 
-   result = True
+   success = True
    for xmlFile in xmlList:
      try:
        filename = os.path.splitext(xmlFile)[0]
@@ -154,12 +154,12 @@ def run(param):
        html = open(htmlDir + "/" + filename + ".html", 'w')
        print >> html , style.tostring(result)
      except Exception, e:
-       result = False
+       success = False
        print "!!!!!!Bad Formatted XML on ", filename, "!!!!!!!"
        print e
        os.chdir(scriptsDir)
-       
-   if(result == True):
+   
+   if(success == True):
        print "PUBLISH SUCCESSFUL"
    
    index = open(htmlDir + "/index.html", 'w')
