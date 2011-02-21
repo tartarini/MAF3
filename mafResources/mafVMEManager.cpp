@@ -79,6 +79,7 @@ void mafVMEManager::vmeAdd(mafObjectBase *vme) {
     // VME has been added.
     // Connect the manager to the view destroyed signal
     connect(vme_to_add, SIGNAL(destroyed()), this, SLOT(vmeDestroyed()));
+    m_VMEHierarchy->addHierarchyNode(vme, NULL);
 }
 
 void mafVMEManager::vmeRemove(mafObjectBase *vme) {
