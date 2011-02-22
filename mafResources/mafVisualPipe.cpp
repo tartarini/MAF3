@@ -10,8 +10,9 @@
  */
 
 #include "mafVisualPipe.h"
-#include <mafEventBusManager.h>
 #include "mafVME.h"
+#include <mafContainerInterface.h>
+#include <mafEventBusManager.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -43,7 +44,7 @@ void mafVisualPipe::initializeConnections() {
 }
 
 void mafVisualPipe::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafContainerInterface *actor, QEvent * e) {
-    if(actor == m_Output){
+    if (m_Output->isEqual(actor)){
         mafVME *vme = this->inputList()->at(0);
         if (vme != NULL){
             mafEventArgumentsList argList;
@@ -53,7 +54,6 @@ void mafVisualPipe::vmePick(double *pickPos, unsigned long modifiers, mafCore::m
             mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePicked", mafEventTypeLocal, &argList);
         }
     }
-
 }
 
 void mafVisualPipe::setVisibility(bool visible) {
