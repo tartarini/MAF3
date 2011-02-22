@@ -26,6 +26,7 @@ using namespace mafPluginVTK;
 mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f)
 {
     m_Actor = new mafCore::mafContainer<vtkActor>;
+    mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
 }
 
 mafVTKWidget::~mafVTKWidget(){

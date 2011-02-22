@@ -29,7 +29,7 @@ This class overloads VKT mouse events and forward them to EventBus.
 */
 
 class MAFPLUGINVTKSHARED_EXPORT mafVTKWidget : public QVTKWidget {
-
+    Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(QVTKWidget);
 public:
@@ -50,6 +50,10 @@ public:
 
     /// Overloaded mouse move handler
     /*virtual*/ void mouseMoveEvent(QMouseEvent* event);
+
+signals:
+    /// picked button pressed.
+    void vmePickSignal(double *pos, unsigned long modifiers, mafCore::mafContainerInterface *interface, QEvent * e);
 
 private:
     /// Get key modifiers.
