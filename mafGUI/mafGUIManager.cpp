@@ -364,7 +364,7 @@ mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *par
     w->setMinimumSize(200, 200);
     w->setMaximumSize(16777215, 16777215);
     connect(w, SIGNAL(clicked(QModelIndex)), this, SLOT(selectVME(QModelIndex)));
-    connect(model, SIGNAL(layoutChanged()), w, SLOT(expandAll()));
+    connect(model, SIGNAL(itemAdded(QModelIndex)), w, SLOT(expand(QModelIndex)));
 
     if(parent) {
         if(parent->layout()) {
