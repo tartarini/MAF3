@@ -20,7 +20,7 @@ mafResource::mafResource(const mafString code_location) : mafObject(code_locatio
 }
 
 mafResource::~mafResource() {
-    mafDEL(m_Output);
+    //mafDEL(m_Output);
 
     m_InputList->clear();
     mafDEL(m_InputList);
