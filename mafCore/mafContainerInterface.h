@@ -69,10 +69,6 @@ inline mafString mafContainerInterface::externalCodecType() {
     return m_ExternalCodecType;
 }
 
-inline bool mafContainerInterface::isEqual(mafContainerInterface *container) {
-}
-
-
 /// Define the pointer to the mafContainerInterface needed to be registered with Q_DECLARE_METATYPE macro.
 typedef mafContainerInterface * mafContainerInterfacePointer;
 

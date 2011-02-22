@@ -16,6 +16,8 @@
 #include "mafGUIDefinitions.h"
 #include <QTreeWidget>
 #include <QStandardItemModel>
+#include <QAction>
+#include <QContextMenuEvent>
 
 namespace mafGUI {
 /**
@@ -32,11 +34,11 @@ public:
 public slots:
     //void refresh(void);
 
-private slots:
-    //void updateItem(...);
-
 private:
+    void contextMenuEvent(QContextMenuEvent *e);
 
+    QAction *m_ActionShow;
+    QAction *m_ActionDelete;
 };
 
 } //end namespace
