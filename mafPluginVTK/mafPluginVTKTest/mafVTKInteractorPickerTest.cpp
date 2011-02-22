@@ -71,9 +71,6 @@ private slots:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        //mafDEL(m_Picker); // WARNING-> Pattern RAII not followed when creating/destroying a interactor bounded with a vme
-                            // interactor has been created by a "generator" class that is not vme, but in the vme destructor
-                            // this interactor is deleted. @TODO, NEED TO BE STUDIED
         shutdownGraphicResources();
         mafDEL(m_Picker);
     }
@@ -142,18 +139,23 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     vme->dataSetCollection()->insertItem(dataSetSphere, 0);
     vme->setInteractor(m_Picker);
 
-    //Create parametric surface used by picker
-    mafString surfaceType = "mafPluginVTK::mafVTKParametricSurfaceSphere";
-    m_Picker->setSurface(surfaceType);
+    //Must create a visual pipe that send "maf.local.resources.interaction.vmePicked"
+    //when its vme is picked
+    mafVisualPipeVTKSurface *pipe;
+    pipe = mafNEW(mafPluginVTK::mafVisualPipeVTKSurface);
+    pipe->setInput(vme);
+    pipe->createPipe();
+    pipe->updatePipe();
 
-    vtkSmartPointer<vtkPolyDataMapper> sphereMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    sphereMapper->SetInputConnection(dataSource->GetOutputPort());
-    vtkSmartPointer<vtkActor> sphereActor = vtkSmartPointer<vtkActor>::New();
-    sphereActor->SetMapper(sphereMapper);
-    m_Renderer->AddActor(sphereActor);
+    mafContainer<vtkActor> *sphereActor = mafContainerPointerTypeCast(vtkActor, pipe->output());
+    m_Renderer->AddActor(*sphereActor);
     m_VTKWidget->GetRenderWindow()->Render();
     m_VTKWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCamera();
     QTest::qSleep(1000);
+
+    //Create parametric surface used by picker
+    mafString surfaceType = "mafPluginVTK::mafVTKParametricSurfaceSphere";
+    m_Picker->setSurface(surfaceType);
 
     //picking the actor
     QTestEventList events;

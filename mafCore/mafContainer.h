@@ -52,6 +52,9 @@ public:
     /// External data should assign the pointer to its custom method to destroy
     void setDestructionFunction(mafExternalDataDestructorPointer destruc_function);
 
+    /// Check if the object is equal to that passed as argument.
+    /*virtual*/ bool isEqual(mafContainerInterface *container);
+
 private:
     /// Update the string containing the data type related to the external wrapped data.
     void updateExternalDataType();

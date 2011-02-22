@@ -33,7 +33,7 @@ mafVMEManager::mafVMEManager(const mafString code_location) : mafObjectBase(code
 }
 
 mafVMEManager::~mafVMEManager() {
-    //m_VMEHierarchy->clear();
+    shutdown();
 
 }
 

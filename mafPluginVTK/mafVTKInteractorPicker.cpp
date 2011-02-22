@@ -11,6 +11,7 @@
 
 #include "mafVTKInteractorPicker.h"
 #include "mafVTKParametricSurfaceSphere.h"
+#include <mafVME.h>
 
 #include <vtkAlgorithmOutput.h>
 #include <vtkSmartPointer.h>
@@ -37,7 +38,7 @@ mafVTKInteractorPicker::mafVTKInteractorPicker(const mafString code_location) : 
 }
 
 mafVTKInteractorPicker::~mafVTKInteractorPicker(){
-    mafEventBusManager::instance()->removeSignal(this, "maf.local.resources.interaction.vmePick");
+    mafEventBusManager::instance()->removeSignal(this, "maf.local.resources.interaction.vmePicked");
     mafEventBusManager::instance()->removeSignal(this, "maf.local.operation.VTK.nextPick");
     mafEventBusManager::instance()->removeSignal(this, "maf.local.operation.VTK.OK");
     mafDEL(m_ParametricSurface);
@@ -48,13 +49,13 @@ mafVTKInteractorPicker::~mafVTKInteractorPicker(){
 void mafVTKInteractorPicker::initializeConnections() {
     this->createPipe();
 
-    //mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePick");
+    //mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePicked");
 
     // Register API signals.
-    mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
+    mafRegisterLocalSignal("maf.local.resources.interaction.vmePicked", this, "vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase *)");
 
     // Register private callbacks.
-    mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
+    mafRegisterLocalCallback("maf.local.resources.interaction.vmePicked", this, "vmePicked(double *, unsigned long, mafCore::mafObjectBase *)");
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.operation.VTK.nextPick", this, "nextPickSignal()");
@@ -83,9 +84,12 @@ void mafVTKInteractorPicker::createPipe() {
     m_Output = &m_Actor;
 }
 
-void mafVTKInteractorPicker::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafContainerInterface *actor, QEvent *e ) {
-    Q_UNUSED(actor);
-    Q_UNUSED(e);
+void mafVTKInteractorPicker::vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj) {
+    //Check if this is the interactor of the vme picked.
+    mafResources::mafVME *vme = qobject_cast<mafResources::mafVME*>(obj);
+    if(vme->interactor() != this) {
+        return;
+    }
 
     //Check if ctrl is pressed
     if((modifiers&(1<<MAF_CTRL_KEY))!=0){

@@ -40,6 +40,9 @@ private slots:
     void cleanupTestCase() {
         m_VMEManager->shutdown();
 
+        //restore vme manager status
+        m_EventBus->notifyEvent("maf.local.resources.hierarchy.create");
+
         // Shutdown eventbus singleton and core singletons.
         m_EventBus->shutdown();
         mafMessageHandler::instance()->shutdown();

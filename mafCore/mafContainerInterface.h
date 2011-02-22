@@ -45,6 +45,9 @@ public:
     /// Set the data type for the external wrapped data.
     void setExternalCodecType(const mafString codec_type);
 
+    /// Check if the object is equal to that passed as argument.
+    virtual bool isEqual(mafContainerInterface *container);
+
 protected:
     mafString m_ExternalDataType; ///< Store the data type for the external wrapped data.
     mafString m_ExternalCodecType; ///< Store the codec type for the external wrapped data.
@@ -65,6 +68,10 @@ inline mafString mafContainerInterface::externalDataType() {
 inline mafString mafContainerInterface::externalCodecType() {
     return m_ExternalCodecType;
 }
+
+inline bool mafContainerInterface::isEqual(mafContainerInterface *container) {
+}
+
 
 /// Define the pointer to the mafContainerInterface needed to be registered with Q_DECLARE_METATYPE macro.
 typedef mafContainerInterface * mafContainerInterfacePointer;

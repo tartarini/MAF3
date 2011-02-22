@@ -198,8 +198,12 @@ private slots:
         mafDEL(m_Vme);
 
         // Shutdown eventbus singleton and core singletons.
-        mafEventBusManager::instance()->shutdown();
         m_VMEManager->shutdown();
+
+        //restore vme manager status
+        m_EventBus->notifyEvent("maf.local.resources.hierarchy.create");
+
+        mafEventBusManager::instance()->shutdown();
         mafMessageHandler::instance()->shutdown();
     }
 
