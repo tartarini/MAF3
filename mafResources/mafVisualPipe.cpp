@@ -43,7 +43,8 @@ void mafVisualPipe::initializeConnections() {
 }
 
 void mafVisualPipe::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafContainerInterface *actor, QEvent * e) {
-    if(actor == m_Output){
+    Q_UNUSED(e);
+    if(actor == m_Output) {
         mafVME *vme = this->inputList()->at(0);
         if (vme != NULL){
             mafEventArgumentsList argList;
@@ -53,7 +54,6 @@ void mafVisualPipe::vmePick(double *pickPos, unsigned long modifiers, mafCore::m
             mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePicked", mafEventTypeLocal, &argList);
         }
     }
-
 }
 
 void mafVisualPipe::setVisibility(bool visible) {
