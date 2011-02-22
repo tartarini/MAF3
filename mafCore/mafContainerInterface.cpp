@@ -20,3 +20,7 @@ mafContainerInterface::mafContainerInterface(const mafContainerInterface &dw) {
     *this = dw;
 }
 
+bool mafContainerInterface::isEqual(mafContainerInterface *container) {
+    Q_UNUSED(container);
+    return false;
+}
