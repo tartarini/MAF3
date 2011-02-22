@@ -362,7 +362,7 @@ mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *par
     w->setAnimated(true);
 //    w->setGeometry(settings.value("SideBar/Geometry", QRect(0, 0, 200, 400)).toRect());
     w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    w->setMinimumSize(200, 200);
+    w->setMinimumSize(200, 0);
     w->setMaximumSize(16777215, 16777215);
     connect(w, SIGNAL(clicked(QModelIndex)), this, SLOT(selectVME(QModelIndex)));
     connect(model, SIGNAL(itemAdded(QModelIndex)), w, SLOT(expand(QModelIndex)));
