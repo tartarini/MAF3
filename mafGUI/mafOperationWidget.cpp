@@ -49,6 +49,15 @@ void mafOperationWidget::setOperationGUI(QWidget *gui) {
     m_Operation->connectObjectSlotsByName((QObject *)m_OperationGUI);
     // and initialize the widgets value with those contained into the operation's properties.
     m_Operation->initializeUI((QObject *)m_OperationGUI);
+    // do the same thing for all the the operations'children
+    QObjectList children = m_Operation->children();
+    foreach(QObject *child, children) {
+        mafCore::mafObjectBase *obj = qobject_cast<mafCore::mafObjectBase *>(child);
+        if(obj) {
+            obj->connectObjectSlotsByName((QObject *)m_OperationGUI);
+            obj->initializeUI((QObject *)m_OperationGUI);
+        }
+    }
 }
 
 void mafOperationWidget::changeEvent(QEvent *e) {
