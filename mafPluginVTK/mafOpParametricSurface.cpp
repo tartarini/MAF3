@@ -66,7 +66,7 @@ void mafOpParametricSurface::initializeParametricSurfaces(){
     m_ParametricSurfaceList.insert(PARAMETRIC_CYLINDER, m_ParametricCylinder);
 
     m_ParametricEllipsoid = (mafVTKParametricSurfaceEllipsoid *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceEllipsoid");
-    m_ParametricCylinder->setParent(this);
+    m_ParametricEllipsoid->setParent(this);
     m_ParametricSurfaceList.insert(PARAMETRIC_ELLIPSOID, m_ParametricEllipsoid);
 }
 
