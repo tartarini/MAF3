@@ -68,7 +68,7 @@ private slots:
     void itemDetached(QObject *item);
 
 signals:
-    //void load();
+    void itemAdded(QModelIndex index);
     //void save();
 
 private:

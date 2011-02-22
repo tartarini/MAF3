@@ -74,8 +74,9 @@ void mafTreeModel::clear() {
 
 void mafTreeModel::itemAttached(QObject *item, QObject *parent) {
     this->selectItemFromData(parent);
-    this->insertNewItem(AsChild, item, this->currentIndex());
-    emit layoutChanged();
+    QModelIndex index = this->currentIndex();
+    this->insertNewItem(AsChild, item, index);
+    emit itemAdded(index);
 }
 
 void mafTreeModel::itemDetached(QObject *item) {
