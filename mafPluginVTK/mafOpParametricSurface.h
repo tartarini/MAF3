@@ -123,6 +123,9 @@ public slots:
     //virtual bool terminate();
 
 private:
+    /// Create parametric surfaces.
+    void initializeParametricSurfaces();
+
     int m_CurrentSurfaceIndex; ///< Index of the current parametric surface.
     int m_ParametricSurfaceType; ///< Kind of parametric surface.
 

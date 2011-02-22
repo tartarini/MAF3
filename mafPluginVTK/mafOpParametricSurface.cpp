@@ -28,17 +28,46 @@ mafOpParametricSurface::mafOpParametricSurface(const mafString code_location) : 
     m_ParametricCylinder = NULL;
     m_ParametricEllipsoid = NULL;
     m_ParametricSurfaceList.clear();
+    m_ParametricContainer = NULL;
     this->setParametricSurfaceType(m_ParametricSurfaceType);
+    initializeParametricSurfaces();
 }
 
 mafOpParametricSurface::~mafOpParametricSurface() {
+    m_ParametricSurfaceList.clear();
+    m_Output = NULL;
+    m_ParametricContainer = NULL;
+    mafDEL(m_DataSet);
+    mafDEL(m_VME);
+
+    //removed temporarly
     mafDEL(m_ParametricSphere);
     mafDEL(m_ParametricCube);
     mafDEL(m_ParametricCone);
     mafDEL(m_ParametricCylinder);
     mafDEL(m_ParametricEllipsoid);
-    m_ParametricSurfaceList.clear();
-    m_Output = NULL;
+}
+
+void mafOpParametricSurface::initializeParametricSurfaces(){
+    m_ParametricSphere = (mafVTKParametricSurfaceSphere *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceSphere");
+    m_ParametricSphere->setParent(this);
+    m_ParametricSurfaceList.insert(PARAMETRIC_SPHERE, m_ParametricSphere);
+
+    m_ParametricCube = (mafVTKParametricSurfaceCube *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceCube");
+    m_ParametricCube->setParent(this);
+    m_ParametricSurfaceList.insert(PARAMETRIC_CUBE, m_ParametricCube);
+
+    m_ParametricCone = (mafVTKParametricSurfaceCone *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceCone");
+    m_ParametricCone->setParent(this);
+    m_ParametricSurfaceList.insert(PARAMETRIC_CONE, m_ParametricCone);
+
+    m_ParametricCylinder = (mafVTKParametricSurfaceCylinder *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceCylinder");
+    m_ParametricCylinder->setParent(this);
+    m_ParametricSurfaceList.insert(PARAMETRIC_CYLINDER, m_ParametricCylinder);
+
+    m_ParametricEllipsoid = (mafVTKParametricSurfaceEllipsoid *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceEllipsoid");
+    m_ParametricCylinder->setParent(this);
+    m_ParametricSurfaceList.insert(PARAMETRIC_ELLIPSOID, m_ParametricEllipsoid);
 }
 
 bool mafOpParametricSurface::acceptObject(mafCore::mafObjectBase *obj) {
@@ -47,41 +76,6 @@ bool mafOpParametricSurface::acceptObject(mafCore::mafObjectBase *obj) {
     }
     mafString ct(obj->metaObject()->className());
     return ct == "mafResources::mafVME";
-}
-void mafOpParametricSurface::setParametricSurfaceType(int parametricSurfaceType) {
-     //Creates different instances of parametric surface, in order to store parameters
-    switch (parametricSurfaceType){
-        case PARAMETRIC_SPHERE:
-            if (m_ParametricSphere == NULL){
-                m_ParametricSphere = (mafVTKParametricSurfaceSphere *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceSphere");
-                m_ParametricSurfaceList.insert(parametricSurfaceType, m_ParametricSphere);
-            }
-            break;
-       case PARAMETRIC_CUBE:
-            if (m_ParametricCube == NULL){
-                m_ParametricCube = (mafVTKParametricSurfaceCube *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceCube");
-                m_ParametricSurfaceList.insert(parametricSurfaceType, m_ParametricCube);
-            }
-            break;
-        case PARAMETRIC_CONE:
-            if (m_ParametricCone == NULL){
-                m_ParametricCone = (mafVTKParametricSurfaceCone *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceCone");
-                m_ParametricSurfaceList.insert(parametricSurfaceType, m_ParametricCone);
-            }
-            break;
-        case PARAMETRIC_CYLINDER:
-            if (m_ParametricCylinder == NULL){
-                m_ParametricCylinder = (mafVTKParametricSurfaceCylinder *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceCylinder");
-                m_ParametricSurfaceList.insert(parametricSurfaceType, m_ParametricCylinder);
-            }
-            break;
-        case PARAMETRIC_ELLIPSOID:
-            if (m_ParametricEllipsoid == NULL){
-                m_ParametricEllipsoid = (mafVTKParametricSurfaceEllipsoid *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceEllipsoid");
-                m_ParametricSurfaceList.insert(parametricSurfaceType, m_ParametricEllipsoid);
-            }
-            break;
-    }
 }
 
 int mafOpParametricSurface::parametricSurfaceType() {
@@ -109,6 +103,11 @@ void mafOpParametricSurface::execute() {
 void mafOpParametricSurface::setParameters(mafList<mafVariant> parameters) {
     Q_UNUSED(parameters);
 }
+
+void mafOpParametricSurface::setParametricSurfaceType(int index){
+    m_ParametricSurfaceType = index;
+}
+
 
 void mafOpParametricSurface::on_parametricSurfaceType_currentChanged(int index){
     this->setParametricSurfaceType(index);
