@@ -19,3 +19,4 @@ mafContainerInterface::mafContainerInterface() : m_ExternalDataType(""), m_Exter
 mafContainerInterface::mafContainerInterface(const mafContainerInterface &dw) {
     *this = dw;
 }
+
