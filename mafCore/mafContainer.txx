@@ -47,6 +47,16 @@ T *mafContainer<T>::externalData() {
 }
 
 template<typename T>
+bool mafContainer<T>::isEqual(mafContainerInterface *container) {
+bool result = this->externalDataType().compare(container->externalDataType()) == 0;
+if (result) {
+    mafContainer<T> *data = static_cast<mafContainer<T> *>(container);
+    result = m_ExternalData == data->externalData();
+}
+return result;
+}
+
+template<typename T>
 inline void mafContainer<T>::updateExternalDataType() {
     mafString data_type(typeid( T ).name());
     
@@ -60,3 +70,4 @@ inline void mafContainer<T>::updateExternalDataType() {
 #endif    
     setExternalDataType(data_type);
 }
+
