@@ -45,9 +45,9 @@ void mafVisualPipe::initializeConnections() {
 
 void mafVisualPipe::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafContainerInterface *actor, QEvent * e) {
     Q_UNUSED(e);
-    if (m_Output->isEqual(actor)){
+    if (m_Output && m_Output->isEqual(actor)) {
         mafVME *vme = this->inputList()->at(0);
-        if (vme != NULL){
+        if (vme != NULL) {
             mafEventArgumentsList argList;
             argList.append(mafEventArgument(double *, pickPos));
             argList.append(mafEventArgument(unsigned long, modifiers));
