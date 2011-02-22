@@ -94,9 +94,6 @@ signals:
     /// middle button relesed.
     void middleButtonReleaseSignal(unsigned long modifiers);
 
-    /// picked button pressed.
-    void vmePickSignal(double *pos, unsigned long modifiers, mafCore::mafContainerInterface *interface, QEvent * e);
-
 };
 
 testInteractionManagerCustom::~testInteractionManagerCustom() {
@@ -123,7 +120,6 @@ testInteractionManagerCustom::testInteractionManagerCustom(QString code_location
     mafRegisterLocalSignal("maf.local.resources.interaction.middleButtonRelease", this, "middleButtonReleaseSignal(unsigned long)");
     mafRegisterLocalCallback("maf.local.resources.interaction.middleButtonRelease", this, "middleButtonRelease(unsigned long)");
 
-    mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
     mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafContainerInterface *,QEvent *)");
     m_Counter = 0;
 }
@@ -315,7 +311,6 @@ void mafVTKWidgetTest::mafVTKWidgetConnectionTest() {
     //Check if events has been captured by testInteractionManagerCustom
     QVERIFY(m_CustomManager->m_Counter == 2);
     m_CustomManager->m_Counter = 0;
-
 }
 
 void mafVTKWidgetTest::mafVTKWidgetLeftButtonReleaseTest() {
