@@ -48,7 +48,7 @@ public:
 
 signals:
     /// Signal for VME picked.
-    void vmePickSignal(double *picktPos, unsigned long,  mafCore::mafContainerInterface *actor, QEvent *e);
+    void vmePickedSignal(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj);
 
     /// Store last picking point and allow to set a new picking point
     void nextPickSignal();
@@ -63,7 +63,7 @@ public slots:
 
 private slots:
     /// Called when a VME has been picked.
-    void vmePick(double *pickPos, unsigned long, mafCore::mafContainerInterface *actor, QEvent * e);
+    void vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj);
 
     /// Called when a new pick is required.
     void nextPick();
