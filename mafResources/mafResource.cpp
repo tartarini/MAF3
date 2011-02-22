@@ -15,7 +15,7 @@ using namespace mafCore;
 using namespace mafResources;
 
 
-mafResource::mafResource(const mafString code_location) : mafObject(code_location), m_Busy(false), m_DataLoaded(false), m_InputList(NULL), m_Output(NULL) {
+mafResource::mafResource(const mafString code_location) : mafObject(code_location), m_Busy(false), m_DataLoaded(false), m_Output(NULL), m_InputList(NULL) {
     m_InputList = new mafResourceList;
 }
 
