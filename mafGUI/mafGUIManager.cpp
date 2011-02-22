@@ -360,7 +360,6 @@ mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *par
 //    mafSettings settings;
     mafTreeWidget *w = new mafTreeWidget();
     w->setAnimated(true);
-//    w->setGeometry(settings.value("SideBar/Geometry", QRect(0, 0, 200, 400)).toRect());
     w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     w->setMinimumSize(200, 0);
     w->setMaximumSize(16777215, 16777215);
