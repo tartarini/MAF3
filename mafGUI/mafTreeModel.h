@@ -60,6 +60,8 @@ public slots:
     /// select the object from the data, return true if selected, false otherwise.
     void selectItem(QModelIndex index);
 
+    /*virtual*/ bool submit();
+
 private slots:
     /// Slot called when a new item has been attached to the tree hierarchy.
     void itemAttached(QObject *item, QObject *parent);
