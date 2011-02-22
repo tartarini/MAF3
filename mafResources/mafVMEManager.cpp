@@ -29,6 +29,7 @@ void mafVMEManager::shutdown() {
 
 mafVMEManager::mafVMEManager(const mafString code_location) : mafObjectBase(code_location), m_SelectedVME(NULL), m_Root(NULL), m_VMEHierarchy(NULL) {
     initializeConnections();
+    createVMEHierarchy();
 }
 
 mafVMEManager::~mafVMEManager() {
