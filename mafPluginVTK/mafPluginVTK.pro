@@ -71,3 +71,5 @@ win32:QMAKE_POST_LINK += $$CP_CMD \
 macx:QMAKE_POST_LINK += $$CP_CMD \
     $$DESTDIR/$${LIB_PREFIX}$${TARGET}.1.0.0.dylib \
     $$DESTDIR/$${LIB_PREFIX}$${TARGET}.mafplugin
+
+system($$CP_CMD $$quote($$_PRO_FILE_PWD_/mafOpParametricSurface.ui) $$DESTDIR)

@@ -3,7 +3,7 @@
  *  mafGUI
  *
  *  Created by Daniele Giunchi on 26/10/10.
- *  Copyright 2010 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -60,8 +60,17 @@ public slots:
     /// select the object from the data, return true if selected, false otherwise.
     void selectItem(QModelIndex index);
 
+    /*virtual*/ bool submit();
+
+private slots:
+    /// Slot called when a new item has been attached to the tree hierarchy.
+    void itemAttached(QObject *item, QObject *parent);
+
+    /// Slot called when an item is going to be removed from the tree hierarchy
+    void itemDetached(QObject *item);
+
 signals:
-    //void load();
+    void itemAdded(QModelIndex index);
     //void save();
 
 private:

@@ -77,7 +77,7 @@
    <property name="minimumSize">
     <size>
      <width>200</width>
-     <height>200</height>
+     <height>42</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -109,7 +109,7 @@
       <item row="0" column="0">
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="tabTree">
          <property name="sizePolicy">
@@ -145,7 +145,7 @@
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>200</height>
+               <height>0</height>
               </size>
              </property>
              <property name="title">

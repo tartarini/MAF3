@@ -32,6 +32,12 @@ void mafOperationManager::shutdown() {
 
 mafOperationManager::mafOperationManager(const mafString code_location) : mafObjectBase(code_location), m_LastExecutedOperation(NULL), m_CurrentOperation(NULL) {
     initializeConnections();
+
+    //request of the selected vme
+    mafCore::mafObjectBase *sel_vme;
+    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
+    vmeSelect(sel_vme);
 }
 
 mafOperationManager::~mafOperationManager() {
@@ -192,7 +198,9 @@ void mafOperationManager::stopOperation() {
 
     m_CurrentOperation->terminate();
     if(m_CurrentOperation->canUnDo()) {
-        m_UndoStack.pop_back();
+        if(m_UndoStack.size() != 0) {
+            m_UndoStack.pop_back();
+        }
     }
     mafDEL(m_CurrentOperation);
 }

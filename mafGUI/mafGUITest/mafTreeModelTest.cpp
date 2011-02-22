@@ -97,7 +97,7 @@ void mafTreeModelTest::hierarchyAndInsertItemTest() {
     vmeChild2->setObjectName("vmeChild2");
     m_HierarchyToManage->addHierarchyNode(vmeChild2, vmeRoot); // maybe a signal is useful
 
-    m_TreeModel->insertNewItem(mafTreeModel::AsChild,vmeChild2, m_TreeModel->currentIndex()); //currentIndex is in root
+//    m_TreeModel->insertNewItem(mafTreeModel::AsChild,vmeChild2, m_TreeModel->currentIndex()); //currentIndex is in root
     rows = m_TreeModel->rowCount();
     QVERIFY(rows == 3);
 

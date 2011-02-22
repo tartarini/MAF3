@@ -29,10 +29,11 @@ void mafVMEManager::shutdown() {
 
 mafVMEManager::mafVMEManager(const mafString code_location) : mafObjectBase(code_location), m_SelectedVME(NULL), m_Root(NULL), m_VMEHierarchy(NULL) {
     initializeConnections();
+    createVMEHierarchy();
 }
 
 mafVMEManager::~mafVMEManager() {
-    //m_VMEHierarchy->clear();
+    shutdown();
 
 }
 
@@ -79,6 +80,7 @@ void mafVMEManager::vmeAdd(mafObjectBase *vme) {
     // VME has been added.
     // Connect the manager to the view destroyed signal
     connect(vme_to_add, SIGNAL(destroyed()), this, SLOT(vmeDestroyed()));
+    m_VMEHierarchy->addHierarchyNode(vme, NULL);
 }
 
 void mafVMEManager::vmeRemove(mafObjectBase *vme) {

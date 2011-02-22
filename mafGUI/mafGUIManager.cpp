@@ -249,8 +249,6 @@ void mafGUIManager::registerEvents() {
 
     // OperationManager's callback
     mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
-//    mafRegisterLocalCallback("maf.local.resources.operation.stop", this, "removeOperationGUI()");
-//    mafRegisterLocalCallback("maf.local.resources.operation.execute", this, "removeOperationGUI()");
 
     // ViewManager's callbacks.
     mafRegisterLocalCallback("maf.local.resources.view.selected", this, "viewSelected(mafCore::mafObjectBase *)");
@@ -337,6 +335,8 @@ void mafGUIManager::startOperation() {
 }
 
 void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
+    m_OpMenu->setEnabled(false);
+
     // Get the started operation
     mafString guiFilename = operation->uiFilename();
     m_OperationWidget->setOperation(operation);
@@ -351,6 +351,7 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
 }
 
 void mafGUIManager::removeOperationGUI() {
+    m_OpMenu->setEnabled(true);
     m_GUILoadedType = mafGUILoadedTypeOperation;
     emit guiTypeToRemove(m_GUILoadedType);
 }
@@ -358,11 +359,13 @@ void mafGUIManager::removeOperationGUI() {
 mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *parent) {
 //    mafSettings settings;
     mafTreeWidget *w = new mafTreeWidget();
+    w->setAnimated(true);
 //    w->setGeometry(settings.value("SideBar/Geometry", QRect(0, 0, 200, 400)).toRect());
     w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    w->setMinimumSize(200, 200);
+    w->setMinimumSize(200, 0);
     w->setMaximumSize(16777215, 16777215);
     connect(w, SIGNAL(clicked(QModelIndex)), this, SLOT(selectVME(QModelIndex)));
+    connect(model, SIGNAL(itemAdded(QModelIndex)), w, SLOT(expand(QModelIndex)));
 
     if(parent) {
         if(parent->layout()) {
