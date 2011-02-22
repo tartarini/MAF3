@@ -249,8 +249,6 @@ void mafGUIManager::registerEvents() {
 
     // OperationManager's callback
     mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
-//    mafRegisterLocalCallback("maf.local.resources.operation.stop", this, "removeOperationGUI()");
-//    mafRegisterLocalCallback("maf.local.resources.operation.execute", this, "removeOperationGUI()");
 
     // ViewManager's callbacks.
     mafRegisterLocalCallback("maf.local.resources.view.selected", this, "viewSelected(mafCore::mafObjectBase *)");
@@ -337,6 +335,8 @@ void mafGUIManager::startOperation() {
 }
 
 void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
+    m_OpMenu->setEnabled(false);
+
     // Get the started operation
     mafString guiFilename = operation->uiFilename();
     m_OperationWidget->setOperation(operation);
@@ -351,6 +351,7 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
 }
 
 void mafGUIManager::removeOperationGUI() {
+    m_OpMenu->setEnabled(true);
     m_GUILoadedType = mafGUILoadedTypeOperation;
     emit guiTypeToRemove(m_GUILoadedType);
 }
