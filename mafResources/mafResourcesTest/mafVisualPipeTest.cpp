@@ -13,6 +13,7 @@
 #include <mafCoreSingletons.h>
 #include <mafVisualPipe.h>
 #include <mafVME.h>
+#include <mafContainer.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -47,7 +48,8 @@ public slots:
     void vmePicked(double *pos, unsigned long modifiers, mafCore::mafObjectBase *vme);
 
 private:
-    mafString m_PipeLine; ///< Test Var.
+    mafString m_PipeLine; ///< Test var.
+    mafCore::mafContainer<mafString> m_Container; ///< Test var.
 
 };
 
@@ -59,11 +61,15 @@ testVisualPipeCustomForVisualPipe::testVisualPipeCustomForVisualPipe(const mafSt
 
 void testVisualPipeCustomForVisualPipe::createPipe() {
     m_PipeLine = "Created";
+    m_Output = &m_Container;
 }
 
 void testVisualPipeCustomForVisualPipe::updatePipe(double t) {
     m_PipeLine = "Updated";
     m_PipeLine.append(mafString::number(t));
+
+    m_Container = new mafString;
+    m_Container.externalData()->append(m_PipeLine);
 }
 
 void testVisualPipeCustomForVisualPipe::vmePicked(double *pos, unsigned long modifiers, mafCore::mafObjectBase *vme){
@@ -128,18 +134,18 @@ void mafVisualPipeTest::mafVisualPipeVmePickTest() {
     QEvent *e;
 
     mafVME *vme = mafNEW(mafResources::mafVME);
-    mafCore::mafContainerInterface *actor = m_VisualPipe->output();
+    mafCore::mafContainerInterface *stringContainer = m_VisualPipe->output();
 
     m_VisualPipe->setInput(vme);
 
     mafEventBus::mafEventArgumentsList argList;
     argList.append(mafEventArgument(double *, (double *)posPicked));
     argList.append(mafEventArgument(unsigned long, modifiers));
-    argList.append(mafEventArgument(mafCore::mafContainerInterface *, actor));
+    argList.append(mafEventArgument(mafCore::mafContainerInterface *, stringContainer));
     argList.append(mafEventArgument(QEvent *, e));
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePick", mafEventBus::mafEventTypeLocal, &argList);
-    // m_Output is NULL => m_RecivedPickEvent is false.
-    QVERIFY(m_VisualPipe->m_RecivedPickEvent == false);
+    QVERIFY(m_VisualPipe->m_RecivedPickEvent == true);
+
 
     mafDEL(vme);
 }
