@@ -58,8 +58,8 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
-        mafResources::mafVMEManager::instance();
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
+        mafVMEManager::instance();
 
         /// Create the view...
         m_View = mafNEW(mafPluginVTK::mafViewVTK);
@@ -120,7 +120,7 @@ private slots:
         m_PDataFilter->Delete();
         m_DataSource->Delete();
         m_DataSourceMoved->Delete();
-        mafResources::mafVMEManager::instance()->shutdown();
+        mafVMEManager::instance()->shutdown();
         mafMessageHandler::instance()->shutdown();
     }
 
