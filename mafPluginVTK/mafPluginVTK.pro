@@ -8,6 +8,7 @@ CONFIG += create_prl
 CONFIG += link_prl
 win32:CONFIG += dll
 DEFINES += MAFPLUGIN_VTK
+DEFINES +=VTK_BUILD_SHARED_LIBS
 SOURCES += mafDataBoundaryAlgorithmVTK.cpp \
     mafPluginRegistrator.cpp \
     mafVisualPipeVTKSurface.cpp \

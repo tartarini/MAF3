@@ -4,6 +4,7 @@
 QT += xml
 CONFIG += qtestlib
 CONFIG += link_prl
+DEFINES +=VTK_BUILD_SHARED_LIBS
 SOURCES += main.cpp \
     mafVisualPipeVTKSurfaceTest.cpp \
     mafViewVTKTest.cpp \
