@@ -23,37 +23,32 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafPluginVTK;
 
-mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f)
-{
-    m_Actor = new mafCore::mafContainer<vtkActor>;
+mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f) {
     mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
 }
 
-mafVTKWidget::~mafVTKWidget(){
-    delete m_Actor;
+mafVTKWidget::~mafVTKWidget() {
 }
 
-void mafVTKWidget::mousePressEvent(QMouseEvent* e){
+void mafVTKWidget::mousePressEvent(QMouseEvent* e) {
     // Emit a mouse press event for anyone who might be interested
     emit mouseEvent(e);
 
     vtkRenderWindowInteractor* iren = NULL;
-    if(this->mRenWin)
-      {
-      iren = this->mRenWin->GetInteractor();
-      }
+    if(this->mRenWin) {
+        iren = this->mRenWin->GetInteractor();
+    }
 
-    if(!iren || !iren->GetEnabled())
-      {
-      return;
-      }
+    if(!iren || !iren->GetEnabled()) {
+        return;
+    }
 
     // give interactor the event information
     iren->SetEventInformationFlipY(e->x(), e->y(),
-                                (e->modifiers() & Qt::ControlModifier) > 0 ? 1 : 0,
-                                (e->modifiers() & Qt::ShiftModifier ) > 0 ? 1 : 0,
-                                0,
-                                e->type() == QEvent::MouseButtonDblClick ? 1 : 0);
+                                   (e->modifiers() & Qt::ControlModifier) > 0 ? 1 : 0,
+                                   (e->modifiers() & Qt::ShiftModifier ) > 0 ? 1 : 0,
+                                   0,
+                                   e->type() == QEvent::MouseButtonDblClick ? 1 : 0);
 
     this->getModifiers(iren);
     mafEventArgumentsList argList;
@@ -63,141 +58,130 @@ void mafVTKWidget::mousePressEvent(QMouseEvent* e){
     this->vmePickCheck(iren, e);
 
     // invoke appropriate vtk event
-    switch(e->button())
-      {
-      case Qt::LeftButton:
+    switch(e->button()) {
+    case Qt::LeftButton:
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.leftButtonPress", mafEventTypeLocal, &argList);
         iren->InvokeEvent(vtkCommand::LeftButtonPressEvent, e); //Move into InteractorManager?
         break;
 
-      case Qt::MidButton:
+    case Qt::MidButton:
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.middleButtonPress", mafEventTypeLocal, &argList);
         iren->InvokeEvent(vtkCommand::MiddleButtonPressEvent, e); //Move into InteractorManager?
         break;
 
-      case Qt::RightButton:
+    case Qt::RightButton:
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.rightButtonPress", mafEventTypeLocal, &argList);
         iren->InvokeEvent(vtkCommand::RightButtonPressEvent, e); //Move into InteractorManager?
         break;
 
-      default:
+    default:
         break;
-      }
+    }
 }
 
-void mafVTKWidget::mouseReleaseEvent(QMouseEvent* e){
-  vtkRenderWindowInteractor* iren = NULL;
-  if(this->mRenWin)
-    {
-    iren = this->mRenWin->GetInteractor();
+void mafVTKWidget::mouseReleaseEvent(QMouseEvent* e) {
+    vtkRenderWindowInteractor* iren = NULL;
+    if(this->mRenWin) {
+        iren = this->mRenWin->GetInteractor();
     }
 
-  if(!iren || !iren->GetEnabled())
-    {
-    return;
+    if(!iren || !iren->GetEnabled()) {
+        return;
     }
 
-  // give vtk event information
-  iren->SetEventInformationFlipY(e->x(), e->y(),
-                             (e->modifiers() & Qt::ControlModifier) > 0 ? 1 : 0,
-                             (e->modifiers() & Qt::ShiftModifier ) > 0 ? 1 : 0);
+    // give vtk event information
+    iren->SetEventInformationFlipY(e->x(), e->y(),
+                                   (e->modifiers() & Qt::ControlModifier) > 0 ? 1 : 0,
+                                   (e->modifiers() & Qt::ShiftModifier ) > 0 ? 1 : 0);
 
-  this->getModifiers(iren);
-  mafEventArgumentsList argList;
-  argList.append(mafEventArgument(unsigned long, m_Modifiers));
+    this->getModifiers(iren);
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
-  // Check if a VME has been picked
-  this->vmePickCheck(iren, e);
+    // Check if a VME has been picked
+    this->vmePickCheck(iren, e);
 
-  // invoke appropriate vtk event
-  switch(e->button())
-    {
+    // invoke appropriate vtk event
+    switch(e->button()) {
     case Qt::LeftButton:
-      mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.leftButtonRelease", mafEventTypeLocal, &argList);
-      iren->InvokeEvent(vtkCommand::LeftButtonReleaseEvent, e); //Move into InteractorManager?
-      break;
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.leftButtonRelease", mafEventTypeLocal, &argList);
+        iren->InvokeEvent(vtkCommand::LeftButtonReleaseEvent, e); //Move into InteractorManager?
+        break;
 
     case Qt::MidButton:
-      mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.middleButtonRelease", mafEventTypeLocal, &argList);
-      iren->InvokeEvent(vtkCommand::MiddleButtonReleaseEvent, e); //Move into InteractorManager?
-      break;
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.middleButtonRelease", mafEventTypeLocal, &argList);
+        iren->InvokeEvent(vtkCommand::MiddleButtonReleaseEvent, e); //Move into InteractorManager?
+        break;
 
     case Qt::RightButton:
-      mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.rightButtonRelease", mafEventTypeLocal, &argList);
-      iren->InvokeEvent(vtkCommand::RightButtonReleaseEvent, e); //Move into InteractorManager?
-      break;
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.rightButtonRelease", mafEventTypeLocal, &argList);
+        iren->InvokeEvent(vtkCommand::RightButtonReleaseEvent, e); //Move into InteractorManager?
+        break;
 
     default:
-      break;
+        break;
     }
 }
 
-void mafVTKWidget::wheelEvent(QWheelEvent* e){
-  vtkRenderWindowInteractor* iren = NULL;
-  if(this->mRenWin)
-    {
-    iren = this->mRenWin->GetInteractor();
+void mafVTKWidget::wheelEvent(QWheelEvent* e) {
+    vtkRenderWindowInteractor* iren = NULL;
+    if(this->mRenWin) {
+        iren = this->mRenWin->GetInteractor();
     }
 
-  if(!iren || !iren->GetEnabled())
-    {
-    return;
+    if(!iren || !iren->GetEnabled()) {
+        return;
     }
 
-// VTK supports wheel mouse events only in version 4.5 or greater
-  // give event information to interactor
-  iren->SetEventInformationFlipY(e->x(), e->y(),
-                             (e->modifiers() & Qt::ControlModifier) > 0 ? 1 : 0,
-                             (e->modifiers() & Qt::ShiftModifier ) > 0 ? 1 : 0);
+    // VTK supports wheel mouse events only in version 4.5 or greater
+    // give event information to interactor
+    iren->SetEventInformationFlipY(e->x(), e->y(),
+                                   (e->modifiers() & Qt::ControlModifier) > 0 ? 1 : 0,
+                                   (e->modifiers() & Qt::ShiftModifier ) > 0 ? 1 : 0);
 
-  this->getModifiers(iren);
-  mafEventArgumentsList argList;
-  argList.append(mafEventArgument(unsigned long, m_Modifiers));
+    this->getModifiers(iren);
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
-  // Check if a VME has been picked
-  this->vmePickCheck(iren, e);
+    // Check if a VME has been picked
+    this->vmePickCheck(iren, e);
 
-  // invoke vtk event
-  // if delta is positive, it is a forward wheel event
-  if(e->delta() > 0)
-    {
-      mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseWheelForward", mafEventTypeLocal, &argList);
-    iren->InvokeEvent(vtkCommand::MouseWheelForwardEvent, e); //Move into InteractorManager?
-    }
-  else
-    {
-      mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseWheelBackward", mafEventTypeLocal, &argList);
-    iren->InvokeEvent(vtkCommand::MouseWheelBackwardEvent, e); //Move into InteractorManager?
+    // invoke vtk event
+    // if delta is positive, it is a forward wheel event
+    if(e->delta() > 0) {
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseWheelForward", mafEventTypeLocal, &argList);
+        iren->InvokeEvent(vtkCommand::MouseWheelForwardEvent, e); //Move into InteractorManager?
+    } else {
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseWheelBackward", mafEventTypeLocal, &argList);
+        iren->InvokeEvent(vtkCommand::MouseWheelBackwardEvent, e); //Move into InteractorManager?
     }
 }
 
-void mafVTKWidget::mouseMoveEvent(QMouseEvent* e){
-  vtkRenderWindowInteractor* iren = NULL;
-  if(this->mRenWin)
-    {
-    iren = this->mRenWin->GetInteractor();
+void mafVTKWidget::mouseMoveEvent(QMouseEvent* e) {
+    vtkRenderWindowInteractor* iren = NULL;
+    if(this->mRenWin) {
+        iren = this->mRenWin->GetInteractor();
     }
 
-  if(!iren || !iren->GetEnabled())
-    {
-    return;
+    if(!iren || !iren->GetEnabled()) {
+        return;
     }
 
-  // give interactor the event information
-  iren->SetEventInformationFlipY(e->x(), e->y(),
-                             (e->modifiers() & Qt::ControlModifier) > 0 ? 1 : 0,
-                             (e->modifiers() & Qt::ShiftModifier ) > 0 ? 1 : 0);
+    // give interactor the event information
+    iren->SetEventInformationFlipY(e->x(), e->y(),
+                                   (e->modifiers() & Qt::ControlModifier) > 0 ? 1 : 0,
+                                   (e->modifiers() & Qt::ShiftModifier ) > 0 ? 1 : 0);
 
-  this->getModifiers(iren);
-  mafEventArgumentsList argList;
-  argList.append(mafEventArgument(unsigned long, m_Modifiers));
+    this->getModifiers(iren);
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
-  // Check if a VME has been picked
-  this->vmePickCheck(iren, e);
+    // Check if a VME has been picked
+    this->vmePickCheck(iren, e);
 
-  // invoke vtk event
-  mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseMove", mafEventTypeLocal, &argList);
-  iren->InvokeEvent(vtkCommand::MouseMoveEvent, e); //Move into InteractorManager?
+    // invoke vtk event
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseMove", mafEventTypeLocal, &argList);
+    iren->InvokeEvent(vtkCommand::MouseMoveEvent, e); //Move into InteractorManager?
 }
 
 void mafVTKWidget::getModifiers(vtkRenderWindowInteractor* iren) {
@@ -231,8 +215,8 @@ void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e) {
     int mousePosY = 0;
     double posPicked[3];
 
-    *(m_Actor) = NULL;
-    mafContainerInterface *actorPicked;
+    m_Actor = NULL;
+    mafContainer<vtkActor> actorPicked;
 
     iren->GetEventPosition(mousePosX, mousePosY);
     vtkSmartPointer<vtkCellPicker> cellPicker = vtkSmartPointer<vtkCellPicker>::New();;
@@ -242,19 +226,17 @@ void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e) {
     while(r = rc->GetNextItem()) {
         if(cellPicker->Pick(mousePosX,mousePosY,0,r)) {
             cellPicker->GetPickPosition(posPicked);
-            *(m_Actor) = cellPicker->GetActor();
+            m_Actor = cellPicker->GetActor();
             actorPicked = m_Actor;
         }
     }
 
-    if (*(m_Actor) != NULL) {
+    if (m_Actor != NULL) {
         mafEventArgumentsList argList;
         argList.append(mafEventArgument(double *, (double *)posPicked));
         argList.append(mafEventArgument(unsigned long, m_Modifiers));
-        argList.append(mafEventArgument(mafCore::mafContainerInterface *, actorPicked));
+        argList.append(mafEventArgument(mafCore::mafContainerInterface *, &actorPicked));
         argList.append(mafEventArgument(QEvent *, e));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePick", mafEventTypeLocal, &argList);
     }
 }
-
-

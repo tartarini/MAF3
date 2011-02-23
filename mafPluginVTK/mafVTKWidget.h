@@ -14,11 +14,8 @@
 
 // Includes list
 #include "mafPluginVTKDefinitions.h"
-#include <mafContainer.h>
 #include <vtkActor.h>
 #include <QVTKWidget.h>
-#include <qwidget.h>
-
 
 
 namespace mafPluginVTK {
@@ -27,7 +24,6 @@ namespace mafPluginVTK {
 Class name: mafVTKWidget
 This class overloads VKT mouse events and forward them to EventBus.
 */
-
 class MAFPLUGINVTKSHARED_EXPORT mafVTKWidget : public QVTKWidget {
     Q_OBJECT
     /// typedef macro.
@@ -62,7 +58,7 @@ private:
     /// Check if VME has been picked
     void vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e);
 
-    mafCore::mafContainer<vtkActor> *m_Actor; ///<  Container of the actor.
+    vtkActor *m_Actor; ///<  Container of the actor.
 
     unsigned long m_Modifiers;  ///< Optional modifiers for the button.
 };
