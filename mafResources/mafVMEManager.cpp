@@ -114,7 +114,7 @@ mafCore::mafHierarchyPointer mafVMEManager::createVMEHierarchy() {
          m_VMEHierarchy = mafNEW(mafCore::mafHierarchy);
     }
 
-    if (m_VMEHierarchy->children().count() == 0) {
+    if (m_Root == NULL || m_VMEHierarchy->numberOfChildren(m_Root) == 0) {
          //Delete previous created root.
          mafDEL(m_Root);
          //Create a new root.
