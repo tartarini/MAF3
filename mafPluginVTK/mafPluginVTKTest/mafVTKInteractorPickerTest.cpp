@@ -259,6 +259,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
 
+    mafDEL(pipe);
     mafDEL(vme);
 
     //Simulate operation event "Undo pick".
