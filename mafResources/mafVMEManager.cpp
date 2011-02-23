@@ -23,8 +23,8 @@ mafVMEManager* mafVMEManager::instance() {
 
 void mafVMEManager::shutdown() {
     m_SelectedVME = NULL;
-    mafDEL(m_Root);
-    mafDEL(m_VMEHierarchy);
+    m_VMEHierarchy->clear();
+    m_Root = NULL;
 }
 
 mafVMEManager::mafVMEManager(const mafString code_location) : mafObjectBase(code_location), m_SelectedVME(NULL), m_Root(NULL), m_VMEHierarchy(NULL) {
@@ -34,7 +34,7 @@ mafVMEManager::mafVMEManager(const mafString code_location) : mafObjectBase(code
 
 mafVMEManager::~mafVMEManager() {
     shutdown();
-
+    mafDEL(m_VMEHierarchy);
 }
 
 void mafVMEManager::initializeConnections() {
@@ -80,7 +80,7 @@ void mafVMEManager::vmeAdd(mafObjectBase *vme) {
     // VME has been added.
     // Connect the manager to the view destroyed signal
     connect(vme_to_add, SIGNAL(destroyed()), this, SLOT(vmeDestroyed()));
-    m_VMEHierarchy->addHierarchyNode(vme, NULL);
+    m_VMEHierarchy->addHierarchyNode(vme, m_SelectedVME);
 }
 
 void mafVMEManager::vmeRemove(mafObjectBase *vme) {
@@ -106,12 +106,15 @@ void mafVMEManager::removeVME(mafVME *vme) {
     if (vme == m_SelectedVME) {
         m_SelectedVME = NULL;
     }
+    m_VMEHierarchy->removeHierarchyNode(vme, false);
 }
 
 mafCore::mafHierarchyPointer mafVMEManager::createVMEHierarchy() {
      if(m_VMEHierarchy == NULL) {
          m_VMEHierarchy = mafNEW(mafCore::mafHierarchy);
+    }
 
+    if (m_VMEHierarchy->children().count() == 0) {
          //Delete previous created root.
          mafDEL(m_Root);
          //Create a new root.
