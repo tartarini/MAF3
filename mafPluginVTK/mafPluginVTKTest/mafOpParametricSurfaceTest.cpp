@@ -48,38 +48,26 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
-        m_VMEManager = mafVMEManager::instance();
-
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
 
-        // Callbacks related to the VME creation
-        mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)");
+        m_VMEManager = mafVMEManager::instance();
 
         // Create the parametric operation.
         m_OpParametric = mafNEW(mafPluginVTK::mafOpParametricSurface);
-
-        // execute the operation
-        m_OpParametric->execute();
-
-        // get output of the operation
-        m_VME = qobject_cast<mafVME *>(m_OpParametric->output());
-
-        QVERIFY(m_VmeAdded->isEqual(m_VME));
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_OpParametric);
-        mafMessageHandler::instance()->shutdown();
         m_VMEManager->shutdown();
+        mafMessageHandler::instance()->shutdown();
     }
+
+    /// Test the operation's execution.
+    void testExecute();
 
    /// Test Set/Get method of tparametric surface
     void SetGetTest();
-
-public slots:
-    void vmeAdd(mafCore::mafObjectBase *vme);
-
 
 private:
     mafOpParametricSurface *m_OpParametric; ///< Parametric operation.
@@ -87,6 +75,16 @@ private:
     mafVME *m_VmeAdded; ///< test object.
     mafResources::mafVMEManager *m_VMEManager; ///< instance of mafVMEManager.
 };
+
+void mafOpParametricSurfaceTest::testExecute() {
+    // execute the operation
+    m_OpParametric->execute();
+
+    // get output of the operation
+    m_VME = qobject_cast<mafVME *>(m_OpParametric->output());
+
+    QVERIFY(m_VME != NULL);
+}
 
 void mafOpParametricSurfaceTest::SetGetTest() {
     mafVisualPipeVTKSurface *pipe;
@@ -124,11 +122,6 @@ void mafOpParametricSurfaceTest::SetGetTest() {
     iren->Delete();
     mafDEL(pipe);
 }
-
-void mafOpParametricSurfaceTest::vmeAdd(mafCore::mafObjectBase *vme){
-    QVERIFY(vme != NULL);
-    m_VmeAdded = qobject_cast<mafVME *>(vme);
-    }
 
 
 MAF_REGISTER_TEST(mafOpParametricSurfaceTest);
