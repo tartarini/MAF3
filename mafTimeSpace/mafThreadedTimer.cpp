@@ -27,7 +27,8 @@ mafThreadedTimer::~mafThreadedTimer() {
     if(m_Thread != NULL) {
         m_Thread->exit(0);
 #ifdef WIN32
-        mafDEL(m_Thread);
+        delete m_Thread;
+        m_Thread = NULL;
 #else
         m_Thread->deleteLater();
 #endif
