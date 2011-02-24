@@ -22,7 +22,7 @@ namespace mafCore {
  This class represent the abstract interface for factory allocator of the MAF3 objects.
  @sa mafClassFactory mafObjectFactory
  */
-class mafObjectFactoryInterface {
+class MAFCORESHARED_EXPORT mafObjectFactoryInterface {
 public:
     /// Object destructor.
     virtual ~mafObjectFactoryInterface();
