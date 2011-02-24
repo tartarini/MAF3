@@ -22,6 +22,9 @@ mafVisitorFindSceneNodeByVMEHash::mafVisitorFindSceneNodeByVMEHash(const mafStri
 mafVisitorFindSceneNodeByVMEHash::mafVisitorFindSceneNodeByVMEHash(const mafString hash_code, const mafString code_location) : mafVisitorFindObjects(code_location) , m_HashCode(hash_code), m_SceneNode(NULL) {
 }
 
+mafVisitorFindSceneNodeByVMEHash::~mafVisitorFindSceneNodeByVMEHash() {
+}
+
 void mafVisitorFindSceneNodeByVMEHash::visit(mafObjectBase *object) {
     mafSceneNode *n = qobject_cast<mafSceneNode *>(object);
     if(n != NULL) {

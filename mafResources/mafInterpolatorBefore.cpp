@@ -17,6 +17,9 @@ using namespace mafResources;
 mafInterpolatorBefore::mafInterpolatorBefore(const mafString code_location) : mafInterpolator(code_location) {
 }
 
+mafInterpolatorBefore::~mafInterpolatorBefore() {
+}
+
 mafDataSet *mafInterpolatorBefore::itemAt(mafDataSetMap *collection, double t) {
     mafDataSetMap::const_iterator iter = collection->constBegin();
     while(iter != collection->constEnd() && iter.key() <= t) {

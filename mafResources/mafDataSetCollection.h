@@ -33,9 +33,6 @@ public:
      /// Object constructor.
     mafDataSetCollection(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafDataSetCollection();
-
     /// Set the current timestamp for the collection.
     void setTimestamp(double t);
 
@@ -109,6 +106,9 @@ private slots:
     void itemDestroyed();
 
 protected:
+    /// Object destructor.
+    /* virtual */ ~mafDataSetCollection();
+
     /// Define the checks to accept incoming mafDataSets.
     /** This method allows to check that input mafDataSet is of the same type of that one previously inserted.
     If the given dataset if the first one, then it initialize the data 'type' and future data accepted.*/

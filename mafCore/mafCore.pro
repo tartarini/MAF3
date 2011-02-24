@@ -74,7 +74,8 @@ SOURCES += mafObjectBase.cpp \
     mafHierarchy.cpp \
     mafOntology.cpp \
     mafExceptions.cpp \
-    mafCoreRegistration.cpp
+    mafCoreRegistration.cpp \
+    mafObjectFactoryInterface.cpp
 include(../mafInstallModule.pri)
 include(../mafInstallFoundationLibraries.pri)
 OTHER_FILES += mafTree.tpp \

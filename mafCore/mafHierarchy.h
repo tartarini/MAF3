@@ -35,9 +35,6 @@ public:
     /// Object constructor.
     mafHierarchy(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafHierarchy();
-
     /// Add a node to the tree.
     void addHierarchyNode(QObject *node, QObject *parentNode = 0);
 
@@ -80,6 +77,10 @@ signals:
 
     /// Signal emitted when an item is removed form the hierarchy.
     void itemDetached(QObject *item);
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafHierarchy();
 
 private:
     mafTree<QObject *> *m_Tree; ///< tree variable which hosts mafSceneNode elements

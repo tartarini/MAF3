@@ -41,9 +41,6 @@ public:
     /// Object constructor.
     mafVME(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafVME();
-
     /// Set the bounds of the bounding box of the VME.
     void setBounds(mafVariantList bounds);
 
@@ -104,6 +101,10 @@ public slots:
 
     /// Execute the resource algorithm.
     /*virtual*/ void execute();
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafVME();
 
 private:
     mafInteractor *m_Interactor; ///< Custom interactor associated with the VME.

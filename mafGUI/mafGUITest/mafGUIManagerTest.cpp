@@ -31,7 +31,11 @@ private slots:
         // Register all the creatable objects for the mafGUI module.
         mafGUIRegistration::registerGUIObjects();
         m_MainWin = new QMainWindow();
+
+        mafLogger *logger = mafCore::mafMessageHandler::instance()->activeLogger();
         m_GUIManager = new mafGUIManager(m_MainWin, mafCodeLocation);
+        //need to change the logger
+        mafCore::mafMessageHandler::instance()->setActiveLogger(logger);
     }
 
     /// Cleanup test variables memory allocation.

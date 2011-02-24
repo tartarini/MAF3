@@ -39,6 +39,8 @@ public:
     mafString *resultBuffer();
 
 protected:
+    /// Object destructor.
+    /* virtual */ ~mafMonitor();
     mafString m_ResultBuffer; ///< String buffer in which save the whole monitor result values.
 };
 

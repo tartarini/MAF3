@@ -32,15 +32,15 @@ public:
     /// Object constructor.
     mafSerializerFileSystem(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafSerializerFileSystem();
-
     /// Initialize the IO device and make it ready to operate.
     /*virtual*/ void openDevice(mafSerializerOpenMode mode);
 
     /// Close the IO device and flush all the information into the media.
     /*virtual*/ void closeDevice();
 
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafSerializerFileSystem();
 private:
     mafFile *m_File; ///< Reference to the file media.
 

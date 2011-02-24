@@ -38,9 +38,6 @@ public:
     /// Object constructor;
     mafVisualPipeVTKSurface(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafVisualPipeVTKSurface();
-
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
 
@@ -68,6 +65,10 @@ public slots:
 
     /// Set the flag to activate immediate rendering mode.
     void setImmediateRendering(bool immediateRendering);
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafVisualPipeVTKSurface();
 
 private:
     vtkPolyDataMapper  *m_Mapper; ///< Class that maps polygonal data.

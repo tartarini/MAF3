@@ -39,6 +39,9 @@ public:
     /// Execute the defined operation on visited object passes as argument.
     /*virtual*/ void visit(mafObjectBase *object);
 
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafVisitorFindObjectsByHashCode();
 private:
     mafString m_HashCode;
 };

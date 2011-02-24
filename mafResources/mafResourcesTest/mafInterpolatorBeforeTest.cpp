@@ -45,7 +45,7 @@ private slots:
         for(int i = 0; i < 10; ++i) {
             mafDataSet *item = mafNEW(mafResources::mafDataSet);
             m_ItemMap.insert(ts[i], item);
-            delete item;
+            mafDEL(item);
         }
     }
 

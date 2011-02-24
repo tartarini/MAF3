@@ -111,13 +111,14 @@ private slots:
     /// Plug a new serializer into the serializer hash for the given schema (schema eg. "file") (serializer_type eg. "mafSerialization::mafSerializerFileSystem").
     void plugSerializer(const mafString &schema, const mafString &serializer_type);
 
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafSerializationManager();
+
 private:
     /// Object constructor.
     /** Here are the plug for the default MAF3 codec and serializer.*/
     mafSerializationManager(const mafString code_location = "");
-
-    /// Object destructor.
-    ~mafSerializationManager() {}
 
     /// Initialize the signals / slots connection and generate the IDs needed for the communication with the Serialization Module.
     void initializeConnections();

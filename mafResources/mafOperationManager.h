@@ -127,15 +127,16 @@ private slots:
     /// return last executed operation
     const mafCore::mafObjectBase *lastExecutedOperation() const;
 
+protected:
+    /// Object destructor
+    /*virtual*/ ~mafOperationManager();
+
 private:
     /// create IDs and connect signals with slots for View create, destroy, select and VME show.
     void initializeConnections();
 
     /// Object constructor.
     mafOperationManager(const mafString code_location = "");
-
-    /// Object destructor
-    /*virtual*/ ~mafOperationManager();
 
     mafOperation *m_LastExecutedOperation; ///< Last executed operation
     mafLinkedList<mafOperation *> m_UndoStack; ///< Undo stack which is a linked list of operations

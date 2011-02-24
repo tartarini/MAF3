@@ -151,7 +151,8 @@ void mafDataSetCollectionTest::collectionInsertItemTest() {
     //! </snippet>
     QVERIFY(*m == *new_matrix);
 
-    mafDEL(new_matrix);
+    delete new_matrix;
+    new_matrix = NULL;
 }
 
 void mafDataSetCollectionTest::collectionDataSetTest() {

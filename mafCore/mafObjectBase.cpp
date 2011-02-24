@@ -19,7 +19,7 @@
 
 using namespace mafCore;
 
-mafObjectBase::mafObjectBase(const mafString code_location) : QObject(), m_UIFilename("") {
+mafObjectBase::mafObjectBase(const mafString code_location) : QObject(), m_UIFilename(""), m_ReferenceCount(1) {
     mafIdProvider *provider = mafIdProvider::instance();
     m_ObjectId = provider->createNewId();
 
@@ -160,6 +160,15 @@ void mafObjectBase::initializeUI(QObject *selfUI) {
         }
     }
 }
+
+void mafObjectBase::deleteObject() {
+    --m_ReferenceCount;
+    //mafMsgDebug() << m_ReferenceCount;
+    if(m_ReferenceCount == 0) {
+        delete this;
+    }
+}
+
 
 //void mafObjectBase::createHashCode(mafString &token) {
 //    m_ObjectHash = QCryptographicHash::hash(token.toLatin1(), QCryptographicHash::Sha1);

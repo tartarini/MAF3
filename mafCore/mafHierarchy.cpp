@@ -21,7 +21,7 @@ mafHierarchy::mafHierarchy(const mafString code_location) : mafObjectBase(code_l
 }
 
 mafHierarchy::~mafHierarchy() {
-    mafDEL(m_Tree);
+    delete m_Tree;
 }
 
 void mafHierarchy::addHierarchyNode(QObject* node, QObject *parentNode) {
@@ -37,6 +37,9 @@ void mafHierarchy::addHierarchyNode(QObject* node, QObject *parentNode) {
         int numberOfChildren = m_TreeIterator.node()->m_children.size();
         m_TreeIterator = m_Tree->insert(m_TreeIterator, numberOfChildren, node);
     }
+
+    this->metaObject()->invokeMethod(node, "ref");
+
     emit itemAttached(node, parentNode);
 }
 
@@ -108,8 +111,11 @@ void mafHierarchy::clear() {
     for (; i != iterEnd; ++i) {
         mafTreeNode<QObject *> *n = i.simplify().node();
         if(n->m_data) {
-            delete n->m_data;
-            n->m_data = NULL;
+            bool result = QObject::metaObject()->invokeMethod(n->m_data, "deleteObject");
+            if(result == false) {
+                delete n->m_data;
+                n->m_data = NULL;
+            }
         }
     }
     m_TreeIterator = m_Tree->root();

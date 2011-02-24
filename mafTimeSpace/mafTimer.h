@@ -37,9 +37,6 @@ public:
     /// Object constructor.
     mafTimer(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafTimer();
-
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
 
@@ -74,6 +71,10 @@ public slots:
 
     /// Start the timer with the predefined interval (via setInterval).
     void start();
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafTimer();
 
 private:
     QTimer *m_Timer; ///< Wrapped timer instance.

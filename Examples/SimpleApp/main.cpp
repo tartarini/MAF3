@@ -40,9 +40,9 @@ int main(int argc, char *argv[]) {
     res = QFile::copy(pluginVTK, p);
 
     // Create the application's logic instance
-    mafApplicationLogic::mafLogic logic;
+    mafApplicationLogic::mafLogic *logic = new mafApplicationLogic::mafLogic();
     // and initialize it. This initialization will load dinamically the mafResources Library.
-    bool ok = logic.initialize();
+    bool ok = logic->initialize();
     if(!ok) {
         exit(1);
     }
@@ -54,13 +54,13 @@ int main(int argc, char *argv[]) {
     // mafRegisterObject(myClassCustom);
     mafRegisterObjectAndAcceptBind(mafOperationSimpleApp);
     // Plug the object's information into the framework
-    logic.plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
-    logic.plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View 3D");
+    logic->plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
+    logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View 3D");
 
     // Create the instance of the main window and pass to it the application's logic.
     // In this way the mafMainWondow class will also load the plug-ins present
     // in the default 'plugins' directory.
-    mafMainWindow w(&logic);
+    mafMainWindow w(logic);
 
     // plug custom application's setting page
     mafApplicationSettingsPageConfigurations *page = new mafApplicationSettingsPageConfigurations();
@@ -68,10 +68,12 @@ int main(int argc, char *argv[]) {
 
     // Eventually call the loadPlugins method with custom directory to allow the application
     // load custom plugins located in custom directories.
-    //logic.loadPlugins(cusom_plugin_path);
+    //logic->loadPlugins(cusom_plugin_path);
 
     w.setupMainWindow();
     int result = a.exec();
+
+    mafDEL(logic);
 
     return result;
 }

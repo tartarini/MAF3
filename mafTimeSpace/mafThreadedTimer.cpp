@@ -33,7 +33,7 @@ mafThreadedTimer::~mafThreadedTimer() {
 #endif
     }
     // Delete the timer.
-    delete m_Timer;
+    mafDEL(m_Timer);
 }
 
 void mafThreadedTimer::start() {

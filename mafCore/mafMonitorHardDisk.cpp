@@ -26,6 +26,9 @@ using namespace mafCore;
 mafMonitorHardDisk::mafMonitorHardDisk(const mafString code_location) : mafMonitorMemory(code_location) {
 }
 
+mafMonitorHardDisk::~mafMonitorHardDisk() {
+}
+
 void mafMonitorHardDisk::update() {
 #ifdef WIN32
     __int64 lpFreeBytesAvaibleToCaller, lpTotalNumberOfBytes, lpTotalNumberOfFreeBytes;

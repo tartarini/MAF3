@@ -35,6 +35,9 @@ public:
     /// update memory variables
     /*virtual*/ void update();
 
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafMonitorRAM();
 };
 
 } // namespace mafCore

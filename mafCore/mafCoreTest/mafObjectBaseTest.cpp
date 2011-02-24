@@ -38,7 +38,7 @@ private slots:
 
     /// Cleanup tes variables memory allocation.
     void cleanupTestCase() {
-        delete m_ObjTestVar;
+        m_ObjTestVar->deleteObject();
     }
 
     /// Test the ID generation for the mafObjectBase
@@ -57,6 +57,12 @@ void mafObjectBaseTest::objectIdTest() {
     mafId id = m_ObjTestVar->objectId();
     //! </snippet>
     QVERIFY(id != -1);
+
+    m_ObjTestVar->ref();
+    m_ObjTestVar->ref();
+
+    m_ObjTestVar->deleteObject();
+    m_ObjTestVar->deleteObject();
 }
 
 //void mafObjectBaseTest::createObjectHashTest() {

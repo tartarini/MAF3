@@ -32,3 +32,6 @@ mafMementoViewManager::mafMementoViewManager(const mafObjectBase *obj, const maf
         list->append(item);
     }
 }
+
+mafMementoViewManager::~mafMementoViewManager() {
+}

@@ -28,6 +28,10 @@ class MAFCORESHARED_EXPORT mafMonitorHardDisk : public mafMonitorMemory {
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafMonitorMemory);
 
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafMonitorHardDisk();
+
 public:
     /// Object constructor.
     mafMonitorHardDisk(const mafString code_location = "");

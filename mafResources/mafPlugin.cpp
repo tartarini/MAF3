@@ -42,7 +42,8 @@ mafPlugin::mafPlugin(const mafString &pluginFilename, const mafString code_locat
         m_RefCount = new size_t(1);
     } catch(...) {
         m_LibraryHandler->unload();
-        mafDEL(m_LibraryHandler);
+        delete m_LibraryHandler;
+        m_LibraryHandler = NULL;
         throw;
     }
 } 
@@ -59,6 +60,7 @@ mafPlugin::~mafPlugin() {
     if(!--*m_RefCount) {
         delete m_RefCount;
         //m_LibraryHandler->unload();
-        mafDEL(m_LibraryHandler);
+        delete m_LibraryHandler;
+        m_LibraryHandler = NULL;
     }
 }

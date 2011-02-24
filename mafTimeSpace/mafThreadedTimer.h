@@ -37,9 +37,6 @@ public:
     /// Object constructor overloaded.
     mafThreadedTimer(mafTimer *timer, const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafThreadedTimer();
-
     /// Start the timer in the main thread.
     void start();
 
@@ -52,6 +49,9 @@ public:
     /// Return if the timer is active.
     bool isActive() const;
 
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafThreadedTimer();
 private:
     mafTimer *m_Timer; ///< Timer variable which will be associated with Thread.
     mafThread *m_Thread; ///< Thread variable representing the thread on which Timer runs. If NULL it means the timer is running on the main thread.

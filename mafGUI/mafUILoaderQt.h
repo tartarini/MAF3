@@ -30,11 +30,12 @@ public:
     /// Object constructor.
     mafUILoaderQt(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafUILoaderQt();
-
     /// load from external file (generally an xml) the GUI
     /*virtual*/ void uiLoad(const mafString &fileName);
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafUILoaderQt();
 
 private:
     mafUiLoader m_UILoaderQt;///< instance of the .ui file loader

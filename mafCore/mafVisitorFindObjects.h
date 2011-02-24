@@ -33,13 +33,13 @@ public:
     /// object constructor
     mafVisitorFindObjects(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafVisitorFindObjects();
-
     /// Return the Objects List
     mafObjectsList *objectsList();
 
 protected:
+    /// Object destructor.
+    /* virtual */ ~mafVisitorFindObjects();
+
     mafObjectsList *m_ObjectsList; ///< contains the list of found objects
 };
 

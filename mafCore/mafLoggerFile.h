@@ -34,9 +34,6 @@ public:
     /// Object constructor.
     mafLoggerFile(const mafString code_location = "");
 
-    /// Object destructor.
-    /*virtual*/ ~mafLoggerFile();
-
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
 
@@ -49,6 +46,9 @@ public:
     const mafString lastLogFile() const {return m_LastLogFile;}
 
 protected:
+    /// Object destructor.
+    /* virtual */~mafLoggerFile();
+
     /// Method used to log the given message to the filesystem.
     /*virtual*/ void loggedMessage(const mafMsgType type, const mafString &msg);
 

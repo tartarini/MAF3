@@ -43,6 +43,8 @@ public:
     /*virtual*/ void clearLogHistory() {m_BufferLog.clear();}
 
 protected:
+    /// Object destructor.
+    /* virtual */ ~mafLoggerBuffer();
     /// Method used to log the given message to the buffer.
     /*virtual*/ void loggedMessage(const mafMsgType type, const mafString &msg);
 

@@ -32,9 +32,6 @@ public:
     /// Object constructor.
     mafOntology(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafOntology();
-
     /// Return the dictionary item with the given name. Return NULL if the item has not been found.
     mafDictionary *findItemByName(const mafString itemName);
 
@@ -47,8 +44,11 @@ public:
     */
     void setDictionaryTemplate(const mafString dictionary_template);
 
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafOntology();
 private:
-    mafHierarchy m_Hierarchy; ///< Hierarchy of dictionary items representing the dictionary structure.
+    mafHierarchy *m_Hierarchy; ///< Hierarchy of dictionary items representing the dictionary structure.
 };
 
 } // namespace mafCore

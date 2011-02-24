@@ -46,7 +46,7 @@ private slots:
         for(int i = 0; i < 10; ++i) {
             mafDataSet *item = mafNEW(mafResources::mafDataSet);
             m_ItemMap.insert(ts[i], item);
-            delete item;
+            mafDEL(item);
         }
     }
 
@@ -104,7 +104,7 @@ void mafInterpolatorNearestTest::mafInterpolationNearestEmptyCollTest() {
 
     item = mafNEW(mafResources::mafDataSet);
     m_ItemMap.insert(0.0, item);
-    delete item;
+    mafDEL(item);
 
     item = m_Interpolator->itemAt(&m_ItemMap, 0.0);
     QVERIFY(item != NULL);

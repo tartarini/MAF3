@@ -32,14 +32,15 @@ public:
     /// Object constructor.
     mafCodecRaw(const mafString code_location = "");
 
-    /// Object destructor.
-    ~mafCodecRaw();
-
     /// Encode the memento into the output type.
     virtual void encode(mafCore::mafMemento *memento) = 0;
 
     /// Decode the output type into the memento.
     virtual mafCore::mafMemento *decode() = 0;
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafCodecRaw();
 
 private:
     /// marshalling of QVariant data type in order to write the correct type.

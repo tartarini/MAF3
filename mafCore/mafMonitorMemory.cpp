@@ -16,6 +16,9 @@ using namespace mafCore;
 mafMonitorMemory::mafMonitorMemory(const mafString code_location) : mafMonitor(code_location), m_TotalSpace(0), m_FreeSpace(0) {
 }
 
+mafMonitorMemory::~mafMonitorMemory() {
+}
+
 unsigned int mafMonitorMemory::conversionFromBytes(long long bytes, int byteConversion) {
 
     return bytes / byteConversion;

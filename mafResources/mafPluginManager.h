@@ -84,12 +84,13 @@ public slots:
     /// Allow to query the base MAF class type that the plugged object is extending.
     void queryBaseClassType(mafString &pluggedObjectClassType, mafCore::mafPluggedObjectInformationList *resultBaseClass);
 
+protected:
+    /// Object destructor
+    /*virtual*/ ~mafPluginManager();
+
 private:
     /// Object costructor
     mafPluginManager(const mafString code_location = "");
-
-    /// Object destructor
-    /*virtual*/ ~mafPluginManager();
 
     /// Hash of plugins by their associated file names
     typedef mafHash<mafString, mafPlugin *> mafPluginHash;

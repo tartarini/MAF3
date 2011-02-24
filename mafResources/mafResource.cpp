@@ -23,7 +23,8 @@ mafResource::~mafResource() {
     //mafDEL(m_Output);
 
     m_InputList->clear();
-    mafDEL(m_InputList);
+    delete m_InputList;
+    m_InputList = NULL;
 }
 
 bool mafResource::isObjectValid() const {

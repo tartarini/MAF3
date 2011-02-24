@@ -29,7 +29,7 @@ class MAFRESOURCESSHARED_EXPORT mafDataBoundaryAlgorithm : public mafCore::mafOb
 
 public:
     /// Object constructor.
-    mafDataBoundaryAlgorithm(const mafString code_location = "") : mafCore::mafObjectBase(code_location) {}
+    mafDataBoundaryAlgorithm(const mafString code_location = "");
 
     /// Algorithm that will be used to extract the boundary from the given data value and pose matrix.
     virtual mafCore::mafContainerInterface *calculateBoundary(mafCore::mafContainerInterface *data, mafPoseMatrix *matrix = NULL) = 0;
@@ -39,6 +39,10 @@ public:
 
     /// Return bounds value of the bounding box.
     virtual void bounds(double bounds[6]) = 0;
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafDataBoundaryAlgorithm();
 };
 
 } // namespace mafResources

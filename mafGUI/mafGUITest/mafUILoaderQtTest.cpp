@@ -75,8 +75,7 @@ private slots:
     void cleanupTestCase() {
         delete m_LoadRequestor;
         m_LoadRequestor = NULL;
-        delete m_UILoader;
-        m_UILoader = NULL;
+        mafDEL(m_UILoader);
         mafEventBusManager::instance()->shutdown();
         mafMessageHandler::instance()->shutdown();
     }

@@ -34,6 +34,9 @@ using namespace mafCore;
 mafMonitorRAM::mafMonitorRAM(const mafString code_location) : mafMonitorMemory(code_location) {
 }
 
+mafMonitorRAM::~mafMonitorRAM() {
+}
+
 void mafMonitorRAM::update() {
 #ifdef WIN32
     MEMORYSTATUS memoryStatus;

@@ -40,7 +40,7 @@ private slots:
 
     /// Cleanup tes variables memory allocation.
     void cleanupTestCase() {
-        delete m_Logger;
+        mafDEL(m_Logger);
     }
 
     /// create new object and check that is not NULL test case.

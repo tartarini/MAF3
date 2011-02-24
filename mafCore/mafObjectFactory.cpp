@@ -19,6 +19,11 @@ mafObjectFactory* mafObjectFactory::instance() {
     return &instanceObjectFactory;
 }
 
+
+mafObjectFactory::~mafObjectFactory() {
+    qDeleteAll( m_ObjectMap.values() );
+}
+
 void mafObjectFactory::shutdown() {
 
 }
@@ -42,4 +47,3 @@ mafObjectBase *mafObjectFactory::instantiateObjectBase( const mafString &classNa
         return NULL;
     }
 }
-

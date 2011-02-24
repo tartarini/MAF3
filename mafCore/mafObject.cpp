@@ -23,7 +23,7 @@ mafObject::mafObject(const mafString code_location) : mafObjectBase(code_locatio
 
 mafObject::~mafObject() {
     delete m_TagList;
-    mafDEL(m_Dictionary);
+    delete m_Dictionary;
 }
 
 void mafObject::setModified(bool m) {

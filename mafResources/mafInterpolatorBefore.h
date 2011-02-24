@@ -35,6 +35,10 @@ public:
 
     /// Search the item at the given timestamp 't' with the defined interpolation strategy.
     /*virtual*/ mafDataSet *itemAt(mafDataSetMap *collection, double t);
+
+protected:
+    /// Object destructor.
+    /* virtual */  ~mafInterpolatorBefore();
 };
 
 } //mafResources

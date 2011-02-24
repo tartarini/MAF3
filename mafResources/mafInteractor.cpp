@@ -2,7 +2,7 @@
  *  mafInteractor.cpp
  *  mafResources
  *
- *  Created by Paolo Quadrani on 07/10/10.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 07/10/10.
  *  Copyright 2009 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
@@ -18,6 +18,9 @@ mafInteractor::mafInteractor(const mafString code_location) : mafObjectBase(code
 }
 
 mafInteractor::mafInteractor(mafContainerInterfacePointer default_is, mafContainerInterfacePointer edit_is, const mafString code_location) : mafObjectBase(code_location), m_DefaultInteractorStyle(default_is), m_EditingInteractorStyle(edit_is) {
+}
+
+mafInteractor::~mafInteractor() {
 }
 
 void mafInteractor::setDefaultInteractionStyle(mafContainerInterfacePointer is) {

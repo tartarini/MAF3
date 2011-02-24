@@ -23,7 +23,8 @@ mafPipe::mafPipe(const mafString code_location) : mafObject(code_location), m_In
 
 mafPipe::~mafPipe() {
     m_InputList->clear();
-    mafDEL(m_InputList);
+    delete m_InputList;
+    m_InputList = NULL;
 }
 
 void mafPipe::setInput(mafVME *vme) {

@@ -36,9 +36,6 @@ public:
     /// Object constructor.
     mafDataBoundaryAlgorithmVTK(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafDataBoundaryAlgorithmVTK();
-
     /// Algorithm used to extract the boundary from the given data value and pose matrix.
     /* virtual */ mafCore::mafContainerInterface *calculateBoundary(mafCore::mafContainerInterface *data, mafResources::mafPoseMatrix *matrix = NULL);
 
@@ -47,6 +44,10 @@ public:
 
     /// Return bounds value of the bounding box.
     /* virtual */ void bounds(double bounds[6]);
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafDataBoundaryAlgorithmVTK();
 
 private:
     mafCore::mafContainer<vtkAlgorithmOutput> m_OutputBoundary; ///< vtkAlgorithmOutput as output of the algorithm.

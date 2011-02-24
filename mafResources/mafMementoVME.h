@@ -39,6 +39,10 @@ public:
     /// object overloaded constructor.
     mafMementoVME(const mafCore::mafObject *obj, bool binary = true, const mafString code_location = "");
 
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafMementoVME();
+
 private:
     friend class mafVME;
 };

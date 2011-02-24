@@ -40,9 +40,6 @@ public:
     /// Object constructor.
     mafVTKInteractorPicker(const mafString code_location = "");
 
-    /// Object destructor.
-    ~mafVTKInteractorPicker();
-
     /// Get output of the pipe.
     mafCore::mafContainerInterface *output();
 
@@ -60,6 +57,10 @@ public slots:
 
     /// Set type of parametric surface used as marker.
     void setSurface(mafString parametricSurfaceType);
+
+protected:
+    /// Object destructor.
+    /* virtual */~mafVTKInteractorPicker();
 
 private slots:
     /// Called when a VME has been picked.

@@ -37,6 +37,8 @@ public:
     /*virtual*/ void clearLogHistory() {}
 
 protected:
+    /// Object destructor.
+    /* virtual */ ~mafLoggerConsole();
     /// Method used to log the given message to the console.
     /*virtual*/ void loggedMessage(const mafMsgType type, const mafString &msg);
 };

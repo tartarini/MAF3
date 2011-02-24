@@ -49,6 +49,10 @@ public:
     /// Assign the object class type from the hinerited mementos.
     void setObjectClassType (const mafString &class_type);
 
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafMemento();
+
 private:
     friend class mafObject;
     mafString m_ObjectClassType; ///< Store the object's class type.

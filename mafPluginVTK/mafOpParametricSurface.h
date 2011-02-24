@@ -39,9 +39,6 @@ public:
     /// Object constructor.
     mafOpParametricSurface(const mafString code_location = "");
 
-    /// Object destructor.
-    ~mafOpParametricSurface();
-
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
 
@@ -121,6 +118,10 @@ public slots:
 
     /// Terminate the execution.
     //virtual bool terminate();
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafOpParametricSurface();
 
 private:
     /// Create parametric surfaces.

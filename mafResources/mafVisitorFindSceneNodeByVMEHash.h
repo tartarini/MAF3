@@ -45,6 +45,10 @@ public:
     /// Return the found mafSceneNode if any.
     mafSceneNode *sceneNode();
 
+protected:
+    /// Object destructor
+    /*virtual*/ ~mafVisitorFindSceneNodeByVMEHash();
+
 private:
     mafString m_HashCode;
     mafSceneNode *m_SceneNode; ///< Scene node found corresponding to the given VME hash

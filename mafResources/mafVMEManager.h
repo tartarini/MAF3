@@ -76,15 +76,16 @@ private slots:
     /// Create a hierarchy of VMEs
     mafCore::mafHierarchyPointer createVMEHierarchy();
 
+protected:
+    /// Object destructor
+    /*virtual*/ ~mafVMEManager();
+
 private:
     /// Object constructor.
     mafVMEManager(const mafString code_location = "");
 
     /// create IDs and connect signals with slots for VME add, remove and select.
     void initializeConnections();
-
-    /// Object destructor
-    /*virtual*/ ~mafVMEManager();
 
     /// Remove the VME from the managed VME tree.
     void removeVME(mafVME *vme);

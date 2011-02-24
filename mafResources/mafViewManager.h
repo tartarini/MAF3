@@ -94,12 +94,13 @@ private slots:
     /// Method called when a view has been destroyed (by someone else).
     void viewDestroyed();
 
+protected:
+    /// Object destructor
+    /*virtual*/ ~mafViewManager();
+
 private:
     /// Object constructor.
     mafViewManager(const mafString code_location = "");
-
-    /// Object destructor
-    /*virtual*/ ~mafViewManager();
 
     /// create IDs and connect signals with slots for View create, destroy, select and VME show.
     void initializeConnections();

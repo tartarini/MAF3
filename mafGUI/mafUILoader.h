@@ -37,11 +37,12 @@ public:
     /// Object constructor.
     mafUILoader(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafUILoader();
-
     /// load from external file (generally an xml) the GUI
     virtual void uiLoad(const mafString &fileName) = 0;
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafUILoader();
 };
 
 } //end namespace mafGUI

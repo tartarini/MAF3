@@ -64,8 +64,8 @@ private:
 
     mafCodecVolume *m_CodecRawVolume;       ///< Test var
     int m_Dimensions[3];                    ///< The dimensions of the test volumes
-    mafMemento m_GrayMemento;               ///< Test Object (Gray unsigned short).
-    mafMemento m_RGBMemento;                ///< Test Object (RGB unsigned char).
+    mafMemento *m_GrayMemento;               ///< Test Object (Gray unsigned short).
+    mafMemento *m_RGBMemento;                ///< Test Object (RGB unsigned char).
     mafString  m_GrayFileName;              ///< The file name of m_GrayMemento
     mafString  m_RGBFileName;               ///< The file name of m_RGBMenmento
     mafMemento *m_LoadedGrayMemento;        ///< The loaded memento from m_GrayFileName
@@ -87,8 +87,9 @@ void mafCodecVolumeTest::initTestCase() {
     // init the test variable
     m_CodecRawVolume = mafNEW(mafSerialization::mafCodecVolume);
 
+    m_GrayMemento = new mafMemento();
     // init the volume data (single component, unsigned short)
-    mafMementoPropertyList *propList = m_GrayMemento.mementoPropertyList();
+    mafMementoPropertyList *propList = m_GrayMemento->mementoPropertyList();
     // codecType
     item.m_Name  = "codecType";
     item.m_Value = "RAW_LOD";
@@ -99,7 +100,7 @@ void mafCodecVolumeTest::initTestCase() {
     propList->append(item);
     // dataHash
     item.m_Name  = "dataHash";
-    item.m_Value = m_GrayMemento.objectHash();
+    item.m_Value = m_GrayMemento->objectHash();
     propList->append(item);
     // dataType
     item.m_Name  = "dataType";
@@ -182,8 +183,9 @@ void mafCodecVolumeTest::initTestCase() {
     item.m_Value = qVariantFromValue((void *)data);
     propList->append(item);
 
+    m_RGBMemento = new mafMemento();
     // init the volume data (three component, unsigned char)
-    propList = m_RGBMemento.mementoPropertyList();
+    propList = m_RGBMemento->mementoPropertyList();
     // codecType
     item.m_Name  = "codecType";
     item.m_Value = "RAW_LOD";
@@ -194,7 +196,7 @@ void mafCodecVolumeTest::initTestCase() {
     propList->append(item);
     // dataHash
     item.m_Name  = "dataHash";
-    item.m_Value = m_RGBMemento.objectHash();
+    item.m_Value = m_RGBMemento->objectHash();
     propList->append(item);
     // dataType
     item.m_Name  = "dataType";
@@ -283,7 +285,7 @@ void mafCodecVolumeTest::initTestCase() {
 void mafCodecVolumeTest::cleanupTestCase() {
     mafDEL(m_CodecRawVolume);
     // release the volume data in m_GrayMemento
-    mafMementoPropertyList *propList = m_GrayMemento.mementoPropertyList();
+    mafMementoPropertyList *propList = m_GrayMemento->mementoPropertyList();
     mafMementoPropertyList::iterator iter = propList->begin();
     while (iter != propList->end()) {
         if (iter->m_Name == "dataValue") {
@@ -296,7 +298,7 @@ void mafCodecVolumeTest::cleanupTestCase() {
     mafFile::remove(m_GrayFileName);
     
     // release the volume data in m_RGBMemento
-    propList = m_RGBMemento.mementoPropertyList();
+    propList = m_RGBMemento->mementoPropertyList();
     iter = propList->begin();
     while (iter != propList->end()) {
         if (iter->m_Name == "dataValue") {
@@ -339,6 +341,9 @@ void mafCodecVolumeTest::cleanupTestCase() {
     }
     propList->clear();
     mafDEL(m_LoadedRGBMemento);
+
+    mafDEL(m_GrayMemento);
+    mafDEL(m_RGBMemento);
 }
 
 void mafCodecVolumeTest::mafCodecRawVolumeAllocationTest() {
@@ -356,7 +361,7 @@ void mafCodecVolumeTest::encodeTest() {
     m_CodecRawVolume->setDevice(&file);
 
     // give the memento to the codec
-    m_CodecRawVolume->encode(&m_GrayMemento);
+    m_CodecRawVolume->encode(m_GrayMemento);
 
     // close the gray file
     file.close();
@@ -373,7 +378,7 @@ void mafCodecVolumeTest::encodeTest() {
     m_CodecRawVolume->setDevice(&file);
 
     // give the memento to the codec
-    m_CodecRawVolume->encode(&m_RGBMemento);
+    m_CodecRawVolume->encode(m_RGBMemento);
 
     // close the RGB file
     file.close();
@@ -669,7 +674,7 @@ mafMementoPropertyItem mafCodecVolumeTest::findPropertyItem(mafMemento *menento,
 void mafCodecVolumeTest::verifyGrayMemento(mafMemento *memento, int level, int startPos[3], int dimensions[3]) {
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     foreach(mafMementoPropertyItem item, *propList) {
-        mafMementoPropertyItem comparedItem = findPropertyItem(&m_GrayMemento, item.m_Name);
+        mafMementoPropertyItem comparedItem = findPropertyItem(m_GrayMemento, item.m_Name);
         if (item.m_Name == "fileName") {
             continue;
         } else if (item.m_Name == "levels") {
@@ -711,7 +716,7 @@ void mafCodecVolumeTest::verifyGrayMemento(mafMemento *memento, int level, int s
 void mafCodecVolumeTest::verifyRGBMemento(mafMemento *memento, int level, int startPos[3], int dimensions[3]) {
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     foreach(mafMementoPropertyItem item, *propList) {
-        mafMementoPropertyItem comparedItem = findPropertyItem(&m_RGBMemento, item.m_Name);
+        mafMementoPropertyItem comparedItem = findPropertyItem(m_RGBMemento, item.m_Name);
         if (item.m_Name == "fileName") {
             continue;
         } else if (item.m_Name == "levels") {

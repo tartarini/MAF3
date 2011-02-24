@@ -34,9 +34,6 @@ public:
     /// Object constructor.
     mafResource(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafResource();
-
     /// Used in MAF3 design by contract to check object's validity.
     /** isObjectValid methods play an important role in checking the consistency
     of objects in the debug. isObjectValid is defined as a pure virtual function
@@ -112,6 +109,9 @@ public slots:
     virtual bool terminate();
 
 protected:
+    /// Object destructor.
+    /* virtual */ ~mafResource();
+
     bool m_Busy; ///< Indicates if resource is busy.
     bool m_DataLoaded; ///< Indicates if data has been loaded.
     mafResource *m_Output; ///< Output of the resource.

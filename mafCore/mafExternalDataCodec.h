@@ -52,6 +52,9 @@ public:
     unsigned int stringSize();
 
 protected:
+    /// Object destructor.
+    /* virtual */~mafExternalDataCodec();
+
     mafContainerInterface *m_ExternalData; ///< External data type do be coded/encoded into/from file.
     unsigned int m_StringSize; ///< Size of the input/output string.
 };

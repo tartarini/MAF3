@@ -30,7 +30,7 @@ private slots:
 
     /// Cleanup tes variables memory allocation.
     void cleanupTestCase() {
-        mafDEL(m_ContainerInterface);
+        delete m_ContainerInterface;
     }
 
     /// Create new object and check that is not NULL test case.

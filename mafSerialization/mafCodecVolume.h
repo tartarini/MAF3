@@ -34,9 +34,6 @@ public:
     /// Object constructor.
     mafCodecVolume(const mafString code_location = "");
 
-    /// Object destructor.
-    ~mafCodecVolume();
-
     /// Encode the memento into the output type.
     /*virtual*/ void encode(mafCore::mafMemento *memento);
 
@@ -45,6 +42,10 @@ public:
 
     /// Update the memento from the output type when the start position or dimension of the volume is changed
     /*virtual*/ void update(mafCore::mafMemento *memento);
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafCodecVolume();
 
 private:
     /// marshalling of QVariant data type in order to write the correct type.

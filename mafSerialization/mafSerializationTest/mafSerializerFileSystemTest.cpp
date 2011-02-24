@@ -41,7 +41,7 @@ private slots:
     /// Cleanup tes variables memory allocation.
     void cleanupTestCase() {
         mafFile::remove(m_TestURL);
-        delete m_Serializer;
+        mafDEL(m_Serializer);
         mafMessageHandler::instance()->shutdown();
     }
 

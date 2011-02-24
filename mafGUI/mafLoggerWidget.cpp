@@ -49,7 +49,8 @@ mafLoggerWidget::mafLoggerWidget(const mafString code_location): mafLogger(code_
 }
 
 mafLoggerWidget::~mafLoggerWidget() {
-    mafDEL(m_TextHighlighter);
+    delete m_TextHighlighter;
+    m_TextHighlighter = NULL;
 }
 
 void mafLoggerWidget::clearLogHistory() {

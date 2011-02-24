@@ -25,12 +25,11 @@ namespace mafCore {
 class mafObjectFactoryInterface {
 public:
     /// Object destructor.
-    virtual ~mafObjectFactoryInterface() {}
+    virtual ~mafObjectFactoryInterface();
 
     /// Allocator for MAF objects.
     virtual mafObjectBase* make(const mafString codeLocation = "") const = 0;
 };
-
 
 } //mafCore
 

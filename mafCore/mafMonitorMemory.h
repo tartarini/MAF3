@@ -58,6 +58,8 @@ public:
     static unsigned int conversionFromBytes(long long bytes, int byteConversion = -1);
 
 protected:
+    /// Object destructor.
+    /* virtual */ ~mafMonitorMemory();
     long long m_TotalSpace; ///< total space on device
     long long m_FreeSpace; ///< free space on device
 };

@@ -37,6 +37,10 @@ public:
     /// ObjectMemento overloaded constructor.
     mafMementoObject(const mafObject *obj, const mafTagList *tagList, mafDictionary *dic, const mafString code_location = "");
 
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafMementoObject();
+
 private:
     friend class mafObject;
 };

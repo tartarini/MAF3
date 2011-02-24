@@ -83,3 +83,5 @@ mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const mafString 
     }
 }
 
+mafMementoVME::~mafMementoVME() {
+}

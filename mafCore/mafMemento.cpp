@@ -26,6 +26,9 @@ mafMemento::mafMemento(const mafObject *obj, const mafString code_location) : ma
     m_MementoPropertyList.clear();
 }
 
+ mafMemento::~mafMemento() {
+ }
+
 bool mafMemento::isEqual(const mafObjectBase *obj) const {
     // First check the isEqual for the parent class.
     if(Superclass::isEqual(obj)) {

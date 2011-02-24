@@ -37,9 +37,6 @@ public:
     /// Object constructor.
     mafObject(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafObject();
-
     /// Used in MAF3 design by contract to check object's validity.
     /** isObjectValid methods play an important role in checking the consistency
     of objects in the debug. isObjectValid is defined as a pure virtual function
@@ -99,6 +96,8 @@ public slots:
     void setTagList(const mafTagList &list);
 
 protected:
+    /// Object destructor.
+    /* virtual */ ~mafObject();
     bool m_Selected; ///< Flag used to store the selection flag of the owned VME.
 
 private:

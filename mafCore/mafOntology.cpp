@@ -14,12 +14,14 @@
 
 using namespace mafCore;
 
-mafOntology::mafOntology(const mafString code_location) : mafObjectBase(code_location) {
+mafOntology::mafOntology(const mafString code_location) : mafObjectBase(code_location), m_Hierarchy(NULL) {
+    m_Hierarchy = new mafHierarchy();
 }
 
 mafOntology::~mafOntology() {
     // Clean up the memory allocated for the dictionary items.
-    m_Hierarchy.clear();
+    m_Hierarchy->clear();
+    mafDEL(m_Hierarchy);
 }
 
 void mafOntology::setDictionaryTemplate(const mafString dictionary_template) {

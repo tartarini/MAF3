@@ -59,6 +59,9 @@ public:
     virtual void clearLogHistory() = 0;
 
 protected:
+    /// Object destructor.
+    /* virtual */~mafLogger();
+
     /// Virtual method implementation of logMessage.
     /** You have to redefine this method in your sublass and put here your strategy to store the log message into the specific output stream media (file, db, buffer, console, ...).*/
     virtual void loggedMessage(const mafMsgType type, const mafString &msg) = 0;

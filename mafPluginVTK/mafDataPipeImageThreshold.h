@@ -42,9 +42,6 @@ public:
     /// Object constructor.
     mafDataPipeImageThreshold(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafDataPipeImageThreshold();
-
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
 
@@ -79,6 +76,10 @@ public:
 public slots:
     /// Allow to execute and update the pipeline when something change
     /*virtual*/ void updatePipe(double t = -1);
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafDataPipeImageThreshold();
 
 private:
     double m_LowerThreshold; ///< Variable that contains the lower threshold value for the Thresholding operation.

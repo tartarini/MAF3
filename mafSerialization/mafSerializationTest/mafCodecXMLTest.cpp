@@ -103,8 +103,8 @@ void mafCodecXMLTest::encodeTest() {
 
     mafMsgDebug() << "\n" << buffer.data();
 
-    delete m2;
-    delete m1;
+    mafDEL(m2);
+    mafDEL(m1);
 }
 
 void mafCodecXMLTest::decodeTest() {
@@ -140,8 +140,8 @@ void mafCodecXMLTest::decodeTest() {
         QVERIFY(m_List.at(i).toString().compare(obj->tagList()->at(i).toString()) == 0);
 
     }
-    delete obj;
-    delete m;
+    mafDEL(obj);
+    mafDEL(m);
 }
 
 MAF_REGISTER_TEST(mafCodecXMLTest);

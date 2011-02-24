@@ -28,6 +28,9 @@ class MAFCORESHARED_EXPORT mafVisitor : public mafObjectBase {
     mafSuperclassMacro(mafCore::mafObjectBase);
 
 public:
+    /// Object destructor.
+    /* virtual */ ~mafVisitor();
+
     /// Object constructor
     mafVisitor(const mafString code_location = "");
 

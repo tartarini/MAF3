@@ -34,9 +34,6 @@ public:
     /// Object constructor.
     mafDataPipe(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafDataPipe();
-
     /// Append a new VME to the input list.
     /** This method allows to add a VME to the input list. It returns the index of the last VME added.*/
     int addInput(mafVME *vme);
@@ -62,6 +59,9 @@ private slots:
     void inputDestroyed();
 
 protected:
+    /// Object destructor.
+    /* virtual */ ~mafDataPipe();
+
     mafDataPipe *m_DecoratorPipe; ///< Pointer to the decorator data pipe class.
     mafVME *m_Output; ///< Output Data.
     bool m_InPlace; ///< If false, dataPipe creates a new mafVME as output.

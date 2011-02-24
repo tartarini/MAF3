@@ -45,7 +45,7 @@ private slots:
     /// Cleanup tes variables memory allocation.
     void cleanupTestCase() {
         //! <snippet>
-        delete m_Logger;
+        mafDEL(m_Logger);
         //! </snippet>
     }
 

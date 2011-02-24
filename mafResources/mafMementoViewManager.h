@@ -37,6 +37,10 @@ public:
     /// object constructor.
     mafMementoViewManager(const mafCore::mafObjectBase *obj, const mafResourceList *vList, const mafString code_location = "");
 
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafMementoViewManager();
+
 private:
     friend class mafViewManager;
 };

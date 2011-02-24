@@ -31,9 +31,6 @@ public:
     /// Object constructor.
     mafCodec(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafCodec() {}
-
     /// Return the codec output type
     const mafString encodingType();
 
@@ -47,6 +44,9 @@ public:
     void setDevice(mafIODevice *d);
 
 protected:
+    /// Object destructor.
+    /* virtual */ ~mafCodec();
+
     mafString m_EncodingType; ///< Encoding type for the codec.
     mafIODevice *m_Device; ///< Media device.
     unsigned int m_Level; ///< Decoding level for compounded memento classes.

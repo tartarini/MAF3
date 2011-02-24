@@ -107,8 +107,8 @@ void mafCodecRawASCIITest::encodeTest() {
 
     QVERIFY(s > 0);
 
-    delete m2;
-    delete m1;
+    mafDEL(m2);
+    mafDEL(m1);
 }
 
 void mafCodecRawASCIITest::decodeTest() {
@@ -146,8 +146,8 @@ void mafCodecRawASCIITest::decodeTest() {
         QVERIFY(m_List.at(i).toString().compare(obj->tagList()->at(i).toString()) == 0);
     }
 
-    delete obj;
-    delete m;
+    mafDEL(obj);
+    mafDEL(m);
 }
 
 

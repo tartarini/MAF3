@@ -38,6 +38,10 @@ public:
     /// object overloaded constructor.
     mafMementoResource(const mafCore::mafObject *obj, const mafResourceList *inputList, const mafString code_location = "");
 
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafMementoResource();
+
 private:
     friend class mafResource;
 };

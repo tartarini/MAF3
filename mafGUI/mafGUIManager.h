@@ -60,9 +60,6 @@ public:
     /// Object constructor.
     mafGUIManager(QMainWindow *main_win, const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafGUIManager();
-
     /// Create the menu for the vertical application.
     virtual void createMenus();
 
@@ -103,6 +100,9 @@ public:
     void chooseFileDialog(const mafString title, const mafString start_dir, const mafString wildcard = mafTr("All files (*.*)"));
 
 protected:
+    /// Object destructor.
+    /* virtual */ ~mafGUIManager();
+
     /// Create the actions associated with the menu items.
     virtual void createActions();
 

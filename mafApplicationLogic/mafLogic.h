@@ -50,9 +50,6 @@ public:
     /// Object constructor.
     mafLogic(const mafString code_location = "");
 
-    /// Object destructor.
-    /*virtual*/ ~mafLogic();
-
     /// Allows to initialize all the singletons and register all the objects to the factory.
     virtual bool initialize();
 
@@ -105,6 +102,10 @@ signals:
 
     /// Signal used to ask the vme manager to restore its status.
     void statusVmeManagerRestore(mafCore::mafMemento *memento, bool deep);
+
+protected:
+    /// Object destructor.
+    /*virtual*/ ~mafLogic();
 
 private:
     mafString m_WorkingDirectory; ///< Contains the root directory of the application's data.

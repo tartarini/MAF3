@@ -31,7 +31,7 @@
 
 #define mafDEL(object_pointer) \
     if(object_pointer != NULL) { \
-        delete object_pointer; \
+        object_pointer->deleteObject(); \
         object_pointer = NULL; \
     }
 
@@ -83,7 +83,7 @@ private:
     mafObjectFactory() {};
     
     /// mafObjectFactory destructor.
-    ~mafObjectFactory() { qDeleteAll( m_ObjectMap.values() ); };
+    ~mafObjectFactory();
 
     typedef QHash<mafString, mafObjectFactoryInterface*> mafObjectFactoryMapType;
     mafObjectFactoryMapType m_ObjectMap; ///< Hash table used for storing registered objects.

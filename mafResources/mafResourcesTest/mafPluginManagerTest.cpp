@@ -173,7 +173,8 @@ void mafPluginManagerTest::mafPluginManagerLoadPluginTest() {
     int size = pluggedObjectList->count();
     QVERIFY(size > 0);
 
-    mafDEL(pluggedObjectList);
+    delete pluggedObjectList;
+    pluggedObjectList = NULL;
 
     mafPluggedObjectInformationList baseClassList;
     mafString pluggedClassType("mafPluginTest::mafDataPipeSurfacePluginTest");

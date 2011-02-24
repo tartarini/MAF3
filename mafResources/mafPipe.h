@@ -33,9 +33,6 @@ public:
      /// Object constructor.
     mafPipe(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafPipe();
-
     /// Set the input VME to be used as input data for the pipeline./*
     void setInput(mafVME *vme);
 
@@ -54,6 +51,10 @@ public:
 public slots:
     /// Allow to execute and update the pipeline when something change
     virtual void updatePipe(double t = -1) = 0;
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafPipe();
 
 private slots:
     /// Method called when an input mafVME has been destroyed (by someone else).

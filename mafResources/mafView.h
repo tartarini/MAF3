@@ -38,9 +38,6 @@ public:
     /// Object constructor.
     mafView(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafView();
-
     /// Create the view
     virtual void create();
 
@@ -75,7 +72,10 @@ private slots:
     /// Called when the scene node has been destroyed.
     void sceneNodeDestroy();
 
-  protected:
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafView();
+
     mafCore::mafContainerInterface *m_RenderWidget; ///< Rendering widget for the view.
     mafString m_DefaultVisualPipe; ///< Name of the default visual pipe.
     mafCore::mafHierarchy *m_Scenegraph; ///< Scenegraph

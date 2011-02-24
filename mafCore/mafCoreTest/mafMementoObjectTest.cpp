@@ -53,8 +53,8 @@ void mafMementoObjectTest::mafMementoConstructorTest() {
     mafMementoObject *memento = new mafMementoObject(obj, obj->tagList(), obj->dictionary(), mafCodeLocation);
     //! </snippet>
     QVERIFY(memento != NULL);
-    delete memento;
-    delete obj;
+    mafDEL(memento);
+    mafDEL(obj);
 }
 
 MAF_REGISTER_TEST(mafMementoObjectTest);

@@ -49,6 +49,8 @@ public:
     mafIODevice *ioDevice();
 
 protected:
+    /// Object destructor
+    /* virtual */ ~mafSerializer();
     mafIODevice *m_IODevice; ///< IO device used to operate on the specific media defined by the strategy used.
 
 private:

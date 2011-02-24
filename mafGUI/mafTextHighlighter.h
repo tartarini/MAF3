@@ -53,6 +53,7 @@ public:
 
     /// retrieve format from name
     const mafTextCharFormat &format(const mafString &name);
+
 protected:
     /// Set the text which will be highlighted
     /*virtual*/ void highlightBlock(const mafString &text);

@@ -23,7 +23,8 @@ mafDataSet::mafDataSet(const mafString code_location) : mafObject(code_location)
 mafDataSet::~mafDataSet() {
     // External data must be destroyed by the creator if no pointer to destructor function has been given.
     mafDEL(m_DataBoundaryAlgorithm);
-    mafDEL(m_Matrix);
+    delete m_Matrix;
+    m_Matrix = NULL;
 }
 
 void mafDataSet::setBoundaryAlgorithm(mafDataBoundaryAlgorithm *algorithm) {

@@ -21,6 +21,9 @@ mafVisitorFindObjectsByHashCode::mafVisitorFindObjectsByHashCode(const mafString
 mafVisitorFindObjectsByHashCode::mafVisitorFindObjectsByHashCode(const mafString hash_code, const mafString code_location) : mafVisitorFindObjects(code_location) , m_HashCode(hash_code) {
 }
 
+mafVisitorFindObjectsByHashCode::~mafVisitorFindObjectsByHashCode() {
+}
+
 void mafVisitorFindObjectsByHashCode::visit(mafObjectBase *object) {
   if(m_HashCode == object->objectHash()) {
       if(!m_ObjectsList->contains(object)) {

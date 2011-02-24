@@ -38,9 +38,6 @@ public:
     /// Object constructor.
     mafLogicLight(const mafString code_location = "");
 
-    /// Object destructor.
-    /*virtual*/ ~mafLogicLight();
-
     /// Create and start the server for remote communication according to the given protocol and listen port.
     bool startServer(const mafString &communication_protocol, unsigned int listen_port);
 
@@ -54,6 +51,9 @@ public:
     virtual bool initialize();
 
 protected:
+    /// Object destructor.
+    /*virtual*/ ~mafLogicLight();
+
     mafEventBus::mafEventBusManager *m_EventBus; ///< Reference to the communication's event bus
 };
 

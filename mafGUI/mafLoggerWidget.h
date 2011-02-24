@@ -34,9 +34,6 @@ public:
     /// Object constructor.
     mafLoggerWidget(const mafString code_location = "");
 
-    /// Object destructor.
-    ~mafLoggerWidget();
-
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
 
@@ -47,6 +44,9 @@ public:
     /*virtual*/ void clearLogHistory();
 
 protected:
+    /// Object destructor.
+    /* virtual */ ~mafLoggerWidget();
+
     /// Method used to log the given message to the buffer.
     /*virtual*/ void loggedMessage(const mafMsgType type, const mafString &msg);
 

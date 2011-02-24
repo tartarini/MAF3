@@ -43,15 +43,16 @@ public:
     /// Object constructor.
     mafVTKParametricSurfaceEllipsoid(const mafString code_location = "");
 
-    /// Object destructor.
-    ~mafVTKParametricSurfaceEllipsoid();
-
 public slots:
 
     /// Update surface with parameters.
     /*virtual*/ void updateSurface();
 
-protected slots:
+protected:
+    /// Object destructor.
+    /*virtual*/ ~mafVTKParametricSurfaceEllipsoid();
+
+private slots:
 
     /// Set the radius of the parametric ellipsoid.
     void setEllipsoidRadius(double ellipsoidRadius);

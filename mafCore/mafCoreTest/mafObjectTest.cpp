@@ -54,9 +54,9 @@ private slots:
     /// Cleanup tes variables memory allocation.
     void cleanupTestCase() {
         if(m_Memento != NULL) {
-            delete m_Memento;
+             mafDEL(m_Memento);
         }
-        delete m_ObjTestVar;
+        mafDEL(m_ObjTestVar);
     }
 
     /// register new object in factory test case.
@@ -92,7 +92,7 @@ void mafObjectTest::mafObjectConstructorTest() {
     mafObject *obj = mafNEW(mafCore::mafObject);
     //! </snippet>
     QVERIFY(obj != NULL);
-    delete obj;
+    mafDEL(obj);
 }
 
 void mafObjectTest::isObjectValidTest() {
@@ -184,8 +184,7 @@ void mafObjectTest::isEqualTest() {
 
     // Extract from the test var mafObject its memento
     if(m_Memento != NULL) {
-        delete m_Memento;
-        m_Memento = NULL;
+        mafDEL(m_Memento);
     }
     m_Memento = m_ObjTestVar->createMemento();
     // Assign it to the new one object so they become equals.
@@ -194,7 +193,7 @@ void mafObjectTest::isEqualTest() {
 
     QVERIFY(m_ObjTestVar->isEqual(obj));
 
-    delete obj;
+    mafDEL(obj);
 }
 
 void mafObjectTest::setDictionaryTest() {
@@ -202,7 +201,7 @@ void mafObjectTest::setDictionaryTest() {
     mafObject *obj = mafNEW(mafCore::mafObject);
 
     // @@@@@@@@@@@ TO BE IMPLEMENTED!! @@@@@@@@@@
-    delete obj;
+    mafDEL(obj);
 }
 
 void mafObjectTest::removeDictionaryTest() {
@@ -211,7 +210,7 @@ void mafObjectTest::removeDictionaryTest() {
 
     // @@@@@@@@@@@ TO BE IMPLEMENTED!! @@@@@@@@@@
 
-    delete obj;
+    mafDEL(obj);
 }
 
 MAF_REGISTER_TEST(mafObjectTest);

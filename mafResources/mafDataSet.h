@@ -44,9 +44,6 @@ public:
     /// Object constructor.
     mafDataSet(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafDataSet();
-
     /// Return the data boundary.
     mafCore::mafContainerInterface *dataBoundary();
 
@@ -78,6 +75,10 @@ public:
     The 'deep_memento' flag is used to avoid the copy of the object unique hash in normal operation like
     undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafDataSet();
 
 private:
     mafCore::mafContainerInterface *m_DataValue; ///< Data value present into the current dataset at current timestamp.

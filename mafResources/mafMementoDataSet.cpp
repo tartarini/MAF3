@@ -85,3 +85,6 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, mafPoseMatrix *matrix
         mafDEL(codec);
      }
 }
+
+mafMementoDataSet::~mafMementoDataSet() {
+}

@@ -34,9 +34,6 @@ public:
      /// Object constructor.
     mafVisualPipe(const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafVisualPipe();
-
     /// Get output of the pipe.
     mafCore::mafContainerInterface *output();
 
@@ -65,6 +62,9 @@ private:
     bool m_Visibility; ///< Contains the visibility status of the owned object/s
 
 protected:
+    /// Object destructor.
+    /* virtual */ ~mafVisualPipe();
+
     mafCore::mafContainerInterface *m_Output; ///< Output for visual pipe.
 };
 

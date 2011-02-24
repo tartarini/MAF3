@@ -81,7 +81,7 @@ void mafObjectFactoryTest::instantiateObjectTest() {
     // registered object.
     mafObjectBase *obj_base = mafNEW(mafCore::mafObjectBase);
     QVERIFY(obj_base != NULL);
-    delete obj_base;
+    mafDEL(obj_base);
 }
 
 void mafObjectFactoryTest::instantiateObjectBaseTest() {
@@ -90,7 +90,7 @@ void mafObjectFactoryTest::instantiateObjectBaseTest() {
     QVERIFY(obj != NULL);
     mafString cn = obj->metaObject()->className();
     QVERIFY(cn == "mafCore::mafObject");
-    delete obj;
+    mafDEL(obj);
 }
 
 void mafObjectFactoryTest::unregisterObjectTest() {

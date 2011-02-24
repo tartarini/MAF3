@@ -40,9 +40,6 @@ public:
     an plugin map container.*/
     mafPlugin(const mafPlugin &Other, const mafString code_location = "");
 
-    /// Destroys the plugin, unloading its library when no more references to it exist.
-    /*virtual*/ ~mafPlugin();
-
     /// Query the plugin for its expected engine version
     mafPluginInfo pluginInfo() const {
         return m_PluginInfo();
@@ -52,6 +49,10 @@ public:
     void registerPlugin() {
         m_RegisterPlugin();
     }
+
+protected:
+    /// Destroys the plugin, unloading its library when no more references to it exist.
+    /*virtual*/ ~mafPlugin();
 
 private:
     /// Signature for the version query function

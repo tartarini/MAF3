@@ -37,6 +37,9 @@ public:
 public slots:
     /// Allow to execute and update the pipeline when something change
     /*virtual*/ void updatePipe(double t = -1);
+
+protected:
+    /*virtual*/ ~mafDataPipeSurfacePluginTest() {};
 };
 
 } // namespace mafPluginTest

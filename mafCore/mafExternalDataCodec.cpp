@@ -19,3 +19,7 @@ mafExternalDataCodec::mafExternalDataCodec(const mafString &code_location) : maf
 
 mafExternalDataCodec::mafExternalDataCodec(mafContainerInterface *data, const mafString &code_location) : mafObjectBase(code_location), m_ExternalData(data), m_StringSize(0) {
 }
+
+mafExternalDataCodec::~mafExternalDataCodec() {
+
+}

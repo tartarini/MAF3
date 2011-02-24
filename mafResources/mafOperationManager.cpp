@@ -173,7 +173,7 @@ void mafOperationManager::executeOperation() {
                 bool found = false;
                 for(i = m_UndoStack.begin() ; i != m_UndoStack.end(); ++i) {
                     if(found) {
-                        mafDEL(*i);
+                        mafDEL((*i));
                     }
                     if(*i == m_LastExecutedOperation) {
                         found = true;

@@ -35,9 +35,6 @@ public:
     /// Object constructor.
     mafObjectBase(const mafString code_location = "");
 
-    /// Object destructor.
-    virtual ~mafObjectBase();
-
     /// Return the object's ID.
     mafId objectId() const;
 
@@ -74,6 +71,13 @@ public:
     /// initialize ui widgets with properties, using USER flag in Q_PROPERTY.
     void initializeUI(QObject *selfUI);
 
+public slots:
+    /// increment of 1 unit the reference count.
+    void ref();
+
+    /// delete the object
+    void deleteObject();
+
 protected:
     /// set the hash code for the current object.
     /** This method is used from the undo mechanism like memento pattern
@@ -81,6 +85,9 @@ protected:
     void setObjectHash(const mafString obj_hash);
     
     mafString m_UIFilename; ///< Filename that define the object's UI written into a XML file.
+
+    /// Object destructor.
+    virtual ~mafObjectBase();
 
 signals:
     /// Signal emitted to alert all receivers that the object has been modified.
@@ -90,6 +97,8 @@ private:
     mafId m_ObjectId; ///< Unique ID which identifies the object.
     //mafByteArray m_ObjectHash; ///< Hash value for the current object.
     mafUuid m_ObjectHash; ///< Hash value for the current object.
+
+    int m_ReferenceCount;
 };
 
 
@@ -115,6 +124,10 @@ inline const mafString mafObjectBase::uiFilename() const {
 
 inline bool mafObjectBase::operator ==(const mafObjectBase& obj) const {
     return this->isEqual(&obj);
+}
+
+inline void mafObjectBase::ref() {
+    ++m_ReferenceCount;
 }
 
 } // mafCore

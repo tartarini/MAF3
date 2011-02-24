@@ -53,6 +53,10 @@ public:
     /// Return the editing interaction style.
     mafCore::mafContainerInterfacePointer editingInteractionStyle();
 
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafInteractor();
+
 private:
     mafCore::mafContainerInterfacePointer m_DefaultInteractorStyle; ///< Default interaction style that will be associated with the mafVME.
     mafCore::mafContainerInterfacePointer m_EditingInteractorStyle; ///< Interaction style associated to the mafVME and used during the editing operations of the data inside the mafVME itself.

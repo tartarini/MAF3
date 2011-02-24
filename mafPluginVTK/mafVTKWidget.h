@@ -32,9 +32,6 @@ public:
     /// Object constructor.
     mafVTKWidget(QWidget* parent = NULL, Qt::WFlags f = 0);
 
-    /// Object destructor.
-    ~mafVTKWidget();
-
     /// Overloaded mouse press handler
     /*virtual*/ void mousePressEvent(QMouseEvent* event);
 
@@ -50,6 +47,10 @@ public:
 signals:
     /// picked button pressed.
     void vmePickSignal(double *pos, unsigned long modifiers, mafCore::mafContainerInterface *interface, QEvent * e);
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafVTKWidget();
 
 private:
     /// Get key modifiers.

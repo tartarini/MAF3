@@ -39,6 +39,10 @@ public:
     /// object overloaded constructor.
     mafMementoDataSet(const mafCore::mafObject *obj, mafPoseMatrix *matrix, mafCore::mafContainerInterface *dataValue, bool binary = true, const mafString code_location = "");
 
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafMementoDataSet();
+
 private:
     friend class mafDataSet;
 };

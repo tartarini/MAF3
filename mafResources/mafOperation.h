@@ -66,6 +66,9 @@ public slots:
     virtual bool terminate();
 
 protected:
+    /// Object destructor.
+    /* virtual */ ~mafOperation();
+
     bool m_IsRunning; ///< Flag that check if the operation is running, i.e. the execution is started
     bool m_CanUnDo; ///< Flag that store the unDo capability of the operation.
     mafOperationType m_OperationType; ///< Describe the operation type (mafOperationTypeImporter, mafOperationTypeExporter or mafOperationTypeOperation).

@@ -31,14 +31,15 @@ public:
     /// Object constructor.
     mafCodecRawASCII(const mafString code_location = "");
 
-    /// Object destructor.
-    ~mafCodecRawASCII();
-
     /// Encode the memento into the output type.
     /*virtual*/ void encode(mafCore::mafMemento *memento);
 
     /// Decode the output type into the memento.
     /*virtual*/ mafCore::mafMemento *decode();
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafCodecRawASCII();
 
 private:
     /// marshalling of QVariant data type in order to write the correct type.

@@ -35,7 +35,8 @@ SOURCES += mafResource.cpp \
     mafMementoDataSet.cpp \
     mafInteractionManager.cpp \
     mafInteractor.cpp \
-    mafMementoViewManager.cpp
+    mafMementoViewManager.cpp \
+    mafDataBoundaryAlgorithm.cpp
 HEADERS += mafResource.h \
     mafResources_global.h \
     mafResourcesDefinitions.h \
@@ -72,7 +73,7 @@ include(../mafImportVXL.pri)
 include(../mafImportQXMLRPC.pri)
 include(../mafImportQtSoap.pri)
 INCLUDEPATH += ../mafEventBus \
-                ../mafCore
+    ../mafCore
 LIBS += -L$$DESTDIR \
     -lmafEventBus$$BUILD_EXT \
     -lmafCore$$BUILD_EXT

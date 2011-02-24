@@ -80,7 +80,8 @@ void testCustomManager::createdExtData(mafCore::mafContainerInterface *data) {
     QCOMPARE(boundsIn[5], boundsOut[5]);
 
     sphereMapper->Delete();
-    mafDEL(data);
+    delete data;
+    data = NULL;
 }
 
 

@@ -107,8 +107,8 @@ void mafCodecRawBinaryTest::encodeTest() {
 
     QVERIFY(s > 0);
 
-    delete m2;
-    delete m1;
+    mafDEL(m2);
+    mafDEL(m1);
 }
 
 void mafCodecRawBinaryTest::decodeTest() {
@@ -145,8 +145,8 @@ void mafCodecRawBinaryTest::decodeTest() {
 
     }
 
-    delete obj;
-    delete m;
+    mafDEL(obj);
+    mafDEL(m);
 }
 
 

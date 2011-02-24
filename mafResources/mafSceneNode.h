@@ -36,9 +36,6 @@ public:
     /// Object constructor.
     mafSceneNode(mafVME *vme, mafVisualPipe *visual_pipe = NULL, const mafString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafSceneNode();
-
     /// Set visual pipe to the scene node
     void setVisualPipe(mafString visualPipeType);
 
@@ -54,6 +51,10 @@ public:
 signals:
     /// Alert the view that the node can be deleted because its inner vme has been destroyed.
     void destroyNode();
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafSceneNode();
 
 private slots:
     /// monitor the visual pipe deletation.

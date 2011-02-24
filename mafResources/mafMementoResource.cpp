@@ -37,3 +37,6 @@ mafMementoResource::mafMementoResource(const mafObject *obj, const mafResourceLi
     item.m_Value = mafVariant(hashLists);
     list->append(item);
 }
+
+mafMementoResource::~mafMementoResource() {
+}

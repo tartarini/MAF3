@@ -16,6 +16,9 @@ using namespace mafCore;
 mafLoggerBuffer::mafLoggerBuffer(const mafString code_location) : mafLogger(code_location) {
 }
 
+mafLoggerBuffer::~mafLoggerBuffer() {
+}
+
 void mafLoggerBuffer::loggedMessage(const mafMsgType type, const mafString &msg) {
     m_BufferLog.append(mafDateTime::currentDateTime().toString(mafDateTimeLogFormat));
     m_BufferLog.append(" --> ");

@@ -21,6 +21,9 @@ mafVTKParametricSurface::mafVTKParametricSurface(const mafString code_location) 
     m_Center[2] = 0;
 }
 
+mafVTKParametricSurface::~mafVTKParametricSurface() {
+}
+
 vtkAlgorithmOutput* mafVTKParametricSurface::output(){
     return m_Output;
 }

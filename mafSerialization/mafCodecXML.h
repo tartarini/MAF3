@@ -17,7 +17,6 @@
 
 namespace mafSerialization {
 
-
 /**
  Class name: mafCodecXML
  Codec to Encode/Decode maf objects into XML structure.
@@ -32,14 +31,15 @@ public:
     /// Object constructor.
     mafCodecXML(const mafString code_location = "");
 
-    /// Object destructor.
-    ~mafCodecXML();
-
     /// Encode the memento into the output type.
     /*virtual*/ void encode(mafCore::mafMemento *memento);
 
     /// Decode the output type into the memento.
     /*virtual*/ mafCore::mafMemento *decode();
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafCodecXML();
 
 private:
     /// marshalling of QVariant data type in order to write the correct type.

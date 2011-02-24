@@ -36,14 +36,15 @@ public:
     /// Object constructor.
     mafExternalDataCodecVTK(const mafString code_location = "");
 
-    /// Object destructor.
-    ~mafExternalDataCodecVTK();
-
     /// Encode external data into a mafDataStream.
     /*virtual*/ char *encode(bool binary = true);
 
     /// Decode external data from the mafDataStream.
     /*virtual*/ void decode(const char *input_string, bool binary = true);
+
+protected:
+    /// Object destructor.
+    ~mafExternalDataCodecVTK();
 
 private:
     vtkDataSetReader *m_Reader; ///< Reader of the vtkDataSet

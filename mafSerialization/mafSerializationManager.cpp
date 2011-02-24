@@ -36,6 +36,9 @@ mafSerializationManager::mafSerializationManager(const mafString code_location) 
     plugSerializer("file", "mafSerialization::mafSerializerFileSystem");
 }
 
+mafSerializationManager::~mafSerializationManager() {
+}
+
 void mafSerializationManager::initializeConnections() {
     // Create the IDs required to Save/Load MAF3 data.
     mafIdProvider *provider = mafIdProvider::instance();

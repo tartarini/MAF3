@@ -29,7 +29,8 @@ mafDataSetCollection::~mafDataSetCollection() {
         ++iter;
     }
     m_CollectionMap->clear();
-    mafDEL(m_CollectionMap);
+    delete m_CollectionMap;
+    m_CollectionMap = NULL;
     mafDEL(m_Interpolator);
 }
 
@@ -287,7 +288,8 @@ mafDataSet *mafDataSetCollection::itemAt(double t) {
         m->set_identity();
         item->setPoseMatrix(m);
         insertItem(item, ts);
-        mafDEL(m);
+        delete m;
+        m = NULL;
     }
     return item;
 }

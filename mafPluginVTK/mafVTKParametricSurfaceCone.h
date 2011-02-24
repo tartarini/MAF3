@@ -40,15 +40,16 @@ public:
     /// Object constructor.
     mafVTKParametricSurfaceCone(const mafString code_location = "");
 
-    /// Object destructor.
-    ~mafVTKParametricSurfaceCone();
-
 public slots:
 
     /// Update surface with parameters.
     /*virtual*/ void updateSurface();
 
-protected slots:
+protected:
+    /// Object destructor.
+    ~mafVTKParametricSurfaceCone();
+
+private slots:
     /// Set the height of the parametric cone.
     void setConeHeight(double coneHeight);
 

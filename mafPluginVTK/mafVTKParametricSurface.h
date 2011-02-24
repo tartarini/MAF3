@@ -47,6 +47,9 @@ public:
     virtual void updateSurface();
 
 protected:
+    /// Object destructor.
+    /* virtual */ ~mafVTKParametricSurface();
+
     double m_Center[3]; ///< Center of the parametric surface.
     vtkAlgorithmOutput *m_Output; ///< Output of the parametric surface.
 };

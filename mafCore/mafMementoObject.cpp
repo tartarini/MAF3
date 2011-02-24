@@ -47,3 +47,6 @@ mafMementoObject::mafMementoObject(const mafObject *obj, const mafTagList *tagLi
     itemDic.m_Value = *(dic);
     list->append(itemDic);
 }
+
+mafMementoObject::~mafMementoObject() {
+}
