@@ -78,8 +78,8 @@ void mafVMEManager::vmeAdd(mafObjectBase *vme) {
         return;
     }
     // VME has been added.
-    // Connect the manager to the view destroyed signal
-    connect(vme_to_add, SIGNAL(destroyed()), this, SLOT(vmeDestroyed()));
+    // Connect the manager to the view destroyed signal **** DEPRECATED ****
+    //connect(vme_to_add, SIGNAL(destroyed()), this, SLOT(vmeDestroyed()));
     m_VMEHierarchy->addHierarchyNode(vme, m_SelectedVME);
 }
 
@@ -106,7 +106,7 @@ void mafVMEManager::removeVME(mafVME *vme) {
     if (vme == m_SelectedVME) {
         m_SelectedVME = NULL;
     }
-    m_VMEHierarchy->removeHierarchyNode(vme, false);
+    m_VMEHierarchy->removeHierarchyNode(vme);
 }
 
 mafCore::mafHierarchyPointer mafVMEManager::createVMEHierarchy() {
