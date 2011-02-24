@@ -3,7 +3,7 @@
  *  mafNetworkConnectorQtSoapTest
  *
  *  Created by Daniele Giunchi on 16/07/10.
- *  Copyright 2010 B3C. All rights reserved.
+ *  Copyright 2009-2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
