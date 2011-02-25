@@ -124,6 +124,7 @@ void mafVTKParametricSurfaceSphereTest::SetGetTest() {
     m_ParametricSphere->setProperty("sphereTheRes", 10);
     m_ParametricSphere->setProperty("spherePhiRes", 10);
     m_ParametricSphere->setProperty("sphereRadius", 5);
+    m_ParametricSphere->updateSurface();
 
 
     //Check if parameters had changed.

@@ -124,6 +124,7 @@ void mafVTKParametricSurfaceCubeTest::SetGetTest() {
     m_ParametricCube->setProperty("cubeXLength", 15);
     m_ParametricCube->setProperty("cubeYLength", 20);
     m_ParametricCube->setProperty("cubeZLength", 5);
+    m_ParametricCube->updateSurface();
 
     //Check if parameters had changed.
     QCOMPARE(m_ParametricCube->property("cubeXLength").toDouble(), 15.0);

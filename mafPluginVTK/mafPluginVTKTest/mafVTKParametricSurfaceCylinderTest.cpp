@@ -124,6 +124,7 @@ void mafVTKParametricSurfaceCylinderTest::SetGetTest() {
     m_ParametricCylinder->setProperty("cylinderHeight", 20);
     m_ParametricCylinder->setProperty("cylinderRadius", 10);
     m_ParametricCylinder->setProperty("cylinderRes", 10);
+    m_ParametricCylinder->updateSurface();
 
     //Check if parameters had changed.
     QCOMPARE(m_ParametricCylinder->property("cylinderHeight").toDouble(), 20.0);
