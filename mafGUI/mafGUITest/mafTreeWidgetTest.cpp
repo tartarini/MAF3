@@ -95,6 +95,7 @@ void mafTreeWidgetTest::mafTreeWidgetAllocationTest() {
 //m_TreeWidget->show();
 //app.exec();
 
+    m_HierarchyToManage->clear();
 
     mafDEL(m_HierarchyToManage);
     mafDEL(vmeChild1);

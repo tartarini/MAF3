@@ -111,6 +111,8 @@ void mafTreeModelTest::hierarchyAndInsertItemTest() {
     rows = m_TreeModel->rowCount();
     QVERIFY(rows == 2);
 
+    m_HierarchyToManage->clear();
+
     mafDEL(m_HierarchyToManage);
     mafDEL(vmeChild2);
     mafDEL(vmeChild1);
