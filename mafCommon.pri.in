@@ -39,14 +39,14 @@ LIB_PREFIX = lib
 
 win32 {
     DESTDIR = $$INSTALL_DIR\bin\\$$BUILD_DIR
-    #OBJECTS_DIR = $$DESTDIR\\OBJ
-    #MOC_DIR = $$DESTDIR\\MOC
+    OBJECTS_DIR = $$DESTDIR\\OBJ
+    MOC_DIR = $$DESTDIR\\MOC
     LIB_PREFIX = ""
 }
 unix {
     DESTDIR = $$INSTALL_DIR/bin/$$BUILD_DIR
-    #OBJECTS_DIR = $$DESTDIR/OBJ
-    #MOC_DIR = $$DESTDIR/MOC
+    OBJECTS_DIR = $$DESTDIR/OBJ
+    MOC_DIR = $$DESTDIR/MOC
 }
 
 # Definitions of gcov and lcov flags.
