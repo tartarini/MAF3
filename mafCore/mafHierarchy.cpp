@@ -117,7 +117,7 @@ void mafHierarchy::clear() {
     for (; i != iterEnd; ++i) {
         mafTreeNode<QObject *> *n = i.simplify().node();
         if(n->m_data) {
-            qDebug() << n->m_children.size();
+            //qDebug() << n->m_children.size();
             bool isMafObject = QObject::metaObject()->invokeMethod(n->m_data, "deleteObject");
             if(isMafObject) {
                 n->m_data = NULL;
