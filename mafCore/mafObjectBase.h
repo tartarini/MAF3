@@ -75,8 +75,11 @@ public slots:
     /// increment of 1 unit the reference count.
     void ref();
 
-    /// delete the object
+    /// delete the object.
     void deleteObject();
+
+    /// return the reference count.
+    int referenceCount();
 
 protected:
     /// set the hash code for the current object.
@@ -128,6 +131,10 @@ inline bool mafObjectBase::operator ==(const mafObjectBase& obj) const {
 
 inline void mafObjectBase::ref() {
     ++m_ReferenceCount;
+}
+
+inline int mafObjectBase::referenceCount() {
+    return m_ReferenceCount;
 }
 
 } // mafCore
