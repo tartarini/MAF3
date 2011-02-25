@@ -33,11 +33,12 @@ public:
     /// Object constructor;
     testVisualPipeCustom(const mafString code_location = "") : mafVisualPipe(code_location) {};
 
-    /// Object destructor.
-    /* virtual */ ~testVisualPipeCustom() {};
-
     /// Initialize ans create the pipeline.
     /*virtual*/ void createPipe() {};
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~testVisualPipeCustom() {};
 
 public slots:
     /// Allow to execute and update the pipeline when something change.
@@ -130,7 +131,7 @@ void mafHierarchyTest::mafSceneGraphManageTest() {
     mafSceneNode *sceneNodeChild0 = new mafSceneNode(vmeChild0, pipeChild0, mafCodeLocation);
     sceneNodeChild0->setObjectName("sceneNodeChild0");
     m_HierarchyToManage->addHierarchyNode(sceneNodeChild0);
-    
+
     mafVME* vmeChild0Child0 = mafNEW(mafResources::mafVME);
     vmeChild0Child0->setObjectName("vmeChild0Child0");
     testVisualPipeCustom *pipeChild0Child0 = new testVisualPipeCustom();
@@ -138,6 +139,7 @@ void mafHierarchyTest::mafSceneGraphManageTest() {
     mafSceneNode *sceneNodeChild0Child0 = new mafSceneNode(vmeChild0Child0, pipeChild0Child0, mafCodeLocation);
     sceneNodeChild0Child0->setObjectName("sceneNodeChild0Child0");
     m_HierarchyToManage->addHierarchyNode(sceneNodeChild0Child0);
+
 
     // Search the node by VME hash
     mafVisitorFindSceneNodeByVMEHash *v0 = new mafVisitorFindSceneNodeByVMEHash(sceneNodeChild0->vme()->objectHash(), mafCodeLocation);
@@ -177,6 +179,11 @@ void mafHierarchyTest::mafSceneGraphManageTest() {
     mafMsgDebug() << information;
 
     // Remove the allocated objects
+    mafDEL(sceneNodeRoot);
+    mafDEL(sceneNodeChild0);
+    mafDEL(sceneNodeChild0Child0);
+    mafDEL(sceneNodeChild1);
+
     mafDEL(vmeChild1);
     mafDEL(vmeChild0Child0);
     mafDEL(vmeChild0);
@@ -255,7 +262,11 @@ void mafHierarchyTest::unbalancedTreeRandomCreation(unsigned int numberOfElement
 
         m_Hierarchy->addHierarchyNode(sceneNode);
         ++count;
+        mafDEL(sceneNode);
     }
+
+    mafDEL(sceneNodeRoot);
+    mafDEL(sceneNodeChild0);
 }
 
 void mafHierarchyTest::unbalancedTreeDestruction() {
