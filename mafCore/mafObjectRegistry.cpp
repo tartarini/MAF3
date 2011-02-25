@@ -32,6 +32,7 @@ void mafObjectRegistry::addObject(mafObjectBase *obj, const mafString location) 
     ri.m_Object = obj;
     ri.m_InstantiateLocationInfo = location;
     ri.m_AllocationTime = mafTime::currentTime();
+    ri.m_ReferenceCount = obj->referenceCount();
 
     // Insert the item into the registry.
     m_Registry.insert(obj->objectId(), ri);
@@ -52,7 +53,8 @@ void mafObjectRegistry::dumpLiveObjects() {
         mafString name = iter.value().m_Object->metaObject()->className();
         mafString loc = iter.value().m_InstantiateLocationInfo;
         mafTime t = iter.value().m_AllocationTime;
-        mafMsgDebug() << "class name: " << name << ", allocated by: " << loc << ", at time: " << t.toString("hh:mm:ss");
+        int refCount = iter.value().m_ReferenceCount;
+        mafMsgDebug() << "class name: " << name << ", refCount: " << refCount << ", allocated by: " << loc << ", at time: " << t.toString("hh:mm:ss");
         ++iter;
     }
 }
