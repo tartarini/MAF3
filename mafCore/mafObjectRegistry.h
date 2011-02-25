@@ -69,6 +69,7 @@ private:
         mafObjectBase *m_Object;
         mafString m_InstantiateLocationInfo;
         mafTime m_AllocationTime;
+        int m_ReferenceCount;
     };
 
     typedef mafHash<mafId, mafObjectRegistryItem> mafRegistryHashType;

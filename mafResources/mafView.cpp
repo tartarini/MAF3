@@ -48,6 +48,7 @@ void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
         if(m_Scenegraph != NULL) {
             m_Scenegraph->addHierarchyNode(node);
         }
+        mafDEL(node);
     }
 }
 

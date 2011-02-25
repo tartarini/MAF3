@@ -43,23 +43,28 @@ void mafHierarchy::addHierarchyNode(QObject* node, QObject *parentNode) {
     emit itemAttached(node, parentNode);
 }
 
-void mafHierarchy::removeCurrentHierarchyNode(bool free_memory) {
+void mafHierarchy::removeCurrentHierarchyNode() {
     mafTree<QObject *>::iterator temp_iterator = m_Tree->parent(m_TreeIterator);
 
     mafTree<QObject *> cutTree;
     cutTree = m_Tree->cut(m_TreeIterator);
     for (mafTree<QObject *>::prefix_iterator i = cutTree.prefix_begin(); i != cutTree.prefix_end(); ++i) {
         mafTreeNode<QObject *> *n = i.simplify().node();
-        if(n->m_data && free_memory) {
-           delete n->m_data;
-           n->m_data = NULL;
+        if(n->m_data) {
+            bool isMafObject = QObject::metaObject()->invokeMethod(n->m_data, "deleteObject");
+            if(isMafObject) {
+                n->m_data = NULL;
+            } else {
+                delete n->m_data;
+                n->m_data = NULL;
+            }
         }
     }
     m_Tree->erase(m_TreeIterator);
     m_TreeIterator = temp_iterator;
 }
 
-void mafHierarchy::removeHierarchyNode(QObject *node, bool free_memory) {
+void mafHierarchy::removeHierarchyNode(QObject *node) {
     REQUIRE(node != NULL);
 
     // Move the iterator to the node to remove.
@@ -67,7 +72,7 @@ void mafHierarchy::removeHierarchyNode(QObject *node, bool free_memory) {
     // notify the observer that a node is going to be detached.
     emit itemDetached(node);
     // Remove the node from the hierarchy => the item will be deleted !!
-    removeCurrentHierarchyNode(free_memory);
+    removeCurrentHierarchyNode();
 }
 
 void mafHierarchy::moveTreeIteratorToParent() {
@@ -108,11 +113,15 @@ void mafHierarchy::moveTreeIteratorToRootNode() {
 void mafHierarchy::clear() {
     mafTree<QObject *>::prefix_iterator i = m_Tree->prefix_begin();
     mafTree<QObject *>::prefix_iterator iterEnd = m_Tree->prefix_end();
+
     for (; i != iterEnd; ++i) {
         mafTreeNode<QObject *> *n = i.simplify().node();
         if(n->m_data) {
-            bool result = QObject::metaObject()->invokeMethod(n->m_data, "deleteObject");
-            if(result == false) {
+            //qDebug() << n->m_children.size();
+            bool isMafObject = QObject::metaObject()->invokeMethod(n->m_data, "deleteObject");
+            if(isMafObject) {
+                n->m_data = NULL;
+            } else {
                 delete n->m_data;
                 n->m_data = NULL;
             }

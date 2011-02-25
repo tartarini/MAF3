@@ -76,6 +76,7 @@ private slots:
 
         //Insert data into VME
         m_VmeCube = mafNEW(mafResources::mafVME);
+        m_VmeCube->setObjectName("VME Cube");
         m_DataSetCube = mafNEW(mafResources::mafDataSet);
         m_DataSetCube->setDataValue(&m_DataSourceContainer);
         m_VmeCube->dataSetCollection()->insertItem(m_DataSetCube, 0);
@@ -104,6 +105,7 @@ private slots:
         m_DataSetCubeMoved->setDataValue(&m_DataSourceContainerMoved);
 
         m_VmeCubeMoved = mafNEW(mafResources::mafVME);
+        m_VmeCubeMoved->setObjectName("Moved VME Cube");
         m_VmeCubeMoved->dataSetCollection()->insertItem(m_DataSetCubeMoved, 0);
     }
 
@@ -116,6 +118,7 @@ private slots:
         widget->close();
 
         mafDEL(m_View);
+        mafDEL(m_VmeCube);
         mafDEL(m_VmeCubeMoved);
         m_PDataFilter->Delete();
         m_DataSource->Delete();
@@ -192,10 +195,7 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
 
     // Show off first cube
     m_View->showSceneNode(cubeNode, false);
-    QTest::qSleep(2000);
-
-    // Remove VME
-    mafDEL(m_VmeCube);
+    QTest::qSleep(2000);    
 }
 
 MAF_REGISTER_TEST(mafViewVTKTest);

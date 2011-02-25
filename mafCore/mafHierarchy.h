@@ -39,10 +39,10 @@ public:
     void addHierarchyNode(QObject *node, QObject *parentNode = 0);
 
     /// Remove the current selected node from the tree. The current node will be deleted.
-    void removeCurrentHierarchyNode(bool free_memory = true);
+    void removeCurrentHierarchyNode();
 
     /// Remove the current selected node from the tree. The node will be deleted.
-    void removeHierarchyNode(QObject *node, bool free_memory = true);
+    void removeHierarchyNode(QObject *node);
 
     /// Move the tree iterator to the parent of the current position pointed
     void moveTreeIteratorToParent();

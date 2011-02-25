@@ -26,12 +26,12 @@ void mafResourcesSingletons::mafSingletonsInitialize() {
 
 void mafResourcesSingletons::mafSingletonsShutdown() {
     // Un-register objects from the factory.
-    mafResourcesRegistration::unregisterResourcesObjects();
-    mafPluginManager::instance()->shutdown();
     mafViewManager::instance()->shutdown();
     mafVMEManager::instance()->shutdown();
     mafOperationManager::instance()->shutdown();
     mafInteractionManager::instance()->shutdown();
+    mafPluginManager::instance()->shutdown();
+    mafResourcesRegistration::unregisterResourcesObjects();
 }
 
 void mafResources::initializeModule() {
