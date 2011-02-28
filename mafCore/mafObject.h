@@ -29,6 +29,7 @@ class MAFCORESHARED_EXPORT mafObject : public mafObjectBase {
     Q_OBJECT
     Q_PROPERTY(bool modified READ modified WRITE setModified)
     Q_PROPERTY(bool selected READ selected WRITE setSelected)
+    Q_PROPERTY(QString iconFile READ iconFile WRITE setIconFile)
 
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
@@ -60,6 +61,12 @@ public:
 
     /// Return the selection state for the owned VME.
     bool selected() const;
+
+    /// Allow to set the filename representing the icon file associated with the object.
+    void setIconFile(mafString icon_file);
+
+    /// Return the filename associated with the object.
+    mafString iconFile() const;
 
     /// Return the instance of the object's status. The caller has to delete the allocated memento memory he asked for.
     virtual mafMemento *createMemento() const;
@@ -99,6 +106,7 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafObject();
     bool m_Selected; ///< Flag used to store the selection flag of the owned VME.
+    mafString m_IconFIle; ///< Filename associated to the icon file to use with the object.
 
 private:
     bool m_Modified; ///< Contains the modified state of the VME.
@@ -116,6 +124,10 @@ inline bool mafObject::modified() const {
 
 inline bool mafObject::selected() const {
     return m_Selected;
+}
+
+inline mafString mafObject::iconFile() const {
+    return m_IconFIle;
 }
 
 inline const mafTagList *mafObject::tagList() const {

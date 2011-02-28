@@ -16,7 +16,7 @@
 
 using namespace mafCore;
 
-mafObject::mafObject(const mafString code_location) : mafObjectBase(code_location), m_Selected(false), m_Modified(false), m_TagList(NULL), m_Dictionary(NULL) {
+mafObject::mafObject(const mafString code_location) : mafObjectBase(code_location), m_Selected(false), m_IconFIle(""), m_Modified(false), m_TagList(NULL), m_Dictionary(NULL) {
     m_TagList = new mafTagList();
     m_Dictionary = new mafDictionary;
 }
@@ -34,6 +34,10 @@ void mafObject::setSelected(bool sel) {
     if(sel != m_Selected) {
         m_Selected = sel;
     }
+}
+
+void mafObject::setIconFile(QString icon_file) {
+    m_IconFIle = icon_file;
 }
 
 mafMemento *mafObject::createMemento() const {
