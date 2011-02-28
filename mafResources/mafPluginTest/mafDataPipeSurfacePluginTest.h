@@ -39,7 +39,7 @@ public slots:
     /*virtual*/ void updatePipe(double t = -1);
 
 protected:
-    /*virtual*/ ~mafDataPipeSurfacePluginTest() {};
+    /*virtual*/ ~mafDataPipeSurfacePluginTest();
 };
 
 } // namespace mafPluginTest
