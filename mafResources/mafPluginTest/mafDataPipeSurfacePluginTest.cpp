@@ -16,6 +16,9 @@ using namespace mafPluginTest;
 mafDataPipeSurfacePluginTest::mafDataPipeSurfacePluginTest(const mafString code_location) : mafDataPipe(code_location) {
 }
 
+mafDataPipeSurfacePluginTest::~mafDataPipeSurfacePluginTest() {
+}
+
 void mafDataPipeSurfacePluginTest::createPipe() {
     mafMsgDebug("%s", mafTr("plugin pipeline created!!").toAscii().data());
 }
