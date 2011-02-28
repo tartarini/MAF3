@@ -91,10 +91,13 @@ def execute():
 
 def usage():
     print "python BinaryLauncher.py -d directory -t test-suite"
+    print "-h, --help                 show help (this)"
+    print "-d, --directory=           select path in which find executables"
+    print "-t, --test-suite=          choose the test suite from supported ones: QTest , cppunit"
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "d:t:", ["directory=", "test-suite="] )
+        opts, args = getopt.getopt(sys.argv[1:], "hd:t:", ["help", "directory=", "test-suite="] )
     except getopt.GetoptError, err:
         # print help information and exit:
         print str(err) # will print something like "option -a not recognized"
@@ -102,7 +105,10 @@ def main():
         sys.exit(2)
     
     for o, a in opts:
-        if o in ("-d", "--directory"):
+         if o in ("-h", "--help"):
+            usage()
+            sys.exit()
+        elif o in ("-d", "--directory"):
             param['directory'] = os.path.abspath(os.path.normpath(a))
         elif o in ("-t", "--test-suite"):
             param['test-suite'] = a
