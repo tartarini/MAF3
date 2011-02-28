@@ -57,7 +57,7 @@ signals:
     void destroyViewSignal(mafCore::mafObjectBase *view);
 
     /// Allow to cdreate a new mafView given the type name as string. Return the created view on success.
-    void createViewSignal(mafString view_type);
+    void createViewSignal(QString view_type);
 
     /// Notify the view creation to all observers.
     void viewCreatedSignal(mafCore::mafObjectBase *view);
@@ -89,7 +89,7 @@ private slots:
     void destroyView(mafCore::mafObjectBase *view);
 
     /// Allow to cdreate a new mafView given the type name as string. Return the pointer to the created view on success.
-    void createView(mafString view_type);
+    void createView(QString view_type);
 
     /// Method called when a view has been destroyed (by someone else).
     void viewDestroyed();
@@ -100,7 +100,7 @@ protected:
 
 private:
     /// Object constructor.
-    mafViewManager(const mafString code_location = "");
+    mafViewManager(const QString code_location = "");
 
     /// create IDs and connect signals with slots for View create, destroy, select and VME show.
     void initializeConnections();

@@ -30,23 +30,23 @@ class  testVisualPipeCustomForSceneNode : public  mafResources::mafVisualPipe {
 
 public:
     /// Object constructor.
-    testVisualPipeCustomForSceneNode(const mafString code_location = "");
+    testVisualPipeCustomForSceneNode(const QString code_location = "");
 
     /// Initialize and create the pipeline
     /*virtual*/ void createPipe();
 
     /// Return the string variable initializated and updated from the data pipe.
-    mafString pipeline() {return m_PipeLine;}
+    QString pipeline() {return m_PipeLine;}
 
 public slots:
     /// Allow to execute and update the pipeline when something change
     /*virtual*/ void updatePipe(double t = -1);
 
 private:
-    mafString m_PipeLine; ///< Test Var.
+    QString m_PipeLine; ///< Test Var.
 };
 
-testVisualPipeCustomForSceneNode::testVisualPipeCustomForSceneNode(const mafString code_location) : mafVisualPipe(code_location), m_PipeLine("") {
+testVisualPipeCustomForSceneNode::testVisualPipeCustomForSceneNode(const QString code_location) : mafVisualPipe(code_location), m_PipeLine("") {
 }
 
 void testVisualPipeCustomForSceneNode::createPipe() {
@@ -55,7 +55,7 @@ void testVisualPipeCustomForSceneNode::createPipe() {
 
 void testVisualPipeCustomForSceneNode::updatePipe(double t) {
     m_PipeLine = "Updated";
-    m_PipeLine.append(mafString::number(t));
+    m_PipeLine.append(QString::number(t));
 }
 //------------------------------------------------------------------------------------------
 

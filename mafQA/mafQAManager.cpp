@@ -56,7 +56,7 @@ void mafQAManager::profilerInit() {
     }
 }
 
-void mafQAManager::profilerStart(const mafString &comment) {
+void mafQAManager::profilerStart(const QString &comment) {
     if(m_Profiler == NULL) {
         profilerInit();
     }
@@ -66,7 +66,7 @@ void mafQAManager::profilerStart(const mafString &comment) {
         profilerStop();
     }
     REQUIRE(m_ProfilingCounter >= 0);
-    mafString profileMarker(mafTr("mafQAManager run number %1").arg(++m_ProfilingCounter));
+    QString profileMarker(mafTr("mafQAManager run number %1").arg(++m_ProfilingCounter));
     m_Profiler->profilerStart(profileMarker, profileMarker, comment);
 }
 
@@ -78,20 +78,20 @@ void mafQAManager::profilerStop() {
     }
 
     REQUIRE(m_ProfilingCounter >= 0);
-    mafString profileMarker(mafTr("mafQAManager run number %1").arg(m_ProfilingCounter));
+    QString profileMarker(mafTr("mafQAManager run number %1").arg(m_ProfilingCounter));
     m_Profiler->profilerStop(profileMarker, profileMarker);
 }
 
 void mafQAManager::printOnConsole() {
-    mafMsgDebug() << *m_ResultBuffer;
+    qDebug() << *m_ResultBuffer;
 }
 
-void mafQAManager::printOnFile(mafString filename) {
-    mafFile f(filename);
+void mafQAManager::printOnFile(QString filename) {
+    QFile f(filename);
     if(!f.open(QIODevice::WriteOnly)) {
-        mafMsgCritical("%s", mafTr("Unable to open file %1").arg(filename).toAscii().constData());
+        qCritical("%s", mafTr("Unable to open file %1").arg(filename).toAscii().constData());
     }
-    mafTextStream dataStream(&f);
+    QTextStream dataStream(&f);
     dataStream << *m_ResultBuffer;
 
     f.close();
@@ -102,13 +102,13 @@ void mafQAManager::profilerViewResultsOnConsole() {
     printOnConsole();
 }
 
-void mafQAManager::profilerViewResultsOnFile(mafString filename, bool open_file) {
+void mafQAManager::profilerViewResultsOnFile(QString filename, bool open_file) {
     m_ResultBuffer = m_Profiler->bufferString();
 
     printOnFile(filename);
 
     if(open_file) {
-        mafStringList argument;
+        QStringList argument;
         runScript(filename, argument);
     }
 }
@@ -135,7 +135,7 @@ void mafQAManager::printMemoryMonitorResultOnConsole() {
     printOnConsole();
 }
 
-void mafQAManager::printMemoryMonitorResultOnFile(mafString filename, bool open_file) {
+void mafQAManager::printMemoryMonitorResultOnFile(QString filename, bool open_file) {
     // Execute the monitor calculation that will update the result buffer
     monitorExecute();
 
@@ -144,7 +144,7 @@ void mafQAManager::printMemoryMonitorResultOnFile(mafString filename, bool open_
 
     // If open_file flag is true, open it with the default viewer application.
     if(open_file) {
-        mafStringList argument;
+        QStringList argument;
         runScript(filename, argument);
     }
 }
@@ -168,75 +168,75 @@ void mafQAManager::monitorExecute() {
 }
 
 void mafQAManager::enableErrorMonitor(int level, bool enable) {
-    mafMsgDebug() << "level: " << level << " enabled: " << enable;
+    qDebug() << "level: " << level << " enabled: " << enable;
 }
 
 
-bool mafQAManager::pluginValidate(const mafString &plugin) {
-    mafMsgDebug() << "Validating Plugin: " << plugin;
+bool mafQAManager::pluginValidate(const QString &plugin) {
+    qDebug() << "Validating Plugin: " << plugin;
 
     // Try to load the plugin as a dynamic library
-    mafLibrary *libraryHandler = new mafLibrary(plugin);
+    QLibrary *libraryHandler = new QLibrary(plugin);
     if(!libraryHandler->load()) {
-        mafString msg(mafTr("'%1' is not a valid MAF3 plugin. It can't be loaded.").arg(plugin));
-        mafMsgDebug() << msg;
+        QString msg(mafTr("'%1' is not a valid MAF3 plugin. It can't be loaded.").arg(plugin));
+        qDebug() << msg;
         return false;
     }
-    mafString msg(mafTr("'%1' successfully loaded.").arg(plugin));
-    mafMsgDebug() << msg;
+    QString msg(mafTr("'%1' successfully loaded.").arg(plugin));
+    qDebug() << msg;
 
     mafQAFnPluginInfo *pluginInfo;
     pluginInfo = reinterpret_cast<mafQAFnPluginInfo *>(libraryHandler->resolve("pluginInfo"));
     if(!pluginInfo) {
-        mafString msg(mafTr("'%1' is not a valid MAF3 plugin. Plugin information not found.").arg(plugin));
-        mafMsgDebug() << msg;
+        QString msg(mafTr("'%1' is not a valid MAF3 plugin. Plugin information not found.").arg(plugin));
+        qDebug() << msg;
         return false;
     }
-    msg = mafString(mafTr("'%1' contains plugin info.").arg(plugin));
-    mafMsgDebug() << msg;
+    msg = QString(mafTr("'%1' contains plugin info.").arg(plugin));
+    qDebug() << msg;
 
 
     if (pluginInfo().m_Author.length() == 0 || pluginInfo().m_PluginName.length() == 0 \
         || pluginInfo().m_Description.length() == 0)
     {
-        mafString msg(mafTr("'%1' is not a valid MAF3 plugin. Plugin information not found.").arg(plugin));;
-        mafMsgDebug() << msg;
+        QString msg(mafTr("'%1' is not a valid MAF3 plugin. Plugin information not found.").arg(plugin));;
+        qDebug() << msg;
         return false;
     }
 
-    msg = mafString(mafTr("'%1' is a valid MAF3 plugin:").arg(plugin));
-    mafMsgDebug() << msg;
+    msg = QString(mafTr("'%1' is a valid MAF3 plugin:").arg(plugin));
+    qDebug() << msg;
 
-    mafMsgDebug() << "\n";
-    mafMsgDebug() << "Plug-in Information:";
-    mafMsgDebug() << "Varsion: " << pluginInfo().m_Version;
-    mafMsgDebug() << "Author: " << pluginInfo().m_Author;
-    mafMsgDebug() << "Description: " << pluginInfo().m_Description;
+    qDebug() << "\n";
+    qDebug() << "Plug-in Information:";
+    qDebug() << "Varsion: " << pluginInfo().m_Version;
+    qDebug() << "Author: " << pluginInfo().m_Author;
+    qDebug() << "Description: " << pluginInfo().m_Description;
 
 
     return true;
 }
 
-int mafQAManager::runPythonScript(const mafString &script_url, mafStringList arguments, bool sync) {
+int mafQAManager::runPythonScript(const QString &script_url, QStringList arguments, bool sync) {
     bool res = false;
-    mafStringList params;
+    QStringList params;
     params.append(script_url);
     params.append(arguments);
     if (sync) {
-        res = mafProcess::execute("python", params) == 0;
+        res = QProcess::execute("python", params) == 0;
     }
     else {
-        res = mafProcess::startDetached("python", params);
+        res = QProcess::startDetached("python", params);
     }
     return res ? 0 : -1;
 }
 
-int mafQAManager::runScript(const mafString &script_url, mafStringList arguments, bool sync) {
+int mafQAManager::runScript(const QString &script_url, QStringList arguments, bool sync) {
     bool res = false;
     if (sync) {
-        res = mafProcess::execute(script_url, arguments) == 0;
+        res = QProcess::execute(script_url, arguments) == 0;
     } else {
-        res = mafProcess::startDetached(script_url, arguments);
+        res = QProcess::startDetached(script_url, arguments);
     }
     return res ? 0 : -1;
 }
@@ -247,12 +247,12 @@ void mafQAManager::eventStatisticsInit() {
 
 
 void mafQAManager::eventStatisticsStart(mafId event_id) {
-    mafMsgDebug() << "Statistics start for eventID: " << event_id;
+    qDebug() << "Statistics start for eventID: " << event_id;
 }
 
 
 void mafQAManager::eventStatisticsStop(mafId event_id) {
-    mafMsgDebug() << "Statistics stop for eventID: " << event_id;
+    qDebug() << "Statistics stop for eventID: " << event_id;
 }
 
 
@@ -261,13 +261,13 @@ void mafQAManager::eventStatisticsViewResults() {
 }
 
 
-int mafQAManager::openPollUrl(const mafString &poll_url) {
-    mafStringList argument;
+int mafQAManager::openPollUrl(const QString &poll_url) {
+    QStringList argument;
     return runScript(poll_url, argument);
 }
 
 
-const mafString mafQAManager::applicationVersion() {
+const QString mafQAManager::applicationVersion() {
     return "1.0";
 }
 

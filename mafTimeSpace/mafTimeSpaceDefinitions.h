@@ -29,7 +29,7 @@ typedef enum {
     mafTimerTypeCyclic
 } mafTimerType;
 
-typedef mafHash<mafCore::mafId, mafTimeSpace::mafThreadedTimer *> mafTimerHash; ///< Hash table that store the association between the mafId of the crearted timer and its instance.
+typedef QHash<mafCore::mafId, mafTimeSpace::mafThreadedTimer *> mafTimerHash; ///< Hash table that store the association between the mafId of the crearted timer and its instance.
 
 }
 

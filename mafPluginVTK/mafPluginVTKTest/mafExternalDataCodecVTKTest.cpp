@@ -78,7 +78,7 @@ private slots:
 private:
     mafExternalDataCodecVTK *m_CodecIn; ///< Test var.
     mafExternalDataCodecVTK *m_CodecOut; ///< Test var.
-    mafDataStream m_OutputStream; ///< Test var.
+    QDataStream m_OutputStream; ///< Test var.
 
     vtkCubeSource *m_DataSource; ///< Source data for the test suite.
     mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source

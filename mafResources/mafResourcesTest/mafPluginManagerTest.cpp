@@ -35,7 +35,7 @@ class testPluginObserver : public mafObjectBase {
 
 public:
     /// Object constructor
-    testPluginObserver(const mafString code_location = "");
+    testPluginObserver(const QString code_location = "");
 
     /// Object destructor
     /*virtual*/ ~testPluginObserver();
@@ -51,7 +51,7 @@ private:
     mafDataPipe *m_PluggedPipe; ///< Test var.
 };
 
-testPluginObserver::testPluginObserver(const mafString code_location) : mafObjectBase(code_location), m_PluggedPipe(NULL) {
+testPluginObserver::testPluginObserver(const QString code_location) : mafObjectBase(code_location), m_PluggedPipe(NULL) {
     mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "pluggedObject(mafCore::mafPluggedObjectsHash)");
 }
 
@@ -60,7 +60,7 @@ testPluginObserver::~testPluginObserver() {
 }
 
 void testPluginObserver::pluggedObject(mafCore::mafPluggedObjectsHash pluginHash) {
-    mafString base_class("");
+    QString base_class("");
     mafPluggedObjectInformation objInfo;
     mafPluggedObjectsHash::iterator iter = pluginHash.begin();
     while(iter != pluginHash.end()) {
@@ -134,7 +134,7 @@ private slots:
 
 private:
     mafPluginManager *m_PluginManager; ///< Test var.
-    mafString m_PluginName; ///< Test var.
+    QString m_PluginName; ///< Test var.
     testPluginObserver *m_Observer; ///< Test observer.
 };
 
@@ -146,26 +146,26 @@ void mafPluginManagerTest::mafPluginManagerLoadPluginTest() {
     // Load the library containing the objects that I want to plug-in.
     //! <snippet>
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafString, m_PluginName));
+    argList.append(mafEventArgument(QString, m_PluginName));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.loadLibrary", mafEventTypeLocal, &argList);
     //! </snippet>
     
     // Dump the plug-in information.
     mafPluginInfo info = m_PluginManager->pluginInformation(m_PluginName);
-    mafMsgDebug() << "Plug-in Information:";
-    mafMsgDebug() << "Varsion: " << info.m_Version;
-    mafMsgDebug() << "Author: " << info.m_Author;
-    mafMsgDebug() << "Vendor: " << info.m_Vendor;
-    mafMsgDebug() << "Description: " << info.m_Description;
+    qDebug() << "Plug-in Information:";
+    qDebug() << "Varsion: " << info.m_Version;
+    qDebug() << "Author: " << info.m_Author;
+    qDebug() << "Vendor: " << info.m_Vendor;
+    qDebug() << "Description: " << info.m_Description;
 
     mafDataPipe *dp = m_Observer->pluggedPipe();
     QVERIFY(dp != NULL);
 
     argList.clear();
-    mafString baseClassType("mafResources::mafDataPipe");
-    argList.append(mafEventArgument(mafString, baseClassType));
+    QString baseClassType("mafResources::mafDataPipe");
+    argList.append(mafEventArgument(QString, baseClassType));
     mafPluggedObjectInformationList *pluggedObjectList = NULL;
-    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafPluggedObjectInformationList *, pluggedObjectList);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafPluggedObjectInformationList *, pluggedObjectList);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.resourcesQuery", mafEventTypeLocal, &argList, &ret_val);
 
     QVERIFY(pluggedObjectList != NULL);
@@ -177,14 +177,14 @@ void mafPluginManagerTest::mafPluginManagerLoadPluginTest() {
     pluggedObjectList = NULL;
 
     mafPluggedObjectInformationList baseClassList;
-    mafString pluggedClassType("mafPluginTest::mafDataPipeSurfacePluginTest");
+    QString pluggedClassType("mafPluginTest::mafDataPipeSurfacePluginTest");
     m_PluginManager->queryBaseClassType(pluggedClassType, &baseClassList);
 
     size = baseClassList.count();
     QVERIFY(size == 1);
 
     mafPluggedObjectInformation objInfo = baseClassList.first();
-    mafString res("mafResources::mafDataPipe");
+    QString res("mafResources::mafDataPipe");
     QCOMPARE(res, objInfo.m_ClassType);
 }
 

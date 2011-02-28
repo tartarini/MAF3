@@ -41,15 +41,15 @@ using namespace mafResources;
 class testExtDataType {
 public:
     /// Object constructor.
-    testExtDataType(mafString v) : m_Value(v) {}
+    testExtDataType(QString v) : m_Value(v) {}
 
     /// set the new value for the class.
-    void setValue(mafString v) {m_Value = v;}
+    void setValue(QString v) {m_Value = v;}
     /// Return the inner value.
-    mafString value() {return m_Value;}
+    QString value() {return m_Value;}
 
 private:
-    mafString m_Value; ///< Test variable for external data
+    QString m_Value; ///< Test variable for external data
 };
 
 
@@ -65,7 +65,7 @@ class  testExtDataCodecCustom : public  mafCore::mafExternalDataCodec {
 
 public:
     /// Object constructor.
-    testExtDataCodecCustom(const mafString code_location = "");
+    testExtDataCodecCustom(const QString code_location = "");
 
 
 
@@ -76,25 +76,25 @@ public:
     /*virtual*/ void decode(const char *input_string, bool binary = true);
 
 private:
-    mafContainer<mafString> *m_Cont; ///< Test Var.
+    mafContainer<QString> *m_Cont; ///< Test Var.
 };
 
-testExtDataCodecCustom::testExtDataCodecCustom(const mafString code_location) : mafExternalDataCodec(code_location) {
+testExtDataCodecCustom::testExtDataCodecCustom(const QString code_location) : mafExternalDataCodec(code_location) {
 }
 
 void testExtDataCodecCustom::decode(const char *input_string, bool binary) {
     Q_UNUSED(binary);
     REQUIRE(input_string != NULL);
-    m_Cont = new mafContainer<mafString>();
-    *m_Cont = new mafString;
+    m_Cont = new mafContainer<QString>();
+    *m_Cont = new QString;
     m_Cont->externalData()->append(input_string);
     this->m_ExternalData = m_Cont;
 }
 
 char *testExtDataCodecCustom::encode(bool binary) {
     Q_UNUSED(binary);
-    mafContainer<mafString> *dataSet = mafContainerPointerTypeCast(mafString, this->externalData());
-    mafString dataString = dataSet->externalData()->toAscii();
+    mafContainer<QString> *dataSet = mafContainerPointerTypeCast(QString, this->externalData());
+    QString dataString = dataSet->externalData()->toAscii();
     char *output_string = new char[dataString.size()+1];
     memcpy(output_string,dataString.toAscii().data(),dataString.size()+1);
     return output_string;
@@ -111,23 +111,23 @@ class  testDataPipe : public  mafDataPipe {
 
 public:
     /// Object constructor.
-    testDataPipe(const mafString code_location = "");
+    testDataPipe(const QString code_location = "");
 
     /// Initialize and create the pipeline
     /*virtual*/ void createPipe();
 
     /// Return the string variable initializated and updated from the data pipe.
-    mafString pipeline() {return m_PipeLine;}
+    QString pipeline() {return m_PipeLine;}
 
 public slots:
     /// Allow to execute and update the pipeline when something change
     /*virtual*/ void updatePipe(double t = -1);
 
 private:
-    mafString m_PipeLine; ///< Test Var.
+    QString m_PipeLine; ///< Test Var.
 };
 
-testDataPipe::testDataPipe(const mafString code_location) : mafDataPipe(code_location), m_PipeLine("") {
+testDataPipe::testDataPipe(const QString code_location) : mafDataPipe(code_location), m_PipeLine("") {
 }
 
 void testDataPipe::createPipe() {
@@ -136,7 +136,7 @@ void testDataPipe::createPipe() {
 
 void testDataPipe::updatePipe(double t) {
     m_PipeLine = "Updated";
-    m_PipeLine.append(mafString::number(t));
+    m_PipeLine.append(QString::number(t));
     m_Output = inputList()->at(0);
 }
 
@@ -187,8 +187,8 @@ void mafMementoVMETest::mafMementoVMEDefaultAllocationTest() {
 
 void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
 
-    mafString testString("testString");
-    mafString testString2("testString2");
+    QString testString("testString");
+    QString testString2("testString2");
 
     //Create first dataSet
     mafContainer<testExtDataType> container;
@@ -242,15 +242,15 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
 
     mafDataSet *returnDataSet;
     returnDataSet = returnVME->dataSetCollection()->itemAt(0);
-    mafContainer<mafString> *string = mafContainerPointerTypeCast(mafString, returnDataSet->dataValue());
-    mafString out;
+    mafContainer<QString> *string = mafContainerPointerTypeCast(QString, returnDataSet->dataValue());
+    QString out;
     out = string->externalData()->toAscii();
     QCOMPARE(out, testString);
 
     mafDataSet *returnDataSet2;
     returnDataSet2 = returnVME->dataSetCollection()->itemAt(1);
-    mafContainer<mafString> *string2 = mafContainerPointerTypeCast(mafString, returnDataSet2->dataValue());
-    mafString out2;
+    mafContainer<QString> *string2 = mafContainerPointerTypeCast(QString, returnDataSet2->dataValue());
+    QString out2;
     out2 = string2->externalData()->toAscii();
     QCOMPARE(out2, testString2);
 

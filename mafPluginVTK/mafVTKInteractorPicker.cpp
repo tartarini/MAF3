@@ -30,7 +30,7 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafPluginVTK;
 
-mafVTKInteractorPicker::mafVTKInteractorPicker(const mafString code_location) : mafResources::mafInteractor(code_location), m_Mapper(NULL), m_AppendData(NULL), m_Output(NULL), m_ParametricSurface(NULL) {
+mafVTKInteractorPicker::mafVTKInteractorPicker(const QString code_location) : mafResources::mafInteractor(code_location), m_Mapper(NULL), m_AppendData(NULL), m_Output(NULL), m_ParametricSurface(NULL) {
     m_Center = NULL;
     m_PointList.clear();
     this->initializeConnections();
@@ -149,7 +149,7 @@ void mafVTKInteractorPicker::OK() {
     m_PointList.append(m_Center);
 
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafList<double *>, m_PointList));
+    argList.append(mafEventArgument(QList<double *>, m_PointList));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.pickedList", mafEventTypeLocal, &argList);
 }
 

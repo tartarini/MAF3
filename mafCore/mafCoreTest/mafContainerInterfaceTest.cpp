@@ -48,7 +48,7 @@ void mafContainerInterfaceTest::mafContainerInterfaceAllocationTest() {
 }
 
 void mafContainerInterfaceTest::externalDataTypeTest() {
-    mafString ext("myCustomType");
+    QString ext("myCustomType");
     m_ContainerInterface->setExternalDataType(ext);
     QCOMPARE(m_ContainerInterface->externalDataType(), ext);
 }

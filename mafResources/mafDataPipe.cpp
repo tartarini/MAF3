@@ -15,7 +15,7 @@
 
 using namespace mafResources;
 
-mafDataPipe::mafDataPipe(const mafString code_location) : mafPipe(code_location), m_DecoratorPipe(NULL), m_Output(NULL), m_InPlace(true) {
+mafDataPipe::mafDataPipe(const QString code_location) : mafPipe(code_location), m_DecoratorPipe(NULL), m_Output(NULL), m_InPlace(true) {
 }
 
 mafDataPipe::~mafDataPipe() {
@@ -27,7 +27,7 @@ mafDataPipe::~mafDataPipe() {
 int mafDataPipe::addInput(mafVME *vme) {
     REQUIRE(vme != NULL);
     if(this->inputList()->contains(vme)) {
-        mafMsgWarning("%s", mafTr("Object %1 already present in input list").arg(vme->objectName()).toAscii().data());
+        qWarning("%s", mafTr("Object %1 already present in input list").arg(vme->objectName()).toAscii().data());
         return this->inputList()->indexOf(vme);
     }
 

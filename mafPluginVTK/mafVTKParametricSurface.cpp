@@ -15,7 +15,7 @@ using namespace mafCore;
 using namespace mafPluginVTK;
 
 
-mafVTKParametricSurface::mafVTKParametricSurface(const mafString code_location) : mafCore::mafObject(code_location), m_Output(NULL) {
+mafVTKParametricSurface::mafVTKParametricSurface(const QString code_location) : mafCore::mafObject(code_location), m_Output(NULL) {
     m_Center[0] = 0;
     m_Center[1] = 0;
     m_Center[2] = 0;

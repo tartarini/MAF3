@@ -64,8 +64,8 @@ private slots:
 private:
     mafCodecRawBinary *m_CodecRaw; ///< Test var
     mafObject *m_ObjectTest; ///< Test Object.
-    mafBuffer m_Buffer; ///< Test buffer data.
-    mafList<mafVariant> m_List; ///< Test mafList.
+    QBuffer m_Buffer; ///< Test buffer data.
+    QList<QVariant> m_List; ///< Test QList.
 };
 
 void mafCodecRawBinaryTest::mafCodecRawBinaryAllocationTest() {
@@ -92,7 +92,7 @@ void mafCodecRawBinaryTest::encodeTest() {
 
     //! <snippet>
     //// Open the buffer in writing modality
-    m_Buffer.open(mafBuffer::WriteOnly);
+    m_Buffer.open(QBuffer::WriteOnly);
 
     //// Assign the IODevice.
     m_CodecRaw->setDevice(&m_Buffer);
@@ -115,7 +115,7 @@ void mafCodecRawBinaryTest::decodeTest() {
     mafRegisterObject(mafCore::mafMementoObject);
 
     // Reopen the buffer in reading mode.
-    m_Buffer.open(mafBuffer::ReadOnly);
+    m_Buffer.open(QBuffer::ReadOnly);
     // Check the size
     int s = m_Buffer.size();
     QVERIFY(s > 0);

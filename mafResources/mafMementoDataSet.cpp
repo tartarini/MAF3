@@ -17,14 +17,14 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafMementoDataSet::mafMementoDataSet(const mafString code_location) : mafMemento(code_location) {
+mafMementoDataSet::mafMementoDataSet(const QString code_location) : mafMemento(code_location) {
 }
 
-mafMementoDataSet::mafMementoDataSet(const mafObject *obj, mafPoseMatrix *matrix, mafContainerInterface *dataValue, bool binary, const mafString code_location)  : mafMemento(obj, code_location) {
+mafMementoDataSet::mafMementoDataSet(const mafObject *obj, mafPoseMatrix *matrix, mafContainerInterface *dataValue, bool binary, const QString code_location)  : mafMemento(obj, code_location) {
     mafMementoPropertyList *list = mementoPropertyList();
 
     if(matrix) {
-        QList<mafVariant> matrixList; //should I use double instead of mafVariant?
+        QList<QVariant> matrixList; //should I use double instead of QVariant?
 
         int r = 0;
         for ( ; r < 4; ++r) {
@@ -42,7 +42,7 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, mafPoseMatrix *matrix
     }
     if(dataValue) {
         mafMementoPropertyItem item;
-        mafString codecType = dataValue->externalCodecType();
+        QString codecType = dataValue->externalCodecType();
         mafExternalDataCodec *codec = (mafExternalDataCodec *)mafNEWFromString(codecType);
 
         //Store codec type
@@ -60,19 +60,19 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, mafPoseMatrix *matrix
         //Encode dataValue
         codec->setExternalData(dataValue);
         char *outputString = codec->encode(binary);
-        mafByteArray array = QByteArray::fromRawData(outputString, codec->stringSize());
+        QByteArray array = QByteArray::fromRawData(outputString, codec->stringSize());
 
         //Store dataSize
         item.m_Multiplicity = 1;
         item.m_Name = "dataSize";
         int size = codec->stringSize();
-        item.m_Value = mafVariant(size);
+        item.m_Value = QVariant(size);
         list->append(item);
                       
         //Store dataHash
         item.m_Multiplicity = 1;
         item.m_Name = "dataHash";
-        mafString hash = obj->objectHash();
+        QString hash = obj->objectHash();
         item.m_Value = hash;
         list->append(item);
 

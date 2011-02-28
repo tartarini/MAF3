@@ -32,7 +32,7 @@ class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurface : public mafCore::mafObj
     mafSuperclassMacro(mafCore::mafObject);
 
 public:
-    mafVTKParametricSurface(const mafString code_location = "");
+    mafVTKParametricSurface(const QString code_location = "");
 
     /// Set the center of the parametric surface.
     void setCenter(double *center);

@@ -30,7 +30,7 @@ class MAFSERIALIZATIONSHARED_EXPORT mafSerializerFileSystem : public mafSerializ
 
 public:
     /// Object constructor.
-    mafSerializerFileSystem(const mafString code_location = "");
+    mafSerializerFileSystem(const QString code_location = "");
 
     /// Initialize the IO device and make it ready to operate.
     /*virtual*/ void openDevice(mafSerializerOpenMode mode);
@@ -42,7 +42,7 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafSerializerFileSystem();
 private:
-    mafFile *m_File; ///< Reference to the file media.
+    QFile *m_File; ///< Reference to the file media.
 
 }; // class mafSerializerFileSystem
 

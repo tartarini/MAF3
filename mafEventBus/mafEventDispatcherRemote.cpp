@@ -36,10 +36,10 @@ mafNetworkConnector *mafEventDispatcherRemote::networkConnectorClient() {
 
 void mafEventDispatcherRemote::initializeGlobalEvents() {
     mafEvent *properties = new mafEvent();
-    mafString topic = "maf.remote.eventBus.globalUpdate";
+    QString topic = "maf.remote.eventBus.globalUpdate";
     (*properties)[TOPIC] = topic;
     (*properties)[TYPE] = mafEventTypeRemote;
-    mafVariant var;
+    QVariant var;
     var.setValue((QObject*)this);
     (*properties)[OBJECT] = var;
     (*properties)[SIGTYPE] = mafSignatureTypeSignal;
@@ -77,7 +77,7 @@ void mafEventDispatcherRemote::setNetworkConnectorClient(mafNetworkConnector *co
     }
 }
 
-void mafEventDispatcherRemote::notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList, mafGenericReturnArgument *returnArg) const {
+void mafEventDispatcherRemote::notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList, QGenericReturnArgument *returnArg) const {
     //Q_UNUSED(event_dictionary);
     //Q_UNUSED(argList);
     Q_UNUSED(returnArg);

@@ -25,22 +25,22 @@ void mafTopicRegistry::shutdown() {
     m_TopicHash.clear();
 }
 
-bool mafTopicRegistry::registerTopic(const mafString topic, const QObject *owner) {
+bool mafTopicRegistry::registerTopic(const QString topic, const QObject *owner) {
     if(topic.isEmpty() || owner == NULL ){
         return false;
     }
     if(m_TopicHash.contains(topic)){
         //topic already registered
         const QObject *obj = m_TopicHash.value(topic,NULL);
-        mafString className(obj->metaObject()->className());
-        mafMsgWarning() << mafTr("Topic %1 already owned by %2").arg(topic, className);
+        QString className(obj->metaObject()->className());
+        qWarning() << mafTr("Topic %1 already owned by %2").arg(topic, className);
         return false;
     }
     m_TopicHash.insert(topic,owner);
     return true;
 }
 
-bool mafTopicRegistry::unregisterTopic(const mafString topic) {
+bool mafTopicRegistry::unregisterTopic(const QString topic) {
     bool result = false;
     if(m_TopicHash.contains(topic)){
         if (m_TopicHash.remove(topic) > 0) {
@@ -50,21 +50,21 @@ bool mafTopicRegistry::unregisterTopic(const mafString topic) {
     return result;
 }
 
-const QObject *mafTopicRegistry::owner(const mafString topic) const {
+const QObject *mafTopicRegistry::owner(const QString topic) const {
     return m_TopicHash.value(topic,NULL);
 }
 
-bool mafTopicRegistry::isTopicRegistered(const mafString topic) const {
+bool mafTopicRegistry::isTopicRegistered(const QString topic) const {
     return m_TopicHash.contains(topic);
 }
 
 void mafTopicRegistry::dump() {
-    mafHash<mafString, const QObject*>::const_iterator i = m_TopicHash.constBegin();
+    QHash<QString, const QObject*>::const_iterator i = m_TopicHash.constBegin();
     while (i != m_TopicHash.constEnd()) {
         const QObject *obj = i.value();
-        mafString key =  i.key();
-        mafString name = obj->metaObject()->className();
-        mafMsgDebug() << "Topic: " << key << "   Owner: "  << name;
+        QString key =  i.key();
+        QString name = obj->metaObject()->className();
+        qDebug() << "Topic: " << key << "   Owner: "  << name;
         ++i;
     }
 }

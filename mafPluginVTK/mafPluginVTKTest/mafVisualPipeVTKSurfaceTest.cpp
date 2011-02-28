@@ -171,26 +171,26 @@ void mafVisualPipeVTKSurfaceTest::updatePipeTest() {
 
 void mafVisualPipeVTKSurfaceTest::updatePipeTestFromPlugIn() {
     mafPluginManager *pluginManager = mafPluginManager::instance();
-    mafString pluginName = TEST_LIBRARY_NAME;
+    QString pluginName = TEST_LIBRARY_NAME;
 
     // Load the library containing the visual pipe that I want to plug-in.
     pluginManager->loadPlugin(pluginName);
 
     // Dump the plug-in information.
     mafPluginInfo info = pluginManager->pluginInformation(pluginName);
-    mafMsgDebug() << "Plug-in Information:";
-    mafMsgDebug() << "Varsion: " << info.m_Version;
-    mafMsgDebug() << "Author: " << info.m_Author;
-    mafMsgDebug() << "Vendor: " << info.m_Vendor;
-    mafMsgDebug() << "Description: " << info.m_Description;
+    qDebug() << "Plug-in Information:";
+    qDebug() << "Varsion: " << info.m_Version;
+    qDebug() << "Author: " << info.m_Author;
+    qDebug() << "Vendor: " << info.m_Vendor;
+    qDebug() << "Description: " << info.m_Description;
 
-    mafStringList binding_class_list;
+    QStringList binding_class_list;
     binding_class_list = mafCoreRegistration::acceptObject(m_VME);
     int num = binding_class_list.count();
     QVERIFY(num != 0);
 
     for(int i = 0; i < binding_class_list.size(); ++i) {
-        mafString visualPipeType = binding_class_list.at(i);
+        QString visualPipeType = binding_class_list.at(i);
         QVERIFY(visualPipeType.contains("mafPluginVTK::"));
     }
 

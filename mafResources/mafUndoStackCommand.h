@@ -31,7 +31,7 @@ class MAFRESOURCESSHARED_EXPORT mafUndoStackCommand : public mafCore::mafCommand
     typedef void(mafOperation::*Action)();
 
      /// Object constructor.
-     mafUndoStackCommand(mafOperation *rec, mafString action);
+     mafUndoStackCommand(mafOperation *rec, QString action);
 
      ///  Execute receiver function
      virtual void execute();
@@ -41,7 +41,7 @@ class MAFRESOURCESSHARED_EXPORT mafUndoStackCommand : public mafCore::mafCommand
 
 private:
     mafOperation *m_Receiver; ///< represent the operation with which call undo or redo
-    mafString m_Action; ///< Action to be executed by the command pattern.
+    QString m_Action; ///< Action to be executed by the command pattern.
 };
 
 } //namespace mafResource

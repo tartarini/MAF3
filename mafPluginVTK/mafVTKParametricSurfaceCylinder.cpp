@@ -21,7 +21,7 @@ using namespace mafCore;
 using namespace mafPluginVTK;
 
 
-mafVTKParametricSurfaceCylinder::mafVTKParametricSurfaceCylinder(const mafString code_location) : mafPluginVTK::mafVTKParametricSurface(code_location), m_CylinderSource(NULL) {
+mafVTKParametricSurfaceCylinder::mafVTKParametricSurfaceCylinder(const QString code_location) : mafPluginVTK::mafVTKParametricSurface(code_location), m_CylinderSource(NULL) {
     m_CylinderHeight = 2.0;
     m_CylinderRadius = 1.0;
     m_CylinderRes = 20.0;

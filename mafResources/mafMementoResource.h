@@ -34,9 +34,9 @@ class MAFRESOURCESSHARED_EXPORT mafMementoResource : public mafCore::mafMemento 
 
 public:
     /// object constructor.
-    mafMementoResource(const mafString code_location = "");
+    mafMementoResource(const QString code_location = "");
     /// object overloaded constructor.
-    mafMementoResource(const mafCore::mafObject *obj, const mafResourceList *inputList, const mafString code_location = "");
+    mafMementoResource(const mafCore::mafObject *obj, const mafResourceList *inputList, const QString code_location = "");
 
 protected:
     /// Object destructor.

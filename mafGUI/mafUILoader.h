@@ -35,10 +35,10 @@ signals:
 
 public:
     /// Object constructor.
-    mafUILoader(const mafString code_location = "");
+    mafUILoader(const QString code_location = "");
 
     /// load from external file (generally an xml) the GUI
-    virtual void uiLoad(const mafString &fileName) = 0;
+    virtual void uiLoad(const QString &fileName) = 0;
 
 protected:
     /// Object destructor.

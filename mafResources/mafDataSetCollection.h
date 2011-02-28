@@ -31,7 +31,7 @@ class MAFRESOURCESSHARED_EXPORT mafDataSetCollection : public mafCore::mafObject
 
 public:
      /// Object constructor.
-    mafDataSetCollection(const mafString code_location = "");
+    mafDataSetCollection(const QString code_location = "");
 
     /// Set the current timestamp for the collection.
     void setTimestamp(double t);
@@ -84,7 +84,7 @@ public:
     mafDataSet *itemAtCurrentTime();
 
     /// Set the active interpolator type to be instantiated when needed by the VME itself.
-    void setInterpolator(const mafString &interpolator_type);
+    void setInterpolator(const QString &interpolator_type);
 
     /// Set the active interpolator by passing an instance of it.
     /** The instance of the interpolator will be destroyed by the collection itself when
@@ -123,7 +123,7 @@ protected:
 private:
     mafDataSetMap *m_CollectionMap; ///< Collection of data.
     mafInterpolator *m_Interpolator; ///< Interpolator used to find items given the timestamp given the type of interponation mechanism used.
-    mafString m_DataTypeAccepted; ///< Variable that store the type of incoming mafDataSet.
+    QString m_DataTypeAccepted; ///< Variable that store the type of incoming mafDataSet.
     double m_CurrentTimestamp; ///< Variable that store the current timestamp.
 };
 

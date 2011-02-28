@@ -22,7 +22,7 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace std;
 
-mafVisualPipeVTKSurface::mafVisualPipeVTKSurface(const mafString code_location) : mafVisualPipe(code_location), m_Mapper(NULL), m_ScalarVisibility(0), m_ImmediateRendering(0) {
+mafVisualPipeVTKSurface::mafVisualPipeVTKSurface(const QString code_location) : mafVisualPipe(code_location), m_Mapper(NULL), m_ScalarVisibility(0), m_ImmediateRendering(0) {
 }
 
 mafVisualPipeVTKSurface::~mafVisualPipeVTKSurface() {
@@ -34,7 +34,7 @@ bool mafVisualPipeVTKSurface::acceptObject(mafCore::mafObjectBase *obj) {
     if(vme != NULL) {
         mafCore::mafContainerInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
         if(data != NULL) {
-            mafString dataType = data->externalDataType();
+            QString dataType = data->externalDataType();
             if(dataType == "vtkAlgorithmOutput") {
                 return true;
             }

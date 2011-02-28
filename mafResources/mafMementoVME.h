@@ -35,9 +35,9 @@ class MAFRESOURCESSHARED_EXPORT mafMementoVME : public mafCore::mafMemento {
 
 public:
     /// object constructor.
-    mafMementoVME(const mafString code_location = "");
+    mafMementoVME(const QString code_location = "");
     /// object overloaded constructor.
-    mafMementoVME(const mafCore::mafObject *obj, bool binary = true, const mafString code_location = "");
+    mafMementoVME(const mafCore::mafObject *obj, bool binary = true, const QString code_location = "");
 
 protected:
     /// Object destructor.

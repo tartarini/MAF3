@@ -29,7 +29,7 @@ class MAFPLUGINTESTSHARED_EXPORT mafDataPipeSurfacePluginTest : public mafResour
 
 public:
      /// Object constructor.
-    mafDataPipeSurfacePluginTest(const mafString code_location = "");
+    mafDataPipeSurfacePluginTest(const QString code_location = "");
 
     /// Initialize ans create the pipeline
     /*virtual*/ void createPipe();

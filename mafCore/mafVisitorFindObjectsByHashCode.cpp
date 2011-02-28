@@ -14,11 +14,11 @@
 
 using namespace mafCore;
 
-mafVisitorFindObjectsByHashCode::mafVisitorFindObjectsByHashCode(const mafString code_location) : mafVisitorFindObjects(code_location) {
+mafVisitorFindObjectsByHashCode::mafVisitorFindObjectsByHashCode(const QString code_location) : mafVisitorFindObjects(code_location) {
 }
 
 
-mafVisitorFindObjectsByHashCode::mafVisitorFindObjectsByHashCode(const mafString hash_code, const mafString code_location) : mafVisitorFindObjects(code_location) , m_HashCode(hash_code) {
+mafVisitorFindObjectsByHashCode::mafVisitorFindObjectsByHashCode(const QString hash_code, const QString code_location) : mafVisitorFindObjects(code_location) , m_HashCode(hash_code) {
 }
 
 mafVisitorFindObjectsByHashCode::~mafVisitorFindObjectsByHashCode() {

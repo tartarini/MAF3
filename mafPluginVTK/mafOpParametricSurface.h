@@ -37,7 +37,7 @@ class MAFPLUGINVTKSHARED_EXPORT mafOpParametricSurface : public mafResources::ma
 
 public:
     /// Object constructor.
-    mafOpParametricSurface(const mafString code_location = "");
+    mafOpParametricSurface(const QString code_location = "");
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
@@ -50,7 +50,7 @@ public slots:
     int parametricSurfaceType();
 
     /// Set parameters of operation.
-    virtual void setParameters(mafList<mafVariant> parameters);
+    virtual void setParameters(QList<QVariant> parameters);
 
     /// Execute the resource algorithm.
     virtual void execute();
@@ -138,7 +138,7 @@ private:
     mafResources::mafVME *m_VME; ///< Output VME;
     mafResources::mafDataSet *m_DataSet; ///< Dataset of output VME;
     mafCore::mafContainer<vtkAlgorithmOutput> m_ParametricContainer; ///< output of the parametric sirface.
-    mafList<mafVTKParametricSurface*> m_ParametricSurfaceList; ///< List of parametric surfaces.
+    QList<mafVTKParametricSurface*> m_ParametricSurfaceList; ///< List of parametric surfaces.
 
 };
 

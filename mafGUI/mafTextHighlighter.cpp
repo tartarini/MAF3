@@ -43,7 +43,7 @@ void mafTextHighlighter::initialize() {
 
 
     /*mafHighlightingRule rule;
-    mafStringList keywordPatterns;
+    QStringList keywordPatterns;
     keywordPatterns << "\\bchar\\b" << "\\bclass\\b" << "\\bconst\\b"
                     << "\\bdouble\\b" << "\\benum\\b" << "\\bexplicit\\b"
                     << "\\bfriend\\b" << "\\binline\\b" << "\\bint\\b"
@@ -58,7 +58,7 @@ void mafTextHighlighter::initialize() {
     foreach (const QString &pattern, keywordPatterns) {
         rule.m_Pattern = mafRegExp(pattern);
         rule.m_Format = m_Formats["keywords"];
-        m_HighlightingRules.insert(mafString::number(count++),rule);
+        m_HighlightingRules.insert(QString::number(count++),rule);
     }
 
 
@@ -83,7 +83,7 @@ void mafTextHighlighter::initialize() {
     m_CommentEndExpression = mafRegExp("\\*/");
 }
 
-void mafTextHighlighter::highlightBlock(const mafString &text) {
+void mafTextHighlighter::highlightBlock(const QString &text) {
     foreach (const mafHighlightingRule &rule, m_HighlightingRules) {
         mafRegExp expression(rule.m_Pattern);
         int index = expression.indexIn(text);
@@ -117,29 +117,29 @@ void mafTextHighlighter::highlightBlock(const mafString &text) {
     }
 }
 
-void mafTextHighlighter::insertRule(const mafString &name, mafHighlightingRule rule) {
+void mafTextHighlighter::insertRule(const QString &name, mafHighlightingRule rule) {
     m_HighlightingRules.insert(name, rule);
 }
 
-void mafTextHighlighter::insertRule(const mafString &name, mafRegExp pattern, mafTextCharFormat format) {
+void mafTextHighlighter::insertRule(const QString &name, mafRegExp pattern, mafTextCharFormat format) {
     mafHighlightingRule rule;
     rule.m_Pattern = pattern;
     rule.m_Format = format;
     insertRule(name, rule);
 }
 
-void mafTextHighlighter::removeRule(const mafString& name) {
+void mafTextHighlighter::removeRule(const QString& name) {
     m_HighlightingRules.remove(name);
 }
 
-void mafTextHighlighter::insertFormat(const mafString &name, mafTextCharFormat format) {
+void mafTextHighlighter::insertFormat(const QString &name, mafTextCharFormat format) {
     m_Formats.insert(name, format);
 }
 
-void mafTextHighlighter::removeFormat(const mafString& name) {
+void mafTextHighlighter::removeFormat(const QString& name) {
     m_Formats.remove(name);
 }
 
-const mafTextCharFormat &mafTextHighlighter::format(const mafString &name) {
+const mafTextCharFormat &mafTextHighlighter::format(const QString &name) {
     return m_Formats[name.toAscii()];
 }

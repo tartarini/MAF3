@@ -16,10 +16,10 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafVisitorFindSceneNodeByVMEHash::mafVisitorFindSceneNodeByVMEHash(const mafString code_location) : mafVisitorFindObjects(code_location), m_HashCode(""), m_SceneNode(NULL) {
+mafVisitorFindSceneNodeByVMEHash::mafVisitorFindSceneNodeByVMEHash(const QString code_location) : mafVisitorFindObjects(code_location), m_HashCode(""), m_SceneNode(NULL) {
 }
 
-mafVisitorFindSceneNodeByVMEHash::mafVisitorFindSceneNodeByVMEHash(const mafString hash_code, const mafString code_location) : mafVisitorFindObjects(code_location) , m_HashCode(hash_code), m_SceneNode(NULL) {
+mafVisitorFindSceneNodeByVMEHash::mafVisitorFindSceneNodeByVMEHash(const QString hash_code, const QString code_location) : mafVisitorFindObjects(code_location) , m_HashCode(hash_code), m_SceneNode(NULL) {
 }
 
 mafVisitorFindSceneNodeByVMEHash::~mafVisitorFindSceneNodeByVMEHash() {

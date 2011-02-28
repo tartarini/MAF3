@@ -22,7 +22,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafVisualPipeSelection::mafVisualPipeSelection(const mafString code_location) : mafVisualPipe(code_location) {
+mafVisualPipeSelection::mafVisualPipeSelection(const QString code_location) : mafVisualPipe(code_location) {
 }
 
 mafVisualPipeSelection::~mafVisualPipeSelection() {
@@ -33,7 +33,7 @@ bool mafVisualPipeSelection::acceptObject(mafCore::mafObjectBase *obj) {
     if(vme != NULL) {
         mafCore::mafContainerInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
         if(data != NULL) {
-            mafString dataType = data->externalDataType();
+            QString dataType = data->externalDataType();
             if(dataType.startsWith("vtkAlgorithmOutput", Qt::CaseSensitive)) {
                 return true;
             }

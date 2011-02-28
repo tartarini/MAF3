@@ -108,10 +108,10 @@ void mafObjectTest::createMementoTest() {
 void mafObjectTest::setMementoTest() {
     m_ObjTestVar->setObjectName("Bad name");
     //! <snippet>
-    mafString test_name = "Test Label";
+    QString test_name = "Test Label";
     m_ObjTestVar->setMemento(m_Memento);
     //! </snippet>
-    mafString name = m_ObjTestVar->objectName();
+    QString name = m_ObjTestVar->objectName();
     QCOMPARE(name, test_name);
 }
 
@@ -123,21 +123,21 @@ void mafObjectTest::setMementoTest() {
 class testVisitorCustom : public mafVisitor {
     Q_OBJECT
 public:
-    testVisitorCustom(const mafString code_location = "");
+    testVisitorCustom(const QString code_location = "");
     /*virtual*/ void visit(mafObjectBase *obj) {m_LabelVisited = obj->objectName();}
 
     /// Return m_LabelVisited's value
-    const mafString labelVisited() {return m_LabelVisited;}
+    const QString labelVisited() {return m_LabelVisited;}
 private:
-    mafString m_LabelVisited; ///< Test var.
+    QString m_LabelVisited; ///< Test var.
 };
 
-testVisitorCustom::testVisitorCustom(const mafString code_location) : mafVisitor(code_location), m_LabelVisited("") {
+testVisitorCustom::testVisitorCustom(const QString code_location) : mafVisitor(code_location), m_LabelVisited("") {
 }
 //-------------------------------------------------------------------------
 
 void mafObjectTest::acceptVisitorTest() {
-    mafString test_name = "Test Visitor Label";
+    QString test_name = "Test Visitor Label";
     m_ObjTestVar->setObjectName(test_name);
 
     testVisitorCustom *vc = mafNEW(testVisitorCustom);
@@ -167,7 +167,7 @@ void mafObjectTest::removeTagTest() {
 
 void mafObjectTest::filterTagTest() {
     //! <snippet>
-    mafTagList filteredList;
+    QVariantList filteredList;
     m_ObjTestVar->filterTags("maf", &filteredList);
     int n = filteredList.count();
     //! </snippet>

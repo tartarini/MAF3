@@ -16,7 +16,7 @@
 using namespace mafCore;
 using namespace mafSerialization;
 
-mafCodecRaw::mafCodecRaw(const mafString code_location) : mafCodec(code_location) {
+mafCodecRaw::mafCodecRaw(const QString code_location) : mafCodec(code_location) {
 }
 
 mafCodecRaw::~mafCodecRaw() {

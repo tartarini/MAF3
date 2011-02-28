@@ -32,7 +32,7 @@ class MAFGUISHARED_EXPORT mafLoggerWidget : public mafCore::mafLogger {
     mafSuperclassMacro(mafCore::mafLogger);
 public:
     /// Object constructor.
-    mafLoggerWidget(const mafString code_location = "");
+    mafLoggerWidget(const QString code_location = "");
 
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
@@ -48,7 +48,7 @@ protected:
     /* virtual */ ~mafLoggerWidget();
 
     /// Method used to log the given message to the buffer.
-    /*virtual*/ void loggedMessage(const mafMsgType type, const mafString &msg);
+    /*virtual*/ void loggedMessage(const QtMsgType type, const QString &msg);
 
 private:
     mafTextEditWidget *m_TextWidgetLog; ///< String containing all the logged messages for a specific session.

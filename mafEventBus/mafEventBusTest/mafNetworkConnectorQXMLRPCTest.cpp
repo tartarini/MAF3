@@ -124,17 +124,17 @@ void mafNetworkConnectorQXMLRPCTest::mafNetworkConnectorQXMLRPCCommunictionTest(
     //first parameter is a list which contains event prperties
 
 
-    mafList<mafVariant> eventParameters;
+    QList<QVariant> eventParameters;
     eventParameters.append("maf.local.eventBus.globalUpdate");
     eventParameters.append(mafEventTypeLocal);
     eventParameters.append(mafSignatureTypeCallback);
     eventParameters.append("updateObject()");
 
-    mafList<mafVariant> dataParameters;
+    QList<QVariant> dataParameters;
 
     mafEventArgumentsList listToSend;
-    listToSend.append(mafEventArgument(mafList<mafVariant>, eventParameters));
-    listToSend.append(mafEventArgument(mafList<mafVariant>, dataParameters));
+    listToSend.append(mafEventArgument(QList<QVariant>, eventParameters));
+    listToSend.append(mafEventArgument(QList<QVariant>, dataParameters));
 
     m_NetWorkConnectorQXMLRPC->send("maf.remote.eventBus.comunication.send.xmlrpc", &listToSend);
 

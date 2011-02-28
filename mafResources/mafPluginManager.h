@@ -53,24 +53,24 @@ public:
     void shutdown();
 
     /// Return the Plug-in information structure
-    mafPluginInfo pluginInformation(mafString plugin_name);
+    mafPluginInfo pluginInformation(QString plugin_name);
 
 signals:
     /// Signal emitted by the external library that wants to register its own objects.
     void registerPluginToManager(mafCore::mafPluggedObjectsHash pluginHash);
 
     /// Signal emitted by logic to load an external library containing plug-ins.
-    void loadPluginLibrary(const mafString &pluginFilename);
+    void loadPluginLibrary(const QString &pluginFilename);
 
     /// Signal emitted to query for plugins that extend a given base class type.
-    mafCore::mafPluggedObjectInformationList *queryPluggedObjectsSignal(const mafString &baseMAFClassExtended);
+    mafCore::mafPluggedObjectInformationList *queryPluggedObjectsSignal(const QString &baseMAFClassExtended);
 
 public slots:
     /// Loads a plugin
-    void loadPlugin(const mafString &pluginFilename);
+    void loadPlugin(const QString &pluginFilename);
 
     /// Unload the plug-in and remove it from the hash.
-//    void unLoadPlugin(const mafString &pluginFilename);
+//    void unLoadPlugin(const QString &pluginFilename);
 
     /// Plug-in registration callback.
     /** This method is called by the REGISTER_PLUGIN signal and receive as parameter the hash containing the information on the class type of the base MAF class
@@ -79,10 +79,10 @@ public slots:
     void registerPlugin(mafCore::mafPluggedObjectsHash pluginHash);
 
     /// Allow to query the list of plugged object according to the base MAF class type given as argument. The list given as parameter will be filled with the query result.
-    mafCore::mafPluggedObjectInformationList *queryPluggedObjects(const mafString &baseMAFClassExtended);
+    mafCore::mafPluggedObjectInformationList *queryPluggedObjects(const QString &baseMAFClassExtended);
 
     /// Allow to query the base MAF class type that the plugged object is extending.
-    void queryBaseClassType(mafString &pluggedObjectClassType, mafCore::mafPluggedObjectInformationList *resultBaseClass);
+    void queryBaseClassType(QString &pluggedObjectClassType, mafCore::mafPluggedObjectInformationList *resultBaseClass);
 
 protected:
     /// Object destructor
@@ -90,10 +90,10 @@ protected:
 
 private:
     /// Object costructor
-    mafPluginManager(const mafString code_location = "");
+    mafPluginManager(const QString code_location = "");
 
     /// Hash of plugins by their associated file names
-    typedef mafHash<mafString, mafPlugin *> mafPluginHash;
+    typedef QHash<QString, mafPlugin *> mafPluginHash;
 
     mafPluginHash m_PluginsHash;  ///< Association of filenames with all plugins handlers.
     mafCore::mafPluggedObjectsHash m_PluggedObjectsHash; ///< Association of base MAF3 objects and the list of plugged objects.

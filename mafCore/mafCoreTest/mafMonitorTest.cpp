@@ -22,7 +22,7 @@ using namespace mafCore;
 class testMonitorImplement : public mafMonitor {
     Q_OBJECT
 public:
-    testMonitorImplement(const mafString code_location = "");
+    testMonitorImplement(const QString code_location = "");
 
     /// update space variables
     /*virtual*/ void update();
@@ -30,7 +30,7 @@ public:
 private:
 };
 
-testMonitorImplement::testMonitorImplement(const mafString code_location) : mafMonitor(code_location) {
+testMonitorImplement::testMonitorImplement(const QString code_location) : mafMonitor(code_location) {
 }
 
 void testMonitorImplement::update() {
@@ -69,7 +69,7 @@ void mafMonitorTest::monitorTest() {
     QVERIFY(m_Monitor != NULL);
 
     m_Monitor->update();
-    mafString res("Test");
+    QString res("Test");
     QCOMPARE(*m_Monitor->resultBuffer(), res);
 }
 

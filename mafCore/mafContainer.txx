@@ -58,7 +58,7 @@ return result;
 
 template<typename T>
 inline void mafContainer<T>::updateExternalDataType() {
-    mafString data_type(typeid( T ).name());
+    QString data_type(typeid( T ).name());
     
     // Needed because typeid return the length of the string containing the type
     // before the string itself.

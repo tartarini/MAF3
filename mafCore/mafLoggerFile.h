@@ -32,7 +32,7 @@ class MAFCORESHARED_EXPORT mafLoggerFile : public mafLogger {
 
 public:
     /// Object constructor.
-    mafLoggerFile(const mafString code_location = "");
+    mafLoggerFile(const QString code_location = "");
 
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
@@ -43,14 +43,14 @@ public:
     /*virtual*/ void clearLogHistory();
 
     /// Return the filename associated to the last session of logs.
-    const mafString lastLogFile() const {return m_LastLogFile;}
+    const QString lastLogFile() const {return m_LastLogFile;}
 
 protected:
     /// Object destructor.
     /* virtual */~mafLoggerFile();
 
     /// Method used to log the given message to the filesystem.
-    /*virtual*/ void loggedMessage(const mafMsgType type, const mafString &msg);
+    /*virtual*/ void loggedMessage(const QtMsgType type, const QString &msg);
 
     /// Clear history logs from the last temporary file.
     /** This method is used to close the connection with the last opened temporary file.
@@ -64,7 +64,7 @@ protected:
 
 private:
     QTemporaryFile *m_TempFileLog; ///< Temporary File containing all the logged messages for a specific session.
-    mafString m_LastLogFile; ///< Filename of last logged file. Useful to retrieve information of file log when application cresh.
+    QString m_LastLogFile; ///< Filename of last logged file. Useful to retrieve information of file log when application cresh.
 };
 
 }

@@ -34,7 +34,7 @@ protected:
 
 public:
     /// Object constructor.
-    mafMonitorHardDisk(const mafString code_location = "");
+    mafMonitorHardDisk(const QString code_location = "");
 
     /// update storage variables
     /*virtual*/ void update();

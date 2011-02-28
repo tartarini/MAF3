@@ -54,7 +54,7 @@ class testExtRawASCIICustomManager : public mafObjectBase {
 
 public:
     /// Object constructor
-    testExtRawASCIICustomManager(const mafString code_location = "");
+    testExtRawASCIICustomManager(const QString code_location = "");
 
 public slots:
     /// observer needed to receive the 'extDataLoaded' signal
@@ -66,7 +66,7 @@ testExtRawASCIICustomManager::testExtRawASCIICustomManager(QString code_location
 }
 
 void testExtRawASCIICustomManager::createdMemento(mafCore::mafMemento *memento) {
-    mafMsgDebug("%s", mafTr("memento loaded!!").toAscii().data());
+    qDebug("%s", mafTr("memento loaded!!").toAscii().data());
     QVERIFY(memento != NULL);
 
     mafVME *returnVME = mafNEW(mafResources::mafVME);
@@ -193,7 +193,7 @@ private:
     mafExternalDataCodecVTK *m_Codec; ///< Test var.
     vtkCubeSource *m_DataSource;
     vtkCubeSource *m_DataSourceMoved;
-    mafDataStream m_OutputStream; ///< Test var.
+    QDataStream m_OutputStream; ///< Test var.
     testExtRawASCIICustomManager *m_CustomManager; ///< Manager test var
     mafVME *m_Vme; ///< Test var.
     mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
@@ -210,22 +210,22 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKAllocationTest() {
 
 void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
     // Create the temporary file into the temp directory of the current user.
-    mafString test_dir;
+    QString test_dir;
     test_dir = QDir::tempPath();
     test_dir.append("/maf3Logs");
-    mafString test_file = test_dir;
+    QString test_file = test_dir;
     test_file.append("/testExtFile.raw");
-    mafMsgDebug() << test_file;
+    qDebug() << test_file;
 
-    mafString plug_codec_id = "maf.local.serialization.plugCodec";
-    mafString obj_type("mafResources::mafVME");
-    mafString cType = "RAW_ASCII";
-    mafString codec = "mafSerialization::mafCodecRawASCII";
+    QString plug_codec_id = "maf.local.serialization.plugCodec";
+    QString obj_type("mafResources::mafVME");
+    QString cType = "RAW_ASCII";
+    QString codec = "mafSerialization::mafCodecRawASCII";
 
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafString, obj_type));
-    argList.append(mafEventArgument(mafString, cType));
-    argList.append(mafEventArgument(mafString, codec));
+    argList.append(mafEventArgument(QString, obj_type));
+    argList.append(mafEventArgument(QString, cType));
+    argList.append(mafEventArgument(QString, codec));
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
 
     //Save VME with ASCII dataSet
@@ -234,37 +234,37 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
     QVERIFY(mementoVME != NULL);
     m->setParent(mementoVME);
 
-    mafString encodeType = "RAW_ASCII";
+    QString encodeType = "RAW_ASCII";
     argList.clear();
     argList.append(mafEventArgument(mafCore::mafMemento *, mementoVME));
-    argList.append(mafEventArgument(mafString, test_file));
-    argList.append(mafEventArgument(mafString, encodeType));
+    argList.append(mafEventArgument(QString, test_file));
+    argList.append(mafEventArgument(QString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal, &argList);
 
-    QVERIFY(mafFile::exists(test_file));
+    QVERIFY(QFile::exists(test_file));
     QFileInfo fInfo3(test_file);
     QVERIFY(fInfo3.size() > 0);
 
 
     encodeType = "RAW_ASCII";
     argList.clear();
-    argList.append(mafEventArgument(mafString, test_file));
-    argList.append(mafEventArgument(mafString, encodeType));
+    argList.append(mafEventArgument(QString, test_file));
+    argList.append(mafEventArgument(QString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal, &argList);
 
     mafDEL(mementoVME);
 
     QDir log_dir(test_dir);
     log_dir.setFilter(QDir::Files);
-    mafStringList list = log_dir.entryList();
+    QStringList list = log_dir.entryList();
     int i = 0;
 
     //remove files crested by test
     for (; i < list.size(); ++i) {
-        mafString fileName = test_dir;
+        QString fileName = test_dir;
         fileName.append("/");
         fileName.append(list.at(i));
-        mafFile::remove(fileName);
+        QFile::remove(fileName);
     }
 
 }

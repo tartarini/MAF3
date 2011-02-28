@@ -13,7 +13,7 @@
 
 using namespace mafCore;
 
-mafVisitorFindObjects::mafVisitorFindObjects(const mafString code_location) : mafVisitor(code_location) {
+mafVisitorFindObjects::mafVisitorFindObjects(const QString code_location) : mafVisitor(code_location) {
     m_ObjectsList = new mafObjectsList();
 }
 

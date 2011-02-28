@@ -38,32 +38,32 @@ public:
     mafTextHighlighter(QTextDocument *parent = 0);
 
     /// Insert new rule
-    void insertRule(const mafString &name, mafHighlightingRule rule);
+    void insertRule(const QString &name, mafHighlightingRule rule);
 
     /// Insert new rule from a pattern and a format
-    void insertRule(const mafString &name, mafRegExp pattern, mafTextCharFormat format);
+    void insertRule(const QString &name, mafRegExp pattern, mafTextCharFormat format);
 
     /// Remove rule
-    void removeRule(const mafString &name);
+    void removeRule(const QString &name);
 
     /// Insert new rule
-    void insertFormat(const mafString &name, mafTextCharFormat format);
+    void insertFormat(const QString &name, mafTextCharFormat format);
     /// Remove rule
-    void removeFormat(const mafString &name);
+    void removeFormat(const QString &name);
 
     /// retrieve format from name
-    const mafTextCharFormat &format(const mafString &name);
+    const mafTextCharFormat &format(const QString &name);
 
 protected:
     /// Set the text which will be highlighted
-    /*virtual*/ void highlightBlock(const mafString &text);
+    /*virtual*/ void highlightBlock(const QString &text);
 
 private:
     /// initialize several patterns
     void initialize();
 
-    mafMap<mafString, mafHighlightingRule> m_HighlightingRules; ///< container with the entire list of rules
-    mafMap<mafString, mafTextCharFormat> m_Formats; ///< container with the entire list of rules
+    QMap<QString, mafHighlightingRule> m_HighlightingRules; ///< container with the entire list of rules
+    QMap<QString, mafTextCharFormat> m_Formats; ///< container with the entire list of rules
 
     //sample for multiline comment
     mafRegExp m_CommentStartExpression; ///< variable which set the pattern for starting a comment

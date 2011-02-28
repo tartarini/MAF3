@@ -13,7 +13,7 @@
 
 using namespace mafResources;
 
-mafOperationSimpleApp::mafOperationSimpleApp(const mafString code_location) : mafOperation(code_location), m_CheckScalar(false) {
+mafOperationSimpleApp::mafOperationSimpleApp(const QString code_location) : mafOperation(code_location), m_CheckScalar(false) {
     m_UIFilename = "mafOperationSimpleApp.ui";
     m_CanUnDo = false;
     setObjectName("mafOperationSimpleApp");
@@ -24,23 +24,23 @@ bool mafOperationSimpleApp::acceptObject(mafCore::mafObjectBase *obj) {
     if(obj == NULL) {
         return false;
     }
-    mafString ct(obj->metaObject()->className());
+    QString ct(obj->metaObject()->className());
     return ct == "mafResources::mafVME";
 }
 
 void mafOperationSimpleApp::setCheckScalar(bool s) {
-    mafMsgDebug() << mafTr("Assigning scalar...");
+    qDebug() << mafTr("Assigning scalar...");
     m_CheckScalar = s;
 }
 
 void mafOperationSimpleApp::execute() {
-    mafMsgDebug() << mafTr("Executing demo operation...");
+    qDebug() << mafTr("Executing demo operation...");
 }
 
 void mafOperationSimpleApp::on_textTest_textEdited(QString text) {
-    mafMsgDebug() << "Text inserted: " << text;
+    qDebug() << "Text inserted: " << text;
 }
 
 void mafOperationSimpleApp::on_checkScalar_clicked(bool state) {
-    mafMsgDebug() << "Scalar State: " << state;
+    qDebug() << "Scalar State: " << state;
 }

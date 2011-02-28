@@ -51,7 +51,7 @@ void mafTextEditWidget::clear() {
     m_TextEditor->clear();
 }
 
-void mafTextEditWidget::append(const mafString text) {
+void mafTextEditWidget::append(const QString text) {
     m_TextEditor->append(text);
 }
 
@@ -66,6 +66,6 @@ void mafTextEditWidget::enableEditing(bool enable) {
     m_TextEditor->setReadOnly(!enable);
 }
 
-void mafTextEditWidget::loadDictionaryFromCSV(const mafString &csvFile) {
+void mafTextEditWidget::loadDictionaryFromCSV(const QString &csvFile) {
     ///read from a csv file
 }

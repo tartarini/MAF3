@@ -42,7 +42,7 @@ void mafTreeModel::buildModel(bool init) {
     for(;index < size; ++index) {
         m_Hierarchy->moveTreeIteratorToNthChild(index);
         QObject *obj = m_Hierarchy->currentData();
-//        mafString name = obj->objectName();
+//        QString name = obj->objectName();
         mafTreeItem *item = new mafTreeItem(obj , false);
         m_CurrentItem->insertRow(index, item);
         setItem(index, 0, m_CurrentItem);
@@ -128,7 +128,7 @@ mafTreeItem *mafTreeModel::insertNewItem(Insert insert,
 void mafTreeModel::removeItem(const QModelIndex &index) {
     mafTreeItem *temp = (mafTreeItem *)this->itemFromIndex(index);
     if(temp->parent() == NULL) {
-        mafMsgDebug() << mafTr("Impossible removing the root");
+        qDebug() << mafTr("Impossible removing the root");
         return;
     }
 
@@ -167,5 +167,5 @@ void mafTreeModel::selectItemFromData(QObject *data) {
          }
      }
 
-    mafMsgDebug() << mafTr("Element not found");
+    qDebug() << mafTr("Element not found");
 }

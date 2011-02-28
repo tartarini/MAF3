@@ -36,14 +36,14 @@ public:
     const QIcon &pageIcon() const;
 
     /// Return the text title associated with the text (the object's name)
-    const mafString &pageText() const;
+    const QString &pageText() const;
 
 protected:
-    mafString m_PageText; ///< text that will be shown into the dialog setting's list
+    QString m_PageText; ///< text that will be shown into the dialog setting's list
     QIcon m_PageIcon; ///< Icon image associated with the setting page.
 };
 
-inline const mafString &mafGUIApplicationSettingsPage::pageText() const {
+inline const QString &mafGUIApplicationSettingsPage::pageText() const {
     return m_PageText;
 }
 

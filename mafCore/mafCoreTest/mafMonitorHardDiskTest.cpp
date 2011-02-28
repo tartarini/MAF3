@@ -56,12 +56,12 @@ void mafMonitorHardDiskTest::storageTest() {
 
     mafMessageHandler *mh = mafMessageHandler::instance();
     mh->testSuiteLogMode(true);
-    mafMsgDebug() << "Total (MB):" << monitor->conversionFromBytes(totBytes, mafMonitorMemory::toMegaBytes);
-    mafMsgDebug() << "Total (GB):" << monitor->conversionFromBytes(totBytes, mafMonitorMemory::toGigaBytes);
-    mafMsgDebug() << "Free (MB):" << monitor->conversionFromBytes(freeSpace, mafMonitorMemory::toMegaBytes);
-    mafMsgDebug() << "Free (GB):" << monitor->conversionFromBytes(freeSpace, mafMonitorMemory::toGigaBytes);
-    mafMsgDebug() << "Used (MB):" << monitor->conversionFromBytes(usedSpace, mafMonitorMemory::toMegaBytes);
-    mafMsgDebug() << "Used (GB):" << monitor->conversionFromBytes(usedSpace, mafMonitorMemory::toGigaBytes);
+    qDebug() << "Total (MB):" << monitor->conversionFromBytes(totBytes, mafMonitorMemory::toMegaBytes);
+    qDebug() << "Total (GB):" << monitor->conversionFromBytes(totBytes, mafMonitorMemory::toGigaBytes);
+    qDebug() << "Free (MB):" << monitor->conversionFromBytes(freeSpace, mafMonitorMemory::toMegaBytes);
+    qDebug() << "Free (GB):" << monitor->conversionFromBytes(freeSpace, mafMonitorMemory::toGigaBytes);
+    qDebug() << "Used (MB):" << monitor->conversionFromBytes(usedSpace, mafMonitorMemory::toMegaBytes);
+    qDebug() << "Used (GB):" << monitor->conversionFromBytes(usedSpace, mafMonitorMemory::toGigaBytes);
     mh->testSuiteLogMode(false);
     mafDEL(monitor);
 }

@@ -65,8 +65,8 @@ void mafMessageHandlerTest::setActiveloggerTest() {
     mafLogger *logger = new mafLoggerConsole();
     m_Handler->setActiveLogger(logger);
 
-    mafString cn = logger->metaObject()->className();
-    mafString res = "mafCore::mafLoggerConsole";
+    QString cn = logger->metaObject()->className();
+    QString res = "mafCore::mafLoggerConsole";
 
     // Default logger is mafLoggerConsole.
     QCOMPARE(cn, res);

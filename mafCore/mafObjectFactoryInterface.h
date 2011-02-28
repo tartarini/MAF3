@@ -28,7 +28,7 @@ public:
     virtual ~mafObjectFactoryInterface();
 
     /// Allocator for MAF objects.
-    virtual mafObjectBase* make(const mafString codeLocation = "") const = 0;
+    virtual mafObjectBase* make(const QString codeLocation = "") const = 0;
 };
 
 } //mafCore

@@ -30,12 +30,12 @@ mafOperationManager* mafOperationManager::instance() {
 void mafOperationManager::shutdown() {
 }
 
-mafOperationManager::mafOperationManager(const mafString code_location) : mafObjectBase(code_location), m_LastExecutedOperation(NULL), m_CurrentOperation(NULL) {
+mafOperationManager::mafOperationManager(const QString code_location) : mafObjectBase(code_location), m_LastExecutedOperation(NULL), m_CurrentOperation(NULL) {
     initializeConnections();
 
     //request of the selected vme
     mafCore::mafObjectBase *sel_vme;
-    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
     vmeSelect(sel_vme);
 }
@@ -60,11 +60,11 @@ void mafOperationManager::initializeConnections() {
     provider->createNewId("maf.local.resources.operation.lastExecuted");
 
     // Register API signals.
-    mafRegisterLocalSignal("maf.local.resources.operation.start", this, "startOperationSignal(const mafString)");
+    mafRegisterLocalSignal("maf.local.resources.operation.start", this, "startOperationSignal(const QString)");
     mafRegisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
-    mafRegisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(mafList<mafVariant>)");
+    mafRegisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(QList<QVariant>)");
     mafRegisterLocalSignal("maf.local.resources.operation.execute", this, "executeOperationSignal()");
-    mafRegisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(mafList<mafVariant>)");
+    mafRegisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(QList<QVariant>)");
     mafRegisterLocalSignal("maf.local.resources.operation.stop", this, "stopOperationSignal()");
     mafRegisterLocalSignal("maf.local.resources.operation.undo", this, "undoOperationSignal()");
     mafRegisterLocalSignal("maf.local.resources.operation.redo", this, "redoOperationSignal()");
@@ -74,10 +74,10 @@ void mafOperationManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.operation.lastExecuted", this, "lastExecutedOperationSignal()");
 
     // Register private callbacks to the instance of the manager..
-    mafRegisterLocalCallback("maf.local.resources.operation.start", this, "startOperation(const mafString)");
-    mafRegisterLocalCallback("maf.local.resources.operation.setParameters", this, "setOperationParameters(mafList<mafVariant>)");
+    mafRegisterLocalCallback("maf.local.resources.operation.start", this, "startOperation(const QString)");
+    mafRegisterLocalCallback("maf.local.resources.operation.setParameters", this, "setOperationParameters(QList<QVariant>)");
     mafRegisterLocalCallback("maf.local.resources.operation.execute", this, "executeOperation()");
-    mafRegisterLocalCallback("maf.local.resources.operation.executeWithParameters", this, "executeWithParameters(mafList<mafVariant>)");
+    mafRegisterLocalCallback("maf.local.resources.operation.executeWithParameters", this, "executeWithParameters(QList<QVariant>)");
     mafRegisterLocalCallback("maf.local.resources.operation.stop", this, "stopOperation()");
     mafRegisterLocalCallback("maf.local.resources.operation.undo", this, "undoOperation()");
     mafRegisterLocalCallback("maf.local.resources.operation.redo", this, "redoOperation()");
@@ -102,7 +102,7 @@ void mafOperationManager::vmeSelect(mafCore::mafObjectBase *obj) {
 //        foreach(mafResource *v, m_OperationsList) {
 //            const QMetaObject* metaOp = v->metaObject();
 //            //need a check on all the operations for accept objects
-//            mafStringList binding_class_list;
+//            QStringList binding_class_list;
 //            binding_class_list = mafResourcesRegistration::acceptObject(v);
 //            bool isAccepted = binding_class_list.contains(metaVme->className());
 //            // instead of name , put struct with label
@@ -111,24 +111,24 @@ void mafOperationManager::vmeSelect(mafCore::mafObjectBase *obj) {
     }
 }
 
-void mafOperationManager::executeWithParameters(mafList<mafVariant> op_with_parameters) {
+void mafOperationManager::executeWithParameters(QList<QVariant> op_with_parameters) {
     REQUIRE(op_with_parameters.count() == 2);
     //parameters contains as first argument the operation name
-    mafString op_to_run = op_with_parameters.at(0).toString();
+    QString op_to_run = op_with_parameters.at(0).toString();
     REQUIRE(!op_to_run.isEmpty());
 
     this->startOperation(op_to_run);
-    //parameters contains as second argument a list of mafVariant which are passed to the operation
+    //parameters contains as second argument a list of QVariant which are passed to the operation
     m_CurrentOperation->setParameters(op_with_parameters.at(1).toList());
     this->executeOperation();
 }
 
-void mafOperationManager::setOperationParameters(mafList<mafVariant> parameters) {
+void mafOperationManager::setOperationParameters(QList<QVariant> parameters) {
     REQUIRE(m_CurrentOperation);
     m_CurrentOperation->setParameters(parameters);
 }
 
-void mafOperationManager::startOperation(const mafString operation) {
+void mafOperationManager::startOperation(const QString operation) {
     REQUIRE(!operation.isEmpty());
     REQUIRE(m_CurrentOperation == NULL); //require also that there isn't running operation
 
@@ -136,7 +136,7 @@ void mafOperationManager::startOperation(const mafString operation) {
     m_CurrentOperation = (mafOperation *)mafNEWFromString(operation);
 
     if(m_CurrentOperation == NULL) {
-        mafMsgWarning() << mafTr("Operation type '%1' not created. It needs to be register into the mafObjectFactory!!").arg(operation);
+        qWarning() << mafTr("Operation type '%1' not created. It needs to be register into the mafObjectFactory!!").arg(operation);
         return;
     }
 
@@ -166,7 +166,7 @@ void mafOperationManager::executeOperation() {
 
         if(m_CurrentOperation->isRunning()) {
             //undo stack insertion
-            mafLinkedList<mafOperation*>::Iterator i;
+            QLinkedList<mafOperation*>::Iterator i;
             if(m_LastExecutedOperation == NULL) {
                 clearUndoStack();
             } else {
@@ -209,7 +209,7 @@ void mafOperationManager::undoOperation() {
     mafUndoStackCommand usc(m_LastExecutedOperation, "unDo");
     usc.execute();
     //m_LastExecutedOperation->unDo();
-    mafLinkedList<mafOperation*>::Iterator i;
+    QLinkedList<mafOperation*>::Iterator i;
     for(i = m_UndoStack.begin() ; i != m_UndoStack.end(); ++i) {
         if(*i == m_LastExecutedOperation) {
             if(i == m_UndoStack.begin()) {
@@ -223,7 +223,7 @@ void mafOperationManager::undoOperation() {
 }
 
 void mafOperationManager::redoOperation() {
-    mafLinkedList<mafOperation*>::Iterator i;
+    QLinkedList<mafOperation*>::Iterator i;
     for(i = m_UndoStack.begin() ; i != m_UndoStack.end(); ++i) {
         if(m_LastExecutedOperation == NULL) { //keep separate from below condition only for undertanding better
             //means that with undo, user arrives at the beginning
@@ -235,7 +235,7 @@ void mafOperationManager::redoOperation() {
         }
         if(*i == m_LastExecutedOperation) {
             if(++i == m_UndoStack.end()) {
-                mafMsgWarning("%s", mafTr("Can't redo, undo stack finished").toAscii().data());
+                qWarning("%s", mafTr("Can't redo, undo stack finished").toAscii().data());
             } else {
                 m_LastExecutedOperation = *i;
                 mafUndoStackCommand usc(m_LastExecutedOperation, "reDo");

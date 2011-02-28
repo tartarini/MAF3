@@ -20,7 +20,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-mafVME::mafVME(const mafString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL) {
+mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL) {
     mafId time_set_id = mafIdProvider::instance()->idValue("TIME_SET");
     if(time_set_id != -1) {
         mafRegisterLocalCallback("TIME_SET", this, "setTimestamp(double)");
@@ -34,7 +34,7 @@ mafVME::~mafVME() {
     mafDEL(m_DataPipe);
 
     // delete all the created mementos for the dataset collection.
-    mafHash<mafMementoDataSet *, double>::iterator iter = m_MementoDataSetHash.begin();
+    QHash<mafMementoDataSet *, double>::iterator iter = m_MementoDataSetHash.begin();
     while(iter != m_MementoDataSetHash.end()) {
         mafMementoDataSet *memento = iter.key();
         mafDEL(memento);
@@ -63,14 +63,14 @@ void mafVME::setInteractor(mafInteractor *i) {
     m_Interactor = i;
 }
 
-void mafVME::setDataPipe(const mafString &pipe_type) {
+void mafVME::setDataPipe(const QString &pipe_type) {
     mafObjectBase *obj = mafNEWFromString(pipe_type);
     mafDataPipe *new_pipe = qobject_cast<mafDataPipe *>(obj);
     if(new_pipe) {
         setDataPipe(new_pipe);
         return;
     } else {
-        mafMsgWarning("%s", mafTr("%1 does not represent a type of mafDataPipe.").arg(pipe_type).toAscii().data());
+        qWarning("%s", mafTr("%1 does not represent a type of mafDataPipe.").arg(pipe_type).toAscii().data());
     }
     mafDEL(obj);
 }
@@ -180,7 +180,7 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
 }
 
 void mafVME::updateData() {
-    mafHash<mafMementoDataSet *, double>::iterator iter = m_MementoDataSetHash.begin();
+    QHash<mafMementoDataSet *, double>::iterator iter = m_MementoDataSetHash.begin();
     while(iter != m_MementoDataSetHash.end()) {
         mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
         mafMementoDataSet *memento = iter.key();

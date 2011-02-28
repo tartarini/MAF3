@@ -30,13 +30,13 @@ class  testVisualPipeCustomForVisualPipe : public  mafVisualPipe {
 
 public:
     /// Object constructor.
-    testVisualPipeCustomForVisualPipe(const mafString code_location = "");
+    testVisualPipeCustomForVisualPipe(const QString code_location = "");
 
     /// Initialize and create the pipeline
     /*virtual*/ void createPipe();
 
     /// Return the string variable initializated and updated from the data pipe.
-    mafString pipeline() {return m_PipeLine;}
+    QString pipeline() {return m_PipeLine;}
 
     bool m_RecivedPickEvent; /// True if maf.local.resources.interaction.vmePicked has been catched.
 
@@ -48,12 +48,12 @@ public slots:
     void vmePicked(double *pos, unsigned long modifiers, mafCore::mafObjectBase *vme);
 
 private:
-    mafString m_PipeLine; ///< Test var.
-    mafCore::mafContainer<mafString> m_Container; ///< Test var.
+    QString m_PipeLine; ///< Test var.
+    mafCore::mafContainer<QString> m_Container; ///< Test var.
 
 };
 
-testVisualPipeCustomForVisualPipe::testVisualPipeCustomForVisualPipe(const mafString code_location) : mafVisualPipe(code_location), m_PipeLine("") {
+testVisualPipeCustomForVisualPipe::testVisualPipeCustomForVisualPipe(const QString code_location) : mafVisualPipe(code_location), m_PipeLine("") {
     mafRegisterLocalSignal("maf.local.resources.interaction.vmePicked", this, "vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.interaction.vmePicked", this, "vmePicked(double *, unsigned long, mafCore::mafObjectBase *)");
     m_RecivedPickEvent = false;
@@ -66,9 +66,9 @@ void testVisualPipeCustomForVisualPipe::createPipe() {
 
 void testVisualPipeCustomForVisualPipe::updatePipe(double t) {
     m_PipeLine = "Updated";
-    m_PipeLine.append(mafString::number(t));
+    m_PipeLine.append(QString::number(t));
 
-    m_Container = new mafString;
+    m_Container = new QString;
     m_Container.externalData()->append(m_PipeLine);
 }
 
@@ -118,7 +118,7 @@ void mafVisualPipeTest::mafVisualPipeAllocationTest() {
 }
 
 void mafVisualPipeTest::mafVisualPipeCreationAndUpdateTest() {
-    mafString res("Created");
+    QString res("Created");
     m_VisualPipe->createPipe();
 
     QCOMPARE(m_VisualPipe->pipeline(), res);

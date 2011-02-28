@@ -20,7 +20,7 @@
 using namespace mafCore;
 using namespace mafPluginVTK;
 
-mafVTKParametricSurfaceCube::mafVTKParametricSurfaceCube(const mafString code_location) : mafPluginVTK::mafVTKParametricSurface(code_location), m_CubeSource(NULL) {
+mafVTKParametricSurfaceCube::mafVTKParametricSurfaceCube(const QString code_location) : mafPluginVTK::mafVTKParametricSurface(code_location), m_CubeSource(NULL) {
     m_CubeXLength = 1.0;
     m_CubeYLength = 1.0;
     m_CubeZLength = 1.0;

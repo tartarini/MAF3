@@ -138,7 +138,7 @@ private slots:
 
 private:
     /// Object constructor.
-    mafInteractionManager(const mafString code_location = "");
+    mafInteractionManager(const QString code_location = "");
 
     /// Object destructor
     /*virtual*/ ~mafInteractionManager();

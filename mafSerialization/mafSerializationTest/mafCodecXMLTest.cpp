@@ -62,8 +62,8 @@ private slots:
 private:
     mafCodecXML *m_CodecXML; ///< Test var
     mafObject *m_ObjectTest; ///< Test Object.
-    mafBuffer buffer; ///< Test buffer data.
-    mafList<mafVariant> m_List;
+    QBuffer buffer; ///< Test buffer data.
+    QList<QVariant> m_List;
 };
 
 void mafCodecXMLTest::mafCodecXMLAllocationTest() {
@@ -86,7 +86,7 @@ void mafCodecXMLTest::encodeTest() {
     m2->setParent(m1);
 
     // Open the buffer in writing modality
-    buffer.open(mafBuffer::WriteOnly);
+    buffer.open(QBuffer::WriteOnly);
 
     // Assign the IODevice and give the memento to the codec.
     //! <snippet>
@@ -101,7 +101,7 @@ void mafCodecXMLTest::encodeTest() {
 
     QVERIFY(s > 0);
 
-    mafMsgDebug() << "\n" << buffer.data();
+    qDebug() << "\n" << buffer.data();
 
     mafDEL(m2);
     mafDEL(m1);
@@ -111,7 +111,7 @@ void mafCodecXMLTest::decodeTest() {
     mafRegisterObject(mafCore::mafMementoObject);
 
     // Reopen the buffer in reading mode.
-    buffer.open(mafBuffer::ReadOnly);
+    buffer.open(QBuffer::ReadOnly);
     // Check the size
     int s = buffer.size();
     QVERIFY(s > 0);

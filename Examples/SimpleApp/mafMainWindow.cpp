@@ -203,8 +203,8 @@ void mafMainWindow::loadedGUIToRemove(int type) {
 }
 
 void mafMainWindow::readSettings() {
-    mafMsgDebug() << "Reading mafMainWindows settings...";
-    mafSettings settings;
+    qDebug() << "Reading mafMainWindows settings...";
+    QSettings settings;
     
     // reastoring MainWindow
     QPoint pos = settings.value("MainWindow/Position", QPoint(200, 200)).toPoint();
@@ -231,8 +231,8 @@ void mafMainWindow::readSettings() {
 }
 
 void mafMainWindow::writeSettings() {
-    mafMsgDebug() << "Writing mafMainWindows settings...";
-    mafSettings settings;
+    qDebug() << "Writing mafMainWindows settings...";
+    QSettings settings;
     settings.setValue("MainWindow/Position", pos());
     settings.setValue("MainWindow/Size", size());
 
@@ -302,9 +302,9 @@ void mafMainWindow::viewCreated(mafCore::mafObjectBase *view) {
 }
 
 void mafMainWindow::viewWillBeSelected() {
-    mafMsgDebug() << "View will be selected!!";
+    qDebug() << "View will be selected!!";
 }
 
 void mafMainWindow::subWindowSelected(QMdiSubWindow *sub_win) {
-    mafMsgDebug() << "View selected!!";
+    qDebug() << "View selected!!";
 }

@@ -33,7 +33,7 @@ class MAFCORESHARED_EXPORT mafLogger : public mafObjectBase {
 
 public:
     /// Object constructor.
-    mafLogger(const mafString code_location = "");
+    mafLogger(const QString code_location = "");
 
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
@@ -53,7 +53,7 @@ public:
     bool enabled() const {return m_Enabled;}
 
     /// Method used to log the given message into the specific ouput stream.
-    void logMessage(const mafMsgType type, mafString &msg);
+    void logMessage(const QtMsgType type, QString &msg);
 
     /// Clear all the logged messages until now.
     virtual void clearLogHistory() = 0;
@@ -64,7 +64,7 @@ protected:
 
     /// Virtual method implementation of logMessage.
     /** You have to redefine this method in your sublass and put here your strategy to store the log message into the specific output stream media (file, db, buffer, console, ...).*/
-    virtual void loggedMessage(const mafMsgType type, const mafString &msg) = 0;
+    virtual void loggedMessage(const QtMsgType type, const QString &msg) = 0;
 
 private:
     mafLogMode m_LogMode; ///< Active logging mode type, see mafLogMode typedef.

@@ -51,7 +51,7 @@ void mafCoreSingletonsTest::mafSingletonsInitializeTest() {
     QVERIFY(m_IdProvider != NULL);
 
     //mafInitializeModule test
-    mafLibrary *module_initialized;
+    QLibrary *module_initialized;
     module_initialized = mafInitializeModule(TEST_LIBRARY_NAME);
     QVERIFY(module_initialized != NULL);
 

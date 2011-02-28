@@ -31,7 +31,7 @@ class MAFCORESHARED_EXPORT mafVisitorFindObjects : public mafVisitor {
 
 public:
     /// object constructor
-    mafVisitorFindObjects(const mafString code_location = "");
+    mafVisitorFindObjects(const QString code_location = "");
 
     /// Return the Objects List
     mafObjectsList *objectsList();

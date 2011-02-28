@@ -34,12 +34,12 @@ class MAFPLUGINVTKSHARED_EXPORT mafExternalDataCodecVTK : public mafCore::mafExt
 
 public:
     /// Object constructor.
-    mafExternalDataCodecVTK(const mafString code_location = "");
+    mafExternalDataCodecVTK(const QString code_location = "");
 
-    /// Encode external data into a mafDataStream.
+    /// Encode external data into a QDataStream.
     /*virtual*/ char *encode(bool binary = true);
 
-    /// Decode external data from the mafDataStream.
+    /// Decode external data from the QDataStream.
     /*virtual*/ void decode(const char *input_string, bool binary = true);
 
 protected:

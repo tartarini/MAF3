@@ -136,9 +136,9 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     mafEventHash values;
 
     //this is value 1
-    mafString valueToSend = "EternoDolore";
+    QString valueToSend = "EternoDolore";
 
-    mafVariant v(valueToSend);
+    QVariant v(valueToSend);
 
     //set the name and the value
     values.insert("input", v);
@@ -159,9 +159,9 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     }
 
     // compare results
-    mafSoapType *soapTypeResult = m_NetWorkConnectorQtSoap->response();
+    QtSoapType *soapTypeResult = m_NetWorkConnectorQtSoap->response();
     if(soapTypeResult)
-    mafMsgDebug("%s", soapTypeResult->toString().toLatin1().constData());
+    qDebug("%s", soapTypeResult->toString().toLatin1().constData());
 }
 
 void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassingStringOnAxisServiceTest() {
@@ -176,9 +176,9 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     mafEventHash values;
 
     //this is value 1
-    mafString valueToSend = "IBM";
+    QString valueToSend = "IBM";
 
-    mafVariant v(valueToSend);
+    QVariant v(valueToSend);
 
     //set the name and the value
     values.insert("in", v);
@@ -203,9 +203,9 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     }
 
     // compare results
-    mafSoapType *soapTypeResult = m_NetWorkConnectorQtSoap->response();
+    QtSoapType *soapTypeResult = m_NetWorkConnectorQtSoap->response();
     if(soapTypeResult)
-    mafMsgDebug("%s", soapTypeResult->toString().toLatin1().constData());
+    qDebug("%s", soapTypeResult->toString().toLatin1().constData());
 }
 
 void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassingStringArrayTest() {
@@ -220,18 +220,18 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     mafEventHash values;
 
     //this is value 1
-    mafList<mafString> list1;
+    QList<QString> list1;
     list1.push_back("eventA1");
     list1.push_back("eventA2");
 
     //this is value 2
-    mafList<mafString> list2;
+    QList<QString> list2;
     list2.push_back("dataA1");
     list2.push_back("dataA2");
 
-    //incapsulate inside a mafVariant
-    mafVariant v1(list1);
-    mafVariant v2(list2);
+    //incapsulate inside a QVariant
+    QVariant v1(list1);
+    QVariant v2(list2);
 
     //set the name and the value
     values.insert("arrEvent", v1);
@@ -253,9 +253,9 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     }
 
     // compare results
-    mafSoapType *soapTypeResult = m_NetWorkConnectorQtSoap->response();
+    QtSoapType *soapTypeResult = m_NetWorkConnectorQtSoap->response();
     if(soapTypeResult)
-    mafMsgDebug("%s", soapTypeResult->toString().toLatin1().constData());
+    qDebug("%s", soapTypeResult->toString().toLatin1().constData());
 }
 
 void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionWithGSOAPServiceTest() {
@@ -286,9 +286,9 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionWithGSO
     }
 
     // compare results
-    mafSoapType *soapTypeResult = m_NetWorkConnectorQtSoap->response();
+    QtSoapType *soapTypeResult = m_NetWorkConnectorQtSoap->response();
     if(soapTypeResult)
-    mafMsgDebug("%s", soapTypeResult->toString().toLatin1().constData());
+    qDebug("%s", soapTypeResult->toString().toLatin1().constData());
 }
 
 MAF_REGISTER_TEST(mafNetworkConnectorQtSoapTest);

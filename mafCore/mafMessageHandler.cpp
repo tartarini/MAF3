@@ -15,22 +15,22 @@
 
 using namespace mafCore;
 
-static void mafMessageHandlerOutput(mafMsgType type, const char *msg) {
+static void mafMessageHandlerOutput(QtMsgType type, const char *msg) {
     mafMessageHandler *handler = mafMessageHandler::instance();
-    mafString msg_to_forward = msg;
+    QString msg_to_forward = msg;
     mafLogger *current_logger = handler->activeLogger();
     if(current_logger->enabled()) {
         mafLogMode lm = current_logger->logMode();
-        if(lm == mafLogModeOnlyCritical && type != mafMsgTypeCritical) {
+        if(lm == mafLogModeOnlyCritical && type != QtCriticalMsg) {
             return;
         }
-        if(lm == mafLogModeOnlyFatal && type != mafMsgTypeFatal) {
+        if(lm == mafLogModeOnlyFatal && type != QtFatalMsg) {
             return;
         }
-        if(lm == mafLogModeNoDebug && type == mafMsgTypeDebug) {
+        if(lm == mafLogModeNoDebug && type == QtDebugMsg) {
             return;
         }
-        if(lm == mafLogModeNoWarnings && type == mafMsgTypeWarning) {
+        if(lm == mafLogModeNoWarnings && type == QtWarningMsg) {
             return;
         }
         current_logger->logMessage(type, msg_to_forward);

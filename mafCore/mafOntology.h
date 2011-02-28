@@ -30,10 +30,10 @@ class MAFCORESHARED_EXPORT mafOntology : public mafObjectBase {
 
 public:
     /// Object constructor.
-    mafOntology(const mafString code_location = "");
+    mafOntology(const QString code_location = "");
 
     /// Return the dictionary item with the given name. Return NULL if the item has not been found.
-    mafDictionary *findItemByName(const mafString itemName);
+    mafDictionary *findItemByName(const QString itemName);
 
     /// Dictionary template based on CSV text file.
     /** The information stored into the CVS file must be ordered acording to this list of items:
@@ -42,7 +42,7 @@ public:
     after the creation of the dictionary and not through the template. The file has no header and
     blank lines will be skipped.
     */
-    void setDictionaryTemplate(const mafString dictionary_template);
+    void setDictionaryTemplate(const QString dictionary_template);
 
 protected:
     /// Object destructor.

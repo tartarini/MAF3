@@ -33,7 +33,7 @@ class MAFCORESHARED_EXPORT mafMonitorMemory : public mafMonitor {
 
 public:
     /// Object constructor.
-    mafMonitorMemory(const mafString code_location = "");
+    mafMonitorMemory(const QString code_location = "");
 
     /// return the total space of the device
     virtual long long totalSpace();

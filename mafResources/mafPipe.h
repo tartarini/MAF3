@@ -31,7 +31,7 @@ class MAFRESOURCESSHARED_EXPORT mafPipe : public mafCore::mafObject {
 
 public:
      /// Object constructor.
-    mafPipe(const mafString code_location = "");
+    mafPipe(const QString code_location = "");
 
     /// Set the input VME to be used as input data for the pipeline./*
     void setInput(mafVME *vme);

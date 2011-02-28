@@ -35,7 +35,7 @@ class MAFTIMESPACESHARED_EXPORT mafTimer : public mafCore::mafObjectBase {
 
 public:
     /// Object constructor.
-    mafTimer(const mafString code_location = "");
+    mafTimer(const QString code_location = "");
 
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
@@ -79,7 +79,7 @@ protected:
 private:
     QTimer *m_Timer; ///< Wrapped timer instance.
     int m_TimerId; ///< ID identifing the running timer.
-    mafString m_ObjectId; ///< ID identifing the object to be notified.
+    QString m_ObjectId; ///< ID identifing the object to be notified.
 };
 
 inline int mafTimer::interval() {

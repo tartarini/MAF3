@@ -32,10 +32,10 @@ class MAFCORESHARED_EXPORT mafMementoObject : public mafMemento {
 
 public:
     /// ObjectMemento constructor.
-    mafMementoObject(const mafString code_location = "");
+    mafMementoObject(const QString code_location = "");
 
     /// ObjectMemento overloaded constructor.
-    mafMementoObject(const mafObject *obj, const mafTagList *tagList, mafDictionary *dic, const mafString code_location = "");
+    mafMementoObject(const mafObject *obj, const QVariantList *tagList, mafDictionary *dic, const QString code_location = "");
 
 protected:
     /// Object destructor.

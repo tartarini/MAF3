@@ -29,7 +29,7 @@ class MAFSERIALIZATIONSHARED_EXPORT mafCodecRawASCII : public mafCodecRaw {
 
 public:
     /// Object constructor.
-    mafCodecRawASCII(const mafString code_location = "");
+    mafCodecRawASCII(const QString code_location = "");
 
     /// Encode the memento into the output type.
     /*virtual*/ void encode(mafCore::mafMemento *memento);
@@ -46,10 +46,10 @@ private:
     void marshall(const QVariant &value );
 
     /// unmarshalling of QVariant data type in order to write the correct type.
-    mafVariant demarshall( mafString typeName, int multiplicity);
+    QVariant demarshall( QString typeName, int multiplicity);
 
-    mafTextStream m_DataTextRead;
-    mafTextStream m_DataTextWrite;
+    QTextStream m_DataTextRead;
+    QTextStream m_DataTextWrite;
 };
 
 } // mafSerialization

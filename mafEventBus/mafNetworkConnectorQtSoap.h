@@ -36,19 +36,19 @@ public:
     /*virtual*/ ~mafNetworkConnectorQtSoap();
 
     /// create the unique instance of the client.
-    /*virtual*/ void createClient(const mafString hostName, const unsigned int port);
+    /*virtual*/ void createClient(const QString hostName, const unsigned int port);
 
     /// set the url of the wsdl for querying the service.
-    void setWSDL(const mafString wsdlUrl);
+    void setWSDL(const QString wsdlUrl);
 
     /// set the action for the http transport
-    void setAction(const mafString action);
+    void setAction(const QString action);
 
     /// set the path, for example the end point or the wsdl
-    void setPath(const mafString path);
+    void setPath(const QString path);
 
     /// register a further namespace which will be used in soap 1.1 for axis2 compatibility
-    void registerNamespace(mafString prefix, mafString namespaceURI);
+    void registerNamespace(QString prefix, QString namespaceURI);
 
     /// create the unique instance of the server.
     /*virtual*/ void createServer(const unsigned int port);
@@ -58,13 +58,13 @@ public:
 
     /// Allow to send a network request.
     /** Need to convert the parameter list into another list of basic type to string which are used in QtSoap.*/
-    /*virtual*/ void send(const mafString methodName, mafEventArgumentsList *argList);
+    /*virtual*/ void send(const QString methodName, mafEventArgumentsList *argList);
 
     /// Marshalling of the datatypes
-    mafSoapType *marshall(const mafString name, const mafVariant &parameter);
+    QtSoapType *marshall(const QString name, const QVariant &parameter);
 
     /// return the response retrieved from the service
-    mafSoapType *response();
+    QtSoapType *response();
 
     /// register all the signalsand slots
     /*virtual*/ void initializeForEventBus();
@@ -78,7 +78,7 @@ signals:
 
 public slots:
     /// register methods on the server
-    void registerServerMethod(mafString methodName, mafList<mafVariant::Type> types);
+    void registerServerMethod(QString methodName, QList<QVariant::Type> types);
 
 private slots:
     /// retrieve response from the service
@@ -88,36 +88,36 @@ private:
     /// stop and destroy the server instance.
     void stopServer();
 
-    mafSoapHttpTransport *m_Http; ///< variable that represents the soap request from client to server
-    mafSoapMessage m_Request; ///< variable that represents the request
+    QtSoapHttpTransport *m_Http; ///< variable that represents the soap request from client to server
+    QtSoapMessage m_Request; ///< variable that represents the request
     mafRegisterMethodsMap m_RegisterMethodsMap;
-    mafString m_WSDLUrl; ///< represents the url of the wsdl
-    mafString m_Action; ///< represents the action to put inside transport http
-    mafString m_Path; ///< represents the path (for example the endpoint)
-    mafSoapType *m_Response;
+    QString m_WSDLUrl; ///< represents the url of the wsdl
+    QString m_Action; ///< represents the action to put inside transport http
+    QString m_Path; ///< represents the path (for example the endpoint)
+    QtSoapType *m_Response;
 };
 
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline void mafNetworkConnectorQtSoap::setWSDL(const mafString wsdlUrl) {
+inline void mafNetworkConnectorQtSoap::setWSDL(const QString wsdlUrl) {
     m_WSDLUrl = wsdlUrl;
 }
 
-inline void mafNetworkConnectorQtSoap::setAction(const mafString action) {
+inline void mafNetworkConnectorQtSoap::setAction(const QString action) {
     m_Action = action;
 }
 
-inline void mafNetworkConnectorQtSoap::setPath(const mafString path) {
+inline void mafNetworkConnectorQtSoap::setPath(const QString path) {
     m_Path = path;
 }
 
-inline mafSoapType *mafNetworkConnectorQtSoap::response() {
+inline QtSoapType *mafNetworkConnectorQtSoap::response() {
     return m_Response;
 }
 
-inline void mafNetworkConnectorQtSoap::registerNamespace(mafString prefix, mafString namespaceURI) {
+inline void mafNetworkConnectorQtSoap::registerNamespace(QString prefix, QString namespaceURI) {
     m_Request.useNamespace(prefix, namespaceURI);
 }
 

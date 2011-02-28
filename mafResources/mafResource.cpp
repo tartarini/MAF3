@@ -15,7 +15,7 @@ using namespace mafCore;
 using namespace mafResources;
 
 
-mafResource::mafResource(const mafString code_location) : mafObject(code_location), m_Busy(false), m_DataLoaded(false), m_Output(NULL), m_InputList(NULL) {
+mafResource::mafResource(const QString code_location) : mafObject(code_location), m_Busy(false), m_DataLoaded(false), m_Output(NULL), m_InputList(NULL) {
     m_InputList = new mafResourceList;
 }
 
@@ -61,7 +61,7 @@ int mafResource::setInput(mafResource *resource, const int idx) {
     REQUIRE(idx >= 0);
 
     if(m_InputList->contains(resource)) {
-        mafMsgWarning("%s", mafTr("Object %1 already present in input list").arg(resource->objectName()).toAscii().data());
+        qWarning("%s", mafTr("Object %1 already present in input list").arg(resource->objectName()).toAscii().data());
         return m_InputList->indexOf(resource);
     }
 
@@ -94,7 +94,7 @@ void mafResource::removeInput(const int idx) {
         // remove the object from the input list
         m_InputList->removeAt(idx);
     } else {
-        mafMsgWarning("%s", mafTr("Index %1 outside input list range.").arg(idx).toAscii().data());
+        qWarning("%s", mafTr("Index %1 outside input list range.").arg(idx).toAscii().data());
     }
 }
 
@@ -105,7 +105,7 @@ void mafResource::removeInput(mafResource *resource) {
     if(idx != -1) {
         removeInput(idx);
     } else {
-        mafMsgWarning("%s", mafTr("Object %1 not present in input list").arg(resource->objectName()).toAscii().data());
+        qWarning("%s", mafTr("Object %1 not present in input list").arg(resource->objectName()).toAscii().data());
     }
 }
 
@@ -142,7 +142,7 @@ void mafResource::setMemento(mafMemento *memento, bool deep_memento) {
     mafMemento *m = (mafMemento *)memento->children().at(0);
     Superclass::setMemento(m, deep_memento);
 
-    mafStringList hashLists;
+    QStringList hashLists;
     mafMementoPropertyList *list = memento->mementoPropertyList();
     mafMementoPropertyItem item;
     foreach(item, *list) {
@@ -155,7 +155,7 @@ void mafResource::setMemento(mafMemento *memento, bool deep_memento) {
 
     mafObjectRegistry *reg = mafObjectRegistry::instance();
     mafResource *res;
-    mafString hash;
+    QString hash;
     foreach(hash, hashLists) {
         res = qobject_cast<mafResource *>(reg->objectFromHash(hash));
         if(res != NULL) {

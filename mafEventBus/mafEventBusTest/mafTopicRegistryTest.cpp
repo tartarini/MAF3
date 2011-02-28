@@ -54,7 +54,7 @@ private:
 
 void mafTopicRegistryTest::mafTopicRegistryRegisterTest() {
     QVERIFY(m_TopicRegistry != NULL);
-    mafString topic("maf.local.eventBus.testTopic");
+    QString topic("maf.local.eventBus.testTopic");
 
     bool result = m_TopicRegistry->registerTopic(topic, this);
     QVERIFY(result);
@@ -79,7 +79,7 @@ void mafTopicRegistryTest::mafTopicRegistryRegisterTest() {
 }
 
 void mafTopicRegistryTest::mafTopicRegistryOwnerTest() {
-    mafString topic("maf.local.eventBus.testTopic");
+    QString topic("maf.local.eventBus.testTopic");
     const QObject *obj = m_TopicRegistry->owner(topic);
     QVERIFY(obj == this);
 

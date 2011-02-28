@@ -20,7 +20,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafExternalDataCodecVTK::mafExternalDataCodecVTK(const mafString code_location) : mafExternalDataCodec(code_location), m_Reader(NULL) {
+mafExternalDataCodecVTK::mafExternalDataCodecVTK(const QString code_location) : mafExternalDataCodec(code_location), m_Reader(NULL) {
 }
 
 mafExternalDataCodecVTK::~mafExternalDataCodecVTK() {
@@ -49,7 +49,7 @@ char *mafExternalDataCodecVTK::encode(bool binary) {
         unsigned char *binaryOutput = writer->GetBinaryOutputString();
         memcpy(output_string,binaryOutput,this->m_StringSize+1);
     } else {
-        mafString output = writer->GetOutputString();
+        QString output = writer->GetOutputString();
         //vtkDataSetWriter write some junk character at the end of the string,
         // so i must truncate the string..
         output.truncate(this->m_StringSize);

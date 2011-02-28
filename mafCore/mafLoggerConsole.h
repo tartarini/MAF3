@@ -31,7 +31,7 @@ class MAFCORESHARED_EXPORT mafLoggerConsole : public mafLogger {
 
 public:
     /// Object constructor.
-    mafLoggerConsole(const mafString code_location = "");
+    mafLoggerConsole(const QString code_location = "");
 
     /// Clear all the logged messages until now.
     /*virtual*/ void clearLogHistory() {}
@@ -40,7 +40,7 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafLoggerConsole();
     /// Method used to log the given message to the console.
-    /*virtual*/ void loggedMessage(const mafMsgType type, const mafString &msg);
+    /*virtual*/ void loggedMessage(const QtMsgType type, const QString &msg);
 };
 
 }

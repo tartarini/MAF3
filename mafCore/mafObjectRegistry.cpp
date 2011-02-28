@@ -26,12 +26,12 @@ mafObjectRegistry::~mafObjectRegistry() {
     mafObjectRegistry::instance()->dumpLiveObjects();
 }
 
-void mafObjectRegistry::addObject(mafObjectBase *obj, const mafString location) {
+void mafObjectRegistry::addObject(mafObjectBase *obj, const QString location) {
     // Create the registry item with object's information
     mafObjectRegistryItem ri;
     ri.m_Object = obj;
     ri.m_InstantiateLocationInfo = location;
-    ri.m_AllocationTime = mafTime::currentTime();
+    ri.m_AllocationTime = QTime::currentTime();
     ri.m_ReferenceCount = obj->referenceCount();
 
     // Insert the item into the registry.
@@ -50,11 +50,11 @@ void mafObjectRegistry::dumpLiveObjects() {
     // Dump on standard console the objects that still are present into the registry (memory leaks!!)
     mafRegistryHashType::const_iterator iter = m_Registry.constBegin();
     while(iter != m_Registry.constEnd()) {
-        mafString name = iter.value().m_Object->metaObject()->className();
-        mafString loc = iter.value().m_InstantiateLocationInfo;
-        mafTime t = iter.value().m_AllocationTime;
+        QString name = iter.value().m_Object->metaObject()->className();
+        QString loc = iter.value().m_InstantiateLocationInfo;
+        QTime t = iter.value().m_AllocationTime;
         int refCount = iter.value().m_ReferenceCount;
-        mafMsgDebug() << "class name: " << name << ", refCount: " << refCount << ", allocated by: " << loc << ", at time: " << t.toString("hh:mm:ss");
+        qDebug() << "class name: " << name << ", refCount: " << refCount << ", allocated by: " << loc << ", at time: " << t.toString("hh:mm:ss");
         ++iter;
     }
 }
@@ -78,10 +78,10 @@ void mafObjectRegistry::liveObjects(mafObjectsList *objects) {
 
 mafObjectsList *mafObjectRegistry::findObjectsThreaded(mafVisitorFindObjects *v) {
     // Initialize the max thread count depending on the number of core present into the PC.
-    int idealThreadCount = mafThread::idealThreadCount();
-    mafThreadPool::globalInstance()->setMaxThreadCount(idealThreadCount);
+    int idealThreadCount = QThread::idealThreadCount();
+    QThreadPool::globalInstance()->setMaxThreadCount(idealThreadCount);
     // Use the QtConcurrent framework to run the function in a separate thread.
-    mafFuture<mafObjectsList *> future = mafConcurrent::run(this, &mafCore::mafObjectRegistry::findObjects, v);
+    QFuture<mafObjectsList *> future = QtConcurrent::run(this, &mafCore::mafObjectRegistry::findObjects, v);
     // Wait that the search is performed.
     future.waitForFinished();
     // Return the search result to the caller.
@@ -99,7 +99,7 @@ mafObjectsList *mafObjectRegistry::findObjects(mafVisitorFindObjects *v) {
     return v->objectsList();
 }
 
-mafObjectBase *mafObjectRegistry::objectFromHash(const mafString &hash) {
+mafObjectBase *mafObjectRegistry::objectFromHash(const QString &hash) {
     mafVisitorFindObjectsByHashCode *v = new mafVisitorFindObjectsByHashCode(hash , mafCodeLocation);
 
     mafObjectsList l = *(findObjectsThreaded(v));

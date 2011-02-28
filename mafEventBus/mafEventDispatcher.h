@@ -39,10 +39,10 @@ public:
     bool removeObserver(const mafEvent &props);
 
     /// remove the callback from the observer's hash.
-    bool removeObserver(const QObject *obj, const mafString topic, bool qt_disconnect = true);
+    bool removeObserver(const QObject *obj, const QString topic, bool qt_disconnect = true);
 
     /// Remove the signal from the signal's hash.
-    bool removeSignal(const QObject *obj, const mafString topic = "", bool qt_disconnect = true);
+    bool removeSignal(const QObject *obj, const QString topic = "", bool qt_disconnect = true);
 
     /// register custom signals use by objects to raise them events.
     /** Return true if signal has beed added correctly, false otherwise.
@@ -54,10 +54,10 @@ public:
     bool removeSignal(const mafEvent &props);
 
     /// method used to check if the given signal has been already registered for the given id.
-    bool isLocalSignalPresent(const mafString topic) const;
+    bool isLocalSignalPresent(const QString topic) const;
 
     /// Emit event corresponding to the given id (present into the event_dictionary) locally to the application.
-    virtual void notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList = NULL, mafGenericReturnArgument *returnArg = NULL) const;
+    virtual void notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList = NULL, QGenericReturnArgument *returnArg = NULL) const;
 
     /// clean the signal and callback hashes.
     /** This method is used when the destructor is called. The destructor of the dispatcher is called by the mafEventBusManager destructor.*/
@@ -80,7 +80,7 @@ protected:
     bool removeEventItem(const mafEvent &props);
 
     /// Return the signal item property associated to the given ID.
-    mafEventItemListType signalItemProperty(const mafString topic) const;
+    mafEventItemListType signalItemProperty(const QString topic) const;
 
 private:
     /// method used to check if the given object has been already registered for the given id and signature.
@@ -94,7 +94,7 @@ private:
     bool disconnectCallback(const mafEvent &props);
 
     /// Remove the given object from the has passed as argument
-    bool removeFromHash(mafEventsHashType *hash, const QObject *obj, const mafString topic, bool qt_disconnect = true);
+    bool removeFromHash(mafEventsHashType *hash, const QObject *obj, const QString topic, bool qt_disconnect = true);
 
     mafEventsHashType m_CallbacksHash; ///< Callbacks' hash for receiving events like updates or refreshes.
     mafEventsHashType m_SignalsHash; ///< Signals' hash for sending events.
@@ -104,7 +104,7 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline mafEventItemListType mafEventDispatcher::signalItemProperty(const mafString topic) const {
+inline mafEventItemListType mafEventDispatcher::signalItemProperty(const QString topic) const {
     return m_SignalsHash.values(topic);
 }
 

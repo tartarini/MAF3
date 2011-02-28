@@ -45,7 +45,7 @@ class testObjectCustom : public mafObject {
 
 public:
     /// constructor.
-    testObjectCustom(const mafString code_location = "");
+    testObjectCustom(const QString code_location = "");
 
     /// Return tha var's value.
     int var() {return m_Var;}
@@ -65,17 +65,17 @@ private:
     bool m_OneShot; ///< Test var.
 };
 
-testObjectCustom::testObjectCustom(const mafString code_location) : mafObject(code_location), m_Var(0), m_OneShot(true) {
+testObjectCustom::testObjectCustom(const QString code_location) : mafObject(code_location), m_Var(0), m_OneShot(true) {
 }
 
 void testObjectCustom::updateObject() {
     ++m_Var;
-    mafMsgDebug() << m_Var;
+    qDebug() << m_Var;
     if(m_OneShot) {
         QVERIFY(m_Var == 1);
     }
 
-    mafMsgDebug("timeout reached!!");
+    qDebug("timeout reached!!");
 }
 //-------------------------------------------------------------------------
 
@@ -127,7 +127,7 @@ void mafTimerTest::mafTimerAllocationTest() {
 }
 
 void mafTimerTest::startOneShotTest() {
-    mafString obj_id = mafIdProvider::instance()->idName(m_TimerTest->objectId());
+    QString obj_id = mafIdProvider::instance()->idName(m_TimerTest->objectId());
     mafRegisterLocalCallback(obj_id, m_ObjectTest, "updateObject()");
 
     m_TimerTest->setSingleShot(true);
@@ -135,7 +135,7 @@ void mafTimerTest::startOneShotTest() {
     // Use accessory function for defining event loop (not needed in applications) and start the timer.
     startTimerOnEventLoop(m_TimerTest, 500);
 
-    mafMsgDebug() << "var value = " << m_ObjectTest->var();
+    qDebug() << "var value = " << m_ObjectTest->var();
 }
 
 MAF_REGISTER_TEST(mafTimerTest);

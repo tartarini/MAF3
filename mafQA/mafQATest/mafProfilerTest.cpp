@@ -77,9 +77,9 @@ void mafProfilerTest::profilerTest() {
     }
     m_Profiler->profilerStop("profilerTest2", "mafProfilerTest.cpp");
 
-    mafString *buff = m_Profiler->bufferString();
+    QString *buff = m_Profiler->bufferString();
 
-    mafMsgDebug() << *buff;
+    qDebug() << *buff;
     QVERIFY(buff->length() > 0);
 }
 

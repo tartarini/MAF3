@@ -32,7 +32,7 @@ class MAFRESOURCESSHARED_EXPORT mafDataPipe : public mafPipe {
 
 public:
     /// Object constructor.
-    mafDataPipe(const mafString code_location = "");
+    mafDataPipe(const QString code_location = "");
 
     /// Append a new VME to the input list.
     /** This method allows to add a VME to the input list. It returns the index of the last VME added.*/

@@ -27,7 +27,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafDataBoundaryAlgorithmVTK::mafDataBoundaryAlgorithmVTK(const mafString code_location) : mafResources::mafDataBoundaryAlgorithm(code_location), m_Box(NULL), m_PDataFilter(NULL) {
+mafDataBoundaryAlgorithmVTK::mafDataBoundaryAlgorithmVTK(const QString code_location) : mafResources::mafDataBoundaryAlgorithm(code_location), m_Box(NULL), m_PDataFilter(NULL) {
 }
 
 mafDataBoundaryAlgorithmVTK::~mafDataBoundaryAlgorithmVTK() {

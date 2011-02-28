@@ -20,11 +20,11 @@ mafEventDispatcherLocal::mafEventDispatcherLocal() : mafEventDispatcher() {
 
 void mafEventDispatcherLocal::initializeGlobalEvents() {
     mafEvent *properties = new mafEvent();
-    mafString topic = "maf.local.eventBus.globalUpdate";
+    QString topic = "maf.local.eventBus.globalUpdate";
     (*properties)[TOPIC] =  topic;
     (*properties)[TYPE] = mafEventTypeLocal;
     (*properties)[SIGTYPE] = mafSignatureTypeSignal;
-    mafVariant var;
+    QVariant var;
     var.setValue((QObject*)this);
     (*properties)[OBJECT] = var;
     (*properties)[SIGNATURE] = "notifyDefaultEvent()";
@@ -33,13 +33,13 @@ void mafEventDispatcherLocal::initializeGlobalEvents() {
     mafEventDispatcher::initializeGlobalEvents();
 }
 
-void mafEventDispatcherLocal::notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList, mafGenericReturnArgument *returnArg) const {
-    mafString topic = event_dictionary[TOPIC].toString();
+void mafEventDispatcherLocal::notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList, QGenericReturnArgument *returnArg) const {
+    QString topic = event_dictionary[TOPIC].toString();
     mafEventItemListType items = signalItemProperty(topic);
     mafEvent *itemEventProp;
     foreach(itemEventProp, items) {
         if((*itemEventProp)[SIGNATURE].toString().length() != 0) {
-            mafString signal_to_emit = (*itemEventProp)[SIGNATURE].toString().split("(")[0];
+            QString signal_to_emit = (*itemEventProp)[SIGNATURE].toString().split("(")[0];
             QObject *obj = (*itemEventProp)[OBJECT].value<QObject *>();
             if(argList != NULL) {
                 if (returnArg == NULL || returnArg->data() == NULL) { //don't use return value
@@ -92,7 +92,7 @@ void mafEventDispatcherLocal::notifyEvent(const mafEvent &event_dictionary, mafE
                              argList->at(5), argList->at(6), argList->at(7), argList->at(8), argList->at(9));
                             break;
                         default:
-                            mafMsgWarning("%s", mafTr("Number of arguments not supported. Max 10 arguments").toAscii().data());
+                            qWarning("%s", mafTr("Number of arguments not supported. Max 10 arguments").toAscii().data());
                     } //switch
                  } else { //use return value
                     switch (argList->count()) {
@@ -144,7 +144,7 @@ void mafEventDispatcherLocal::notifyEvent(const mafEvent &event_dictionary, mafE
                              argList->at(5), argList->at(6), argList->at(7), argList->at(8), argList->at(9));
                             break;
                         default:
-                            mafMsgWarning("%s", mafTr("Number of arguments not supported. Max 10 arguments").toAscii().data());
+                            qWarning("%s", mafTr("Number of arguments not supported. Max 10 arguments").toAscii().data());
                     } //switch
                  }
             } else {

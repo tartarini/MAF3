@@ -18,12 +18,12 @@ mafEvent::mafEvent() {
 }
 
 /// Overload object constructor.
-mafEvent::mafEvent(mafString topic, mafEventType event_type, mafSignatureType signature_type, QObject *objectPointer, mafString signature) {
+mafEvent::mafEvent(QString topic, mafEventType event_type, mafSignatureType signature_type, QObject *objectPointer, QString signature) {
     m_EventHash = new mafEventHash();
     entries()->insert(TOPIC, topic);
     entries()->insert(TYPE, static_cast<int>(event_type));
     entries()->insert(SIGTYPE, static_cast<int>(signature_type));
-    mafVariant var;
+    QVariant var;
     var.setValue(objectPointer);
     entries()->insert(OBJECT, var);
     entries()->insert(SIGNATURE, signature);
@@ -42,7 +42,7 @@ mafEventHash *mafEvent::entries() const {
     return m_EventHash;
 }
 
-mafVariant &mafEvent::operator[](mafString key) const{
+QVariant &mafEvent::operator[](QString key) const{
     return (*m_EventHash)[key];
 }
 
@@ -50,7 +50,7 @@ mafEventType mafEvent::eventType() const {
     return static_cast<mafEventType>(entries()->value(TYPE).toInt());
 }
 
-mafString mafEvent::eventTopic() const {
+QString mafEvent::eventTopic() const {
     return entries()->value(TOPIC).toString();
 }
 
@@ -63,11 +63,11 @@ void mafEvent::setEventType(mafEventType et) {
     entries()->insert(TYPE, static_cast<int>(et));
 }
 
-void mafEvent::setEventTopic(mafString topic) {
+void mafEvent::setEventTopic(QString topic) {
     entries()->insert(TOPIC, topic);
 }
 
-/*mafString mafEvent::eventIdName() const {
+/*QString mafEvent::eventIdName() const {
     mafId id = eventId();
     return mafIdProvider::instance()->idName(id);
 }*/

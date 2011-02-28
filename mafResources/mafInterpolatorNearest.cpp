@@ -14,7 +14,7 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafInterpolatorNearest::mafInterpolatorNearest(const mafString code_location) : mafInterpolator(code_location) {
+mafInterpolatorNearest::mafInterpolatorNearest(const QString code_location) : mafInterpolator(code_location) {
 }
 
 mafInterpolatorNearest::~mafInterpolatorNearest() {

@@ -24,12 +24,12 @@ mafPluginManager* mafPluginManager::instance() {
 void mafPluginManager::shutdown() {
 }
 
-mafPluginManager::mafPluginManager(const mafString code_location) : mafObjectBase(code_location) {
+mafPluginManager::mafPluginManager(const QString code_location) : mafObjectBase(code_location) {
     // Create the Topic needed to load the external library containing the plug-ins.
     mafId load_library_id = mafIdProvider::instance()->createNewId("maf.local.resources.plugin.loadLibrary");
     if(load_library_id != -1) {
-        mafRegisterLocalSignal("maf.local.resources.plugin.loadLibrary", this, "loadPluginLibrary(const mafString &)");
-        mafRegisterLocalCallback("maf.local.resources.plugin.loadLibrary", this, "loadPlugin(const mafString &)");
+        mafRegisterLocalSignal("maf.local.resources.plugin.loadLibrary", this, "loadPluginLibrary(const QString &)");
+        mafRegisterLocalCallback("maf.local.resources.plugin.loadLibrary", this, "loadPlugin(const QString &)");
     }
 
     // Create the Topic needed to register plug-in objects.
@@ -42,8 +42,8 @@ mafPluginManager::mafPluginManager(const mafString code_location) : mafObjectBas
     // Create the Topic to perform a query on the plugged libraries.
     mafId query_plugin_id = mafIdProvider::instance()->createNewId("maf.local.resources.plugin.resourcesQuery");
     if(query_plugin_id != -1) {
-        mafRegisterLocalSignal("maf.local.resources.plugin.resourcesQuery", this, "queryPluggedObjectsSignal(const mafString &)");
-        mafRegisterLocalCallback("maf.local.resources.plugin.resourcesQuery", this, "queryPluggedObjects(const mafString &)");
+        mafRegisterLocalSignal("maf.local.resources.plugin.resourcesQuery", this, "queryPluggedObjectsSignal(const QString &)");
+        mafRegisterLocalCallback("maf.local.resources.plugin.resourcesQuery", this, "queryPluggedObjects(const QString &)");
     }
 }
 
@@ -58,35 +58,35 @@ mafPluginManager::~mafPluginManager() {
     m_PluginsHash.clear();
 }
 
-void mafPluginManager::loadPlugin( const mafString &pluginFilename ) {
+void mafPluginManager::loadPlugin( const QString &pluginFilename ) {
     if(!m_PluginsHash.contains(pluginFilename))
         m_PluginsHash.insert(pluginFilename, new mafPlugin(pluginFilename, mafCodeLocation)).value()->registerPlugin();
 }
 
-//void mafPluginManager::unLoadPlugin(const mafString &pluginFilename) {
+//void mafPluginManager::unLoadPlugin(const QString &pluginFilename) {
 //    mafPlugin *p = m_PluginsHash.value(pluginFilename);
 //    mafDEL(p);
 //    m_PluginsHash.remove(pluginFilename);
 //}
 
-mafPluginInfo mafPluginManager::pluginInformation(mafString plugin_name) {
+mafPluginInfo mafPluginManager::pluginInformation(QString plugin_name) {
     mafPlugin *p = m_PluginsHash.value(plugin_name);
     return p->pluginInfo();
 }
 
-//void mafPluginManager::registerPlugin(const mafString &baseClassExtended, const mafString &pluggedObjectType, const mafString &objectLabel) {
+//void mafPluginManager::registerPlugin(const QString &baseClassExtended, const QString &pluggedObjectType, const QString &objectLabel) {
 void mafPluginManager::registerPlugin(mafCore::mafPluggedObjectsHash pluginHash) {
     // Store plugin information to be queryed starting from base MAF class extended.
     // This is useful to show for example all the plugged mafView in the main menu.
 
-    mafString base_class("");
+    QString base_class("");
     mafPluggedObjectInformation objInfo;
     mafPluggedObjectsHash::iterator iter = pluginHash.begin();
     while(iter != pluginHash.end()) {
         objInfo = iter.value();
         base_class = iter.key();
         if(base_class.isEmpty()) {
-            mafMsgWarning("%s", mafTr("Try to plug %1 that has no base class reference!!").arg(objInfo.m_ClassType).toAscii().data());
+            qWarning("%s", mafTr("Try to plug %1 that has no base class reference!!").arg(objInfo.m_ClassType).toAscii().data());
         } else {
             m_PluggedObjectsHash.insertMulti(base_class, objInfo);
 
@@ -99,7 +99,7 @@ void mafPluginManager::registerPlugin(mafCore::mafPluggedObjectsHash pluginHash)
     }
 }
 
-mafPluggedObjectInformationList *mafPluginManager::queryPluggedObjects(const mafString &baseMAFClassExtended) {
+mafPluggedObjectInformationList *mafPluginManager::queryPluggedObjects(const QString &baseMAFClassExtended) {
     REQUIRE(baseMAFClassExtended.length() > 0);
 
     mafPluggedObjectInformationList *resultList = new mafPluggedObjectInformationList();
@@ -107,7 +107,7 @@ mafPluggedObjectInformationList *mafPluginManager::queryPluggedObjects(const maf
     return resultList;
 }
 
-void mafPluginManager::queryBaseClassType(mafString &pluggedObjectClassType, mafPluggedObjectInformationList *resultBaseClass) {
+void mafPluginManager::queryBaseClassType(QString &pluggedObjectClassType, mafPluggedObjectInformationList *resultBaseClass) {
     REQUIRE(resultBaseClass != NULL);
 
     mafPluggedObjectInformation result = m_ReverseObjectsHash.value(pluggedObjectClassType);

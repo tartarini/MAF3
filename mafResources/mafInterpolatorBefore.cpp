@@ -14,7 +14,7 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafInterpolatorBefore::mafInterpolatorBefore(const mafString code_location) : mafInterpolator(code_location) {
+mafInterpolatorBefore::mafInterpolatorBefore(const QString code_location) : mafInterpolator(code_location) {
 }
 
 mafInterpolatorBefore::~mafInterpolatorBefore() {

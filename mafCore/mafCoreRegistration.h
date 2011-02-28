@@ -73,17 +73,17 @@ class MAFCORESHARED_EXPORT mafCoreRegistration {
     }
 
     /// Register bind function for the acceptObject static method.
-    template<typename T> static void registerBind(const mafString &className);
+    template<typename T> static void registerBind(const QString &className);
 
     /// Unregister and unbind function for the acceptObject static method.
-    static void unregisterUnbind(const mafString &className);
+    static void unregisterUnbind(const QString &className);
 
     /// Check the given object with the registered accept functions.
-    static mafStringList acceptObject(mafObjectBase *obj);
+    static QStringList acceptObject(mafObjectBase *obj);
 
 private:
     typedef bool (*acceptObjectPointer)(mafObjectBase *);
-    typedef mafMap<mafString, acceptObjectPointer> mafBindingMap;
+    typedef QMap<QString, acceptObjectPointer> mafBindingMap;
     static mafBindingMap m_BindingMap; ///< Map containing the pointers to the accept registered functions.
 };
 
@@ -92,7 +92,7 @@ private:
 /////////////////////////////////////////////////////////////
 
 template <typename T>
-void mafCoreRegistration::registerBind( const mafString& className ) {
+void mafCoreRegistration::registerBind( const QString& className ) {
     if (!m_BindingMap.contains(className)) {
         m_BindingMap.insert(className, &T::acceptObject);
     }

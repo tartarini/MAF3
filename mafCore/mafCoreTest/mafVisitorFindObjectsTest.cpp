@@ -26,13 +26,13 @@ class  testVisitorFindObjectsCustom : public  mafVisitorFindObjects {
 
 public:
     /// Object constructor.
-    testVisitorFindObjectsCustom(const mafString code_location = "");
+    testVisitorFindObjectsCustom(const QString code_location = "");
 
     /// implement visit method
     void visit(mafObjectBase *obj);
 };
 
-testVisitorFindObjectsCustom::testVisitorFindObjectsCustom(const mafString code_location) : mafVisitorFindObjects(code_location) {
+testVisitorFindObjectsCustom::testVisitorFindObjectsCustom(const QString code_location) : mafVisitorFindObjects(code_location) {
 }
 
 void testVisitorFindObjectsCustom::visit(mafObjectBase *obj) {

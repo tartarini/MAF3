@@ -14,7 +14,7 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafInterpolator::mafInterpolator(const mafString code_location) : mafObjectBase(code_location) {
+mafInterpolator::mafInterpolator(const QString code_location) : mafObjectBase(code_location) {
 }
 
 mafInterpolator::~mafInterpolator() {

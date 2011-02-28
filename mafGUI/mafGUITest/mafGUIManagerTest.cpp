@@ -79,7 +79,7 @@ void mafGUIManagerTest::mafGUIManagerCreateMenuTest() {
 
     menu = m_GUIManager->operationMenu();
     QVERIFY(menu != NULL);
-    mafList<QAction*> items = menu->actions();
+    QList<QAction*> items = menu->actions();
     int num_items = items.count();
     QVERIFY(num_items == 0);
 
@@ -106,7 +106,7 @@ void mafGUIManagerTest::mafGUIManagerFillMenuTest() {
 
     QMenu *menu = m_GUIManager->operationMenu();
     QVERIFY(menu != NULL);
-    mafList<QAction*> items = menu->actions();
+    QList<QAction*> items = menu->actions();
     int num_items = items.count();
     QVERIFY(num_items == 1);
 

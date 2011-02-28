@@ -58,7 +58,7 @@ class MAFGUISHARED_EXPORT mafGUIManager : public mafCore::mafObjectBase {
 
 public:
     /// Object constructor.
-    mafGUIManager(QMainWindow *main_win, const mafString code_location = "");
+    mafGUIManager(QMainWindow *main_win, const QString code_location = "");
 
     /// Create the menu for the vertical application.
     virtual void createMenus();
@@ -97,7 +97,7 @@ public:
     QMenu *helpMenu() const;
 
     /// Show the file dialog to select the file path given a window title, a starting directory and an optional file wildcard
-    void chooseFileDialog(const mafString title, const mafString start_dir, const mafString wildcard = mafTr("All files (*.*)"));
+    void chooseFileDialog(const QString title, const QString start_dir, const QString wildcard = mafTr("All files (*.*)"));
 
 protected:
     /// Object destructor.
@@ -108,7 +108,7 @@ protected:
 
 signals:
     /// Signal emitted on path selection using the dialog.
-    void pathSelected(const mafString path);
+    void pathSelected(const QString path);
 
     /// Signal emitted when the GUI panel has been loaded.
     void guiLoaded(int type, QWidget *w);
@@ -121,7 +121,7 @@ public slots:
     void fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash);
 
     /// Return the Action associated with the given name.
-    QObject *actionByName(mafString name);
+    QObject *actionByName(QString name);
 
 private slots:
     /// Start the operation associated with the operation's action activated.
@@ -163,7 +163,7 @@ private:
     void updateRecentFileActions();
 
     /// Manage the filename of the recent file.
-    mafString strippedName(const mafString &fullFileName);
+    QString strippedName(const QString &fullFileName);
 
     QMenu *m_FileMenu; ///< Reference to the 'File' menu.
     QMenu *m_RecentFilesMenu; ///< Reference to 'Recent File' menu.
@@ -177,7 +177,7 @@ private:
     QToolBar *m_FileToolBar; ///< Toolbar related to File tasks
     QToolBar *m_EditToolBar; ///< Toolbar related to Edit tasks
 
-    mafList<QAction *> m_ActionList; ///< List of created actions.
+    QList<QAction *> m_ActionList; ///< List of created actions.
 
     QAction *m_NewAct; ///< Reference to the action associated to the 'New' Item creation.
     QAction *m_CollaborateAct; ///< Reference to the action associated to the 'Collaboration' chat Item.
@@ -197,7 +197,7 @@ private:
     QAction *m_LogBarAct; ///< Reference to the action associated to the 'LogBar' Item.
 
     int m_MaxRecentFiles; ///< Number of maximum recent files.
-    mafList<QAction *> m_RecentFileActs; ///< List of recent file's actions.
+    QList<QAction *> m_RecentFileActs; ///< List of recent file's actions.
     bool m_ActionsCreated; ///< Flag that store the actions' creation.
 
     mafGUIApplicationSettingsDialog *m_SettingsDialog; ///< Settings dialog

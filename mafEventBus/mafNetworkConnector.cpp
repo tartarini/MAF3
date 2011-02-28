@@ -17,6 +17,6 @@ mafNetworkConnector::mafNetworkConnector() {
 
 }
 
-mafString mafNetworkConnector::protocol() {
+QString mafNetworkConnector::protocol() {
     return m_Protocol;
 }

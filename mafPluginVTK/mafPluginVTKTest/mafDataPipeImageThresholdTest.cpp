@@ -102,8 +102,8 @@ void mafDataPipeImageThresholdTest::updatePipeTest() {
     mafDataSetCollection *collection = output->dataSetCollection();
     mafDataSet *dataSet = collection->itemAtCurrentTime();
     mafContainer<vtkImageData> *image = mafContainerPointerTypeCast(vtkImageData, dataSet->dataValue());
-    mafString dt(image->externalDataType());
-    mafString res("vtkImageData");
+    QString dt(image->externalDataType());
+    QString res("vtkImageData");
 
     QCOMPARE(dt, res);
 

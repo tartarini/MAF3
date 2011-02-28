@@ -29,7 +29,7 @@ mafProfiler* mafProfiler::instance() {
     return m_Instance;
 }
 
-void mafProfiler::profilerStart(const mafString &funcName, const mafString &funcLocation, const mafString &notes, bool profileMultipleTimes, int numTotalProfileTimesBeforeLog) {
+void mafProfiler::profilerStart(const QString &funcName, const QString &funcLocation, const QString &notes, bool profileMultipleTimes, int numTotalProfileTimesBeforeLog) {
     m_Running = true;
     int index = -1;
     for(int i = m_ProfiledFunctions.size() - 1; i >= 0; --i) {
@@ -46,7 +46,7 @@ void mafProfiler::profilerStart(const mafString &funcName, const mafString &func
         profileInfo.MultipleCalls = profileMultipleTimes;
         profileInfo.NumTotalProfileTimes = profileMultipleTimes ? numTotalProfileTimesBeforeLog : 1;
         profileInfo.NumTimesCalled = 1;
-        profileInfo.StartTime = new mafTime();
+        profileInfo.StartTime = new QTime();
         profileInfo.StartTime->start();
         profileInfo.TotalElapsedTime = 0;
         m_ProfiledFunctions.push_back(profileInfo);
@@ -56,7 +56,7 @@ void mafProfiler::profilerStart(const mafString &funcName, const mafString &func
     }
 }
 
-void mafProfiler::profilerStop(const mafString &funcName, const mafString &funcLocation) {
+void mafProfiler::profilerStop(const QString &funcName, const QString &funcLocation) {
     m_Running = false;
     int index = -1;
     for(int i = m_ProfiledFunctions.size() - 1; i >= 0; --i) {
@@ -86,15 +86,15 @@ void mafProfiler::logResults( int index ) {
     }
 
     if (m_ProfiledFunctions[index].MultipleCalls) {
-        m_LogStream << mafString("Number of times called: ") << m_ProfiledFunctions[index].NumTimesCalled << "\n";
+        m_LogStream << QString("Number of times called: ") << m_ProfiledFunctions[index].NumTimesCalled << "\n";
         double meanElapsedTime = static_cast< double >( m_ProfiledFunctions[index].TotalElapsedTime ) / m_ProfiledFunctions[index].NumTotalProfileTimes;
-        m_LogStream << mafString("Avg. mSecs: ") << mafString::number(meanElapsedTime) << "\n";
-        m_LogStream << mafString("Total mSecs: ") << mafString::number(m_ProfiledFunctions[index].TotalElapsedTime) << "\n";
+        m_LogStream << QString("Avg. mSecs: ") << QString::number(meanElapsedTime) << "\n";
+        m_LogStream << QString("Total mSecs: ") << QString::number(m_ProfiledFunctions[index].TotalElapsedTime) << "\n";
     } else {
         double elapsed_time;
         m_LogStream << "Call Number: " << m_ProfiledFunctions[index].NumTimesCalled << "\n";
         elapsed_time = static_cast< double >(m_ProfiledFunctions[index].ElapsedTime[m_ProfiledFunctions[index].NumTimesCalled - 1]);
-        m_LogStream << "mSecs: " << mafString::number(elapsed_time) << "\n";
+        m_LogStream << "mSecs: " << QString::number(elapsed_time) << "\n";
     }
 
     m_LogStream << "\n";

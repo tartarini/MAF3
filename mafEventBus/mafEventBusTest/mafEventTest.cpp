@@ -61,7 +61,7 @@ void mafEventTest::mafEventAccessorsTest() {
     QVERIFY(m_Event->eventType() == mafEventTypeRemote);
     QVERIFY(m_Event->isEventLocal() != true);
 
-    mafString topic = "maf.level1.level2.level3";
+    QString topic = "maf.level1.level2.level3";
     m_Event->setEventTopic(topic);
     QCOMPARE(m_Event->eventTopic(), topic);
 
@@ -71,8 +71,8 @@ void mafEventTest::mafEventAccessorsTest() {
     mafEventHash *dict = m_Event->entries();
     QVERIFY(dict != NULL);
 
-    mafVariant var = (*m_Event)[TOPIC];
-    mafString check = var.toString();
+    QVariant var = (*m_Event)[TOPIC];
+    QString check = var.toString();
     QCOMPARE(check, topic);
 
     delete m_Event;

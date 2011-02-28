@@ -14,10 +14,10 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafInteractor::mafInteractor(const mafString code_location) : mafObjectBase(code_location), m_DefaultInteractorStyle(NULL), m_EditingInteractorStyle(NULL) {
+mafInteractor::mafInteractor(const QString code_location) : mafObjectBase(code_location), m_DefaultInteractorStyle(NULL), m_EditingInteractorStyle(NULL) {
 }
 
-mafInteractor::mafInteractor(mafContainerInterfacePointer default_is, mafContainerInterfacePointer edit_is, const mafString code_location) : mafObjectBase(code_location), m_DefaultInteractorStyle(default_is), m_EditingInteractorStyle(edit_is) {
+mafInteractor::mafInteractor(mafContainerInterfacePointer default_is, mafContainerInterfacePointer edit_is, const QString code_location) : mafObjectBase(code_location), m_DefaultInteractorStyle(default_is), m_EditingInteractorStyle(edit_is) {
 }
 
 mafInteractor::~mafInteractor() {

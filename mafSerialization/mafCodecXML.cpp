@@ -17,7 +17,7 @@ using namespace mafCore;
 using namespace mafSerialization;
 using namespace mafEventBus;
 
-mafCodecXML::mafCodecXML(const mafString code_location) : mafCodec(code_location) {
+mafCodecXML::mafCodecXML(const QString code_location) : mafCodec(code_location) {
     m_EncodingType = "XML";
     m_MementoLevel = -1;
     m_Valid = true;
@@ -31,8 +31,8 @@ void mafCodecXML::encode(mafMemento *memento) {
     REQUIRE(m_Device != NULL);
     int dataSize = 0;
     double dataTime = 0;
-    mafString dataHash;
-    mafString codecType;
+    QString dataHash;
+    QString codecType;
 
     ++m_MementoLevel;
 
@@ -51,7 +51,7 @@ void mafCodecXML::encode(mafMemento *memento) {
     m_XMLStreamWriter.writeAttribute("mementoType", meta->className());
     m_XMLStreamWriter.writeAttribute("objectClassType", memento->objectClassType());
 
-    mafString className = meta->className();
+    QString className = meta->className();
     if (className == "mafResources::mafMementoVME") {
         m_XMLStreamWriter.writeStartElement("dataSetCollection");
         m_XMLStreamWriter.writeAttribute("name", "dataSetCollection"); //Start DataSetCollection
@@ -67,7 +67,7 @@ void mafCodecXML::encode(mafMemento *memento) {
 
         m_XMLStreamWriter.writeStartElement("item");
         m_XMLStreamWriter.writeAttribute("name", item.m_Name);
-        m_XMLStreamWriter.writeAttribute("multiplicity", mafString::number(item.m_Multiplicity));
+        m_XMLStreamWriter.writeAttribute("multiplicity", QString::number(item.m_Multiplicity));
         if (item.m_Name == "dataSize" ) {
             dataSize = item.m_Value.toInt();
         }
@@ -83,15 +83,15 @@ void mafCodecXML::encode(mafMemento *memento) {
 
         if (item.m_Name == "dataValue") {
             //Generate file name and save external data
-            mafString path = ((mafFile *)this->m_Device)->fileName().section('/', 0, -2);
-            mafString fileName;
-            mafTextStream(&fileName) << dataHash << "_" << dataTime << ".vtk";
-            mafString url;
-            mafTextStream(&url) << path << "/" << fileName;
+            QString path = ((QFile *)this->m_Device)->fileName().section('/', 0, -2);
+            QString fileName;
+            QTextStream(&fileName) << dataHash << "_" << dataTime << ".vtk";
+            QString url;
+            QTextStream(&url) << path << "/" << fileName;
 
             mafEventArgumentsList argList;
             argList.append(mafEventArgument(char*, (char*)item.m_Value.toByteArray().constData()));
-            argList.append(mafEventArgument(mafString, url));
+            argList.append(mafEventArgument(QString, url));
             argList.append(mafEventArgument(int, dataSize));
             mafEventBusManager::instance()->notifyEvent("maf.local.serialization.saveExternalData", mafEventTypeLocal, &argList);
             marshall(fileName);
@@ -136,10 +136,10 @@ mafMemento *mafCodecXML::decode() {
        mafDomElement e = m_CurrentNode.toElement();
 
        if(!e.isNull()) {
-           mafString name = e.tagName();
+           QString name = e.tagName();
            if(name == "memento") {
-               mafString mementoType;
-               mafString objType;
+               QString mementoType;
+               QString objType;
                mafDomNamedNodeMap attributes = e.attributes();
                if(attributes.contains("mementoType")) {
                    mementoType = e.attribute("mementoType","");
@@ -159,7 +159,7 @@ mafMemento *mafCodecXML::decode() {
            for(;i<size;++i) {
                m_CurrentNode = childNodeList.at(i);
                mafDomElement eChild = m_CurrentNode.toElement();
-               mafString childName = eChild.tagName();
+               QString childName = eChild.tagName();
                if (childName == "dataSetCollection") {
                    //Find all items in dataSetCollection
                    mafDomNodeList list = eChild.elementsByTagName("item");
@@ -190,7 +190,7 @@ mafMemento *mafCodecXML::decode() {
 
 mafMementoPropertyItem mafCodecXML::setPropertyItem(mafDomElement eChild){
     mafMementoPropertyItem item;
-    mafString itemName;
+    QString itemName;
     int multiplicity = 1;
 
     mafDomNamedNodeMap attributes = eChild.attributes();
@@ -205,9 +205,9 @@ mafMementoPropertyItem mafCodecXML::setPropertyItem(mafDomElement eChild){
 
     if (item.m_Name == "dataValue") {
         //check if eChild is a file Name
-        mafString value = demarshall(eChild).toString();
-        mafString path = ((mafFile *)this->m_Device)->fileName().section('/', 0, -2);
-        mafByteArray url;
+        QString value = demarshall(eChild).toString();
+        QString path = ((QFile *)this->m_Device)->fileName().section('/', 0, -2);
+        QByteArray url;
         url.append(path);
         url.append("/");
         url.append(value);
@@ -224,65 +224,65 @@ mafMementoPropertyItem mafCodecXML::setPropertyItem(mafDomElement eChild){
     return item;
 }
 
-void mafCodecXML::marshall(const mafVariant &value ){
+void mafCodecXML::marshall(const QVariant &value ){
     switch( value.type() ){
-        case mafVariant::Int:
-        case mafVariant::UInt:
-        case mafVariant::LongLong:
-        case mafVariant::ULongLong:
+        case QVariant::Int:
+        case QVariant::UInt:
+        case QVariant::LongLong:
+        case QVariant::ULongLong:
                 m_XMLStreamWriter.writeStartElement("value");
                 m_XMLStreamWriter.writeAttribute("dataType", "i4");
                 m_XMLStreamWriter.writeCharacters(value.toString());
                 m_XMLStreamWriter.writeEndElement();
                 break;
-        case mafVariant::Double:
+        case QVariant::Double:
                 m_XMLStreamWriter.writeStartElement("value");
                 m_XMLStreamWriter.writeAttribute("dataType", "double");
                 m_XMLStreamWriter.writeCharacters(value.toString());
                 m_XMLStreamWriter.writeEndElement();
                 break;
-        case mafVariant::Bool:
+        case QVariant::Bool:
                 m_XMLStreamWriter.writeStartElement("value");
                 m_XMLStreamWriter.writeAttribute("dataType", "boolean");
                 m_XMLStreamWriter.writeCharacters((value.toBool()?"true":"false") );
                 m_XMLStreamWriter.writeEndElement();
                 break;
-        case mafVariant::Date:
+        case QVariant::Date:
                 m_XMLStreamWriter.writeStartElement("value");
                 m_XMLStreamWriter.writeAttribute("dataType", "dateTime.iso8601");
                 m_XMLStreamWriter.writeCharacters(value.toDate().toString( Qt::ISODate ) );
                 m_XMLStreamWriter.writeEndElement();
                 break;
-        case mafVariant::DateTime:
+        case QVariant::DateTime:
                 m_XMLStreamWriter.writeStartElement("value");
                 m_XMLStreamWriter.writeAttribute("dataType", "dateTime.iso8601");
                 m_XMLStreamWriter.writeCharacters(value.toDateTime().toString( Qt::ISODate ) );
                 m_XMLStreamWriter.writeEndElement();
                 break;
-        case mafVariant::Time:
+        case QVariant::Time:
                 m_XMLStreamWriter.writeStartElement("value");
                 m_XMLStreamWriter.writeAttribute("dataType", "dateTime.iso8601");
                 m_XMLStreamWriter.writeCharacters(value.toTime().toString( Qt::ISODate ) );
                 m_XMLStreamWriter.writeEndElement();
                 break;
-        case mafVariant::StringList:
-        case mafVariant::List: {
+        case QVariant::StringList:
+        case QVariant::List: {
                 m_XMLStreamWriter.writeAttribute("arrayType", "list");
-                foreach( mafVariant item, value.toList() ) {
+                foreach( QVariant item, value.toList() ) {
                         marshall(  item );
                     }
                 break;
         }
-        case mafVariant::Map: {
+        case QVariant::Map: {
             m_XMLStreamWriter.writeAttribute("arrayType", "map");
             m_XMLStreamWriter.writeStartElement("struct");
-            mafMap<mafString, mafVariant> map = value.toMap();
-            mafMap<mafString, mafVariant>::ConstIterator index = map.begin();
+            QMap<QString, QVariant> map = value.toMap();
+            QMap<QString, QVariant>::ConstIterator index = map.begin();
             while( index != map.end() ) {
                 m_XMLStreamWriter.writeStartElement("member");
                 m_XMLStreamWriter.writeAttribute("name", index.key());
                 int mult = (index.value().toList().count() == 0) ? 1:index.value().toList().count();
-                m_XMLStreamWriter.writeAttribute("multiplicity", mafString::number(mult));
+                m_XMLStreamWriter.writeAttribute("multiplicity", QString::number(mult));
                 marshall( *index );
                 m_XMLStreamWriter.writeEndElement();
                 ++index;
@@ -290,23 +290,23 @@ void mafCodecXML::marshall(const mafVariant &value ){
             m_XMLStreamWriter.writeEndElement();
             break;
         }
-        case mafVariant::Hash: {
+        case QVariant::Hash: {
             m_XMLStreamWriter.writeAttribute("arrayType", "hash");
             m_XMLStreamWriter.writeStartElement("struct");
-            mafHash<mafString, mafVariant> hash = value.toHash();
-            mafHash<mafString, mafVariant>::ConstIterator index = hash.begin();
+            QHash<QString, QVariant> hash = value.toHash();
+            QHash<QString, QVariant>::ConstIterator index = hash.begin();
             while( index != hash.end() ) {
                 m_XMLStreamWriter.writeStartElement("member");
                 m_XMLStreamWriter.writeAttribute("name", index.key());
                 int multi = 1;
-                if (index.value().type() == mafVariant::List) {
+                if (index.value().type() == QVariant::List) {
                     multi = index.value().toList().count();
-                } else if (index.value().type() == mafVariant::Map) {
+                } else if (index.value().type() == QVariant::Map) {
                     multi = index.value().toMap().count();
-                } else if (index.value().type() == mafVariant::Hash) {
+                } else if (index.value().type() == QVariant::Hash) {
                     multi = index.value().toHash().count();
                 }
-                m_XMLStreamWriter.writeAttribute("multiplicity", mafString::number(multi));
+                m_XMLStreamWriter.writeAttribute("multiplicity", QString::number(multi));
                 marshall( *index );
                 m_XMLStreamWriter.writeEndElement();
                 ++index;
@@ -314,7 +314,7 @@ void mafCodecXML::marshall(const mafVariant &value ){
             m_XMLStreamWriter.writeEndElement();
             break;
         }
-        case mafVariant::ByteArray: {
+        case QVariant::ByteArray: {
             m_XMLStreamWriter.writeStartElement("value");
             m_XMLStreamWriter.writeAttribute("dataType", "base64");
             m_XMLStreamWriter.writeCharacters(value.toByteArray().toBase64() );
@@ -322,7 +322,7 @@ void mafCodecXML::marshall(const mafVariant &value ){
             break;
         }
         default: {
-            if( value.canConvert(mafVariant::String) ) {
+            if( value.canConvert(QVariant::String) ) {
                 m_XMLStreamWriter.writeStartElement("value");
                 m_XMLStreamWriter.writeAttribute("dataType", "string");
                 m_XMLStreamWriter.writeCharacters( value.toString() );
@@ -336,20 +336,20 @@ void mafCodecXML::marshall(const mafVariant &value ){
     }
 }
 
-mafVariant mafCodecXML::demarshall( const QDomElement &elem ) {
+QVariant mafCodecXML::demarshall( const QDomElement &elem ) {
     if ( elem.tagName().toLower() != "item" && elem.tagName().toLower() != "value" \
         && elem.tagName().toLower() != "member") {
         m_Valid = false;
-        mafMsgCritical() << mafString("bad param value");
-        return mafVariant();
+        qCritical() << QString("bad param value");
+        return QVariant();
     }
 
     if ( elem.tagName().toLower() == "item" && !elem.firstChild().isElement() ) {
-        return mafVariant( elem.firstChild().toElement().text() );
+        return QVariant( elem.firstChild().toElement().text() );
     }
 
     mafDomElement valueElem;
-    mafString typeName;
+    QString typeName;
     mafDomNamedNodeMap attributes = elem.attributes();
 
 
@@ -364,7 +364,7 @@ mafVariant mafCodecXML::demarshall( const QDomElement &elem ) {
         else
         {
             if(multiplicity == 0) {
-                return mafVariant();
+                return QVariant();
             }
             valueElem = elem.firstChild().toElement();
             mafDomNamedNodeMap attributesValue = valueElem.attributes();
@@ -382,91 +382,91 @@ mafVariant mafCodecXML::demarshall( const QDomElement &elem ) {
     }
 
     if ( typeName == "string" ) {
-        return mafVariant( valueElem.text() );
+        return QVariant( valueElem.text() );
     }
     else if (typeName == "int" || typeName == "i4" ) {
         bool ok = false;
-        mafVariant val( valueElem.text().toInt( &ok ) );
+        QVariant val( valueElem.text().toInt( &ok ) );
         if( ok )
                 return val;
-        mafMsgCritical() << mafString("I was looking for an integer but data was courupt");
+        qCritical() << QString("I was looking for an integer but data was courupt");
     }
     else if( typeName == "double" ) {
         bool ok = false;
-        mafVariant val( valueElem.text().toDouble( &ok ) );
+        QVariant val( valueElem.text().toDouble( &ok ) );
         if( ok )
                 return val;
-        mafMsgCritical() << mafString("I was looking for an double but data was courupt");
+        qCritical() << QString("I was looking for an double but data was courupt");
     }
     else if( typeName == "boolean" ) {
-        return mafVariant( ( valueElem.text().toLower() == "true" || valueElem.text() == "1")?true:false );
+        return QVariant( ( valueElem.text().toLower() == "true" || valueElem.text() == "1")?true:false );
     }
     else if( typeName == "datetime" || typeName == "dateTime.iso8601" ) {
-        return mafVariant( mafDateTime::fromString( valueElem.text(), Qt::ISODate ) );
+        return QVariant( QDateTime::fromString( valueElem.text(), Qt::ISODate ) );
     }
     else if( typeName == "list" ) {
-        mafList<mafVariant> arr;
+        QList<QVariant> arr;
         mafDomNode valueNode = elem.firstChild();
-        //mafString name = valueNode.toElement().tagName();
+        //QString name = valueNode.toElement().tagName();
         while( !valueNode.isNull() && m_Valid ) {
-            arr.append(mafVariant(demarshall( valueNode.toElement())) );
+            arr.append(QVariant(demarshall( valueNode.toElement())) );
             valueNode = valueNode.nextSibling();
         }
-        return mafVariant( arr );
+        return QVariant( arr );
     }
     else if( typeName == "map" )
     {
-        mafMap<mafString,mafVariant> stct;
+        QMap<QString,QVariant> stct;
         valueElem = elem.firstChild().toElement();
         QDomNode valueNode = valueElem.firstChild();
-        mafString name = valueNode.toElement().tagName();
+        QString name = valueNode.toElement().tagName();
         while( !valueNode.isNull() && m_Valid ) {
-            mafString nodeName = valueNode.toElement().attribute("name");
+            QString nodeName = valueNode.toElement().attribute("name");
             if (valueNode.toElement().attribute("arrayType") != "") {
                 stct[ nodeName ] = demarshall( valueNode.toElement() );
             } else {
                 const QDomElement dataNode = valueNode.toElement().elementsByTagName("value").item(0).toElement();
-                mafString nameb = dataNode.tagName();
+                QString nameb = dataNode.tagName();
                 stct[ nodeName ] = demarshall( dataNode );
             }
             valueNode = valueNode.nextSibling();
         }
-        return mafVariant(stct);
+        return QVariant(stct);
     }
     else if( typeName == "hash" )
     {
-        mafHash<mafString,mafVariant> stct;
+        QHash<QString,QVariant> stct;
         valueElem = elem.firstChild().toElement();
         QDomNode valueNode = valueElem.firstChild();
-        mafString name = valueNode.toElement().tagName();
+        QString name = valueNode.toElement().tagName();
         while( !valueNode.isNull() && m_Valid ) {
-            mafString nodeName = valueNode.toElement().attribute("name");
+            QString nodeName = valueNode.toElement().attribute("name");
             if (valueNode.toElement().attribute("arrayType") != "") {
                 stct[ nodeName ] = demarshall( valueNode.toElement() );
             } else {
                 const QDomElement dataNode = valueNode.toElement().elementsByTagName("value").item(0).toElement();
-                mafString nameb = dataNode.tagName();
+                QString nameb = dataNode.tagName();
                 stct[ nodeName ] = demarshall( dataNode );
             }
             valueNode = valueNode.nextSibling();
         }
-        return mafVariant(stct);
+        return QVariant(stct);
     }
     else if( typeName == "base64" ) {
-        mafVariant returnVariant;
-        mafByteArray dest;
-        mafByteArray src = valueElem.text().toLatin1();
-        dest = mafByteArray::fromBase64( src );
-        mafDataStream ds(&dest, mafIODevice::ReadOnly);
-        ds.setVersion(mafDataStream::Qt_4_6);
+        QVariant returnVariant;
+        QByteArray dest;
+        QByteArray src = valueElem.text().toLatin1();
+        dest = QByteArray::fromBase64( src );
+        QDataStream ds(&dest, mafIODevice::ReadOnly);
+        ds.setVersion(QDataStream::Qt_4_6);
         ds >> returnVariant;
         if( returnVariant.isValid() ) {
             return returnVariant;
         }
         else {
-            return mafVariant( dest );
+            return QVariant( dest );
         }
     }
-    mafMsgCritical() << mafString( "Cannot handle type %1").arg(typeName);
-    return mafVariant();
+    qCritical() << QString( "Cannot handle type %1").arg(typeName);
+    return QVariant();
 }

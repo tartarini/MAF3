@@ -34,10 +34,10 @@ class MAFRESOURCESSHARED_EXPORT mafMementoDataSet : public mafCore::mafMemento {
 
 public:
     /// object constructor.
-    mafMementoDataSet(const mafString code_location = "");
+    mafMementoDataSet(const QString code_location = "");
 
     /// object overloaded constructor.
-    mafMementoDataSet(const mafCore::mafObject *obj, mafPoseMatrix *matrix, mafCore::mafContainerInterface *dataValue, bool binary = true, const mafString code_location = "");
+    mafMementoDataSet(const mafCore::mafObject *obj, mafPoseMatrix *matrix, mafCore::mafContainerInterface *dataValue, bool binary = true, const QString code_location = "");
 
 protected:
     /// Object destructor.

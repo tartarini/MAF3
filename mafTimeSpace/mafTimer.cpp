@@ -16,7 +16,7 @@ using namespace mafCore;
 using namespace mafTimeSpace;
 using namespace mafEventBus;
 
-mafTimer::mafTimer(const mafString code_location) : mafObjectBase(code_location), m_TimerId(-1) {
+mafTimer::mafTimer(const QString code_location) : mafObjectBase(code_location), m_TimerId(-1) {
     m_Timer = new QTimer(this);
     connect(m_Timer, SIGNAL(timeout()), this, SLOT(update()));
     m_ObjectId = mafIdProvider::instance()->idName(objectId());

@@ -52,9 +52,9 @@ void mafMonitorRAMTest::memoryTest() {
     //! </snippet>
     QVERIFY(monitor != NULL);
     monitor->update();
-    mafMsgDebug() << "Total:" << monitor->property("Total").toLongLong();
-    mafMsgDebug() << "Free:" <<monitor->property("Free").toLongLong();
-    mafMsgDebug() << "Used:" <<monitor->property("Used").toLongLong();
+    qDebug() << "Total:" << monitor->property("Total").toLongLong();
+    qDebug() << "Free:" <<monitor->property("Free").toLongLong();
+    qDebug() << "Used:" <<monitor->property("Used").toLongLong();
 
     mafDEL(monitor);
 }

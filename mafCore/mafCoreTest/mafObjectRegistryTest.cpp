@@ -98,7 +98,7 @@ void mafObjectRegistryTest::liveObjectsTest() {
 
 void mafObjectRegistryTest::objectFromHashTest() {
     mafObject *obj1 = mafNEW(mafCore::mafObject);
-    mafString validHash = obj1->objectHash();
+    QString validHash = obj1->objectHash();
 
      // Search an object by the given hash string.
     mafObjectBase *checkObject = m_Registry->objectFromHash(validHash);

@@ -36,7 +36,7 @@ class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceCylinder : public mafPlug
 
 public:
     /// Object constructor.
-    mafVTKParametricSurfaceCylinder(const mafString code_location = "");
+    mafVTKParametricSurfaceCylinder(const QString code_location = "");
 
 public slots:
 

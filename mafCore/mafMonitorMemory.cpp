@@ -13,7 +13,7 @@
 
 using namespace mafCore;
 
-mafMonitorMemory::mafMonitorMemory(const mafString code_location) : mafMonitor(code_location), m_TotalSpace(0), m_FreeSpace(0) {
+mafMonitorMemory::mafMonitorMemory(const QString code_location) : mafMonitor(code_location), m_TotalSpace(0), m_FreeSpace(0) {
 }
 
 mafMonitorMemory::~mafMonitorMemory() {

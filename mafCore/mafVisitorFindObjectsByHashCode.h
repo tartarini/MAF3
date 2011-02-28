@@ -31,10 +31,10 @@ class MAFCORESHARED_EXPORT mafVisitorFindObjectsByHashCode : public mafVisitorFi
 
 public:
     /// object constructor
-    mafVisitorFindObjectsByHashCode(const mafString code_location = "");
+    mafVisitorFindObjectsByHashCode(const QString code_location = "");
 
     /// overloaded object constructor
-    mafVisitorFindObjectsByHashCode(const mafString hash_code, const mafString code_location = "");
+    mafVisitorFindObjectsByHashCode(const QString hash_code, const QString code_location = "");
 
     /// Execute the defined operation on visited object passes as argument.
     /*virtual*/ void visit(mafObjectBase *object);
@@ -43,7 +43,7 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafVisitorFindObjectsByHashCode();
 private:
-    mafString m_HashCode;
+    QString m_HashCode;
 };
 
 } //mafCore

@@ -130,7 +130,7 @@ void mafEventDispatcherTest::mafEventDispatcherAllocationTest() {
 
 void mafEventDispatcherTest::mafEventDispatcherAddAndRemoveObserverAndNotifyEventTest() {
     // Create new Event ID used for callback and event notification.
-    mafString updateID = "maf.local.dispatcherTest.update";
+    QString updateID = "maf.local.dispatcherTest.update";
 
     mafEvent *properties = new mafEventBus::mafEvent;
     (*properties)[TOPIC] =  updateID;
@@ -154,7 +154,7 @@ void mafEventDispatcherTest::mafEventDispatcherAddAndRemoveObserverAndNotifyEven
 }
 
 void mafEventDispatcherTest::mafEventDispatcherRegisterAndRemoveSignalAndNotifyEventTest() {
-    mafString updateID = "maf.local.dispatcherTest.update";
+    QString updateID = "maf.local.dispatcherTest.update";
 
     mafEvent *properties = new mafEventBus::mafEvent;
     (*properties)[TOPIC] =  updateID;
@@ -181,13 +181,13 @@ void mafEventDispatcherTest::mafEventDispatcherRegisterAndRemoveSignalAndNotifyE
 }
 
 void mafEventDispatcherTest::isSignalPresentTest() {
-    mafString updateID = "maf.local.dispatcherTest.update";
+    QString updateID = "maf.local.dispatcherTest.update";
     // Register the callback to update the object custom:
     QVERIFY(m_EventDispatcher->isLocalSignalPresent(updateID));
 }
 
 void mafEventDispatcherTest::removeObserverTest() {
-    mafString updateID = "maf.local.dispatcherTest.update";
+    QString updateID = "maf.local.dispatcherTest.update";
 
     // remove the observer from the updateID topics...
     QVERIFY(m_EventDispatcher->removeObserver(m_ObjTestObserver, updateID));
@@ -208,7 +208,7 @@ void mafEventDispatcherTest::removeObserverTest() {
 }
 
 void mafEventDispatcherTest::removeItemTest() {
-    mafString updateID = "maf.local.dispatcherTest.update";
+    QString updateID = "maf.local.dispatcherTest.update";
 
 
     // Add again the test object as observer...
@@ -241,7 +241,7 @@ void mafEventDispatcherTest::removeItemTest() {
 }
 
 void mafEventDispatcherTest::removeSignalTest() {
-    mafString updateID = "maf.local.dispatcherTest.update";
+    QString updateID = "maf.local.dispatcherTest.update";
 
     // remove the signal from the updateID topics...
     // ...but don't need to make a qt disconnect because all observer has been disconnected already on previous test case.
@@ -262,7 +262,7 @@ void mafEventDispatcherTest::removeSignalTest() {
 
 
 void mafEventDispatcherTest::reverseOrderRegistrationTest() {
-    mafString updateID = "maf.local.dispatcherTest.custom";
+    QString updateID = "maf.local.dispatcherTest.custom";
 
     // Register the callback to update the object custom:
     mafEvent *propCallback = new mafEventBus::mafEvent;

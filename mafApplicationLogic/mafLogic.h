@@ -48,13 +48,13 @@ class MAFAPPLICATIONLOGICSHARED_EXPORT mafLogic : public mafLogicLight {
 
 public:
     /// Object constructor.
-    mafLogic(const mafString code_location = "");
+    mafLogic(const QString code_location = "");
 
     /// Allows to initialize all the singletons and register all the objects to the factory.
     virtual bool initialize();
 
     /// Allows to retrieve the application's working directory.
-    mafString workingDirectory() const;
+    QString workingDirectory() const;
 
     /// Returns the VME Hierarchy.
     mafCore::mafHierarchy *hierarchy();
@@ -62,18 +62,18 @@ public:
     /// Allow to load plugins located into the 'plugins' folder located into the application's directory path.
     /** The optional argument allows logic to load a plugin from a given directory. By default the
     plugin directory will be ApplicationDirectory/plugins.*/
-    void loadPlugins(mafString plugin_dir = "");
+    void loadPlugins(QString plugin_dir = "");
 
     /// Method used to add custom object defined in vertical application.
     /** This type of addition to the framework is the same of that one done by the plug-in
     but is used to add a small number of objects without incapsulating them into a plug-in,
     because for example are still in beta testing phase or because is needed to plug only one
     custom class.*/
-    void plugObject(const mafString base_class, const mafString class_type, const mafString object_label);
+    void plugObject(const QString base_class, const QString class_type, const QString object_label);
 
 public slots:
     /// Allows to assign the application's working directory.
-    void setWorkingDirectory(const mafString wd);
+    void setWorkingDirectory(const QString wd);
 
     /// Orchestrate the requests for the store the application's settings.
     void storeSettings();
@@ -83,7 +83,7 @@ public slots:
 
 signals:
     /// Signal emitted when a recent file is asked to be opened. The argument of the signal contains the filename.
-    void openFile(const mafString filename);
+    void openFile(const QString filename);
 
     /// Signal used to alert all observers to write the owned settings.
     void writeSettings();
@@ -108,21 +108,21 @@ protected:
     /*virtual*/ ~mafLogic();
 
 private:
-    mafString m_WorkingDirectory; ///< Contains the root directory of the application's data.
-    mafString m_ApplicationDirectory; ///< Contains the application's working directory.
+    QString m_WorkingDirectory; ///< Contains the root directory of the application's data.
+    QString m_ApplicationDirectory; ///< Contains the application's working directory.
     mafCore::mafPluggedObjectsHash m_CustomPluggedObjectsHash; ///< Hash containing operations, views and all the plugged custom objects.
-    mafHash<mafString, mafLibrary *> m_LibraryHandlersHash; ///< Hash containing  the loaded plugins.
+    QHash<QString, QLibrary *> m_LibraryHandlersHash; ///< Hash containing  the loaded plugins.
     mafCore::mafHierarchy *m_Hierarchy; ///< VME Hierarchy
 };
 
-inline void mafLogic::setWorkingDirectory(const mafString wd) {
+inline void mafLogic::setWorkingDirectory(const QString wd) {
     m_WorkingDirectory =  QDir::toNativeSeparators(wd);
 #ifndef WIN32
     m_WorkingDirectory.replace('\\','/');
 #endif
 }
 
-inline mafString mafLogic::workingDirectory() const {
+inline QString mafLogic::workingDirectory() const {
     return m_WorkingDirectory;
 }
 

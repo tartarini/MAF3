@@ -32,7 +32,7 @@
 namespace mafCore {
 
 inline void AbortProgram(const char *file, int line, const char *bool_expression) {
-    mafMsgFatal("Program terminated in file: %s at line: %d on expression: %s", file, line, bool_expression);
+    qFatal("Program terminated in file: %s at line: %d on expression: %s", file, line, bool_expression);
 }
 
 } // mafCore

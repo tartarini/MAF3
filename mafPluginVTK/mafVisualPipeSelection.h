@@ -35,7 +35,7 @@ class MAFPLUGINVTKSHARED_EXPORT mafVisualPipeSelection : public mafResources::ma
 
 public:
     /// Object constructor;
-    mafVisualPipeSelection(const mafString code_location = "");
+    mafVisualPipeSelection(const QString code_location = "");
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);

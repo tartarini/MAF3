@@ -15,10 +15,10 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafMementoViewManager::mafMementoViewManager(const mafString code_location) : mafMemento(code_location) {
+mafMementoViewManager::mafMementoViewManager(const QString code_location) : mafMemento(code_location) {
 }
 
-mafMementoViewManager::mafMementoViewManager(const mafObjectBase *obj, const mafResourceList *vList, const mafString code_location) : mafMemento(code_location) {
+mafMementoViewManager::mafMementoViewManager(const mafObjectBase *obj, const mafResourceList *vList, const QString code_location) : mafMemento(code_location) {
     const QMetaObject* meta = obj->metaObject();
     setObjectClassType(meta->className());
 
@@ -28,7 +28,7 @@ mafMementoViewManager::mafMementoViewManager(const mafObjectBase *obj, const maf
     foreach(mafResource *v, *vList) {
         item.m_Name = "ViewType";
         item.m_Multiplicity = 1;
-        item.m_Value = mafVariant(v->metaObject()->className());
+        item.m_Value = QVariant(v->metaObject()->className());
         list->append(item);
     }
 }

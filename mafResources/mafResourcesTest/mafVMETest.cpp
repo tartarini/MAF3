@@ -31,23 +31,23 @@ class testVMEDataPipeCustom : public  mafDataPipe {
 
 public:
     /// Object constructor.
-    testVMEDataPipeCustom(const mafString code_location = "");
+    testVMEDataPipeCustom(const QString code_location = "");
 
     /// Initialize and create the pipeline
     /*virtual*/ void createPipe();
 
     /// Return the string variable initializated and updated from the data pipe.
-    mafString pipeline() {return m_PipeLine;}
+    QString pipeline() {return m_PipeLine;}
 
 public slots:
     /// Allow to execute and update the pipeline when something change
     /*virtual*/ void updatePipe(double t = -1);
 
 private:
-    mafString m_PipeLine; ///< Test Var.
+    QString m_PipeLine; ///< Test Var.
 };
 
-testVMEDataPipeCustom::testVMEDataPipeCustom(const mafString code_location) : mafDataPipe(code_location), m_PipeLine("") {
+testVMEDataPipeCustom::testVMEDataPipeCustom(const QString code_location) : mafDataPipe(code_location), m_PipeLine("") {
 }
 
 void testVMEDataPipeCustom::createPipe() {
@@ -57,7 +57,7 @@ void testVMEDataPipeCustom::createPipe() {
 void testVMEDataPipeCustom::updatePipe(double t) {
     Superclass::updatePipe();
     m_PipeLine = "Updated";
-    m_PipeLine.append(mafString::number(t));
+    m_PipeLine.append(QString::number(t));
 }
 //------------------------------------------------------------------------------------------
 
@@ -138,7 +138,7 @@ void mafVMETest::mafVMEMementeTest() {
     // Assign the previous memento and check the name again.
     // The name should be the empty string again.
     m_VME->setMemento(m);
-    mafString name;
+    QString name;
     name = m_VME->objectName();
     QVERIFY(name.isEmpty());
 

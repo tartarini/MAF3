@@ -31,7 +31,7 @@ public:
     mafNetworkConnector();
 
     /// create the unique instance of the client.
-    virtual void createClient(const mafString hostName, const unsigned int port) = 0;
+    virtual void createClient(const QString hostName, const unsigned int port) = 0;
 
     /// create the unique instance of the server.
     virtual void createServer(const unsigned int port) = 0;
@@ -40,23 +40,23 @@ public:
     virtual void startListen() = 0;
 
     /// Allow to send a network request.
-    virtual void send(const mafString event_id, mafEventArgumentsList *argList) = 0;
+    virtual void send(const QString event_id, mafEventArgumentsList *argList) = 0;
 
     /// retrieve an instance of the object
     virtual mafNetworkConnector *clone() = 0;
 
     /// retrieve the protocol type of the connector
-    mafString protocol();
+    QString protocol();
 
     /// register all the signals and slots
     virtual void initializeForEventBus() = 0;
 
 signals:
     /// signal for send a message to through network
-    void remoteCommunication(const mafString event_id, mafEventArgumentsList *argList);
+    void remoteCommunication(const QString event_id, mafEventArgumentsList *argList);
 
 protected:
-    mafString m_Protocol; ///< define the protocol of the connector (xmlrpc, soap, etc...)
+    QString m_Protocol; ///< define the protocol of the connector (xmlrpc, soap, etc...)
 };
 
 } //namespace mafEventBus

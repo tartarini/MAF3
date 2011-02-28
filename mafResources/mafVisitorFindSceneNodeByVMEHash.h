@@ -34,10 +34,10 @@ class MAFRESOURCESSHARED_EXPORT mafVisitorFindSceneNodeByVMEHash : public mafCor
 
 public:
     /// object constructor
-    mafVisitorFindSceneNodeByVMEHash(const mafString code_location = "");
+    mafVisitorFindSceneNodeByVMEHash(const QString code_location = "");
 
     /// overloaded object constructor
-    mafVisitorFindSceneNodeByVMEHash(const mafString hash_code, const mafString code_location);
+    mafVisitorFindSceneNodeByVMEHash(const QString hash_code, const QString code_location);
 
     /// Execute the defined operation on visited object passes as argument.
     /*virtual*/ void visit(mafObjectBase *object);
@@ -50,7 +50,7 @@ protected:
     /*virtual*/ ~mafVisitorFindSceneNodeByVMEHash();
 
 private:
-    mafString m_HashCode;
+    QString m_HashCode;
     mafSceneNode *m_SceneNode; ///< Scene node found corresponding to the given VME hash
 };
 

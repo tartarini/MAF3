@@ -17,10 +17,10 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-mafSceneNode::mafSceneNode(const mafString code_location) : mafObject(code_location), m_VisualPipe(NULL) {
+mafSceneNode::mafSceneNode(const QString code_location) : mafObject(code_location), m_VisualPipe(NULL) {
 }
 
-mafSceneNode::mafSceneNode(mafVME *vme, mafVisualPipe *visual_pipe, const mafString code_location) : mafObject(code_location), m_VME(vme), m_VisualPipe(visual_pipe) {
+mafSceneNode::mafSceneNode(mafVME *vme, mafVisualPipe *visual_pipe, const QString code_location) : mafObject(code_location), m_VME(vme), m_VisualPipe(visual_pipe) {
     connect(vme, SIGNAL(destroyed()), this, SIGNAL(destroyNode()));
     connect(vme, SIGNAL(detatched()), this, SIGNAL(destroyNode()));
 }
@@ -45,9 +45,9 @@ void mafSceneNode::visualPipeDestroyed() {
     this->m_VisualPipe = NULL;
 }
 
-void mafSceneNode::setVisualPipe(mafString visualPipeType) {
+void mafSceneNode::setVisualPipe(QString visualPipeType) {
     if(m_VisualPipe != NULL) {
-        mafString currentVisualPipeType = this->m_VisualPipe->metaObject()->className();
+        QString currentVisualPipeType = this->m_VisualPipe->metaObject()->className();
         if (visualPipeType.compare(currentVisualPipeType) == 0) {
             return;
         }

@@ -44,7 +44,7 @@ class testObjectCustomListener : public mafObject {
 
 public:
     /// constructor.
-    testObjectCustomListener(const mafString code_location = "");
+    testObjectCustomListener(const QString code_location = "");
 
     /// Return tha var's value.
     int var() {return m_Var;}
@@ -64,17 +64,17 @@ private:
     bool m_OneShot; ///< Test var.
 };
 
-testObjectCustomListener::testObjectCustomListener(const mafString code_location) : mafObject(code_location), m_Var(0), m_OneShot(true) {
+testObjectCustomListener::testObjectCustomListener(const QString code_location) : mafObject(code_location), m_Var(0), m_OneShot(true) {
 }
 
 void testObjectCustomListener::updateObject() {
     ++m_Var;
-    mafMsgDebug() << m_Var;
+    qDebug() << m_Var;
     if(m_OneShot) {
         QVERIFY(m_Var == 1);
     }
 
-    mafMsgDebug("timeout from manager reached!!");
+    qDebug("timeout from manager reached!!");
 }
 //-------------------------------------------------------------------------
 
@@ -144,12 +144,12 @@ void mafTimeManagerTest::createTimerTest() {
     argList.append(mafEventArgument(int, interval));
     argList.append(mafEventArgument(bool, true));
 
-    mafGenericReturnArgument value = mafEventReturnArgument(mafCore::mafId, m_TimerId);
+    QGenericReturnArgument value = mafEventReturnArgument(mafCore::mafId, m_TimerId);
     m_EventBus->notifyEvent("maf.local.time.create", mafEventTypeLocal, &argList, &value);
     QVERIFY(m_TimerId != -1);
 
     // Register the callback with the timer ID. Later on will be used in the test suite.
-    mafString timer_id = mafIdProvider::instance()->idName(m_TimerId);
+    QString timer_id = mafIdProvider::instance()->idName(m_TimerId);
     mafRegisterLocalCallback(timer_id, m_ObjectTest, "updateObject()");
 
     // The created timer is not active; call the mafTimeManager's startTimer method
@@ -158,7 +158,7 @@ void mafTimeManagerTest::createTimerTest() {
     argList.append(mafEventArgument(mafCore::mafId, m_TimerId));
 
     bool res(true);
-    mafGenericReturnArgument return_value = mafEventReturnArgument(bool, res);
+    QGenericReturnArgument return_value = mafEventReturnArgument(bool, res);
     m_EventBus->notifyEvent("maf.local.time.isRunning", mafEventTypeLocal, &argList, &return_value);
 
     QVERIFY(res == false);
@@ -180,7 +180,7 @@ void mafTimeManagerTest::startTimerTest() {
     timerLoop.start(interval);
     loop.exec();
 
-    mafMsgDebug() << "var value = " << m_ObjectTest->var();
+    qDebug() << "var value = " << m_ObjectTest->var();
 }
 void mafTimeManagerTest::startTimerOnThreadTest() {
     m_ObjectTest->resetVar();
@@ -195,7 +195,7 @@ void mafTimeManagerTest::startTimerOnThreadTest() {
 
     QTest::qWait(2000);
 
-    mafMsgDebug() << "var value = " << m_ObjectTest->var();
+    qDebug() << "var value = " << m_ObjectTest->var();
 }
 
 MAF_REGISTER_TEST(mafTimeManagerTest);

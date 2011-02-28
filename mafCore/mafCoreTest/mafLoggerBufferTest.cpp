@@ -24,9 +24,9 @@ using namespace mafCore;
 //! </title>
 //! <description>
 //mafLoggerBuffer defines the MAF3 logging class that will store messages into a buffer that
-//can be queried later or linked to a UI Widget. It defines the variable mafString m_BufferLog
+//can be queried later or linked to a UI Widget. It defines the variable QString m_BufferLog
 //containing all the logged messages for a specific session.
-//It also redifine "virtual void loggedMessage(mafMsgType type, mafString &msg)" used to log
+//It also redifine "virtual void loggedMessage(QtMsgType type, QString &msg)" used to log
 // the given message to the buffer.
 //! </description>
 
@@ -69,35 +69,35 @@ void mafLoggerBufferTest::mafLoggerBufferConstructorTest() {
 
 void mafLoggerBufferTest::logMessageTest() {
     //! <snippet>
-    mafString msg("Test for mafLoggerBuffer");
-    m_Logger->logMessage(mafMsgTypeDebug, msg);
+    QString msg("Test for mafLoggerBuffer");
+    m_Logger->logMessage(QtDebugMsg, msg);
     //! </snippet>
-    mafString res = "Debug: Test for mafLoggerBuffer\n";
-    mafString buf = m_Logger->bufferLog();
+    QString res = "Debug: Test for mafLoggerBuffer\n";
+    QString buf = m_Logger->bufferLog();
 
     QVERIFY(buf.contains(res));
 //    QCOMPARE(buf, res);
 
     res = ("Warning: Test for mafLoggerBuffer\n");
-    m_Logger->logMessage(mafMsgTypeWarning, msg);
+    m_Logger->logMessage(QtWarningMsg, msg);
     buf = m_Logger->bufferLog();
     QVERIFY(buf.contains(res));
 //    QCOMPARE(buf, res);
 
     res = ("Debug: via Msg Handler\n");
-    mafString msgDbg(res);
-    m_Logger->logMessage(mafMsgTypeDebug, msgDbg);
+    QString msgDbg(res);
+    m_Logger->logMessage(QtDebugMsg, msgDbg);
     buf = m_Logger->bufferLog();
     QVERIFY(buf.contains(res));
 //    QCOMPARE(buf, res);
 }
 
 void mafLoggerBufferTest::clearLogHistoryTest() {
-    mafString msg("Test for mafLoggerBuffer");
-    m_Logger->logMessage(mafMsgTypeDebug, msg);
+    QString msg("Test for mafLoggerBuffer");
+    m_Logger->logMessage(QtDebugMsg, msg);
 
     m_Logger->clearLogHistory();
-    mafString buf = m_Logger->bufferLog();
+    QString buf = m_Logger->bufferLog();
 
     QVERIFY(buf.isEmpty());
 }

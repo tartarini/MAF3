@@ -34,7 +34,7 @@ class MAFPLUGINVTKSHARED_EXPORT mafDataBoundaryAlgorithmVTK : public mafResource
 
 public:
     /// Object constructor.
-    mafDataBoundaryAlgorithmVTK(const mafString code_location = "");
+    mafDataBoundaryAlgorithmVTK(const QString code_location = "");
 
     /// Algorithm used to extract the boundary from the given data value and pose matrix.
     /* virtual */ mafCore::mafContainerInterface *calculateBoundary(mafCore::mafContainerInterface *data, mafResources::mafPoseMatrix *matrix = NULL);

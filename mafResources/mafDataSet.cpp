@@ -17,7 +17,7 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
 
-mafDataSet::mafDataSet(const mafString code_location) : mafObject(code_location), m_DataValue(NULL), m_DataBoundary(NULL), m_Matrix(NULL), m_DataBoundaryAlgorithm(NULL) {
+mafDataSet::mafDataSet(const QString code_location) : mafObject(code_location), m_DataValue(NULL), m_DataBoundary(NULL), m_Matrix(NULL), m_DataBoundaryAlgorithm(NULL) {
 }
 
 mafDataSet::~mafDataSet() {
@@ -77,8 +77,8 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
     // Design by contract condition.
     REQUIRE(memento != NULL);
     REQUIRE(memento->objectClassType() == this->metaObject()->className());
-    mafString codecType;
-    mafString dataType;
+    QString codecType;
+    QString dataType;
     int dataSize = 0;
 
     mafMementoPropertyList *list = memento->mementoPropertyList();
@@ -110,13 +110,13 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
         } else if (item.m_Name == "dataValue") {
             //Read from external file
             char *value;
-            mafByteArray stringArray;
+            QByteArray stringArray;
             mafEventArgumentsList argList;
             mafUrl url = QUrl::fromEncoded(item.m_Value.toByteArray());
             if (url.isValid()) {
-                mafString urlString = url.toString();
-                argList.append(mafEventArgument(mafString, urlString));
-                mafGenericReturnArgument ret_val = mafEventReturnArgument(mafByteArray, stringArray);
+                QString urlString = url.toString();
+                argList.append(mafEventArgument(QString, urlString));
+                QGenericReturnArgument ret_val = mafEventReturnArgument(QByteArray, stringArray);
                 mafEventBusManager::instance()->notifyEvent("maf.local.serialization.loadExternalData", mafEventTypeLocal, &argList, &ret_val);
                 value = (char*)stringArray.constData();
             } else {

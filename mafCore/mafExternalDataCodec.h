@@ -28,15 +28,15 @@ class MAFCORESHARED_EXPORT mafExternalDataCodec : public mafObjectBase {
 
 public:
     /// Object constructor.
-    mafExternalDataCodec(const mafString &code_location = "");
+    mafExternalDataCodec(const QString &code_location = "");
 
     /// Object constructor.
-    mafExternalDataCodec(mafContainerInterface *data, const mafString &code_location = "");
+    mafExternalDataCodec(mafContainerInterface *data, const QString &code_location = "");
 
-    /// Encode external data into a mafDataStream.
+    /// Encode external data into a QDataStream.
     virtual char *encode(bool binary = true) = 0;
 
-    /// Decode external data from the mafDataStream.
+    /// Decode external data from the QDataStream.
     virtual void decode(const char *input_string, bool binary = true) = 0;
 
     /// Allow to set the reference to the external data type. The memory deallocation is in charge at the caller.

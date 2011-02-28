@@ -88,7 +88,7 @@ void mafObjectFactoryTest::instantiateObjectBaseTest() {
     mafRegisterObject(mafCore::mafObject);
     mafObjectBase *obj = mafNEWFromString("mafCore::mafObject");
     QVERIFY(obj != NULL);
-    mafString cn = obj->metaObject()->className();
+    QString cn = obj->metaObject()->className();
     QVERIFY(cn == "mafCore::mafObject");
     mafDEL(obj);
 }

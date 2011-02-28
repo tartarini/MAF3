@@ -38,17 +38,17 @@ class  testParametricSurfaceCustom : public  mafVTKParametricSurface {
 
 public:
     /// Object constructor.
-    testParametricSurfaceCustom(const mafString code_location = "");
+    testParametricSurfaceCustom(const QString code_location = "");
 
     /// Update surface with parameters.
     /*virtual*/ void updateSurface();
 
 
 private:
-    mafString m_PipeLine; ///< Test Var.
+    QString m_PipeLine; ///< Test Var.
 };
 
-testParametricSurfaceCustom::testParametricSurfaceCustom(const mafString code_location) : mafVTKParametricSurface(code_location) {
+testParametricSurfaceCustom::testParametricSurfaceCustom(const QString code_location) : mafVTKParametricSurface(code_location) {
 }
 
 void testParametricSurfaceCustom::updateSurface() {

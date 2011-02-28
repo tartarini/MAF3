@@ -40,11 +40,11 @@ namespace mafSerialization {
 // Class forwarding list
 class mafCodec;
 
-typedef mafHash<mafString, mafString> mafEncodingHash; ///< Hash table that associate the object type name (mafObject, mafResource,...) and the the output data type (RAW, VTK, STL...)
-typedef mafHash<mafString, mafString> mafCodecHash; ///< Hash table that associate the output data type (RAW, VTK, STL...) and the corresponding codec type (mafCodecRaw...)
-typedef mafHash<mafString, mafString> mafSerializerHash; ///< Hash table that associate the URL schema with the corresponding serializer class (Eg. file, mafSerialization::mafSerializerFileSystem)
+typedef QHash<QString, QString> mafEncodingHash; ///< Hash table that associate the object type name (mafObject, mafResource,...) and the the output data type (RAW, VTK, STL...)
+typedef QHash<QString, QString> mafCodecHash; ///< Hash table that associate the output data type (RAW, VTK, STL...) and the corresponding codec type (mafCodecRaw...)
+typedef QHash<QString, QString> mafSerializerHash; ///< Hash table that associate the URL schema with the corresponding serializer class (Eg. file, mafSerialization::mafSerializerFileSystem)
 
-typedef mafList<mafString> mafEncodingList; ///< List of encoding types (RAW, STL ...).
+typedef QList<QString> mafEncodingList; ///< List of encoding types (RAW, STL ...).
 
 ///< Enum that identify the mafSerializer open modality.
 typedef enum {
@@ -56,7 +56,7 @@ typedef enum {
 ///< Enum that identify the data type
 typedef enum {
     mafUnsignedChar,
-    mafChar,
+    QChar,
     mafUnsignedShort,
     mafShort,
     mafUnsignedInt,

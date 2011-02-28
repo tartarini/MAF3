@@ -17,7 +17,7 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafPipe::mafPipe(const mafString code_location) : mafObject(code_location), m_InputList(NULL) {
+mafPipe::mafPipe(const QString code_location) : mafObject(code_location), m_InputList(NULL) {
     m_InputList = new mafVMEList();
 }
 
@@ -46,7 +46,7 @@ void mafPipe::removeInput(mafVME *vme) {
     if(idx != -1) {
         m_InputList->removeAt(idx);
     } else {
-        mafMsgWarning("%s", mafTr("Object %1 not present in input list").arg(vme->objectName()).toAscii().data());
+        qWarning("%s", mafTr("Object %1 not present in input list").arg(vme->objectName()).toAscii().data());
     }
 }
 
@@ -58,7 +58,7 @@ void mafPipe::removeInput(const int idx) {
         disconnect(vme, SIGNAL(destroyed()),this, SLOT(inputDestroyed()));
         m_InputList->removeAt(idx);
     } else {
-        mafMsgWarning("%s", mafTr("Index %1 outside input list range.").arg(idx).toAscii().data());
+        qWarning("%s", mafTr("Index %1 outside input list range.").arg(idx).toAscii().data());
     }
 }
 

@@ -40,7 +40,7 @@ class MAFPLUGINVTKSHARED_EXPORT mafDataPipeImageThreshold : public mafResources:
 
 public:
     /// Object constructor.
-    mafDataPipeImageThreshold(const mafString code_location = "");
+    mafDataPipeImageThreshold(const QString code_location = "");
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);

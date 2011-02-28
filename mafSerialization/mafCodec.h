@@ -29,10 +29,10 @@ namespace mafSerialization {
 
 public:
     /// Object constructor.
-    mafCodec(const mafString code_location = "");
+    mafCodec(const QString code_location = "");
 
     /// Return the codec output type
-    const mafString encodingType();
+    const QString encodingType();
 
     /// Encode the memento into the output type.
     virtual void encode(mafCore::mafMemento *memento) = 0;
@@ -47,7 +47,7 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafCodec();
 
-    mafString m_EncodingType; ///< Encoding type for the codec.
+    QString m_EncodingType; ///< Encoding type for the codec.
     mafIODevice *m_Device; ///< Media device.
     unsigned int m_Level; ///< Decoding level for compounded memento classes.
 };
@@ -56,7 +56,7 @@ protected:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline const mafString mafCodec::encodingType() {
+inline const QString mafCodec::encodingType() {
     return m_EncodingType;
 }
 

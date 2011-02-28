@@ -19,7 +19,7 @@ using namespace mafResources;
 using namespace mafEventBus;
 using namespace mafCore;
 
-mafOpParametricSurface::mafOpParametricSurface(const mafString code_location) : mafOperation(code_location), m_VME(NULL), m_DataSet(NULL) {
+mafOpParametricSurface::mafOpParametricSurface(const QString code_location) : mafOperation(code_location), m_VME(NULL), m_DataSet(NULL) {
     m_UIFilename = "mafOpParametricSurface.ui";
     m_ParametricSurfaceType = PARAMETRIC_SPHERE;
     m_ParametricSphere = NULL;
@@ -74,7 +74,7 @@ bool mafOpParametricSurface::acceptObject(mafCore::mafObjectBase *obj) {
     if(obj == NULL) {
         return false;
     }
-    mafString ct(obj->metaObject()->className());
+    QString ct(obj->metaObject()->className());
     return ct == "mafResources::mafVME";
 }
 
@@ -100,7 +100,7 @@ void mafOpParametricSurface::execute() {
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 }
 
-void mafOpParametricSurface::setParameters(mafList<mafVariant> parameters) {
+void mafOpParametricSurface::setParameters(QList<QVariant> parameters) {
     Q_UNUSED(parameters);
 }
 

@@ -30,18 +30,18 @@ class MAFCORESHARED_EXPORT mafMonitor : public mafObjectBase {
 
 public:
     /// Object constructor.
-    mafMonitor(const mafString code_location = "");
+    mafMonitor(const QString code_location = "");
 
     /// update space variables
     virtual void update() = 0;
 
     /// Return the monitor's results.
-    mafString *resultBuffer();
+    QString *resultBuffer();
 
 protected:
     /// Object destructor.
     /* virtual */ ~mafMonitor();
-    mafString m_ResultBuffer; ///< String buffer in which save the whole monitor result values.
+    QString m_ResultBuffer; ///< String buffer in which save the whole monitor result values.
 };
 
 
@@ -49,7 +49,7 @@ protected:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline mafString *mafMonitor::resultBuffer() {
+inline QString *mafMonitor::resultBuffer() {
     return &m_ResultBuffer;
 }
 

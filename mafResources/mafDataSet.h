@@ -42,7 +42,7 @@ signals:
 
 public:
     /// Object constructor.
-    mafDataSet(const mafString code_location = "");
+    mafDataSet(const QString code_location = "");
 
     /// Return the data boundary.
     mafCore::mafContainerInterface *dataBoundary();

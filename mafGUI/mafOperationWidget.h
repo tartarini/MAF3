@@ -45,7 +45,7 @@ public:
     void setOperation(mafCore::mafObjectBase *op);
 
     /// Assign the operation's name
-    void setOperationName(mafString name);
+    void setOperationName(QString name);
 
     /// Assign the operation's GUI
     void setOperationGUI(QWidget *gui);

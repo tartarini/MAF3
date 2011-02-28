@@ -36,10 +36,10 @@ class MAFRESOURCESSHARED_EXPORT mafInteractor : public mafCore::mafObjectBase {
 
 public:
     /// Object constructor
-    mafInteractor(const mafString code_location = "");
+    mafInteractor(const QString code_location = "");
 
     /// Object constructor
-    mafInteractor(mafCore::mafContainerInterfacePointer default_is, mafCore::mafContainerInterfacePointer edit_is = NULL, const mafString code_location = "");
+    mafInteractor(mafCore::mafContainerInterfacePointer default_is, mafCore::mafContainerInterfacePointer edit_is = NULL, const QString code_location = "");
 
     /// Allow to assign the default interaction style.
     void setDefaultInteractionStyle(mafCore::mafContainerInterfacePointer is);

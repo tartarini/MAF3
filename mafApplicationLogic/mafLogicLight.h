@@ -36,13 +36,13 @@ class MAFAPPLICATIONLOGICSHARED_EXPORT mafLogicLight : public mafCore::mafObject
 
 public:
     /// Object constructor.
-    mafLogicLight(const mafString code_location = "");
+    mafLogicLight(const QString code_location = "");
 
     /// Create and start the server for remote communication according to the given protocol and listen port.
-    bool startServer(const mafString &communication_protocol, unsigned int listen_port);
+    bool startServer(const QString &communication_protocol, unsigned int listen_port);
 
     /// Create the client for remote communication according to the given protocol, server host and port.
-    bool createClient(const mafString &communication_protocol, const mafString &server_host, unsigned int port);
+    bool createClient(const QString &communication_protocol, const QString &server_host, unsigned int port);
 
     /// send request from Client to Server
     void sendRequestToServer(mafEventBus::mafEvent *event_dict, mafEventBus::mafEventArgumentsList *argList = NULL);

@@ -13,7 +13,7 @@
 
 using namespace mafCore;
 
-mafLogger::mafLogger(const mafString code_location) : mafObjectBase(code_location), m_LogMode(mafLogModeAllMessages), m_Enabled(true) {
+mafLogger::mafLogger(const QString code_location) : mafObjectBase(code_location), m_LogMode(mafLogModeAllMessages), m_Enabled(true) {
 }
 
 mafLogger::~mafLogger() {
@@ -25,14 +25,14 @@ void mafLogger::setLogMode(const mafLogMode mode) {
     }
 }
 
-void mafLogger::logMessage(const mafMsgType type, mafString &msg) {
-    REQUIRE(type == mafMsgTypeCritical ||
-            type == mafMsgTypeDebug ||
-            type == mafMsgTypeFatal ||
-            type == mafMsgTypeWarning);
+void mafLogger::logMessage(const QtMsgType type, QString &msg) {
+    REQUIRE(type == QtCriticalMsg ||
+            type == QtDebugMsg ||
+            type == QtFatalMsg ||
+            type == QtWarningMsg);
 
-    if(type == mafMsgTypeCritical && m_LogMode != mafLogModeTestSuite) {
-        mafString failString(mafTr("FAIL! "));
+    if(type == QtCriticalMsg && m_LogMode != mafLogModeTestSuite) {
+        QString failString(mafTr("FAIL! "));
         msg.prepend(failString);
     }
     loggedMessage(type, msg);

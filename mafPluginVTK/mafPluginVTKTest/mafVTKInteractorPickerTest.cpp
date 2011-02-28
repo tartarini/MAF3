@@ -154,7 +154,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     QTest::qSleep(1000);
 
     //Create parametric surface used by picker
-    mafString surfaceType = "mafPluginVTK::mafVTKParametricSurfaceSphere";
+    QString surfaceType = "mafPluginVTK::mafVTKParametricSurfaceSphere";
     m_Picker->setSurface(surfaceType);
 
     //picking the actor
@@ -272,7 +272,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);*/
 
-    //mafMsgDebug() << "Finished Interactor Picker Test";
+    //qDebug() << "Finished Interactor Picker Test";
 }
 
 
