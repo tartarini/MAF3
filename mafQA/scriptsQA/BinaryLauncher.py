@@ -14,6 +14,29 @@ def find_executable(executable, path=None):
             return None
         else:
             return fullPathName
+            
+def qtestValidate(fileName):
+    from TestsValidator.QTestsValidator import QTestsValidator
+    val = QTestsValidator.QTestsValidator()
+    val.setFullPathInputFile(fileName)
+    val.validate()
+    
+def cppunitValidate(fileName):
+    print "cppunit already not implemented"
+
+def errhandler():
+   print "Unrecognized compiler"
+  
+def validate(fileName):
+    takeValidator = {
+    "QTest": qtestValidate,
+    "cppunit": cppunitValidate,
+    }
+    
+    try:
+        takeValidator.get(param['test-suite'],errhandler)(fileName)
+    except Exception, e:
+        print "Test suite not present" , e 
 
 def execute():
     scriptsDir = currentPathScript
@@ -53,17 +76,25 @@ def execute():
         executable = dir  + suffix
         if(os.path.exists(executable) or os.path.exists(executable + ".exe")):
             #print os.getcwd() + "/" + executable
-            os.system(execDir + "/" + executable)
+            absPath = os.path.join(execDir, executable)
+            logResult = absPath + "LOG.txt";
+            if(os.path.exists(logResult)):
+                os.remove(logResult)
+            #create file, and append results in it
+            os.system(absPath + " >> " + logResult);
+            name_key = "test-suite"
+            if name_key in param:
+                validate(logResult)
         else:
             print "Executable %s Not Present in %s" % (executable , execDir)
     os.chdir(scriptsDir)
 
 def usage():
-    print "python BinaryLauncher.py -d directory"
+    print "python BinaryLauncher.py -d directory -t test-suite"
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "d:", ["directory="])
+        opts, args = getopt.getopt(sys.argv[1:], "d:t:", ["directory=", "test-suite="] )
     except getopt.GetoptError, err:
         # print help information and exit:
         print str(err) # will print something like "option -a not recognized"
@@ -73,6 +104,8 @@ def main():
     for o, a in opts:
         if o in ("-d", "--directory"):
             param['directory'] = os.path.abspath(os.path.normpath(a))
+        elif o in ("-t", "--test-suite"):
+            param['test-suite'] = a
         else:
             assert False, "unhandled option"
     
