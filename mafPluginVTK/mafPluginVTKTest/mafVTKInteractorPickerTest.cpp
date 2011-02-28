@@ -276,6 +276,6 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
 }
 
 
-MAF_REGISTER_TEST(mafVTKInteractorPickerTest);
+//MAF_REGISTER_TEST(mafVTKInteractorPickerTest);
 #include "mafVTKInteractorPickerTest.moc"
 
