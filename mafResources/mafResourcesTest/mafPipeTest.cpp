@@ -30,23 +30,23 @@ class  testPipeCustom : public  mafPipe {
 
 public:
     /// Object constructor.
-    testPipeCustom(const mafString code_location = "");
+    testPipeCustom(const QString code_location = "");
 
     /// Initialize and create the pipeline
     /*virtual*/ void createPipe();
 
     /// Return the string variable initializated and updated from the data pipe.
-    mafString pipeline() {return m_PipeLine;}
+    QString pipeline() {return m_PipeLine;}
 
 public slots:
     /// Allow to execute and update the pipeline when something change
     /*virtual*/ void updatePipe(double t = -1);
 
 private:
-    mafString m_PipeLine; ///< Test Var.
+    QString m_PipeLine; ///< Test Var.
 };
 
-testPipeCustom::testPipeCustom(const mafString code_location) : mafPipe(code_location), m_PipeLine("") {
+testPipeCustom::testPipeCustom(const QString code_location) : mafPipe(code_location), m_PipeLine("") {
 }
 
 void testPipeCustom::createPipe() {
@@ -55,7 +55,7 @@ void testPipeCustom::createPipe() {
 
 void testPipeCustom::updatePipe(double t) {
     m_PipeLine = "Updated";
-    m_PipeLine.append(mafString::number(t));
+    m_PipeLine.append(QString::number(t));
 }
 //------------------------------------------------------------------------------------------
 
@@ -96,7 +96,7 @@ void mafPipeTest::mafPipeAllocationTest() {
 }
 
 void mafPipeTest::mafPipeCreationAndUpdateTest() {
-    mafString res("Created");
+    QString res("Created");
     m_Pipe->createPipe();
 
     QCOMPARE(m_Pipe->pipeline(), res);

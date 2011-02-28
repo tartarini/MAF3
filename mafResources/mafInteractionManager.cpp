@@ -23,7 +23,7 @@ mafInteractionManager* mafInteractionManager::instance() {
 void mafInteractionManager::shutdown() {
 }
 
-mafInteractionManager::mafInteractionManager(const mafString code_location) : mafObjectBase(code_location) {
+mafInteractionManager::mafInteractionManager(const QString code_location) : mafObjectBase(code_location) {
     initializeConnections();
 }
 
@@ -71,7 +71,7 @@ void mafInteractionManager::vmeSelected(mafVME *vme) {
 }
 
 void mafInteractionManager::leftButtonPress() {
-    mafMsgDebug() << "left mouse button pressed!!";
+    qDebug() << "left mouse button pressed!!";
 }
 
 void mafInteractionManager::leftButtonRelease() {

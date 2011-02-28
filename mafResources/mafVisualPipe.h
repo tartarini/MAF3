@@ -32,7 +32,7 @@ class MAFRESOURCESSHARED_EXPORT mafVisualPipe : public mafPipe {
 
 public:
      /// Object constructor.
-    mafVisualPipe(const mafString code_location = "");
+    mafVisualPipe(const QString code_location = "");
 
     /// Get output of the pipe.
     mafCore::mafContainerInterface *output();

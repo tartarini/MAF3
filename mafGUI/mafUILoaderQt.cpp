@@ -16,13 +16,13 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafGUI;
 
-mafUILoaderQt::mafUILoaderQt(const mafString code_location) : mafUILoader(code_location) {
+mafUILoaderQt::mafUILoaderQt(const QString code_location) : mafUILoader(code_location) {
 }
 
 mafUILoaderQt::~mafUILoaderQt() {
 }
 
-void mafUILoaderQt::uiLoad(const mafString &fileName) {
+void mafUILoaderQt::uiLoad(const QString &fileName) {
     QFile file(fileName.toAscii());
     file.open(QFile::ReadOnly);
     mafContainer<QWidget> *arg = new mafContainer<QWidget>();

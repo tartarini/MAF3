@@ -86,7 +86,7 @@ private:
     mafCore::mafHierarchy *m_Hierarchy; ///< hierarchy from which construct the model
     mafTreeItem *m_CurrentItem; ///< current item of the model
 
-    mafList<mafTreeItem *> m_ItemsList; ///< variable useful for rapid iteration between mafTreeItem
+    QList<mafTreeItem *> m_ItemsList; ///< variable useful for rapid iteration between mafTreeItem
 };
 
 } //end namespace

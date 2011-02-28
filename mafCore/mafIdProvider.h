@@ -30,21 +30,21 @@ public:
     /** Return next valid Id to assign to an object or to use for an event.
     By default, if no name is given to the ID, a OBJECT_ID name is assigned.
     If you try to create a new ID by using an existing name, the previous defined ID is returned and no new ID is created.*/
-    mafId createNewId(const mafString id_name = "");
+    mafId createNewId(const QString id_name = "");
 
     /// Allow to remove a previously created Id.
-    bool removeId(const mafString id_name);
+    bool removeId(const QString id_name);
 
     /// Change (or allows to customize) the name associated to the ID. Return true on success, otherwise false.
-    bool setIdName(const mafId id, const mafString id_name);
+    bool setIdName(const mafId id, const QString id_name);
 
     /// Return the ID name corresponding to the value.
     /** The function returns the string associated with the numeric ID. If the passed value doesn't exist, an empty string is returned.*/
-    const mafString idName(const mafId id_value) const;
+    const QString idName(const mafId id_value) const;
 
     /// Return the ID value given to the id_name
     /** The function returns the numeric ID associated with the string passed as argument. If the string name is not present, -1 is returned.*/
-    mafId idValue(const mafString id_name) const;
+    mafId idValue(const QString id_name) const;
 
     /// Destroy the singleton instance. To be called at the end of the application.
     void shutdown();
@@ -57,7 +57,7 @@ private:
     ~mafIdProvider();
 
     /// Types definitions (to be more readable).
-    typedef mafHash<mafId, mafString> mafIdHashType;
+    typedef QHash<mafId, QString> mafIdHashType;
 
     mafIdHashType m_IdHash; ///< Hash that store the associations between IDs and corresponding strings.
 

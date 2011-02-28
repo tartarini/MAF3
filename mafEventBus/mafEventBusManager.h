@@ -46,25 +46,25 @@ public:
     /** This method allows to remove from the observer's hash the object
     passed as argument. If no topic is specified, the observer will be removed from all
     the topic it was listening, otherwise it will be disconnected only from the given topic.*/
-    void removeObserver(const QObject *obj, const mafString topic = "", bool qt_disconnect = true);
+    void removeObserver(const QObject *obj, const QString topic = "", bool qt_disconnect = true);
 
     /// Remove the object passed as argument from the signal emitter's hash.
     /** This method allows to remove from the signal emitter's hash the object
     passed as argument. If no topic is specified, the emitter will be removed from all
     the topic it was emitting signals, otherwise it will be removed only from the given topic.*/
-    void removeSignal(const QObject *obj, mafString topic = "", bool qt_disconnect = true);
+    void removeSignal(const QObject *obj, QString topic = "", bool qt_disconnect = true);
 
     /// Notify events associated to the given id locally to the application.
-    void notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList = NULL, mafGenericReturnArgument *returnArg = NULL) const;
+    void notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList = NULL, QGenericReturnArgument *returnArg = NULL) const;
 
     /// Notify event associated to the given id locally to the application.
-    void notifyEvent(const mafString topic, mafEventType ev_type = mafEventTypeLocal, mafEventArgumentsList *argList = NULL, mafGenericReturnArgument *returnArg = NULL) const;
+    void notifyEvent(const QString topic, mafEventType ev_type = mafEventTypeLocal, mafEventArgumentsList *argList = NULL, QGenericReturnArgument *returnArg = NULL) const;
 
     /// Enable/Disable event logging to allow dumping events notification into the selected logging output stream.
     void enableEventLogging(bool enable = true);
 
     /// When logging is enabled, allows logging events releted to specific id (require a valid topic).
-    void logEventTopic(const mafString topic);
+    void logEventTopic(const QString topic);
 
     /// When enabled, allows logging all events. It reset the value for m_LogEventId to -1 (the default)
     void logAllEvents();
@@ -76,19 +76,19 @@ public:
     void initializeNetworkConnectors();
 
     /// Retrieve if the signal has been registered previously.
-    bool isLocalSignalPresent(const mafString topic) const;
+    bool isLocalSignalPresent(const QString topic) const;
 
     /// Plug a new network connector into the connector hash for the given network protocol (protocol eg. "XMLRPC") (connector_type eg. "mafEventBus::mafNetworkConnectorQXMLRPC").
-    void plugNetworkConnector(const mafString &protocol, mafNetworkConnector *connector);
+    void plugNetworkConnector(const QString &protocol, mafNetworkConnector *connector);
 
     /// Create the server for remote communication according to the given protocol and listen port.
-    bool createServer(const mafString &communication_protocol, unsigned int listen_port);
+    bool createServer(const QString &communication_protocol, unsigned int listen_port);
 
     /// Allow to start server listening.
     void startListen();
 
     /// Create the client for remote communication according to the given protocol, server host and port.
-    bool createClient(const mafString &communication_protocol, const mafString &server_host, unsigned int port);
+    bool createClient(const QString &communication_protocol, const QString &server_host, unsigned int port);
 
 public slots:
     /// Intercepts objects deletation and detach them from the event bus.
@@ -105,7 +105,7 @@ private:
     mafEventDispatcherRemote *m_RemoteDispatcher; ///< Dispatcher class dispatches events remotely to another applications or via network.
 
     bool m_EnableEventLogging; ///< Flag to enable/disable logging for event sent.
-    mafString m_LogEventTopic; ///< Store the current Event_Id to track through the logger.
+    QString m_LogEventTopic; ///< Store the current Event_Id to track through the logger.
     mafNetworkConnectorHash m_NetworkConnectorHash; ///< Hash table used to store the association of network protocols and network connector types.
 
     bool m_SkipDetach; ///< lifesafe variable to avoid the detach from eventbus.

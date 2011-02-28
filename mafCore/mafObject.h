@@ -36,7 +36,7 @@ class MAFCORESHARED_EXPORT mafObject : public mafObjectBase {
 
 public:
     /// Object constructor.
-    mafObject(const mafString code_location = "");
+    mafObject(const QString code_location = "");
 
     /// Used in MAF3 design by contract to check object's validity.
     /** isObjectValid methods play an important role in checking the consistency
@@ -63,10 +63,10 @@ public:
     bool selected() const;
 
     /// Allow to set the filename representing the icon file associated with the object.
-    void setIconFile(mafString icon_file);
+    void setIconFile(QString icon_file);
 
     /// Return the filename associated with the object.
-    mafString iconFile() const;
+    QString iconFile() const;
 
     /// Return the instance of the object's status. The caller has to delete the allocated memento memory he asked for.
     virtual mafMemento *createMemento() const;
@@ -84,33 +84,33 @@ public:
     categorize it in the cloud of MAF3 objects (like a photo tags on Flickr).
     This method return true if the tag is added correctly, otherwise false.
     It return false also if you are trying to add and already added tag.*/
-    bool addTag(mafString tag);
+    bool addTag(QString tag);
 
     /// Remove from the tag list the given string tag.
-    bool removeTag(mafString tag);
+    bool removeTag(QString tag);
 
     /// Find all the tags that match the given string patter and put the result into the 'filtered_list argument.
-    void filterTags(mafString tag_pattern, mafTagList *filtered_list);
+    void filterTags(QString tag_pattern, QVariantList *filtered_list);
 
     /// Return the list of all tag inserted.
-    const mafTagList *tagList() const;
+    const QVariantList *tagList() const;
 
     /// Return the dictionary associated to the object.
     mafDictionary *dictionary() const;
 
 public slots:
     /// Method used to initialize the object's tag list.
-    void setTagList(const mafTagList &list);
+    void setTagList(const QVariantList &list);
 
 protected:
     /// Object destructor.
     /* virtual */ ~mafObject();
     bool m_Selected; ///< Flag used to store the selection flag of the owned VME.
-    mafString m_IconFIle; ///< Filename associated to the icon file to use with the object.
+    QString m_IconFIle; ///< Filename associated to the icon file to use with the object.
 
 private:
     bool m_Modified; ///< Contains the modified state of the VME.
-    mafTagList *m_TagList; ///< Tag list that categorize the object.
+    QVariantList *m_TagList; ///< Tag list that categorize the object.
     mafDictionary* m_Dictionary; ///< Dictionary associated to the object.
 };
 
@@ -126,11 +126,11 @@ inline bool mafObject::selected() const {
     return m_Selected;
 }
 
-inline mafString mafObject::iconFile() const {
+inline QString mafObject::iconFile() const {
     return m_IconFIle;
 }
 
-inline const mafTagList *mafObject::tagList() const {
+inline const QVariantList *mafObject::tagList() const {
     return m_TagList;
 }
 

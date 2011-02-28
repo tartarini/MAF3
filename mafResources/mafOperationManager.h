@@ -51,23 +51,23 @@ public:
     /// Destroy the singleton instance. To be called at the end of the application.
     void shutdown();
 
-    typedef mafMap<mafString, bool> OperationAcceptVMEMap; /// typedef for creating a map which stores if the current vme has been accepted as input by the operation
+    typedef QMap<QString, bool> OperationAcceptVMEMap; /// typedef for creating a map which stores if the current vme has been accepted as input by the operation
 
 signals:
     /// start operation and set that operation as current one
-    void startOperationSignal(const mafString operation);
+    void startOperationSignal(const QString operation);
 
     /// Notification signal for started operation.
     void operationDidStart(mafCore::mafObjectBase *operation);
 
     /// set the parameters to the current started operation
-    void setOperationParametersSignal(mafList<mafVariant> parameters);
+    void setOperationParametersSignal(QList<QVariant> parameters);
 
     /// execute current operation
     void executeOperationSignal();
 
     /// Signal that allows to start an operation with some optionals parameters.
-    void executeWithParametersSignal(mafList<mafVariant> parameters);
+    void executeWithParametersSignal(QList<QVariant> parameters);
 
     /// stop current operation
     void stopOperationSignal();
@@ -92,16 +92,16 @@ signals:
 
 private slots:
     /// start operation and set that operation as current one
-    void startOperation(const mafString operation);
+    void startOperation(const QString operation);
 
     /// set the parameters to the current started operation
-    void setOperationParameters(mafList<mafVariant> parameters);
+    void setOperationParameters(QList<QVariant> parameters);
 
     /// execute current operation
     void executeOperation();
 
     /// initialize the given operation (first element of the list), pass to it the given (optionals) parameters as second element of the list and start the execution of the operation.
-    void executeWithParameters(mafList<mafVariant> op_with_parameters);
+    void executeWithParameters(QList<QVariant> op_with_parameters);
 
     /// called when a vme has been selected.
     void vmeSelect(mafCore::mafObjectBase *vme);
@@ -136,10 +136,10 @@ private:
     void initializeConnections();
 
     /// Object constructor.
-    mafOperationManager(const mafString code_location = "");
+    mafOperationManager(const QString code_location = "");
 
     mafOperation *m_LastExecutedOperation; ///< Last executed operation
-    mafLinkedList<mafOperation *> m_UndoStack; ///< Undo stack which is a linked list of operations
+    QLinkedList<mafOperation *> m_UndoStack; ///< Undo stack which is a linked list of operations
     mafOperation *m_CurrentOperation; ///< Current operation handled by th manager
 //    mafResourceList m_OperationsList; ///< List of plugged operations.
 //    OperationAcceptVMEMap m_OperationAcceptCurentVMEMap; /// Map which determines if the current vme can be input of the operations

@@ -34,38 +34,38 @@ public:
     /*virtual*/ ~mafContainerInterface() {}
 
     /// Return the data type for the external data wrapped.
-    mafString externalDataType();
+    QString externalDataType();
 
     /// Return the codec type for the external data wrapped.
-    mafString externalCodecType();
+    QString externalCodecType();
 
     /// Set the data type for the external wrapped data.
-    void setExternalDataType(const mafString data_type);
+    void setExternalDataType(const QString data_type);
 
     /// Set the data type for the external wrapped data.
-    void setExternalCodecType(const mafString codec_type);
+    void setExternalCodecType(const QString codec_type);
 
     /// Check if the object is equal to that passed as argument.
     virtual bool isEqual(mafContainerInterface *container);
 
 protected:
-    mafString m_ExternalDataType; ///< Store the data type for the external wrapped data.
-    mafString m_ExternalCodecType; ///< Store the codec type for the external wrapped data.
+    QString m_ExternalDataType; ///< Store the data type for the external wrapped data.
+    QString m_ExternalCodecType; ///< Store the codec type for the external wrapped data.
 };
 
-inline void mafContainerInterface::setExternalDataType(const mafString data_type) {
+inline void mafContainerInterface::setExternalDataType(const QString data_type) {
     m_ExternalDataType = data_type;
 }
 
-inline void mafContainerInterface::setExternalCodecType(const mafString codec_type) {
+inline void mafContainerInterface::setExternalCodecType(const QString codec_type) {
     m_ExternalCodecType = codec_type;
 }
 
-inline mafString mafContainerInterface::externalDataType() {
+inline QString mafContainerInterface::externalDataType() {
     return m_ExternalDataType;
 }
 
-inline mafString mafContainerInterface::externalCodecType() {
+inline QString mafContainerInterface::externalCodecType() {
     return m_ExternalCodecType;
 }
 

@@ -15,10 +15,10 @@
 
 using namespace mafCore;
 
-mafMementoObject::mafMementoObject(const mafString code_location) : mafMemento(code_location) {
+mafMementoObject::mafMementoObject(const QString code_location) : mafMemento(code_location) {
 }
 
-mafMementoObject::mafMementoObject(const mafObject *obj, const mafTagList *tagList, mafDictionary *dic, const mafString code_location) : mafMemento(obj, code_location) {
+mafMementoObject::mafMementoObject(const mafObject *obj, const QVariantList *tagList, mafDictionary *dic, const QString code_location) : mafMemento(obj, code_location) {
     mafMementoPropertyList *list = mementoPropertyList();
     int i = 0;
     const QMetaObject *meta = obj->metaObject();
@@ -26,9 +26,9 @@ mafMementoObject::mafMementoObject(const mafObject *obj, const mafTagList *tagLi
     for ( ; i < num; ++i) {
         mafMementoPropertyItem item;
         const QMetaProperty qmp = meta->property(i);
-        mafString propName = qmp.name();
+        QString propName = qmp.name();
 
-        mafVariant value = obj->property(propName.toAscii());
+        QVariant value = obj->property(propName.toAscii());
         item.m_Multiplicity = 1;
         item.m_Name = qmp.name();
         item.m_Value = value;

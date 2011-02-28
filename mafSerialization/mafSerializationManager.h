@@ -47,22 +47,22 @@ public:
 
 signals:
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
-    void save(mafCore::mafMemento *memento, const mafString &url, const mafString &encode_type = "RAW");
+    void save(mafCore::mafMemento *memento, const QString &url, const QString &encode_type = "RAW");
 
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
-    void load(const mafString &url, const mafString &encode_type);
+    void load(const QString &url, const QString &encode_type);
 
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
-    void exportData(mafCore::mafContainerInterface *externalData, const mafString &url, const mafString &encode_type = "RAW");
+    void exportData(mafCore::mafContainerInterface *externalData, const QString &url, const QString &encode_type = "RAW");
 
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
-    void importData(const mafString &url, const mafString &encode_type);
+    void importData(const QString &url, const QString &encode_type);
 
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
-    void saveExtData(char *externalDataString, const mafString &url, int stringSize);
+    void saveExtData(char *externalDataString, const QString &url, int stringSize);
 
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
-    mafByteArray loadExtData(const mafString &url);
+    QByteArray loadExtData(const QString &url);
 
     /// Alert all the observers that a new memento has been loaded from the media.
     void mementoLoaded(mafCore::mafMemento *m);
@@ -71,45 +71,45 @@ signals:
     void extDataImported(mafCore::mafContainerInterface *data);
 
        /// Signal needed to register new type of custom codec.
-    void plugCodecInModule(const mafString &object_type, const mafString &encoding_type, const mafString &codecType = "RAW");
+    void plugCodecInModule(const QString &object_type, const QString &encoding_type, const QString &codecType = "RAW");
 
     /// Signal needed to register custom type of serializer.
-    void plugSerializerInModule(const mafString &schema, const mafString &serializer_type);
+    void plugSerializerInModule(const QString &schema, const QString &serializer_type);
 
 private slots:
     /// Manage the save for the given object.
     /** The 'url' parameter is used to tell the Manager on which media type store the memento.
     This information is written into the url protocol. The last optional parameter (encode_type) is used to customize
     the memento encoding. The default is the raw memory dump, otherwise pass a string for the custom type like 'VTK', 'STL' and so on.*/
-    void saveMemento(mafCore::mafMemento *memento, const mafString &url, const mafString &encode_type = "RAW");
+    void saveMemento(mafCore::mafMemento *memento, const QString &url, const QString &encode_type = "RAW");
 
     /// Manage the load of the memento hierarchy from the given URL and decode it according to the given encoding type.
     /** The Serialization Manager extract the protocol from the URL given and create an instance of the related mafSerializer
     that allows to read data from the physical media. Then the manager create the codec necessary to decode the content read
     and reconstruct the memento hierarchy. When the memento has been created, an event is launched to alert the menegers
     that the new memento is live and has to be reconstructed the correct resource associated to it.*/
-    void loadMemento(const mafString &url, const mafString &encode_type);
+    void loadMemento(const QString &url, const QString &encode_type);
 
     /// Manage the export for the given object.
-    void exportExternalData(mafCore::mafContainerInterface *externalData, const mafString &url, const mafString &encode_type);
+    void exportExternalData(mafCore::mafContainerInterface *externalData, const QString &url, const QString &encode_type);
 
     /// Manage the import of an external data from the given URL and decode it according to the given encoding type.
-    void importExternalData(const mafString &url, const mafString &encode_type);
+    void importExternalData(const QString &url, const QString &encode_type);
 
     /// Manage the load of an external data from the given URL and decode it according to the given encoding type.
-    mafByteArray loadExternalData(const mafString &url);
+    QByteArray loadExternalData(const QString &url);
 
     /// Manage the save for the given object.
-    void saveExternalData(char *externalDataString, const mafString &url, int stringSize);
+    void saveExternalData(char *externalDataString, const QString &url, int stringSize);
 
     /// Return the list of encoding type (RAW, VTK, STL...) associated to the given memento.
     mafEncodingList encodingTypeList(const mafCore::mafMemento *memento = NULL);
 
     /// Plug a new codec into the codec hash for the given object type (object_type eg. mafResources::mafVMESurface) (encoding_type eg. "VTK") (codec_type eg. mafCodecVTK).
-    void plugCodec(const mafString &object_type, const mafString &encoding_type, const mafString &codecType = "RAW");
+    void plugCodec(const QString &object_type, const QString &encoding_type, const QString &codecType = "RAW");
 
     /// Plug a new serializer into the serializer hash for the given schema (schema eg. "file") (serializer_type eg. "mafSerialization::mafSerializerFileSystem").
-    void plugSerializer(const mafString &schema, const mafString &serializer_type);
+    void plugSerializer(const QString &schema, const QString &serializer_type);
 
 protected:
     /// Object destructor.
@@ -118,7 +118,7 @@ protected:
 private:
     /// Object constructor.
     /** Here are the plug for the default MAF3 codec and serializer.*/
-    mafSerializationManager(const mafString code_location = "");
+    mafSerializationManager(const QString code_location = "");
 
     /// Initialize the signals / slots connection and generate the IDs needed for the communication with the Serialization Module.
     void initializeConnections();
@@ -127,9 +127,9 @@ private:
     mafCodecHash m_CodecHash; ///< Hash table that store the binding between encoding types (eg. "VTK") and related codec types (eg. mafCodecVTK).
     mafSerializerHash m_SerializerHash; ///< Hash table that store the binding between URL schema and serializer type.
 
-    mafString m_MementoLoadedId; ///< ID related to the signal 'maf.local.serialization.mementoLoaded' invoked when new memento has been created during load operation.
+    QString m_MementoLoadedId; ///< ID related to the signal 'maf.local.serialization.mementoLoaded' invoked when new memento has been created during load operation.
 
-    mafString m_ExtDataImportedId; ///< ID related to the signal 'maf.local.serialization.extDataImported' invoked when new external data has been created during load operation.
+    QString m_ExtDataImportedId; ///< ID related to the signal 'maf.local.serialization.extDataImported' invoked when new external data has been created during load operation.
 };
 
 /////////////////////////////////////////////////////////////

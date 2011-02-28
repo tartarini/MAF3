@@ -49,7 +49,7 @@ void mafMementoTest::mafMementoConstructorTest() {
 }
 
 void mafMementoTest::classTypeMementoTest() {
-    mafString ct("mafCustomType");
+    QString ct("mafCustomType");
     m_Memento->setObjectClassType(ct);
 
     mafMementoPropertyItem item;
@@ -62,7 +62,7 @@ void mafMementoTest::classTypeMementoTest() {
 
 void mafMementoTest::isEqualTest() {
     mafMemento *memento = mafNEW(mafCore::mafMemento);
-    mafString ct("differentClassType");
+    QString ct("differentClassType");
     memento->setObjectClassType(ct);
     bool res = m_Memento->isEqual(memento);
     QVERIFY(res == false);

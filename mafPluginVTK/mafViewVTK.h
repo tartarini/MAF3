@@ -38,13 +38,13 @@ class MAFPLUGINVTKSHARED_EXPORT mafViewVTK : public mafResources::mafView {
 
 public:
     /// Object constructor.
-    mafViewVTK(const mafString code_location = "");
+    mafViewVTK(const QString code_location = "");
 
     /*virtual*/ void create();
 
     /*virtual*/ void removeSceneNode(mafResources::mafSceneNode *node);
 
-    /*virtual*/ void showSceneNode(mafResources::mafSceneNode *node, bool show = true, const mafString visualPipeType = "");
+    /*virtual*/ void showSceneNode(mafResources::mafSceneNode *node, bool show = true, const QString visualPipeType = "");
 
 protected:
     /// Object destructor.

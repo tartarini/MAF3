@@ -144,17 +144,17 @@ void mafEventDispatcherLocalTest::mafEventDispatcherLocalAllocationTest() {
 void mafEventDispatcherLocalTest::notifyEventWithoutReturnValueTest() {
 
     //test with events which returns no value
-    mafString topic0 = "maf.local.setObjectValue0";
-    mafString topic1 = "maf.local.setObjectValue1";
-    mafString topic2 = "maf.local.setObjectValue2";
-    mafString topic3 = "maf.local.setObjectValue3";
-    mafString topic4 = "maf.local.setObjectValue4";
-    mafString topic5 = "maf.local.setObjectValue5";
-    mafString topic6 = "maf.local.setObjectValue6";
-    mafString topic7 = "maf.local.setObjectValue7";
-    mafString topic8 = "maf.local.setObjectValue8";
-    mafString topic9 = "maf.local.setObjectValue9";
-    mafString topic10 = "maf.local.setObjectValue10";
+    QString topic0 = "maf.local.setObjectValue0";
+    QString topic1 = "maf.local.setObjectValue1";
+    QString topic2 = "maf.local.setObjectValue2";
+    QString topic3 = "maf.local.setObjectValue3";
+    QString topic4 = "maf.local.setObjectValue4";
+    QString topic5 = "maf.local.setObjectValue5";
+    QString topic6 = "maf.local.setObjectValue6";
+    QString topic7 = "maf.local.setObjectValue7";
+    QString topic8 = "maf.local.setObjectValue8";
+    QString topic9 = "maf.local.setObjectValue9";
+    QString topic10 = "maf.local.setObjectValue10";
 
     //signal
     mafEvent *propSignal0 = new mafEventBus::mafEvent(topic0, mafEventTypeLocal, mafSignatureTypeSignal, m_ObjTest, "signalSetObjectValue0()");
@@ -237,8 +237,8 @@ void mafEventDispatcherLocalTest::notifyEventWithoutReturnValueTest() {
         }
 
         mafEvent *notEvent = new mafEventBus::mafEvent();
-        mafString topicToNotify = "maf.local.setObjectValue";
-        topicToNotify.append(mafString::number(argCounter));
+        QString topicToNotify = "maf.local.setObjectValue";
+        topicToNotify.append(QString::number(argCounter));
         notEvent->setEventTopic(topicToNotify);
 
         m_EventDispatcherLocal->notifyEvent(*notEvent, &argList);
@@ -277,17 +277,17 @@ void mafEventDispatcherLocalTest::notifyEventWithoutReturnValueTest() {
 void mafEventDispatcherLocalTest::notifyEventWitReturnValueTest() {
 
     //test with events which returns no value
-    mafString topic0 = "maf.local.setObjectValue0WithReturnValue";
-    mafString topic1 = "maf.local.setObjectValue1WithReturnValue";
-    mafString topic2 = "maf.local.setObjectValue2WithReturnValue";
-    mafString topic3 = "maf.local.setObjectValue3WithReturnValue";
-    mafString topic4 = "maf.local.setObjectValue4WithReturnValue";
-    mafString topic5 = "maf.local.setObjectValue5WithReturnValue";
-    mafString topic6 = "maf.local.setObjectValue6WithReturnValue";
-    mafString topic7 = "maf.local.setObjectValue7WithReturnValue";
-    mafString topic8 = "maf.local.setObjectValue8WithReturnValue";
-    mafString topic9 = "maf.local.setObjectValue9WithReturnValue";
-    mafString topic10 = "maf.local.setObjectValue10WithReturnValue";
+    QString topic0 = "maf.local.setObjectValue0WithReturnValue";
+    QString topic1 = "maf.local.setObjectValue1WithReturnValue";
+    QString topic2 = "maf.local.setObjectValue2WithReturnValue";
+    QString topic3 = "maf.local.setObjectValue3WithReturnValue";
+    QString topic4 = "maf.local.setObjectValue4WithReturnValue";
+    QString topic5 = "maf.local.setObjectValue5WithReturnValue";
+    QString topic6 = "maf.local.setObjectValue6WithReturnValue";
+    QString topic7 = "maf.local.setObjectValue7WithReturnValue";
+    QString topic8 = "maf.local.setObjectValue8WithReturnValue";
+    QString topic9 = "maf.local.setObjectValue9WithReturnValue";
+    QString topic10 = "maf.local.setObjectValue10WithReturnValue";
 
     //signal
     mafEvent *propSignal0 = new mafEventBus::mafEvent(topic0, mafEventTypeLocal, mafSignatureTypeSignal, m_ObjTest, "signalSetObjectValue0WithReturnValue()");
@@ -360,7 +360,7 @@ void mafEventDispatcherLocalTest::notifyEventWitReturnValueTest() {
 
     mafEventArgumentsList argList;
     int returnValue = -1;
-    mafGenericReturnArgument ret_val = mafEventReturnArgument(int,returnValue);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(int,returnValue);
 
     int argCounter=0;
     bool ret(false);
@@ -372,8 +372,8 @@ void mafEventDispatcherLocalTest::notifyEventWitReturnValueTest() {
         }
 
         mafEvent *notEvent = new mafEventBus::mafEvent();
-        mafString topicToNotify = "maf.local.setObjectValue";
-        topicToNotify.append(mafString::number(argCounter));
+        QString topicToNotify = "maf.local.setObjectValue";
+        topicToNotify.append(QString::number(argCounter));
         topicToNotify.append("WithReturnValue");
         notEvent->setEventTopic(topicToNotify);
 

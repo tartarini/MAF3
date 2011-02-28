@@ -28,22 +28,22 @@ void mafObjectFactory::shutdown() {
 
 }
 
-bool mafObjectFactory::unregisterObject( const mafString& className ) {
+bool mafObjectFactory::unregisterObject( const QString& className ) {
     // The return value of the 'remove' operation is the number of object removed.
     int res = m_ObjectMap.remove(className);
     return res != 0;
 }
 
-bool mafObjectFactory::isObjectRegistered( const mafString &className ) {
+bool mafObjectFactory::isObjectRegistered( const QString &className ) {
     return m_ObjectMap.contains(className);
 }
 
-mafObjectBase *mafObjectFactory::instantiateObjectBase( const mafString &className, const mafString location) {
+mafObjectBase *mafObjectFactory::instantiateObjectBase( const QString &className, const QString location) {
     // Check the existence of object type into the hash and then return its instance.
     if (isObjectRegistered(className)) {
         return m_ObjectMap.value(className)->make(location);
     } else {
-        mafMsgWarning() << mafTr("Can not create object instance of type: ") << className;
+        qWarning() << mafTr("Can not create object instance of type: ") << className;
         return NULL;
     }
 }

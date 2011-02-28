@@ -30,7 +30,7 @@ class MAFSERIALIZATIONSHARED_EXPORT mafCodecRaw : public mafCodec {
 
 public:
     /// Object constructor.
-    mafCodecRaw(const mafString code_location = "");
+    mafCodecRaw(const QString code_location = "");
 
     /// Encode the memento into the output type.
     virtual void encode(mafCore::mafMemento *memento) = 0;
@@ -47,7 +47,7 @@ private:
     virtual void marshall(const QVariant &value ) = 0;
 
     /// unmarshalling of QVariant data type in order to write the correct type.
-    virtual mafVariant demarshall( mafString typeName, int multiplicity) = 0;
+    virtual QVariant demarshall( QString typeName, int multiplicity) = 0;
 
 };
 

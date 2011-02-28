@@ -23,31 +23,31 @@ class testLoggerCustom : public mafLogger {
     Q_OBJECT
 public:
     /// Object constructor.
-    testLoggerCustom(const mafString code_location = "");
+    testLoggerCustom(const QString code_location = "");
 
     /// Clear all the logged messages until now.
     /*virtual*/ void clearLogHistory();
 
     /// Return the log buffer
-    mafString buffer() {return m_Buffer;}
+    QString buffer() {return m_Buffer;}
 
 protected:
     /// Virtual method implementation of logMessage.
     /** You have to redefine this method in your sublass and put here your strategy to store the log message into the specific output stream media (file, db, buffer, console, ...).*/
-    /*virtual*/ void loggedMessage(const mafMsgType type, const mafString &msg);
+    /*virtual*/ void loggedMessage(const QtMsgType type, const QString &msg);
 
 private:
-    mafString m_Buffer; ///< Test var
+    QString m_Buffer; ///< Test var
 };
 
-testLoggerCustom::testLoggerCustom(const mafString code_location) : mafLogger(code_location) {
+testLoggerCustom::testLoggerCustom(const QString code_location) : mafLogger(code_location) {
 }
 
 void testLoggerCustom::clearLogHistory() {
     m_Buffer = "";
 }
 
-void testLoggerCustom::loggedMessage(const mafMsgType type, const mafString &msg) {
+void testLoggerCustom::loggedMessage(const QtMsgType type, const QString &msg) {
     Q_UNUSED(type);
     m_Buffer = msg;
 }
@@ -114,8 +114,8 @@ void mafLoggerTest::setEnabledTest() {
 }
 
 void mafLoggerTest::logMessageTest() {
-    mafString msg("Test");
-    m_Logger->logMessage(mafMsgTypeDebug, msg);
+    QString msg("Test");
+    m_Logger->logMessage(QtDebugMsg, msg);
     QCOMPARE(m_Logger->buffer(), msg);
 
     m_Logger->clearLogHistory();

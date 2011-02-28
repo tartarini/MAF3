@@ -77,7 +77,7 @@ void mafVMEManagerTest::vmeManagingTest() {
     m_EventBus->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 
     mafCore::mafObjectBase *sel_vme;
-    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
     m_EventBus->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
 
     QVERIFY(sel_vme != NULL); // root is selected

@@ -15,7 +15,7 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafGUI;
 
-mafUILoader::mafUILoader(const mafString code_location) : mafObjectBase(code_location) {
+mafUILoader::mafUILoader(const QString code_location) : mafObjectBase(code_location) {
     mafIdProvider *provider = mafIdProvider::instance();
     mafId ui_id = provider->idValue("maf.local.gui.uiloaded");
     if(ui_id == -1) {

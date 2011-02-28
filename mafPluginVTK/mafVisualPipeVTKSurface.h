@@ -36,7 +36,7 @@ class MAFPLUGINVTKSHARED_EXPORT mafVisualPipeVTKSurface : public mafResources::m
 
 public:
     /// Object constructor;
-    mafVisualPipeVTKSurface(const mafString code_location = "");
+    mafVisualPipeVTKSurface(const QString code_location = "");
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);

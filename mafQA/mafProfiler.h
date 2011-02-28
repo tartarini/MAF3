@@ -28,10 +28,10 @@ public:
     static mafProfiler *instance();
     
     /// Register a new entry point for the profiler. ProfilerStop will close this entry.
-    void profilerStart(const mafString &funcName, const mafString &funcLocation, const mafString &notes, bool profileMultipleTimes = false, int numTotalProfileTimesBeforeLog = 1000);
+    void profilerStart(const QString &funcName, const QString &funcLocation, const QString &notes, bool profileMultipleTimes = false, int numTotalProfileTimesBeforeLog = 1000);
     
     /// Close the current entry of the profiler.
-    void profilerStop(const mafString &funcName, const mafString &funcLocation);
+    void profilerStop(const QString &funcName, const QString &funcLocation);
     
     /// Return the status of the Profiler.*/
     bool isRunning();
@@ -40,7 +40,7 @@ public:
     void shutdown();
 
     /// Return the profile results.
-    mafString *bufferString();
+    QString *bufferString();
 
 protected:
     /// Logs the results of the profiling test.
@@ -58,12 +58,12 @@ private:
     
     /// Structure representing the timing information associated to a monitored function or piece of code.
     struct mafProfilerInformation {
-        mafString FunctionName;
-        mafString FunctionLocation;
-        mafString Notes;
+        QString FunctionName;
+        QString FunctionLocation;
+        QString Notes;
         unsigned int NumTimesCalled;
         unsigned int NumTotalProfileTimes;
-        mafTime *StartTime;
+        QTime *StartTime;
         bool MultipleCalls;
         std::vector<int> ElapsedTime;
         int TotalElapsedTime;
@@ -73,15 +73,15 @@ private:
     bool m_Running; ///< Flag to indicate that the profiler is running or no.
     std::vector<mafProfilerInformation> m_ProfiledFunctions; ///< Vector of all timing of profiled functions.
     
-    mafString m_BufferString; ///< Buffer containing the Profiler's results.
-    mafTextStream m_LogStream; ///< Stream that contain the Profiler results.
+    QString m_BufferString; ///< Buffer containing the Profiler's results.
+    QTextStream m_LogStream; ///< Stream that contain the Profiler results.
 };
 
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline mafString *mafProfiler::bufferString() {
+inline QString *mafProfiler::bufferString() {
     return &m_BufferString;
 }
 

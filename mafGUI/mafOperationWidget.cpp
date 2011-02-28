@@ -34,7 +34,7 @@ void mafOperationWidget::setOperation(mafCore::mafObjectBase *op) {
     m_Operation = op;
 }
 
-void mafOperationWidget::setOperationName(mafString name) {
+void mafOperationWidget::setOperationName(QString name) {
     ui->boxOperation->setTitle(name);
 }
 

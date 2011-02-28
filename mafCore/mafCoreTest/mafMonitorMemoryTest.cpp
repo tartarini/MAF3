@@ -26,13 +26,13 @@ class  testMonitorMemoryCustom : public  mafMonitorMemory {
 
 public:
     /// Object constructor.
-    testMonitorMemoryCustom(const mafString code_location = "");
+    testMonitorMemoryCustom(const QString code_location = "");
 
     /// implement visit method
     void update();
 };
 
-testMonitorMemoryCustom::testMonitorMemoryCustom(const mafString code_location) : mafMonitorMemory(code_location) {
+testMonitorMemoryCustom::testMonitorMemoryCustom(const QString code_location) : mafMonitorMemory(code_location) {
 }
 
 void testMonitorMemoryCustom::update() {
@@ -79,9 +79,9 @@ void mafMonitorMemoryTest::memoryTest() {
     //! </snippet>
     QVERIFY(monitor != NULL);
     monitor->update();
-    mafMsgDebug() << "Total:" << monitor->property("Total").toLongLong();
-    mafMsgDebug() << "Free:" <<monitor->property("Free").toLongLong();
-    mafMsgDebug() << "Used:" <<monitor->property("Used").toLongLong();
+    qDebug() << "Total:" << monitor->property("Total").toLongLong();
+    qDebug() << "Free:" <<monitor->property("Free").toLongLong();
+    qDebug() << "Used:" <<monitor->property("Used").toLongLong();
 
     QVERIFY(monitor->totalSpace() == 1000);
     QVERIFY(monitor->freeSpace() == 300);

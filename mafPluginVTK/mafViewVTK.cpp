@@ -26,7 +26,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafViewVTK::mafViewVTK(const mafString code_location) : mafView(code_location), m_Renderer(NULL) {
+mafViewVTK::mafViewVTK(const QString code_location) : mafView(code_location), m_Renderer(NULL) {
 }
 
 mafViewVTK::~mafViewVTK() {
@@ -60,7 +60,7 @@ void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
     Superclass::removeSceneNode(node);
 }
 
-void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show, const mafString visualPipeType) {
+void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show, const QString visualPipeType) {
     Superclass::showSceneNode(node, show, visualPipeType);
 
     if (node != NULL) {

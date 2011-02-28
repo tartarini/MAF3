@@ -35,7 +35,7 @@ public:
     /*virtual*/ ~mafEventDispatcherRemote();
 
     /// Emit event corresponding to the given id (present into the event_dictionary) locally to the application.
-    /*virtual*/ void notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList = NULL, mafGenericReturnArgument *returnArg = NULL) const;
+    /*virtual*/ void notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList = NULL, QGenericReturnArgument *returnArg = NULL) const;
 
     /// Set the active server side network connector type.
     void setNetworkConnectorServer(mafNetworkConnector *connector);

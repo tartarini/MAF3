@@ -36,7 +36,7 @@ class MAFRESOURCESSHARED_EXPORT mafView : public mafResource {
 
 public:
     /// Object constructor.
-    mafView(const mafString code_location = "");
+    mafView(const QString code_location = "");
 
     /// Create the view
     virtual void create();
@@ -48,7 +48,7 @@ public:
     virtual void selectSceneNode(mafSceneNode *node, bool select);
 
     /// Called to show/hide scene node.
-    virtual void showSceneNode(mafSceneNode *node, bool show = true, const mafString visualPipeType = "");
+    virtual void showSceneNode(mafSceneNode *node, bool show = true, const QString visualPipeType = "");
 
     /// Select this view.
     void select(bool select);
@@ -57,13 +57,13 @@ public:
     bool isSelected();
 
     /// Set default visual pipe for a type of data.
-    void plugVisualPipe(mafString dataType, const mafString visualPipeType);
+    void plugVisualPipe(QString dataType, const QString visualPipeType);
 
     /// Set rendering window used by the view.
-    void setRenderingWidget(mafVariant renWidget);
+    void setRenderingWidget(QVariant renWidget);
 
     /// Get the rendering widget used by the view to render its scene.
-    mafVariant renderingWidget() const;
+    QVariant renderingWidget() const;
 
 private slots:
     /// Wrap the new VME into a mafSceneNode.
@@ -77,9 +77,9 @@ protected:
     /* virtual */ ~mafView();
 
     mafCore::mafContainerInterface *m_RenderWidget; ///< Rendering widget for the view.
-    mafString m_DefaultVisualPipe; ///< Name of the default visual pipe.
+    QString m_DefaultVisualPipe; ///< Name of the default visual pipe.
     mafCore::mafHierarchy *m_Scenegraph; ///< Scenegraph
-    mafHash<mafString, mafString> m_VisualPipeHash; ///< Bind between dataType and Visual pipe.
+    QHash<QString, QString> m_VisualPipeHash; ///< Bind between dataType and Visual pipe.
     bool m_Selected; ///< Flag for active view.
 };
 
@@ -95,12 +95,12 @@ inline bool mafView::isSelected() {
     return m_Selected;
 }
 
-inline void mafView::setRenderingWidget(mafVariant renWidget) {
+inline void mafView::setRenderingWidget(QVariant renWidget) {
     m_RenderWidget = renWidget.value<mafCore::mafContainerInterfacePointer>();
 }
 
-inline mafVariant mafView::renderingWidget() const {
-    mafVariant v;
+inline QVariant mafView::renderingWidget() const {
+    QVariant v;
     v.setValue<mafCore::mafContainerInterfacePointer>(m_RenderWidget);
     return v;
 }

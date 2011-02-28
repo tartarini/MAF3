@@ -53,7 +53,7 @@ class testDataBoundaryCustom : public mafDataBoundaryAlgorithm {
     Q_OBJECT
 public:
     /// Object constructor.
-    testDataBoundaryCustom(const mafString code_location = "");
+    testDataBoundaryCustom(const QString code_location = "");
 
     /// Object destructor.
     ~testDataBoundaryCustom();
@@ -71,7 +71,7 @@ private:
     mafContainer<testExternalBoundary> m_Boundary; ///< boundary data.
 };
 
-testDataBoundaryCustom::testDataBoundaryCustom(const mafString code_location) : mafDataBoundaryAlgorithm(code_location) {
+testDataBoundaryCustom::testDataBoundaryCustom(const QString code_location) : mafDataBoundaryAlgorithm(code_location) {
     m_Boundary = new testExternalBoundary();
     m_Boundary->m_Range[0] = m_Boundary->m_Range[1] = 0;
 }
@@ -116,7 +116,7 @@ class testDataSetObserver : public mafObjectBase {
 
 public:
     /// Object constructor.
-    testDataSetObserver(const mafString code_location = "");
+    testDataSetObserver(const QString code_location = "");
 
 public slots:
     void dataDidConnected();
@@ -127,11 +127,11 @@ testDataSetObserver::testDataSetObserver(QString code_location) : mafObjectBase(
 }
 
 void testDataSetObserver::dataDidConnected() {
-    mafMsgDebug("%s", mafTr("Dataset I'm observing has been connected!!").toAscii().data());
+    qDebug("%s", mafTr("Dataset I'm observing has been connected!!").toAscii().data());
 }
 
 void testDataSetObserver::dataDidDisconnected() {
-    mafMsgDebug("%s", mafTr("Dataset I'm observing has been disconnected!!").toAscii().data());
+    qDebug("%s", mafTr("Dataset I'm observing has been disconnected!!").toAscii().data());
 }
 
 //------------------------------------------------------------------------------------------

@@ -14,7 +14,7 @@
 
 using namespace mafCore;
 
-mafOntology::mafOntology(const mafString code_location) : mafObjectBase(code_location), m_Hierarchy(NULL) {
+mafOntology::mafOntology(const QString code_location) : mafObjectBase(code_location), m_Hierarchy(NULL) {
     m_Hierarchy = new mafHierarchy();
 }
 
@@ -24,16 +24,16 @@ mafOntology::~mafOntology() {
     mafDEL(m_Hierarchy);
 }
 
-void mafOntology::setDictionaryTemplate(const mafString dictionary_template) {
+void mafOntology::setDictionaryTemplate(const QString dictionary_template) {
     REQUIRE(dictionary_template != "");
 
     // Split the template file content into rows.
-    mafStringList template_items = dictionary_template.split("\n");
-    mafString item;
-    mafString name, editable, author, value_type, note, searchable;
+    QStringList template_items = dictionary_template.split("\n");
+    QString item;
+    QString name, editable, author, value_type, note, searchable;
     foreach(item, template_items) {
         // Extract the information for the dictionary item from the template's row.
-        mafStringList items = item.split(",");
+        QStringList items = item.split(",");
         name = items.at(0);
         editable = items.at(1);
         author = items.at(2);
@@ -55,7 +55,7 @@ void mafOntology::setDictionaryTemplate(const mafString dictionary_template) {
     }
 }
 
-mafDictionary *mafOntology::findItemByName(const mafString itemName) {
+mafDictionary *mafOntology::findItemByName(const QString itemName) {
     Q_UNUSED(itemName);
     REQUIRE(itemName.length() > 0);
 

@@ -66,15 +66,15 @@ void mafObjectBaseTest::objectIdTest() {
 }
 
 //void mafObjectBaseTest::createObjectHashTest() {
-//    mafByteArray res_ba("f\022\225\311\313\371\326\262\366B\204\024PJ\215\356\323\002\006A");
-//    mafString hash_key = "test string";
+//    QByteArray res_ba("f\022\225\311\313\371\326\262\366B\204\024PJ\215\356\323\002\006A");
+//    QString hash_key = "test string";
 //    m_ObjTestVar->createHashCode(hash_key);
-//    mafByteArray ba = m_ObjTestVar->objectHash();
+//    QByteArray ba = m_ObjTestVar->objectHash();
 //    QVERIFY(ba == res_ba);
 //}
 
 void mafObjectBaseTest::isEqualTest() {
-//    mafString hash_key = "test string";
+//    QString hash_key = "test string";
 //    m_ObjTestVar->createHashCode(hash_key);
 //
 //    mafObjectBase *obj2 = mafNEW(mafCore::mafObjectBase);

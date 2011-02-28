@@ -82,19 +82,19 @@ public:
     testNetworkConnectorForEventBus();
 
     /// Create and initialize client
-    /*virtual*/ void createClient(mafString hostName, unsigned int port);
+    /*virtual*/ void createClient(QString hostName, unsigned int port);
 
     /// Return the string variable initializated and updated from the data pipe.
     /*virtual*/ void createServer(unsigned int port);
 
     /// Allow to send a network request.
-    /*virtual*/ void send(const mafString event_id, mafEventArgumentsList *params);
+    /*virtual*/ void send(const QString event_id, mafEventArgumentsList *params);
 
     /// Start the server.
     /*virtual*/ void startListen();
 
     /// Return connector status.
-    mafString connectorStatus();
+    QString connectorStatus();
 
     /// retrieve instance of object
     /*virtual*/ mafNetworkConnector *clone();
@@ -103,7 +103,7 @@ public:
     /*virtual*/ void initializeForEventBus();
 
 private:
-    mafString m_ConnectorStatus; ///< Test Var.
+    QString m_ConnectorStatus; ///< Test Var.
 };
 
 mafNetworkConnector *testNetworkConnectorForEventBus::clone() {
@@ -119,27 +119,27 @@ testNetworkConnectorForEventBus::testNetworkConnectorForEventBus() : mafNetworkC
 
 void testNetworkConnectorForEventBus::createServer(unsigned int port) {
     m_ConnectorStatus = "Server Created - Port: ";
-    m_ConnectorStatus.append(mafString::number(port));
+    m_ConnectorStatus.append(QString::number(port));
 }
 
 void testNetworkConnectorForEventBus::startListen() {
     m_ConnectorStatus = "Server Listening";
 }
 
-void testNetworkConnectorForEventBus::createClient(mafString hostName, unsigned int port) {
+void testNetworkConnectorForEventBus::createClient(QString hostName, unsigned int port) {
     m_ConnectorStatus = "Client Created - Host: ";
     m_ConnectorStatus.append(hostName);
     m_ConnectorStatus.append(" Port: ");
-    m_ConnectorStatus.append(mafString::number(port));
+    m_ConnectorStatus.append(QString::number(port));
 }
 
-void testNetworkConnectorForEventBus::send(const mafString event_id, mafEventArgumentsList *params) {
+void testNetworkConnectorForEventBus::send(const QString event_id, mafEventArgumentsList *params) {
     Q_UNUSED(params);
     m_ConnectorStatus = "Event sent with ID: ";
     m_ConnectorStatus.append(event_id);
 }
 
-mafString testNetworkConnectorForEventBus::connectorStatus() {
+QString testNetworkConnectorForEventBus::connectorStatus() {
     return m_ConnectorStatus;
 }
 //-------------------------------------------------------------------------
@@ -233,7 +233,7 @@ void mafEventBusManagerTest::eventBusRegistrationNotificationTest() {
     QVERIFY(status == 0);
 
     // Create new Event ID used for callback and event notification.
-    mafString updateID = "maf.local.eventBus.globalUpdate";
+    QString updateID = "maf.local.eventBus.globalUpdate";
     mafRegisterLocalCallback(updateID, m_ObjTestObserver, "updateObject()");
 
     // Register also the second test observer to the global update event
@@ -251,7 +251,7 @@ void mafEventBusManagerTest::eventBusRegistrationNotificationTest() {
 
     // ... and now filter events only with ID == "CUSTOM_SIGNAL"
     //mafId customID = idProvider->createNewId("CUSTOM_SIGNAL");
-    mafString customID = "CUSTOM_SIGNAL";
+    QString customID = "CUSTOM_SIGNAL";
 
     // ...and enable event logging for that id.
     m_EventBus->logEventTopic(customID);
@@ -265,7 +265,7 @@ void mafEventBusManagerTest::eventBusRegistrationNotificationTest() {
     ObjTestSender->setObjectValue(52);
 
     // Create new Event ID used for callback and event notification.
-    mafString setValueID = "SETVALUE_SIGNAL";
+    QString setValueID = "SETVALUE_SIGNAL";
     mafRegisterLocalSignal(setValueID, ObjTestSender, "valueModified(int)");
 
     // Register the callback to update the object custom:
@@ -290,14 +290,14 @@ void mafEventBusManagerTest::eventBusWithReturnArgumentTest() {
     ObjTestSender->setObjectValue(52);
 
     // Create new Event ID used for callback and event notification.
-    mafString returnValueID = "RETURNVALUE_SIGNAL";
+    QString returnValueID = "RETURNVALUE_SIGNAL";
     mafRegisterLocalSignal(returnValueID, ObjTestSender, "returnObjectValueSignal()");
     mafRegisterLocalCallback(returnValueID, ObjTestSender, "returnObjectValue()");
 
 
     //Notify event with return argument
     int returnValue = 0;
-    mafGenericReturnArgument ret_val = mafEventReturnArgument(int,returnValue);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(int,returnValue);
     m_EventBus->notifyEvent(returnValueID, mafEventTypeLocal, NULL, &ret_val);
 
     QVERIFY(returnValue == 5);
@@ -306,7 +306,7 @@ void mafEventBusManagerTest::eventBusWithReturnArgumentTest() {
 
 
 void mafEventBusManagerTest::eventNotificationBenchmarkTest() {
-    mafString updateID = "maf.local.eventBus.globalUpdate";
+    QString updateID = "maf.local.eventBus.globalUpdate";
     m_EventBus->logAllEvents();
 
     QBENCHMARK {
@@ -322,20 +322,20 @@ void mafEventBusManagerTest::remoteConnectionTest() {
 
     //create list to send from the client
     //first parameter is a list which contains event properties
-    mafList<mafVariant> eventParameters;
+    QList<QVariant> eventParameters;
     eventParameters.append("maf.local.eventBus.globalUpdate");
     eventParameters.append(mafEventTypeLocal);
     eventParameters.append(mafSignatureTypeCallback);
     eventParameters.append("updateObject()");
 
-    mafList<mafVariant> dataParameters;
+    QList<QVariant> dataParameters;
 
     mafEventArgumentsList listToSend;
-    listToSend.append(mafEventArgument(mafList<mafVariant>, eventParameters));
-    listToSend.append(mafEventArgument(mafList<mafVariant>, dataParameters));
+    listToSend.append(mafEventArgument(QList<QVariant>, eventParameters));
+    listToSend.append(mafEventArgument(QList<QVariant>, dataParameters));
 
     //with eventbus
-    mafString topic = "maf.remote.eventBus.comunication.send.xmlrpc";
+    QString topic = "maf.remote.eventBus.comunication.send.xmlrpc";
     m_EventBus->notifyEvent(topic, mafEventTypeRemote , &listToSend);
 
     QTime dieTime = QTime::currentTime().addSecs(3);

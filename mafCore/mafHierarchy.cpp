@@ -14,7 +14,7 @@
 
 using namespace mafCore;
 
-mafHierarchy::mafHierarchy(const mafString code_location) : mafObjectBase(code_location), m_Tree(NULL) {
+mafHierarchy::mafHierarchy(const QString code_location) : mafObjectBase(code_location), m_Tree(NULL) {
     //create Tree
     m_Tree = new mafTree<QObject *>();
     m_TreeIterator = m_Tree->root();
@@ -132,7 +132,7 @@ void mafHierarchy::clear() {
     m_TreeIterator.null();
 }
 
-void mafHierarchy::printInformation(mafString &string) {
+void mafHierarchy::printInformation(QString &string) {
     for (mafTree<QObject *>::prefix_iterator i = m_Tree->prefix_begin(); i != m_Tree->prefix_end(); ++i) {
         mafTreeNode<QObject *> *n = i.simplify().node();
         QObject *obj = n->m_data;

@@ -17,7 +17,7 @@ using namespace mafTimeSpace;
 using namespace mafCore;
 using namespace mafEventBus;
 
-mafTimeManager::mafTimeManager(const mafString code_location) : mafObjectBase(code_location) {
+mafTimeManager::mafTimeManager(const QString code_location) : mafObjectBase(code_location) {
     mafRegisterObject(mafTimeSpace::mafThreadedTimer);
     mafRegisterObject(mafTimeSpace::mafTimer);
 
@@ -83,7 +83,7 @@ mafId mafTimeManager::createTimer(int interval, bool one_shot) {
     return t_id;
 }
 
-/*mafId mafTimeManager::createTimer(int interval, mafObjectBase *requestor, mafString callback_signature, bool one_shot) {
+/*mafId mafTimeManager::createTimer(int interval, mafObjectBase *requestor, QString callback_signature, bool one_shot) {
     REQUIRE(interval > 0);
     REQUIRE(requestor != NULL);
     REQUIRE(callback_signature.length() > 0);
@@ -120,7 +120,7 @@ void mafTimeManager::startTimer(mafId id, bool separate_thread) {
         mafThreadedTimer *threadedTimer = m_TimerHash.value(id);
         if(separate_thread) {
             // Manage thread creation and move the timer on it.
-            mafThread *thread =  new mafThread();
+            QThread *thread =  new QThread();
             threadedTimer->startOnThread(thread);
         } else {
             threadedTimer->start();

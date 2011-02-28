@@ -127,7 +127,7 @@ void mafViewTest::mafViewRenderingWidgetTest() {
     w->setObjectName("My Widget");
 
     // Assign the widget to the mafView.
-    mafVariant vw;
+    QVariant vw;
     vw.setValue<mafContainerInterfacePointer>(&w);
     m_View->setRenderingWidget(vw);
 
@@ -140,8 +140,8 @@ void mafViewTest::mafViewRenderingWidgetTest() {
 
     mafObject *resultObject = mafContainerPointerTypeCast(mafCore::mafObject, resultWidget)->externalData();
 
-    mafString name_result = resultObject->objectName();
-    QCOMPARE(name_result, mafString("My Widget"));
+    QString name_result = resultObject->objectName();
+    QCOMPARE(name_result, QString("My Widget"));
 
     mafDEL(obj);
 

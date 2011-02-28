@@ -32,7 +32,7 @@ class MAFRESOURCESSHARED_EXPORT mafResource : public mafCore::mafObject {
 
 public:
     /// Object constructor.
-    mafResource(const mafString code_location = "");
+    mafResource(const QString code_location = "");
 
     /// Used in MAF3 design by contract to check object's validity.
     /** isObjectValid methods play an important role in checking the consistency

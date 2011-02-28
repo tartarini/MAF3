@@ -66,7 +66,7 @@ private slots:
 
 private:
     mafPlugin *m_Plugin; ///< Test var.
-    mafString m_PluginName; ///< Test var.
+    QString m_PluginName; ///< Test var.
 };
 
 void mafPluginTest::mafPluginAllocationTest() {
@@ -77,7 +77,7 @@ void mafPluginTest::mafPluginAllocationTest() {
     catch(std::runtime_error error)
     {
         //prompt error message();
-        mafString errorMsg("Could not load 'myLibrary'");
+        QString errorMsg("Could not load 'myLibrary'");
         QVERIFY(errorMsg.compare(error.what()) == 0);
         QVERIFY(m_Plugin == NULL);
     }

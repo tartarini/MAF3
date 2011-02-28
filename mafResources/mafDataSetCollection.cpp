@@ -16,7 +16,7 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafDataSetCollection::mafDataSetCollection(const mafString code_location) : mafObject(code_location), m_CollectionMap(NULL), m_Interpolator(NULL), m_DataTypeAccepted(""), m_CurrentTimestamp(0.0) {
+mafDataSetCollection::mafDataSetCollection(const QString code_location) : mafObject(code_location), m_CollectionMap(NULL), m_Interpolator(NULL), m_DataTypeAccepted(""), m_CurrentTimestamp(0.0) {
     m_CollectionMap = new mafDataSetMap();
     setInterpolator("mafResources::mafInterpolatorBefore");
 }
@@ -47,13 +47,13 @@ void mafDataSetCollection::setInterpolator(mafInterpolator *interpolator) {
     m_Interpolator = interpolator;
 }
 
-void mafDataSetCollection::setInterpolator(const mafString &interpolator_type) {
+void mafDataSetCollection::setInterpolator(const QString &interpolator_type) {
     mafObjectBase *obj = mafNEWFromString(interpolator_type);
     mafInterpolator *new_interpolator = qobject_cast<mafInterpolator *>(obj);
     if(new_interpolator) {
         setInterpolator(new_interpolator);
     } else {
-        mafMsgWarning("%s", mafTr("%1 does not represent a type of mafInterpolator.").arg(interpolator_type).toAscii().data());
+        qWarning("%s", mafTr("%1 does not represent a type of mafInterpolator.").arg(interpolator_type).toAscii().data());
     }
 }
 
@@ -151,7 +151,7 @@ mafPoseMatrix *mafDataSetCollection::poseMatrix(double t) {
     if(item != NULL) {
         m = item->poseMatrix();
     } else {
-        mafMsgWarning("%s", mafTr("Item at timestamp %1 does not exist! Try 'insertItem' before.").arg(t).toAscii().data());
+        qWarning("%s", mafTr("Item at timestamp %1 does not exist! Try 'insertItem' before.").arg(t).toAscii().data());
     }
     return m;
 }
@@ -251,11 +251,11 @@ bool mafDataSetCollection::setDataSet(mafDataSet *data, double t) {
 
             return true;
         } else {
-            mafMsgWarning("%s", mafTr("Item at timestamp %1 can not be modified, because it doesn't exist! Try 'insertItem' before").arg(t).toAscii().data());
+            qWarning("%s", mafTr("Item at timestamp %1 can not be modified, because it doesn't exist! Try 'insertItem' before").arg(t).toAscii().data());
             return false;
         }
     }
-    mafMsgWarning("%s", mafTr("Item at timestamp %1 can not be accepted! Acceptable type is %2").arg(mafString::number(t), m_DataTypeAccepted).toAscii().data());
+    qWarning("%s", mafTr("Item at timestamp %1 can not be accepted! Acceptable type is %2").arg(QString::number(t), m_DataTypeAccepted).toAscii().data());
     return false;
 }
 
@@ -264,7 +264,7 @@ bool mafDataSetCollection::acceptData(mafDataSet *data) {
 
     bool result(true);
     mafContainerInterface *new_data_value = data->dataValue();
-    mafString new_data_type = new_data_value->externalDataType();
+    QString new_data_type = new_data_value->externalDataType();
     if(m_DataTypeAccepted == "") {
         // the collection doesn't contain yet any data; initialize the acceptable
         // data type with that one contained in the current mafDataSet.
@@ -302,7 +302,7 @@ bool mafDataSetCollection::removeItem(mafDataSet *item, bool keep_alive) {
     REQUIRE(item != NULL);
 
     // Alternative code if that one below is slow.
-//    mafList<mafDataSet *> items_list = m_CollectionMap->values();
+//    QList<mafDataSet *> items_list = m_CollectionMap->values();
 //    int index = items_list.indexOf(item);
 //    if(index != -1) {
 //        disconnect(item, SIGNAL(destroyed()),this, SLOT(itemDestroyed()));

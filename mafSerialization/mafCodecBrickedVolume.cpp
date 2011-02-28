@@ -18,7 +18,7 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafSerialization;
 
-mafCodecBrickedVolume::mafCodecBrickedVolume(const mafString code_location) : mafCodecRaw(code_location) {
+mafCodecBrickedVolume::mafCodecBrickedVolume(const QString code_location) : mafCodecRaw(code_location) {
     m_EncodingType = "VOLUME_BRICKED_LOD";
 }
 
@@ -26,7 +26,7 @@ mafCodecBrickedVolume::~mafCodecBrickedVolume() {
 }
 
 void mafCodecBrickedVolume::encode(mafMemento *memento) {
-    mafFile *file = qobject_cast<mafFile *>(m_Device);
+    QFile *file = qobject_cast<QFile *>(m_Device);
     REQUIRE(memento != NULL);
     REQUIRE(m_Device != NULL);
     REQUIRE(file != NULL);
@@ -35,15 +35,15 @@ void mafCodecBrickedVolume::encode(mafMemento *memento) {
     m_DataStreamWrite.setVersion(QDataStream::Qt_4_6);
 
     const QMetaObject* meta = memento->metaObject();
-    m_DataStreamWrite << mafString("MementoType");
-    mafString cn = meta->className();
+    m_DataStreamWrite << QString("MementoType");
+    QString cn = meta->className();
     m_DataStreamWrite << cn;
-    mafString ot = memento->objectClassType();
+    QString ot = memento->objectClassType();
     m_DataStreamWrite << ot;
     
     double dataTime;
-    mafString dataHash;
-    mafString url;
+    QString dataHash;
+    QString url;
     void *data = 0;
     int dataType = -1;
     int componentNum = 0;
@@ -69,7 +69,7 @@ void mafCodecBrickedVolume::encode(mafMemento *memento) {
         m_DataStreamWrite << item.m_Name;
         m_DataStreamWrite << item.m_Multiplicity;   
         if (item.m_Name == "codecType") {
-            mafString codecType = item.m_Value.toString();
+            QString codecType = item.m_Value.toString();
             m_DataStreamWrite << codecType;
         } else if (item.m_Name == "mafDataSetTime") {
             dataTime = item.m_Value.toDouble();
@@ -90,7 +90,7 @@ void mafCodecBrickedVolume::encode(mafMemento *memento) {
             componentNum = item.m_Value.toInt();
             m_DataStreamWrite << componentNum;
         } else if (item.m_Name == "dimensions") {
-                mafList<mafVariant> list = item.m_Value.toList();
+                QList<QVariant> list = item.m_Value.toList();
                 REQUIRE(list.size() == 3);
                 for (int i = 0; i < 3; ++i) {
                     dimensions[i] = list[i].toInt();
@@ -100,23 +100,23 @@ void mafCodecBrickedVolume::encode(mafMemento *memento) {
             brickSize = item.m_Value.toInt();
             m_DataStreamWrite << brickSize;
         } else if (item.m_Name == "spacing") {
-            mafList<mafVariant> list = item.m_Value.toList();
+            QList<QVariant> list = item.m_Value.toList();
             REQUIRE(list.size() == 3);
-            foreach(mafVariant iter, list) {
+            foreach(QVariant iter, list) {
                 float value = iter.toFloat();
                 m_DataStreamWrite << value;
             }
         } else if (item.m_Name == "posMatrix") {
-            mafList<mafVariant> list = item.m_Value.toList();
+            QList<QVariant> list = item.m_Value.toList();
             REQUIRE(list.size() == 16);
-            foreach(mafVariant iter, list) {
+            foreach(QVariant iter, list) {
                 float value = iter.toDouble();
                 m_DataStreamWrite << value;
             }
         } else if (item.m_Name == "dataValue") {
             // generate file names and save internal data pointer
-            mafString path = file->fileName().section('/', 0, -2);
-            mafTextStream(&url) << path << "/" << dataHash << "_" << dataTime;
+            QString path = file->fileName().section('/', 0, -2);
+            QTextStream(&url) << path << "/" << dataHash << "_" << dataTime;
             data = item.m_Value.value<void *>();
             m_DataStreamWrite << url;
         } else if (item.m_Name == "memoryLimit") {
@@ -129,19 +129,19 @@ void mafCodecBrickedVolume::encode(mafMemento *memento) {
 
     // check whether the raw volume data is valid
     if (data == 0) {
-        mafMsgCritical() << mafTr("No data value");
+        qCritical() << mafTr("No data value");
         return;
     }
     if (brickSize <= 0) {
-        mafMsgCritical() << mafTr("Invalid brick size");
+        qCritical() << mafTr("Invalid brick size");
         return;
     }
     if (dataType < mafUnsignedChar || dataType > mafDouble) {
-        mafMsgCritical() << mafTr("Invalid data type");
+        qCritical() << mafTr("Invalid data type");
         return;
     }
     if (dimensions[0] <= 0 || dimensions[1] <= 0 || dimensions[2] <= 0) {
-        mafMsgCritical() << mafTr("Invalid dimensions");
+        qCritical() << mafTr("Invalid dimensions");
         return;
     }
 
@@ -151,7 +151,7 @@ void mafCodecBrickedVolume::encode(mafMemento *memento) {
         levels = calcMultiresolutionLevel(dataType, componentNum, dimensions, memoryLimit);
     encode(url, data, dataType, componentNum, dimensions, brickSize, levels);
     // encode the level number
-    m_DataStreamWrite << mafString("levels");;
+    m_DataStreamWrite << QString("levels");;
     m_DataStreamWrite << 1;
     m_DataStreamWrite << levels;
 }
@@ -159,9 +159,9 @@ void mafCodecBrickedVolume::encode(mafMemento *memento) {
 mafMemento *mafCodecBrickedVolume::decode() {
     REQUIRE(m_Device != NULL);
 
-    mafString mementoTag;
-    mafString mementoType;
-    mafString objType;
+    QString mementoTag;
+    QString mementoType;
+    QString objType;
 
     m_DataStreamRead.setDevice(m_Device);
     m_DataStreamRead >> mementoTag;
@@ -174,7 +174,7 @@ mafMemento *mafCodecBrickedVolume::decode() {
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     mafMementoPropertyItem item;
 
-    mafString url;
+    QString url;
     int levels = 1;
     int dataType = -1;
     int componentNum = 0;
@@ -187,7 +187,7 @@ mafMemento *mafCodecBrickedVolume::decode() {
         m_DataStreamRead >> item.m_Multiplicity;
 
         if (item.m_Name == "codecType") {
-            mafString codecType;
+            QString codecType;
             m_DataStreamRead >> codecType;
             item.m_Value = codecType;
         } else if (item.m_Name == "mafDataSetTime") {
@@ -195,7 +195,7 @@ mafMemento *mafCodecBrickedVolume::decode() {
             m_DataStreamRead >> dataTime;
             item.m_Value = dataTime;
         } else if (item.m_Name == "dataHash") {
-            mafString dataHash;
+            QString dataHash;
             m_DataStreamRead >> dataHash;
             item.m_Value = dataHash;
         } else if (item.m_Name == "dataType") {
@@ -216,7 +216,7 @@ mafMemento *mafCodecBrickedVolume::decode() {
                 m_DataStreamRead >> originalDimensions[0];
                 m_DataStreamRead >> originalDimensions[1];
                 m_DataStreamRead >> originalDimensions[2];
-                mafList<mafVariant> list;
+                QList<QVariant> list;
                 list.append(originalDimensions[0]);
                 list.append(originalDimensions[1]);
                 list.append(originalDimensions[2]);
@@ -227,7 +227,7 @@ mafMemento *mafCodecBrickedVolume::decode() {
             item.m_Value = brickSize;
         } else if (item.m_Name == "spacing") {
             float spacing;
-            mafList<mafVariant> list;
+            QList<QVariant> list;
             m_DataStreamRead >> spacing;
             list.append(spacing);
             m_DataStreamRead >> spacing;
@@ -237,7 +237,7 @@ mafMemento *mafCodecBrickedVolume::decode() {
             item.m_Value = list;
         } else if (item.m_Name == "posMatrix") {
             double value;
-            mafList<mafVariant> list;
+            QList<QVariant> list;
             for (int i = 0; i < 16; ++i) {
                 m_DataStreamRead >> value;
                 list.append(value);
@@ -256,7 +256,7 @@ mafMemento *mafCodecBrickedVolume::decode() {
             m_DataStreamRead >> memoryLimit;
             item.m_Value = memoryLimit;
         } else {
-            mafString codecType;
+            QString codecType;
             m_DataStreamRead >> codecType;
             item.m_Value = demarshall(codecType, item.m_Multiplicity);
         }
@@ -284,7 +284,7 @@ mafMemento *mafCodecBrickedVolume::decode() {
     }
 
     // start position in the current resolution
-    mafList<mafVariant> list;
+    QList<QVariant> list;
     list.append(startPos[0]);
     list.append(startPos[1]);
     list.append(startPos[2]);
@@ -321,7 +321,7 @@ mafMemento *mafCodecBrickedVolume::decode() {
 void mafCodecBrickedVolume::update(mafCore::mafMemento *memento) {
     REQUIRE(memento != NULL);
 
-    mafString url;
+    QString url;
     void *data = 0;
     int levels = 1;
     int currentLevel = 0;
@@ -339,7 +339,7 @@ void mafCodecBrickedVolume::update(mafCore::mafMemento *memento) {
     foreach(mafMementoPropertyItem item, *propList) {
         // information about the highest resolution volume
         if (item.m_Name == "originalDimensions") {
-            mafList<mafVariant> list = item.m_Value.toList();
+            QList<QVariant> list = item.m_Value.toList();
             REQUIRE(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 originalDimensions[i] = list[i].toInt();
@@ -357,12 +357,12 @@ void mafCodecBrickedVolume::update(mafCore::mafMemento *memento) {
             memoryLimit = item.m_Value.toInt();
         // information about the current volume data
         } else if (item.m_Name == "startPositions") {
-            mafList<mafVariant> list = item.m_Value.toList();
+            QList<QVariant> list = item.m_Value.toList();
             REQUIRE(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 startPos[i] = list[i].toInt();
         } else if (item.m_Name == "dimensions") {
-            mafList<mafVariant> list = item.m_Value.toList();
+            QList<QVariant> list = item.m_Value.toList();
             REQUIRE(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 dimensions[i] = list[i].toInt();
@@ -372,12 +372,12 @@ void mafCodecBrickedVolume::update(mafCore::mafMemento *memento) {
             data = item.m_Value.value<void *>();
         // information about the updated volume data in the highest resolution
         } else if (item.m_Name == "updatedStartPositions") {
-            mafList<mafVariant> list = item.m_Value.toList();
+            QList<QVariant> list = item.m_Value.toList();
             REQUIRE(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 updatedStartPos[i] = list[i].toInt();
         } else if (item.m_Name == "updatedDimensions") {
-            mafList<mafVariant> list = item.m_Value.toList();
+            QList<QVariant> list = item.m_Value.toList();
             REQUIRE(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 updatedDimensions[i] = list[i].toInt();
@@ -427,7 +427,7 @@ void mafCodecBrickedVolume::update(mafCore::mafMemento *memento) {
         return;
 
     // update the information in memento
-    mafList<mafVariant> list;
+    QList<QVariant> list;
     mafMementoPropertyList::iterator iter = propList->begin();
     while (iter != propList->end()) {
         if (iter->m_Name == "startPositions") {
@@ -457,55 +457,55 @@ void mafCodecBrickedVolume::update(mafCore::mafMemento *memento) {
     }
 }
 
-void mafCodecBrickedVolume::marshall(const mafVariant &value) {
+void mafCodecBrickedVolume::marshall(const QVariant &value) {
     switch(value.type()){
-        case mafVariant::Int:
-        case mafVariant::UInt:
-        case mafVariant::LongLong:
-        case mafVariant::ULongLong:
-            m_DataStreamWrite << mafString("int");
+        case QVariant::Int:
+        case QVariant::UInt:
+        case QVariant::LongLong:
+        case QVariant::ULongLong:
+            m_DataStreamWrite << QString("int");
             m_DataStreamWrite << (int)value.toInt();
             break;
-        case mafVariant::Double:
-            m_DataStreamWrite << mafString("double");
+        case QVariant::Double:
+            m_DataStreamWrite << QString("double");
             m_DataStreamWrite << (double)value.toDouble();
             break;
-        case mafVariant::Bool:
-            m_DataStreamWrite << mafString("boolean");
+        case QVariant::Bool:
+            m_DataStreamWrite << QString("boolean");
             m_DataStreamWrite << (bool)value.toBool();
             break;
-        case mafVariant::Date:
-            m_DataStreamWrite << mafString("dateTime.iso8601");
-            m_DataStreamWrite << (mafString)value.toDate().toString( Qt::ISODate );
+        case QVariant::Date:
+            m_DataStreamWrite << QString("dateTime.iso8601");
+            m_DataStreamWrite << (QString)value.toDate().toString( Qt::ISODate );
             break;
-        case mafVariant::DateTime:
-            m_DataStreamWrite << mafString("dateTime.iso8601");
-            m_DataStreamWrite << (mafString)value.toDateTime().toString( Qt::ISODate );
+        case QVariant::DateTime:
+            m_DataStreamWrite << QString("dateTime.iso8601");
+            m_DataStreamWrite << (QString)value.toDateTime().toString( Qt::ISODate );
             break;
-        case mafVariant::Time:
-            m_DataStreamWrite << mafString("dateTime.iso8601");
-            m_DataStreamWrite << (mafString)value.toTime().toString( Qt::ISODate );
+        case QVariant::Time:
+            m_DataStreamWrite << QString("dateTime.iso8601");
+            m_DataStreamWrite << (QString)value.toTime().toString( Qt::ISODate );
             break;
-        case mafVariant::StringList:
-        case mafVariant::List: {
-            m_DataStreamWrite << mafString("list");
-            foreach(mafVariant item, value.toList()) {
+        case QVariant::StringList:
+        case QVariant::List: {
+            m_DataStreamWrite << QString("list");
+            foreach(QVariant item, value.toList()) {
                 marshall(item);
             }
             break;
         }
-        case mafVariant::Map: {
-            mafMap<mafString, mafVariant> map = value.toMap();
-            mafMap<mafString, mafVariant>::ConstIterator index = map.begin();
-            m_DataStreamWrite << mafString("map");
+        case QVariant::Map: {
+            QMap<QString, QVariant> map = value.toMap();
+            QMap<QString, QVariant>::ConstIterator index = map.begin();
+            m_DataStreamWrite << QString("map");
             while(index != map.end()) {
                 marshall(index.key());
                 int multi = 0;
-                if (index.value().type() == mafVariant::List) {
+                if (index.value().type() == QVariant::List) {
                     multi = index.value().toList().count();
-                } else if (index.value().type() == mafVariant::Map) {
+                } else if (index.value().type() == QVariant::Map) {
                     multi = index.value().toMap().count();
-                } else if (index.value().type() == mafVariant::Hash) {
+                } else if (index.value().type() == QVariant::Hash) {
                     multi = index.value().toHash().count();
                 }
                 marshall(*index);
@@ -513,18 +513,18 @@ void mafCodecBrickedVolume::marshall(const mafVariant &value) {
             }
             break;
         }
-        case mafVariant::Hash: {
-            mafHash<mafString, mafVariant> hash = value.toHash();
-            mafHash<mafString, mafVariant>::ConstIterator index = hash.begin();
-            m_DataStreamWrite << mafString("hash");
+        case QVariant::Hash: {
+            QHash<QString, QVariant> hash = value.toHash();
+            QHash<QString, QVariant>::ConstIterator index = hash.begin();
+            m_DataStreamWrite << QString("hash");
             while(index != hash.end()) {
                 marshall(index.key());
                 int multi = 0;
-                if (index.value().type() == mafVariant::List) {
+                if (index.value().type() == QVariant::List) {
                     multi = index.value().toList().count();
-                } else if (index.value().type() == mafVariant::Map) {
+                } else if (index.value().type() == QVariant::Map) {
                     multi = index.value().toMap().count();
-                } else if (index.value().type() == mafVariant::Hash) {
+                } else if (index.value().type() == QVariant::Hash) {
                     multi = index.value().toHash().count();
                 }
                 m_DataStreamWrite << multi;
@@ -533,15 +533,15 @@ void mafCodecBrickedVolume::marshall(const mafVariant &value) {
             }
             break;
         }
-        case mafVariant::ByteArray: {
-            m_DataStreamWrite << mafString("base64");
+        case QVariant::ByteArray: {
+            m_DataStreamWrite << QString("base64");
             m_DataStreamWrite << value.toByteArray().toBase64();
             break;
         }
         default: {
-            if(value.canConvert(mafVariant::String)) {
-                m_DataStreamWrite << mafString("string");
-                m_DataStreamWrite << (mafString)value.toString();
+            if(value.canConvert(QVariant::String)) {
+                m_DataStreamWrite << QString("string");
+                m_DataStreamWrite << (QString)value.toString();
             }
             else {
                //self representation?
@@ -551,88 +551,88 @@ void mafCodecBrickedVolume::marshall(const mafVariant &value) {
     }
 }
 
-mafVariant mafCodecBrickedVolume::demarshall(mafString typeName, int multiplicity) {
+QVariant mafCodecBrickedVolume::demarshall(QString typeName, int multiplicity) {
     if (typeName == "string") {
-        mafString value;
+        QString value;
         m_DataStreamRead >> value;
-        return mafVariant(value);
+        return QVariant(value);
     }
     else if (typeName == "int") {
         int value = 0;
         m_DataStreamRead >> value;
-        return mafVariant(value);
+        return QVariant(value);
     }
     else if(typeName == "double") {
         double value = 0;
         m_DataStreamRead >> value;
-        return mafVariant(value);
+        return QVariant(value);
     }
     else if(typeName == "boolean") {
         bool value;
         m_DataStreamRead >> value;
-        return mafVariant(value);
+        return QVariant(value);
     }
     else if(typeName == "datetime" || typeName == "dateTime.iso8601") {
-        mafString value;
+        QString value;
         m_DataStreamRead >> value;
-        return mafVariant(mafDateTime::fromString(value, Qt::ISODate));
+        return QVariant(QDateTime::fromString(value, Qt::ISODate));
     }
     else if(typeName == "list") {
-        mafList<mafVariant> value;
+        QList<QVariant> value;
         for (int i = 0; i < multiplicity; ++i) {
-            mafString type;
+            QString type;
             int multi = 0;
             m_DataStreamRead >> type;
-            value.append(mafVariant(demarshall(type, multi)));
+            value.append(QVariant(demarshall(type, multi)));
         }
-        return mafVariant(value);
+        return QVariant(value);
     }
     else if(typeName == "map") {
-        mafMap<mafString,mafVariant> stct;
+        QMap<QString,QVariant> stct;
         for (int i = 0; i < multiplicity; ++i) {
-            mafString type;
+            QString type;
             int multi = 0;
             m_DataStreamRead >> type;
-            mafString nodeName = demarshall(type, multi).toString();
+            QString nodeName = demarshall(type, multi).toString();
             m_DataStreamRead >> type;
             m_DataStreamRead >> multi;
-            stct[nodeName] = mafVariant(demarshall(type, multi));
+            stct[nodeName] = QVariant(demarshall(type, multi));
         }
-        return mafVariant(stct);
+        return QVariant(stct);
     }
     else if(typeName == "hash") {
-        mafHash<mafString,mafVariant> hash;
+        QHash<QString,QVariant> hash;
         for (int i = 0; i < multiplicity; ++i) {
-            mafString type;
+            QString type;
             int multi = 0;
             m_DataStreamRead >> type;
-            mafString nodeName = demarshall(type, multi).toString();
+            QString nodeName = demarshall(type, multi).toString();
             m_DataStreamRead >> multi;
             m_DataStreamRead >> type;
-            hash[nodeName] = mafVariant(demarshall(type, multi));
+            hash[nodeName] = QVariant(demarshall(type, multi));
         }
-        return mafVariant(hash);
+        return QVariant(hash);
     }
     else if(typeName == "base64") {
-        mafVariant returnVariant;
-        mafByteArray dest;
-        mafByteArray src;
+        QVariant returnVariant;
+        QByteArray dest;
+        QByteArray src;
         m_DataStreamRead >> src;
-        dest = mafByteArray::fromBase64(src);
-        mafDataStream ds(&dest, mafIODevice::ReadOnly);
-        ds.setVersion(mafDataStream::Qt_4_6);
+        dest = QByteArray::fromBase64(src);
+        QDataStream ds(&dest, mafIODevice::ReadOnly);
+        ds.setVersion(QDataStream::Qt_4_6);
         ds >> returnVariant;
-        return returnVariant.isValid() ? returnVariant : mafVariant(dest);
+        return returnVariant.isValid() ? returnVariant : QVariant(dest);
     }
-    mafMsgCritical() << mafString("Cannot handle type %1").arg(typeName);
-    return mafVariant();
+    qCritical() << QString("Cannot handle type %1").arg(typeName);
+    return QVariant();
 }
 
 int mafCodecBrickedVolume::getByteNum(int dataType) {
     int byteNum = 0;
     switch(dataType) {
         case mafUnsignedChar:
-        case mafChar:
+        case QChar:
             byteNum = 1;
             break;
         case mafUnsignedShort:
@@ -648,7 +648,7 @@ int mafCodecBrickedVolume::getByteNum(int dataType) {
             byteNum = sizeof(double);
             break;
         default:
-            mafMsgCritical("Unknown data type.\n");
+            qCritical("Unknown data type.\n");
 
     }
     return byteNum;
@@ -694,7 +694,7 @@ void mafCodecBrickedVolume::resample(void *originalData, void *resampledData, in
         case mafUnsignedChar:
             resampleVolume<unsigned char>((unsigned char*)originalData, (unsigned char*)resampledData, componentNum, dimensions);
             break;
-        case mafChar:
+        case QChar:
             resampleVolume<char>((char*)originalData, (char*)resampledData, componentNum, dimensions);
             break;
         case mafUnsignedShort:
@@ -716,7 +716,7 @@ void mafCodecBrickedVolume::resample(void *originalData, void *resampledData, in
             resampleVolume<double>((double*)originalData, (double*)resampledData, componentNum, dimensions);
             break;
         default:
-            mafMsgCritical("Unknown data type.\n");
+            qCritical("Unknown data type.\n");
     }
 }
 
@@ -787,7 +787,7 @@ bool mafCodecBrickedVolume::voxelsEqualInBrick(char *brickData, int dataType, in
     switch(dataType) {
         case mafUnsignedChar:
             return allVoxelsEqual<unsigned char>((unsigned char *)brickData, componentNum, brickSize);
-        case mafChar:
+        case QChar:
             return allVoxelsEqual<char>((char *)brickData, componentNum, brickSize);
         case mafUnsignedShort:
             return allVoxelsEqual<unsigned short>((unsigned short *)brickData, componentNum, brickSize);
@@ -802,7 +802,7 @@ bool mafCodecBrickedVolume::voxelsEqualInBrick(char *brickData, int dataType, in
         case mafDouble:
             return allVoxelsEqual<double>((double *)brickData, componentNum, brickSize);
         default:
-            mafMsgCritical("Unknown data type.\n");
+            qCritical("Unknown data type.\n");
     }
     return false;
 }
@@ -870,19 +870,19 @@ void mafCodecBrickedVolume::fillVolumeWithBrick(char *volumeData, char *brickDat
     }
 }
 
-void mafCodecBrickedVolume::encode(mafString url, void *data, int dataType, int componentNum, int dimensions[3], int brickSize, int levels) {
+void mafCodecBrickedVolume::encode(QString url, void *data, int dataType, int componentNum, int dimensions[3], int brickSize, int levels) {
     // open all files
-    mafFile bpiFile(url + ".bpi"), bevFile(url + ".bev"), bvFile(url + ".bv");
+    QFile bpiFile(url + ".bpi"), bevFile(url + ".bev"), bvFile(url + ".bv");
     if (!bpiFile.open(mafIODevice::WriteOnly)) {
-        mafMsgCritical("%s", mafTr("Not able to open file '%1'.bpi").arg(url).toAscii().data());
+        qCritical("%s", mafTr("Not able to open file '%1'.bpi").arg(url).toAscii().data());
         return;
     }
     if (!bevFile.open(mafIODevice::WriteOnly)) {
-        mafMsgCritical("%s", mafTr("Not able to open file '%1'.bev").arg(url).toAscii().data());
+        qCritical("%s", mafTr("Not able to open file '%1'.bev").arg(url).toAscii().data());
         return;
     }
     if (!bvFile.open(mafIODevice::WriteOnly)) {
-        mafMsgCritical("%s", mafTr("Not able to open file '%1'.bv").arg(url).toAscii().data());
+        qCritical("%s", mafTr("Not able to open file '%1'.bv").arg(url).toAscii().data());
         return;
     }
 
@@ -934,19 +934,19 @@ void mafCodecBrickedVolume::encode(mafString url, void *data, int dataType, int 
     delete []sampledData;
 }
 
-void * mafCodecBrickedVolume::decode(mafString url, int dataType, int componentNum, int originalDimensions[3], int brickSize, int startPos[3], int dimensions[3], int level) {
+void * mafCodecBrickedVolume::decode(QString url, int dataType, int componentNum, int originalDimensions[3], int brickSize, int startPos[3], int dimensions[3], int level) {
     // open all files
-    mafFile bpiFile(url + ".bpi"), bevFile(url + ".bev"), bvFile(url + ".bv");
+    QFile bpiFile(url + ".bpi"), bevFile(url + ".bev"), bvFile(url + ".bv");
     if (!bpiFile.open(mafIODevice::ReadOnly)) {
-        mafMsgCritical("%s", mafTr("Not able to open file '%1'.bpi").arg(url).toAscii().data());
+        qCritical("%s", mafTr("Not able to open file '%1'.bpi").arg(url).toAscii().data());
         return 0;
     }
     if (!bevFile.open(mafIODevice::ReadOnly)) {
-        mafMsgCritical("%s", mafTr("Not able to open file '%1'.bev").arg(url).toAscii().data());
+        qCritical("%s", mafTr("Not able to open file '%1'.bev").arg(url).toAscii().data());
         return 0;
     }
     if (!bvFile.open(mafIODevice::ReadOnly)) {
-        mafMsgCritical("%s", mafTr("Not able to open file '%1'.bv").arg(url).toAscii().data());
+        qCritical("%s", mafTr("Not able to open file '%1'.bv").arg(url).toAscii().data());
         return 0;
     }
 

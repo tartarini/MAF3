@@ -33,7 +33,7 @@ class MAFCORESHARED_EXPORT mafHierarchy : public mafObjectBase {
 
 public:
     /// Object constructor.
-    mafHierarchy(const mafString code_location = "");
+    mafHierarchy(const QString code_location = "");
 
     /// Add a node to the tree.
     void addHierarchyNode(QObject *node, QObject *parentNode = 0);
@@ -63,7 +63,7 @@ public:
     void moveTreeIteratorToRootNode();
 
     /// Fill the parameter string with a text representation of the tree.
-    void printInformation(mafString &string);
+    void printInformation(QString &string);
 
     /// retrieve current data inside the node
     QObject *currentData() { return m_TreeIterator.node()->m_data; }

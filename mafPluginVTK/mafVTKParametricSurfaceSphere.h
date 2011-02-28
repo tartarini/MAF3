@@ -36,7 +36,7 @@ class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceSphere : public mafPlugin
 
 public:
     /// Object constructor.
-    mafVTKParametricSurfaceSphere(const mafString code_location = "");
+    mafVTKParametricSurfaceSphere(const QString code_location = "");
 
 public slots:
 

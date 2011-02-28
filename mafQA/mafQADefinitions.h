@@ -19,8 +19,5 @@
 
 namespace mafQA {
 
-#define mafTextStream QTextStream
-
-} // namespace mafQA
-
+} // namQTextStream
 #endif // MAFQADEFINITIONS_H

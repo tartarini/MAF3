@@ -25,19 +25,19 @@ class testObjectCustomForCoreRegistration : public mafObject {
 
 public:
     /// Object constructor.
-    testObjectCustomForCoreRegistration(const mafString code_location = "");
+    testObjectCustomForCoreRegistration(const QString code_location = "");
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
 };
 
-testObjectCustomForCoreRegistration::testObjectCustomForCoreRegistration(const mafString code_location) : mafObject(code_location) {
+testObjectCustomForCoreRegistration::testObjectCustomForCoreRegistration(const QString code_location) : mafObject(code_location) {
 }
 
 bool testObjectCustomForCoreRegistration::acceptObject(mafCore::mafObjectBase *obj) {
     mafObject *object = qobject_cast<mafCore::mafObject*>(obj);
     if(object != NULL) {
-        const mafTagList *tagList = object->tagList();
+        const QVariantList *tagList = object->tagList();
         if(tagList->size() > 0) {
             return true;
         }
@@ -85,7 +85,7 @@ void mafCoreRegistrationTest::acceptObjectTest() {
     // Register the custom visual pipe using the macro for registering itself also for binding check
     mafRegisterObjectAndAcceptBind(testObjectCustomForCoreRegistration);
 
-    mafStringList binding_class_list;
+    QStringList binding_class_list;
 
     // Create two test objects.
     mafObject *obj_accepted = mafNEW(mafCore::mafObject);
@@ -100,7 +100,7 @@ void mafCoreRegistrationTest::acceptObjectTest() {
 
     binding_class_list = mafCoreRegistration::acceptObject(obj_accepted);
     num = binding_class_list.count();
-    mafMsgDebug() << num;
+    qDebug() << num;
     QVERIFY(num != 0);
 
     // Check that the test object has been registered correctly to the object factory.

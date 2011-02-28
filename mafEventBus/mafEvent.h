@@ -32,7 +32,7 @@ public:
     ~mafEvent();
 
     /// Overload object constructor.
-    mafEvent(mafString topic, mafEventType event_type, mafSignatureType signature_type, QObject *objectPointer, mafString signature);
+    mafEvent(QString topic, mafEventType event_type, mafSignatureType signature_type, QObject *objectPointer, QString signature);
 
     /// Allow to assign the event type: mafEventTypeLocal or mafEventTypeRemote.
     void setEventType(mafEventType et);
@@ -44,13 +44,13 @@ public:
     bool isEventLocal() const;
 
     /// Allow to set or modify the event ID
-    void setEventTopic(mafString topic);
+    void setEventTopic(QString topic);
 
     /// Return the Id associated with the event.
-    mafString eventTopic() const;
+    QString eventTopic() const;
 
     /// Return the name associated to the numeric Id.
-    //mafString eventIdName() const;
+    //QString eventIdName() const;
 
     /// Redefined operator to have access to the entries owned.
     mafEventHash *entries();
@@ -59,7 +59,7 @@ public:
     mafEventHash *entries() const;
 
     /// Overload operator for rapid access to mafDictionaryEntries
-    mafVariant &operator[](mafString key) const;
+    QVariant &operator[](QString key) const;
 
 private:
     mafEventHash *m_EventHash;

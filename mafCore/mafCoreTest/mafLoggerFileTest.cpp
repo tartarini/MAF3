@@ -27,7 +27,7 @@ using namespace mafCore;
 //! <description>
 //mafLoggerFile defines the MAF3 logging class that will store messages into a file
 //on filesystem. It creates a temporary file into a temporary directory and redifine
-//"virtual void loggedMessage(mafMsgType type, mafString &msg)" used to write the given
+//"virtual void loggedMessage(QtMsgType type, QString &msg)" used to write the given
 //message into the temporary file created.
 //! </description>
 
@@ -63,18 +63,18 @@ private:
 
 void mafLoggerFileTest::mafLoggerFileConstructorTest() {
     QVERIFY(m_Logger != NULL);
-    mafString log_file = m_Logger->lastLogFile();
+    QString log_file = m_Logger->lastLogFile();
     QVERIFY(QFile::exists(log_file));
 }
 
 void mafLoggerFileTest::logMessageTest() {
-    mafString log_file = m_Logger->lastLogFile();
+    QString log_file = m_Logger->lastLogFile();
     QFileInfo fInfo(log_file);
     QVERIFY(fInfo.size() == 0); // Empty file at begin.
 
     //! <snippet>
-    mafString msg("Test for mafLoggerFile");
-    m_Logger->logMessage(mafMsgTypeDebug, msg);
+    QString msg("Test for mafLoggerFile");
+    m_Logger->logMessage(QtDebugMsg, msg);
     //! </snippet>
 
 //    QVERIFY(fInfo.size() > 0); // Cannot be verified because the
@@ -84,7 +84,7 @@ void mafLoggerFileTest::logMessageTest() {
 }
 
 void mafLoggerFileTest::clearLogHistoryTest() {
-    mafString log_file = m_Logger->lastLogFile();
+    QString log_file = m_Logger->lastLogFile();
     m_Logger->clearLogHistory();
 
     QVERIFY(!QFile::exists(log_file)); // Should not exists; after clear the old file is deleted.

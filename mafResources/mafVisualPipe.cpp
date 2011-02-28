@@ -19,7 +19,7 @@ using namespace mafEventBus;
 using namespace mafResources;
 
 
-mafVisualPipe::mafVisualPipe(const mafString code_location) : mafPipe(code_location), m_Output(NULL) {
+mafVisualPipe::mafVisualPipe(const QString code_location) : mafPipe(code_location), m_Output(NULL) {
     initializeConnections();
 }
 

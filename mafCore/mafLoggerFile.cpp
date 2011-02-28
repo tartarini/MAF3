@@ -14,7 +14,7 @@
 
 using namespace mafCore;
 
-mafLoggerFile::mafLoggerFile(const mafString code_location) : mafLogger(code_location) {
+mafLoggerFile::mafLoggerFile(const QString code_location) : mafLogger(code_location) {
     initializeNewTemporaryFile();
 }
 
@@ -22,29 +22,29 @@ mafLoggerFile::~mafLoggerFile() {
     closeLastTempFile();
 }
 
-void mafLoggerFile::loggedMessage(const mafMsgType type, const mafString &msg) {
-    mafString bufferLog = mafDateTime::currentDateTime().toString(mafDateTimeLogFormat);
+void mafLoggerFile::loggedMessage(const QtMsgType type, const QString &msg) {
+    QString bufferLog = QDateTime::currentDateTime().toString(mafDateTimeLogFormat);
     bufferLog.append(" --> ");
 
     switch (type) {
-        case mafMsgTypeDebug:
+        case QtDebugMsg:
             if(logMode() == mafLogModeTestSuite) {
                 bufferLog.append(TEST_SUITE_LOG_PREFIX);
             } else {
                 bufferLog.append("Debug: ");
             }
         break;
-        case mafMsgTypeWarning:
+        case QtWarningMsg:
             if(logMode() == mafLogModeTestSuite) {
                 bufferLog.append(TEST_SUITE_LOG_PREFIX);
             } else {
                 bufferLog.append("Warning: ");
             }
         break;
-        case mafMsgTypeCritical: // System message types are defined as same type by Qt.
+        case QtCriticalMsg: // System message types are defined as same type by Qt.
             bufferLog.append("Critical: ");
         break;
-        case mafMsgTypeFatal:
+        case QtFatalMsg:
             bufferLog.append("Fatal: ");
         break;
     }
@@ -56,7 +56,7 @@ void mafLoggerFile::loggedMessage(const mafMsgType type, const mafString &msg) {
 
 void mafLoggerFile::clearLogHistory() {
     closeLastTempFile();
-    mafString old_file = m_LastLogFile;
+    QString old_file = m_LastLogFile;
     initializeNewTemporaryFile();
     QFile::remove(old_file);
 }
@@ -64,7 +64,7 @@ void mafLoggerFile::clearLogHistory() {
 void mafLoggerFile::initializeNewTemporaryFile() {
     m_TempFileLog = new QTemporaryFile();
     m_TempFileLog->setAutoRemove(false);
-    mafString tmp = QDir::tempPath();
+    QString tmp = QDir::tempPath();
     tmp.append("/maf3Logs");
     QDir log_dir(tmp);
     if(!log_dir.exists()) {

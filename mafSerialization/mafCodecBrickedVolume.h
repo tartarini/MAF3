@@ -45,7 +45,7 @@ class MAFSERIALIZATIONSHARED_EXPORT mafCodecBrickedVolume : public mafCodecRaw {
 
 public:
     /// Object constructor.
-    mafCodecBrickedVolume(const mafString code_location = "");
+    mafCodecBrickedVolume(const QString code_location = "");
 
     /// Encode the memento into the output type.
     /*virtual*/ void encode(mafCore::mafMemento *memento);
@@ -65,7 +65,7 @@ private:
     void marshall(const QVariant &value );
 
     /// unmarshalling of QVariant data type in order to write the correct type.
-    mafVariant demarshall(mafString typeName, int multiplicity);
+    QVariant demarshall(QString typeName, int multiplicity);
 
     /// get the byte number of the data type
     /** 
@@ -177,7 +177,7 @@ private:
      * @param brickSize     the brick size
      * @param levels        the level number of multiresolution
      */
-    void encode(mafString url, void *data, int dataType, int componentNum, int dimensions[3], int brickSize, int levels);
+    void encode(QString url, void *data, int dataType, int componentNum, int dimensions[3], int brickSize, int levels);
 
     /// decode the raw volume data in the indicated level
     /**
@@ -191,10 +191,10 @@ private:
      * @param dimensions         the dimensions to be loaded in the current resolution
      * @param level              the multiresolution level to be loaded
      */
-    void *decode(mafString url, int dataType, int componentNum, int originalDimensions[3], int brickSize, int startPos[3], int dimensions[3], int level);
+    void *decode(QString url, int dataType, int componentNum, int originalDimensions[3], int brickSize, int startPos[3], int dimensions[3], int level);
 
-    mafDataStream m_DataStreamRead;
-    mafDataStream m_DataStreamWrite;
+    QDataStream m_DataStreamRead;
+    QDataStream m_DataStreamWrite;
 };
 
 } // mafSerialization

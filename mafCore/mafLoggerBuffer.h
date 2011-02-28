@@ -31,13 +31,13 @@ class MAFCORESHARED_EXPORT mafLoggerBuffer : public mafLogger {
 
 public:
     /// Object constructor.
-    mafLoggerBuffer(const mafString code_location = "");
+    mafLoggerBuffer(const QString code_location = "");
 
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
 
     /// return the buffer containing all the logged messages.
-    mafString &bufferLog() {return m_BufferLog;}
+    QString &bufferLog() {return m_BufferLog;}
 
     /// Clear all the logged messages until now.
     /*virtual*/ void clearLogHistory() {m_BufferLog.clear();}
@@ -46,10 +46,10 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafLoggerBuffer();
     /// Method used to log the given message to the buffer.
-    /*virtual*/ void loggedMessage(const mafMsgType type, const mafString &msg);
+    /*virtual*/ void loggedMessage(const QtMsgType type, const QString &msg);
 
 private:
-    mafString m_BufferLog; ///< String containing all the logged messages for a specific session.
+    QString m_BufferLog; ///< String containing all the logged messages for a specific session.
 };
 
 }

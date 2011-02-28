@@ -24,7 +24,7 @@ using namespace mafCore;
 //! </title>
 //! <description>
 //mafLoggerConsole defines the MAF3 default logging class that will shows messages to console output.
-//It also redifine "virtual void loggedMessage(mafMsgType type, mafString &msg)" used to log the given message to the console.
+//It also redifine "virtual void loggedMessage(QtMsgType type, QString &msg)" used to log the given message to the console.
 //! </description>
 
 class mafLoggerConsoleTest : public QObject {
@@ -59,12 +59,12 @@ void mafLoggerConsoleTest::mafLoggerConsoleConstructorTest() {
 
 void mafLoggerConsoleTest::logMesageTest() {
     //! <snippet>
-    mafString msg("Test for mafLoggerConsole");
-    m_Logger->logMessage(mafMsgTypeDebug, msg);
+    QString msg("Test for mafLoggerConsole");
+    m_Logger->logMessage(QtDebugMsg, msg);
     //! </snippet>
 
-    // Test mafMsgTypeWarning
-    m_Logger->logMessage(mafMsgTypeWarning, msg);
+    // Test QtWarningMsg
+    m_Logger->logMessage(QtWarningMsg, msg);
 }
 
 MAF_REGISTER_TEST(mafLoggerConsoleTest);

@@ -29,7 +29,7 @@ class MAFSERIALIZATIONSHARED_EXPORT mafCodecXML : public mafCodec {
 
 public:
     /// Object constructor.
-    mafCodecXML(const mafString code_location = "");
+    mafCodecXML(const QString code_location = "");
 
     /// Encode the memento into the output type.
     /*virtual*/ void encode(mafCore::mafMemento *memento);
@@ -46,7 +46,7 @@ private:
     void marshall(const QVariant &value );
 
     /// unmarshalling of QVariant data type in order to write the correct type.
-    mafVariant demarshall( const mafDomElement &elem );
+    QVariant demarshall( const mafDomElement &elem );
 
     mafCore::mafMementoPropertyItem setPropertyItem(mafDomElement eChild);
 

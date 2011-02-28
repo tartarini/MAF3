@@ -19,10 +19,10 @@ int main(int argc, char *argv[]) {
     a.setApplicationName("SimpleApp");
     a.setApplicationVersion("1.0");
 
-    mafString pluginVTK;
+    QString pluginVTK;
     pluginVTK.append(VTK_PLUGIN_NAME);
 
-    mafString p = QDir::currentPath();
+    QString p = QDir::currentPath();
     p.append(QDir::separator());
     p.append("plugins");
 

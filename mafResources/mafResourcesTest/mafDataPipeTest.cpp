@@ -30,23 +30,23 @@ class  testDataPipeCustom : public  mafDataPipe {
 
 public:
     /// Object constructor.
-    testDataPipeCustom(const mafString code_location = "");
+    testDataPipeCustom(const QString code_location = "");
 
     /// Initialize and create the pipeline
     /*virtual*/ void createPipe();
 
     /// Return the string variable initialized and updated from the data pipe.
-    mafString pipeline() {return m_PipeLine;}
+    QString pipeline() {return m_PipeLine;}
 
 public slots:
     /// Allow to execute and update the pipeline when something change
     /*virtual*/ void updatePipe(double t = -1);
 
 private:
-    mafString m_PipeLine; ///< Test Var.
+    QString m_PipeLine; ///< Test Var.
 };
 
-testDataPipeCustom::testDataPipeCustom(const mafString code_location) : mafDataPipe(code_location), m_PipeLine("") {
+testDataPipeCustom::testDataPipeCustom(const QString code_location) : mafDataPipe(code_location), m_PipeLine("") {
 }
 
 void testDataPipeCustom::createPipe() {
@@ -55,7 +55,7 @@ void testDataPipeCustom::createPipe() {
 
 void testDataPipeCustom::updatePipe(double t) {
     m_PipeLine = "Updated";
-    m_PipeLine.append(mafString::number(t));
+    m_PipeLine.append(QString::number(t));
     m_Output = inputList()->at(0);
 }
 
@@ -108,10 +108,10 @@ void mafDataPipeTest::mafDataPipeAllocationTest() {
 }
 
 void mafDataPipeTest::mafDataPipeCreationAndUpdateTest() {
-    mafString res("Created");
+    QString res("Created");
     m_DataPipe->createPipe();
 
-    mafString pipe = m_DataPipe->pipeline();
+    QString pipe = m_DataPipe->pipeline();
     QCOMPARE(pipe, res);
 
     res = "Updated1";
@@ -125,7 +125,7 @@ void mafDataPipeTest::decorateTest() {
     // Instantiate and create the decorator data pipe.
     testDataPipeCustom *dpDecorator = mafNEW(testDataPipeCustom);
 //    dpDecorator->createPipe();
-    mafString res("Updated1");
+    QString res("Updated1");
     m_DataPipe->decorateWithDataPipe(dpDecorator);
     
     m_DataPipe->output(1);

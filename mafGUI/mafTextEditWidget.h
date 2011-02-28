@@ -38,13 +38,13 @@ public:
     void enableEditing(bool enable);
 
     /// load Highlight Dictionary from CSV file
-    void loadDictionaryFromCSV(const mafString &csvFile);
+    void loadDictionaryFromCSV(const QString &csvFile);
 
     /// clear text area.
     void clear();
 
     /// append Text in the area.
-    void append(const mafString text);
+    void append(const QString text);
 
 private:
     /// set the layout of this composite widget

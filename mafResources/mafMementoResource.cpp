@@ -16,17 +16,17 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafMementoResource::mafMementoResource(const mafString code_location)  : mafMemento(code_location) {
+mafMementoResource::mafMementoResource(const QString code_location)  : mafMemento(code_location) {
 }
 
-mafMementoResource::mafMementoResource(const mafObject *obj, const mafResourceList *inputList, const mafString code_location) : mafMemento(obj, code_location) {
+mafMementoResource::mafMementoResource(const mafObject *obj, const mafResourceList *inputList, const QString code_location) : mafMemento(obj, code_location) {
     REQUIRE(obj != NULL);
     REQUIRE(inputList != NULL);
 
-    mafStringList hashLists;
+    QStringList hashLists;
     mafResource *o = NULL;
     foreach(o, *inputList) {
-        mafString hash = o->objectHash();
+        QString hash = o->objectHash();
         hashLists.append(hash);
     }
 
@@ -34,7 +34,7 @@ mafMementoResource::mafMementoResource(const mafObject *obj, const mafResourceLi
     mafMementoPropertyItem item;
     item.m_Multiplicity = hashLists.count();
     item.m_Name = "InputList";
-    item.m_Value = mafVariant(hashLists);
+    item.m_Value = QVariant(hashLists);
     list->append(item);
 }
 

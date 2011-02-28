@@ -39,7 +39,7 @@ class testCustomManager : public mafObjectBase {
 
 public:
     /// Object constructor
-    testCustomManager(const mafString code_location = "");
+    testCustomManager(const QString code_location = "");
 
 public slots:
     /// observer needed to receive the 'mementoLoaded' signal
@@ -61,7 +61,7 @@ testCustomManager::testCustomManager(QString code_location) : mafObjectBase(code
 }
 
 void testCustomManager::createdMemento(mafCore::mafMemento *m) {
-    mafMsgDebug("%s", mafTr("Memento loaded!!").toAscii().data());
+    qDebug("%s", mafTr("Memento loaded!!").toAscii().data());
     QVERIFY(m != NULL);
     mafDEL(m);
 }
@@ -111,7 +111,7 @@ private slots:
 
 private:
     mafSerializationManager *m_SerializationManager; ///< Test var
-    mafString m_TestURL; ///< Test URL for file.
+    QString m_TestURL; ///< Test URL for file.
     testCustomManager *m_CustomManager; ///< Manager test var
 };
 
@@ -126,7 +126,7 @@ void mafSerializationManagerTest::mafSerializationManagerAllocationTest() {
 }
 
 void mafSerializationManagerTest::mafSerializationManagerSaveTest() {
-    mafString pathURL = QDir::tempPath();
+    QString pathURL = QDir::tempPath();
     pathURL.append("/maf3Logs");
     QDir log_dir(pathURL);
     if(!log_dir.exists()) {
@@ -135,30 +135,30 @@ void mafSerializationManagerTest::mafSerializationManagerSaveTest() {
     m_TestURL = pathURL;
     m_TestURL.append("/testSerializationManager1.maf3");
 
-    mafString obj_type("mafCore::mafObject");
-    mafString vtk = "VTK";
-    mafString stl = "STL";
-    mafString vrml = "VRML";
-    mafString codecVTK = "myNamespace::mafCodecVTK";
-    mafString codecSTL = "myNamespace::mafCodecSTL";
-    mafString codecVRML = "myNamespace::mafCodecVRML";
+    QString obj_type("mafCore::mafObject");
+    QString vtk = "VTK";
+    QString stl = "STL";
+    QString vrml = "VRML";
+    QString codecVTK = "myNamespace::mafCodecVTK";
+    QString codecSTL = "myNamespace::mafCodecSTL";
+    QString codecVRML = "myNamespace::mafCodecVRML";
 
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafString, obj_type));
-    argList.append(mafEventArgument(mafString, vtk));
-    argList.append(mafEventArgument(mafString, codecVTK));
+    argList.append(mafEventArgument(QString, obj_type));
+    argList.append(mafEventArgument(QString, vtk));
+    argList.append(mafEventArgument(QString, codecVTK));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal, &argList);
 
     argList.clear();
-    argList.append(mafEventArgument(mafString, obj_type));
-    argList.append(mafEventArgument(mafString, stl));
-    argList.append(mafEventArgument(mafString, codecSTL));
+    argList.append(mafEventArgument(QString, obj_type));
+    argList.append(mafEventArgument(QString, stl));
+    argList.append(mafEventArgument(QString, codecSTL));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal,&argList);
 
     argList.clear();
-    argList.append(mafEventArgument(mafString, obj_type));
-    argList.append(mafEventArgument(mafString, vrml));
-    argList.append(mafEventArgument(mafString, codecVRML));
+    argList.append(mafEventArgument(QString, obj_type));
+    argList.append(mafEventArgument(QString, vrml));
+    argList.append(mafEventArgument(QString, codecVRML));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal,&argList);
 
     mafObject *obj1 = mafNEW(mafCore::mafObject);
@@ -167,17 +167,17 @@ void mafSerializationManagerTest::mafSerializationManagerSaveTest() {
     mafMemento *m = obj1->createMemento();
 
     // Try to use a unknown codec; should be used the RAW default.
-    mafString encodeType = "MP3";
+    QString encodeType = "MP3";
     argList.clear();
     argList.append(mafEventArgument(mafCore::mafMemento *, m));
-    argList.append(mafEventArgument(mafString, m_TestURL));
-    argList.append(mafEventArgument(mafString, encodeType));
+    argList.append(mafEventArgument(QString, m_TestURL));
+    argList.append(mafEventArgument(QString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal,&argList);
 
-    QVERIFY(mafFile::exists(m_TestURL));
+    QVERIFY(QFile::exists(m_TestURL));
     QFileInfo fInfo1(m_TestURL);
     QVERIFY(fInfo1.size() > 0);
-    mafFile::remove(m_TestURL);
+    QFile::remove(m_TestURL);
 
     //! [1..]
     // Fake memento with custom object type to be serialized with mafCodecRaw; it should be able to serialize it.
@@ -186,7 +186,7 @@ void mafSerializationManagerTest::mafSerializationManagerSaveTest() {
     mafMementoPropertyItem item;
     item.m_Name = "objectType";
     item.m_Multiplicity = 1;
-    item.m_Value = mafVariant("myNamespace::mafCustomObject");
+    item.m_Value = QVariant("myNamespace::mafCustomObject");
     list->append(item);
 
     m_TestURL = pathURL;
@@ -195,24 +195,24 @@ void mafSerializationManagerTest::mafSerializationManagerSaveTest() {
     encodeType = "RAW";
     argList.clear();
     argList.append(mafEventArgument(mafCore::mafMemento *, cm));
-    argList.append(mafEventArgument(mafString, m_TestURL));
-    argList.append(mafEventArgument(mafString, encodeType));
+    argList.append(mafEventArgument(QString, m_TestURL));
+    argList.append(mafEventArgument(QString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal,&argList);
     //! [1..]
-    QVERIFY(mafFile::exists(m_TestURL));
+    QVERIFY(QFile::exists(m_TestURL));
     QFileInfo fInfo3(m_TestURL);
     QVERIFY(fInfo3.size() > 0);
-    mafFile::remove(m_TestURL);
+    QFile::remove(m_TestURL);
 
     // Try to use the default codec (mafCodecRaw).
     m_TestURL = pathURL;
     m_TestURL.append("/testSerializationManager3.maf3");
     argList.clear();
     argList.append(mafEventArgument(mafCore::mafMemento *, m));
-    argList.append(mafEventArgument(mafString, m_TestURL));
+    argList.append(mafEventArgument(QString, m_TestURL));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal,&argList);
 
-    QVERIFY(mafFile::exists(m_TestURL));
+    QVERIFY(QFile::exists(m_TestURL));
     QFileInfo fInfo2(m_TestURL);
     QVERIFY(fInfo2.size() > 0);
 
@@ -222,13 +222,13 @@ void mafSerializationManagerTest::mafSerializationManagerSaveTest() {
 }
 
 void mafSerializationManagerTest::mafSerializationManagerLoadTest() {
-    mafString encodeType = "RAW";
+    QString encodeType = "RAW";
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafString, m_TestURL));
-    argList.append(mafEventArgument(mafString, encodeType));
+    argList.append(mafEventArgument(QString, m_TestURL));
+    argList.append(mafEventArgument(QString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal,&argList);
     //! [2..]
-    mafFile::remove(m_TestURL);
+    QFile::remove(m_TestURL);
 }
 
 MAF_REGISTER_TEST(mafSerializationManagerTest);

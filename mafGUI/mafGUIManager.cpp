@@ -24,7 +24,7 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafGUI;
 
-mafGUIManager::mafGUIManager(QMainWindow *main_win, const mafString code_location) : mafObjectBase(code_location)
+mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location) : mafObjectBase(code_location)
     , m_NewAct(NULL), m_CollaborateAct(NULL)
     , m_OpenAct(NULL), m_SaveAct(NULL), m_SaveAsAct(NULL), m_RecentFilesSeparatorAct(NULL), m_ExitAct(NULL)
     , m_CutAct(NULL), m_CopyAct(NULL), m_PasteAct(NULL), m_AboutAct(NULL)
@@ -164,7 +164,7 @@ void mafGUIManager::showSettingsDialog() {
 
 void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash) {
     mafCore::mafObjectBase *sel_vme;
-    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
 
     if(!m_ActionsCreated) {
@@ -172,7 +172,7 @@ void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pl
         // Ask to create it which will crete also the actions.
         createMenus();
     }
-    mafString base_class("");
+    QString base_class("");
     mafPluggedObjectInformation objInfo;
     mafPluggedObjectsHash::iterator iter = pluginHash.begin();
     while(iter != pluginHash.end()) {
@@ -198,13 +198,13 @@ void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pl
     this->updateMenuForSelectedVme(sel_vme);
 }
 
-QObject *mafGUIManager::actionByName(mafString name) {
+QObject *mafGUIManager::actionByName(QString name) {
     if(!m_ActionsCreated || name.length() == 0) {
         return NULL;
     }
     for (int i = 0; i < m_ActionList.size(); ++i) {
         QObject *action = m_ActionList.at(i);
-        mafString an = action->objectName();
+        QString an = action->objectName();
         if (an == name) {
             return action;
         }
@@ -213,11 +213,11 @@ QObject *mafGUIManager::actionByName(mafString name) {
 }
 
 void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
-    mafStringList accepted_list;
+    QStringList accepted_list;
     accepted_list = mafCoreRegistration::acceptObject(vme);
 
-    mafList<QAction *> opActions = m_OpMenu->actions();
-    mafString op;
+    QList<QAction *> opActions = m_OpMenu->actions();
+    QString op;
     foreach(QAction *action, opActions) {
         op = action->data().toString();
         action->setEnabled(accepted_list.contains(op));
@@ -245,7 +245,7 @@ void mafGUIManager::registerEvents() {
     mafRegisterLocalSignal("maf.local.gui.action.copy", m_CopyAct, "triggered()");
     mafRegisterLocalSignal("maf.local.gui.action.paste", m_PasteAct, "triggered()");
     mafRegisterLocalSignal("maf.local.gui.action.about", m_AboutAct, "triggered()");
-    mafRegisterLocalSignal("maf.local.gui.pathSelected", this, "pathSelected(const mafString)");
+    mafRegisterLocalSignal("maf.local.gui.pathSelected", this, "pathSelected(const QString)");
 
     // OperationManager's callback
     mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
@@ -328,9 +328,9 @@ void mafGUIManager::startOperation() {
     QAction *opAction = (QAction *)QObject::sender();
     m_OperationWidget->setOperationName(opAction->text());
 
-    mafString op(opAction->data().toString());
+    QString op(opAction->data().toString());
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafString, op));
+    argList.append(mafEventArgument(QString, op));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
 }
 
@@ -338,7 +338,7 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
     m_OpMenu->setEnabled(false);
 
     // Get the started operation
-    mafString guiFilename = operation->uiFilename();
+    QString guiFilename = operation->uiFilename();
     m_OperationWidget->setOperation(operation);
 
     if(guiFilename.isEmpty()) {
@@ -357,7 +357,7 @@ void mafGUIManager::removeOperationGUI() {
 }
 
 mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *parent) {
-//    mafSettings settings;
+//    QSettings settings;
     mafTreeWidget *w = new mafTreeWidget();
     w->setAnimated(true);
     w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -413,7 +413,7 @@ void mafGUIManager::uiLoaded(mafCore::mafContainerInterface *guiWidget) {
         case mafGUILoadedTypeVme:
         break;
         default:
-            mafMsgWarning() << mafTr("type %1 not recognized...").arg(m_GUILoadedType);
+            qWarning() << mafTr("type %1 not recognized...").arg(m_GUILoadedType);
             return;
         break;
     }
@@ -422,16 +422,16 @@ void mafGUIManager::uiLoaded(mafCore::mafContainerInterface *guiWidget) {
 
 void mafGUIManager::createView() {
     QAction *viewAction = (QAction *)QObject::sender();
-    mafString view(viewAction->data().toString());
+    QString view(viewAction->data().toString());
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafString, view));
+    argList.append(mafEventArgument(QString, view));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList);
 }
 
 void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
     REQUIRE(view != NULL);
     // Get the selected view's UI file
-    mafString guiFilename = view->uiFilename();
+    QString guiFilename = view->uiFilename();
     if(guiFilename.isEmpty()) {
         return;
     }
@@ -446,26 +446,26 @@ void mafGUIManager::selectVME(QModelIndex index) {
     mafTreeModel *model = (mafTreeModel *)tree->model();
     mafTreeItem *item = (mafTreeItem *)model->itemFromIndex(index);
     QObject *obj = item->data();
-    mafVariant sel(true);
+    QVariant sel(true);
     obj->setProperty("selected", sel);
 }
 
-void mafGUIManager::chooseFileDialog(const mafString title, const mafString start_dir, const mafString wildcard) {
-    mafString fileName = QFileDialog::getOpenFileName(m_MainWindow, title, start_dir, wildcard);
+void mafGUIManager::chooseFileDialog(const QString title, const QString start_dir, const QString wildcard) {
+    QString fileName = QFileDialog::getOpenFileName(m_MainWindow, title, start_dir, wildcard);
 }
 
 void mafGUIManager::openRecentFile() {
     QAction *action = qobject_cast<QAction *>(sender());
     if (action) {
-        mafString file_to_open(action->data().toString());
+        QString file_to_open(action->data().toString());
         mafEventArgumentsList argList;
-        argList.append(mafEventArgument(mafString, file_to_open));
+        argList.append(mafEventArgument(QString, file_to_open));
         mafEventBusManager::instance()->notifyEvent("maf.local.logic.openFile", mafEventTypeLocal, &argList);
     }
 }
 
 void mafGUIManager::updateRecentFileActions() {
-    mafSettings settings;
+    QSettings settings;
     QStringList files = settings.value("recentFileList").toStringList();
 
     int numRecentFiles = qMin(files.size(), (int)m_MaxRecentFiles);
@@ -482,6 +482,6 @@ void mafGUIManager::updateRecentFileActions() {
     m_RecentFilesSeparatorAct->setVisible(numRecentFiles > 0);
 }
 
-mafString mafGUIManager::strippedName(const mafString &fullFileName) {
+QString mafGUIManager::strippedName(const QString &fullFileName) {
     return QFileInfo(fullFileName).fileName();
 }

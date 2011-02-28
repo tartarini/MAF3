@@ -27,7 +27,7 @@ void mafVMEManager::shutdown() {
     mafDEL(m_Root);
 }
 
-mafVMEManager::mafVMEManager(const mafString code_location) : mafObjectBase(code_location), m_SelectedVME(NULL), m_Root(NULL), m_VMEHierarchy(NULL) {
+mafVMEManager::mafVMEManager(const QString code_location) : mafObjectBase(code_location), m_SelectedVME(NULL), m_Root(NULL), m_VMEHierarchy(NULL) {
     initializeConnections();
     createVMEHierarchy();
 }
@@ -64,7 +64,7 @@ void mafVMEManager::initializeConnections() {
 void mafVMEManager::vmeSelect(mafObjectBase *vme) {
     mafVME *vme_to_select = qobject_cast<mafResources::mafVME *>(vme);
     if(NULL == vme_to_select) {
-        mafMsgWarning("%s", mafTr("Trying to select an object that not represent a mafVME.").toAscii().data());
+        qWarning("%s", mafTr("Trying to select an object that not represent a mafVME.").toAscii().data());
         return;
     }
     // VME has been selected.
@@ -74,7 +74,7 @@ void mafVMEManager::vmeSelect(mafObjectBase *vme) {
 void mafVMEManager::vmeAdd(mafObjectBase *vme) {
     mafVME *vme_to_add = qobject_cast<mafResources::mafVME *>(vme);
     if(NULL == vme_to_add) {
-        mafMsgWarning("%s", mafTr("Trying to add an object that not represent a mafVME.").toAscii().data());
+        qWarning("%s", mafTr("Trying to add an object that not represent a mafVME.").toAscii().data());
         return;
     }
     // VME has been added.
@@ -86,7 +86,7 @@ void mafVMEManager::vmeAdd(mafObjectBase *vme) {
 void mafVMEManager::vmeRemove(mafObjectBase *vme) {
     mafVME *vme_to_remove = qobject_cast<mafResources::mafVME *>(vme);
     if(NULL == vme_to_remove) {
-        mafMsgWarning("%s", mafTr("Trying to remove an object that not represent a mafVME.").toAscii().data());
+        qWarning("%s", mafTr("Trying to remove an object that not represent a mafVME.").toAscii().data());
         return;
     }
     // VME has been removed.

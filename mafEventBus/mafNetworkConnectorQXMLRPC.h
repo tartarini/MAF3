@@ -40,7 +40,7 @@ public:
     /*virtual*/ ~mafNetworkConnectorQXMLRPC();
 
     /// create the unique instance of the client.
-    /*virtual*/ void createClient(const mafString hostName, const unsigned int port);
+    /*virtual*/ void createClient(const QString hostName, const unsigned int port);
 
     /// create the unique instance of the server.
     /*virtual*/ void createServer(const unsigned int port);
@@ -64,7 +64,7 @@ public slots:
 
     /// Allow to send a network request.
     /** Contains the conversion between maf datatypes and qxmlrpc datatype based both on QVariant. */
-    /*virtual*/ void send(const mafString event_id, mafEventArgumentsList *argList);
+    /*virtual*/ void send(const QString event_id, mafEventArgumentsList *argList);
 
 private slots:
     /// callback for the client which retrieve the variable from the server
@@ -82,7 +82,7 @@ protected:
 
 private:
     /// send a request from the client to the network.
-    void xmlrpcSend(const mafString &methodName, mafList<xmlrpc::Variant> parameters);
+    void xmlrpcSend(const QString &methodName, QList<xmlrpc::Variant> parameters);
 
     /// stop and destroy the server instance.
     void stopServer();

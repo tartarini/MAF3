@@ -19,7 +19,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafDataPipeImageThreshold::mafDataPipeImageThreshold(const mafString code_location) : mafDataPipe(code_location), m_LowerThreshold(0.0), m_UpperThreshold(1.0), m_ThresholdMode(BETWEEN) {
+mafDataPipeImageThreshold::mafDataPipeImageThreshold(const QString code_location) : mafDataPipe(code_location), m_LowerThreshold(0.0), m_UpperThreshold(1.0), m_ThresholdMode(BETWEEN) {
 }
 
 mafDataPipeImageThreshold::~mafDataPipeImageThreshold() {
@@ -30,7 +30,7 @@ bool mafDataPipeImageThreshold::acceptObject(mafCore::mafObjectBase *obj) {
     if(vme != NULL) {
         mafCore::mafContainerInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
         if(data != NULL) {
-            mafString dataType = data->externalDataType();
+            QString dataType = data->externalDataType();
             if(dataType == "vtkImageData") {
                 return true;
             }
@@ -42,7 +42,7 @@ bool mafDataPipeImageThreshold::acceptObject(mafCore::mafObjectBase *obj) {
 void mafDataPipeImageThreshold::createPipe() {
     m_ThresholdFilter = vtkSmartPointer<vtkImageThreshold>::New();
     if(inputList()->size() == 0) {
-        mafMsgWarning(mafTr("Assign an input VME before asking the creation of the data pipe!!").toAscii());
+        qWarning(mafTr("Assign an input VME before asking the creation of the data pipe!!").toAscii());
         return;
     }
     m_Output = this->inputList()->at(0);

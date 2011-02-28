@@ -13,34 +13,34 @@
 
 using namespace mafCore;
 
-mafLoggerBuffer::mafLoggerBuffer(const mafString code_location) : mafLogger(code_location) {
+mafLoggerBuffer::mafLoggerBuffer(const QString code_location) : mafLogger(code_location) {
 }
 
 mafLoggerBuffer::~mafLoggerBuffer() {
 }
 
-void mafLoggerBuffer::loggedMessage(const mafMsgType type, const mafString &msg) {
-    m_BufferLog.append(mafDateTime::currentDateTime().toString(mafDateTimeLogFormat));
+void mafLoggerBuffer::loggedMessage(const QtMsgType type, const QString &msg) {
+    m_BufferLog.append(QDateTime::currentDateTime().toString(mafDateTimeLogFormat));
     m_BufferLog.append(" --> ");
     switch (type) {
-        case mafMsgTypeDebug:
+        case QtDebugMsg:
             if(logMode() == mafLogModeTestSuite) {
                 m_BufferLog.append(TEST_SUITE_LOG_PREFIX);
             } else {
                 m_BufferLog.append("Debug: ");
             }
         break;
-        case mafMsgTypeWarning:
+        case QtWarningMsg:
             if(logMode() == mafLogModeTestSuite) {
                 m_BufferLog.append(TEST_SUITE_LOG_PREFIX);
             } else {
                 m_BufferLog.append("Warning: ");
             }
         break;
-        case mafMsgTypeCritical: // System message types are defined as same type by Qt.
+        case QtCriticalMsg: // System message types are defined as same type by Qt.
             m_BufferLog.append("Critical: ");
         break;
-        case mafMsgTypeFatal:
+        case QtFatalMsg:
             m_BufferLog.append("Fatal: ");
         break;
     }

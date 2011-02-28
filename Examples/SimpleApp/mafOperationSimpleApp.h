@@ -26,7 +26,7 @@ class mafOperationSimpleApp : public mafResources::mafOperation {
 
 public:
     /// Object constructor.
-    mafOperationSimpleApp(const mafString code_location = "");
+    mafOperationSimpleApp(const QString code_location = "");
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);

@@ -28,7 +28,7 @@ class  testSerializerCustom : public  mafSerializer {
 
 public:
     /// Object constructor.
-    testSerializerCustom(const mafString code_location = "");
+    testSerializerCustom(const QString code_location = "");
 
     /// Initialize the IO device and make it ready to operate.
     /*virtual*/ void openDevice(mafSerializerOpenMode mode);
@@ -37,13 +37,13 @@ public:
     /*virtual*/ void closeDevice();
 
     /// Return the string variable initializated on openDevice call of the testSerializerCustom.
-    mafString serializerString() {return m_SerializerString;}
+    QString serializerString() {return m_SerializerString;}
 
 private:
-    mafString m_SerializerString; ///< Test Var.
+    QString m_SerializerString; ///< Test Var.
 };
 
-testSerializerCustom::testSerializerCustom(const mafString code_location) : mafSerializer(code_location), m_SerializerString("") {
+testSerializerCustom::testSerializerCustom(const QString code_location) : mafSerializer(code_location), m_SerializerString("") {
 }
 
 void testSerializerCustom::openDevice(mafSerializerOpenMode mode) {
@@ -101,7 +101,7 @@ void mafSerializerTest::mafSerializerAllocationTest() {
 }
 
 void mafSerializerTest::openCloseDeviceTest() {
-    mafString res("DeviceOpened");
+    QString res("DeviceOpened");
 
     // Open the device
     m_Serializer->openDevice(mafSerializerOpenModeBidirectional);
@@ -118,11 +118,11 @@ void mafSerializerTest::openCloseDeviceTest() {
 }
 
 void mafSerializerTest::dataURLTest() {
-    mafString urlString("http://www.mysite.com/");
+    QString urlString("http://www.mysite.com/");
     m_Serializer->setDataURL(urlString);
     mafUrl url = m_Serializer->dataURL();
     QVERIFY(!url.isEmpty());
-    mafString res = url.toString();
+    QString res = url.toString();
     QCOMPARE(res, urlString);
 }
 

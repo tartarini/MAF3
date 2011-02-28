@@ -105,7 +105,7 @@ void mafQAManagerTest::profilerTest() {
     // Show the results on console.
     m_QAManager->profilerViewResultsOnConsole();
     // Save the results on file with the possibility to open it using default viewer.
-    mafString tmp = QDir::tempPath();
+    QString tmp = QDir::tempPath();
     tmp.append("/maf3Logs");
     QDir log_dir(tmp);
     if(!log_dir.exists()) {
@@ -137,13 +137,13 @@ void mafQAManagerTest::runPythonScriptTest() {
 
     file.close();
 
-    mafMsgDebug() << "Asynchronous:";
-    mafStringList argList;
+    qDebug() << "Asynchronous:";
+    QStringList argList;
     int res = m_QAManager->runPythonScript("temporaryPythonScript.py",argList);
     QVERIFY(res == 0);
 
     //launch sync
-    mafMsgDebug() << "Synchronous:";
+    qDebug() << "Synchronous:";
     res = m_QAManager->runPythonScript("temporaryPythonScript.py",argList, true);
     QVERIFY(res == 0);
 
@@ -151,14 +151,14 @@ void mafQAManagerTest::runPythonScriptTest() {
 }
 
 void mafQAManagerTest::runScriptTest() {
-    /*mafMsgDebug() << "Asynchronous:";
-    mafStringList argList;
+    /*qDebug() << "Asynchronous:";
+    QStringList argList;
     int res = m_QAManager->runScript(TEST_SCRIPT_NAME,argList, false);
     QCOMPARE(res, 0);*/
 
     //launch sync
-    mafMsgDebug() << "Synchronous:";
-    mafStringList argList;
+    qDebug() << "Synchronous:";
+    QStringList argList;
     int res;
     res = m_QAManager->runScript(TEST_SCRIPT_NAME,argList, true);
     QCOMPARE(res, 0);

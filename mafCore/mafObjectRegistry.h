@@ -40,7 +40,7 @@ public:
     /// Return the object pointer from its hash code.
     /** This is an example that demostrate the usage of findObjectsThreaded.
     It is also a shortcut for searching object by a given hash string. Non valid hash code will make return a NULL pointer.*/
-    mafObjectBase *objectFromHash(const mafString &hash);
+    mafObjectBase *objectFromHash(const QString &hash);
 
     /// Find objects according to the given mafVisitor strategy. The returned value is a list of found objects.
     mafObjectsList *findObjectsThreaded(mafVisitorFindObjects *v);
@@ -52,7 +52,7 @@ protected:
     friend class mafObjectBase;
 
     /// Register allocated object into the registry hash.
-    void addObject(mafObjectBase *obj, const mafString location);
+    void addObject(mafObjectBase *obj, const QString location);
 
     /// Remove object from the registry hash. It appens when object is deleted.
     void removeObject(mafId obj_id);
@@ -67,12 +67,12 @@ private:
     /** struct that contain information on allocated object.*/
     struct mafObjectRegistryItem {
         mafObjectBase *m_Object;
-        mafString m_InstantiateLocationInfo;
-        mafTime m_AllocationTime;
+        QString m_InstantiateLocationInfo;
+        QTime m_AllocationTime;
         int m_ReferenceCount;
     };
 
-    typedef mafHash<mafId, mafObjectRegistryItem> mafRegistryHashType;
+    typedef QHash<mafId, mafObjectRegistryItem> mafRegistryHashType;
     mafRegistryHashType m_Registry; ///< Object allocation hash.
 };
 

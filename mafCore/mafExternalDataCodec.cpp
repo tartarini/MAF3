@@ -14,10 +14,10 @@
 using namespace mafCore;
 
 
-mafExternalDataCodec::mafExternalDataCodec(const mafString &code_location) : mafObjectBase(code_location), m_ExternalData(NULL), m_StringSize(0) {
+mafExternalDataCodec::mafExternalDataCodec(const QString &code_location) : mafObjectBase(code_location), m_ExternalData(NULL), m_StringSize(0) {
 }
 
-mafExternalDataCodec::mafExternalDataCodec(mafContainerInterface *data, const mafString &code_location) : mafObjectBase(code_location), m_ExternalData(data), m_StringSize(0) {
+mafExternalDataCodec::mafExternalDataCodec(mafContainerInterface *data, const QString &code_location) : mafObjectBase(code_location), m_ExternalData(data), m_StringSize(0) {
 }
 
 mafExternalDataCodec::~mafExternalDataCodec() {

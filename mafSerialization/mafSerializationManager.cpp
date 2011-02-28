@@ -25,7 +25,7 @@ mafSerializationManager* mafSerializationManager::instance() {
     return &instanceSerializationManager;
 }
 
-mafSerializationManager::mafSerializationManager(const mafString code_location) : mafObjectBase(code_location) {
+mafSerializationManager::mafSerializationManager(const QString code_location) : mafObjectBase(code_location) {
     mafSerializationRegistration::registerSerializationObjects();
 
     initializeConnections();
@@ -56,36 +56,36 @@ void mafSerializationManager::initializeConnections() {
     provider->createNewId(m_ExtDataImportedId);
 
     // Register API signals.
-    mafRegisterLocalSignal("maf.local.serialization.plugCodec", this, "plugCodecInModule(const mafString &, const mafString &, const mafString &)");
-    mafRegisterLocalSignal("maf.local.serialization.plugSerializer", this, "plugSerializerInModule(const mafString &, const mafString &)");
-    mafRegisterLocalSignal("maf.local.serialization.save", this, "save(mafCore::mafMemento *, const mafString &, const mafString &)");
-    mafRegisterLocalSignal("maf.local.serialization.load", this, "load(const mafString &, const mafString &)");
-    mafRegisterLocalSignal("maf.local.serialization.export", this, "exportData(mafCore::mafContainerInterface *, const mafString &, const mafString &)");
-    mafRegisterLocalSignal("maf.local.serialization.import", this, "importData(const mafString &, const mafString &)");
-    mafRegisterLocalSignal("maf.local.serialization.saveExternalData", this, "saveExtData(char *, const mafString &, int)");
-    mafRegisterLocalSignal("maf.local.serialization.loadExternalData", this, "loadExtData(const mafString &)");
+    mafRegisterLocalSignal("maf.local.serialization.plugCodec", this, "plugCodecInModule(const QString &, const QString &, const QString &)");
+    mafRegisterLocalSignal("maf.local.serialization.plugSerializer", this, "plugSerializerInModule(const QString &, const QString &)");
+    mafRegisterLocalSignal("maf.local.serialization.save", this, "save(mafCore::mafMemento *, const QString &, const QString &)");
+    mafRegisterLocalSignal("maf.local.serialization.load", this, "load(const QString &, const QString &)");
+    mafRegisterLocalSignal("maf.local.serialization.export", this, "exportData(mafCore::mafContainerInterface *, const QString &, const QString &)");
+    mafRegisterLocalSignal("maf.local.serialization.import", this, "importData(const QString &, const QString &)");
+    mafRegisterLocalSignal("maf.local.serialization.saveExternalData", this, "saveExtData(char *, const QString &, int)");
+    mafRegisterLocalSignal("maf.local.serialization.loadExternalData", this, "loadExtData(const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.mementoLoaded", this, "mementoLoaded(mafCore::mafMemento *)");
     mafRegisterLocalSignal("maf.local.serialization.extDataImported", this, "extDataImported(mafCore::mafContainerInterface *)");
 
     // Register private callbacks.
-    mafRegisterLocalCallback("maf.local.serialization.plugCodec", this, "plugCodec(const mafString &, const mafString &, const mafString &)");
-    mafRegisterLocalCallback("maf.local.serialization.plugSerializer", this, "plugSerializer(const mafString &, const mafString &)");
-    mafRegisterLocalCallback("maf.local.serialization.save", this, "saveMemento(mafCore::mafMemento *, const mafString &, const mafString &)");
-    mafRegisterLocalCallback("maf.local.serialization.load", this, "loadMemento(const mafString &, const mafString &)");
-    mafRegisterLocalCallback("maf.local.serialization.export", this, "exportExternalData(mafCore::mafContainerInterface *, const mafString &, const mafString &)");
-    mafRegisterLocalCallback("maf.local.serialization.import", this, "importExternalData(const mafString &, const mafString &)");
-    mafRegisterLocalCallback("maf.local.serialization.saveExternalData", this, "saveExternalData(char *, const mafString &, int)");
-    mafRegisterLocalCallback("maf.local.serialization.loadExternalData", this, "loadExternalData(const mafString &)");
+    mafRegisterLocalCallback("maf.local.serialization.plugCodec", this, "plugCodec(const QString &, const QString &, const QString &)");
+    mafRegisterLocalCallback("maf.local.serialization.plugSerializer", this, "plugSerializer(const QString &, const QString &)");
+    mafRegisterLocalCallback("maf.local.serialization.save", this, "saveMemento(mafCore::mafMemento *, const QString &, const QString &)");
+    mafRegisterLocalCallback("maf.local.serialization.load", this, "loadMemento(const QString &, const QString &)");
+    mafRegisterLocalCallback("maf.local.serialization.export", this, "exportExternalData(mafCore::mafContainerInterface *, const QString &, const QString &)");
+    mafRegisterLocalCallback("maf.local.serialization.import", this, "importExternalData(const QString &, const QString &)");
+    mafRegisterLocalCallback("maf.local.serialization.saveExternalData", this, "saveExternalData(char *, const QString &, int)");
+    mafRegisterLocalCallback("maf.local.serialization.loadExternalData", this, "loadExternalData(const QString &)");
 }
 
-void mafSerializationManager::saveMemento(mafMemento *memento, const mafString &url, const mafString &encode_type) {
+void mafSerializationManager::saveMemento(mafMemento *memento, const QString &url, const QString &encode_type) {
     REQUIRE(memento != NULL);
 
     // Create an instance of the codec type corresponding to the object's memento
     mafEncodingList encoding_list = encodingTypeList(memento);
     bool encoding_not_found = true;
-    mafString encodingTypeItem = "";
-    mafString codecType = "";
+    QString encodingTypeItem = "";
+    QString codecType = "";
     if(!encode_type.isEmpty()) {
         foreach(encodingTypeItem, encoding_list) {
             if(encodingTypeItem == encode_type) {
@@ -98,7 +98,7 @@ void mafSerializationManager::saveMemento(mafMemento *memento, const mafString &
 
     if(encoding_not_found) {
         if(encode_type != "RAW") {
-            mafMsgWarning("%s", mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toAscii().data());
+            qWarning("%s", mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toAscii().data());
         }
         codecType = m_CodecHash["RAW"];
     }
@@ -110,12 +110,12 @@ void mafSerializationManager::saveMemento(mafMemento *memento, const mafString &
     mafUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
-        mafMsgCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
+        qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
         return;
     }
 
-    mafString s = u.scheme();
-    mafString serializer_type = m_SerializerHash[s];
+    QString s = u.scheme();
+    QString serializer_type = m_SerializerHash[s];
 
     // Create the instance of correct serializer
     mafSerializer *ser = (mafSerializer *)mafNEWFromString(serializer_type);
@@ -136,25 +136,25 @@ void mafSerializationManager::saveMemento(mafMemento *memento, const mafString &
     mafDEL(ser);
 }
 
-void mafSerializationManager::loadMemento(const mafString &url, const mafString &encode_type) {
+void mafSerializationManager::loadMemento(const QString &url, const QString &encode_type) {
     if(!m_CodecHash.contains(encode_type)) {
-        mafMsgCritical("%s", mafTr("No codec associated with the '%1' encoding type.").arg(encode_type).toAscii().data());
+        qCritical("%s", mafTr("No codec associated with the '%1' encoding type.").arg(encode_type).toAscii().data());
         return;
     }
 
-    mafString codecType = m_CodecHash[encode_type];
+    QString codecType = m_CodecHash[encode_type];
     mafCodec *codec = (mafCodec *)mafNEWFromString(codecType);
 
     // Check the protocol of the given 'url' and create the corresponding mafSerialize class
     mafUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
-        mafMsgCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
+        qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
         return;
     }
 
-    mafString s = u.scheme();
-    mafString serializer_type = m_SerializerHash[s];
+    QString s = u.scheme();
+    QString serializer_type = m_SerializerHash[s];
 
     // Create the instance of correct serializer
     mafSerializer *ser = (mafSerializer *)mafNEWFromString(serializer_type);
@@ -180,14 +180,14 @@ void mafSerializationManager::loadMemento(const mafString &url, const mafString 
     mafEventBusManager::instance()->notifyEvent(m_MementoLoadedId, mafEventTypeLocal, &list);
 }
 
-void mafSerializationManager::exportExternalData(mafCore::mafContainerInterface *externalData, const mafString &url, const mafString &encode_type) {
+void mafSerializationManager::exportExternalData(mafCore::mafContainerInterface *externalData, const QString &url, const QString &encode_type) {
     REQUIRE(externalData != NULL);
 
     // Create an instance of the codec type corresponding to the object's memento
     mafEncodingList encoding_list = m_EncodingHash.values(externalData->externalDataType());
     bool encoding_not_found = true;
-    mafString encodingTypeItem = "";
-    mafString codecType = "";
+    QString encodingTypeItem = "";
+    QString codecType = "";
     if(!encode_type.isEmpty()) {
         foreach(encodingTypeItem, encoding_list) {
             if(encodingTypeItem == encode_type) {
@@ -200,7 +200,7 @@ void mafSerializationManager::exportExternalData(mafCore::mafContainerInterface 
 
     if(encoding_not_found) {
         if(encode_type != "RAW") {
-            mafMsgWarning("%s", mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toAscii().data());
+            qWarning("%s", mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toAscii().data());
         }
         codecType = m_CodecHash["RAW"];
     }
@@ -212,12 +212,12 @@ void mafSerializationManager::exportExternalData(mafCore::mafContainerInterface 
     mafUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
-        mafMsgCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
+        qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
          return;
      }
 
-    mafString s = u.scheme();
-    mafString serializer_type = m_SerializerHash[s];
+    QString s = u.scheme();
+    QString serializer_type = m_SerializerHash[s];
 
     // Create the instance of correct serializer
     mafSerializer *ser = (mafSerializer *)mafNEWFromString(serializer_type);
@@ -226,7 +226,7 @@ void mafSerializationManager::exportExternalData(mafCore::mafContainerInterface 
     // ... and open the output connection.
     ser->openDevice(mafSerializerOpenModeOut);
 
-    mafDataStream stream(ser->ioDevice());
+    QDataStream stream(ser->ioDevice());
 
     // ... and encode data into the string
     codec->setExternalData(externalData);
@@ -242,19 +242,19 @@ void mafSerializationManager::exportExternalData(mafCore::mafContainerInterface 
     mafDEL(ser);
 }
 
-void mafSerializationManager::saveExternalData(char *externalDataString, const mafString &url, int stringSize) {
+void mafSerializationManager::saveExternalData(char *externalDataString, const QString &url, int stringSize) {
     REQUIRE(externalDataString != NULL);
 
     // Check the protocol of the given 'url' and create the corresponding mafSerialize class
     mafUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
-        mafMsgCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
+        qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
          return;
      }
 
-    mafString s = u.scheme();
-    mafString serializer_type = m_SerializerHash[s];
+    QString s = u.scheme();
+    QString serializer_type = m_SerializerHash[s];
 
     // Create the instance of correct serializer
     mafSerializer *ser = (mafSerializer *)mafNEWFromString(serializer_type);
@@ -263,7 +263,7 @@ void mafSerializationManager::saveExternalData(char *externalDataString, const m
     // ... and open the output connection.
     ser->openDevice(mafSerializerOpenModeOut);
 
-    mafDataStream stream(ser->ioDevice());
+    QDataStream stream(ser->ioDevice());
 
     //write binary data
     stream.writeBytes(externalDataString, stringSize);
@@ -274,25 +274,25 @@ void mafSerializationManager::saveExternalData(char *externalDataString, const m
     mafDEL(ser);
 }
 
-void mafSerializationManager::importExternalData(const mafString &url, const mafString &encode_type) {
+void mafSerializationManager::importExternalData(const QString &url, const QString &encode_type) {
     if(!m_CodecHash.contains(encode_type)) {
-        mafMsgCritical("%s", mafTr("No codec associated with the '%1' encoding type.").arg(encode_type).toAscii().data());
+        qCritical("%s", mafTr("No codec associated with the '%1' encoding type.").arg(encode_type).toAscii().data());
         return;
     }
 
-    mafString codecType = m_CodecHash[encode_type];
+    QString codecType = m_CodecHash[encode_type];
     mafExternalDataCodec *codec = (mafExternalDataCodec *)mafNEWFromString(codecType);
 
     // Check the protocol of the given 'url' and create the corresponding mafSerialize class
     mafUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
-        mafMsgCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
+        qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
          return;
      }
 
-    mafString s = u.scheme();
-    mafString serializer_type = m_SerializerHash[s];
+    QString s = u.scheme();
+    QString serializer_type = m_SerializerHash[s];
 
     // Create the instance of correct serializer
     mafSerializer *ser = (mafSerializer *)mafNEWFromString(serializer_type);
@@ -303,7 +303,7 @@ void mafSerializationManager::importExternalData(const mafString &url, const maf
 
     unsigned int size;
     char * inputString;;
-    mafDataStream stream(ser->ioDevice());
+    QDataStream stream(ser->ioDevice());
     stream.readBytes(inputString, size);
 
     // Finally close the connection.
@@ -321,18 +321,18 @@ void mafSerializationManager::importExternalData(const mafString &url, const maf
     mafDEL(codec);
 }
 
-mafByteArray mafSerializationManager::loadExternalData(const mafString &url) {
+QByteArray mafSerializationManager::loadExternalData(const QString &url) {
 
     // Check the protocol of the given 'url' and create the corresponding mafSerialize class
     mafUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
-        mafMsgCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
+        qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
          return 0;
      }
 
-    mafString s = u.scheme();
-    mafString serializer_type = m_SerializerHash[s];
+    QString s = u.scheme();
+    QString serializer_type = m_SerializerHash[s];
 
     // Create the instance of correct serializer
     mafSerializer *ser = (mafSerializer *)mafNEWFromString(serializer_type);
@@ -343,25 +343,25 @@ mafByteArray mafSerializationManager::loadExternalData(const mafString &url) {
 
     unsigned int size;
     char * inputString;;
-    mafDataStream stream(ser->ioDevice());
+    QDataStream stream(ser->ioDevice());
     stream.readBytes(inputString, size);
 
     // Finally close the connection.
     ser->closeDevice();
     mafDEL(ser);
 
-    mafByteArray stringArray;
+    QByteArray stringArray;
     stringArray = QByteArray::fromRawData(inputString, size);
     return stringArray;
 }
 
-void mafSerializationManager::plugCodec(const mafString &object_type,const mafString &encoding_type, const mafString &codecType) {
+void mafSerializationManager::plugCodec(const QString &object_type,const QString &encoding_type, const QString &codecType) {
     m_EncodingHash.insertMulti(object_type, encoding_type);
     m_CodecHash.insertMulti(encoding_type, codecType);
 }
 
 mafEncodingList mafSerializationManager::encodingTypeList(const mafMemento *memento) {
-    mafString key = memento->objectClassType();
+    QString key = memento->objectClassType();
     return m_EncodingHash.values(key);
 }
 

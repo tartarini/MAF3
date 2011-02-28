@@ -34,7 +34,7 @@ class testOperationforOperationManager : public mafResources::mafOperation {
 
 public:
     /// Object constructor.
-    testOperationforOperationManager(const mafString code_location = "");
+    testOperationforOperationManager(const QString code_location = "");
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
@@ -47,14 +47,14 @@ public:
 
 public slots:
     /// Set parameters of operation.
-    /*virtual*/ void setParameters(mafList<mafVariant> parameters);
+    /*virtual*/ void setParameters(QList<QVariant> parameters);
 
 private:
     int m_ParamInt; ///< first parameter.
     double m_ParamDouble; ///< second parameter.
 };
 
-testOperationforOperationManager::testOperationforOperationManager(const mafString code_location) : mafOperation(code_location), m_ParamInt(0), m_ParamDouble(0.0) {
+testOperationforOperationManager::testOperationforOperationManager(const QString code_location) : mafOperation(code_location), m_ParamInt(0), m_ParamDouble(0.0) {
     m_CanUnDo = false;
 }
 
@@ -66,7 +66,7 @@ bool testOperationforOperationManager::acceptObject(mafCore::mafObjectBase *obj)
     return false;
 }
 
-void testOperationforOperationManager::setParameters(mafList<mafVariant> parameters) {
+void testOperationforOperationManager::setParameters(QList<QVariant> parameters) {
     m_ParamInt = parameters.at(0).toInt();
     m_ParamDouble = parameters.at(1).toDouble();
 }
@@ -90,7 +90,7 @@ class testFirstUndoableOperationforOperationManager : public mafResources::mafOp
 
 public:
     /// Object constructor.
-    testFirstUndoableOperationforOperationManager(const mafString code_location = "");
+    testFirstUndoableOperationforOperationManager(const QString code_location = "");
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
@@ -103,7 +103,7 @@ public:
 
 };
 
-testFirstUndoableOperationforOperationManager::testFirstUndoableOperationforOperationManager(const mafString code_location) : mafOperation(code_location) {
+testFirstUndoableOperationforOperationManager::testFirstUndoableOperationforOperationManager(const QString code_location) : mafOperation(code_location) {
     m_CanUnDo = true;
 }
 
@@ -116,11 +116,11 @@ bool testFirstUndoableOperationforOperationManager::acceptObject(mafCore::mafObj
 }
 
 void testFirstUndoableOperationforOperationManager::unDo() {
-    mafMsgDebug() << "Undo of testFirstUndoableOperationforOperationManager";
+    qDebug() << "Undo of testFirstUndoableOperationforOperationManager";
 }
 
 void testFirstUndoableOperationforOperationManager::reDo() {
-    mafMsgDebug() << "Redo of testFirstUndoableOperationforOperationManager";
+    qDebug() << "Redo of testFirstUndoableOperationforOperationManager";
 }
 
 /**
@@ -133,7 +133,7 @@ class testSecondUndoableOperationforOperationManager : public mafResources::mafO
 
 public:
     /// Object constructor.
-    testSecondUndoableOperationforOperationManager(const mafString code_location = "");
+    testSecondUndoableOperationforOperationManager(const QString code_location = "");
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
@@ -145,7 +145,7 @@ public:
     /*virtual*/ void reDo();
 };
 
-testSecondUndoableOperationforOperationManager::testSecondUndoableOperationforOperationManager(const mafString code_location) : mafOperation(code_location) {
+testSecondUndoableOperationforOperationManager::testSecondUndoableOperationforOperationManager(const QString code_location) : mafOperation(code_location) {
     m_CanUnDo = true;
 }
 
@@ -158,11 +158,11 @@ bool testSecondUndoableOperationforOperationManager::acceptObject(mafCore::mafOb
 }
 
 void testSecondUndoableOperationforOperationManager::unDo() {
-    mafMsgDebug() << "Undo of testSecondUndoableOperationforOperationManager";
+    qDebug() << "Undo of testSecondUndoableOperationforOperationManager";
 }
 
 void testSecondUndoableOperationforOperationManager::reDo() {
-    mafMsgDebug() << "Redo of testSecondUndoableOperationforOperationManager";
+    qDebug() << "Redo of testSecondUndoableOperationforOperationManager";
 }
 
 /**
@@ -255,22 +255,22 @@ void mafOperationManagerTest::setParametersTest() {
     m_EventBus->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 
     argList.clear();
-    mafString op("testOperationforOperationManager");
-    argList.append(mafEventArgument(mafString, op));
+    QString op("testOperationforOperationManager");
+    argList.append(mafEventArgument(QString, op));
 
     // Notify the event.
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
 
-    mafList<mafVariant> op_params;
-    op_params.append(mafVariant(5));
-    op_params.append(mafVariant(3.5));
+    QList<QVariant> op_params;
+    op_params.append(QVariant(5));
+    op_params.append(QVariant(3.5));
 
     argList.clear();
-    argList.append(mafEventArgument(mafList<mafVariant>, op_params));
+    argList.append(mafEventArgument(QList<QVariant>, op_params));
     m_EventBus->notifyEvent("maf.local.resources.operation.setParameters", mafEventTypeLocal, &argList);
 
     const mafCore::mafObjectBase *curr_op = NULL;
-    mafGenericReturnArgument ret_val = mafEventReturnArgument(const mafCore::mafObjectBase *, curr_op);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(const mafCore::mafObjectBase *, curr_op);
     m_EventBus->notifyEvent("maf.local.resources.operation.currentRunning", mafEventTypeLocal, NULL, &ret_val);
     int vi = ((testOperationforOperationManager *)curr_op)->paramInt();
     double vd = ((testOperationforOperationManager *)curr_op)->paramDouble();
@@ -284,20 +284,20 @@ void mafOperationManagerTest::setParametersTest() {
 void mafOperationManagerTest::startOperationTest() {
     // Create event parameters
     mafEventArgumentsList argList;
-    mafString op("mafResources::mafOperation");
-    argList.append(mafEventArgument(mafString, op));
+    QString op("mafResources::mafOperation");
+    argList.append(mafEventArgument(QString, op));
     // notify the event.
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
 
     const mafCore::mafObjectBase *curr_op = NULL;
-    mafGenericReturnArgument ret_val = mafEventReturnArgument(const mafCore::mafObjectBase *, curr_op);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(const mafCore::mafObjectBase *, curr_op);
     m_EventBus->notifyEvent("maf.local.resources.operation.currentRunning", mafEventTypeLocal, NULL, &ret_val);
 
     QVERIFY(curr_op != NULL);
 }
 
 void mafOperationManagerTest::vmeSelectedTest() {
-    mafStringList binding_class_list;
+    QStringList binding_class_list;
 
     // Create two test objects.
     mafVME *vme = mafNEW(mafResources::mafVME);
@@ -314,7 +314,7 @@ void mafOperationManagerTest::executeOperationTest() {
     m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 
     const mafCore::mafObjectBase *op = NULL;
-    mafGenericReturnArgument ret_val = mafEventReturnArgument(const mafCore::mafObjectBase *, op);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(const mafCore::mafObjectBase *, op);
     m_EventBus->notifyEvent("maf.local.resources.operation.currentRunning", mafEventTypeLocal, NULL, &ret_val);
 
     QVERIFY(op == NULL);
@@ -332,27 +332,27 @@ void mafOperationManagerTest::executeOperationTest() {
 void mafOperationManagerTest::undoOperationTest() {
     // Start test operation using explicit calls
 
-    mafString vt("testFirstUndoableOperationforOperationManager");
+    QString vt("testFirstUndoableOperationforOperationManager");
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafString, vt));
+    argList.append(mafEventArgument(QString, vt));
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
 
     m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 
     argList.clear();
     // Starts and execute another operation using the 'batch mode' call.
-    mafList<mafVariant> params; // no parameters needed.
+    QList<QVariant> params; // no parameters needed.
     params.append("testSecondUndoableOperationforOperationManager");
-    mafList<mafVariant> args;
+    QList<QVariant> args;
     params.push_back(args);
 
-    argList.push_back(mafEventArgument(mafList<mafVariant>, params));
+    argList.push_back(mafEventArgument(QList<QVariant>, params));
     //m_OperationManager->executeWithParameters(params);
     m_EventBus->notifyEvent("maf.local.resources.operation.executeWithParameters", mafEventTypeLocal, &argList);
 
-    mafString vt2("testFirstUndoableOperationforOperationManager");
+    QString vt2("testFirstUndoableOperationforOperationManager");
     argList.clear();
-    argList.append(mafEventArgument(mafString, vt2));
+    argList.append(mafEventArgument(QString, vt2));
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
 
     m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
@@ -365,21 +365,21 @@ void mafOperationManagerTest::undoOperationTest() {
 }
 
 void mafOperationManagerTest::redoOperationTest() {
-    mafString vt("testFirstUndoableOperationforOperationManager");
+    QString vt("testFirstUndoableOperationforOperationManager");
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafString, vt));
+    argList.append(mafEventArgument(QString, vt));
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
     m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 
-    mafString vt2("testFirstUndoableOperationforOperationManager");
+    QString vt2("testFirstUndoableOperationforOperationManager");
     argList.clear();
-    argList.append(mafEventArgument(mafString, vt2));
+    argList.append(mafEventArgument(QString, vt2));
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
     m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 
-    mafString vt3("testFirstUndoableOperationforOperationManager");
+    QString vt3("testFirstUndoableOperationforOperationManager");
     argList.clear();
-    argList.append(mafEventArgument(mafString, vt3));
+    argList.append(mafEventArgument(QString, vt3));
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
     m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 
@@ -395,53 +395,53 @@ void mafOperationManagerTest::redoOperationTest() {
 }
 
 void mafOperationManagerTest::undoStackStressTest() {
-    mafString vt("testFirstUndoableOperationforOperationManager");
+    QString vt("testFirstUndoableOperationforOperationManager");
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafString, vt));
+    argList.append(mafEventArgument(QString, vt));
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
     m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 
     int value;
-    mafGenericReturnArgument ret_val = mafEventReturnArgument(int, value);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(int, value);
     m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &ret_val);
     QVERIFY(value == 1);
 
-    mafString vt2("testSecondUndoableOperationforOperationManager");
+    QString vt2("testSecondUndoableOperationforOperationManager");
     argList.clear();
-    argList.append(mafEventArgument(mafString, vt2));
+    argList.append(mafEventArgument(QString, vt2));
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
     m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
     m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &ret_val);
     QVERIFY(value == 2);
 
-    mafString vt3("testFirstUndoableOperationforOperationManager");
+    QString vt3("testFirstUndoableOperationforOperationManager");
     argList.clear();
-    argList.append(mafEventArgument(mafString, vt3));
+    argList.append(mafEventArgument(QString, vt3));
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
     m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
     m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &ret_val);
     QVERIFY(value == 3);
 
 
-    mafString vt4("testFirstUndoableOperationforOperationManager");
+    QString vt4("testFirstUndoableOperationforOperationManager");
     argList.clear();
-    argList.append(mafEventArgument(mafString, vt4));
+    argList.append(mafEventArgument(QString, vt4));
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
     m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
     m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &ret_val);
     QVERIFY(value == 4);
 
-    mafString vt5("testSecondUndoableOperationforOperationManager");
+    QString vt5("testSecondUndoableOperationforOperationManager");
     argList.clear();
-    argList.append(mafEventArgument(mafString, vt5));
+    argList.append(mafEventArgument(QString, vt5));
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
     m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
     m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &ret_val);
     QVERIFY(value == 5);
 
-    mafString vt6("testFirstUndoableOperationforOperationManager");
+    QString vt6("testFirstUndoableOperationforOperationManager");
     argList.clear();
-    argList.append(mafEventArgument(mafString, vt6));
+    argList.append(mafEventArgument(QString, vt6));
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
     m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
     m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &ret_val);
@@ -455,9 +455,9 @@ void mafOperationManagerTest::undoStackStressTest() {
 
     m_EventBus->notifyEvent("maf.local.resources.operation.redo", mafEventTypeLocal);
 
-    mafString vt7("testFirstUndoableOperationforOperationManager");
+    QString vt7("testFirstUndoableOperationforOperationManager");
     argList.clear();
-    argList.append(mafEventArgument(mafString, vt7));
+    argList.append(mafEventArgument(QString, vt7));
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
     m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
     m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &ret_val);

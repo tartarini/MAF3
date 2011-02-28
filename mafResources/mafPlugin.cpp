@@ -15,14 +15,14 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafPlugin::mafPlugin(const mafString &pluginFilename, const mafString code_location) : mafObjectBase(code_location), m_LibraryHandler(0),
+mafPlugin::mafPlugin(const QString &pluginFilename, const QString code_location) : mafObjectBase(code_location), m_LibraryHandler(0),
                                                           m_RefCount(0),
                                                           m_PluginInfo(0),
                                                           m_RegisterPlugin(0)  {
     // Try to load the plugin as a dynamic library
-    m_LibraryHandler = new mafLibrary(pluginFilename);
+    m_LibraryHandler = new QLibrary(pluginFilename);
     if(!m_LibraryHandler->load()) {
-        mafString err_msg(mafTr("Could not load '%1'").arg(pluginFilename));
+        QString err_msg(mafTr("Could not load '%1'").arg(pluginFilename));
         throw std::runtime_error(err_msg.toAscii().constData());
     }
 
@@ -34,7 +34,7 @@ mafPlugin::mafPlugin(const mafString &pluginFilename, const mafString code_locat
         // If the functions aren't found, we're going to assume this is
         // a plain simple DLL and not one of our plugins
         if(!m_PluginInfo || !m_RegisterPlugin) {
-            mafString err_msg(mafTr("'%1' is not a valid MAF3 plugin").arg(pluginFilename));
+            QString err_msg(mafTr("'%1' is not a valid MAF3 plugin").arg(pluginFilename));
             throw std::runtime_error(err_msg.toAscii().constData());
         }
 
@@ -48,7 +48,7 @@ mafPlugin::mafPlugin(const mafString &pluginFilename, const mafString code_locat
     }
 } 
 
-mafPlugin::mafPlugin(const mafPlugin &Other, const mafString code_location) : mafObjectBase(code_location), m_LibraryHandler(Other.m_LibraryHandler),
+mafPlugin::mafPlugin(const mafPlugin &Other, const QString code_location) : mafObjectBase(code_location), m_LibraryHandler(Other.m_LibraryHandler),
                                                m_RefCount(Other.m_RefCount) ,
                                                m_PluginInfo(Other.m_PluginInfo),
                                                m_RegisterPlugin(Other.m_RegisterPlugin) {

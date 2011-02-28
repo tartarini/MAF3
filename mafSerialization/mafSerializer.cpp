@@ -14,7 +14,7 @@
 using namespace mafCore;
 using namespace mafSerialization;
 
-mafSerializer::mafSerializer(const mafString code_location) : mafObjectBase(code_location), m_IODevice(NULL), m_DataURL("") {
+mafSerializer::mafSerializer(const QString code_location) : mafObjectBase(code_location), m_IODevice(NULL), m_DataURL("") {
 }
 
 mafSerializer::~mafSerializer() {

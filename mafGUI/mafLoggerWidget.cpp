@@ -15,7 +15,7 @@
 using namespace mafCore;
 using namespace mafGUI;
 
-mafLoggerWidget::mafLoggerWidget(const mafString code_location): mafLogger(code_location) {
+mafLoggerWidget::mafLoggerWidget(const QString code_location): mafLogger(code_location) {
     m_TextWidgetLog = new mafTextEditWidget();
     m_TextHighlighter = new mafTextHighlighter();
 
@@ -57,29 +57,29 @@ void mafLoggerWidget::clearLogHistory() {
     m_TextWidgetLog->clear();
 }
 
-void mafLoggerWidget::loggedMessage(const mafMsgType type, const mafString &msg) {
-    mafString line("");
-    line.append(mafDateTime::currentDateTime().toString(mafDateTimeLogFormat));
+void mafLoggerWidget::loggedMessage(const QtMsgType type, const QString &msg) {
+    QString line("");
+    line.append(QDateTime::currentDateTime().toString(mafDateTimeLogFormat));
     line.append(" --> ");
     switch (type) {
-        case mafMsgTypeDebug:
+        case QtDebugMsg:
             if(logMode() == mafLogModeTestSuite) {
                 line.append(TEST_SUITE_LOG_PREFIX);
             } else {
                 line.append("Debug: ");
             }
         break;
-        case mafMsgTypeWarning:
+        case QtWarningMsg:
             if(logMode() == mafLogModeTestSuite) {
                 line.append(TEST_SUITE_LOG_PREFIX);
             } else {
                 line.append("Warning: ");
             }
         break;
-        case mafMsgTypeCritical: // System message types are defined as same type by Qt.
+        case QtCriticalMsg: // System message types are defined as same type by Qt.
             line.append("Critical: ");
         break;
-        case mafMsgTypeFatal:
+        case QtFatalMsg:
             line.append("Fatal: ");
         break;
     }

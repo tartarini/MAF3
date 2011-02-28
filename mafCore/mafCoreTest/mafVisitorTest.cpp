@@ -24,16 +24,16 @@ using namespace mafCore;
 class testVisitorImplement : public mafVisitor {
     Q_OBJECT
 public:
-    testVisitorImplement(const mafString code_location = "");
+    testVisitorImplement(const QString code_location = "");
     /*virtual*/ void visit(mafObjectBase *obj) {m_LabelVisited = obj->objectName();}
 
     /// Return m_LabelVisited's value
-    const mafString labelVisited() {return m_LabelVisited;}
+    const QString labelVisited() {return m_LabelVisited;}
 private:
-    mafString m_LabelVisited; ///< Test var.
+    QString m_LabelVisited; ///< Test var.
 };
 
-testVisitorImplement::testVisitorImplement(const mafString code_location) : mafVisitor(code_location), m_LabelVisited("") {
+testVisitorImplement::testVisitorImplement(const QString code_location) : mafVisitor(code_location), m_LabelVisited("") {
 }
 //-------------------------------------------------------------------------
 
@@ -69,7 +69,7 @@ private:
 
 void mafVisitorTest::visitorTest() {
     m_Object->acceptVisitor(m_VisitorImplement);
-    mafString res("Test");
+    QString res("Test");
     QCOMPARE(res, m_Object->objectName());
 }
 

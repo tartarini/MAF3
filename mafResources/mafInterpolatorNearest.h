@@ -31,7 +31,7 @@ class MAFRESOURCESSHARED_EXPORT mafInterpolatorNearest : public mafInterpolator 
 
 public:
     /// Object constructor.
-    mafInterpolatorNearest(const mafString code_location = "");
+    mafInterpolatorNearest(const QString code_location = "");
 
     /// Search the item at the given timestamp 't' with the defined interpolation strategy.
     /*virtual*/ mafDataSet *itemAt(mafDataSetMap *collection, double t);

@@ -33,9 +33,9 @@ class MAFRESOURCESSHARED_EXPORT mafMementoViewManager : public mafCore::mafMemen
 
 public:
     /// object constructor.
-    mafMementoViewManager(const mafString code_location = "");
+    mafMementoViewManager(const QString code_location = "");
     /// object constructor.
-    mafMementoViewManager(const mafCore::mafObjectBase *obj, const mafResourceList *vList, const mafString code_location = "");
+    mafMementoViewManager(const mafCore::mafObjectBase *obj, const mafResourceList *vList, const QString code_location = "");
 
 protected:
     /// Object destructor.

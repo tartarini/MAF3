@@ -31,7 +31,7 @@ public:
     ///object constructor
     testmafUILoaderCustom();
     /// method for load the file
-    /*virtual*/ void uiLoad(const mafString& fileName);
+    /*virtual*/ void uiLoad(const QString& fileName);
     /// check if gui is loaded
     bool isUILoaded() {
         return m_IsUILoaded;
@@ -48,7 +48,7 @@ private:
 testmafUILoaderCustom::testmafUILoaderCustom() : mafUILoader(), m_IsUILoaded(false) {
 }
 
-void testmafUILoaderCustom::uiLoad(const mafString& fileName) {
+void testmafUILoaderCustom::uiLoad(const QString& fileName) {
     REQUIRE(!fileName.isEmpty());
     mafContainerInterface *gui = NULL;
     mafEventArgumentsList list;
@@ -58,7 +58,7 @@ void testmafUILoaderCustom::uiLoad(const mafString& fileName) {
 
 void testmafUILoaderCustom::uiLoaded(mafCore::mafContainerInterface  *widget) {
     Q_UNUSED(widget);
-    mafMsgDebug() << "ui loaded";
+    qDebug() << "ui loaded";
     m_IsUILoaded = true;
 }
 

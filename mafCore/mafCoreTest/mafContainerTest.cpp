@@ -80,7 +80,7 @@ private slots:
     void mafContainerAllocationTest();
     /// Check internal data type existance.
     void mafContainerInternalDataTest();
-    /// Check mafContainerInterface 'wrapped' into mafVariant.
+    /// Check mafContainerInterface 'wrapped' into QVariant.
     void mafContainerToVariant();
 
 private:
@@ -123,29 +123,29 @@ void mafContainerTest::mafContainerInternalDataTest() {
     QVERIFY(vw == 70);
 
     mafContainerInterface *dwi = &m_Wrapper;
-    mafString dt2 = dwi->externalDataType();
-    mafString dt = m_Wrapper.externalDataType();
+    QString dt2 = dwi->externalDataType();
+    QString dt = m_Wrapper.externalDataType();
 
     QCOMPARE(dt, dt2);
 }
 
 void mafContainerTest::mafContainerToVariant() {
-    // Get the initial values befor assigning it to the mafVariant type.
+    // Get the initial values befor assigning it to the QVariant type.
     mafContainerInterface *dwi = &m_Wrapper;
     testCustomDataType *data_source = m_Wrapper.externalData();
     int val_source = data_source->value();
 
-    // Create the mafVariant and assign to it the mafContainer
-    mafVariant var;
+    // Create the QVariant and assign to it the mafContainer
+    QVariant var;
     var.setValue(dwi);
     // Check that it can be converted to the registered type.
     bool ok = var.canConvert<mafContainerInterfacePointer>();
     QVERIFY(ok);
 
-    // Extract the value from the mafVariant and make some checks to ensure that it is equal
+    // Extract the value from the QVariant and make some checks to ensure that it is equal
     // to the previous one assigned.
     mafContainerInterface *dwi_from_variant = var.value<mafContainerInterfacePointer>();
-    mafString edt = dwi_from_variant->externalDataType();
+    QString edt = dwi_from_variant->externalDataType();
     QCOMPARE(edt, dwi->externalDataType());
 
     // Check the internal data owned by the mafContainer

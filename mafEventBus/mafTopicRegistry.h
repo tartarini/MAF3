@@ -31,16 +31,16 @@ public:
     void shutdown();
 
     /// Register a new topic.
-    bool registerTopic(const mafString topic, const QObject *owner);
+    bool registerTopic(const QString topic, const QObject *owner);
 
     /// Unregister a topic.
-    bool unregisterTopic(const mafString topic);
+    bool unregisterTopic(const QString topic);
 
     /// Return the owner of a topic.
-    const QObject *owner(const mafString topic) const;
+    const QObject *owner(const QString topic) const;
 
     /// Check if a topic is present in the topic hash.
-    bool isTopicRegistered(const mafString topic) const;
+    bool isTopicRegistered(const QString topic) const;
 
     /// Dump of the topic hash.
     void dump();
@@ -49,7 +49,7 @@ private:
     /// Object constructor.
     mafTopicRegistry();
 
-    mafHash<mafString, const QObject*> m_TopicHash; ///< Hash containing pairs (topic,owner).
+    QHash<QString, const QObject*> m_TopicHash; ///< Hash containing pairs (topic,owner).
 };
 
 } //nameSpace mafEventBus

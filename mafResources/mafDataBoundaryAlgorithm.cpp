@@ -14,7 +14,7 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafDataBoundaryAlgorithm::mafDataBoundaryAlgorithm(const mafString code_location) : mafObjectBase(code_location) {
+mafDataBoundaryAlgorithm::mafDataBoundaryAlgorithm(const QString code_location) : mafObjectBase(code_location) {
 }
 
 

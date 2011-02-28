@@ -31,7 +31,7 @@
 
 using namespace mafCore;
 
-mafMonitorRAM::mafMonitorRAM(const mafString code_location) : mafMonitorMemory(code_location) {
+mafMonitorRAM::mafMonitorRAM(const QString code_location) : mafMonitorMemory(code_location) {
 }
 
 mafMonitorRAM::~mafMonitorRAM() {
@@ -84,12 +84,12 @@ void mafMonitorRAM::update() {
 #endif
 
     m_ResultBuffer = mafTr("RAM Memory monitor results: \n\nFree RAM: ");
-    m_ResultBuffer.append(mafString::number(freeSpace()));
+    m_ResultBuffer.append(QString::number(freeSpace()));
     m_ResultBuffer.append("\n");
     m_ResultBuffer.append(mafTr("Total RAM: "));
-    m_ResultBuffer.append(mafString::number(totalSpace()));
+    m_ResultBuffer.append(QString::number(totalSpace()));
     m_ResultBuffer.append("\n");
     m_ResultBuffer.append(mafTr("Used RAM: "));
-    m_ResultBuffer.append(mafString::number(usedSpace()));
+    m_ResultBuffer.append(QString::number(usedSpace()));
     m_ResultBuffer.append("\n");
 }

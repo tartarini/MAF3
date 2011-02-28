@@ -38,7 +38,7 @@ public:
     void profilerInit();
 
     /// Allows to start the mafProfiler timer.
-    void profilerStart(const mafString &comment = "");
+    void profilerStart(const QString &comment = "");
 
     /// Allows to stop the mafProfiler timer.
     void profilerStop();
@@ -47,7 +47,7 @@ public:
     void profilerViewResultsOnConsole();
 
     /// Save the results of the profiler in the given filename and if the 'open_file' flag is true, open the file with its default viewer
-    void profilerViewResultsOnFile(mafString filename, bool open_file = false);
+    void profilerViewResultsOnFile(QString filename, bool open_file = false);
 
     /// Allows to shutdown the mafProfiler and free the allocated memory.
     void profilerShutdown();
@@ -62,7 +62,7 @@ public:
     void printMemoryMonitorResultOnConsole();
 
     /// Print the results of memory monitor on file.
-    void printMemoryMonitorResultOnFile(mafString filename, bool open_file = false);
+    void printMemoryMonitorResultOnFile(QString filename, bool open_file = false);
 
     /// Enable/disable memory monitor.
     /** Allow enabling/disabling the monitor of warning/error/exceptions messages.
@@ -70,13 +70,13 @@ public:
     void enableErrorMonitor(int level, bool enable = true);
 
     /// Allow checking validity of the plug-in that should be loaded and return a boolean value indicating the check result.
-    bool pluginValidate(const mafString &plugin);
+    bool pluginValidate(const QString &plugin);
 
     /// Allow running the corresponding external python script. Pyhton has to be on the system PATH.
-    int runPythonScript(const mafString &script_url, mafStringList arguments, bool sync = false);
+    int runPythonScript(const QString &script_url, QStringList arguments, bool sync = false);
 
     /// Allow running the corresponding external script.
-    int runScript(const mafString &script_url, mafStringList arguments, bool sync = false);
+    int runScript(const QString &script_url, QStringList arguments, bool sync = false);
 
     /// Allow initialising the event monitor that will generate statistics on events.
     void eventStatisticsInit();
@@ -91,20 +91,20 @@ public:
     void eventStatisticsViewResults();
 
     /// Open through the default internet browser the URL for the specific application and allows the user compile the poll. Return 0 on success, -1 otherwise.
-    int openPollUrl(const mafString &poll_url);
+    int openPollUrl(const QString &poll_url);
 
     /// Allow retrieving the application version, source code building number and other related build information.
-    const mafString applicationVersion();
+    const QString applicationVersion();
 
 private:
 
     struct mafQAPluginInfo {
     float m_Version;            ///< Plug-in's Version
-    mafString m_PluginName;     ///< Plug-in's name
-    mafString m_Author;         ///< Plug-in's author
-    //mafString m_Vendor;         ///< Plug-in's company name, not used yet
-    //mafString m_VendorHomepage; ///< Plug-in's company hompage, not used yet
-    mafString m_Description;    ///< Plug-in's general description.
+    QString m_PluginName;     ///< Plug-in's name
+    QString m_Author;         ///< Plug-in's author
+    //QString m_Vendor;         ///< Plug-in's company name, not used yet
+    //QString m_VendorHomepage; ///< Plug-in's company hompage, not used yet
+    QString m_Description;    ///< Plug-in's general description.
     };
 
      /// Signature for the version query function
@@ -120,7 +120,7 @@ private:
     void printOnConsole();
 
     /// Print the result buffer on file
-    void printOnFile(mafString filename);
+    void printOnFile(QString filename);
 
     /// Execute mafMonitor code to retrieve information.
     void monitorExecute();
@@ -129,7 +129,7 @@ private:
     int m_ProfilingCounter; ///< Counter needed for multiple start-stop sequences.
     bool m_EnableMonitorRAM; ///< Flag for RAM monitoring.
     bool m_EnableMonitorHD; ///< Flag for HD monitoring.
-    mafString *m_ResultBuffer; ///< String buffer containing results coming from mafProfiler or monitors.
+    QString *m_ResultBuffer; ///< String buffer containing results coming from mafProfiler or monitors.
     mafCore::mafMonitorRAM *m_MonitorRAM; ///< Monitor base class, needed to monitor RAM usage.
     mafCore::mafMonitorHardDisk *m_MonitorHDD; ///< Monitor base class, needed to monitor HD memory usage.
 };

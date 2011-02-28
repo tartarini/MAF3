@@ -82,7 +82,7 @@ protected:
 
 private:
     /// Object constructor.
-    mafVMEManager(const mafString code_location = "");
+    mafVMEManager(const QString code_location = "");
 
     /// create IDs and connect signals with slots for VME add, remove and select.
     void initializeConnections();

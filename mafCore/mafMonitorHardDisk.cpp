@@ -23,7 +23,7 @@
 
 using namespace mafCore;
 
-mafMonitorHardDisk::mafMonitorHardDisk(const mafString code_location) : mafMonitorMemory(code_location) {
+mafMonitorHardDisk::mafMonitorHardDisk(const QString code_location) : mafMonitorMemory(code_location) {
 }
 
 mafMonitorHardDisk::~mafMonitorHardDisk() {
@@ -33,7 +33,7 @@ void mafMonitorHardDisk::update() {
 #ifdef WIN32
     __int64 lpFreeBytesAvaibleToCaller, lpTotalNumberOfBytes, lpTotalNumberOfFreeBytes;
 
-    GetDiskFreeSpaceEx(mafString("C:\\").toStdWString().c_str(), (PULARGE_INTEGER)&lpFreeBytesAvaibleToCaller,
+    GetDiskFreeSpaceEx(QString("C:\\").toStdWString().c_str(), (PULARGE_INTEGER)&lpFreeBytesAvaibleToCaller,
                        (PULARGE_INTEGER) &lpTotalNumberOfBytes,
     (PULARGE_INTEGER) &lpTotalNumberOfFreeBytes);
 
@@ -54,12 +54,12 @@ void mafMonitorHardDisk::update() {
 #endif
 
     m_ResultBuffer = mafTr("Hard Disk Memory monitor results: \n\nFree HD: ");
-    m_ResultBuffer.append(mafString::number(freeSpace()));
+    m_ResultBuffer.append(QString::number(freeSpace()));
     m_ResultBuffer.append("\n");
     m_ResultBuffer.append(mafTr("Total HD: "));
-    m_ResultBuffer.append(mafString::number(totalSpace()));
+    m_ResultBuffer.append(QString::number(totalSpace()));
     m_ResultBuffer.append("\n");
     m_ResultBuffer.append(mafTr("Used HD: "));
-    m_ResultBuffer.append(mafString::number(usedSpace()));
+    m_ResultBuffer.append(QString::number(usedSpace()));
     m_ResultBuffer.append("\n");
 }

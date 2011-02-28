@@ -31,13 +31,13 @@ class MAFRESOURCESSHARED_EXPORT mafSceneNode : public mafCore::mafObject {
 
 public:
     /// Object constructor. USE CONSTRUCTOR BELOW WHICH TAKES VME AS INPUT.
-    mafSceneNode(const mafString code_location = "");
+    mafSceneNode(const QString code_location = "");
 
     /// Object constructor.
-    mafSceneNode(mafVME *vme, mafVisualPipe *visual_pipe = NULL, const mafString code_location = "");
+    mafSceneNode(mafVME *vme, mafVisualPipe *visual_pipe = NULL, const QString code_location = "");
 
     /// Set visual pipe to the scene node
-    void setVisualPipe(mafString visualPipeType);
+    void setVisualPipe(QString visualPipeType);
 
     /// Return the inner visual pipe.
     mafVisualPipe *visualPipe() const;

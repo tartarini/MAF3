@@ -29,7 +29,7 @@ class  testDataBoundaryAlgorithmCustom : public  mafDataBoundaryAlgorithm {
 
 public:
     /// Object constructor.
-    testDataBoundaryAlgorithmCustom(const mafString code_location = "");
+    testDataBoundaryAlgorithmCustom(const QString code_location = "");
 
     /// Algorithm that will be used to extract the boundary from the given data value and pose matrix.
     /*virtual*/ mafContainerInterface *calculateBoundary(mafContainerInterface *data, mafPoseMatrix *matrix);
@@ -41,16 +41,16 @@ public:
     /*virtual*/ void bounds(double bounds[6]);
 
     /// Return the m_BoundaryItem.
-    mafString boundaryItem();
+    QString boundaryItem();
 
 private:
-    mafString m_BoundaryItem; ///< Test Var.
+    QString m_BoundaryItem; ///< Test Var.
 };
 
-testDataBoundaryAlgorithmCustom::testDataBoundaryAlgorithmCustom(const mafString code_location) : mafDataBoundaryAlgorithm(code_location), m_BoundaryItem("") {
+testDataBoundaryAlgorithmCustom::testDataBoundaryAlgorithmCustom(const QString code_location) : mafDataBoundaryAlgorithm(code_location), m_BoundaryItem("") {
 }
 
-mafString testDataBoundaryAlgorithmCustom::boundaryItem() {
+QString testDataBoundaryAlgorithmCustom::boundaryItem() {
     return m_BoundaryItem;
 }
 
@@ -109,7 +109,7 @@ void mafDataBoundaryAlgorithmTest::mafBoundaryAlgorithmAllocationTest() {
 }
 
 void mafDataBoundaryAlgorithmTest::mafBoundaryAlgorithmStrategyTest() {
-    mafString res("BoundaryCalculated");
+    QString res("BoundaryCalculated");
     m_BoundaryAlgorithm->calculateBoundary(NULL);
     QCOMPARE(m_BoundaryAlgorithm->boundaryItem(), res);
 }

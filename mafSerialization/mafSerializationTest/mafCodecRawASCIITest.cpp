@@ -65,8 +65,8 @@ private slots:
 private:
     mafCodecRawASCII *m_CodecRaw; ///< Test var
     mafObject *m_ObjectTest; ///< Test Object.
-    mafBuffer m_Buffer; ///< Test buffer data.
-    mafList<mafVariant> m_List; ///< Test mafList.
+    QBuffer m_Buffer; ///< Test buffer data.
+    QList<QVariant> m_List; ///< Test QList.
 };
 
 void mafCodecRawASCIITest::mafCodecRawBinaryAllocationTest() {
@@ -92,7 +92,7 @@ void mafCodecRawASCIITest::encodeTest() {
 
     //! <snippet>
     //// Open the buffer in writing modality
-    m_Buffer.open(mafBuffer::WriteOnly);
+    m_Buffer.open(QBuffer::WriteOnly);
 
     //// Assign the IODevice.
     m_CodecRaw->setDevice(&m_Buffer);
@@ -115,7 +115,7 @@ void mafCodecRawASCIITest::decodeTest() {
     mafRegisterObject(mafCore::mafMementoObject);
 
     // Reopen the buffer in reading mode.
-    m_Buffer.open(mafBuffer::ReadOnly);
+    m_Buffer.open(QBuffer::ReadOnly);
     // Check the size
     int s = m_Buffer.size();
     QVERIFY(s > 0);
@@ -141,8 +141,8 @@ void mafCodecRawASCIITest::decodeTest() {
     //Check decoding of the list
     int i = 0;
     for (; i < m_List.size(); ++i) {
-//        mafString s = m_List.at(i).toString();
-//        mafString t = obj->tagList()->at(i).toString();
+//        QString s = m_List.at(i).toString();
+//        QString t = obj->tagList()->at(i).toString();
         QVERIFY(m_List.at(i).toString().compare(obj->tagList()->at(i).toString()) == 0);
     }
 

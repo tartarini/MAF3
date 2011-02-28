@@ -19,10 +19,10 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafMementoVME::mafMementoVME(const mafString code_location) : mafMemento(code_location) {
+mafMementoVME::mafMementoVME(const QString code_location) : mafMemento(code_location) {
 }
 
-mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const mafString code_location)  : mafMemento(obj, code_location) {
+mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const QString code_location)  : mafMemento(obj, code_location) {
     mafVME *vme = qobject_cast<mafResources::mafVME*>((mafObject *)obj);
     REQUIRE(vme);
 
@@ -56,7 +56,7 @@ mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const mafString 
         mafMementoPropertyItem item;
         item.m_Multiplicity = 1;
         item.m_Name = "mafDataPipe";
-        item.m_Value = mafVariant(pipe->metaObject()->className());
+        item.m_Value = QVariant(pipe->metaObject()->className());
         list->append(item);
 
         int i = 0;
@@ -64,8 +64,8 @@ mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const mafString 
         for ( ; i < num; ++i) {
             mafMementoPropertyItem item;
             const QMetaProperty qmp = obj->metaObject()->property(i);
-            mafString propName = qmp.name();
-            mafVariant value = obj->property(propName.toAscii());
+            QString propName = qmp.name();
+            QVariant value = obj->property(propName.toAscii());
             item.m_Multiplicity = 1;
             item.m_Name = qmp.name();
             item.m_Value = value;
@@ -78,7 +78,7 @@ mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const mafString 
         mafMementoPropertyItem item;
         item.m_Multiplicity = 6;
         item.m_Name = "vmeBounds";
-        item.m_Value = mafVariant(boundsList);
+        item.m_Value = QVariant(boundsList);
         list->append(item);
     }
 }

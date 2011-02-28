@@ -19,14 +19,14 @@
 
 using namespace mafCore;
 
-mafObjectBase::mafObjectBase(const mafString code_location) : QObject(), m_UIFilename(""), m_ReferenceCount(1) {
+mafObjectBase::mafObjectBase(const QString code_location) : QObject(), m_UIFilename(""), m_ReferenceCount(1) {
     mafIdProvider *provider = mafIdProvider::instance();
     m_ObjectId = provider->createNewId();
 
     mafObjectRegistry::instance()->addObject(this, code_location);
 
     m_ObjectHash = QUuid::createUuid();
-//    mafString id_str = id.toString();
+//    QString id_str = id.toString();
 //    createHashCode(id_str);
 }
 
@@ -51,13 +51,13 @@ bool mafObjectBase::isEqual(const mafObjectBase *obj) const {
     for ( ; i < num; ++i) {
         const QMetaProperty obj_qmp = obj_meta->property(i);
         const QMetaProperty my_qmp = my_meta->property(i);
-        mafString obj_name = obj_qmp.name();
+        QString obj_name = obj_qmp.name();
         if(obj_name == "objectHash") {
             continue;
         }
-        mafVariant obj_value = obj->property(obj_name.toAscii());
-        mafString my_name = my_qmp.name();
-        mafVariant my_value = property(my_name.toAscii());
+        QVariant obj_value = obj->property(obj_name.toAscii());
+        QString my_name = my_qmp.name();
+        QVariant my_value = property(my_name.toAscii());
         if((my_name != obj_name) || (my_value != obj_value)) {
             return false;
         }
@@ -106,18 +106,18 @@ void mafObjectBase::connectObjectSlotsByName(QObject *signal_object) {
 
                     if (!qstrncmp(method.signature(), slot + len + 4, slotlen)) {
                         const char *signal = method.signature();
-                        mafString event_sig = SIGNAL_SIGNATURE;
+                        QString event_sig = SIGNAL_SIGNATURE;
                         event_sig.append(signal);
 
-                        mafString observer_sig = CALLBACK_SIGNATURE;
+                        QString observer_sig = CALLBACK_SIGNATURE;
                         observer_sig.append(slot);
 
                         if(connect(co, event_sig.toAscii(), this, observer_sig.toAscii())) {
-                            mafMsgDebug() << mafTr("CONNECTED slot %1 with signal %2").arg(slot, signal);
+                            qDebug() << mafTr("CONNECTED slot %1 with signal %2").arg(slot, signal);
                             foundIt = true;
                             break;
                         } else {
-                            mafMsgWarning() << mafTr("Cannot connect slot %1 with signal %2").arg(slot, signal);
+                            qWarning() << mafTr("Cannot connect slot %1 with signal %2").arg(slot, signal);
                         }
                     }
                 }
@@ -135,15 +135,15 @@ void mafObjectBase::connectObjectSlotsByName(QObject *signal_object) {
 
 
 void mafObjectBase::initializeUI(QObject *selfUI) {
-    mafList<QObject *> widgetList = qFindChildren<QObject *>(selfUI, QString());
+    QList<QObject *> widgetList = qFindChildren<QObject *>(selfUI, QString());
     int i = 0, size = widgetList.count();
     for(; i<size; ++i) {
         QObject *widget = widgetList.at(i);
-        mafString widgetName = widget->objectName();
+        QString widgetName = widget->objectName();
 
         QVariant value = this->property(widgetName.toAscii());
         if(!value.isValid()) {
-            //mafMsgWarning(mafTr("Property with name %1 doesn't exist").arg(widgetName).toAscii());
+            //qWarning(mafTr("Property with name %1 doesn't exist").arg(widgetName).toAscii());
             continue;
         }
 
@@ -163,13 +163,13 @@ void mafObjectBase::initializeUI(QObject *selfUI) {
 
 void mafObjectBase::deleteObject() {
     --m_ReferenceCount;
-    //mafMsgDebug() << m_ReferenceCount;
+    //qDebug() << m_ReferenceCount;
     if(m_ReferenceCount == 0) {
         delete this;
     }
 }
 
 
-//void mafObjectBase::createHashCode(mafString &token) {
+//void mafObjectBase::createHashCode(QString &token) {
 //    m_ObjectHash = QCryptographicHash::hash(token.toLatin1(), QCryptographicHash::Sha1);
 //}

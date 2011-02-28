@@ -79,9 +79,9 @@ void mafTreeWidgetTest::mafTreeWidgetAllocationTest() {
     vmeChild1->setObjectName("vmeChild1");
     m_HierarchyToManage->addHierarchyNode(vmeChild1, vmeRoot);
 
-    mafString info;
+    QString info;
     m_HierarchyToManage->printInformation(info);
-    mafMsgDebug() << info;
+    qDebug() << info;
     /// end hierarchy creation
 
     mafTreeModel model;

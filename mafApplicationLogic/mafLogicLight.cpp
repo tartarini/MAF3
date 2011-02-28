@@ -17,7 +17,7 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafApplicationLogic;
 
-mafLogicLight::mafLogicLight(const mafString code_location) : mafObjectBase(code_location), m_EventBus(NULL) {
+mafLogicLight::mafLogicLight(const QString code_location) : mafObjectBase(code_location), m_EventBus(NULL) {
 }
 
 mafLogicLight::~mafLogicLight() {
@@ -35,7 +35,7 @@ bool mafLogicLight::initialize() {
     return m_EventBus != NULL;
 }
 
-bool mafLogicLight::startServer(const mafString &communication_protocol, unsigned int listen_port) {
+bool mafLogicLight::startServer(const QString &communication_protocol, unsigned int listen_port) {
     bool res(m_EventBus->createServer(communication_protocol, listen_port));
     if(res) {
         m_EventBus->startListen();
@@ -43,7 +43,7 @@ bool mafLogicLight::startServer(const mafString &communication_protocol, unsigne
     return res;
 }
 
-bool mafLogicLight::createClient(const mafString &communication_protocol, const mafString &server_host, unsigned int port) {
+bool mafLogicLight::createClient(const QString &communication_protocol, const QString &server_host, unsigned int port) {
     bool res(m_EventBus->createClient(communication_protocol, server_host, port));
     return res;
 }
@@ -52,7 +52,7 @@ void mafLogicLight::sendRequestToServer(mafEvent *event_dictionary, mafEventArgu
     //need check for event coherency
     mafEventType evType = event_dictionary->eventType();
     if(evType != mafEventTypeRemote) {
-        mafMsgWarning("%s", mafTr("Wrong event type").toAscii().data());
+        qWarning("%s", mafTr("Wrong event type").toAscii().data());
         return;
     }
     m_EventBus->notifyEvent(*event_dictionary, argList);

@@ -31,7 +31,7 @@ class MAFRESOURCESSHARED_EXPORT mafOperation : public mafResource {
 
 public:
     /// Object constructor.
-    mafOperation(const mafString code_location = "");
+    mafOperation(const QString code_location = "");
 
     /// Return true or false according to the unDo ability of the operation.
     bool canUnDo() const;
@@ -47,11 +47,11 @@ public:
 
 signals:
     /// Trigger the set parameters of the operation.
-    //void setParametersSignal(mafList<mafVariant> parameters);
+    //void setParametersSignal(QList<QVariant> parameters);
 
 public slots:
     /// Set parameters of operation.
-    virtual void setParameters(mafList<mafVariant> parameters);
+    virtual void setParameters(QList<QVariant> parameters);
 
     /// Allows to call the piece of algorithm that is needed to restore the previous state of the operation's execution.
     virtual void unDo();

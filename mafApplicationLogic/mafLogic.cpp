@@ -45,7 +45,7 @@ using namespace mafEventBus;
 using namespace mafCore;
 using namespace mafApplicationLogic;
 
-mafLogic::mafLogic(const mafString code_location) : mafLogicLight(code_location), m_WorkingDirectory(""), m_ApplicationDirectory(QDir::currentPath()) {
+mafLogic::mafLogic(const QString code_location) : mafLogicLight(code_location), m_WorkingDirectory(""), m_ApplicationDirectory(QDir::currentPath()) {
 }
 
 mafLogic::~mafLogic() {
@@ -71,7 +71,7 @@ bool mafLogic::initialize() {
     provider->createNewId("maf.local.logic.settings.restore");
 
     // Signal registration.
-    mafRegisterLocalSignal("maf.local.logic.openFile", this, "openFile(const mafString)");
+    mafRegisterLocalSignal("maf.local.logic.openFile", this, "openFile(const QString)");
     mafRegisterLocalSignal("maf.local.logic.status.viewmanager.store", this, "statusViewManagerStore()");
     mafRegisterLocalSignal("maf.local.logic.status.viewmanager.restore", this, "statusViewManagerRestore(mafCore::mafMemento *, bool)");
     mafRegisterLocalSignal("maf.local.logic.status.vmemanager.store", this, "statusVmeManagerStore()");
@@ -86,14 +86,14 @@ bool mafLogic::initialize() {
     m_CustomPluggedObjectsHash.clear();
 
     // Load the module related to the resources and managers and initialize it.
-    mafLibrary *handler(NULL);
+    QLibrary *handler(NULL);
     handler = mafInitializeModule(RESOURCES_LIBRARY_NAME);
     if(handler) {
         m_LibraryHandlersHash.insert(RESOURCES_LIBRARY_NAME, handler);
     }
 
     // Initialize data hierarchy
-    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, m_Hierarchy);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, m_Hierarchy);
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.create", mafEventTypeLocal, NULL, &ret_val);
 
     // Perform design by contract check.
@@ -101,30 +101,30 @@ bool mafLogic::initialize() {
     return handler != NULL;
 }
 
-void mafLogic::plugObject(const mafString base_class, const mafString class_type, const mafString object_label) {
+void mafLogic::plugObject(const QString base_class, const QString class_type, const QString object_label) {
     // Add information to the
     mafPluggedObjectInformation objectInformation(object_label, class_type);
     // add the plugged object to the hash
     m_CustomPluggedObjectsHash.insertMulti(base_class, objectInformation);
 }
 
-void mafLogic::loadPlugins(mafString plugin_dir) {
+void mafLogic::loadPlugins(QString plugin_dir) {
     // Compose the plugin absolute directory.
-    mafString pluginDir = plugin_dir.isEmpty() ? (m_ApplicationDirectory + QDir::toNativeSeparators("/plugins")) : plugin_dir;
+    QString pluginDir = plugin_dir.isEmpty() ? (m_ApplicationDirectory + QDir::toNativeSeparators("/plugins")) : plugin_dir;
     pluginDir = QDir::cleanPath(pluginDir);
 
     // Check for plugins to load
     QDir dir(pluginDir);
-    mafStringList filters;
+    QStringList filters;
     filters << PLUGIN_EXTENSION_FILTER;
-    mafStringList plugin_list = dir.entryList(filters);
+    QStringList plugin_list = dir.entryList(filters);
     mafEventArgumentsList argList;
 
     // For each plugin file ask the plugin manager to load it through the event bus.
-    foreach(mafString file, plugin_list) {
+    foreach(QString file, plugin_list) {
         argList.clear();
         file = dir.absoluteFilePath(file);
-        argList.append(mafEventArgument(mafString, file));
+        argList.append(mafEventArgument(QString, file));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.loadLibrary", mafEventTypeLocal, &argList);
     }
 
@@ -135,13 +135,13 @@ void mafLogic::loadPlugins(mafString plugin_dir) {
 }
 
 void mafLogic::storeSettings() {
-    mafMsgDebug() << "Writing mafLogic settings...";
-    mafSettings s;
+    qDebug() << "Writing mafLogic settings...";
+    QSettings s;
     s.setValue("workingDir", m_WorkingDirectory);
 }
 
 void mafLogic::restoreSettings() {
-    mafMsgDebug() << "Reading mafLogic settings...";
-    mafSettings s;
+    qDebug() << "Reading mafLogic settings...";
+    QSettings s;
     m_WorkingDirectory = s.value("workingDir").toString();
 }

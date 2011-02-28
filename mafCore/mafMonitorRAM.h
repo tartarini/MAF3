@@ -30,7 +30,7 @@ class MAFCORESHARED_EXPORT mafMonitorRAM : public mafMonitorMemory {
 
 public:
     /// Object constructor.
-    mafMonitorRAM(const mafString code_location = "");
+    mafMonitorRAM(const QString code_location = "");
 
     /// update memory variables
     /*virtual*/ void update();

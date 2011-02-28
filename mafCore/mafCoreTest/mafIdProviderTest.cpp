@@ -25,10 +25,10 @@ using namespace mafCore;
 //mafIdProvider is a singleton which provides the generation of unique ID used for objects or events.
 //
 //It defines methods to assign a unique ID to objects and events:
-//"mafId newObjectId(const mafString id_name = "")" return next valid Id to assign to an object or to use for an event.
+//"mafId newObjectId(const QString id_name = "")" return next valid Id to assign to an object or to use for an event.
 //By default, if no name is given to the ID, a OBJECT_ID name is assigned.
 //
-//The association between IDs and corresponding name is stored in a mafIdHashType (typedef mafHash<mafId, mafString> mafIdHashType)
+//The association between IDs and corresponding name is stored in a mafIdHashType (typedef QHash<mafId, QString> mafIdHashType)
 //! </description>
 
 class mafIdProviderTest : public QObject {
@@ -84,12 +84,12 @@ void mafIdProviderTest::createNewIdTest() {
 void mafIdProviderTest::idNameTest() {
     // No named object ID == OBJECT_ID_XX
     //! <snippet>
-    mafString name = m_IdProvider->idName(0);
+    QString name = m_IdProvider->idName(0);
     //! </snippet>
-    QCOMPARE(name, mafString("OBJECT_ID_0"));
+    QCOMPARE(name, QString("OBJECT_ID_0"));
 
     name = m_IdProvider->idName(m_IdValue + 1);
-    QCOMPARE(name, mafString("TestObjectId"));
+    QCOMPARE(name, QString("TestObjectId"));
 
     // not existing id -> return empty string.
     name = m_IdProvider->idName(1500);

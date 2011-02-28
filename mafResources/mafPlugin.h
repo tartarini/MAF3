@@ -32,13 +32,13 @@ public:
     /// Object Constructor
     /** Loads the specified plugin as a dynamic library and locates
     the plugin's exported functions sFilename Filename of the plugin to load*/
-    mafPlugin(const mafString &sFilename, const mafString code_location = "");
+    mafPlugin(const QString &sFilename, const QString code_location = "");
 
     /// Object Constructor
     /** Creates a copy of a plugin that has already been loaded.
     Required to provide correct semantics for storing plugins in
     an plugin map container.*/
-    mafPlugin(const mafPlugin &Other, const mafString code_location = "");
+    mafPlugin(const mafPlugin &Other, const QString code_location = "");
 
     /// Query the plugin for its expected engine version
     mafPluginInfo pluginInfo() const {
@@ -61,7 +61,7 @@ private:
     /// Signature for the plugin's registration function
     typedef void mafFnRegisterPlugin();
 
-    mafLibrary          *m_LibraryHandler; ///< Plugin Library handle
+    QLibrary          *m_LibraryHandler; ///< Plugin Library handle
     size_t              *m_RefCount;   ///< Number of references to the dynamic library
     mafFnPluginInfo     *m_PluginInfo;  ///< Plug-in information query function
     mafFnRegisterPlugin *m_RegisterPlugin; ///< Plugin registration function

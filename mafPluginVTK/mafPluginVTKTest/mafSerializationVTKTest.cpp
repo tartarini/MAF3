@@ -48,7 +48,7 @@ class testCustomManager : public mafObjectBase {
 
 public:
     /// Object constructor
-    testCustomManager(const mafString code_location = "");
+    testCustomManager(const QString code_location = "");
 
 public slots:
     /// observer needed to receive the 'extDataLoaded' signal
@@ -60,7 +60,7 @@ testCustomManager::testCustomManager(QString code_location) : mafObjectBase(code
 }
 
 void testCustomManager::createdExtData(mafCore::mafContainerInterface *data) {
-    mafMsgDebug("%s", mafTr("External data loaded!!").toAscii().data());
+    qDebug("%s", mafTr("External data loaded!!").toAscii().data());
     QVERIFY(data != NULL);
 
 
@@ -133,7 +133,7 @@ private slots:
 
 private:
     mafExternalDataCodecVTK *m_Codec; ///< Test var.
-    mafDataStream m_OutputStream; ///< Test var.
+    QDataStream m_OutputStream; ///< Test var.
     testCustomManager *m_CustomManager; ///< Manager test var
 
     vtkCubeSource *m_DataSource; ///< Source data for the test suite.
@@ -146,7 +146,7 @@ void mafSerializationVTKTest::mafSerializationVTKAllocationTest() {
 
 void mafSerializationVTKTest::mafSerializationVTKSaveTest() {
     // Create the temporary file into the temp directory of the current user.
-    mafString test_file;
+    QString test_file;
     test_file = QDir::tempPath();
     test_file.append("/maf3Logs");
     QDir log_dir(test_file);
@@ -154,38 +154,38 @@ void mafSerializationVTKTest::mafSerializationVTKSaveTest() {
         log_dir.mkpath(test_file);
     }
     test_file.append("/testVTKFile.vtk");
-    mafFile::remove(test_file);
+    QFile::remove(test_file);
 
     //mafId plug_codec_id = mafIdProvider::instance()->idValue("maf.local.serialization.plugCodec");
-    mafString plug_codec_id = "maf.local.serialization.plugCodec";
-    mafString obj_type("vtkAlgorithmOutput");
-    mafString vtk = "VTK";
-    mafString codecVTK = "mafPluginVTK::mafExternalDataCodecVTK";
+    QString plug_codec_id = "maf.local.serialization.plugCodec";
+    QString obj_type("vtkAlgorithmOutput");
+    QString vtk = "VTK";
+    QString codecVTK = "mafPluginVTK::mafExternalDataCodecVTK";
 
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafString, obj_type));
-    argList.append(mafEventArgument(mafString, vtk));
-    argList.append(mafEventArgument(mafString, codecVTK));
+    argList.append(mafEventArgument(QString, obj_type));
+    argList.append(mafEventArgument(QString, vtk));
+    argList.append(mafEventArgument(QString, codecVTK));
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
 
-    mafString encodeType = "VTK";
+    QString encodeType = "VTK";
     argList.clear();
     argList.append(mafEventArgument(mafCore::mafContainerInterface *, &m_DataSourceContainer));
-    argList.append(mafEventArgument(mafString, test_file));
-    argList.append(mafEventArgument(mafString, encodeType));
+    argList.append(mafEventArgument(QString, test_file));
+    argList.append(mafEventArgument(QString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.export", mafEventTypeLocal, &argList);
 
-    QVERIFY(mafFile::exists(test_file));
+    QVERIFY(QFile::exists(test_file));
     QFileInfo fInfo3(test_file);
     QVERIFY(fInfo3.size() > 0);
 
     encodeType = "VTK";
     argList.clear();
-    argList.append(mafEventArgument(mafString, test_file));
-    argList.append(mafEventArgument(mafString, encodeType));
+    argList.append(mafEventArgument(QString, test_file));
+    argList.append(mafEventArgument(QString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.import", mafEventTypeLocal, &argList);
 
-    mafFile::remove(test_file);
+    QFile::remove(test_file);
 }
 
 MAF_REGISTER_TEST(mafSerializationVTKTest);

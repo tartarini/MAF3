@@ -41,7 +41,7 @@ class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceEllipsoid : public mafPlu
 
 public:
     /// Object constructor.
-    mafVTKParametricSurfaceEllipsoid(const mafString code_location = "");
+    mafVTKParametricSurfaceEllipsoid(const QString code_location = "");
 
 public slots:
 

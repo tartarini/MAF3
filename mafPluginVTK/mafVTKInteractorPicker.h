@@ -38,7 +38,7 @@ class MAFPLUGINVTKSHARED_EXPORT mafVTKInteractorPicker : public mafResources::ma
 public:
 
     /// Object constructor.
-    mafVTKInteractorPicker(const mafString code_location = "");
+    mafVTKInteractorPicker(const QString code_location = "");
 
     /// Get output of the pipe.
     mafCore::mafContainerInterface *output();
@@ -56,7 +56,7 @@ signals:
 public slots:
 
     /// Set type of parametric surface used as marker.
-    void setSurface(mafString parametricSurfaceType);
+    void setSurface(QString parametricSurfaceType);
 
 protected:
     /// Object destructor.
@@ -91,10 +91,10 @@ private:
     vtkPolyDataMapper *m_Mapper; ///< Class that maps polygonal data.
     vtkAppendPolyData *m_AppendData; /// Bunch of surfaces.
     mafCore::mafContainer<vtkActor> m_Actor; ///< Output container.
-    mafList<double*> m_PointList;
+    QList<double*> m_PointList;
     mafCore::mafContainerInterface *m_Output; ///< Output for visual pipe.
     mafVTKParametricSurface *m_ParametricSurface; ///< Parametric surface used as marker.
-    mafString m_ParametricSurfaceType; ///< Type of parametric surface to be used as marker.
+    QString m_ParametricSurfaceType; ///< Type of parametric surface to be used as marker.
 
 };
 
@@ -106,7 +106,7 @@ inline mafCore::mafContainerInterface *mafVTKInteractorPicker::output() {
     return m_Output;
 }
 
-inline void mafVTKInteractorPicker::setSurface(mafString parametricSurfaceType){
+inline void mafVTKInteractorPicker::setSurface(QString parametricSurfaceType){
     m_ParametricSurfaceType = parametricSurfaceType;
 }
 

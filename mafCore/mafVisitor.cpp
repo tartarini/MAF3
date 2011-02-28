@@ -13,7 +13,7 @@
 
 using namespace mafCore;
 
-mafVisitor::mafVisitor(const mafString code_location) : mafObjectBase(code_location) {
+mafVisitor::mafVisitor(const QString code_location) : mafObjectBase(code_location) {
 }
 
 mafVisitor::~mafVisitor() {

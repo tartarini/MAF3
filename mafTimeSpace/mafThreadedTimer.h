@@ -32,16 +32,16 @@ class MAFTIMESPACESHARED_EXPORT mafThreadedTimer : public mafCore::mafObjectBase
 
 public:
     /// Object constructor.
-    mafThreadedTimer(const mafString code_location = "");
+    mafThreadedTimer(const QString code_location = "");
 
     /// Object constructor overloaded.
-    mafThreadedTimer(mafTimer *timer, const mafString code_location = "");
+    mafThreadedTimer(mafTimer *timer, const QString code_location = "");
 
     /// Start the timer in the main thread.
     void start();
 
     /// Start the timer in the thread passed as parameter.
-    void startOnThread(mafThread *thread);
+    void startOnThread(QThread *thread);
 
     /// Stop the timer.
     void stop();
@@ -54,7 +54,7 @@ protected:
     /* virtual */ ~mafThreadedTimer();
 private:
     mafTimer *m_Timer; ///< Timer variable which will be associated with Thread.
-    mafThread *m_Thread; ///< Thread variable representing the thread on which Timer runs. If NULL it means the timer is running on the main thread.
+    QThread *m_Thread; ///< Thread variable representing the thread on which Timer runs. If NULL it means the timer is running on the main thread.
 };
 
 } // namespace mafTimeSpace

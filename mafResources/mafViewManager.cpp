@@ -29,7 +29,7 @@ void mafViewManager::shutdown() {
     destroyAllViews();
 }
 
-mafViewManager::mafViewManager(const mafString code_location) : mafObjectBase(code_location), m_SelectedView(NULL) {
+mafViewManager::mafViewManager(const QString code_location) : mafObjectBase(code_location), m_SelectedView(NULL) {
     initializeConnections();
 }
 
@@ -44,7 +44,7 @@ mafMemento *mafViewManager::createMemento() const {
 void mafViewManager::setMemento(mafMemento *memento, bool deep_memento) {
     Q_UNUSED(deep_memento);
 
-    mafString viewType;
+    QString viewType;
     mafMementoPropertyList *list = memento->mementoPropertyList();
     mafMementoPropertyItem item;
     foreach(item, *list) {
@@ -66,7 +66,7 @@ void mafViewManager::initializeConnections() {
     provider->createNewId("maf.local.resources.view.sceneNodeShow");
 
     // Register API signals.
-    mafRegisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(mafString)");
+    mafRegisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(QString)");
     mafRegisterLocalSignal("maf.local.resources.view.created", this, "viewCreatedSignal(mafCore::mafObjectBase *)");
     mafRegisterLocalSignal("maf.local.resources.view.destroy", this, "destroyViewSignal(mafCore::mafObjectBase *)");
     mafRegisterLocalSignal("maf.local.resources.view.select", this, "selectViewSignal(mafCore::mafObjectBase *)");
@@ -74,7 +74,7 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShowSignal(mafCore::mafObjectBase *, bool)");
 
     // Register private callbacks to the instance of the manager..
-    mafRegisterLocalCallback("maf.local.resources.view.create", this, "createView(mafString)");
+    mafRegisterLocalCallback("maf.local.resources.view.create", this, "createView(QString)");
     mafRegisterLocalCallback("maf.local.resources.view.destroy", this, "destroyView(mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.view.select", this, "selectView(mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShow(mafCore::mafObjectBase *, bool)");
@@ -111,7 +111,7 @@ void mafViewManager::sceneNodeShow(mafCore::mafObjectBase *node, bool show) {
     }
 }
 
-void mafViewManager::createView(mafString view_type) {
+void mafViewManager::createView(QString view_type) {
     REQUIRE(view_type.length() > 0);
 
     mafObjectBase *obj = mafNEWFromString(view_type);

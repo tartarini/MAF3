@@ -29,19 +29,19 @@ class  testInterpolatorCustom : public  mafInterpolator {
 
 public:
     /// Object constructor.
-    testInterpolatorCustom(const mafString code_location = "");
+    testInterpolatorCustom(const QString code_location = "");
 
     /// Search the item at the given timestamp 't' with the defined interpolation strategy.
     /*virtual*/ mafDataSet *itemAt(mafDataSetMap *collection, double t);
 
     /// Access the result of the interpolation mechanism.
-    mafString interpolatedItem() {return m_InterpolatedItem;}
+    QString interpolatedItem() {return m_InterpolatedItem;}
 
 private:
-    mafString m_InterpolatedItem; ///< Test Var.
+    QString m_InterpolatedItem; ///< Test Var.
 };
 
-testInterpolatorCustom::testInterpolatorCustom(const mafString code_location) : mafInterpolator(code_location), m_InterpolatedItem("") {
+testInterpolatorCustom::testInterpolatorCustom(const QString code_location) : mafInterpolator(code_location), m_InterpolatedItem("") {
 }
 
 mafDataSet *testInterpolatorCustom::itemAt(mafDataSetMap *collection, double t) {
@@ -88,7 +88,7 @@ void mafInterpolatorTest::mafInterpolatorAllocationTest() {
 }
 
 void mafInterpolatorTest::mafInterpolationStrategyTest() {
-    mafString res("Interpolated");
+    QString res("Interpolated");
     mafDataSet *data = m_Interpolator->itemAt(&m_ItemMap, 0.0);
     QVERIFY(data == NULL);
     QCOMPARE(m_Interpolator->interpolatedItem(), res);

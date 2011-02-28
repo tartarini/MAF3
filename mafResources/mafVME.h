@@ -39,13 +39,13 @@ class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
 
 public:
     /// Object constructor.
-    mafVME(const mafString code_location = "");
+    mafVME(const QString code_location = "");
 
     /// Set the bounds of the bounding box of the VME.
-    void setBounds(mafVariantList bounds);
+    void setBounds(QVariantList bounds);
 
     /// Return the bounds of the bounding box of the VME.
-    mafVariantList bounds();
+    QVariantList bounds();
 
     /// Return the collection of mafDataSet.
     mafDataSetCollection *dataSetCollection();
@@ -54,7 +54,7 @@ public:
     mafDataPipe *dataPipe();
 
     /// Assign a data pipe by giving its type as string.
-    void setDataPipe(const mafString &pipe_type);
+    void setDataPipe(const QString &pipe_type);
 
     /// Set the data pipe for the VME.
     void setDataPipe(mafDataPipe *pipe);
@@ -110,7 +110,7 @@ private:
     mafInteractor *m_Interactor; ///< Custom interactor associated with the VME.
     mafDataSetCollection *m_DataSetCollection; ///< Collection of timestamped data posed on homogeneous matrices.
     mafDataPipe *m_DataPipe; ///< Data pipe associated with the VME and used to elaborate new data.
-    mafHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
+    QHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
     QVariantList m_Bounds; ///< List of bounds value of the binding box.
 };
 

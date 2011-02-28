@@ -40,15 +40,15 @@ using namespace mafResources;
 class testExternalDataType {
 public:
     /// Object constructor.
-    testExternalDataType(mafString v) : m_Value(v) {}
+    testExternalDataType(QString v) : m_Value(v) {}
 
     /// set the new value for the class.
-    void setValue(mafString v) {m_Value = v;}
+    void setValue(QString v) {m_Value = v;}
     /// Return the inner value.
-    mafString value() {return m_Value;}
+    QString value() {return m_Value;}
 
 private:
-    mafString m_Value; ///< Test variable for external data
+    QString m_Value; ///< Test variable for external data
 };
 
 
@@ -63,7 +63,7 @@ class  testExternalDataCodecCustom : public  mafCore::mafExternalDataCodec {
 
 public:
     /// Object constructor.
-    testExternalDataCodecCustom(const mafString code_location = "");
+    testExternalDataCodecCustom(const QString code_location = "");
 
     /// Encode the memento into the output type.
     /*virtual*/ char *encode(bool binary = true);
@@ -72,25 +72,25 @@ public:
     /*virtual*/ void decode(const char *input_string, bool binary = true);
 
 private:
-    mafContainer<mafString> *m_Cont; ///< Test Var.
+    mafContainer<QString> *m_Cont; ///< Test Var.
 };
 
-testExternalDataCodecCustom::testExternalDataCodecCustom(const mafString code_location) : mafExternalDataCodec(code_location) {
+testExternalDataCodecCustom::testExternalDataCodecCustom(const QString code_location) : mafExternalDataCodec(code_location) {
 }
 
 void testExternalDataCodecCustom::decode(const char *input_string, bool binary) {
     Q_UNUSED(binary);
     REQUIRE(input_string != NULL);
-    m_Cont = new mafContainer<mafString>();
-    *m_Cont = new mafString;
+    m_Cont = new mafContainer<QString>();
+    *m_Cont = new QString;
     m_Cont->externalData()->append(input_string);
     this->m_ExternalData = m_Cont;
 }
 
 char *testExternalDataCodecCustom::encode(bool binary) {
     Q_UNUSED(binary);
-    mafContainer<mafString> *dataSet = mafContainerPointerTypeCast(mafString, this->externalData());
-    mafString dataString = dataSet->externalData()->toAscii();
+    mafContainer<QString> *dataSet = mafContainerPointerTypeCast(QString, this->externalData());
+    QString dataString = dataSet->externalData()->toAscii();
     char *output_string = new char[dataString.size()+1];
     memcpy(output_string,dataString.toAscii().data(),dataString.size()+1);
     return output_string;
@@ -144,7 +144,7 @@ void mafMementoDataSetTest::mafMementoDataSetDefaultAllocationTest() {
 
 void mafMementoDataSetTest::mafMementoDataSetCustomAllocationTest() {
     mafDEL(m_MementoDataSet);
-    mafString testString("testStringa");
+    QString testString("testStringa");
 
     mafContainer<testExternalDataType> container;
     container = new testExternalDataType(testString);
@@ -170,8 +170,8 @@ void mafMementoDataSetTest::mafMementoDataSetCustomAllocationTest() {
     mafDataSet *returnDataSet = mafNEW(mafResources::mafDataSet);
     returnDataSet->setMemento(m_MementoDataSet);
     //! </snippet>
-    mafContainer<mafString> *string = mafContainerPointerTypeCast(mafString, returnDataSet->dataValue());
-    mafString out;
+    mafContainer<QString> *string = mafContainerPointerTypeCast(QString, returnDataSet->dataValue());
+    QString out;
     out = string->externalData()->toAscii();
     QCOMPARE(out, testString);
     mafDEL(returnDataSet);

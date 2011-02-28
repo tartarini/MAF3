@@ -43,7 +43,7 @@ class testInteractionManagerCustom : public mafObjectBase {
 
 public:
     /// Object constructor
-    testInteractionManagerCustom(const mafString code_location = "");
+    testInteractionManagerCustom(const QString code_location = "");
 
     ~testInteractionManagerCustom();
 

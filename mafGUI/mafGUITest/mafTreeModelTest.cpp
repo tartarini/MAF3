@@ -84,9 +84,9 @@ void mafTreeModelTest::hierarchyAndInsertItemTest() {
     vmeChild1->setObjectName("vmeChild1");
     m_HierarchyToManage->addHierarchyNode(vmeChild1, vmeRoot);
 
-    mafString info;
+    QString info;
     m_HierarchyToManage->printInformation(info);
-    mafMsgDebug() << info;
+    qDebug() << info;
     /// end hierarchy creation
 
     m_TreeModel->setHierarchy(m_HierarchyToManage);

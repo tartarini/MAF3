@@ -21,7 +21,7 @@ using namespace mafCore;
 using namespace mafPluginVTK;
 
 
-mafVTKParametricSurfaceSphere::mafVTKParametricSurfaceSphere(const mafString code_location) : mafPluginVTK::mafVTKParametricSurface(code_location), m_SphereSource(NULL) {
+mafVTKParametricSurfaceSphere::mafVTKParametricSurfaceSphere(const QString code_location) : mafPluginVTK::mafVTKParametricSurface(code_location), m_SphereSource(NULL) {
     m_SphereRadius = 1.0;
     m_SpherePhiRes = 20;
     m_SphereTheRes = 20;

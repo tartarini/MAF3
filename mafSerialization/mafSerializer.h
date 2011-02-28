@@ -29,12 +29,12 @@ class MAFSERIALIZATIONSHARED_EXPORT mafSerializer : public mafCore::mafObjectBas
 
 public:
     /// Object constructor.
-    mafSerializer(const mafString code_location = "");
+    mafSerializer(const QString code_location = "");
 
     /// Set the URL to allow the serializer to write/read the DataStream.
     /** Data URL MUST contain the schema associated with the URL itselves.
     For local files the schema if 'file', for web URL the schema can be for example 'http', 'https' or 'ftp'.*/
-    void setDataURL(const mafString &url);
+    void setDataURL(const QString &url);
 
     /// Return the URL of the file containing the data.
     const mafUrl dataURL() const;
@@ -61,7 +61,7 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline void mafSerializer::setDataURL(const mafString &url) {
+inline void mafSerializer::setDataURL(const QString &url) {
     m_DataURL.setUrl(url);
 }
 

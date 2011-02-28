@@ -28,10 +28,10 @@ class MAFGUISHARED_EXPORT mafUILoaderQt : public mafUILoader {
 
 public:
     /// Object constructor.
-    mafUILoaderQt(const mafString code_location = "");
+    mafUILoaderQt(const QString code_location = "");
 
     /// load from external file (generally an xml) the GUI
-    /*virtual*/ void uiLoad(const mafString &fileName);
+    /*virtual*/ void uiLoad(const QString &fileName);
 
 protected:
     /// Object destructor.

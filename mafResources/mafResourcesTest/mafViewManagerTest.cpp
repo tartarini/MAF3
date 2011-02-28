@@ -107,8 +107,8 @@ private:
     mafViewManager *m_ViewManager; ///< View Manager test variable
     mafEventBusManager *m_EventBus; ///< Reference to the event bus.
     testViewManagerObserver *m_Observer; ///< test observer for view created and selected.
-    mafString m_Hash1;
-    mafString m_Hash2;
+    QString m_Hash1;
+    QString m_Hash2;
 };
 
 void mafViewManagerTest::mafViewManagerAllocationTest() {
@@ -117,11 +117,11 @@ void mafViewManagerTest::mafViewManagerAllocationTest() {
 
 void mafViewManagerTest::createViewTest() {
     // Create a new view from its string type name.
-    mafString vt("mafResources::mafView");
+    QString vt("mafResources::mafView");
 
     // Send the message through the vent bus to create it.
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafString, vt));
+    argList.append(mafEventArgument(QString, vt));
     m_EventBus->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList);
 
     mafObjectBase *obj = m_Observer->view();
@@ -177,10 +177,10 @@ void mafViewManagerTest::mementoViewTest() {
 
 void mafViewManagerTest::removeAndDestructionTest() {
     mafObjectBase *obj = m_Observer->view();
-    mafString hash1 = obj->objectHash();
+    QString hash1 = obj->objectHash();
     mafDEL(obj);
     obj = m_Observer->view();
-    mafString hash2 = obj->objectHash();
+    QString hash2 = obj->objectHash();
     QVERIFY(hash1 != hash2);
 }
 

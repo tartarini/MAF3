@@ -28,7 +28,7 @@ class  testCodecCustom : public  mafCodec {
 
 public:
     /// Object constructor.
-    testCodecCustom(const mafString code_location = "");
+    testCodecCustom(const QString code_location = "");
 
     /// Encode the memento into the output type.
     /*virtual*/ void encode(mafMemento *memento);
@@ -37,13 +37,13 @@ public:
     /*virtual*/ mafMemento *decode();
 
     /// Return the string variable encoded and decoded from the testCodecCustom.
-    mafString codecString() {return m_CodecString;}
+    QString codecString() {return m_CodecString;}
 
 private:
-    mafString m_CodecString; ///< Test Var.
+    QString m_CodecString; ///< Test Var.
 };
 
-testCodecCustom::testCodecCustom(const mafString code_location) : mafCodec(code_location), m_CodecString("") {
+testCodecCustom::testCodecCustom(const QString code_location) : mafCodec(code_location), m_CodecString("") {
     m_EncodingType = "CUSTOM";
 }
 
@@ -100,18 +100,18 @@ private:
 
 void mafCodecTest::mafCodecAllocationTest() {
     QVERIFY(m_Codec != NULL);
-    mafString res("CUSTOM");
+    QString res("CUSTOM");
     QCOMPARE(m_Codec->encodingType(), res);
 }
 
 void mafCodecTest::encodeTest() {
-    mafString res("Encoded");
+    QString res("Encoded");
     m_Codec->encode(NULL);
     QCOMPARE(m_Codec->codecString(), res);
 }
 
 void mafCodecTest::decodeTest() {
-    mafString res("Decoded");
+    QString res("Decoded");
     m_Codec->decode();
     QCOMPARE(m_Codec->codecString(), res);
 }

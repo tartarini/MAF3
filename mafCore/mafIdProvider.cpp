@@ -29,11 +29,11 @@ mafIdProvider* mafIdProvider::instance() {
     return &instanceProvider;
 }
 
-mafId mafIdProvider::createNewId(const mafString id_name) {
+mafId mafIdProvider::createNewId(const QString id_name) {
     if(id_name.isEmpty()) {
-        mafString name;
+        QString name;
         name.append("OBJECT_ID_");
-        name.append(mafString::number(m_Id));
+        name.append(QString::number(m_Id));
         m_IdHash.insert(m_Id, name);
     } else {
         // ID with custom name: check if not already inserted!! No multiple names are accepted.
@@ -42,7 +42,7 @@ mafId mafIdProvider::createNewId(const mafString id_name) {
             m_IdHash.insert(m_Id, id_name);
         } else {
             // if the Event id is already defined, return the previous defined ID value.
-            mafMsgWarning("%s", mafTr("ID with name '%1'' has been already defined!").arg(id_name).toAscii().data());
+            qWarning("%s", mafTr("ID with name '%1'' has been already defined!").arg(id_name).toAscii().data());
             return id_value;
         }
     }
@@ -51,7 +51,7 @@ mafId mafIdProvider::createNewId(const mafString id_name) {
     return returnValue;
 }
 
-bool mafIdProvider::removeId(const mafString id_name) {
+bool mafIdProvider::removeId(const QString id_name) {
     int removed_items = 0;
     mafId id_value = idValue(id_name);
     if(m_IdHash.contains(id_value)) {
@@ -60,7 +60,7 @@ bool mafIdProvider::removeId(const mafString id_name) {
     return removed_items != 0;
 }
 
-bool mafIdProvider::setIdName(const mafId id, const mafString id_name) {
+bool mafIdProvider::setIdName(const mafId id, const QString id_name) {
     if(m_IdHash.contains(id) && idValue(id_name) == -1) {
         // id exists and name not yet used, so can be assigned to the id.
         m_IdHash.insert(id, id_name);
@@ -69,11 +69,11 @@ bool mafIdProvider::setIdName(const mafId id, const mafString id_name) {
     return false;
 }
 
-const mafString mafIdProvider::idName(const mafId id_value) const {
+const QString mafIdProvider::idName(const mafId id_value) const {
     return m_IdHash.value(id_value);
 }
 
-mafId mafIdProvider::idValue(const mafString id_name) const {
+mafId mafIdProvider::idValue(const QString id_name) const {
     return m_IdHash.key(id_name, -1);
 }
 

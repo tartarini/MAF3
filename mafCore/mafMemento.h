@@ -32,10 +32,10 @@ class MAFCORESHARED_EXPORT mafMemento : public mafObjectBase {
 
 public:
     /// mafMemento constructor.
-    mafMemento(const mafString code_location = "");
+    mafMemento(const QString code_location = "");
 
     /// mafMemento constructor.
-    mafMemento(const mafObject *obj, const mafString code_location = "");
+    mafMemento(const mafObject *obj, const QString code_location = "");
 
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
@@ -44,10 +44,10 @@ public:
     mafMementoPropertyList *mementoPropertyList();
 
     /// Return the class type of the object associated.
-    mafString objectClassType() const;
+    QString objectClassType() const;
 
     /// Assign the object class type from the hinerited mementos.
-    void setObjectClassType (const mafString &class_type);
+    void setObjectClassType (const QString &class_type);
 
 protected:
     /// Object destructor.
@@ -55,7 +55,7 @@ protected:
 
 private:
     friend class mafObject;
-    mafString m_ObjectClassType; ///< Store the object's class type.
+    QString m_ObjectClassType; ///< Store the object's class type.
     mafMementoPropertyList m_MementoPropertyList; ///< Vector containing the object status.
 };
 
@@ -71,7 +71,7 @@ inline mafMementoPropertyList *mafMemento::mementoPropertyList() {
   return &m_MementoPropertyList;
 }
 
-inline mafString mafMemento::objectClassType() const {
+inline QString mafMemento::objectClassType() const {
     return m_ObjectClassType;
 }
 

@@ -31,7 +31,7 @@ class  testVisualPipeCustom : public mafVisualPipe {
 
 public:
     /// Object constructor;
-    testVisualPipeCustom(const mafString code_location = "") : mafVisualPipe(code_location) {};
+    testVisualPipeCustom(const QString code_location = "") : mafVisualPipe(code_location) {};
 
     /// Initialize ans create the pipeline.
     /*virtual*/ void createPipe() {};
@@ -99,9 +99,9 @@ private slots:
 private:
     mafHierarchy *m_HierarchyToManage; ///< Test var.
     mafHierarchy *m_Hierarchy; ///< Test var.
-    mafString m_CustomHashInTheMiddle; ///< hash to find that is located in the middle of the generation of the tree
-    mafString m_CustomHashInTheEnd; ///< hash to find that is located in the end of the generation of the tree
-    mafList<mafVME *> m_VMEList; ///< VME list which must be used to delete internal objects
+    QString m_CustomHashInTheMiddle; ///< hash to find that is located in the middle of the generation of the tree
+    QString m_CustomHashInTheEnd; ///< hash to find that is located in the end of the generation of the tree
+    QList<mafVME *> m_VMEList; ///< VME list which must be used to delete internal objects
 
     /// function for quick random creation of an unbalanced tree
     void unbalancedTreeRandomCreation(unsigned int numberOfElements);
@@ -158,9 +158,9 @@ void mafHierarchyTest::mafSceneGraphManageTest() {
     // Add the created scene node to the tree.
     m_HierarchyToManage->addHierarchyNode(sceneNodeChild1);
 
-    mafString information;
+    QString information;
     m_HierarchyToManage->printInformation(information);
-    mafMsgDebug() << information;
+    qDebug() << information;
 
     // Search the node by VME hash
     mafVisitorFindSceneNodeByVMEHash *v1 = new mafVisitorFindSceneNodeByVMEHash(sceneNodeChild0->vme()->objectHash(), mafCodeLocation);
@@ -170,13 +170,13 @@ void mafHierarchyTest::mafSceneGraphManageTest() {
     if(n1) {
         // Remove the found node tree.
         m_HierarchyToManage->removeHierarchyNode(n1);
-        mafMsgDebug() << "Remove SceneNode";
+        qDebug() << "Remove SceneNode";
     }
     information.clear();
 
     // Dump the tree hierarchy
     m_HierarchyToManage->printInformation(information);
-    mafMsgDebug() << information;
+    qDebug() << information;
 
     // Remove the allocated objects
     mafDEL(sceneNodeRoot);
@@ -244,8 +244,8 @@ void mafHierarchyTest::unbalancedTreeRandomCreation(unsigned int numberOfElement
         } //else it will be a children
 
         mafVME* vmeChild = mafNEW(mafResources::mafVME);
-        mafString name = "vmeChild";
-        name.append(mafString::number(count));
+        QString name = "vmeChild";
+        name.append(QString::number(count));
         vmeChild->setObjectName(name);
         testVisualPipeCustom *pipeChild = new testVisualPipeCustom();
         mafSceneNode *sceneNode = new mafSceneNode(vmeChild, pipeChild);

@@ -33,7 +33,7 @@ class MAFCORESHARED_EXPORT mafObjectBase : public QObject {
 
 public:
     /// Object constructor.
-    mafObjectBase(const mafString code_location = "");
+    mafObjectBase(const QString code_location = "");
 
     /// Return the object's ID.
     mafId objectId() const;
@@ -54,13 +54,13 @@ public:
     bool operator==(const mafObjectBase &obj) const;
 
     /// Return the hash associated to the object.
-    const mafString objectHash() const;
+    const QString objectHash() const;
 
     /// Create the hash code given the string as argument. The hash is calculated using the SHA1 encryption algorithm.
-//    void createHashCode(mafString &token);
+//    void createHashCode(QString &token);
 
     /// Return the filename associated to the object's UI.
-    const mafString uiFilename() const;
+    const QString uiFilename() const;
 
     /// Allows to accept a mafVisitor which will visit the object and will be executed the mafVisitor algorithm.
     virtual void acceptVisitor(mafVisitor *v);
@@ -85,9 +85,9 @@ protected:
     /// set the hash code for the current object.
     /** This method is used from the undo mechanism like memento pattern
     and by the serialization mechanism to restore the previous saved object's hash.*/
-    void setObjectHash(const mafString obj_hash);
+    void setObjectHash(const QString obj_hash);
     
-    mafString m_UIFilename; ///< Filename that define the object's UI written into a XML file.
+    QString m_UIFilename; ///< Filename that define the object's UI written into a XML file.
 
     /// Object destructor.
     virtual ~mafObjectBase();
@@ -98,8 +98,8 @@ signals:
 
 private:
     mafId m_ObjectId; ///< Unique ID which identifies the object.
-    //mafByteArray m_ObjectHash; ///< Hash value for the current object.
-    mafUuid m_ObjectHash; ///< Hash value for the current object.
+    //QByteArray m_ObjectHash; ///< Hash value for the current object.
+    QUuid m_ObjectHash; ///< Hash value for the current object.
 
     int m_ReferenceCount;
 };
@@ -113,15 +113,15 @@ inline mafId mafObjectBase::objectId() const {
     return m_ObjectId;
 }
 
-inline const mafString mafObjectBase::objectHash() const {
+inline const QString mafObjectBase::objectHash() const {
     return m_ObjectHash.toString();
 }
 
-inline void mafObjectBase::setObjectHash(const mafString obj_hash) {
-    m_ObjectHash = mafUuid(obj_hash);
+inline void mafObjectBase::setObjectHash(const QString obj_hash) {
+    m_ObjectHash = QUuid(obj_hash);
 }
 
-inline const mafString mafObjectBase::uiFilename() const {
+inline const QString mafObjectBase::uiFilename() const {
     return m_UIFilename;
 }
 

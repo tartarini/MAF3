@@ -21,7 +21,7 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafView::mafView(const mafString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL)  {
+mafView::mafView(const QString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL)  {
     m_VisualPipeHash.clear();
     m_Selected = false;
 
@@ -73,24 +73,24 @@ void mafView::selectSceneNode(mafSceneNode *node, bool select) {
     Q_UNUSED(select);
 }
 
-void mafView::showSceneNode(mafSceneNode *node, bool show, const mafString visualPipeType) {
+void mafView::showSceneNode(mafSceneNode *node, bool show, const QString visualPipeType) {
     REQUIRE(node != NULL);
 
     if(node->vme() == NULL) {
         return;
     }
 
-    mafString vp(visualPipeType);
+    QString vp(visualPipeType);
     if (vp == "") {
         // Find visual pipe for this kind of data
-        mafString dataType;
+        QString dataType;
         mafDataSet *data = node->vme()->outputData();
         if  (data != NULL) {
             dataType = data->dataValue()->externalDataType();
         }
         vp = m_VisualPipeHash.value(dataType);
         if (vp == "") {
-           mafMsgDebug("%s", mafTr("Visual pipe not found for '%1' of data!").arg(vp).toAscii().data());
+           qDebug("%s", mafTr("Visual pipe not found for '%1' of data!").arg(vp).toAscii().data());
            return;
         }
     }
@@ -99,7 +99,7 @@ void mafView::showSceneNode(mafSceneNode *node, bool show, const mafString visua
             node->setVisualPipe(vp);
             mafVisualPipe *pipe = node->visualPipe();
             if(pipe == NULL) {
-                mafMsgWarning() << mafTr("No visual pipe type '") << vp << mafTr("'' registered!!");
+                qWarning() << mafTr("No visual pipe type '") << vp << mafTr("'' registered!!");
                 return;
             }
             pipe->setInput(node->vme());
@@ -114,7 +114,7 @@ void mafView::showSceneNode(mafSceneNode *node, bool show, const mafString visua
     }
 }
 
-void mafView::plugVisualPipe(mafString dataType, mafString visualPipeType) {
+void mafView::plugVisualPipe(QString dataType, QString visualPipeType) {
     if (!dataType.isEmpty() && !visualPipeType.isEmpty()) {
         m_VisualPipeHash.insert(dataType, visualPipeType);
     }

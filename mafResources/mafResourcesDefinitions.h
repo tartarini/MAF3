@@ -46,29 +46,29 @@ class mafVME;
 typedef vnl_double_4x4 mafPoseMatrix;
 
 /// Type definition for a list of mafResource.
-typedef mafList<mafResource *> mafResourceList;
+typedef QList<mafResource *> mafResourceList;
 
 /// Time varying data set map.
-typedef mafMap<double, mafDataSet *> mafDataSetMap;
+typedef QMap<double, mafDataSet *> mafDataSetMap;
 
 /// List of dataset used as input list for mafPipe.
-typedef mafList<mafDataSet *> mafDataSetList; //to be removed?
+typedef QList<mafDataSet *> mafDataSetList; //to be removed?
 
 /// List of VME used as input list for mafPipe.
-typedef mafList<mafVME *> mafVMEList;
+typedef QList<mafVME *> mafVMEList;
 
 /** Structure representing the information about a plug-in library.*/
 struct MAFRESOURCESSHARED_EXPORT mafPluginInfo {
     float m_Version;            ///< Plug-in Version
-    mafString m_PluginName;     ///< Plug-in name
-    mafString m_Author;         ///< Plug-in author
-    mafString m_Vendor;         ///< Plug-in company name
-    mafString m_VendorHomepage; ///< Plug-in company homepage
-    mafString m_Description;    ///< Plug-in general description.
+    QString m_PluginName;     ///< Plug-in name
+    QString m_Author;         ///< Plug-in author
+    QString m_Vendor;         ///< Plug-in company name
+    QString m_VendorHomepage; ///< Plug-in company homepage
+    QString m_Description;    ///< Plug-in general description.
 };
 
 /// Hash of plugged objects coming from plig-ins.
-//typedef mafHash<mafString, mafCore::mafPluggedObjectInformation> mafPluggedObjectsHash;
+//typedef QHash<QString, mafCore::mafPluggedObjectInformation> mafPluggedObjectsHash;
 
 ///< Enumeration that define the Cartesian Axis.
 enum {

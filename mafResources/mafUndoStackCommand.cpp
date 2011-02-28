@@ -17,7 +17,7 @@ using namespace mafResources;
 mafUndoStackCommand::~mafUndoStackCommand() {
 }
 
-mafUndoStackCommand::mafUndoStackCommand(mafOperation *rec, mafString action): m_Receiver(rec), m_Action(action) {
+mafUndoStackCommand::mafUndoStackCommand(mafOperation *rec, QString action): m_Receiver(rec), m_Action(action) {
 }
 
 void mafUndoStackCommand::execute() {

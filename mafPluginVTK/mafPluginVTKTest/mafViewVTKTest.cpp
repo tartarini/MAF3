@@ -162,8 +162,8 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     resultObject->resize(QSize(400, 400));
     resultObject->show();
 
-    mafString name_result = resultObject->objectName();
-    QCOMPARE(name_result, mafString("VTKWidget"));
+    QString name_result = resultObject->objectName();
+    QCOMPARE(name_result, QString("VTKWidget"));
 
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VmeCube));
@@ -173,7 +173,7 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     //! </snippet>
 
     // Visualize first cube
-    mafString h = m_VmeCube->objectHash();
+    QString h = m_VmeCube->objectHash();
     mafVisitorFindSceneNodeByVMEHash *v = new mafVisitorFindSceneNodeByVMEHash(h, mafCodeLocation);
     mafObjectRegistry::instance()->findObjectsThreaded(v);
     mafSceneNode *cubeNode = v->sceneNode();

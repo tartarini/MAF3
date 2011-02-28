@@ -54,7 +54,7 @@ private slots:
 
 private:
     /// find the memento property item given the name
-    mafMementoPropertyItem findPropertyItem(mafMemento *menento, mafString name);
+    mafMementoPropertyItem findPropertyItem(mafMemento *menento, QString name);
 
     /// verify the serialization of the Gray Memento
     void verifyGrayMemento(mafMemento *memento, int level, int startPos[3], int dimensions[3]);
@@ -70,16 +70,16 @@ private:
     mafMemento *m_GrayMemento;                   ///< Test Object (Gray unsigned short).
     mafMemento *m_RGBMemento;                    ///< Test Object (RGB unsigned char).
     mafMemento *m_FloatMemento;                  ///< Test Object (Gray float for testing bricks with equal values)
-    mafString  m_GrayFileName;                  ///< The file name of m_GrayMemento
-    mafString  m_RGBFileName;                   ///< The file name of m_RGBMemento
-    mafString  m_FloatFileName;                 ///< The file name of m_FloatMemento
+    QString  m_GrayFileName;                  ///< The file name of m_GrayMemento
+    QString  m_RGBFileName;                   ///< The file name of m_RGBMemento
+    QString  m_FloatFileName;                 ///< The file name of m_FloatMemento
     mafMemento *m_LoadedGrayMemento;            ///< The loaded memento from m_GrayFileName
     mafMemento *m_LoadedRGBMemento;             ///< The loaded memento from m_RGBFileName
     mafMemento *m_LoadedFloatMemento;           ///< The loaded memento from m_FloatFileName
 };
 
 void mafCodecBrickedVolumeTest::initTestCase() {
-    mafList<mafVariant> list;
+    QList<QVariant> list;
     mafMementoPropertyItem item;
     item.m_Multiplicity = 1;
     m_Dimensions[0] = 71;
@@ -416,7 +416,7 @@ void mafCodecBrickedVolumeTest::cleanupTestCase() {
         iter = propList->erase(iter);
     }
     propList->clear();
-    mafFile::remove(m_GrayFileName);
+    QFile::remove(m_GrayFileName);
     
     // release the volume data in m_RGBMemento
     propList = m_RGBMemento->mementoPropertyList();
@@ -429,7 +429,7 @@ void mafCodecBrickedVolumeTest::cleanupTestCase() {
         iter = propList->erase(iter);
     }
     propList->clear();
-    mafFile::remove(m_RGBFileName);
+    QFile::remove(m_RGBFileName);
 
     // release the volume data in m_FloatMemento
     propList = m_FloatMemento->mementoPropertyList();
@@ -442,7 +442,7 @@ void mafCodecBrickedVolumeTest::cleanupTestCase() {
         iter = propList->erase(iter);
     }
     propList->clear();
-    mafFile::remove(m_FloatFileName);
+    QFile::remove(m_FloatFileName);
 
     // release the volume data in m_LoadedGrayMemento
     propList = m_LoadedGrayMemento->mementoPropertyList();
@@ -452,10 +452,10 @@ void mafCodecBrickedVolumeTest::cleanupTestCase() {
             unsigned short *data = (unsigned short *)iter->m_Value.value<void *>();
             delete []data;
         } else if (iter->m_Name == "fileName") {
-            mafString fileName = iter->m_Value.toString();
-            mafFile::remove(fileName + ".bpi");
-            mafFile::remove(fileName + ".bev");
-            mafFile::remove(fileName + ".bv");
+            QString fileName = iter->m_Value.toString();
+            QFile::remove(fileName + ".bpi");
+            QFile::remove(fileName + ".bev");
+            QFile::remove(fileName + ".bv");
         }
         iter = propList->erase(iter);
     }
@@ -470,10 +470,10 @@ void mafCodecBrickedVolumeTest::cleanupTestCase() {
             unsigned char *data = (unsigned char *)iter->m_Value.value<void *>();
             delete []data;
         } else if (iter->m_Name == "fileName") {
-            mafString fileName = iter->m_Value.toString();
-            mafFile::remove(fileName + ".bpi");
-            mafFile::remove(fileName + ".bev");
-            mafFile::remove(fileName + ".bv");
+            QString fileName = iter->m_Value.toString();
+            QFile::remove(fileName + ".bpi");
+            QFile::remove(fileName + ".bev");
+            QFile::remove(fileName + ".bv");
         }
         iter = propList->erase(iter);
     }
@@ -488,10 +488,10 @@ void mafCodecBrickedVolumeTest::cleanupTestCase() {
             float *data = (float *)iter->m_Value.value<void *>();
             delete []data;
         } else if (iter->m_Name == "fileName") {
-            mafString fileName = iter->m_Value.toString();
-            mafFile::remove(fileName + ".bpi");
-            mafFile::remove(fileName + ".bev");
-            mafFile::remove(fileName + ".bv");
+            QString fileName = iter->m_Value.toString();
+            QFile::remove(fileName + ".bpi");
+            QFile::remove(fileName + ".bev");
+            QFile::remove(fileName + ".bv");
         }
         iter = propList->erase(iter);
     }
@@ -510,7 +510,7 @@ void mafCodecBrickedVolumeTest::mafCodecBrickedVolumeAllocationTest() {
 void mafCodecBrickedVolumeTest::encodeTest() {
     // test case 1
     // open the gray file in writing modality
-    mafFile file(m_GrayFileName);
+    QFile file(m_GrayFileName);
     bool success = file.open(mafIODevice::WriteOnly);
     QVERIFY(success);
 
@@ -523,7 +523,7 @@ void mafCodecBrickedVolumeTest::encodeTest() {
     // close the gray file
     file.close();
 
-    QVERIFY(mafFile::exists(m_GrayFileName));
+    QVERIFY(QFile::exists(m_GrayFileName));
 
     // test case 2
     // open the RGB file in writing modality
@@ -540,7 +540,7 @@ void mafCodecBrickedVolumeTest::encodeTest() {
     // close the RGB file
     file.close();
 
-    QVERIFY(mafFile::exists(m_RGBFileName));
+    QVERIFY(QFile::exists(m_RGBFileName));
 
     // test case 3
     // open the float file in writing modality
@@ -557,13 +557,13 @@ void mafCodecBrickedVolumeTest::encodeTest() {
     // close the float file
     file.close();
 
-    QVERIFY(mafFile::exists(m_FloatFileName));
+    QVERIFY(QFile::exists(m_FloatFileName));
 }
 
 void mafCodecBrickedVolumeTest::decodeTest() {
     // test case 1
     // open the gray file in reading modality
-    mafFile file(m_GrayFileName);
+    QFile file(m_GrayFileName);
     bool success = file.open(mafIODevice::ReadOnly);
     QVERIFY(success);
 
@@ -628,13 +628,13 @@ void mafCodecBrickedVolumeTest::decodeTest() {
 }
 
 void mafCodecBrickedVolumeTest::updateTest() {
-    mafList<mafVariant> list;
+    QList<QVariant> list;
     mafMementoPropertyItem item;
     mafMementoPropertyList *propList = 0;
     int startPos[3], dimensions[3];
 
     // open the gray file in reading modality
-    mafFile file(m_GrayFileName);
+    QFile file(m_GrayFileName);
     bool success = file.open(mafIODevice::ReadOnly);
     QVERIFY(success);
 
@@ -920,7 +920,7 @@ void mafCodecBrickedVolumeTest::updateTest() {
     file.close();
 }
 
-mafMementoPropertyItem mafCodecBrickedVolumeTest::findPropertyItem(mafMemento *menento, mafString name){
+mafMementoPropertyItem mafCodecBrickedVolumeTest::findPropertyItem(mafMemento *menento, QString name){
     mafMementoPropertyList *propList = menento->mementoPropertyList();
     foreach(mafMementoPropertyItem item, *propList) {
         if (item.m_Name == name)
@@ -943,12 +943,12 @@ void mafCodecBrickedVolumeTest::verifyGrayMemento(mafMemento *memento, int level
             int currentLevel = item.m_Value.toInt();
             QVERIFY(currentLevel == level);
         } else if (item.m_Name == "startPositions") {
-            mafList<mafVariant> list = item.m_Value.toList();
+            QList<QVariant> list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)             
                 QVERIFY(list[i].toInt() == startPos[i]);
         } else if (item.m_Name == "dimensions") {
-            mafList<mafVariant> list = item.m_Value.toList();
+            QList<QVariant> list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 QVERIFY(list[i].toInt() == dimensions[i]);
@@ -985,12 +985,12 @@ void mafCodecBrickedVolumeTest::verifyRGBMemento(mafMemento *memento, int level,
             int currentLevel = item.m_Value.toInt();
             QVERIFY(currentLevel == level);
         } else if (item.m_Name == "startPositions") {
-            mafList<mafVariant> list = item.m_Value.toList();
+            QList<QVariant> list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 QVERIFY(list[i].toInt() == startPos[i]);
         } else if (item.m_Name == "dimensions") {
-            mafList<mafVariant> list = item.m_Value.toList();
+            QList<QVariant> list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 QVERIFY(list[i].toInt() == dimensions[i]);
@@ -1029,12 +1029,12 @@ void mafCodecBrickedVolumeTest::verifyFloatMemento(mafMemento *memento, int leve
             int currentLevel = item.m_Value.toInt();
             QVERIFY(currentLevel == level);
         } else if (item.m_Name == "startPositions") {
-            mafList<mafVariant> list = item.m_Value.toList();
+            QList<QVariant> list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)             
                 QVERIFY(list[i].toInt() == startPos[i]);
         } else if (item.m_Name == "dimensions") {
-            mafList<mafVariant> list = item.m_Value.toList();
+            QList<QVariant> list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 QVERIFY(list[i].toInt() == dimensions[i]);
@@ -1053,8 +1053,8 @@ void mafCodecBrickedVolumeTest::verifyFloatMemento(mafMemento *memento, int leve
             }
         } else { 
             QVERIFY2(item.m_Name == comparedItem.m_Name, item.m_Name.toAscii().data());
-            mafString a = item.m_Value.toString();
-            mafString b = comparedItem.m_Value.toString();
+            QString a = item.m_Value.toString();
+            QString b = comparedItem.m_Value.toString();
             QVERIFY2(item.m_Value == comparedItem.m_Value, item.m_Name.toAscii().data());
         }
     }

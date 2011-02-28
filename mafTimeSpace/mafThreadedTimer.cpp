@@ -15,10 +15,10 @@
 using namespace mafCore;
 using namespace mafTimeSpace;
 
-mafThreadedTimer::mafThreadedTimer(const mafString code_location): mafObjectBase(code_location) {
+mafThreadedTimer::mafThreadedTimer(const QString code_location): mafObjectBase(code_location) {
 }
 
-mafThreadedTimer::mafThreadedTimer(mafTimer *timer, const mafString code_location): mafObjectBase(code_location) , m_Timer(timer), m_Thread(NULL) {
+mafThreadedTimer::mafThreadedTimer(mafTimer *timer, const QString code_location): mafObjectBase(code_location) , m_Timer(timer), m_Thread(NULL) {
 }
 
 mafThreadedTimer::~mafThreadedTimer() {
@@ -43,7 +43,7 @@ void mafThreadedTimer::start() {
     m_Timer->start();
 }
 
-void mafThreadedTimer::startOnThread(mafThread *thread) {
+void mafThreadedTimer::startOnThread(QThread *thread) {
     REQUIRE(m_Timer != NULL);
     REQUIRE(thread != NULL);
 

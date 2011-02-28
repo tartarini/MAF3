@@ -27,19 +27,19 @@ public:
     testNetworkConnectorCustom();
 
     /// Create and initialize client
-    /*virtual*/ void createClient(const mafString hostName, const unsigned int port);
+    /*virtual*/ void createClient(const QString hostName, const unsigned int port);
 
     /// Return the string variable initializated and updated from the data pipe.
     /*virtual*/ void createServer(const unsigned int port);
 
     /// Allow to send a network request.
-    /*virtual*/ void send(const mafString event_id, mafEventArgumentsList *params);
+    /*virtual*/ void send(const QString event_id, mafEventArgumentsList *params);
 
     /// Start the server.
     /*virtual*/ void startListen();
 
     /// Return connector status.
-    mafString connectorStatus();
+    QString connectorStatus();
 
     /// retrieve instance of object
     /*virtual*/ mafNetworkConnector *clone();
@@ -48,7 +48,7 @@ public:
     /*virtual*/ void initializeForEventBus();
 
 private:
-    mafString m_ConnectorStatus; ///< Test Var.
+    QString m_ConnectorStatus; ///< Test Var.
 };
 
 mafNetworkConnector *testNetworkConnectorCustom::clone() {
@@ -64,27 +64,27 @@ testNetworkConnectorCustom::testNetworkConnectorCustom() : mafNetworkConnector()
 
 void testNetworkConnectorCustom::createServer(const unsigned int port) {
     m_ConnectorStatus = "Server Created - Port: ";
-    m_ConnectorStatus.append(mafString::number(port));
+    m_ConnectorStatus.append(QString::number(port));
 }
 
 void testNetworkConnectorCustom::startListen() {
     m_ConnectorStatus = "Server Listening";
 }
 
-void testNetworkConnectorCustom::createClient(const mafString hostName, const unsigned int port) {
+void testNetworkConnectorCustom::createClient(const QString hostName, const unsigned int port) {
     m_ConnectorStatus = "Client Created - Host: ";
     m_ConnectorStatus.append(hostName);
     m_ConnectorStatus.append(" Port: ");
-    m_ConnectorStatus.append(mafString::number(port));
+    m_ConnectorStatus.append(QString::number(port));
 }
 
-void testNetworkConnectorCustom::send(const mafString event_id, mafEventArgumentsList *params) {
+void testNetworkConnectorCustom::send(const QString event_id, mafEventArgumentsList *params) {
     Q_UNUSED(params);
     m_ConnectorStatus = "Event sent with ID: ";
     m_ConnectorStatus.append(event_id);
 }
 
-mafString testNetworkConnectorCustom::connectorStatus() {
+QString testNetworkConnectorCustom::connectorStatus() {
     return m_ConnectorStatus;
 }
 
@@ -134,7 +134,7 @@ void mafNetworkConnectorTest::mafNetworkConnectorAllocationTest() {
 }
 
 void mafNetworkConnectorTest::mafNetworkConnectorCreateClientAndServerTest() {
-    mafString res;
+    QString res;
     res = "Server Created - Port: 8000";
     m_NetworkConnector->createServer(8000);
 
@@ -147,8 +147,8 @@ void mafNetworkConnectorTest::mafNetworkConnectorCreateClientAndServerTest() {
 }
 
 void mafNetworkConnectorTest::retrieveProtocolTest() {
-    mafString res = "FakeProtocol";
-    mafString check = m_NetworkConnector->protocol();
+    QString res = "FakeProtocol";
+    QString check = m_NetworkConnector->protocol();
     QCOMPARE(check, res);
 }
 

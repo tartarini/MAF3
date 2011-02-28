@@ -40,7 +40,7 @@ private slots:
 
     /// Cleanup tes variables memory allocation.
     void cleanupTestCase() {
-        mafFile::remove(m_TestURL);
+        QFile::remove(m_TestURL);
         mafDEL(m_Serializer);
         mafMessageHandler::instance()->shutdown();
     }
@@ -54,7 +54,7 @@ private slots:
 
 private:
     mafSerializerFileSystem *m_Serializer; ///< Test var
-    mafString m_TestURL; ///< Test URL for file.
+    QString m_TestURL; ///< Test URL for file.
 };
 
 void mafSerializerFileSystemTest::mafSerializerFileSystemAllocationTest() {
@@ -63,7 +63,7 @@ void mafSerializerFileSystemTest::mafSerializerFileSystemAllocationTest() {
 
 void mafSerializerFileSystemTest::mafSerializerFileSystemWritingTest() {
     // Create the temporary file into the temp directory of the current user.
-    mafString test_file;
+    QString test_file;
     test_file = QDir::tempPath();
     test_file.append("/maf3Logs");
     QDir log_dir(test_file);
@@ -73,7 +73,7 @@ void mafSerializerFileSystemTest::mafSerializerFileSystemWritingTest() {
     test_file.append("/testFileSystemSerializer.maf3");
 
     // Create the DataStream used to stream data into the File.
-    mafDataStream dataStream;
+    QDataStream dataStream;
 
     // Assign the URL to the serializer.
     m_TestURL = "file:";
@@ -85,20 +85,20 @@ void mafSerializerFileSystemTest::mafSerializerFileSystemWritingTest() {
     dataStream.setDevice(m_Serializer->ioDevice());
 
     // Send data into the stream.
-    dataStream << mafString("Test1");
+    dataStream << QString("Test1");
     dataStream << 2;
 
     // Close the connection to the File.
     m_Serializer->closeDevice();
 
-    QVERIFY(mafFile::exists(test_file));
+    QVERIFY(QFile::exists(test_file));
     QFileInfo fInfo(test_file);
     QVERIFY(fInfo.size() > 0);
 }
 
 void mafSerializerFileSystemTest::mafSerializerFileSystemReadingTest() {
     // Create the DataStream used to stream data into the File.
-    mafDataStream dataStream;
+    QDataStream dataStream;
 
     // Assign the URL to the serializer.
     m_Serializer->setDataURL(m_TestURL);
@@ -108,7 +108,7 @@ void mafSerializerFileSystemTest::mafSerializerFileSystemReadingTest() {
     // Connect the Serializer to the DataStream
     dataStream.setDevice(m_Serializer->ioDevice());
 
-    mafString strVar;
+    QString strVar;
     int val = 0;
 
     dataStream >> strVar;

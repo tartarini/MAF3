@@ -14,11 +14,11 @@
 
 using namespace mafCore;
 
-mafMemento::mafMemento(const mafString code_location) : mafObjectBase(code_location), m_ObjectClassType("") {
+mafMemento::mafMemento(const QString code_location) : mafObjectBase(code_location), m_ObjectClassType("") {
     m_MementoPropertyList.clear();
 }
 
-mafMemento::mafMemento(const mafObject *obj, const mafString code_location) : mafObjectBase(code_location), m_ObjectClassType("") {
+mafMemento::mafMemento(const mafObject *obj, const QString code_location) : mafObjectBase(code_location), m_ObjectClassType("") {
     REQUIRE(obj);
     const QMetaObject* meta = obj->metaObject();
     setObjectClassType(meta->className());

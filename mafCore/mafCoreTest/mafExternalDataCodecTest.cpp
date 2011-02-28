@@ -26,7 +26,7 @@ class  testExternalDataCodecCustom : public  mafExternalDataCodec {
 
 public:
     /// Object constructor.
-    testExternalDataCodecCustom(const mafString code_location = "");
+    testExternalDataCodecCustom(const QString code_location = "");
 
     /// Encode the memento into the output type.
     /*virtual*/ char *encode(bool binary = true);
@@ -35,13 +35,13 @@ public:
     /*virtual*/ void decode(const char *input_string, bool binary = true);
 
     /// Return the string variable encoded and decoded from the mafCodecCustom.
-    mafString codecString() {return m_CodecString;}
+    QString codecString() {return m_CodecString;}
 
 private:
-    mafString m_CodecString; ///< Test Var.
+    QString m_CodecString; ///< Test Var.
 };
 
-testExternalDataCodecCustom::testExternalDataCodecCustom(const mafString code_location) : mafExternalDataCodec(code_location) {
+testExternalDataCodecCustom::testExternalDataCodecCustom(const QString code_location) : mafExternalDataCodec(code_location) {
 }
 
 void testExternalDataCodecCustom::decode(const char *input_string, bool binary) {
@@ -86,8 +86,8 @@ private slots:
 
 private:
     testExternalDataCodecCustom *m_ExternalDataCodec; ///< Test var
-    mafDataStream m_StreamExternal; ///< Test buffer data.
-    mafDataStream m_StreamInExternal; ///< Test buffer data.
+    QDataStream m_StreamExternal; ///< Test buffer data.
+    QDataStream m_StreamInExternal; ///< Test buffer data.
 };
 
 void mafExternalDataCodecTest::mafCodecAllocationTest() {
@@ -101,12 +101,12 @@ void mafExternalDataCodecTest::encodeTest() {
 }
 
 void mafExternalDataCodecTest::decodeTest() {
-    mafString res = "Coded data";
+    QString res = "Coded data";
 
     // Call the encode function by passing the string as argument.
     m_ExternalDataCodec->decode(res.toAscii().data());
 
-    mafString stringReturned(m_ExternalDataCodec->codecString());
+    QString stringReturned(m_ExternalDataCodec->codecString());
 
     QCOMPARE(res, stringReturned);
 }

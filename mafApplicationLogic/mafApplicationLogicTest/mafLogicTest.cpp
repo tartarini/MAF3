@@ -29,11 +29,11 @@ class testObjectCustomPlugged : public mafObject {
     mafSuperclassMacro(mafCore::mafObject);
 
 public:
-    testObjectCustomPlugged(const mafString code_location = "");
+    testObjectCustomPlugged(const QString code_location = "");
 
 };
 
-testObjectCustomPlugged::testObjectCustomPlugged(mafString code_location) : mafObject(code_location) {
+testObjectCustomPlugged::testObjectCustomPlugged(QString code_location) : mafObject(code_location) {
 }
 //----------------------------------------------------------------------
 
@@ -86,9 +86,9 @@ void mafLogicTest::initializeTest() {
 }
 
 void mafLogicTest::workingDirectoryTest() {
-    mafString res = QDir::toNativeSeparators("/myBaseDir/myDir1/myDir2/");
+    QString res = QDir::toNativeSeparators("/myBaseDir/myDir1/myDir2/");
     m_Logic->setWorkingDirectory("/myBaseDir/myDir1/myDir2/");
-    mafString wd = m_Logic->workingDirectory();
+    QString wd = m_Logic->workingDirectory();
     QCOMPARE(wd, res);
     m_Logic->setWorkingDirectory("\\myBaseDir\\myDir1\\myDir2\\");
     wd = m_Logic->workingDirectory();
@@ -108,17 +108,17 @@ void mafLogicTest::plugObjectTest() {
 
     // Query for the plugged object, so to verify the functionality.
     mafEventArgumentsList argList;
-    mafString baseClassType("mafCore::mafObject");
-    argList.append(mafEventArgument(mafString, baseClassType));
+    QString baseClassType("mafCore::mafObject");
+    argList.append(mafEventArgument(QString, baseClassType));
     mafPluggedObjectInformationList *pluggedObjectList = NULL;
-    mafGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafPluggedObjectInformationList *, pluggedObjectList);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafPluggedObjectInformationList *, pluggedObjectList);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.resourcesQuery", mafEventTypeLocal, &argList, &ret_val);
 
     QVERIFY(pluggedObjectList != NULL);
     int num = pluggedObjectList->size();
     QVERIFY(num == 1);
     mafPluggedObjectInformation info = pluggedObjectList->at(0);
-    mafString ct = info.m_ClassType;
+    QString ct = info.m_ClassType;
     QVERIFY(ct == "testObjectCustomPlugged");
 }
 

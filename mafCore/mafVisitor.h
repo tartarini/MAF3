@@ -32,7 +32,7 @@ public:
     /* virtual */ ~mafVisitor();
 
     /// Object constructor
-    mafVisitor(const mafString code_location = "");
+    mafVisitor(const QString code_location = "");
 
     /// Execute the defined operation on visited object passes as argument.
     virtual void visit(mafObjectBase *object) = 0;

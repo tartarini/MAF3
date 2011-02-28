@@ -13,12 +13,12 @@
 
 using namespace mafCore;
 
-mafMap<mafString, mafCoreRegistration::acceptObjectPointer> mafCoreRegistration::m_BindingMap = mafBindingMap();
+QMap<QString, mafCoreRegistration::acceptObjectPointer> mafCoreRegistration::m_BindingMap = mafBindingMap();
 
-mafStringList mafCoreRegistration::acceptObject(mafCore::mafObjectBase *obj) {
+QStringList mafCoreRegistration::acceptObject(mafCore::mafObjectBase *obj) {
     mafBindingMap::iterator iter = m_BindingMap.begin();
     mafBindingMap::iterator iter_end = m_BindingMap.end();
-    mafStringList res_list;
+    QStringList res_list;
     while(iter != iter_end) {
         if(iter.value()(obj)) {
             res_list.append(iter.key());
@@ -28,6 +28,6 @@ mafStringList mafCoreRegistration::acceptObject(mafCore::mafObjectBase *obj) {
     return res_list;
 }
 
-void mafCoreRegistration::unregisterUnbind( const mafString& className ) {
+void mafCoreRegistration::unregisterUnbind( const QString& className ) {
     m_BindingMap.remove(className);
 }
