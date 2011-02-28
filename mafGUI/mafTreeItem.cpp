@@ -13,8 +13,8 @@
 
 using namespace mafGUI;
 
-mafTreeItem::mafTreeItem(QObject *obj, bool done) : QStandardItem(obj->objectName())
-{
+mafTreeItem::mafTreeItem(QObject *obj, bool done) : QStandardItem(obj->objectName()) {
+    setIcon(QIcon(obj->property("iconFile").toString()));
     setCheckable(true);
     setCheckState(done ? Qt::Checked : Qt::Unchecked);
     setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|
