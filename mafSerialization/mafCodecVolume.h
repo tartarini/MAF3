@@ -54,6 +54,7 @@ private:
     /// unmarshalling of QVariant data type in order to write the correct type.
     QVariant demarshall(QString typeName, int multiplicity);
 
+    /// get the byte number of the data type
     /** 
      * get the byte number of the data type
      * @param dataType  the data type of the component in voxels
@@ -61,6 +62,7 @@ private:
      */
     int getByteNum(int dataType);
 
+    /// calculate the multiresolution level under the memory limit
     /**
      * calculate the multiresolution level under the memory limit
      * @param dataType      the component's data type of the voxel
@@ -70,6 +72,7 @@ private:
      */
     int calcMultiresolutionLevel(int dataType, int componentNum, int dimensions[3], int memoryLimit);
 
+    /// resample the volume data by half
     /**
      * resample the volume data by half
      * @param originalData   the volume data in the current resolution
@@ -80,6 +83,7 @@ private:
      */
     void resample(void *originalData, void *resampledData, int dataType, int componentNum, int dimensions[3]);
 
+    /// check whether the updated volume is in the previous volume
     /**
      * check whether the updated volume is in the previous volume
      * @param startPos          the start positions of the previous volume in the current resolution
@@ -89,6 +93,7 @@ private:
      */
     bool inRange(int startPos[3], int dimensions[3], int updatedStartPos[3], int updatedDimensions[3]);
 
+    /// extract a partial volume data from the original volume data
     /**
      * extract a partial volume data from the original volume data
      * @param data               the volume data to copy
@@ -100,6 +105,7 @@ private:
      */
     void *extractVolumeData(void *data, int dataType, int componentNum, int originalDimensions[3], int startPos[3], int dimensions[3]);
 
+    /// encode the raw volume data in multiresolution
     /**
      * encode the raw volume data in multiresolution 
      * @param url           the url to store the volume data
@@ -111,6 +117,7 @@ private:
      */
     void encode(QString url, void *data, int dataType, int componentNum, int dimensions[3], int levels);
 
+    /// decode the raw volume data from the indicated level
     /**
      * decode the raw volume data from the indicated level
      * @param url                the url to load the volume data
