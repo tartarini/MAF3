@@ -10,7 +10,6 @@
  */
 
 #include "mafPluginRegistrator.h"
-//#include "mafDataPipeSurface.h"
 #include "mafDataPipeImageThreshold.h"
 #include "mafVisualPipeVTKSurface.h"
 #include "mafVisualPipeSelection.h"

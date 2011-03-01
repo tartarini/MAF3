@@ -1,5 +1,5 @@
 /*
- *  mafDataPipeSurface.cpp
+ *  mafDataPipeSurfacePluginTest.cpp
  *  mafPluginTest
  *
  *  Created by Roberto Mucci on 14/12/09.
