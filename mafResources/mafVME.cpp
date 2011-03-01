@@ -20,7 +20,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL) {
+mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL), m_Locked(false) {
     mafId time_set_id = mafIdProvider::instance()->idValue("TIME_SET");
     if(time_set_id != -1) {
         mafRegisterLocalCallback("TIME_SET", this, "setTimestamp(double)");
@@ -48,6 +48,13 @@ void mafVME::setBounds(QVariantList bounds) {
     m_Bounds.append(bounds);
 }
 
+void mafVME::setLocked(bool lock) {
+    if (lock == m_Locked) {
+        return;
+    }
+    m_Locked = lock;
+    emit vmeLocked(m_Locked);
+}
 
 void mafVME::setTimestamp(double t) {
     dataSetCollection()->setTimestamp(t);
