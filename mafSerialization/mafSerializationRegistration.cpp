@@ -15,7 +15,7 @@
 
 using namespace mafSerialization;
 
-void mafSerialization::registerSerializationObjects() {
+void mafSerializationRegistration::registerSerializationObjects() {
         mafRegisterObject(mafSerialization::mafCodecRawBinary);
         mafRegisterObject(mafSerialization::mafCodecRawASCII);
         mafRegisterObject(mafSerialization::mafCodecVolume);
@@ -26,7 +26,7 @@ void mafSerialization::registerSerializationObjects() {
         //mafRegisterObject(mafSerialization::mafCSVReader);
 }
 
-void mafSerialization::unregisterSerializationObjects() {
+void mafSerializationRegistration::unregisterSerializationObjects() {
         mafUnregisterObject(mafSerialization::mafCodecRawBinary);
         mafUnregisterObject(mafSerialization::mafCodecRawASCII);
         mafUnregisterObject(mafSerialization::mafCodecVolume);
