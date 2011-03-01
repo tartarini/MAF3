@@ -14,13 +14,7 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafOperation::mafOperation(const QString code_location) : mafResource(code_location), m_IsRunning(false), m_CanUnDo(true), m_OperationType(mafOperationTypeOperation) {
-    // to be moved into the mafOperationManager.
-//    if(mafIdProvider::instance()->idValue("SET_PARAMETERS") == -1) {
-//        mafId setParamId = mafIdProvider::instance()->createNewId("SET_PARAMETERS");
-//        mafRegisterLocalSignal(setParamId, this, "setParametersSignal(QVariantList)");
-//        mafRegisterLocalCallback(setParamId, this, "setParameters(QVariantList)");
-//    }
+mafOperation::mafOperation(const QString code_location) : mafResource(code_location), m_IsRunning(false), m_CanUnDo(true), m_ExecuteOnThread(false), m_AbortExecution(false), m_OperationType(mafOperationTypeOperation) {
 }
 
 mafOperation::~mafOperation() {
