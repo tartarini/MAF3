@@ -83,6 +83,17 @@
              <property name="autoFillBackground">
               <bool>true</bool>
              </property>
+             <widget class="QWidget" name="verticalLayoutWidget">
+              <property name="geometry">
+               <rect>
+                <x>-1</x>
+                <y>-1</y>
+                <width>181</width>
+                <height>251</height>
+               </rect>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayoutOperation"/>
+             </widget>
             </widget>
            </widget>
           </item>
