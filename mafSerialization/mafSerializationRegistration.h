@@ -28,7 +28,7 @@ namespace mafSerialization {
  Class name: mafSerializationRegistration
  This class allows object rigisteration for all the classes present in mafSerialization module.
  */
-class MAFSERIALIZATIONSHARED_EXPORT mafSerializationRegistration {
+class mafSerializationRegistration {
     public:
     /// Register all the concrete objects that can be instantiated by the mafObjectFactory.
     /** This registration is needed to instantiate object by using the mafNEWFromString macro present in objectFactory
