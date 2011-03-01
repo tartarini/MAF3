@@ -72,30 +72,30 @@ void mafCSVReaderTest::csvFromFileTest() {
 
     int count = 0;
     while(1) {
-        const mafStringList &sl = m_CSVReader->parseLine();
+        const QStringList &sl = m_CSVReader->parseLine();
         if(sl.count() == 0) {
             break;
         }
-        mafMsgDebug() << sl;
+        qDebug() << sl;
         count++;
     }
 
-    mafMsgDebug() << count;
+    qDebug() << count;
     QVERIFY(count == 45); //44 lines for data + 1 line for header
 
 }
 
 void mafCSVReaderTest::csvFromStringTest() {
-    mafString csvString = "Programmer,Society,Framework\n";
+    QString csvString = "Programmer,Society,Framework\n";
     csvString.append("Daniele Giunchi,SCS,MAF3\n");
     m_CSVReader->setString(csvString);
     int count = 0;
     while(1) {
-        const mafStringList &sl = m_CSVReader->parseLine();
+        const QStringList &sl = m_CSVReader->parseLine();
         if(sl.count() == 0) {
             break;
         }
-        mafMsgDebug() << sl;
+        qDebug() << sl;
         count++;
     }
 
