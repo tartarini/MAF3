@@ -19,7 +19,7 @@
 namespace mafPluginTest {
 
 /**
- Class name: mafDataPipeSurface
+ Class name: mafDataPipeSurfacePluginTest
  This class is an example data pipe that is plugged into the framework as plug-in.
  */
 class MAFPLUGINTESTSHARED_EXPORT mafDataPipeSurfacePluginTest : public mafResources::mafDataPipe {
