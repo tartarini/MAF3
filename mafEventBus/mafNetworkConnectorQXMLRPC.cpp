@@ -26,8 +26,8 @@ mafNetworkConnectorQXMLRPC::mafNetworkConnectorQXMLRPC() : mafNetworkConnector()
 }
 
 void mafNetworkConnectorQXMLRPC::initializeForEventBus() {
-    mafRegisterRemoteSignal("maf.remote.eventBus.comunication.send.xmlrpc", this, "remoteCommunication(const QString, mafEventArgumentsList *)");
-    mafRegisterRemoteCallback("maf.remote.eventBus.comunication.send.xmlrpc", this, "send(const QString, mafEventArgumentsList *)");
+    mafRegisterRemoteSignal("maf.remote.eventBus.communication.send.xmlrpc", this, "remoteCommunication(const QString, mafEventArgumentsList *)");
+    mafRegisterRemoteCallback("maf.remote.eventBus.communication.send.xmlrpc", this, "send(const QString, mafEventArgumentsList *)");
 }
 
 mafNetworkConnectorQXMLRPC::~mafNetworkConnectorQXMLRPC() {
@@ -84,7 +84,7 @@ void mafNetworkConnectorQXMLRPC::createServer(const unsigned int port) {
     //registration of the method maf.remote.eventBus.comunication.xmlrpc at XMLRPC level
     // the connect uses function name ad signature defined by parametersForRegisterteredFunction
     mafRegisterMethodsMap methodsMapping;
-    methodsMapping.insert("maf.remote.eventBus.comunication.send.xmlrpc", parametersForRegisterteredFunction);
+    methodsMapping.insert("maf.remote.eventBus.communication.send.xmlrpc", parametersForRegisterteredFunction);
     registerServerMethod(methodsMapping);
 
     //if a user want to register another method, it is important to know that mafEventDispatcherRemote allows

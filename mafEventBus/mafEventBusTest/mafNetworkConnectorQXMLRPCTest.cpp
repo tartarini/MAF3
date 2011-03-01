@@ -136,7 +136,7 @@ void mafNetworkConnectorQXMLRPCTest::mafNetworkConnectorQXMLRPCCommunictionTest(
     listToSend.append(mafEventArgument(QList<QVariant>, eventParameters));
     listToSend.append(mafEventArgument(QList<QVariant>, dataParameters));
 
-    m_NetWorkConnectorQXMLRPC->send("maf.remote.eventBus.comunication.send.xmlrpc", &listToSend);
+    m_NetWorkConnectorQXMLRPC->send("maf.remote.eventBus.communication.send.xmlrpc", &listToSend);
 
 
     QTime dieTime = QTime::currentTime().addSecs(3);

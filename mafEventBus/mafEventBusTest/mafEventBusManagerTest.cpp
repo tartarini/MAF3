@@ -335,7 +335,7 @@ void mafEventBusManagerTest::remoteConnectionTest() {
     listToSend.append(mafEventArgument(QList<QVariant>, dataParameters));
 
     //with eventbus
-    QString topic = "maf.remote.eventBus.comunication.send.xmlrpc";
+    QString topic = "maf.remote.eventBus.communication.send.xmlrpc";
     m_EventBus->notifyEvent(topic, mafEventTypeRemote , &listToSend);
 
     QTime dieTime = QTime::currentTime().addSecs(3);
