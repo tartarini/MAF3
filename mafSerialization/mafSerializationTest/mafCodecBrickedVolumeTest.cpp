@@ -79,7 +79,7 @@ private:
 };
 
 void mafCodecBrickedVolumeTest::initTestCase() {
-    QList<QVariant> list;
+    QVariantList list;
     mafMementoPropertyItem item;
     item.m_Multiplicity = 1;
     m_Dimensions[0] = 71;
@@ -628,7 +628,7 @@ void mafCodecBrickedVolumeTest::decodeTest() {
 }
 
 void mafCodecBrickedVolumeTest::updateTest() {
-    QList<QVariant> list;
+    QVariantList list;
     mafMementoPropertyItem item;
     mafMementoPropertyList *propList = 0;
     int startPos[3], dimensions[3];
@@ -943,12 +943,12 @@ void mafCodecBrickedVolumeTest::verifyGrayMemento(mafMemento *memento, int level
             int currentLevel = item.m_Value.toInt();
             QVERIFY(currentLevel == level);
         } else if (item.m_Name == "startPositions") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)             
                 QVERIFY(list[i].toInt() == startPos[i]);
         } else if (item.m_Name == "dimensions") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 QVERIFY(list[i].toInt() == dimensions[i]);
@@ -985,12 +985,12 @@ void mafCodecBrickedVolumeTest::verifyRGBMemento(mafMemento *memento, int level,
             int currentLevel = item.m_Value.toInt();
             QVERIFY(currentLevel == level);
         } else if (item.m_Name == "startPositions") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 QVERIFY(list[i].toInt() == startPos[i]);
         } else if (item.m_Name == "dimensions") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 QVERIFY(list[i].toInt() == dimensions[i]);
@@ -1029,12 +1029,12 @@ void mafCodecBrickedVolumeTest::verifyFloatMemento(mafMemento *memento, int leve
             int currentLevel = item.m_Value.toInt();
             QVERIFY(currentLevel == level);
         } else if (item.m_Name == "startPositions") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)             
                 QVERIFY(list[i].toInt() == startPos[i]);
         } else if (item.m_Name == "dimensions") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 QVERIFY(list[i].toInt() == dimensions[i]);

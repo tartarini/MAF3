@@ -405,7 +405,7 @@ QVariant mafCodecXML::demarshall( const QDomElement &elem ) {
         return QVariant( QDateTime::fromString( valueElem.text(), Qt::ISODate ) );
     }
     else if( typeName == "list" ) {
-        QList<QVariant> arr;
+        QVariantList arr;
         mafDomNode valueNode = elem.firstChild();
         //QString name = valueNode.toElement().tagName();
         while( !valueNode.isNull() && m_Valid ) {

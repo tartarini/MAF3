@@ -322,17 +322,17 @@ void mafEventBusManagerTest::remoteConnectionTest() {
 
     //create list to send from the client
     //first parameter is a list which contains event properties
-    QList<QVariant> eventParameters;
+    QVariantList eventParameters;
     eventParameters.append("maf.local.eventBus.globalUpdate");
     eventParameters.append(mafEventTypeLocal);
     eventParameters.append(mafSignatureTypeCallback);
     eventParameters.append("updateObject()");
 
-    QList<QVariant> dataParameters;
+    QVariantList dataParameters;
 
     mafEventArgumentsList listToSend;
-    listToSend.append(mafEventArgument(QList<QVariant>, eventParameters));
-    listToSend.append(mafEventArgument(QList<QVariant>, dataParameters));
+    listToSend.append(mafEventArgument(QVariantList, eventParameters));
+    listToSend.append(mafEventArgument(QVariantList, dataParameters));
 
     //with eventbus
     QString topic = "maf.remote.eventBus.communication.send.xmlrpc";

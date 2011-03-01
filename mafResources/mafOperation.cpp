@@ -41,6 +41,6 @@ void mafOperation::reDo() {
 
 }
 
-void mafOperation::setParameters(QList<QVariant> parameters) {
+void mafOperation::setParameters(QVariantList parameters) {
     Q_UNUSED(parameters);
 }

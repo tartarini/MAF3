@@ -24,7 +24,7 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, mafPoseMatrix *matrix
     mafMementoPropertyList *list = mementoPropertyList();
 
     if(matrix) {
-        QList<QVariant> matrixList; //should I use double instead of QVariant?
+        QVariantList matrixList; //should I use double instead of QVariant?
 
         int r = 0;
         for ( ; r < 4; ++r) {

@@ -68,7 +68,7 @@ public slots:
     void setAbortExecution(bool a);
 
     /// Set parameters of operation.
-    virtual void setParameters(QList<QVariant> parameters);
+    virtual void setParameters(QVariantList parameters);
 
     /// Allows to call the piece of algorithm that is needed to restore the previous state of the operation's execution.
     virtual void unDo();

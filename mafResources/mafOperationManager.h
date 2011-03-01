@@ -61,13 +61,13 @@ signals:
     void operationDidStart(mafCore::mafObjectBase *operation);
 
     /// set the parameters to the current started operation
-    void setOperationParametersSignal(QList<QVariant> parameters);
+    void setOperationParametersSignal(QVariantList parameters);
 
     /// execute current operation
     void executeOperationSignal();
 
     /// Signal that allows to start an operation with some optionals parameters.
-    void executeWithParametersSignal(QList<QVariant> parameters);
+    void executeWithParametersSignal(QVariantList parameters);
 
     /// stop current operation
     void stopOperationSignal();
@@ -95,13 +95,13 @@ private slots:
     void startOperation(const QString operation);
 
     /// set the parameters to the current started operation
-    void setOperationParameters(QList<QVariant> parameters);
+    void setOperationParameters(QVariantList parameters);
 
     /// execute current operation
     void executeOperation();
 
     /// initialize the given operation (first element of the list), pass to it the given (optionals) parameters as second element of the list and start the execution of the operation.
-    void executeWithParameters(QList<QVariant> op_with_parameters);
+    void executeWithParameters(QVariantList op_with_parameters);
 
     /// called when a vme has been selected.
     void vmeSelect(mafCore::mafObjectBase *vme);

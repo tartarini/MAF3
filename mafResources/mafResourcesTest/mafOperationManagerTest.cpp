@@ -47,7 +47,7 @@ public:
 
 public slots:
     /// Set parameters of operation.
-    /*virtual*/ void setParameters(QList<QVariant> parameters);
+    /*virtual*/ void setParameters(QVariantList parameters);
 
 private:
     int m_ParamInt; ///< first parameter.
@@ -66,7 +66,7 @@ bool testOperationforOperationManager::acceptObject(mafCore::mafObjectBase *obj)
     return false;
 }
 
-void testOperationforOperationManager::setParameters(QList<QVariant> parameters) {
+void testOperationforOperationManager::setParameters(QVariantList parameters) {
     m_ParamInt = parameters.at(0).toInt();
     m_ParamDouble = parameters.at(1).toDouble();
 }
@@ -261,12 +261,12 @@ void mafOperationManagerTest::setParametersTest() {
     // Notify the event.
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
 
-    QList<QVariant> op_params;
+    QVariantList op_params;
     op_params.append(QVariant(5));
     op_params.append(QVariant(3.5));
 
     argList.clear();
-    argList.append(mafEventArgument(QList<QVariant>, op_params));
+    argList.append(mafEventArgument(QVariantList, op_params));
     m_EventBus->notifyEvent("maf.local.resources.operation.setParameters", mafEventTypeLocal, &argList);
 
     const mafCore::mafObjectBase *curr_op = NULL;
@@ -341,12 +341,12 @@ void mafOperationManagerTest::undoOperationTest() {
 
     argList.clear();
     // Starts and execute another operation using the 'batch mode' call.
-    QList<QVariant> params; // no parameters needed.
+    QVariantList params; // no parameters needed.
     params.append("testSecondUndoableOperationforOperationManager");
-    QList<QVariant> args;
+    QVariantList args;
     params.push_back(args);
 
-    argList.push_back(mafEventArgument(QList<QVariant>, params));
+    argList.push_back(mafEventArgument(QVariantList, params));
     //m_OperationManager->executeWithParameters(params);
     m_EventBus->notifyEvent("maf.local.resources.operation.executeWithParameters", mafEventTypeLocal, &argList);
 

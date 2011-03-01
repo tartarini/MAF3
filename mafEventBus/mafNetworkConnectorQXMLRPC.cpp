@@ -20,7 +20,7 @@ mafNetworkConnectorQXMLRPC::mafNetworkConnectorQXMLRPC() : mafNetworkConnector()
     //generate remote signal, this signal must map in the
     //possible connection with the remote server.
     //Server, in this case XMLRPC, will register a method with id REMOTE_COMMUNICATION
-    //and parameters QList<QVariant>
+    //and parameters QVariantList
 
     m_Protocol = "XMLRPC";
 }
@@ -88,7 +88,7 @@ void mafNetworkConnectorQXMLRPC::createServer(const unsigned int port) {
     registerServerMethod(methodsMapping);
 
     //if a user want to register another method, it is important to know that mafEventDispatcherRemote allows
-    // the registration of function with QList<QVariant> parameter.
+    // the registration of function with QVariantList parameter.
 }
 
 void mafNetworkConnectorQXMLRPC::stopServer() {
@@ -161,22 +161,22 @@ void mafNetworkConnectorQXMLRPC::send(const QString event_id, mafEventArgumentsL
         for(;i<size;++i) {
             QString typeArgument;
             typeArgument = argList->at(i).name();
-            if(typeArgument != "QList<QVariant>") {
-                qWarning("%s", mafTr("Remote Dispatcher need to have arguments that are QList<QVariant>").toAscii().data());
+            if(typeArgument != "QVariantList") {
+                qWarning("%s", mafTr("Remote Dispatcher need to have arguments that are QVariantList").toAscii().data());
                 delete vl;
                 return;
             }
 
             void *vp = argList->at(i).data();
-            QList<QVariant> *l;
-            l = (QList<QVariant> *)vp;
+            QVariantList *l;
+            l = (QVariantList *)vp;
             xmlrpc::Variant var;
             var.setValue(*l);
 
             vl->push_back(var); //only the first parameter represent the whole list of arguments
         }
         if(size == 0) {
-            qWarning("%s", mafTr("Remote Dispatcher need to have at least one argument that is a QList<QVariant>").toAscii().data());
+            qWarning("%s", mafTr("Remote Dispatcher need to have at least one argument that is a QVariantList").toAscii().data());
             return;
         }
     }
@@ -246,11 +246,11 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
     int size = parameters.count();
 
     mafEventArgumentsList *argList = NULL;
-    QList<QVariant> p;
-    p.append((parameters.at(1).value< QList<QVariant> >()));
+    QVariantList p;
+    p.append((parameters.at(1).value< QVariantList >()));
     if(size > 1 && p.count() != 0) {
         argList = new mafEventArgumentsList();
-        argList->push_back(Q_ARG(QList<QVariant>, p));
+        argList->push_back(Q_ARG(QVariantList, p));
     }
 
     if ( mafEventBusManager::instance()->isLocalSignalPresent(id_name) ) {

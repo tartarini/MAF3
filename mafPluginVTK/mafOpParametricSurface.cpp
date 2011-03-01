@@ -102,7 +102,7 @@ void mafOpParametricSurface::execute() {
     emit executionEnded();
 }
 
-void mafOpParametricSurface::setParameters(QList<QVariant> parameters) {
+void mafOpParametricSurface::setParameters(QVariantList parameters) {
     Q_UNUSED(parameters);
 }
 

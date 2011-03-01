@@ -32,21 +32,21 @@ int main(int argc, char *argv[]) {
 
     //remote event parameters
     mafEventBus::mafEventArgumentsList listToSend;
-    QList<QVariant> eventParameters;
+    QVariantList eventParameters;
     eventParameters.append("maf.local.resources.operation.executeWithParameters");
-    listToSend.append(Q_ARG(QList<QVariant>, eventParameters));
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
 
     //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
-    QList<QVariant> dataParameters;
+    QVariantList dataParameters;
     dataParameters.append("mafAlgorithm");
 
-    QList<QVariant> operationParameters;
+    QVariantList operationParameters;
     operationParameters.append("input");
     operationParameters.append("output");
     operationParameters.append(3);
     dataParameters.push_back(operationParameters); //here must be put a dictionary
 
-    listToSend.append(Q_ARG(QList<QVariant>, dataParameters));
+    listToSend.append(Q_ARG(QVariantList, dataParameters));
 
 
     client.sendRequestToServer(&event_dictionary, &listToSend);
