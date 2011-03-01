@@ -100,7 +100,7 @@ void mafOpParametricSurface::execute() {
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 }
 
-void mafOpParametricSurface::setParameters(QList<QVariant> parameters) {
+void mafOpParametricSurface::setParameters(QVariantList parameters) {
     Q_UNUSED(parameters);
 }
 

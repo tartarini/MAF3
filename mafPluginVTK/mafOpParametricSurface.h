@@ -50,7 +50,7 @@ public slots:
     int parametricSurfaceType();
 
     /// Set parameters of operation.
-    virtual void setParameters(QList<QVariant> parameters);
+    virtual void setParameters(QVariantList parameters);
 
     /// Execute the resource algorithm.
     virtual void execute();

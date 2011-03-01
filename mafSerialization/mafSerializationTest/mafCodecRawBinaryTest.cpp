@@ -65,7 +65,7 @@ private:
     mafCodecRawBinary *m_CodecRaw; ///< Test var
     mafObject *m_ObjectTest; ///< Test Object.
     QBuffer m_Buffer; ///< Test buffer data.
-    QList<QVariant> m_List; ///< Test QList.
+    QVariantList m_List; ///< Test QList.
 };
 
 void mafCodecRawBinaryTest::mafCodecRawBinaryAllocationTest() {

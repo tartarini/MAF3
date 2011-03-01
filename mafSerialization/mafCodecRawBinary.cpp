@@ -301,7 +301,7 @@ QVariant mafCodecRawBinary::demarshall( QString typeName, int multiplicity ) {
         return QVariant( QDateTime::fromString( value, Qt::ISODate ) );
     }
     else if( typeName == "list" ) {
-        QList<QVariant> value;
+        QVariantList value;
 
         int i = 0;
         for (; i < multiplicity; ++i) {

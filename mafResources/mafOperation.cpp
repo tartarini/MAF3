@@ -18,8 +18,8 @@ mafOperation::mafOperation(const QString code_location) : mafResource(code_locat
     // to be moved into the mafOperationManager.
 //    if(mafIdProvider::instance()->idValue("SET_PARAMETERS") == -1) {
 //        mafId setParamId = mafIdProvider::instance()->createNewId("SET_PARAMETERS");
-//        mafRegisterLocalSignal(setParamId, this, "setParametersSignal(QList<QVariant>)");
-//        mafRegisterLocalCallback(setParamId, this, "setParameters(QList<QVariant>)");
+//        mafRegisterLocalSignal(setParamId, this, "setParametersSignal(QVariantList)");
+//        mafRegisterLocalCallback(setParamId, this, "setParameters(QVariantList)");
 //    }
 }
 
@@ -47,6 +47,6 @@ void mafOperation::reDo() {
 
 }
 
-void mafOperation::setParameters(QList<QVariant> parameters) {
+void mafOperation::setParameters(QVariantList parameters) {
     Q_UNUSED(parameters);
 }

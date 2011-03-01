@@ -63,7 +63,7 @@ private:
     mafCodecXML *m_CodecXML; ///< Test var
     mafObject *m_ObjectTest; ///< Test Object.
     QBuffer buffer; ///< Test buffer data.
-    QList<QVariant> m_List;
+    QVariantList m_List;
 };
 
 void mafCodecXMLTest::mafCodecXMLAllocationTest() {
