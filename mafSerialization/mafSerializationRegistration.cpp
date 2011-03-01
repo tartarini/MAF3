@@ -15,8 +15,32 @@
 
 using namespace mafSerialization;
 
+void mafSerializationRegistration::registerSerializationObjects() {
+        mafRegisterObject(mafSerialization::mafCodecRawBinary);
+        mafRegisterObject(mafSerialization::mafCodecRawASCII);
+        mafRegisterObject(mafSerialization::mafCodecVolume);
+        mafRegisterObject(mafSerialization::mafCodecBrickedVolume);
+        mafRegisterObject(mafSerialization::mafCodecXML);
+        mafRegisterObject(mafSerialization::mafSerializerFileSystem);
+
+        //mafRegisterObject(mafSerialization::mafCSVReader);
+}
+
+void mafSerializationRegistration::unregisterSerializationObjects() {
+        mafUnregisterObject(mafSerialization::mafCodecRawBinary);
+        mafUnregisterObject(mafSerialization::mafCodecRawASCII);
+        mafUnregisterObject(mafSerialization::mafCodecVolume);
+        mafUnregisterObject(mafSerialization::mafCodecBrickedVolume);
+        mafUnregisterObject(mafSerialization::mafCodecXML);
+        mafUnregisterObject(mafSerialization::mafSerializerFileSystem);
+}
+
 void mafSerialization::initializeModule() {
-    mafSerializationRegistration::registerSerializationObjects();
+    mafSerialization::mafSerializationRegistration::registerSerializationObjects();
     mafSerialization::mafSerializationManager::instance();
 }
 
+void mafSerialization::shutdownModule() {
+    mafSerialization::mafSerializationRegistration::unregisterSerializationObjects();
+    mafSerialization::mafSerializationManager::instance()->shutdown();
+}

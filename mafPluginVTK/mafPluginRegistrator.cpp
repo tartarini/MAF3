@@ -10,7 +10,6 @@
  */
 
 #include "mafPluginRegistrator.h"
-//#include "mafDataPipeSurface.h"
 #include "mafDataPipeImageThreshold.h"
 #include "mafVisualPipeVTKSurface.h"
 #include "mafVisualPipeSelection.h"
@@ -30,7 +29,6 @@ using namespace mafResources;
 
 mafPluginRegistrator::mafPluginRegistrator() {
     // Register to the mafObjectFactory the plug-in object's types.
-    //mafRegisterObject(mafPluginVTK::mafDataPipeSurface);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafDataPipeImageThreshold);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeSelection);
@@ -63,7 +61,6 @@ mafPluginRegistrator::~mafPluginRegistrator() {
 void mafPluginRegistrator::registerObjects() {
     mafPluggedObjectsHash pluginHash;
 
-    //mafPluggedObjectInformation dataPipeSurface("Data pipe Surface", "mafPluginVTK::mafDataPipeSurface");
     mafPluggedObjectInformation dataPipeImageThreshold("Data pipe Image Threshold", "mafPluginVTK::mafDataPipeImageThreshold");
     mafPluggedObjectInformation visualPipeVTKSurface("Visual pipe VTK Surface", "mafPluginVTK::mafVisualPipeVTKSurface");
     mafPluggedObjectInformation visualPipeSelection("Visual pipe used to represent selection of data", "mafPluginVTK::mafVisualPipeSelection");
@@ -71,7 +68,6 @@ void mafPluginRegistrator::registerObjects() {
     mafPluggedObjectInformation opParametricSurface("Create Parametric Surface", "mafPluginVTK::mafOpParametricSurface");
     mafPluggedObjectInformation externalDataCodecVTK("VTK codec", "mafPluginVTK::mafExternalDataCodecVTK");
 
-    //pluginHash.insertMulti("mafResources::mafDataPipe", dataPipeSurface);
     pluginHash.insertMulti("mafResources::mafDataPipe", dataPipeImageThreshold);
     pluginHash.insertMulti("mafResources::mafVisualPipe", visualPipeVTKSurface);
     pluginHash.insertMulti("mafResources::mafVisualPipe", visualPipeSelection);
