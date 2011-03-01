@@ -98,6 +98,8 @@ void mafOpParametricSurface::execute() {
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+
+    emit executionEnded();
 }
 
 void mafOpParametricSurface::setParameters(QList<QVariant> parameters) {
