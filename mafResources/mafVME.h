@@ -34,6 +34,8 @@ notified when new timestamp has been assigned to the system.
 */
 class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_OBJECT
+    Q_PROPERTY(bool locked READ locked WRITE setLocked)
+
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
 
@@ -85,9 +87,18 @@ public:
     /// Allow to send the selection event for itself.
     /*virtual*/ void setSelected(bool sel);
 
+    /// Allow to lock/unlock the VME.
+    void setLocked(bool lock);
+
+    /// Return the lock state for the VME.
+    bool locked() const;
+
 signals:
     /// Alert observers that the VME has been detatched from the hierarchy tree.
     void detatched();
+
+    /// Notify the lock state for the current VME when the lock state change.
+    void vmeLocked(bool);
 
 public slots:
     /// Set the current timestamp for the VME.
@@ -112,6 +123,7 @@ private:
     mafDataPipe *m_DataPipe; ///< Data pipe associated with the VME and used to elaborate new data.
     QHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
     QVariantList m_Bounds; ///< List of bounds value of the binding box.
+    bool m_Locked;  ///< Flag used to indicate if the VME can be modified or no.
 };
 
 /////////////////////////////////////////////////////////////
@@ -128,6 +140,10 @@ inline mafInteractor *mafVME::interactor() {
 
 inline QVariantList mafVME::bounds()  {
     return m_Bounds;
+}
+
+inline bool mafVME::locked() const {
+    return m_Locked;
 }
 
 } // mafResources
