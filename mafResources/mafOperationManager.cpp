@@ -62,9 +62,9 @@ void mafOperationManager::initializeConnections() {
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.operation.start", this, "startOperationSignal(const QString)")
     mafRegisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)")
-    mafRegisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(QList<QVariant>)")
+    mafRegisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(QVariantList)")
     mafRegisterLocalSignal("maf.local.resources.operation.execute", this, "executeOperationSignal()")
-    mafRegisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(QList<QVariant>)")
+    mafRegisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(QVariantList)")
     mafRegisterLocalSignal("maf.local.resources.operation.stop", this, "stopOperationSignal()")
     mafRegisterLocalSignal("maf.local.resources.operation.undo", this, "undoOperationSignal()")
     mafRegisterLocalSignal("maf.local.resources.operation.redo", this, "redoOperationSignal()")
@@ -75,9 +75,9 @@ void mafOperationManager::initializeConnections() {
 
     // Register private callbacks to the instance of the manager..
     mafRegisterLocalCallback("maf.local.resources.operation.start", this, "startOperation(const QString)")
-    mafRegisterLocalCallback("maf.local.resources.operation.setParameters", this, "setOperationParameters(QList<QVariant>)")
+    mafRegisterLocalCallback("maf.local.resources.operation.setParameters", this, "setOperationParameters(QVariantList)")
     mafRegisterLocalCallback("maf.local.resources.operation.execute", this, "executeOperation()")
-    mafRegisterLocalCallback("maf.local.resources.operation.executeWithParameters", this, "executeWithParameters(QList<QVariant>)")
+    mafRegisterLocalCallback("maf.local.resources.operation.executeWithParameters", this, "executeWithParameters(QVariantList)")
     mafRegisterLocalCallback("maf.local.resources.operation.stop", this, "stopOperation()")
     mafRegisterLocalCallback("maf.local.resources.operation.undo", this, "undoOperation()")
     mafRegisterLocalCallback("maf.local.resources.operation.redo", this, "redoOperation()")
