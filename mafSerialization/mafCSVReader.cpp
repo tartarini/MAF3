@@ -55,8 +55,8 @@ void mafCSVReader::setTextCodec(const char* codecName){
         m_Codec = QTextCodec::codecForName(codecName);
 }
 
-mafString mafCSVReader::readLine(){
-        mafString line;
+QString mafCSVReader::readLine(){
+        QString line;
 
         if(m_String.isNull()){
 		//READ DATA FROM DEVICE
@@ -82,13 +82,13 @@ QStringList mafCSVReader::parseLine(){
 }
 
 QStringList mafCSVReader::parseLine(QString line){
-        mafStringList list;
+        QStringList list;
 	int pos2 = 0;
         QRegExp rx2("(?:\"([^\"]*)\",?)|(?:([^,]*),?)");
 	if(line.size()<1){
                 //list << "";
 	}else while (line.size()>pos2 && (pos2 = rx2.indexIn(line, pos2)) != -1) {
-                mafString col;
+                QString col;
 		if(rx2.cap(1).size()>0)
 			col = rx2.cap(1);
 		else if(rx2.cap(2).size()>0)

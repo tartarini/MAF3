@@ -21,11 +21,11 @@ mafQAChecker::~mafQAChecker() {
     m_QaManager->shutdown();
 }
 
-void mafQAChecker::execute(mafString script, mafStringList argList) {
+void mafQAChecker::execute(QString script, QStringList argList) {
     m_QaManager->runPythonScript(script, argList);
 }
 
-void mafQAChecker::executeAndProfile(mafString script, mafStringList argList) {
+void mafQAChecker::executeAndProfile(QString script, QStringList argList) {
     m_QaManager->profilerInit();
     m_QaManager->profilerStart();
     m_QaManager->runScript(script, argList, true);
@@ -33,6 +33,6 @@ void mafQAChecker::executeAndProfile(mafString script, mafStringList argList) {
     m_QaManager->profilerViewResultsOnConsole();
 }
 
-void mafQAChecker::validatePlugin(mafString plugin) {
+void mafQAChecker::validatePlugin(QString plugin) {
     m_QaManager->pluginValidate(plugin);
 }

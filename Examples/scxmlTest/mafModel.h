@@ -20,52 +20,52 @@ class mafModel : public mafCore::mafObjectBase {
 
 public:
     /// Object constructor.
-    mafModel(const mafString code_location = "");
+    mafModel(const QString code_location = "");
 
     /// Set the IP associated with the service to call.
-    void setServiceIP(mafString ip);
+    void setServiceIP(QString ip);
 
     /// Set the Port associated with the service to call.
-    void setServicePort(mafString port);
+    void setServicePort(QString port);
 
     /// Set the Protocol associated with the service to call.
-    void setServiceProtocol(mafString protocol);
+    void setServiceProtocol(QString protocol);
 
     /// Return the IP associated with the service.
-    mafString serviceIP();
+    QString serviceIP();
 
     /// Return the Port associated with the service.
-    mafString servicePort();
+    QString servicePort();
 
     /// Return the Protocol associated with the service.
-    mafString serviceProtocol();
+    QString serviceProtocol();
 
     /// Return the list of parameters.
-    mafVariantList parametersList();
+    QVariantList parametersList();
 
     /// Allow to assign the list of parameters.
-    void setParametersList(mafVariantList params);
+    void setParametersList(QVariantList params);
 
 private:
-    mafString m_Ip; ///< IP associated to the service
-    mafString m_Port; ///< Port associated to the service
-    mafString m_Protocol; ///< Protocol associated to the service
-    mafVariantList m_ParameterList; ///< List of parameters to forward to the called service.
+    QString m_Ip; ///< IP associated to the service
+    QString m_Port; ///< Port associated to the service
+    QString m_Protocol; ///< Protocol associated to the service
+    QVariantList m_ParameterList; ///< List of parameters to forward to the called service.
 };
 
-inline mafString mafModel::serviceIP() {
+inline QString mafModel::serviceIP() {
     return m_Ip;
 }
 
-inline mafString mafModel::servicePort() {
+inline QString mafModel::servicePort() {
     return m_Port;
 }
 
-inline mafString mafModel::serviceProtocol() {
+inline QString mafModel::serviceProtocol() {
     return m_Protocol;
 }
 
-inline mafVariantList mafModel::parametersList() {
+inline QVariantList mafModel::parametersList() {
     return m_ParameterList;
 }
 

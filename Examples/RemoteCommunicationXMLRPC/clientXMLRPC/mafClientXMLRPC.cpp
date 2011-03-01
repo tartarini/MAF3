@@ -28,16 +28,16 @@ mafClientXMLRPC::~mafClientXMLRPC() {
     mafCoreSingletons::mafSingletonsShutdown();
 }
 
-void mafClientXMLRPC::connectToServer(unsigned int port, mafString address) {
+void mafClientXMLRPC::connectToServer(unsigned int port, QString address) {
     if(m_Port == 0 || m_Port != port || m_Address.compare(address) != 0) {
         m_Port = port;
         m_Address = address;
         bool res = m_Logic->createClient("XMLRPC", m_Address, m_Port);
 
         if(res) {
-            mafMsgDebug("%s", mafTr("Client has been created").toAscii().data());
+            qDebug("%s", mafTr("Client has been created").toAscii().data());
         } else {
-            mafMsgCritical("%s", mafTr("Problem on create instance of the Client").toAscii().data());
+            qCritical("%s", mafTr("Problem on create instance of the Client").toAscii().data());
         }
     }
 }

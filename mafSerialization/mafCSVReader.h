@@ -40,9 +40,9 @@ public:
         /// Object constructor.
         mafCSVReader(const QString code_location = "");
         /// Overloaded object constructor
-        mafCSVReader(mafIODevice *device, const QString code_location = "");
+        mafCSVReader(QIODevice *device, const QString code_location = "");
         /// Overloaded object constructor
-        mafCSVReader(mafString &string, const QString code_location = "");
+        mafCSVReader(QString &string, const QString code_location = "");
         /// Object Destructor
         ~mafCSVReader();
 
@@ -52,9 +52,9 @@ public:
         void setDevice(QIODevice *device);
 
         /// it returns a line of the file or the string (each line need to terminate with \n.
-        mafString readLine();
+        QString readLine();
         /// parse a line and retrieve an ordered list of string.
-        mafStringList parseLine();
+        QStringList parseLine();
         /// static method allow to be used like a global function.
         static QStringList parseLine(QString line);
 

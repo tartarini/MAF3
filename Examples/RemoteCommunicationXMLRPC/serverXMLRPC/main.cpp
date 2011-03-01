@@ -15,14 +15,14 @@
 
 int main(int argc, char *argv[]) {
     if(argc != 2) {
-        mafMsgDebug("%s", mafTr("Usage: \nserverXMLRPC port").toAscii().data());
+        qDebug("%s", mafTr("Usage: \nserverXMLRPC port").toAscii().data());
         exit(0);
     }
 
     QCoreApplication a(argc, argv);
 
     mafServerXMLRPC server;
-    mafString port(argv[1]);
+    QString port(argv[1]);
     server.startListen(port.toUInt());
 
     return a.exec();
