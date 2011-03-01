@@ -31,7 +31,8 @@ namespace mafSerialization {
 class MAFSERIALIZATIONSHARED_EXPORT mafSerializationRegistration {
     public:
     /// Register all the concrete objects that can be instantiated by the mafObjectFactory.
-    /** This registration is needed to instantiate object by using the mafNEWFromString macro present in objectFactory which needs as input the object type to instantiate as string.*/
+    /** This registration is needed to instantiate object by using the mafNEWFromString macro present in objectFactory
+    which needs as input the object type to instantiate as string.*/
     MAFSERIALIZATIONSHARED_EXPORT static void registerSerializationObjects();
 
     /// Unregister all the concrete objects from mafObjectFactory.
