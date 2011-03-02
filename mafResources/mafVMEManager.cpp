@@ -47,18 +47,18 @@ void mafVMEManager::initializeConnections() {
     provider->createNewId("maf.local.resources.hierarchy.create");
 
     // Register API signals.
-    mafRegisterLocalSignal("maf.local.resources.vme.add", this, "attachVMEToHierarchy(mafCore::mafObjectBase *)");
-    mafRegisterLocalSignal("maf.local.resources.vme.remove", this, "detachVMEFromHierarchy(mafCore::mafObjectBase *)");
-    mafRegisterLocalSignal("maf.local.resources.vme.select", this, "selectVME(mafCore::mafObjectBase *)");
-    mafRegisterLocalSignal("maf.local.resources.vme.selected", this, "selectedVMESignal()");
-    mafRegisterLocalSignal("maf.local.resources.hierarchy.create", this, "createVMEHierarchySignal()");
+    mafRegisterLocalSignal("maf.local.resources.vme.add", this, "attachVMEToHierarchy(mafCore::mafObjectBase *)")
+    mafRegisterLocalSignal("maf.local.resources.vme.remove", this, "detachVMEFromHierarchy(mafCore::mafObjectBase *)")
+    mafRegisterLocalSignal("maf.local.resources.vme.select", this, "selectVME(mafCore::mafObjectBase *)")
+    mafRegisterLocalSignal("maf.local.resources.vme.selected", this, "selectedVMESignal()")
+    mafRegisterLocalSignal("maf.local.resources.hierarchy.create", this, "createVMEHierarchySignal()")
 
     // Register private callbacks to the instance of the manager..
-    mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("maf.local.resources.vme.remove", this, "vmeRemove(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("maf.local.resources.vme.selected", this, "selectedVME()");
-    mafRegisterLocalCallback("maf.local.resources.hierarchy.create", this, "createVMEHierarchy()");
+    mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)")
+    mafRegisterLocalCallback("maf.local.resources.vme.remove", this, "vmeRemove(mafCore::mafObjectBase *)")
+    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)")
+    mafRegisterLocalCallback("maf.local.resources.vme.selected", this, "selectedVME()")
+    mafRegisterLocalCallback("maf.local.resources.hierarchy.create", this, "createVMEHierarchy()")
 }
 
 void mafVMEManager::vmeSelect(mafObjectBase *vme) {
@@ -68,6 +68,9 @@ void mafVMEManager::vmeSelect(mafObjectBase *vme) {
         return;
     }
     // VME has been selected.
+    if(m_SelectedVME) {
+        m_SelectedVME->setSelected(false);
+    }
     m_SelectedVME = vme_to_select;
 }
 
@@ -103,14 +106,14 @@ void mafVMEManager::removeVME(mafVME *vme) {
     // Disconnect the manager from the vme
     disconnect(vme, SIGNAL(destroyed()),this, SLOT(vmeDestroyed()));
     // remove the VME from the managed resources and manage the active resource if the removed VME is the active one.
-    if (vme == m_SelectedVME) {
+    if ( vme == m_SelectedVME ) {
         m_SelectedVME = NULL;
     }
     //m_VMEHierarchy->removeHierarchyNode(vme); // DEPRECATED
 }
 
 mafCore::mafHierarchyPointer mafVMEManager::createVMEHierarchy() {
-     if(m_VMEHierarchy == NULL) {
+     if ( m_VMEHierarchy == NULL ) {
          m_VMEHierarchy = mafNEW(mafCore::mafHierarchy);
     }
 
@@ -122,9 +125,7 @@ mafCore::mafHierarchyPointer mafVMEManager::createVMEHierarchy() {
          m_VMEHierarchy->addHierarchyNode(m_Root);
 
          // Select the root node.
-         mafEventArgumentsList argList;
-         argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Root));
-         mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+         m_Root->setSelected(true);
      }
 
      return m_VMEHierarchy;
