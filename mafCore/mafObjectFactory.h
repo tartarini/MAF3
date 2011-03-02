@@ -35,6 +35,21 @@
         object_pointer = NULL; \
     }
 
+#ifdef WIN32
+#define mafDELThread(thread_pointer) \
+    if(thread_pointer != NULL) { \
+        thread_pointer->exit(0); \
+        delete thread_pointer; \
+        thread_pointer = NULL; \
+    }
+#else
+#define mafDELThread(thread_pointer) \
+    if(thread_pointer != NULL) { \
+        thread_pointer->exit(0); \
+        thread_pointer->deleteLater(); \
+    }
+#endif
+
 #define mafCreateSmartObject(maf_object_type) \
     mafCore::mafObjectFactory::instance()->instantiateSmartObject<maf_object_type>(#maf_object_type);
 
