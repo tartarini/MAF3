@@ -94,11 +94,24 @@ private slots:
     /// start operation and set that operation as current one
     void startOperation(const QString operation);
 
-    /// set the parameters to the current started operation
+    /// Set the parameters to the current started operation
     void setOperationParameters(QVariantList parameters);
 
-    /// execute current operation
+    /// Execute current operation
+    /**
+        This method check the executeOnThread operation's property to decide if the execution has to be done in the main
+        thread or in a separate one. If executeOnThread flag is "true" then the manager create an execution thread and move
+        the operation on that thread, link the start thread signal with the execute operation's slot and start the thread.
+    */
     void executeOperation();
+
+    /// Called when the operation has terminated its execution.
+    /**
+        All the operation should emit the signal executionEnded at the end of the execution. In this way the operation
+        manager is notified and can finalize the operation execution lifetime by placing the operation into the undo stack
+        if it support the undo or it is deleted.
+    */
+    void operationExecuted();
 
     /// initialize the given operation (first element of the list), pass to it the given (optionals) parameters as second element of the list and start the execution of the operation.
     void executeWithParameters(QVariantList op_with_parameters);
