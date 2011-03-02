@@ -20,7 +20,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL), m_CanRead(true), m_CanWrite(true), m_LockStatus(mafOperationLockNone) {
+mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL), m_CanRead(true), m_CanWrite(true), m_LockStatus(mafVMELockNone) {
     mafId time_set_id = mafIdProvider::instance()->idValue("TIME_SET");
     if(time_set_id != -1) {
         mafRegisterLocalCallback("TIME_SET", this, "setTimestamp(double)")
@@ -57,7 +57,7 @@ void mafVME::setCanRead(bool lock) {
         // VME can not be accessed in read mode => noway also for the write side.
         m_CanWrite = false;
     }
-    m_LockStatus = m_CanRead ? mafOperationLockNone : mafOperationLockRead;
+    m_LockStatus = m_CanRead ? mafVMELockNone : mafVMELockRead;
     emit vmeLocked(m_LockStatus);
 }
 
@@ -66,7 +66,7 @@ void mafVME::setCanWrite(bool lock) {
         return;
     }
     m_CanWrite = lock;
-    m_LockStatus = m_CanWrite ? mafOperationLockNone : mafOperationLockWrite;
+    m_LockStatus = m_CanWrite ? mafVMELockNone : mafVMELockWrite;
     emit vmeLocked(m_LockStatus);
 }
 

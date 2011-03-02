@@ -132,7 +132,7 @@ private:
     QVariantList m_Bounds; ///< List of bounds value of the binding box.
     bool m_CanRead;  ///< Flag used to indicate if the VME is readable.
     bool m_CanWrite; ///< Flag indicating if the vme is writable.
-    mafOperationLock m_LockStatus; ///< Contains the status of vme lock.
+    mafVMELock m_LockStatus; ///< Contains the status of vme lock.
 };
 
 /////////////////////////////////////////////////////////////
