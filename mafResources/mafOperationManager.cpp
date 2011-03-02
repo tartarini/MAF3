@@ -93,21 +93,7 @@ void mafOperationManager::initializeConnections() {
 void mafOperationManager::vmeSelect(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafResources::mafVME*>(obj);
     if(vme && vme != m_SelectedVME) {
-        // VME has been selected.
         m_SelectedVME = vme;
-
-//        const QMetaObject* metaVme = vme->metaObject();
-//
-//        m_OperationAcceptCurentVMEMap.clear();
-//        foreach(mafResource *v, m_OperationsList) {
-//            const QMetaObject* metaOp = v->metaObject();
-//            //need a check on all the operations for accept objects
-//            QStringList binding_class_list;
-//            binding_class_list = mafResourcesRegistration::acceptObject(v);
-//            bool isAccepted = binding_class_list.contains(metaVme->className());
-//            // instead of name , put struct with label
-//            m_OperationAcceptCurentVMEMap.insert(metaOp->className(), isAccepted);
-//        }
     }
 }
 
@@ -154,33 +140,44 @@ void mafOperationManager::startOperation(const QString operation) {
 }
 
 void mafOperationManager::executeOperation() {
-    if(m_CurrentOperation != NULL) {
-        m_CurrentOperation->execute();
+    if ( m_CurrentOperation != NULL ) {
+        connect(m_CurrentOperation, SIGNAL(executionEnded()), this, SLOT(operationExecuted()));
+
+        if ( m_CurrentOperation->executeOnThread() ) {
+            // Create a thread and move the operation's execution on it.
+        } else {
+            // Simply call the operation's execution.
+            m_CurrentOperation->execute();
+        }
+    }
+}
+
+void mafOperationManager::operationExecuted() {
         // check if operation canUndo
-        if(!m_CurrentOperation->canUnDo()) {
+        if ( !m_CurrentOperation->canUnDo() ) {
             clearUndoStack();
             m_LastExecutedOperation = NULL;
             mafDEL(m_CurrentOperation);
             return;
         }
 
-        if(m_CurrentOperation->isRunning()) {
+        if ( m_CurrentOperation->isRunning() ) {
             //undo stack insertion
             QLinkedList<mafOperation*>::Iterator i;
-            if(m_LastExecutedOperation == NULL) {
+            if ( m_LastExecutedOperation == NULL ) {
                 clearUndoStack();
             } else {
                 bool found = false;
-                for(i = m_UndoStack.begin() ; i != m_UndoStack.end(); ++i) {
-                    if(found) {
+                for ( i = m_UndoStack.begin() ; i != m_UndoStack.end(); ++i ) {
+                    if ( found ) {
                         mafDEL((*i));
                     }
-                    if(*i == m_LastExecutedOperation) {
+                    if ( *i == m_LastExecutedOperation ) {
                         found = true;
                     }
                 }
 
-                while(m_UndoStack.last() == NULL) {
+                while ( m_UndoStack.last() == NULL ) {
                     m_UndoStack.pop_back();
                 }
             }
@@ -190,7 +187,6 @@ void mafOperationManager::executeOperation() {
             m_UndoStack.push_back(m_LastExecutedOperation);
         }
         m_CurrentOperation = NULL;
-    }
 }
 
 void mafOperationManager::stopOperation() {
