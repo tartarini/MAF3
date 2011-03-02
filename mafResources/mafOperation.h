@@ -77,6 +77,11 @@ public slots:
     virtual void reDo();
 
     /// Execute the resource algorithm.
+    /**
+        Operation emit the executionEnded signal at the end of the execute code so that the operation manager
+        can finalize the execution mechanism. The subclassing mafOperation and overriding the execute slot, at the end of
+        the execution code the custom operation MUST call mafOperation::execute() or emit the executionEnded signal.
+    */
     virtual void execute();
 
     /// Terminate the execution.
