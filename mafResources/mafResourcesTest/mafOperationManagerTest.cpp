@@ -95,6 +95,7 @@ public:
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
 
+public slots:
     /// undo operation
     /*virtual*/ void unDo(); 
 
@@ -138,6 +139,7 @@ public:
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
 
+public slots:
     /// undo operation
     /*virtual*/ void unDo();
 
@@ -246,15 +248,10 @@ void mafOperationManagerTest::mafOperationManagerAllocationTest() {
 }
 
 void mafOperationManagerTest::setParametersTest() {  
-
-    // Create the event's parameters.
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Vme));
-
     //Select m_VME
-    m_EventBus->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+    m_Vme->setProperty("selected", true);
 
-    argList.clear();
+    mafEventArgumentsList argList;
     QString op("testOperationforOperationManager");
     argList.append(mafEventArgument(QString, op));
 
