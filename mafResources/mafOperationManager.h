@@ -154,8 +154,7 @@ private:
     mafOperation *m_LastExecutedOperation; ///< Last executed operation
     QLinkedList<mafOperation *> m_UndoStack; ///< Undo stack which is a linked list of operations
     mafOperation *m_CurrentOperation; ///< Current operation handled by th manager
-//    mafResourceList m_OperationsList; ///< List of plugged operations.
-//    OperationAcceptVMEMap m_OperationAcceptCurentVMEMap; /// Map which determines if the current vme can be input of the operations
+    QThread *m_ExecutionThread; ///< Thread on which execute the operation.
     mafVME *m_SelectedVME; ///< Vme that is currently selected
     mafCore::mafId m_ExecWithParameters; ///< Id associated with the EXECUTE_WITH_PARAMETERS event.
 };
@@ -168,7 +167,7 @@ inline const mafCore::mafObjectBase *mafOperationManager::currentOperation() con
     return (mafCore::mafObjectBase *)m_CurrentOperation;
 }
 
-inline int mafOperationManager::undoStackSize() const{
+inline int mafOperationManager::undoStackSize() const {
     return m_UndoStack.size();
 }
 
