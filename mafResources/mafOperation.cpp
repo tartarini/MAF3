@@ -26,6 +26,7 @@ bool mafOperation::initialize() {
 }
 
 void mafOperation::execute() {
+    emit executionEnded();
 }
 
 bool mafOperation::terminate() {
