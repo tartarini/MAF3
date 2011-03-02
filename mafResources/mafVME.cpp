@@ -20,10 +20,10 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL), m_Locked(false) {
+mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL), m_CanRead(true), m_CanWrite(true), m_LockStatus(mafOperationLockNone) {
     mafId time_set_id = mafIdProvider::instance()->idValue("TIME_SET");
     if(time_set_id != -1) {
-        mafRegisterLocalCallback("TIME_SET", this, "setTimestamp(double)");
+        mafRegisterLocalCallback("TIME_SET", this, "setTimestamp(double)")
     }
     m_MementoDataSetHash.clear();
     connect(this, SIGNAL(modifiedObject()), this, SLOT(execute()));
@@ -48,12 +48,26 @@ void mafVME::setBounds(QVariantList bounds) {
     m_Bounds.append(bounds);
 }
 
-void mafVME::setLocked(bool lock) {
-    if (lock == m_Locked) {
+void mafVME::setCanRead(bool lock) {
+    if ( lock == m_CanRead ) {
         return;
     }
-    m_Locked = lock;
-    emit vmeLocked(m_Locked);
+    m_CanRead = lock;
+    if ( !m_CanRead ) {
+        // VME can not be accessed in read mode => noway also for the write side.
+        m_CanWrite = false;
+    }
+    m_LockStatus = m_CanRead ? mafOperationLockNone : mafOperationLockRead;
+    emit vmeLocked(m_LockStatus);
+}
+
+void mafVME::setCanWrite(bool lock) {
+    if ( lock == m_CanWrite || !m_CanRead ) {
+        return;
+    }
+    m_CanWrite = lock;
+    m_LockStatus = m_CanWrite ? mafOperationLockNone : mafOperationLockWrite;
+    emit vmeLocked(m_LockStatus);
 }
 
 void mafVME::setTimestamp(double t) {
@@ -63,7 +77,7 @@ void mafVME::setTimestamp(double t) {
 }
 
 void mafVME::setInteractor(mafInteractor *i) {
-    if(i == m_Interactor) {
+    if ( i == m_Interactor ) {
         return;
     }
     mafDEL(m_Interactor);
@@ -73,7 +87,7 @@ void mafVME::setInteractor(mafInteractor *i) {
 void mafVME::setDataPipe(const QString &pipe_type) {
     mafObjectBase *obj = mafNEWFromString(pipe_type);
     mafDataPipe *new_pipe = qobject_cast<mafDataPipe *>(obj);
-    if(new_pipe) {
+    if ( new_pipe ) {
         setDataPipe(new_pipe);
         return;
     } else {
@@ -83,8 +97,8 @@ void mafVME::setDataPipe(const QString &pipe_type) {
 }
 
 void mafVME::setDataPipe(mafDataPipe *pipe) {
-    if(m_DataPipe == pipe) return;
-    if(pipe) {
+    if ( m_DataPipe == pipe ) return;
+    if ( pipe ) {
         pipe->setInput(this);
         mafDEL(m_DataPipe);
         m_DataPipe = pipe;

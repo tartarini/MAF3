@@ -34,7 +34,8 @@ notified when new timestamp has been assigned to the system.
 */
 class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_OBJECT
-    Q_PROPERTY(bool locked READ locked WRITE setLocked)
+    Q_PROPERTY(bool canRead READ canRead WRITE setCanRead)
+    Q_PROPERTY(bool canWrite READ canWrite WRITE setCanWrite)
 
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
@@ -87,18 +88,24 @@ public:
     /// Allow to send the selection event for itself.
     /*virtual*/ void setSelected(bool sel);
 
-    /// Allow to lock/unlock the VME.
-    void setLocked(bool lock);
+    /// Allow to lock/unlock the readability of the VME.
+    void setCanRead(bool lock);
 
-    /// Return the lock state for the VME.
-    bool locked() const;
+    /// Return the readability state for the VME.
+    bool canRead() const;
+
+    /// Allow to lock/unlock the writability of the VME.
+    void setCanWrite(bool lock);
+
+    /// Return the writability state for the VME.
+    bool canWrite() const;
 
 signals:
     /// Alert observers that the VME has been detatched from the hierarchy tree.
     void detatched();
 
     /// Notify the lock state for the current VME when the lock state change.
-    void vmeLocked(bool);
+    void vmeLocked(int);
 
 public slots:
     /// Set the current timestamp for the VME.
@@ -123,7 +130,9 @@ private:
     mafDataPipe *m_DataPipe; ///< Data pipe associated with the VME and used to elaborate new data.
     QHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
     QVariantList m_Bounds; ///< List of bounds value of the binding box.
-    bool m_Locked;  ///< Flag used to indicate if the VME can be modified or no.
+    bool m_CanRead;  ///< Flag used to indicate if the VME is readable.
+    bool m_CanWrite; ///< Flag indicating if the vme is writable.
+    mafOperationLock m_LockStatus; ///< Contains the status of vme lock.
 };
 
 /////////////////////////////////////////////////////////////
@@ -142,8 +151,12 @@ inline QVariantList mafVME::bounds()  {
     return m_Bounds;
 }
 
-inline bool mafVME::locked() const {
-    return m_Locked;
+inline bool mafVME::canRead() const {
+    return m_CanRead;
+}
+
+inline bool mafVME::canWrite() const {
+    return m_CanWrite;
 }
 
 } // mafResources
