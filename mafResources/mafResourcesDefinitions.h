@@ -84,6 +84,13 @@ typedef enum {
     mafOperationTypeOperation
 } mafOperationType;
 
+/// Enumeration that define the status of the VME.
+typedef enum {
+    mafVMELockNone = 0,
+    mafVMELockRead,
+    mafVMELockWrite
+} mafVMELock;
+
 }
 
 #endif // MAFRESOURCESDEFINITIONS_H
