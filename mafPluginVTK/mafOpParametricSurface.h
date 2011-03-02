@@ -53,7 +53,7 @@ public slots:
     virtual void setParameters(QVariantList parameters);
 
     /// Execute the resource algorithm.
-    virtual void execute();
+    /*virtual*/ void execute();
 
     /// Select surface type.
     void on_parametricSurfaceType_currentChanged(int index);
