@@ -24,15 +24,7 @@ mafThreadedTimer::mafThreadedTimer(mafTimer *timer, const QString code_location)
 mafThreadedTimer::~mafThreadedTimer() {
     // If the timer has been moved over a different thread
     // before deleting it, the thread has to be exited and deleted.
-    if(m_Thread != NULL) {
-        m_Thread->exit(0);
-#ifdef WIN32
-        delete m_Thread;
-        m_Thread = NULL;
-#else
-        m_Thread->deleteLater();
-#endif
-    }
+    mafDELThread(m_Thread);
     // Delete the timer.
     mafDEL(m_Timer);
 }
