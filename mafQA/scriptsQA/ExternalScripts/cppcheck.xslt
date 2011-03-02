@@ -31,9 +31,9 @@ xmlns:str="http://exslt.org/strings" extension-element-prefixes="str">
  <table id="listing">
   <thead>
 	<tr>
-	   <th width="30%" align="center"><b>File</b></th>
- 	   <th width="10%" align="center"><b>Type</b></th>
- 	   <th width="10%" align="center"><b>Line</b></th>
+	   <th width="28%" align="center"><b>File</b></th>
+ 	   <th width="7%" align="center"><b>Type</b></th>
+ 	   <th width="5%" align="center"><b>Line</b></th>
 	   <th width="15%" align="center"><b>Severity</b></th>
 	   <th width="35%" align="center"><b>Message</b></th>
 	</tr>
@@ -44,18 +44,18 @@ xmlns:str="http://exslt.org/strings" extension-element-prefixes="str">
 	<xsl:choose>
        <xsl:when test="position() mod 2 != 1">
         <tr class="odd">
-        <td width="30%"><xsl:value-of select="$nodeset[count($nodeset)]" /></td>  	
-	   <td width="10%" align="center"><xsl:value-of select="@id" /></td>
-	   <td width="10%" align="center"><xsl:value-of select="@line" /></td> 
+        <td width="28%"><xsl:value-of select="$nodeset[count($nodeset)]" /></td>  	
+	   <td width="7%" align="center"><xsl:value-of select="@id" /></td>
+	   <td width="5%" align="center"><xsl:value-of select="@line" /></td> 
    	   <td width="15%" align="center"><xsl:value-of select="@severity" /></td>
 	   <td width="35%"><xsl:value-of select="@msg" /></td>
         </tr>
        </xsl:when>
        <xsl:otherwise>
         <tr class="even">
-        <td width="30%"><xsl:value-of select="$nodeset[count($nodeset)]" /></td>  	
-	   <td width="10%" align="center"><xsl:value-of select="@id" /></td>
-	   <td width="10%" align="center"><xsl:value-of select="@line" /></td> 
+        <td width="28%"><xsl:value-of select="$nodeset[count($nodeset)]" /></td>  	
+	   <td width="7%" align="center"><xsl:value-of select="@id" /></td>
+	   <td width="5%" align="center"><xsl:value-of select="@line" /></td> 
    	   <td width="15%" align="center"><xsl:value-of select="@severity" /></td>
 	   <td width="35%"><xsl:value-of select="@msg" /></td>
         </tr>
