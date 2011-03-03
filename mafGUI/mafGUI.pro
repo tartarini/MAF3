@@ -46,5 +46,6 @@ LIBS += -L$$DESTDIR \
     -lmafCore$$BUILD_EXT \
     -lmafEventBus$$BUILD_EXT \
     -lmafApplicationLogic$$BUILD_EXT
-RESOURCES += mafGUIImages.qrc
+RESOURCES += mafGUIImages.qrc \
+    mafGUIVMEImages.qrc
 FORMS += mafOperationWidget.ui
