@@ -19,6 +19,9 @@ namespace mafTimeSpace {
 extern "C" {
     /// Initialize the module by instantiating the singletons and register all the classes with the mafObjectFactory.
     MAFTIMESPACESHARED_EXPORT void initializeModule();
+
+    /// Shutdown the module by shuting down the singletons and un-register all the classes from the mafObjectFactory.
+    MAFTIMESPACESHARED_EXPORT void shutdownModule();
 }
 
 } // namespace mafTimeSpace
