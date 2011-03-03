@@ -18,12 +18,12 @@
 #include <QModelIndex>
 #include <QObject>
 
+
+
 namespace mafGUI {
 /**
 Class Name: mafTreeItemDelegate
-It represents the interface to the data model which need to be represented by
-a tree view or a list view. It is used to interface with mafHerarchy which is a template
-tree structure.
+
 */
 
 class MAFGUISHARED_EXPORT mafTreeItemDelegate : public QStyledItemDelegate {
@@ -38,9 +38,6 @@ public:
     /// Returns the size needed by the delegate to display the item specified by index.
     /*virtual */ QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-signals:
-
-public slots:
 
 private:
 
