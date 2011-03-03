@@ -10,8 +10,17 @@
  */
 
 #include "mafModuleRegistrator.h"
+#include "mafTimer.h"
+#include "mafThreadedTimer.h"
 
 void mafTimeSpace::initializeModule() {
+    mafRegisterObject(mafTimeSpace::mafTimer);
+    mafRegisterObject(mafTimeSpace::mafThreadedTimer);
     mafTimeSpace::mafTimeManager::instance();
 }
 
+void mafTimeSpace::shutdownModule() {
+    mafTimeSpace::mafTimeManager::instance()->shutdown();;
+    mafUnregisterObject(mafTimeSpace::mafTimer);
+    mafUnregisterObject(mafTimeSpace::mafThreadedTimer);
+}

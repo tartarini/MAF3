@@ -30,6 +30,7 @@ class MAFCORESHARED_EXPORT mafObject : public mafObjectBase {
     Q_PROPERTY(bool modified READ modified WRITE setModified)
     Q_PROPERTY(bool selected READ selected WRITE setSelected)
     Q_PROPERTY(QString iconFile READ iconFile WRITE setIconFile)
+    Q_PROPERTY(int lockStatus READ lockStatus)
 
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
@@ -98,6 +99,9 @@ public:
     /// Return the dictionary associated to the object.
     mafDictionary *dictionary() const;
 
+    /// Return the lock status of the object.
+    int lockStatus () const;
+
 public slots:
     /// Method used to initialize the object's tag list.
     void setTagList(const QVariantList &list);
@@ -107,6 +111,7 @@ protected:
     /* virtual */ ~mafObject();
     bool m_Selected; ///< Flag used to store the selection flag of the owned VME.
     QString m_IconFIle; ///< Filename associated to the icon file to use with the object.
+    mafObjectLock m_LockStatus; ///< Contains the status of object lock.
 
 private:
     bool m_Modified; ///< Contains the modified state of the VME.
@@ -136,6 +141,10 @@ inline const QVariantList *mafObject::tagList() const {
 
 inline mafDictionary *mafObject::dictionary() const {
     return m_Dictionary;
+}
+
+inline int mafObject::lockStatus () const {
+    return m_LockStatus;
 }
 
 } // mafCore namespace
