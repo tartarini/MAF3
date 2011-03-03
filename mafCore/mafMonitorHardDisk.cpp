@@ -33,7 +33,7 @@ void mafMonitorHardDisk::update() {
 #ifdef WIN32
     __int64 lpFreeBytesAvaibleToCaller, lpTotalNumberOfBytes, lpTotalNumberOfFreeBytes;
 
-    GetDiskFreeSpaceEx(QString("C:\\").toStdWString().c_str(), (PULARGE_INTEGER)&lpFreeBytesAvaibleToCaller,
+    GetDiskFreeSpaceEx("C:\\", (PULARGE_INTEGER)&lpFreeBytesAvaibleToCaller,
                        (PULARGE_INTEGER) &lpTotalNumberOfBytes,
     (PULARGE_INTEGER) &lpTotalNumberOfFreeBytes);
 
