@@ -59,10 +59,10 @@ typedef QList<mafVME *> mafVMEList;
 
 /** Structure representing the information about a plug-in library.*/
 struct MAFRESOURCESSHARED_EXPORT mafPluginInfo {
-    float m_Version;            ///< Plug-in Version
-    QString m_PluginName;     ///< Plug-in name
-    QString m_Author;         ///< Plug-in author
-    QString m_Vendor;         ///< Plug-in company name
+    float m_Version;                ///< Plug-in Version
+    QString m_PluginName;    ///< Plug-in name
+    QString m_Author;           ///< Plug-in author
+    QString m_Vendor;           ///< Plug-in company name
     QString m_VendorHomepage; ///< Plug-in company homepage
     QString m_Description;    ///< Plug-in general description.
 };
@@ -83,6 +83,13 @@ typedef enum {
     mafOperationTypeExporter,
     mafOperationTypeOperation
 } mafOperationType;
+
+/// Enumeration that define the status of the VME.
+typedef enum {
+    mafVMELockNone = 0,
+    mafVMELockRead,
+    mafVMELockWrite
+} mafVMELock;
 
 }
 

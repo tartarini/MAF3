@@ -63,8 +63,8 @@ typedef struct {
 
 /// Struct that defines the information used by a plug-in that needs to plug new objects into MAF3 framework.
 struct mafPluggedObjectInformation{
-    mafPluggedObjectInformation() : m_Label(""), m_ClassType("") {};
-    mafPluggedObjectInformation(QString label, QString classtype) : m_Label(label), m_ClassType(classtype) {};
+    mafPluggedObjectInformation() : m_Label(""), m_ClassType("") {}
+    mafPluggedObjectInformation(QString label, QString classtype) : m_Label(label), m_ClassType(classtype) {}
     QString m_Label;      ///< String label associated to the plugged object; it will be shown in the user interface if no custom label is assigned by the user.
     QString m_ClassType;  ///< Class type of the plugged object.
 };

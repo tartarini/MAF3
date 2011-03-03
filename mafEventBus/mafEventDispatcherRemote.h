@@ -61,6 +61,6 @@ private:
 
 } //namespace mafEventBus
 
-Q_DECLARE_METATYPE(QList<QVariant>);
+Q_DECLARE_METATYPE(QVariantList);
 
 #endif // MAFEVENTDISPATCHERREMOTE_H

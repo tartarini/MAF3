@@ -88,21 +88,21 @@ void mafCodecVolume::encode(mafMemento *memento) {
             componentNum = item.m_Value.toInt();
             m_DataStreamWrite << componentNum;
         } else if (item.m_Name == "dimensions") {
-                QList<QVariant> list = item.m_Value.toList();
+                QVariantList list = item.m_Value.toList();
                 REQUIRE(list.size() == 3);
                 for (int i = 0; i < 3; ++i) {
                     dimensions[i] = list[i].toInt();
                     m_DataStreamWrite << dimensions[i];
                 }
         } else if (item.m_Name == "spacing") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             REQUIRE(list.size() == 3);
             foreach(QVariant iter, list) {
                 float value = iter.toFloat();
                 m_DataStreamWrite << value;
             }
         } else if (item.m_Name == "posMatrix") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             REQUIRE(list.size() == 16);
             foreach(QVariant iter, list) {
                 float value = iter.toDouble();
@@ -206,7 +206,7 @@ mafMemento *mafCodecVolume::decode() {
             m_DataStreamRead >> originalDimensions[0];
             m_DataStreamRead >> originalDimensions[1];
             m_DataStreamRead >> originalDimensions[2];
-            QList<QVariant> list;
+            QVariantList list;
             list.append(originalDimensions[0]);
             list.append(originalDimensions[1]);
             list.append(originalDimensions[2]);
@@ -214,7 +214,7 @@ mafMemento *mafCodecVolume::decode() {
             item.m_Value = list;
         } else if (item.m_Name == "spacing") {
             float spacing;
-            QList<QVariant> list;
+            QVariantList list;
             m_DataStreamRead >> spacing;
             list.append(spacing);
             m_DataStreamRead >> spacing;
@@ -224,7 +224,7 @@ mafMemento *mafCodecVolume::decode() {
             item.m_Value = list;
         } else if (item.m_Name == "posMatrix") {
             double value;
-            QList<QVariant> list;
+            QVariantList list;
             for (int i = 0; i < 16; ++i) {
                 m_DataStreamRead >> value;
                 list.append(value);
@@ -273,7 +273,7 @@ mafMemento *mafCodecVolume::decode() {
     }
 
     // start position in the current resolution
-    QList<QVariant> list;
+    QVariantList list;
     list.append(startPos[0]);
     list.append(startPos[1]);
     list.append(startPos[2]);
@@ -327,7 +327,7 @@ void mafCodecVolume::update(mafCore::mafMemento *memento) {
     foreach(mafMementoPropertyItem item, *propList) {
         // information about the highest resolution volume
         if (item.m_Name == "originalDimensions") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             REQUIRE(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 originalDimensions[i] = list[i].toInt();
@@ -343,12 +343,12 @@ void mafCodecVolume::update(mafCore::mafMemento *memento) {
             memoryLimit = item.m_Value.toInt();
         // information about the current volume data
         } else if (item.m_Name == "startPositions") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             REQUIRE(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 startPos[i] = list[i].toInt();
         } else if (item.m_Name == "dimensions") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             REQUIRE(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 dimensions[i] = list[i].toInt();
@@ -358,12 +358,12 @@ void mafCodecVolume::update(mafCore::mafMemento *memento) {
             data = item.m_Value.value<void *>();
         // information about the updated volume data in the highest resolution
         } else if (item.m_Name == "updatedStartPositions") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             REQUIRE(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 updatedStartPos[i] = list[i].toInt();
         } else if (item.m_Name == "updatedDimensions") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             REQUIRE(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 updatedDimensions[i] = list[i].toInt();
@@ -413,7 +413,7 @@ void mafCodecVolume::update(mafCore::mafMemento *memento) {
         return;
 
     // update the information in memento
-    QList<QVariant> list;
+    QVariantList list;
     mafMementoPropertyList::iterator iter = propList->begin();
     while (iter != propList->end()) {
         if (iter->m_Name == "startPositions") {
@@ -564,7 +564,7 @@ QVariant mafCodecVolume::demarshall(QString typeName, int multiplicity) {
         return QVariant(QDateTime::fromString(value, Qt::ISODate));
     }
     else if(typeName == "list") {
-        QList<QVariant> value;
+        QVariantList value;
         for (int i = 0; i < multiplicity; ++i) {
             QString type;
             int multi = 0;

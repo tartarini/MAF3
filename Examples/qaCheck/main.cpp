@@ -15,14 +15,14 @@
 #include "mafQAChecker.h"
 
 void printUsage() {
-    mafMsgDebug("%s", mafTr("\n--------------------------------").toAscii().data());
-    mafMsgDebug("%s", mafTr("Usage: qaCheck command").toAscii().data());
-    mafMsgDebug("%s", mafTr("--------------------------------").toAscii().data());
-    mafMsgDebug("%s", mafTr("commands available:").toAscii().data());
-    mafMsgDebug("%s", mafTr("qaCheck run      python_script_to_run [parameters]").toAscii().data());
-    mafMsgDebug("%s", mafTr("qaCheck validate plugin_to_validate").toAscii().data());
-    mafMsgDebug("%s", mafTr("qaCheck profile  script_to_profile [parameters]").toAscii().data());
-    mafMsgDebug("%s", mafTr("\n").toAscii().data());
+    qDebug("%s", mafTr("\n--------------------------------").toAscii().data());
+    qDebug("%s", mafTr("Usage: qaCheck command").toAscii().data());
+    qDebug("%s", mafTr("--------------------------------").toAscii().data());
+    qDebug("%s", mafTr("commands available:").toAscii().data());
+    qDebug("%s", mafTr("qaCheck run      python_script_to_run [parameters]").toAscii().data());
+    qDebug("%s", mafTr("qaCheck validate plugin_to_validate").toAscii().data());
+    qDebug("%s", mafTr("qaCheck profile  script_to_profile [parameters]").toAscii().data());
+    qDebug("%s", mafTr("\n").toAscii().data());
 }
 
 int main(int argc, char *argv[]) {
@@ -32,8 +32,8 @@ int main(int argc, char *argv[]) {
         exit(0);
     }
 
-    mafString cmd(argv[1]);
-    mafString param(argv[2]);
+    QString cmd(argv[1]);
+    QString param(argv[2]);
 
     if(cmd != "run" && cmd != "validate" && cmd != "profile") {
         printUsage();
@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
     //QCoreApplication a(argc, argv);
 
     mafQAChecker checker;
-    mafStringList argList;
+    QStringList argList;
     if(cmd == "run") {
         int i = 3;
         for(; i < argc; ++i) {

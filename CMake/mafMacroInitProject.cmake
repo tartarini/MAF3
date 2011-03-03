@@ -36,7 +36,8 @@ MACRO(mafMacroInitProject test)
   ## Add the project binary dir as include dir for the .moc files.
   INCLUDE_DIRECTORIES("${PROJECT_BINARY_DIR}")
 
-  set(MY_MOC_CXX )
+  set(MY_MOC_CXX)
+  set(MY_UI_CXX)
   if(${test})
     ## Moc the tests:
     foreach(FILE_NAME_ABS ${implementation_file_list})

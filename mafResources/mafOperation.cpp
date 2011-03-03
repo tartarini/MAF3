@@ -14,13 +14,7 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafOperation::mafOperation(const QString code_location) : mafResource(code_location), m_IsRunning(false), m_CanUnDo(true), m_OperationType(mafOperationTypeOperation) {
-    // to be moved into the mafOperationManager.
-//    if(mafIdProvider::instance()->idValue("SET_PARAMETERS") == -1) {
-//        mafId setParamId = mafIdProvider::instance()->createNewId("SET_PARAMETERS");
-//        mafRegisterLocalSignal(setParamId, this, "setParametersSignal(QList<QVariant>)");
-//        mafRegisterLocalCallback(setParamId, this, "setParameters(QList<QVariant>)");
-//    }
+mafOperation::mafOperation(const QString code_location) : mafResource(code_location), m_IsRunning(false), m_CanUnDo(true), m_ExecuteOnThread(false), m_AbortExecution(false), m_OperationType(mafOperationTypeOperation) {
 }
 
 mafOperation::~mafOperation() {
@@ -32,6 +26,7 @@ bool mafOperation::initialize() {
 }
 
 void mafOperation::execute() {
+    emit executionEnded();
 }
 
 bool mafOperation::terminate() {
@@ -47,6 +42,6 @@ void mafOperation::reDo() {
 
 }
 
-void mafOperation::setParameters(QList<QVariant> parameters) {
+void mafOperation::setParameters(QVariantList parameters) {
     Q_UNUSED(parameters);
 }

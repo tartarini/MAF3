@@ -40,11 +40,11 @@ void mafServerXMLRPC::startListen(unsigned int port) {
         m_Port = port;
         bool res = m_Logic->startServer("XMLRPC", port);
         if(res) {
-            mafMsgDebug("%s", mafTr("Server listening on port %1").arg(m_Port).toAscii().data());
+            qDebug("%s", mafTr("Server listening on port %1").arg(m_Port).toAscii().data());
         } else {
-            mafMsgCritical("%s", mafTr("Server cannot start listen at port: %1").arg(m_Port).toAscii().data());
+            qCritical("%s", mafTr("Server cannot start listen at port: %1").arg(m_Port).toAscii().data());
         }
     } else {
-        mafMsgDebug("%s", mafTr("Server already running on port %1").arg(m_Port).toAscii().data());
+        qDebug("%s", mafTr("Server already running on port %1").arg(m_Port).toAscii().data());
     }
 }

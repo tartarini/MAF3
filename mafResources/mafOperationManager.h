@@ -61,13 +61,13 @@ signals:
     void operationDidStart(mafCore::mafObjectBase *operation);
 
     /// set the parameters to the current started operation
-    void setOperationParametersSignal(QList<QVariant> parameters);
+    void setOperationParametersSignal(QVariantList parameters);
 
     /// execute current operation
     void executeOperationSignal();
 
     /// Signal that allows to start an operation with some optionals parameters.
-    void executeWithParametersSignal(QList<QVariant> parameters);
+    void executeWithParametersSignal(QVariantList parameters);
 
     /// stop current operation
     void stopOperationSignal();
@@ -94,14 +94,27 @@ private slots:
     /// start operation and set that operation as current one
     void startOperation(const QString operation);
 
-    /// set the parameters to the current started operation
-    void setOperationParameters(QList<QVariant> parameters);
+    /// Set the parameters to the current started operation
+    void setOperationParameters(QVariantList parameters);
 
-    /// execute current operation
+    /// Execute current operation
+    /**
+        This method check the executeOnThread operation's property to decide if the execution has to be done in the main
+        thread or in a separate one. If executeOnThread flag is "true" then the manager create an execution thread and move
+        the operation on that thread, link the start thread signal with the execute operation's slot and start the thread.
+    */
     void executeOperation();
 
+    /// Called when the operation has terminated its execution.
+    /**
+        All the operation should emit the signal executionEnded at the end of the execution. In this way the operation
+        manager is notified and can finalize the operation execution lifetime by placing the operation into the undo stack
+        if it support the undo or it is deleted.
+    */
+    void operationExecuted();
+
     /// initialize the given operation (first element of the list), pass to it the given (optionals) parameters as second element of the list and start the execution of the operation.
-    void executeWithParameters(QList<QVariant> op_with_parameters);
+    void executeWithParameters(QVariantList op_with_parameters);
 
     /// called when a vme has been selected.
     void vmeSelect(mafCore::mafObjectBase *vme);
@@ -141,8 +154,7 @@ private:
     mafOperation *m_LastExecutedOperation; ///< Last executed operation
     QLinkedList<mafOperation *> m_UndoStack; ///< Undo stack which is a linked list of operations
     mafOperation *m_CurrentOperation; ///< Current operation handled by th manager
-//    mafResourceList m_OperationsList; ///< List of plugged operations.
-//    OperationAcceptVMEMap m_OperationAcceptCurentVMEMap; /// Map which determines if the current vme can be input of the operations
+    QThread *m_ExecutionThread; ///< Thread on which execute the operation.
     mafVME *m_SelectedVME; ///< Vme that is currently selected
     mafCore::mafId m_ExecWithParameters; ///< Id associated with the EXECUTE_WITH_PARAMETERS event.
 };
@@ -155,7 +167,7 @@ inline const mafCore::mafObjectBase *mafOperationManager::currentOperation() con
     return (mafCore::mafObjectBase *)m_CurrentOperation;
 }
 
-inline int mafOperationManager::undoStackSize() const{
+inline int mafOperationManager::undoStackSize() const {
     return m_UndoStack.size();
 }
 

@@ -73,7 +73,7 @@ private:
 };
 
 void mafCodecVolumeTest::initTestCase() {
-    QList<QVariant> list;
+    QVariantList list;
     mafMementoPropertyItem item;
     item.m_Multiplicity = 1;
     m_Dimensions[0] = 71;
@@ -93,10 +93,12 @@ void mafCodecVolumeTest::initTestCase() {
     // codecType
     item.m_Name  = "codecType";
     item.m_Value = "RAW_LOD";
+    item.m_Multiplicity = 1;
     propList->append(item);
     // mafDataSetTime
     item.m_Name  = "mafDataSetTime";
     item.m_Value = (double)281210;
+    item.m_Multiplicity = 1;
     propList->append(item);
     // dataHash
     item.m_Name  = "dataHash";
@@ -105,18 +107,22 @@ void mafCodecVolumeTest::initTestCase() {
     // dataType
     item.m_Name  = "dataType";
     item.m_Value = (int)mafUnsignedShort;
+    item.m_Multiplicity = 1;
     propList->append(item);
     // bitsStored
     item.m_Name  = "bitsStored";
     item.m_Value = 12;
+    item.m_Multiplicity = 1;
     propList->append(item);
     // bigEndian
     item.m_Name  = "bigEndian";
     item.m_Value = false;
+    item.m_Multiplicity = 1;
     propList->append(item);
     // componentNum
     item.m_Name  = "componentNum";
     item.m_Value = 1;
+    item.m_Multiplicity = 1;
     propList->append(item);
     // dimensions
     list.clear();
@@ -125,6 +131,7 @@ void mafCodecVolumeTest::initTestCase() {
     list.append(m_Dimensions[2]);
     item.m_Name  = "dimensions";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
     // spacing
     list.clear();
@@ -133,6 +140,7 @@ void mafCodecVolumeTest::initTestCase() {
     list.append(0.13f);
     item.m_Name  = "spacing";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
     // posMatrix
     list.clear();
@@ -144,6 +152,7 @@ void mafCodecVolumeTest::initTestCase() {
     }
     item.m_Name  = "posMatrix";
     item.m_Value = list;
+    item.m_Multiplicity = 16;
     propList->append(item);
     // orginalDimensions
     list.clear();
@@ -152,6 +161,7 @@ void mafCodecVolumeTest::initTestCase() {
     list.append(m_Dimensions[2]);
     item.m_Name  = "originalDimensions";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
     // startPositions
     list.clear();
@@ -160,14 +170,17 @@ void mafCodecVolumeTest::initTestCase() {
     list.append(0);
     item.m_Name  = "startPositions";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
     // multiresolution
     item.m_Name  = "multiresolution";
     item.m_Value = true;
+    item.m_Multiplicity = 1;
     propList->append(item);
     // memoryLimit
     item.m_Name  = "memoryLimit";
     item.m_Value = 64;   // 64k for test, 1M for default
+    item.m_Multiplicity = 1;
     propList->append(item);
     // dataValue
     unsigned short *data = new unsigned short[m_Dimensions[0] * m_Dimensions[1] * m_Dimensions[2]];
@@ -181,6 +194,7 @@ void mafCodecVolumeTest::initTestCase() {
     }
     item.m_Name  = "dataValue";
     item.m_Value = qVariantFromValue((void *)data);
+    item.m_Multiplicity = 1;
     propList->append(item);
 
     m_RGBMemento = new mafMemento();
@@ -189,30 +203,37 @@ void mafCodecVolumeTest::initTestCase() {
     // codecType
     item.m_Name  = "codecType";
     item.m_Value = "RAW_LOD";
+    item.m_Multiplicity = 1;
     propList->append(item);
     // mafDataSetTime
     item.m_Name  = "mafDataSetTime";
     item.m_Value = (double)281210;
+    item.m_Multiplicity = 1;
     propList->append(item);
     // dataHash
     item.m_Name  = "dataHash";
     item.m_Value = m_RGBMemento->objectHash();
+    item.m_Multiplicity = 1;
     propList->append(item);
     // dataType
     item.m_Name  = "dataType";
     item.m_Value = (int)mafUnsignedChar;
+    item.m_Multiplicity = 1;
     propList->append(item);
     // bitsStored
     item.m_Name  = "bitsStored";
     item.m_Value = 8;
+    item.m_Multiplicity = 1;
     propList->append(item);
     // bigEndian
     item.m_Name  = "bigEndian";
     item.m_Value = false;
+    item.m_Multiplicity = 1;
     propList->append(item);
     // componentNum
     item.m_Name  = "componentNum";
     item.m_Value = 3;
+    item.m_Multiplicity = 1;
     propList->append(item);
     // dimensions
     list.clear();
@@ -221,6 +242,7 @@ void mafCodecVolumeTest::initTestCase() {
     list.append(m_Dimensions[2]);
     item.m_Name  = "dimensions";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
     // spacing
     list.clear();
@@ -229,6 +251,7 @@ void mafCodecVolumeTest::initTestCase() {
     list.append(0.13f);
     item.m_Name  = "spacing";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
     // posMatrix
     list.clear();
@@ -240,6 +263,7 @@ void mafCodecVolumeTest::initTestCase() {
     }
     item.m_Name  = "posMatrix";
     item.m_Value = list;
+    item.m_Multiplicity = 16;
     propList->append(item);
     // orginalDimensions
     list.clear();
@@ -248,6 +272,7 @@ void mafCodecVolumeTest::initTestCase() {
     list.append(m_Dimensions[2]);
     item.m_Name  = "originalDimensions";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
     // startPositions
     list.clear();
@@ -256,14 +281,17 @@ void mafCodecVolumeTest::initTestCase() {
     list.append(0);
     item.m_Name  = "startPositions";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
     // multiresolution
     item.m_Name  = "multiresolution";
     item.m_Value = true;
+    item.m_Multiplicity = 1;
     propList->append(item);
     // memoryLimit
     item.m_Name  = "memoryLimit";
     item.m_Value = 64;   // 64k for test, 1M for default
+    item.m_Multiplicity = 1;
     propList->append(item);
     // dataValue
     unsigned char *data2 = new unsigned char[m_Dimensions[0] * m_Dimensions[1] * m_Dimensions[2] * 3];
@@ -279,6 +307,7 @@ void mafCodecVolumeTest::initTestCase() {
     }
     item.m_Name  = "dataValue";
     item.m_Value = qVariantFromValue((void *)data2);
+    item.m_Multiplicity = 1;
     propList->append(item);
 }
 
@@ -433,7 +462,7 @@ void mafCodecVolumeTest::decodeTest() {
 }
 
 void mafCodecVolumeTest::updateTest() {
-    QList<QVariant> list;
+    QVariantList list;
     mafMementoPropertyItem item;
     mafMementoPropertyList *propList = 0;
     int startPos[3], dimensions[3];
@@ -490,6 +519,7 @@ void mafCodecVolumeTest::updateTest() {
     list.append(startPos[2]);
     item.m_Name  = "updatedStartPositions";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
 
     m_CodecRawVolume->update(m_LoadedGrayMemento);
@@ -521,6 +551,7 @@ void mafCodecVolumeTest::updateTest() {
     list.append(dimensions[2]);
     item.m_Name  = "updatedDimensions";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
 
     m_CodecRawVolume->update(m_LoadedGrayMemento);
@@ -539,6 +570,7 @@ void mafCodecVolumeTest::updateTest() {
     list.append(dimensions[2]);
     item.m_Name  = "updatedDimensions";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
 
     m_CodecRawVolume->update(m_LoadedGrayMemento);
@@ -568,6 +600,7 @@ void mafCodecVolumeTest::updateTest() {
     list.append(startPos[2]);
     item.m_Name  = "updatedStartPositions";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
 
     dimensions[0] = m_Dimensions[0] - 15;
@@ -579,6 +612,7 @@ void mafCodecVolumeTest::updateTest() {
     list.append(dimensions[2]);
     item.m_Name  = "updatedDimensions";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
 
     m_CodecRawVolume->update(m_LoadedRGBMemento);
@@ -601,6 +635,7 @@ void mafCodecVolumeTest::updateTest() {
     list.append(startPos[2]);
     item.m_Name  = "updatedStartPositions";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
 
     m_CodecRawVolume->update(m_LoadedRGBMemento);
@@ -621,6 +656,7 @@ void mafCodecVolumeTest::updateTest() {
     list.append(startPos[2]);
     item.m_Name  = "updatedStartPositions";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
 
     dimensions[0] = m_Dimensions[0] - 40;
@@ -632,6 +668,7 @@ void mafCodecVolumeTest::updateTest() {
     list.append(dimensions[2]);
     item.m_Name  = "updatedDimensions";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
 
     m_CodecRawVolume->update(m_LoadedRGBMemento);
@@ -650,6 +687,7 @@ void mafCodecVolumeTest::updateTest() {
     list.append(dimensions[2]);
     item.m_Name  = "updatedDimensions";
     item.m_Value = list;
+    item.m_Multiplicity = 3;
     propList->append(item);
 
     m_CodecRawVolume->update(m_LoadedRGBMemento);
@@ -684,12 +722,12 @@ void mafCodecVolumeTest::verifyGrayMemento(mafMemento *memento, int level, int s
             int currentLevel = item.m_Value.toInt();
             QVERIFY(currentLevel == level);
         } else if (item.m_Name == "startPositions") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)             
                 QVERIFY(list[i].toInt() == startPos[i]);
         } else if (item.m_Name == "dimensions") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 QVERIFY(list[i].toInt() == dimensions[i]);
@@ -726,12 +764,12 @@ void mafCodecVolumeTest::verifyRGBMemento(mafMemento *memento, int level, int st
             int currentLevel = item.m_Value.toInt();
             QVERIFY(currentLevel == level);
         } else if (item.m_Name == "startPositions") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 QVERIFY(list[i].toInt() == startPos[i]);
         } else if (item.m_Name == "dimensions") {
-            QList<QVariant> list = item.m_Value.toList();
+            QVariantList list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
             for (int i = 0; i < 3; ++i)
                 QVERIFY(list[i].toInt() == dimensions[i]);

@@ -16,13 +16,13 @@
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
     if(argc != 3) {
-        mafMsgDebug("%s", mafTr("Usage: \nclientXMLRPC port server_address").toAscii().data());
+        qDebug("%s", mafTr("Usage: \nclientXMLRPC port server_address").toAscii().data());
         exit(0);
     }
 
     mafClientXMLRPC client;
-    mafString port(argv[1]);
-    mafString address(argv[2]);
+    QString port(argv[1]);
+    QString address(argv[2]);
     client.connectToServer(port.toUInt(), address);
 
     //event dictionary
@@ -32,21 +32,21 @@ int main(int argc, char *argv[]) {
 
     //remote event parameters
     mafEventBus::mafEventArgumentsList listToSend;
-    mafList<mafVariant> eventParameters;
+    QVariantList eventParameters;
     eventParameters.append("maf.local.resources.operation.executeWithParameters");
-    listToSend.append(Q_ARG(mafList<mafVariant>, eventParameters));
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
 
-    //remote data parameters (need to send for operation < nameOfOperation , List of mafVariant arguments >
-    mafList<mafVariant> dataParameters;
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    QVariantList dataParameters;
     dataParameters.append("mafAlgorithm");
 
-    mafList<mafVariant> operationParameters;
+    QVariantList operationParameters;
     operationParameters.append("input");
     operationParameters.append("output");
     operationParameters.append(3);
     dataParameters.push_back(operationParameters); //here must be put a dictionary
 
-    listToSend.append(Q_ARG(mafList<mafVariant>, dataParameters));
+    listToSend.append(Q_ARG(QVariantList, dataParameters));
 
 
     client.sendRequestToServer(&event_dictionary, &listToSend);

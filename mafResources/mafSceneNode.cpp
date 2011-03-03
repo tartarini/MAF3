@@ -34,9 +34,7 @@ void mafSceneNode::setSelected(bool sel) {
         m_Selected = sel;
         if(m_Selected) {
             // notify the VME selection.
-            mafEventArgumentsList argList;
-            argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
-            mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+            m_VME->setSelected(true);
         }
     }
 }

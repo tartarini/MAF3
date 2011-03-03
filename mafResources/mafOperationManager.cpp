@@ -30,7 +30,7 @@ mafOperationManager* mafOperationManager::instance() {
 void mafOperationManager::shutdown() {
 }
 
-mafOperationManager::mafOperationManager(const QString code_location) : mafObjectBase(code_location), m_LastExecutedOperation(NULL), m_CurrentOperation(NULL) {
+mafOperationManager::mafOperationManager(const QString code_location) : mafObjectBase(code_location), m_LastExecutedOperation(NULL), m_CurrentOperation(NULL), m_ExecutionThread(NULL) {
     initializeConnections();
 
     //request of the selected vme
@@ -60,58 +60,44 @@ void mafOperationManager::initializeConnections() {
     provider->createNewId("maf.local.resources.operation.lastExecuted");
 
     // Register API signals.
-    mafRegisterLocalSignal("maf.local.resources.operation.start", this, "startOperationSignal(const QString)");
-    mafRegisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
-    mafRegisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(QList<QVariant>)");
-    mafRegisterLocalSignal("maf.local.resources.operation.execute", this, "executeOperationSignal()");
-    mafRegisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(QList<QVariant>)");
-    mafRegisterLocalSignal("maf.local.resources.operation.stop", this, "stopOperationSignal()");
-    mafRegisterLocalSignal("maf.local.resources.operation.undo", this, "undoOperationSignal()");
-    mafRegisterLocalSignal("maf.local.resources.operation.redo", this, "redoOperationSignal()");
-    mafRegisterLocalSignal("maf.local.resources.operation.clearUndoStack", this, "clearUndoStackSignal()");
-    mafRegisterLocalSignal("maf.local.resources.operation.sizeUndoStack", this, "undoStackSizeSignal()");
-    mafRegisterLocalSignal("maf.local.resources.operation.currentRunning", this, "currentOperationSignal()");
-    mafRegisterLocalSignal("maf.local.resources.operation.lastExecuted", this, "lastExecutedOperationSignal()");
+    mafRegisterLocalSignal("maf.local.resources.operation.start", this, "startOperationSignal(const QString)")
+    mafRegisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)")
+    mafRegisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(QVariantList)")
+    mafRegisterLocalSignal("maf.local.resources.operation.execute", this, "executeOperationSignal()")
+    mafRegisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(QVariantList)")
+    mafRegisterLocalSignal("maf.local.resources.operation.stop", this, "stopOperationSignal()")
+    mafRegisterLocalSignal("maf.local.resources.operation.undo", this, "undoOperationSignal()")
+    mafRegisterLocalSignal("maf.local.resources.operation.redo", this, "redoOperationSignal()")
+    mafRegisterLocalSignal("maf.local.resources.operation.clearUndoStack", this, "clearUndoStackSignal()")
+    mafRegisterLocalSignal("maf.local.resources.operation.sizeUndoStack", this, "undoStackSizeSignal()")
+    mafRegisterLocalSignal("maf.local.resources.operation.currentRunning", this, "currentOperationSignal()")
+    mafRegisterLocalSignal("maf.local.resources.operation.lastExecuted", this, "lastExecutedOperationSignal()")
 
     // Register private callbacks to the instance of the manager..
-    mafRegisterLocalCallback("maf.local.resources.operation.start", this, "startOperation(const QString)");
-    mafRegisterLocalCallback("maf.local.resources.operation.setParameters", this, "setOperationParameters(QList<QVariant>)");
-    mafRegisterLocalCallback("maf.local.resources.operation.execute", this, "executeOperation()");
-    mafRegisterLocalCallback("maf.local.resources.operation.executeWithParameters", this, "executeWithParameters(QList<QVariant>)");
-    mafRegisterLocalCallback("maf.local.resources.operation.stop", this, "stopOperation()");
-    mafRegisterLocalCallback("maf.local.resources.operation.undo", this, "undoOperation()");
-    mafRegisterLocalCallback("maf.local.resources.operation.redo", this, "redoOperation()");
-    mafRegisterLocalCallback("maf.local.resources.operation.clearUndoStack", this, "clearUndoStack()");
-    mafRegisterLocalCallback("maf.local.resources.operation.sizeUndoStack", this, "undoStackSize()");
-    mafRegisterLocalCallback("maf.local.resources.operation.currentRunning", this, "currentOperation()");
-    mafRegisterLocalCallback("maf.local.resources.operation.lastExecuted", this, "lastExecutedOperation()");
+    mafRegisterLocalCallback("maf.local.resources.operation.start", this, "startOperation(const QString)")
+    mafRegisterLocalCallback("maf.local.resources.operation.setParameters", this, "setOperationParameters(QVariantList)")
+    mafRegisterLocalCallback("maf.local.resources.operation.execute", this, "executeOperation()")
+    mafRegisterLocalCallback("maf.local.resources.operation.executeWithParameters", this, "executeWithParameters(QVariantList)")
+    mafRegisterLocalCallback("maf.local.resources.operation.stop", this, "stopOperation()")
+    mafRegisterLocalCallback("maf.local.resources.operation.undo", this, "undoOperation()")
+    mafRegisterLocalCallback("maf.local.resources.operation.redo", this, "redoOperation()")
+    mafRegisterLocalCallback("maf.local.resources.operation.clearUndoStack", this, "clearUndoStack()")
+    mafRegisterLocalCallback("maf.local.resources.operation.sizeUndoStack", this, "undoStackSize()")
+    mafRegisterLocalCallback("maf.local.resources.operation.currentRunning", this, "currentOperation()")
+    mafRegisterLocalCallback("maf.local.resources.operation.lastExecuted", this, "lastExecutedOperation()")
 
-    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)");
+    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)")
 }
 
 
 void mafOperationManager::vmeSelect(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafResources::mafVME*>(obj);
     if(vme && vme != m_SelectedVME) {
-        // VME has been selected.
         m_SelectedVME = vme;
-
-//        const QMetaObject* metaVme = vme->metaObject();
-//
-//        m_OperationAcceptCurentVMEMap.clear();
-//        foreach(mafResource *v, m_OperationsList) {
-//            const QMetaObject* metaOp = v->metaObject();
-//            //need a check on all the operations for accept objects
-//            QStringList binding_class_list;
-//            binding_class_list = mafResourcesRegistration::acceptObject(v);
-//            bool isAccepted = binding_class_list.contains(metaVme->className());
-//            // instead of name , put struct with label
-//            m_OperationAcceptCurentVMEMap.insert(metaOp->className(), isAccepted);
-//        }
     }
 }
 
-void mafOperationManager::executeWithParameters(QList<QVariant> op_with_parameters) {
+void mafOperationManager::executeWithParameters(QVariantList op_with_parameters) {
     REQUIRE(op_with_parameters.count() == 2);
     //parameters contains as first argument the operation name
     QString op_to_run = op_with_parameters.at(0).toString();
@@ -123,7 +109,7 @@ void mafOperationManager::executeWithParameters(QList<QVariant> op_with_paramete
     this->executeOperation();
 }
 
-void mafOperationManager::setOperationParameters(QList<QVariant> parameters) {
+void mafOperationManager::setOperationParameters(QVariantList parameters) {
     REQUIRE(m_CurrentOperation);
     m_CurrentOperation->setParameters(parameters);
 }
@@ -154,43 +140,57 @@ void mafOperationManager::startOperation(const QString operation) {
 }
 
 void mafOperationManager::executeOperation() {
-    if(m_CurrentOperation != NULL) {
-        m_CurrentOperation->execute();
-        // check if operation canUndo
-        if(!m_CurrentOperation->canUnDo()) {
-            clearUndoStack();
-            m_LastExecutedOperation = NULL;
-            mafDEL(m_CurrentOperation);
-            return;
+    if ( m_CurrentOperation != NULL ) {
+        connect(m_CurrentOperation, SIGNAL(executionEnded()), this, SLOT(operationExecuted()));
+
+        if ( m_CurrentOperation->executeOnThread() ) {
+            // Create a thread and move the operation's execution on it.
+            m_ExecutionThread = new QThread();
+            connect(m_ExecutionThread, SIGNAL(started()), m_CurrentOperation, SLOT(execute()));
+            connect(m_CurrentOperation, SIGNAL(executionEnded()), m_ExecutionThread, SLOT(quit()));
+            m_CurrentOperation->moveToThread(m_ExecutionThread);
+            m_ExecutionThread->start();
+        } else {
+            // Simply call the operation's execution.
+            m_CurrentOperation->execute();
         }
+    }
+}
 
-        if(m_CurrentOperation->isRunning()) {
-            //undo stack insertion
-            QLinkedList<mafOperation*>::Iterator i;
-            if(m_LastExecutedOperation == NULL) {
-                clearUndoStack();
-            } else {
-                bool found = false;
-                for(i = m_UndoStack.begin() ; i != m_UndoStack.end(); ++i) {
-                    if(found) {
-                        mafDEL((*i));
-                    }
-                    if(*i == m_LastExecutedOperation) {
-                        found = true;
-                    }
+void mafOperationManager::operationExecuted() {
+    // check if operation canUndo
+    if ( !m_CurrentOperation->canUnDo() ) {
+        clearUndoStack();
+        m_LastExecutedOperation = NULL;
+        mafDEL(m_CurrentOperation);
+        return;
+    }
+
+    if ( m_CurrentOperation->isRunning() ) {
+        //undo stack insertion
+        QLinkedList<mafOperation*>::Iterator i;
+        if ( m_LastExecutedOperation == NULL ) {
+            clearUndoStack();
+        } else {
+            bool found = false;
+            for ( i = m_UndoStack.begin() ; i != m_UndoStack.end(); ++i ) {
+                if ( found ) {
+                    mafDEL((*i));
                 }
-
-                while(m_UndoStack.last() == NULL) {
-                    m_UndoStack.pop_back();
+                if ( *i == m_LastExecutedOperation ) {
+                    found = true;
                 }
             }
 
-
-            m_LastExecutedOperation = m_CurrentOperation;
-            m_UndoStack.push_back(m_LastExecutedOperation);
+            while ( m_UndoStack.last() == NULL ) {
+                m_UndoStack.pop_back();
+            }
         }
-        m_CurrentOperation = NULL;
+
+        m_LastExecutedOperation = m_CurrentOperation;
+        m_UndoStack.push_back(m_LastExecutedOperation);
     }
+    m_CurrentOperation = NULL;
 }
 
 void mafOperationManager::stopOperation() {

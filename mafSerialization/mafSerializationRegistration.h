@@ -28,28 +28,23 @@ namespace mafSerialization {
  Class name: mafSerializationRegistration
  This class allows object rigisteration for all the classes present in mafSerialization module.
  */
-class MAFSERIALIZATIONSHARED_EXPORT mafSerializationRegistration {
+class mafSerializationRegistration {
     public:
     /// Register all the concrete objects that can be instantiated by the mafObjectFactory.
-    /** This registration is needed to instantiate object by using the mafNEWFromString macro present in objectFactory which needs as input the object type to instantiate as string.*/
-    static void registerSerializationObjects() {
-        mafRegisterObject(mafSerialization::mafCodecRawBinary);
-        mafRegisterObject(mafSerialization::mafCodecRawASCII);
-        mafRegisterObject(mafSerialization::mafCodecVolume);
-        mafRegisterObject(mafSerialization::mafCodecBrickedVolume);
-        mafRegisterObject(mafSerialization::mafCodecXML);
-        mafRegisterObject(mafSerialization::mafSerializerFileSystem);
+    /** This registration is needed to instantiate object by using the mafNEWFromString macro present in objectFactory
+    which needs as input the object type to instantiate as string.*/
+    MAFSERIALIZATIONSHARED_EXPORT static void registerSerializationObjects();
 
-        //mafRegisterObject(mafSerialization::mafCSVReader);
-    }
-
-//    static void registerSerializationCustomObjects() {
-//    }
+    /// Unregister all the concrete objects from mafObjectFactory.
+    MAFSERIALIZATIONSHARED_EXPORT static void unregisterSerializationObjects();
 };
 
 extern "C" {
     /// Initialize the module by instantiating the singletons and register all the classes with the mafObjectFactory.
     MAFSERIALIZATIONSHARED_EXPORT void initializeModule();
+
+    /// Shutdown the module by shuting down the singletons and un-register all the classes from the mafObjectFactory.
+    MAFSERIALIZATIONSHARED_EXPORT void shutdownModule();
 }
 
 } // mafSerialization

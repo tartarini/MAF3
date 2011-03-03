@@ -28,13 +28,13 @@ public:
     ~mafQAChecker();
 
     /// execute the given script or executable
-    void execute(mafString script, mafStringList argList);
+    void execute(QString script, QStringList argList);
 
     /// profile the execution of the given script or executable
-    void executeAndProfile(mafString script, mafStringList argList);
+    void executeAndProfile(QString script, QStringList argList);
 
     /// Validate the given plugin.
-    void validatePlugin(mafString plugin);
+    void validatePlugin(QString plugin);
 
 private:
     mafQA::mafQAManager *m_QaManager; ///< QA Manager.

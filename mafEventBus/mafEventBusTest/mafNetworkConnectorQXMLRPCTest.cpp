@@ -124,19 +124,19 @@ void mafNetworkConnectorQXMLRPCTest::mafNetworkConnectorQXMLRPCCommunictionTest(
     //first parameter is a list which contains event prperties
 
 
-    QList<QVariant> eventParameters;
+    QVariantList eventParameters;
     eventParameters.append("maf.local.eventBus.globalUpdate");
     eventParameters.append(mafEventTypeLocal);
     eventParameters.append(mafSignatureTypeCallback);
     eventParameters.append("updateObject()");
 
-    QList<QVariant> dataParameters;
+    QVariantList dataParameters;
 
     mafEventArgumentsList listToSend;
-    listToSend.append(mafEventArgument(QList<QVariant>, eventParameters));
-    listToSend.append(mafEventArgument(QList<QVariant>, dataParameters));
+    listToSend.append(mafEventArgument(QVariantList, eventParameters));
+    listToSend.append(mafEventArgument(QVariantList, dataParameters));
 
-    m_NetWorkConnectorQXMLRPC->send("maf.remote.eventBus.comunication.send.xmlrpc", &listToSend);
+    m_NetWorkConnectorQXMLRPC->send("maf.remote.eventBus.communication.send.xmlrpc", &listToSend);
 
 
     QTime dieTime = QTime::currentTime().addSecs(3);

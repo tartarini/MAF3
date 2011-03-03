@@ -24,7 +24,7 @@ class mafAlgorithm : public mafResources::mafOperation {
 
 public:
     /// Object constructor
-    mafAlgorithm(const mafString code_location = "");
+    mafAlgorithm(const QString code_location = "");
 
 signals:
     /// Trigger the start execution of the operation.
@@ -32,14 +32,14 @@ signals:
 
 public slots:
     /// set Parameters of the operation
-    /* virtual */ void setParameters(mafList<mafVariant> parameters);
+    /* virtual */ void setParameters(QList<QVariant> parameters);
 
     /// Execute the resource algorithm.
     /*virtual*/ void execute();
 
 private:
-    mafString m_FileNameInput;
-    mafString m_FileNameOutput;
+    QString m_FileNameInput;
+    QString m_FileNameOutput;
     int m_IterationParameter;
 };
 

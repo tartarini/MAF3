@@ -24,14 +24,14 @@ public:
     ~mafClientXMLRPC();
 
     /// create connection to the server at parametric address/port
-    void connectToServer(unsigned int port, mafString address);
+    void connectToServer(unsigned int port, QString address);
 
 //public slots:
     /// send request to the server
     void sendRequestToServer(mafEventBus::mafEvent *event_dictionary, mafEventBus::mafEventArgumentsList *listToSend = NULL);
 
 private:
-    mafString m_Address; /// Address giving as host or IP
+    QString m_Address; /// Address giving as host or IP
     unsigned int m_Port; ///< Port on which the server will listen.
     mafApplicationLogic::mafLogicLight *m_Logic; ///< Application's logic.
 };

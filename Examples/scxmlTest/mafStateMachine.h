@@ -20,7 +20,7 @@ class mafStateMachine : public mafCore::mafObjectBase  {
 
 public:
     /// Object constructor.
-    mafStateMachine(QScxml *state_machine, const mafString code_location = "");
+    mafStateMachine(QScxml *state_machine, const QString code_location = "");
 
     /// Object destructor.
     /* virtual */ ~mafStateMachine();
@@ -32,10 +32,10 @@ public:
     mafModel *model() {return m_Model;}
 
     /// Set the current executed state name.
-    void setCurrentState(mafString name);
+    void setCurrentState(QString name);
 
     /// Return the current executed state name.
-    mafString currentState();
+    QString currentState();
 
 public slots:
     /// Slot that use the data written inside the model.
@@ -43,11 +43,11 @@ public slots:
 
 private:
     QScxml *m_StateMachine; ///< Reference to the scripting state machine.
-    mafString m_CurrentState; ///< Reference to the current executed state.
+    QString m_CurrentState; ///< Reference to the current executed state.
     mafModel *m_Model; ///< Reference to the current model.
 };
 
-inline mafString mafStateMachine::currentState() {
+inline QString mafStateMachine::currentState() {
     return m_CurrentState;
 }
 

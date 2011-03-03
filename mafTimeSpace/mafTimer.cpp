@@ -20,7 +20,7 @@ mafTimer::mafTimer(const QString code_location) : mafObjectBase(code_location), 
     m_Timer = new QTimer(this);
     connect(m_Timer, SIGNAL(timeout()), this, SLOT(update()));
     m_ObjectId = mafIdProvider::instance()->idName(objectId());
-    mafRegisterLocalSignal(m_ObjectId, this, "timeoutReached()");
+    mafRegisterLocalSignal(m_ObjectId, this, "timeoutReached()")
 }
 
 mafTimer::~mafTimer() {

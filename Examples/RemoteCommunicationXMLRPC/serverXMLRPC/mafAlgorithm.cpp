@@ -17,22 +17,22 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
 
-mafAlgorithm::mafAlgorithm(const mafString code_location) : mafOperation(code_location) {
+mafAlgorithm::mafAlgorithm(const QString code_location) : mafOperation(code_location) {
 }
 
-void mafAlgorithm::setParameters(mafList<mafVariant> parameters) {
+void mafAlgorithm::setParameters(QList<QVariant> parameters) {
     m_FileNameInput = parameters.at(0).toString();
     m_FileNameOutput = parameters.at(1).toString();
     m_IterationParameter = parameters.at(2).toInt();
 }
 
 void mafAlgorithm::execute() {
-    mafMsgDebug("%s", mafTr("Executing testProcess!!!").toAscii().data());
+    qDebug("%s", mafTr("Executing testProcess!!!").toAscii().data());
 
-    mafStringList commandAndParameters;
+    QStringList commandAndParameters;
     commandAndParameters << m_FileNameInput.toAscii()  \
                         << m_FileNameOutput.toAscii() \
-                        << mafString::number(m_IterationParameter);
+                        << QString::number(m_IterationParameter);
 
-    bool ok = mafProcess::execute("./testProcess" ,commandAndParameters) == 0;
+    bool ok = QProcess::execute("./testProcess" ,commandAndParameters) == 0;
 }

@@ -297,10 +297,10 @@ void mafNetworkConnectorQtSoap::processRequest( int requestId, QString methodNam
     int size = parameters.count();
 
     mafEventArgumentsList *argList = NULL;
-    QList<QVariant> *p = & (parameters.at(1).value< QList<QVariant> >());
+    QVariantList *p = & (parameters.at(1).value< QVariantList >());
     if(size > 1 && p->count() != 0) {
         argList = new mafEventArgumentsList();
-        argList->push_back(Q_ARG(QList<QVariant>, *p));
+        argList->push_back(Q_ARG(QVariantList, *p));
     }
 
     if ( mafEventBusManager::instance()->isLocalSignalPresent(id_name) ) {
