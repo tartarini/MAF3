@@ -14,7 +14,7 @@
 
 #include <QtCore/qglobal.h>
 
-#if defined(MAFEVENTBUS_LIBRARY)
+#if defined(mafEventBus_EXPORTS)
 #  define MAFEVENTBUSSHARED_EXPORT Q_DECL_EXPORT
 #else
 #  define MAFEVENTBUSSHARED_EXPORT Q_DECL_IMPORT
