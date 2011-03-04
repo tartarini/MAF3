@@ -56,7 +56,6 @@ void mafTreeModel::buildModel(bool init) {
 
 bool mafTreeModel::submit() {
     if (m_CurrentItem->parent() == NULL) {
-        m_CurrentItem->setText("root");
         return false;
     }
     m_CurrentItem->data()->setObjectName(m_CurrentItem->text());
