@@ -14,7 +14,7 @@
 
 #include <QtCore/qglobal.h>
 
-#if defined(MAFAPPLICATIONLOGIC_LIBRARY)
+#if defined(mafApplicationLogic_EXPORTS)
 #  define MAFAPPLICATIONLOGICSHARED_EXPORT Q_DECL_EXPORT
 #else
 #  define MAFAPPLICATIONLOGICSHARED_EXPORT Q_DECL_IMPORT
