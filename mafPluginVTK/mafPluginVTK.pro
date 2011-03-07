@@ -7,7 +7,7 @@ TEMPLATE = lib
 CONFIG += create_prl
 CONFIG += link_prl
 win32:CONFIG += dll
-DEFINES += MAFPLUGIN_VTK
+DEFINES += mafPluginVTK_EXPORTS
 
 SOURCES += mafDataBoundaryAlgorithmVTK.cpp \
     mafPluginRegistrator.cpp \

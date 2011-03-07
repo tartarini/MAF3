@@ -15,7 +15,7 @@
 #include <QtCore/qglobal.h>
 #include "mafSerializationDefinitions.h"
 
-#if defined(MAFSERIALIZATION_LIBRARY)
+#if defined(mafSerialization_EXPORTS)
 #  define MAFSERIALIZATIONSHARED_EXPORT Q_DECL_EXPORT
 #else
 #  define MAFSERIALIZATIONSHARED_EXPORT Q_DECL_IMPORT

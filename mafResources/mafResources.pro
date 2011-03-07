@@ -7,7 +7,7 @@ TEMPLATE = lib
 CONFIG += create_prl
 CONFIG += link_prl
 win32:CONFIG += dll
-DEFINES += MAFRESOURCES_LIBRARY
+DEFINES += mafResources_EXPORTS
 SOURCES += mafResource.cpp \
     mafMementoResource.cpp \
     mafVME.cpp \

@@ -14,7 +14,7 @@
 
 #include <QtCore/qglobal.h>
 
-#if defined(MAFRESOURCES_LIBRARY)
+#if defined(mafResources_EXPORTS)
 #  define MAFRESOURCESSHARED_EXPORT Q_DECL_EXPORT
 #else
 #  define MAFRESOURCESSHARED_EXPORT Q_DECL_IMPORT
