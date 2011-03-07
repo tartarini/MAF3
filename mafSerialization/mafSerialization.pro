@@ -8,7 +8,7 @@ TEMPLATE = lib
 CONFIG += create_prl
 CONFIG += link_prl
 win32:CONFIG += dll
-DEFINES += MAFSERIALIZATION_LIBRARY
+DEFINES += mafSerialization_EXPORTS
 SOURCES += mafSerializationManager.cpp \
     mafCodec.cpp \
     mafCodecRawBinary.cpp \

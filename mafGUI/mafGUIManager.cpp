@@ -17,6 +17,7 @@
 #include "mafTextEditWidget.h"
 #include "mafTextHighlighter.h"
 #include "mafGUIApplicationSettingsDialog.h"
+#include "mafTreeItemDelegate.h"
 
 #include <mafOperationWidget.h>
 
@@ -359,6 +360,7 @@ void mafGUIManager::removeOperationGUI() {
 mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *parent) {
 //    QSettings settings;
     mafTreeWidget *w = new mafTreeWidget();
+    mafTreeItemDelegate *itemDelegate = new mafTreeItemDelegate(this);
     w->setAnimated(true);
     w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     w->setMinimumSize(200, 0);
@@ -375,6 +377,7 @@ mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *par
     }
 
     w->setModel( model );
+    w->setItemDelegate(itemDelegate);
     return w;
 }
 

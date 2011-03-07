@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/root.png</file>
+        <file>images/questionMark.png</file>
+        <file>images/surface.png</file>
+        <file>images/lock_icon.png</file>
+    </qresource>
+</RCC>

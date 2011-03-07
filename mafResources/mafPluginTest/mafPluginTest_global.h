@@ -14,7 +14,7 @@
 
 #include <QtCore/qglobal.h>
 
-#if defined(MAFPLUGIN_TEST)
+#if defined(mafPlugin_EXPORTS)
 #  define MAFPLUGINTESTSHARED_EXPORT Q_DECL_EXPORT
 #else
 #  define MAFPLUGINTESTSHARED_EXPORT Q_DECL_IMPORT

@@ -15,7 +15,7 @@
 #include <QtCore/qglobal.h>
 #include "mafCoreDefinitions.h"
 
-#if defined(MAFQA_LIBRARY)
+#if defined(mafQA_EXPORTS)
 #  define MAFQASHARED_EXPORT Q_DECL_EXPORT
 #else
 #  define MAFQASHARED_EXPORT Q_DECL_IMPORT

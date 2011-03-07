@@ -56,3 +56,7 @@ void mafSceneNode::setVisualPipe(QString visualPipeType) {
     connect(m_VisualPipe, SIGNAL(destroyed()), this, SLOT(visualPipeDestroyed()));
 }
 
+void mafSceneNode::setVisibility(bool visible) {
+    m_Visibility = visible;
+}
+

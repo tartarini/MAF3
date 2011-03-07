@@ -15,7 +15,7 @@
 #include <QtCore/qglobal.h>
 #include "mafTimeSpaceDefinitions.h"
 
-#if defined(MAFTIMESPACE_LIBRARY)
+#if defined(mafTimeSpace_EXPORTS)
 #  define MAFTIMESPACESHARED_EXPORT Q_DECL_EXPORT
 #else
 #  define MAFTIMESPACESHARED_EXPORT Q_DECL_IMPORT

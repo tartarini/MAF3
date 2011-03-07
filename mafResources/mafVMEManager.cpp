@@ -121,6 +121,7 @@ mafCore::mafHierarchyPointer mafVMEManager::createVMEHierarchy() {
          //Create a new root.
          m_Root = mafNEW(mafResources::mafVME);
          m_Root->setObjectName("root");
+         m_Root->setProperty("iconFile", ":/images/root.png");
 
          m_VMEHierarchy->addHierarchyNode(m_Root);
 
