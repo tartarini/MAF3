@@ -38,7 +38,7 @@ void mafMonitorHardDisk::update() {
                        (PULARGE_INTEGER) &lpTotalNumberOfBytes,
     (PULARGE_INTEGER) &lpTotalNumberOfFreeBytes);
 #else
-    GetDiskFreeSpaceEx("C:\\", (PULARGE_INTEGER)&lpFreeBytesAvaibleToCaller,
+    GetDiskFreeSpaceEx(L"C:\\", (PULARGE_INTEGER)&lpFreeBytesAvaibleToCaller,
                        (PULARGE_INTEGER) &lpTotalNumberOfBytes,
     (PULARGE_INTEGER) &lpTotalNumberOfFreeBytes);
 #endif
