@@ -36,7 +36,8 @@ SOURCES += mafResource.cpp \
     mafInteractionManager.cpp \
     mafInteractor.cpp \
     mafMementoViewManager.cpp \
-    mafDataBoundaryAlgorithm.cpp
+    mafDataBoundaryAlgorithm.cpp \
+    mafResourceWorker.cpp
 HEADERS += mafResource.h \
     mafResources_global.h \
     mafResourcesDefinitions.h \
@@ -67,7 +68,8 @@ HEADERS += mafResource.h \
     mafMementoDataSet.h \
     mafInteractionManager.h \
     mafInteractor.h \
-    mafMementoViewManager.h
+    mafMementoViewManager.h \
+    mafResourceWorker.h
 include(../mafInstallModule.pri)
 include(../mafImportVXL.pri)
 include(../mafImportQXMLRPC.pri)
