@@ -23,7 +23,7 @@
 namespace mafGUI {
 /**
 Class Name: mafTreeItemDelegate
-
+This class is responsible for display and editing items of the tree model.
 */
 
 class MAFGUISHARED_EXPORT mafTreeItemDelegate : public QStyledItemDelegate {
@@ -31,9 +31,6 @@ Q_OBJECT
 public:
     /// Object constructor.
     /*explicit*/ mafTreeItemDelegate(QObject *parent = 0);
-
-    /// Returns the editor to be used for editing the data item with the given index.
-    /*virtual */ //QWidget *createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
 
     /// Sets the contents of the given editor to the data for the item at the given index.
     /*virtual */ void setEditorData( QWidget * editor, const QModelIndex & index ) const;
@@ -46,6 +43,9 @@ public:
 
     /// Returns the size needed by the delegate to display the item specified by index.
     /*virtual */ QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+
+    /// Convert colored QPixmap to greyscale.
+    QPixmap toGrayScale(QPixmap icon) const;
 
 signals:
     /// Alert observers about checkbox status.

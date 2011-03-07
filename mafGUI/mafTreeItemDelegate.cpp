@@ -30,20 +30,10 @@ using namespace mafGUI;
 mafTreeItemDelegate::mafTreeItemDelegate(QObject *parent) : QStyledItemDelegate(parent) {
 }
 
-//QWidget *mafTreeItemDelegate::createEditor( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const {
-//    QLineEdit *textEditor = new QLineEdit(parent);
-//    mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
-//    QObject *objItem = item->data();
-//    //textEditor->setText(objItem->property("objectName").toString());
-//    return textEditor;
-
-//}
-
 void mafTreeItemDelegate::setEditorData( QWidget * editor, const QModelIndex & index ) const {
     QString text = index.model()->data(index, Qt::EditRole).toString();
     QLineEdit *textEditor = static_cast<QLineEdit*>(editor);
     textEditor->setText(text);
-    //warning: not working for root!!
 }
 
 void mafTreeItemDelegate::setModelData(QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const {
@@ -59,13 +49,22 @@ void mafTreeItemDelegate::setModelData(QWidget * editor, QAbstractItemModel * mo
 }
 
 void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
+    QPalette::ColorRole textColorRole = QPalette::NoRole;
+    QString vmeIconFile;
+    QPixmap vmeIcon;
+
     //Check if model is a mafSceneNode and set property visibility.
     mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
     QObject *objItem = item->data();
 
-    QPalette::ColorRole textColorRole = QPalette::NoRole;
-    QString iconFile;
-    QPixmap icon;
+    //Load icon of the VME
+    vmeIconFile = objItem->property("iconFile").toString();
+    vmeIcon = QPixmap(vmeIconFile);
+    if(vmeIcon.isNull()) {
+        //default image
+        vmeIcon = QPixmap(":/images/questionMark.png");
+    }
+
     //Get lock status
     int lockStatus = objItem->property("lockStatus").toInt();
     switch (lockStatus) {
@@ -82,7 +81,6 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
             } else {
                 checkBoxOption.state |= QStyle::State_Off;
             }
-
             QString objType = objItem->metaObject()->className();
             if(objType.compare("mafResources::mafSceneNode") == 0){
                 bool visibility = objItem->property("visibility").toBool();
@@ -96,34 +94,28 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
         case mafCore::mafObjectLockRead: {
             //and case mafCore::mafObjectLockWrite:
             //Draw lock Icon.
-            icon = QPixmap(":/images/lock_icon.png");
+            QPixmap lockIcon;
+            lockIcon = QPixmap(":/images/lock_icon.png");
+            // set Label in grey
             textColorRole = QPalette::Mid;
             //Draw Icon.
-            QApplication::style()->drawItemPixmap(painter, option.rect, Qt::AlignLeft | Qt::AlignVCenter, icon);
+            QApplication::style()->drawItemPixmap(painter, option.rect, Qt::AlignLeft | Qt::AlignVCenter, lockIcon);
+            // set vmeIcon to greyscale
+            vmeIcon = this->toGrayScale(vmeIcon);
         break;
         }
     }
-
     //Set icon beside checkbox
     int x = option.rect.x() +20; //replace 20 with the width of the checkbox.
     int y = option.rect.y();
     int w = option.rect.width() ;
     int h = option.rect.height();
 
-    iconFile = objItem->property("iconFile").toString();
-    icon = QPixmap(iconFile,);
-    if(icon.isNull()) {
-        //default image
-        //icon = QPixmap(":/images/questionMark.png");
-        icon = QPixmap(":/images/lock_icon.png");
-        textColorRole = QPalette::Mid;
-    }
+    //Draw vmeIcon.
+    QApplication::style()->drawItemPixmap(painter, QRect(x, y, w, h), Qt::AlignLeft | Qt::AlignVCenter, vmeIcon);
 
-    //Draw Icon.
-    QApplication::style()->drawItemPixmap(painter, QRect(x, y, w, h), Qt::AlignLeft | Qt::AlignVCenter, icon);
-
-    //Set VME name beside icon
-    int newX = x + icon.rect().width() + 5; //set 5 to create a little space..
+    //Set VME name beside vmeIcon
+    int newX = x + vmeIcon.rect().width() + 5; //set 5 to create a little space..
 
     //Get the name of the Object
     QString itemName = objItem->property("objectName").toString();
@@ -133,6 +125,24 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 
 QSize mafTreeItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
         return QSize(20,20);
+}
+
+QPixmap mafTreeItemDelegate::toGrayScale(QPixmap icon) const {
+    QPixmap pix = icon;
+    QImage image = icon.toImage();
+    QRgb col;
+    int gray;
+    int width = icon.width();
+    int height = icon.height();
+    for (int i = 0; i < width; ++i) {
+        for (int j = 0; j < height; ++j) {
+            col = image.pixel(i, j);
+            gray = qGray(col);
+            image.setPixel(i, j, qRgb(gray, gray, gray));
+        }
+    }
+    pix = pix.fromImage(image);
+    return pix;
 }
 
 
