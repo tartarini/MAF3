@@ -175,12 +175,19 @@ MACRO(mafMacroWrapBuild)
       set(lib_name ${lib_prefix}${PROJECT_NAME}${lib_ext})
 	  set(wrap_lib_prefix "_")
       set(wrap_lib_name ${wrap_lib_prefix}${PROJECT_NAME}${wrap_lib_ext})
-    
+      
+      set(SHARED_LIB_COPY_COMMAND)
+      IF(MSVC)
+          set(SHARED_LIB_COPY_SOURCE ${LIBRARY_OUTPUT_PATH}${CMAKE_CFG_INTDIR}/${lib_name})
+      ELSE(MSVC)
+          set(SHARED_LIB_COPY_SOURCE ${LIBRARY_OUTPUT_PATH}${lib_name})
+      ENDIF(MSVC)
+      
       add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i
         COMMAND ${CMAKE_COMMAND} ARGS -E  make_directory ${CMAKE_BINARY_DIR}/modules
         COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}.py ${CMAKE_BINARY_DIR}/modules
-        COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${LIBRARY_OUTPUT_PATH}${lib_name} ${CMAKE_BINARY_DIR}/modules/${wrap_lib_name}
+        COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${SHARED_LIB_COPY_SOURCE} ${CMAKE_BINARY_DIR}/modules/${wrap_lib_name}
         COMMENT "-- Moving python modules to ${CMAKE_BINARY_DIR}/modules")
 
       set(${PROJECT_NAME}_MODULES ${CMAKE_BINARY_DIR}/modules/${PROJECT_NAME}.py)
