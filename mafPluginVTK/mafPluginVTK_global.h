@@ -14,7 +14,7 @@
 
 #include <QtCore/qglobal.h>
 
-#if defined(MAFPLUGIN_VTK)
+#if defined(mafPluginVTK_EXPORTS)
 #  define MAFPLUGINVTKSHARED_EXPORT Q_DECL_EXPORT
 #else
 #  define MAFPLUGINVTKSHARED_EXPORT Q_DECL_IMPORT

@@ -1,6 +1,7 @@
 # import VTK foundation library references
 
 COMPILER = $$QMAKE_CC
+DEFINES +=VTK_BUILD_SHARED_LIBS
 
 !contains(COMPILER, gcc) {
     LIB_DIR = Release
@@ -18,6 +19,9 @@ win32 {
 
 unix:LIB_CHECK = $$(MAF3_FOUNDATION_LIB_DIR)/vtk-5.6/lib/
 win32:LIB_CHECK = $$(MAF3_FOUNDATION_LIB_DIR)\vtk-5.6\lib\\$$LIB_DIR\
+
+#QMAKE_CXXFLAGS_WARN_ON += -Wno-deprecated
+QMAKE_CXXFLAGS_WARN_ON += -w
 
 # Foundation libraries dependencies
 exists( $$LIB_CHECK ) {

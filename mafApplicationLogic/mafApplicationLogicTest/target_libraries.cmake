@@ -6,8 +6,6 @@
 
 SET(target_libraries
   ${MAF_BASE_LIBRARIES}
-  mafCore
-  mafEventBus
   mafApplicationLogic
   mafQA
   )

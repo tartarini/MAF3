@@ -7,7 +7,7 @@ TEMPLATE = lib
 CONFIG += create_prl
 CONFIG += link_prl
 win32:CONFIG += dll
-DEFINES += MAFAPPLICATIONLOGIC_LIBRARY
+DEFINES += mafApplicationLogic_EXPORTS
 SOURCES += mafLogicLight.cpp \
     mafLogic.cpp
 HEADERS += mafLogicLight.h \

@@ -7,7 +7,7 @@ TEMPLATE = lib
 CONFIG += create_prl
 CONFIG += link_prl
 win32:CONFIG += dll
-DEFINES += MAFTIMESPACE_LIBRARY
+DEFINES += mafTimeSpace_EXPORTS
 SOURCES += mafTimeManager.cpp \
     mafTimer.cpp \
     mafThreadedTimer.cpp \
