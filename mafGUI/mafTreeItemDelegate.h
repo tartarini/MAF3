@@ -32,6 +32,9 @@ public:
     /// Object constructor.
     /*explicit*/ mafTreeItemDelegate(QObject *parent = 0);
 
+    /// Returns the widget used to edit the item specified by index for editing.
+    /*virtual*/ QWidget *createEditor( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+
     /// Sets the contents of the given editor to the data for the item at the given index.
     /*virtual */ void setEditorData( QWidget * editor, const QModelIndex & index ) const;
 
