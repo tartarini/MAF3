@@ -37,8 +37,11 @@ MACRO(mafMacroInitProject test)
   INCLUDE_DIRECTORIES("${PROJECT_BINARY_DIR}")
 
   IF(WIN32)
+      IF(MSVC)
+        ADD_DEFINITIONS(-DUNICODE)
+      ENDIF(MSVC)
   ELSE(WIN32)
-    ADD_DEFINITIONS(-Wno-deprecated)
+    ADD_DEFINITIONS(-w)
   ENDIF(WIN32)
 
   set(MY_MOC_CXX)
