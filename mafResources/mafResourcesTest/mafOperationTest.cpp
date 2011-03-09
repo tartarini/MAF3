@@ -60,10 +60,12 @@ void mafOperationTest::mafOperationAllocationTest() {
     QVERIFY(op_type == mafOperationTypeOperation);
     QVERIFY(m_Operation->canUnDo());
 
-    QVERIFY(!m_Operation->isRunning());
+    m_Operation->initialize();
+    QVERIFY ( m_Operation->isRunning() );
     m_Operation->unDo();
     m_Operation->reDo();
-    QVERIFY(!m_Operation->terminate());
+    m_Operation->terminate();
+    QVERIFY ( !m_Operation->isRunning() );
 }
 
 MAF_REGISTER_TEST(mafOperationTest);
