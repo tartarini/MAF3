@@ -31,13 +31,12 @@ QWidget *mafTreeItemDelegate::createEditor( QWidget * parent, const QStyleOption
     mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
     QObject *objItem = item->data();
     int lockStatus = objItem->property("lockStatus").toInt();
+    QWidget *editor = NULL;
     // Not allow VME name editing to locked item.
     if (lockStatus == mafCore::mafObjectLockNone) {
-        QLineEdit *editor = new QLineEdit(parent);
-        return editor;
-    } else {
-        return NULL;
+        editor = QStyledItemDelegate::createEditor(parent, option, index);
     }
+    return editor;
 }
 
 void mafTreeItemDelegate::setEditorData( QWidget * editor, const QModelIndex & index ) const {
@@ -59,146 +58,58 @@ void mafTreeItemDelegate::setModelData(QWidget * editor, QAbstractItemModel * mo
 }
 
 void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    bool isLocked = false;
-    QRect mainRect = option.rect; //Rect of the tree item
-    QPalette::ColorRole textColorRole = QPalette::NoRole;
-    int alignmentFlag =  Qt::AlignLeft;
-    QString vmeIconFile;
-    QPixmap vmeIcon;
-
-    //Check if model is a mafSceneNode and set property visibility.
-    mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
-    QObject *objItem = item->data();
-
-    //Load icon of the VME
-    vmeIconFile = objItem->property("iconFile").toString();
-    vmeIcon = QPixmap(vmeIconFile);
-    if(vmeIcon.isNull()) {
-        //default image
-        vmeIcon = QPixmap(":/images/questionMark.png");
-    }
+    QStyleOptionViewItemV4 options = option;
+    initStyleOption(&options, index);
 
     //Get lock status
+    mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
+    QObject *objItem = item->data();
     int lockStatus = objItem->property("lockStatus").toInt();
     switch (lockStatus) {
-        case mafCore::mafObjectLockNone: {
-            //Drawing CheckBox
-            QStyleOptionButton checkBoxOption;
-            checkBoxOption.rect = mainRect.adjusted(1, 1, -1, -1);
-            checkBoxOption.state |= QStyle::State_Enabled; //diable in some cases.
-
-            //Control checkbox status
-            bool checkStatus = index.model()->data(index, Qt::CheckStateRole).toBool();
-            if (checkStatus) {
-                checkBoxOption.state |= QStyle::State_On;
-            } else {
-                checkBoxOption.state |= QStyle::State_Off;
-            }
-            QString objType = objItem->metaObject()->className();
-            if(objType.compare("mafResources::mafSceneNode") == 0){
-                bool visibility = objItem->property("visibility").toBool();
-                if(visibility != checkStatus) {
-                    objItem->setProperty("visibility", checkStatus);
-                }
-            }
-            QApplication::style()->drawControl(QStyle::CE_CheckBox, &checkBoxOption, painter, 0);
-            alignmentFlag |=  Qt::AlignVCenter;
-          break;
-      }
         case mafCore::mafObjectLockRead: {
-            //and case mafCore::mafObjectLockWrite:
-            isLocked = true;
-            //Drawing lock Icon.
-            QPixmap lockIcon;
-            lockIcon = QPixmap(":/images/lock_icon.png");
-            // set Label in grey
-            textColorRole = QPalette::Mid;
-            alignmentFlag |= Qt::AlignTop;
-            //Drawing Icon.
-            mainRect.setY(mainRect.y()+3);
-            QApplication::style()->drawItemPixmap(painter, mainRect, alignmentFlag, lockIcon);
-            // set vmeIcon to greyscale
-            vmeIcon = this->toGrayScale(vmeIcon);
+                //change item icon
+                //Remember standard Icon: QApplication::style()->standardIcon(QStyle::SP_ArrowDown)
+                //item->setIcon(lockIcon);
+                options.state = QStyle::State_ReadOnly; //set item locked
+                QPixmap lockPixmap = QPixmap(":/images/lock_icon.png");
+                QRect lockRect = options.rect;
+                lockRect.setX(options.rect.x() + 2);
 
-            ///////  progress bar code ///////////
-            //int progress = index.data().toInt();
-            int progress = 20;
-            QStyleOptionProgressBar progressBarOption;
-            progressBarOption.rect = mainRect;
-            progressBarOption.rect.setY(lockIcon.height() -5);
-            progressBarOption.rect.setWidth(200);
-            progressBarOption.rect.setTopLeft(mainRect.center());
-            progressBarOption.rect.setBottomLeft(mainRect.bottomLeft());
-            progressBarOption.minimum = 0;
-            progressBarOption.maximum = 100;
-            progressBarOption.textAlignment = Qt::AlignCenter;
-            progressBarOption.progress = progress;
-            progressBarOption.text = QString::number(progress) + "%";
-            progressBarOption.textVisible = true;
-            QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
-            ////////////////////////////////////////
-        break;
-        }
+                //Drawind progressBar
+                //int progress = index.data().toInt();
+                int progress = 20;
+                QStyleOptionProgressBar progressBarOption;
+                QRect progressRect = options.rect;
+
+                progressRect.setX(options.rect.x() + 40);
+                progressBarOption.rect = progressRect;
+                progressBarOption.rect.setWidth(option.fontMetrics.width(option.font.toString()));
+                progressBarOption.minimum = 0;
+                progressBarOption.maximum = 100;
+                progressBarOption.textAlignment = Qt::AlignLeft;
+                progressBarOption.progress = progress;
+                progressBarOption.text = QString::number(progress) + "%";
+                progressBarOption.textVisible = true;
+
+                painter->save();
+                painter->setOpacity(0.8);
+                //Drawing Progress bar (first to be covered by item label).
+                QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
+                painter->restore();
+                //Drawing tree item
+                QStyledItemDelegate::paint(painter, options, index);
+                //Drawing lock icon
+                QApplication::style()->drawItemPixmap(painter, lockRect, Qt::AlignLeft, lockPixmap);
+            }
+            break;
+    default:
+            QStyledItemDelegate::paint(painter, options, index);
     }
-    //Set icon beside checkbox
-    QRect vmeIconRect;
-    vmeIconRect = mainRect;
-    vmeIconRect.setX(mainRect.x() +20);
-    //Drawing vmeIcon.
-    QApplication::style()->drawItemPixmap(painter, vmeIconRect, alignmentFlag, vmeIcon);
-
-    //Set VME name beside vmeIcon
-    QRect labelRect;
-    labelRect = mainRect;
-    labelRect.setX(vmeIconRect.x() + vmeIcon.rect().width() + 10);
-
-    //Get the name of the Object
-    QString itemName = objItem->property("objectName").toString();
-    painter->save();
-    if (option.state & QStyle::State_Selected && !isLocked) {
-        //Highlight selected VME
-        QRect paintRect = labelRect;
-        paintRect.setX(labelRect.x() - 5);//expande a little painted area.
-        painter->setBrush(option.palette.highlight());
-        painter->setPen(Qt::darkGray);
-        painter->drawRect(paintRect);
-        painter->setRenderHint(QPainter::Antialiasing, true);
-        painter->setPen(option.palette.highlightedText().color());
-        painter->setBrush(option.palette.highlightedText());
-    }
-
-    //Drawing VME name.
-    QApplication::style()->drawItemText(painter, labelRect, alignmentFlag, QApplication::palette(), option.state, itemName, textColorRole);
     painter->restore();
 }
 
 QSize mafTreeItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
-    QObject *objItem = item->data();
-    int lockStatus = objItem->property("lockStatus").toInt();
-    if (lockStatus == mafCore::mafObjectLockRead) {
-        return QSize(20, 40);
-        } else {
-        return QSize(20,20);
-    }
-}
-
-QPixmap mafTreeItemDelegate::toGrayScale(QPixmap icon) const {
-    QPixmap pix = icon;
-    QImage image = icon.toImage();
-    QRgb col;
-    int gray;
-    int width = icon.width();
-    int height = icon.height();
-    for (int i = 0; i < width; ++i) {
-        for (int j = 0; j < height; ++j) {
-            col = image.pixel(i, j);
-            gray = qGray(col);
-            image.setPixel(i, j, qRgb(gray, gray, gray));
-        }
-    }
-    pix = pix.fromImage(image);
-    return pix;
+    return QStyledItemDelegate::sizeHint(option, index);
 }
 
 

@@ -47,12 +47,6 @@ public:
     /// Returns the size needed by the delegate to display the item specified by index.
     /*virtual */ QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-    /// Convert colored QPixmap to greyscale.
-    QPixmap toGrayScale(QPixmap icon) const;
-
-signals:
-    /// Alert observers about checkbox status.
-    void checkBoxStatus(bool status, const QModelIndex &index) const;
 
 public slots:
 
