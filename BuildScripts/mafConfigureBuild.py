@@ -274,12 +274,12 @@ def build():
         
 def generateFromCmake():
     #create build dir
-    buildDir = os.pathjoin("..", ".." , "MAF.build")
+    buildDir = os.path.join("..", ".." , "MAF.build")
     if not os.path.exists(buildDir):
         os.makedirs(buildDir)
     os.chdir(buildDir)
     
-    srcDir = os.path(currentPathScript, "..")
+    srcDir = os.path.join(currentPathScript, "..")
     #cmake project
     command = "cmake " + srcDir
     os.system(command)
