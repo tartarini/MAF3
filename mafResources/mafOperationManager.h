@@ -19,7 +19,7 @@ namespace mafResources {
 // Class forwarding list
 class mafOperation;
 class mafVME;
-class mafResourceWorker;
+class mafOperationWorker;
 
 /// This class provides the manager class for MAF3 operations.
 /**
@@ -40,6 +40,7 @@ The manager defines these Topics:
 - maf.local.resources.operation.clearundoStack clear the undo stack.
 - maf.local.resources.operation.sizeUndoStack retrieve number of elements of undo stack.
 - maf.local.resources.operation.currentRunning retrieve current operation.
+- maf.local.resources.operation.executionPool Return the execution pool containing the running operations.
 */
 class MAFRESOURCESSHARED_EXPORT mafOperationManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -89,6 +90,9 @@ signals:
 
     /// Signal connected with currentOperation slot.
     const mafCore::mafObjectBase *currentOperationSignal() const;
+
+    /// Signal connected with the executionPool slot.
+    const mafExecutionPool *executionPoolSignal();
 
 private slots:
     /// Start operation and set that operation as current one
@@ -156,6 +160,9 @@ private slots:
     /// Return current operation
     const mafCore::mafObjectBase *currentOperation() const;
 
+    /// Return the execution pool containing the runngin operations in background.
+    const mafExecutionPool *executionPool() const;
+
 protected:
     /// Object destructor
     /*virtual*/ ~mafOperationManager();
@@ -172,16 +179,16 @@ private:
 
     /// Remove the passed object from the execution pool.
     /**
-        This method check if the passed object is a mafResourceWorker and eventually remove it from the execution pool.
-        The method return to the caller a casted pointer to mafResourceWorker removed from the pool. NULL is returned
-        if the possed argument is not a mafResourceWorker.
-        @param obj Pointer to the mafResourceWorker.
+        This method check if the passed object is a mafOperationWorker and eventually remove it from the execution pool.
+        The method return to the caller a casted pointer to mafOperationWorker removed from the pool. NULL is returned
+        if the possed argument is not a mafOperationWorker.
+        @param obj Pointer to the mafOperationWorker.
     */
-    mafResourceWorker *removeWorkerFromPool(QObject *obj);
+    mafOperationWorker *removeWorkerFromPool(QObject *obj);
 
     QList<mafOperation *> m_UndoStack;    ///< Undo stack which is a linked list of operations
     mafOperation *m_CurrentOperation;       ///< Current operation handled by th manager
-    QVector<mafResourceWorker *> m_ExecutionPool; ///< Pool of running operations.
+    mafExecutionPool m_ExecutionPool; ///< Pool of running operations.
     mafVME *m_SelectedVME;                      ///< Vme that is currently selected
     mafCore::mafId m_ExecWithParameters; ///< Id associated with the EXECUTE_WITH_PARAMETERS event.
 };
@@ -190,7 +197,7 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline const mafCore::mafObjectBase *mafOperationManager::currentOperation() const{
+inline const mafCore::mafObjectBase *mafOperationManager::currentOperation() const {
     return (mafCore::mafObjectBase *)m_CurrentOperation;
 }
 
@@ -198,6 +205,9 @@ inline int mafOperationManager::undoStackSize() const {
     return m_UndoStack.size();
 }
 
+inline const mafExecutionPool *mafOperationManager::executionPool() const {
+    return (const mafExecutionPool*)&m_ExecutionPool;
+}
 
 } // namespace mafResources
 

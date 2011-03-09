@@ -15,7 +15,7 @@
 #include "mafResourcesRegistration.h"
 #include "mafVME.h"
 #include "mafUndoStackCommand.h"
-#include "mafResourceWorker.h"
+#include "mafOperationWorker.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -60,6 +60,7 @@ void mafOperationManager::initializeConnections() {
     provider->createNewId("maf.local.resources.operation.updateUndoStack");
     provider->createNewId("maf.local.resources.operation.sizeUndoStack");
     provider->createNewId("maf.local.resources.operation.currentRunning");
+    provider->createNewId("maf.local.resources.operation.executionPool");
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.operation.start", this, "startOperationSignal(const QString)")
@@ -73,6 +74,7 @@ void mafOperationManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.operation.updateUndoStack", this, "updateUndoStackSignal(mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.operation.sizeUndoStack", this, "undoStackSizeSignal()")
     mafRegisterLocalSignal("maf.local.resources.operation.currentRunning", this, "currentOperationSignal()")
+    mafRegisterLocalSignal("maf.local.resources.operation.executionPool", this, "executionPoolSignal()")
 
     // Register private callbacks to the instance of the manager..
     mafRegisterLocalCallback("maf.local.resources.operation.start", this, "startOperation(const QString)")
@@ -85,10 +87,10 @@ void mafOperationManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.resources.operation.updateUndoStack", this, "updateUndoStack(mafCore::mafObjectBase *)")
     mafRegisterLocalCallback("maf.local.resources.operation.sizeUndoStack", this, "undoStackSize()")
     mafRegisterLocalCallback("maf.local.resources.operation.currentRunning", this, "currentOperation()")
+    mafRegisterLocalCallback("maf.local.resources.operation.executionPool", this, "executionPool()")
 
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)")
 }
-
 
 void mafOperationManager::vmeSelect(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafResources::mafVME*>(obj);
@@ -128,15 +130,11 @@ void mafOperationManager::startOperation(const QString operation) {
 
     // Assign as input the current selected VME.
     m_CurrentOperation->setInput(m_SelectedVME);
-    // and ask the operation to initialize itself.
-    bool result = m_CurrentOperation->initialize();
 
     // Notify the observers that the new operation has started.
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase*, m_CurrentOperation));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.started", mafEventTypeLocal, &argList);
-
-    ENSURE(result);
 }
 
 void mafOperationManager::executeOperation() {
@@ -145,24 +143,23 @@ void mafOperationManager::executeOperation() {
         m_UndoStack << m_CurrentOperation;
 
         // Create a resource worker and pass to it the resource to be execute in a separate thread.
-        mafResourceWorker *worker = new mafResourceWorker(m_CurrentOperation, mafCodeLocation);
+        mafOperationWorker *worker = new mafOperationWorker(m_CurrentOperation, mafCodeLocation);
         // become observer wo be notified when the work is done.
         connect(worker, SIGNAL(workDone()), this, SLOT(operationExecuted()));
-        connect(worker, SIGNAL(abortFlag()), this, SLOT(stopOperation()));
+        connect(worker, SIGNAL(workAborted()), this, SLOT(stopOperation()));
         // Put the worker into the pool.
         m_ExecutionPool << worker;
         // Start the work.
         worker->doWork();
-//            connect(m_CurrentOperation, SIGNAL(executionEnded()), m_ExecutionThread, SLOT(quit()));
     }
 }
 
-mafResourceWorker *mafOperationManager::removeWorkerFromPool(QObject *obj) {
-    mafResourceWorker *worker = qobject_cast<mafResources::mafResourceWorker *>(obj);
+mafOperationWorker *mafOperationManager::removeWorkerFromPool(QObject *obj) {
+    mafOperationWorker *worker = qobject_cast<mafResources::mafOperationWorker *>(obj);
     if (worker) {
         int idx = m_ExecutionPool.indexOf(worker);
         if ( idx != -1 ) {
-            m_ExecutionPool.remove(idx);
+            m_ExecutionPool.removeAt(idx);
         }
     }
     return worker;
@@ -170,11 +167,9 @@ mafResourceWorker *mafOperationManager::removeWorkerFromPool(QObject *obj) {
 
 void mafOperationManager::operationExecuted() {
     // Remove the resource worker from the list.
-    mafResourceWorker *worker = removeWorkerFromPool(QObject::sender());
+    mafOperationWorker *worker = removeWorkerFromPool(QObject::sender());
 
-    mafResource *res = worker->resource();
-    mafOperation *op = qobject_cast<mafResources::mafOperation *>(res);
-
+    mafOperation *op = worker->operation();
     REQUIRE(op != NULL);
 
     if ( !op->canUnDo() ) {
@@ -192,7 +187,7 @@ void mafOperationManager::operationExecuted() {
 
 void mafOperationManager::stopOperation() {
     // Remove the resource worker from the list.
-    mafResourceWorker *worker = removeWorkerFromPool(QObject::sender());
+    mafOperationWorker *worker = removeWorkerFromPool(QObject::sender());
 
     if ( worker == NULL ) {
         // Operation not executing => Simply cancelled by the user.
@@ -201,17 +196,17 @@ void mafOperationManager::stopOperation() {
         return;
     }
 
-    mafResource *res = worker->resource();
-    mafOperation *op = qobject_cast<mafResources::mafOperation *>(res);
-
+    mafOperation *op = worker->operation();
     REQUIRE(op != NULL);
 
-    op->terminate();
+    qDebug() << op->objectName();
+
+    //op->terminate();
     int idx = m_UndoStack.indexOf(op);
     if ( idx != -1 ) {
         m_UndoStack.removeAt(idx);
+        mafDEL(op);
     }
-    mafDEL(op);
     mafDEL(worker);
 }
 
