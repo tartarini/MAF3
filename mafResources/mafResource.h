@@ -89,15 +89,18 @@ public:
     /// Return true if data has been loaded.
     bool dataLoaded();
 
-    /// Return true if resource is busy
-    bool isBusy();
-
     /// Initialize the resource.
     virtual bool initialize();
 
 signals:
+    /// Start the execution of the resource.
+    void startExecution();
+
     /// Notify that the resource execution is terminated.
     void executionEnded();
+
+    /// Terminate the execution.
+    void terminateExecution();
 
 public slots:
     /// Set value of m_DataLoaded.
@@ -114,20 +117,15 @@ public slots:
     */
     virtual void execute();
 
-    /// Allows to abort the background execution of the resource.
-    void abortExecution();
-
     /// Terminate the execution.
-    virtual bool terminate();
+    virtual void terminate();
 
 protected:
     /// Object destructor.
     /* virtual */ ~mafResource();
 
-    bool m_Busy; ///< Indicates if resource is busy.
     bool m_DataLoaded; ///< Indicates if data has been loaded.
     mafResource *m_Output; ///< Output of the resource.
-    bool m_AbortExecution;   ///< Flag used to stop the execution.
 
 private:
     mafResourceList *m_InputList; ///< Resource input List
@@ -137,10 +135,6 @@ private:
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
-
-inline bool mafResource::isBusy() {
-    return m_Busy;
-}
 
 inline mafResourceList *mafResource::inputList() {
     return m_InputList;
@@ -152,10 +146,6 @@ inline mafResource *mafResource::output() {
 
 inline bool mafResource::dataLoaded() {
     return m_DataLoaded;
-}
-
-inline void mafResource::abortExecution() {
-    m_AbortExecution = true;
 }
 
 } //mafResources
