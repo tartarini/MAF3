@@ -281,7 +281,7 @@ def generateFromCmake():
     
     srcDir = os.path.join(currentPathScript, "..")
     #cmake project
-    command = "cmake " + srcDir
+    command = "cmake -DCMAKE_BUILD_TYPE:STRING=Release " + srcDir
     os.system(command)
     os.chdir(currentPathScript)
     
