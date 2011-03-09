@@ -18,6 +18,7 @@
 #include <mafOperationManager.h>
 #include <mafOperation.h>
 #include <mafVME.h>
+#include <mafOperationWorker.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -45,17 +46,21 @@ private:
 
 testHeavyOperationforOperationManager::testHeavyOperationforOperationManager(const QString code_location) : mafOperation(code_location), m_val(0) {
     m_CanUnDo = false;
+    setObjectName("ThreadedOperation");
 }
 
 void testHeavyOperationforOperationManager::execute() {
-    for ( int i = 0; i < 10000; ++i ) {
-        if ( i % 1000 == 0 ) {
-            m_val += i;
-            qDebug() << m_val;
-        }
+    while ( !m_Abort ) {
+        ;
     }
+//    for ( int i = 0; i < 10000; ++i ) {
+//        if ( i % 1000 == 0 ) {
+//            m_val += i;
+//            qDebug() << m_val;
+//        }
+//    }
 
-    emit executionEnded();
+    //emit executionEnded();
 }
 
 /**
@@ -82,6 +87,7 @@ private slots:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
+        qDebug() << "cleanup test suite...";
         m_OperationManager->shutdown();
 
         mafUnregisterObject(testHeavyOperationforOperationManager);
@@ -132,8 +138,27 @@ void mafOperationManagerTest::threadedExecutionTest() {
     QObject::connect(op, SIGNAL(executionEnded()), &loop, SLOT(quit()));
 
     m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
-    qDebug() << mafTr("start execution in background...");
+    qDebug() << mafTr("start background execution...");
 
+    QTimer t;
+    t.setSingleShot(true);
+
+    const mafExecutionPool *opWorker = NULL;
+    QGenericReturnArgument worker_val = mafEventReturnArgument(const mafExecutionPool *, opWorker);
+    m_EventBus->notifyEvent("maf.local.resources.operation.executionPool", mafEventTypeLocal, NULL, &worker_val);
+    int num = opWorker->size();
+
+    QVERIFY(num == 1);
+
+    mafObjectBase *obj = opWorker->at(0);
+    mafOperationWorker *w = qobject_cast<mafResources::mafOperationWorker *>(obj);
+
+    connect(&t, SIGNAL(timeout()), w, SLOT(abortExecution()));
+    connect(&t, SIGNAL(timeout()), &loop, SLOT(quit()));
+
+    QVERIFY(w != NULL);
+
+    t.start(2000);
     loop.exec();
 }
 
