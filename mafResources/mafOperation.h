@@ -28,6 +28,7 @@ class MAFRESOURCESSHARED_EXPORT mafOperation : public mafResource {
     Q_OBJECT
     Q_PROPERTY(bool running READ isRunning)
     Q_PROPERTY(bool executeOnThread READ executeOnThread WRITE setExecuteOnThread)
+    Q_PROPERTY(bool canAbort READ canAbort)
 
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
@@ -51,6 +52,13 @@ public:
     /// Return the status of the execute on separate thread.
     bool executeOnThread() const;
 
+    /// Return the abort capability of the operation.
+    bool canAbort() const;
+
+signals:
+    /// Trigger the undo execution.
+    void undoExecution();
+
 public slots:
     /// Set the flag to alert the Operation Manager to move the operation's execution on a separate thread.
     void setExecuteOnThread(bool on_thread);
@@ -65,16 +73,23 @@ public slots:
     virtual void reDo();
 
     /// Terminate the execution.
-    virtual bool terminate();
+    virtual void terminate();
+
+private slots:
+    /// Terminate the execution.
+    void abort();
 
 protected:
     /// Object destructor.
     /* virtual */ ~mafOperation();
 
+    mutable QMutex mutex;
     bool m_IsRunning; ///< Flag that check if the operation is running, i.e. the execution is started
     bool m_CanUnDo; ///< Flag that store the unDo capability of the operation.
     bool m_ExecuteOnThread; ///< Flag used to enable/disable the execution on separate thread.
     mafOperationType m_OperationType; ///< Describe the operation type (mafOperationTypeImporter, mafOperationTypeExporter or mafOperationTypeOperation).
+    bool m_CanAbort;            ///< Flag indicating that the operation can abort its execution or no.
+    bool m_Abort;                  ///< Flag indicating that the operation has to be aborted. The code inside the execute slot has to take care about it.
 };
 
 /////////////////////////////////////////////////////////////
@@ -98,6 +113,10 @@ inline bool mafOperation::executeOnThread() const {
 
 inline void mafOperation::setExecuteOnThread(bool on_thread) {
     m_ExecuteOnThread = on_thread;
+}
+
+inline bool mafOperation::canAbort() const {
+    return m_CanAbort;
 }
 
 } // namespace mafResources
