@@ -35,8 +35,8 @@ mafOperationWorker::~mafOperationWorker() {
 void mafOperationWorker::initializeWorkflow() {
     connect(m_ExecutionThread, SIGNAL(started()), m_Operation, SIGNAL(startExecution()));
     connect(m_Operation, SIGNAL(executionEnded()), this, SIGNAL(workDone()));
-    connect(this, SIGNAL(workAborted()), m_Operation, SLOT(terminate()));
     connect(this, SIGNAL(workAborted()), m_Operation, SLOT(abort()));
+    connect(this, SIGNAL(workAborted()), m_Operation, SLOT(terminate()));
 
     // Create the state machine's states.
     QState *idleState = new QState(&m_StateMachine);
