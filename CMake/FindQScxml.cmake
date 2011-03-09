@@ -16,4 +16,5 @@ LINK_DIRECTORIES(${LINK_DIRECTORIES} "${QSCXML_DIR}/lib/")
 SET(QSCXML_LIBRARY "qscxml")
 
 SET(QSCXML_FOUND TRUE)
-
+include(mafCopySharedLibrariesInInstallDir)
+mafCopySharedLibrariesInInstallDir("${QSCXML_DIR}lib")

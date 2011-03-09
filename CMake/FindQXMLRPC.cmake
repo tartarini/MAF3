@@ -24,5 +24,7 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
     set(QXMLRPC_LIBRARY ${QXMLRPC_LIBRARY}${extension})
 ENDIF(CMAKE_BUILD_TYPE MATCHES Debug)
 
-SET(QXMLRPC_FOUND TRUE)    
+SET(QXMLRPC_FOUND TRUE)
+include(mafCopySharedLibrariesInInstallDir)
+mafCopySharedLibrariesInInstallDir("${QXMLRPC_DIR}lib") 
 

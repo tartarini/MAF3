@@ -63,5 +63,7 @@ ELSE(CMAKE_BUILD_TYPE MATCHES Debug)
     SET(VTK_LIBRARY ${VTK_LIBRARY_TEMP})
 ENDIF(CMAKE_BUILD_TYPE MATCHES Debug)
 
-SET(VTK_FOUND TRUE)    
+SET(VTK_FOUND TRUE)
+include(mafCopySharedLibrariesInInstallDir)
+mafCopySharedLibrariesInInstallDir("${VTK_DIR}lib")   
 
