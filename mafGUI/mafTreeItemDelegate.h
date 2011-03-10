@@ -45,14 +45,19 @@ public:
     /*virtual */ void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
     /// Returns the size needed by the delegate to display the item specified by index.
-    /*virtual */ QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    /*virtual */ //QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
+    /// Whenever an event occurs, this function is called with the event model option and the index that corresponds to the item being edited.
     /*virtual*/ bool editorEvent ( QEvent * event, QAbstractItemModel * model, const QStyleOptionViewItem & option, const QModelIndex & index );
+
+    /// Return the QObject corrisponding to index.
+    QObject *objFromIndex(const QModelIndex &index) const;
 
 
 public slots:
 
 private:
+    bool m_isSceneNode;
 
 
 

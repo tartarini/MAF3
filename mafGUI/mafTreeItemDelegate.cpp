@@ -12,6 +12,7 @@
 #include "mafTreeItemDelegate.h"
 #include "mafTreeItem.h"
 #include <QStyledItemDelegate>
+#include <QItemDelegate>
 #include <QPainter>
 #include <QStyle>
 #include <QApplication>
@@ -24,12 +25,11 @@
 using namespace mafCore;
 using namespace mafGUI;
 
-mafTreeItemDelegate::mafTreeItemDelegate(QObject *parent) : QStyledItemDelegate(parent) {
+mafTreeItemDelegate::mafTreeItemDelegate(QObject *parent) : QStyledItemDelegate(parent), m_isSceneNode(false ){
 }
 
 QWidget *mafTreeItemDelegate::createEditor( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const {
-    mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
-    QObject *objItem = item->data();
+    QObject *objItem = objFromIndex(index);
     int lockStatus = objItem->property("lockStatus").toInt();
     QWidget *editor = NULL;
     // Not allow VME name editing to locked item.
@@ -58,24 +58,30 @@ void mafTreeItemDelegate::setModelData(QWidget * editor, QAbstractItemModel * mo
 }
 
 void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    bool isLocked = false;
+    mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
     QStyleOptionViewItemV4 options = option;
     initStyleOption(&options, index);
     QPixmap iconPixmap;
 
     //Get lock status
-    mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
-    QObject *objItem = item->data();
+    QObject *objItem = objFromIndex(index);
     uint lockStatus = objItem->property("lockStatus").toUInt();
+    if (lockStatus & mafCore::mafObjectLockNone) {
+       item->setIcon(QIcon(objItem->property("iconFile").toString()));
+    }
     if (lockStatus & mafCore::mafObjectLockProgres)  {
         //Drawing Progress bar (first to be covered by item label).
+        int checkSpacer = 5;
+        if (item->isCheckable()) {
+            checkSpacer = 25;
+        }
         int progress = 20;
         QStyleOptionProgressBar progressBarOption;
-        QRect progressRect = options.rect;
-
-        progressRect.setX(options.rect.x() + 40);
-        progressBarOption.rect = progressRect;
-        progressBarOption.rect.setWidth(option.fontMetrics.width(option.font.toString()));
+        QRect rectProgress = options.rect;
+        rectProgress.setX(options.rect.x() + options.decorationSize.width() + checkSpacer);
+        int x = options.fontMetrics.averageCharWidth() * options.text.size();
+        rectProgress.setWidth(qMax(x + 60, 100));
+        progressBarOption.rect = rectProgress;
         progressBarOption.minimum = 0;
         progressBarOption.maximum = 100;
         progressBarOption.textAlignment = Qt::AlignLeft;
@@ -89,41 +95,41 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
         QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
         painter->restore();
         //I can set an icon for Uploading/Donloading
-        //conPixmap = QPixmap(":/images/lock_icon.png");
     }
 
     if (lockStatus & mafCore::mafObjectLockRead || lockStatus & mafCore::mafObjectLockWrite)  {
         //Set lock icon and diable item
         iconPixmap = QPixmap(":/images/lock_icon.png");
+        item->setIcon(QIcon(iconPixmap));
         options.state = QStyle::State_ReadOnly; //set item locked
-        isLocked = true;
     }
 
     //Drawing tree item
     QStyledItemDelegate::paint(painter, options, index);
-
-    if (isLocked)  {
-        //Drawing icon over checkbox
-        QRect lockRect = options.rect;
-        lockRect.setX(options.rect.x() + 2);
-        QApplication::style()->drawItemPixmap(painter, lockRect, Qt::AlignLeft, iconPixmap);
-    }
 }
 
-QSize mafTreeItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    return QStyledItemDelegate::sizeHint(option, index);
-}
+//QSize mafTreeItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
+//    return QStyledItemDelegate::sizeHint(option, index);
+//}
 
 bool mafTreeItemDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) {
     bool result = QStyledItemDelegate::editorEvent(event, model, option, index);
-    mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
-    QObject* sceneNode = item->data();
+    QObject *sceneNode = objFromIndex(index);
+    //If item is a SceneNode, set visibility property to item checked
     if (sceneNode->metaObject()->className() == "mafResources::mafSceneNode") {
+        m_isSceneNode = true;
         QVariant value = index.data(Qt::CheckStateRole);
         if (!value.isValid())
             return result;
         bool state = (static_cast<Qt::CheckState>(value.toInt())) ? true : false;
         sceneNode->setProperty("visibility", state);
+    } else {
+        m_isSceneNode = false;
     }
     return result;
+}
+
+QObject *mafTreeItemDelegate::objFromIndex(const QModelIndex &index) const {
+    mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
+    return item->data();
 }
