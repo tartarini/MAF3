@@ -103,6 +103,6 @@ void mafCSVReaderTest::csvFromStringTest() {
 }
 
 
-MAF_REGISTER_TEST(mafCSVReaderTest);
+//MAF_REGISTER_TEST(mafCSVReaderTest);
 #include "mafCSVReaderTest.moc"
 

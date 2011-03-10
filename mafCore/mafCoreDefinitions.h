@@ -60,7 +60,7 @@ enum mafObjectLock {
     mafObjectLockWrite = 0x2,
     mafObjectLockProgres = 0x4
                        };
-Q_DECLARE_FLAGS(mafObjectLockStatus, mafObjectLock)
+Q_DECLARE_FLAGS(mafObjectLockStatus, mafObjectLock);
 
 
 
