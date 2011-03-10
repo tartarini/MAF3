@@ -54,11 +54,15 @@ typedef enum {
 #define TEST_SUITE_LOG_PREFIX " -- TestSuite Message -- "
 
 /// Enumeration that define the status of the object.
-typedef enum {
-    mafObjectLockNone = 0,
-    mafObjectLockRead,
-    mafObjectLockWrite
-} mafObjectLock;
+enum mafObjectLock {
+    mafObjectLockNone = 0x0,
+    mafObjectLockRead = 0x1,
+    mafObjectLockWrite = 0x2,
+    mafObjectLockProgres = 0x4
+                       };
+Q_DECLARE_FLAGS(mafObjectLockStatus, mafObjectLock)
+
+
 
 /// Typedef representing an item property of the memento that has to be encoded or decoded.
 typedef struct {
