@@ -61,7 +61,6 @@ private slots:
     void inputDestroyed();
 
 private:
-    //mafDataSetList *m_InputList; ///< Data input List
     mafVMEList *m_InputList; ///< VME input List
 };
 

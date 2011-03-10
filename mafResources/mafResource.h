@@ -89,11 +89,18 @@ public:
     /// Return true if data has been loaded.
     bool dataLoaded();
 
-    /// Return true if resource is busy
-    bool isBusy();
-
     /// Initialize the resource.
     virtual bool initialize();
+
+signals:
+    /// Start the execution of the resource.
+    void startExecution();
+
+    /// Notify that the resource execution is terminated.
+    void executionEnded();
+
+    /// Terminate the execution.
+    void terminateExecution();
 
 public slots:
     /// Set value of m_DataLoaded.
@@ -103,16 +110,20 @@ public slots:
     void inputDestroyed();
 
     /// Execute the resource algorithm.
+    /**
+        Resource emit the executionEnded signal at the end of the execute code so that the observer connected to it
+        can finalize the execution mechanism. The subclassing mafResource and overriding the execute slot, at the end of
+        the execution code the custom resource MUST call mafResource::execute() or emit the executionEnded signal.
+    */
     virtual void execute();
 
     /// Terminate the execution.
-    virtual bool terminate();
+    virtual void terminate();
 
 protected:
     /// Object destructor.
     /* virtual */ ~mafResource();
 
-    bool m_Busy; ///< Indicates if resource is busy.
     bool m_DataLoaded; ///< Indicates if data has been loaded.
     mafResource *m_Output; ///< Output of the resource.
 
@@ -124,10 +135,6 @@ private:
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
-
-inline bool mafResource::isBusy() {
-    return m_Busy;
-}
 
 inline mafResourceList *mafResource::inputList() {
     return m_InputList;

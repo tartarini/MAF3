@@ -15,7 +15,7 @@ using namespace mafCore;
 using namespace mafResources;
 
 
-mafResource::mafResource(const QString code_location) : mafObject(code_location), m_Busy(false), m_DataLoaded(false), m_Output(NULL), m_InputList(NULL) {
+mafResource::mafResource(const QString code_location) : mafObject(code_location), m_DataLoaded(false), m_Output(NULL), m_InputList(NULL) {
     m_InputList = new mafResourceList;
 }
 
@@ -172,10 +172,10 @@ bool mafResource::initialize() {
     return true;
 }
 
-bool mafResource::terminate() {
-    return true;
+void mafResource::terminate() {
 }
 
 void mafResource::execute() {
+    emit executionEnded();
 }
 

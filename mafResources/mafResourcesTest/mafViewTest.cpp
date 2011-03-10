@@ -11,6 +11,7 @@
 
 #include <mafTestSuite.h>
 #include <mafResourcesRegistration.h>
+#include <mafResourcesSingletons.h>
 #include <mafContainer.h>
 #include <mafView.h>
 #include <mafVME.h>
@@ -40,6 +41,8 @@ private slots:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
+        mafResourcesSingletons::mafSingletonsInitialize();
+
         mafResourcesRegistration::registerResourcesObjects();
         m_View = mafNEW(mafResources::mafView);
         m_View->create();
@@ -48,6 +51,8 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_View);
+        mafResourcesSingletons::mafSingletonsShutdown();
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.create");
         mafMessageHandler::instance()->shutdown();
     }
 
