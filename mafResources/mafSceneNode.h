@@ -27,6 +27,7 @@ This class represents a scene node which owns the pointer to the mafVME and the 
 class MAFRESOURCESSHARED_EXPORT mafSceneNode : public mafCore::mafObject {
     Q_OBJECT
     Q_PROPERTY(bool visibility READ visibility WRITE setVisibility)
+    Q_PROPERTY(bool canVisualize READ canVisualize WRITE setCanVisualize)
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObject);
 
@@ -53,6 +54,9 @@ public slots:
     /// Set the visibility of its rendering scene.
     virtual void setVisibility(bool visible);
 
+    /// Set the canVisualize property.
+    virtual void setCanVisualize(bool canVisualize);
+
 signals:
     /// Alert the view that the node can be deleted because its inner vme has been destroyed.
     void destroyNode();
@@ -64,6 +68,9 @@ protected:
     /// Return the visibility status
     bool visibility() const;
 
+    /// Return the canVisualize status
+    bool canVisualize() const;
+
 private slots:
     /// monitor the visual pipe deletation.
     void visualPipeDestroyed();
@@ -72,6 +79,7 @@ private:
     mafVME *m_VME; ///< Represent the data object.
     mafVisualPipe *m_VisualPipe;  ///< represente the renderable object inside the scene node
     bool m_Visibility; ///< Contains the visibility status of the owned object/s.
+    bool m_CanVisualize; ///< Contains the canVisualize status of the owned object/s.
 };
 
 /////////////////////////////////////////////////////////////
@@ -89,6 +97,7 @@ inline mafVME *mafSceneNode::vme() const {
 inline bool mafSceneNode::visibility() const {
     return m_Visibility;
 }
+
 
 } //namespace mafResources
 
