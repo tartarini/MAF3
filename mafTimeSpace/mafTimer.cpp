@@ -24,7 +24,7 @@ mafTimer::mafTimer(const QString code_location) : mafObjectBase(code_location), 
 }
 
 mafTimer::~mafTimer() {
-    delete m_Timer;
+    m_Timer->deleteLater();
 }
 
 void mafTimer::setInterval(int interval) {
