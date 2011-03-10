@@ -111,7 +111,7 @@ protected:
     /* virtual */ ~mafObject();
     bool m_Selected; ///< Flag used to store the selection flag of the owned VME.
     QString m_IconFIle; ///< Filename associated to the icon file to use with the object.
-    mafObjectLock m_LockStatus; ///< Contains the status of object lock.
+    mafObjectLockStatus m_LockStatus; ///< Contains the status of object lock.
 
 private:
     bool m_Modified; ///< Contains the modified state of the VME.
