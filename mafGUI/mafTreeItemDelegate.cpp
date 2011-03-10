@@ -58,58 +58,72 @@ void mafTreeItemDelegate::setModelData(QWidget * editor, QAbstractItemModel * mo
 }
 
 void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
+    bool isLocked = false;
     QStyleOptionViewItemV4 options = option;
     initStyleOption(&options, index);
+    QPixmap iconPixmap;
 
     //Get lock status
     mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
     QObject *objItem = item->data();
-    int lockStatus = objItem->property("lockStatus").toInt();
-    switch (lockStatus) {
-        case mafCore::mafObjectLockRead: {
-                //change item icon
-                //Remember standard Icon: QApplication::style()->standardIcon(QStyle::SP_ArrowDown)
-                //item->setIcon(lockIcon);
-                options.state = QStyle::State_ReadOnly; //set item locked
-                QPixmap lockPixmap = QPixmap(":/images/lock_icon.png");
-                QRect lockRect = options.rect;
-                lockRect.setX(options.rect.x() + 2);
+    uint lockStatus = objItem->property("lockStatus").toUInt();
+    if (lockStatus & mafCore::mafObjectLockProgres)  {
+        //Drawing Progress bar (first to be covered by item label).
+        int progress = 20;
+        QStyleOptionProgressBar progressBarOption;
+        QRect progressRect = options.rect;
 
-                //Drawind progressBar
-                //int progress = index.data().toInt();
-                int progress = 20;
-                QStyleOptionProgressBar progressBarOption;
-                QRect progressRect = options.rect;
+        progressRect.setX(options.rect.x() + 40);
+        progressBarOption.rect = progressRect;
+        progressBarOption.rect.setWidth(option.fontMetrics.width(option.font.toString()));
+        progressBarOption.minimum = 0;
+        progressBarOption.maximum = 100;
+        progressBarOption.textAlignment = Qt::AlignLeft;
+        progressBarOption.progress = progress;
+        progressBarOption.text = QString::number(progress) + "%";
+        progressBarOption.textVisible = true;
 
-                progressRect.setX(options.rect.x() + 40);
-                progressBarOption.rect = progressRect;
-                progressBarOption.rect.setWidth(option.fontMetrics.width(option.font.toString()));
-                progressBarOption.minimum = 0;
-                progressBarOption.maximum = 100;
-                progressBarOption.textAlignment = Qt::AlignLeft;
-                progressBarOption.progress = progress;
-                progressBarOption.text = QString::number(progress) + "%";
-                progressBarOption.textVisible = true;
-
-                painter->save();
-                painter->setOpacity(0.8);
-                //Drawing Progress bar (first to be covered by item label).
-                QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
-                painter->restore();
-                //Drawing tree item
-                QStyledItemDelegate::paint(painter, options, index);
-                //Drawing lock icon
-                QApplication::style()->drawItemPixmap(painter, lockRect, Qt::AlignLeft, lockPixmap);
-            }
-            break;
-    default:
-            QStyledItemDelegate::paint(painter, options, index);
+        painter->save();
+        painter->setOpacity(0.8);
+        //Drawing Progress bar (first to be covered by item label).
+        QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
+        painter->restore();
+        //I can set an icon for Uploading/Donloading
+        //conPixmap = QPixmap(":/images/lock_icon.png");
     }
-    painter->restore();
+
+    if (lockStatus & mafCore::mafObjectLockRead || lockStatus & mafCore::mafObjectLockWrite)  {
+        //Set lock icon and diable item
+        iconPixmap = QPixmap(":/images/lock_icon.png");
+        options.state = QStyle::State_ReadOnly; //set item locked
+        isLocked = true;
+    }
+
+    //Drawing tree item
+    QStyledItemDelegate::paint(painter, options, index);
+
+    if (isLocked)  {
+        //Drawing icon over checkbox
+        QRect lockRect = options.rect;
+        lockRect.setX(options.rect.x() + 2);
+        QApplication::style()->drawItemPixmap(painter, lockRect, Qt::AlignLeft, iconPixmap);
+    }
 }
 
 QSize mafTreeItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
     return QStyledItemDelegate::sizeHint(option, index);
 }
 
-
+bool mafTreeItemDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) {
+    bool result = QStyledItemDelegate::editorEvent(event, model, option, index);
+    mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
+    QObject* sceneNode = item->data();
+    if (sceneNode->metaObject()->className() == "mafResources::mafSceneNode") {
+        QVariant value = index.data(Qt::CheckStateRole);
+        if (!value.isValid())
+            return result;
+        bool state = (static_cast<Qt::CheckState>(value.toInt())) ? true : false;
+        sceneNode->setProperty("visibility", state);
+    }
+    return result;
+}

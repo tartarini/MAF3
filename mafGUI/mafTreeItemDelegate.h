@@ -47,6 +47,8 @@ public:
     /// Returns the size needed by the delegate to display the item specified by index.
     /*virtual */ QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
+    /*virtual*/ bool editorEvent ( QEvent * event, QAbstractItemModel * model, const QStyleOptionViewItem & option, const QModelIndex & index );
+
 
 public slots:
 
