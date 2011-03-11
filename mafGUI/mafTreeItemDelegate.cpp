@@ -75,7 +75,9 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
         if (item->isCheckable()) {
             checkSpacer = 25;
         }
-        int progress = 20;
+
+        //Get progress bar value from "progressStatus" property.
+        int progress = objItem->property("progressStatus").toInt();
         QStyleOptionProgressBar progressBarOption;
         QRect rectProgress = options.rect;
         rectProgress.setX(options.rect.x() + options.decorationSize.width() + checkSpacer);
@@ -107,10 +109,6 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
     //Drawing tree item
     QStyledItemDelegate::paint(painter, options, index);
 }
-
-//QSize mafTreeItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
-//    return QStyledItemDelegate::sizeHint(option, index);
-//}
 
 bool mafTreeItemDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) {
     bool result = QStyledItemDelegate::editorEvent(event, model, option, index);
