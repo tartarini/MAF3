@@ -16,7 +16,7 @@
 
 using namespace mafCore;
 
-mafObject::mafObject(const QString code_location) : mafObjectBase(code_location), m_Selected(false), m_IconFIle(""), m_LockStatus(mafObjectLockNone), m_Modified(false), m_TagList(NULL), m_Dictionary(NULL) {
+mafObject::mafObject(const QString code_location) : mafObjectBase(code_location), m_Selected(false), m_IconFIle(""), m_LockStatus(mafObjectLockNone), m_ProgressStatus(0), m_Modified(false), m_TagList(NULL), m_Dictionary(NULL) {
     m_TagList = new QVariantList();
     m_Dictionary = new mafDictionary;
 }
@@ -111,4 +111,8 @@ bool mafObject::isEqual(const mafObjectBase *obj) const {
 void mafObject::setTagList(const QVariantList &list) {
     m_TagList->clear();
     m_TagList->append(list);
+}
+
+void mafObject::setProgressStatus(int status) {
+    m_ProgressStatus = status;
 }

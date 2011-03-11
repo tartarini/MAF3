@@ -20,7 +20,7 @@ using namespace mafEventBus;
 mafSceneNode::mafSceneNode(const QString code_location) : mafObject(code_location), m_VisualPipe(NULL) {
 }
 
-mafSceneNode::mafSceneNode(mafVME *vme, mafVisualPipe *visual_pipe, const QString code_location) : mafObject(code_location), m_VME(vme), m_VisualPipe(visual_pipe) {
+mafSceneNode::mafSceneNode(mafVME *vme, mafVisualPipe *visual_pipe, const QString code_location) : mafObject(code_location), m_VME(vme), m_VisualPipe(visual_pipe), m_Visibility(false), m_CanVisualize(false) {
     connect(vme, SIGNAL(destroyed()), this, SIGNAL(destroyNode()));
     connect(vme, SIGNAL(detatched()), this, SIGNAL(destroyNode()));
 }
@@ -59,4 +59,14 @@ void mafSceneNode::setVisualPipe(QString visualPipeType) {
 void mafSceneNode::setVisibility(bool visible) {
     m_Visibility = visible;
 }
+
+void mafSceneNode::setCanVisualize(bool canVisualize) {
+    m_CanVisualize = canVisualize;
+}
+
+bool mafSceneNode::canVisualize() const {
+    m_CanVisualize ? m_VME->property("canRead").toBool() : m_CanVisualize;
+    return m_CanVisualize;
+}
+
 
