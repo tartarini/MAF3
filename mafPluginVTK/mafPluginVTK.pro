@@ -46,7 +46,6 @@ HEADERS += mafPluginVTK_global.h \
     mafOpParametricSurface.h
 
 # mafDataPipeSurface.h \
-# mafInteractorVTK.h \
 include(../mafInstallModule.pri)
 include(../mafImportVXL.pri)
 include(../mafImportVTK.pri)
