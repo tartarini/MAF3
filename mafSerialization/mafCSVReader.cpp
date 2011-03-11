@@ -19,7 +19,7 @@ mafCSVReader::mafCSVReader(const QString code_location): mafObjectBase(code_loca
     initialize();
 }
 
-mafCSVReader::mafCSVReader(QIODevice *device, const QString code_location): mafObjectBase(code_location), m_Device(device), m_String(NULL) {
+mafCSVReader::mafCSVReader(QIODevice *device, const QString code_location): mafObjectBase(code_location), m_Device(device), m_String("") {
     initialize();
 }
 
