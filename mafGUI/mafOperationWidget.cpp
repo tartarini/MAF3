@@ -38,13 +38,15 @@ void mafOperationWidget::setOperationName(QString name) {
     ui->boxOperation->setTitle(name);
 }
 
+QString mafOperationWidget::operationName() const {
+    return ui->boxOperation->title();
+}
+
 void mafOperationWidget::setOperationGUI(QWidget *gui) {
     m_OperationGUI = gui;
     // Connect the Ok/Cancel buttons with the GUI close.
     connect(ui->buttonOkCancel, SIGNAL(accepted()), m_OperationGUI, SLOT(close()));
     connect(ui->buttonOkCancel, SIGNAL(rejected()), m_OperationGUI, SLOT(close()));
-    ui->executeOnThread->setChecked(m_Operation->property("executeOnThread").toBool());
-    connect(ui->executeOnThread, SIGNAL(clicked(bool)), m_Operation, SLOT(setExecuteOnThread(bool)));
     // and add the widget to the mafOperationWidget's layout.
     ui->verticalLayoutOperation->addWidget(m_OperationGUI);
     // Then connect automatically the signals of the GUI widgets to the Operation's slots.
