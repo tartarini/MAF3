@@ -33,6 +33,7 @@ The manager defines these Topics:
 - maf.local.resources.operation.started notify all the observer that the operation has started.
 - maf.local.resources.operation.setParameters asign the parameters to the current started operation.
 - maf.local.resources.operation.execute start the execution of operation.
+- maf.local.resources.operation.executed notify that the operation terminated its execution and the thread has been removed.
 - maf.local.resources.operation.executeWithParameters start the execution of operation.
 - maf.local.resources.operation.stop terminate the execution of the operation.
 - maf.local.resources.operation.undo allow to navigate in undo stack in order to restore data before current operation.
@@ -41,6 +42,8 @@ The manager defines these Topics:
 - maf.local.resources.operation.sizeUndoStack retrieve number of elements of undo stack.
 - maf.local.resources.operation.currentRunning retrieve current operation.
 - maf.local.resources.operation.executionPool Return the execution pool containing the running operations.
+
+@sa mafOperation mafOperationWorker
 */
 class MAFRESOURCESSHARED_EXPORT mafOperationManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -70,6 +73,9 @@ signals:
     /// Signal connected to the executeOperation slot.
     void executeOperationSignal();
 
+    /// Signal emitted to notify that the operation ended its execution and the associated thread has been deleted.
+    void executedOperationSignal();
+
     /// Signal connected with executeWithParameters slot.
     void executeWithParametersSignal(QVariantList parameters);
 
@@ -81,9 +87,6 @@ signals:
 
     /// Signal connected with redoOperation slot.
     void redoOperationSignal();
-
-    /// Signal connected with updateUndoStack slot.
-    void updateUndoStackSignal(mafCore::mafObjectBase *op);
 
     /// Signal ocnnected with undoStackSize slot.
     int undoStackSizeSignal() const;
@@ -110,11 +113,10 @@ private slots:
     */
     void setOperationParameters(QVariantList parameters);
 
-    /// Execute current operation
+    /// Execute current operation.
     /**
-        This method check the executeOnThread operation's property to decide if the execution has to be done in the main
-        thread or in a separate one. If executeOnThread flag is "true" then the manager create an execution thread and move
-        the operation on that thread, link the start thread signal with the execute operation's slot and start the thread.
+        This method allows to execute the operation in a separat thread, by instantiating the mafOperationWorker and
+        giving to it the operation to execute. The worker that is put into the execution pool of the operation manager.
     */
     void executeOperation();
 
@@ -124,7 +126,7 @@ private slots:
         manager is notified and can finalize the operation execution lifetime by placing the operation into the undo stack
         if it support the undo or it is deleted.
     */
-    void operationExecuted();
+    void executionEnded();
 
     /// Execute the operation with given parameters.
     /**
@@ -146,13 +148,11 @@ private slots:
     /// Reapply operation results
     void redoOperation();
 
-    /// Clear undo stack destroying all allocated operations before the execution of not-undoable operation passed as argument.
+    /// Clear undo stack destroying all allocated operations before the execution of not-undoable operation.
     /**
         This method allows to clear all the operations present into the stack before that executed and can't undo.
-        The operation that doesn't support the undo is passed as argument. If NULL is passed, all the undo stack is cleared.
-        @param no_undo_op Operation that doesn't support the undo.
     */
-    void updateUndoStack(mafCore::mafObjectBase *no_undo_op);
+    void cleanUndoStack();
 
     /// Return the size of the stack undo in terms of operation numbers
     int undoStackSize() const;
