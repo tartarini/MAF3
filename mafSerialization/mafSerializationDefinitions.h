@@ -27,19 +27,6 @@
 
 namespace mafSerialization {
 
-#define mafUrl QUrl
-#define mafXmlStreamWriter QXmlStreamWriter
-#define mafDomNamedNodeMap QDomNamedNodeMap
-#define mafDomNodeList QDomNodeList
-#define mafDomDocument QDomDocument
-#define mafDomElement QDomElement
-#define mafDomNode QDomNode
-
-#define mafIODevice QIODevice
-
-// Class forwarding list
-class mafCodec;
-
 typedef QHash<QString, QString> mafEncodingHash; ///< Hash table that associate the object type name (mafObject, mafResource,...) and the the output data type (RAW, VTK, STL...)
 typedef QHash<QString, QString> mafCodecHash; ///< Hash table that associate the output data type (RAW, VTK, STL...) and the corresponding codec type (mafCodecRaw...)
 typedef QHash<QString, QString> mafSerializerHash; ///< Hash table that associate the URL schema with the corresponding serializer class (Eg. file, mafSerialization::mafSerializerFileSystem)

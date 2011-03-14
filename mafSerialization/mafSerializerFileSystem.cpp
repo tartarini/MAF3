@@ -31,7 +31,7 @@ void mafSerializerFileSystem::openDevice(mafSerializerOpenMode mode) {
     m_File->setFileName(f);
 
     // Create the connection with the media; in this case open the file on disk.
-    mafIODevice::OpenMode open_mode = (mode == mafSerializerOpenModeIn) ? mafIODevice::ReadOnly : mafIODevice::Append;
+    QIODevice::OpenMode open_mode = (mode == mafSerializerOpenModeIn) ? QIODevice::ReadOnly : QIODevice::Append;
     bool file_opened = m_File->open(open_mode);
 
     if(!file_opened) {
