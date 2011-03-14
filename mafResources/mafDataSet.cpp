@@ -112,7 +112,7 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
             char *value;
             QByteArray stringArray;
             mafEventArgumentsList argList;
-            mafUrl url = QUrl::fromEncoded(item.m_Value.toByteArray());
+            QUrl url = QUrl::fromEncoded(item.m_Value.toByteArray());
             if (url.isValid()) {
                 QString urlString = url.toString();
                 argList.append(mafEventArgument(QString, urlString));

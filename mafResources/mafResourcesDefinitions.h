@@ -34,8 +34,6 @@
 
 namespace mafResources {
 
-#define mafUrl QUrl
-
 class mafDataSet;
 class mafDataSetCollection;
 class mafResource;
