@@ -31,6 +31,7 @@ include(mafMacroInstallProject)
 include(mafMacroSetupQt)
 include(mafMacroWrapTargetFiles)
 include(mafMacroTargetLibraries)
+include(mafCopyFilesFromExtension)
 
 #-----------------------------------------------------------------------------
 # MAF3 Foundation Libraries.
