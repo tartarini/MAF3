@@ -28,6 +28,7 @@ mafOperationWorker::mafOperationWorker(mafOperation *op, const QString code_loca
 
 mafOperationWorker::~mafOperationWorker() {
     m_StateMachine.stop();
+    m_ExecutionThread->quit();
     mafDEL(m_Operation);
     mafDELThread(m_ExecutionThread);
 }
@@ -52,6 +53,7 @@ void mafOperationWorker::initializeWorkflow() {
 
     // Connect the state entered/exited with operation's slots
     connect(runningState, SIGNAL(entered()), m_Operation, SLOT(execute()));
+    connect(stackedState, SIGNAL(entered()), m_Operation, SLOT(unDo()));
 
     // Add transitions.
     idleState->addTransition(m_Operation, SIGNAL(startExecution()), runningState);
