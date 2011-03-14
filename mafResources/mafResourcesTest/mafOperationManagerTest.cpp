@@ -17,51 +17,204 @@
 #include <mafVMEManager.h>
 #include <mafOperationManager.h>
 #include <mafOperation.h>
-#include <mafVME.h>
+//#include <mafVME.h>
 #include <mafOperationWorker.h>
+
+#define kMAX_COUNT 10000
 
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
 
+class testEventLoopTerminator : public QObject {
+    Q_OBJECT
+
+public:
+    testEventLoopTerminator();
+
+    void setCounter(int c);
+
+public slots:
+    void workDoneCounter();
+
+signals:
+    void terminateLoop();
+
+private:
+    int m_Counter;
+};
+
+testEventLoopTerminator::testEventLoopTerminator() : QObject(), m_Counter(0) {
+}
+
+void testEventLoopTerminator::setCounter(int c) {
+    m_Counter = c;
+}
+
+void testEventLoopTerminator::workDoneCounter() {
+    --m_Counter;
+
+    if ( m_Counter == 0 ) {
+        qDebug() << "Terminating Loop...";
+        emit terminateLoop();
+    }
+}
+
+//==========================================================================================
+// Objects used in test suite.
+//==========================================================================================
+
 /**
- Class name: testHeavyOperationforOperationManager
- This operation is an example of heavy operation that needs to be executed on a separate thread.
+ Class name: testEndlessOperation
+ This is an example of endless operation that needs to be aborted to tesrminate the test suite.
  */
-class testHeavyOperationforOperationManager : public mafResources::mafOperation {
+class testEndlessOperation : public mafResources::mafOperation {
     Q_OBJECT
     mafSuperclassMacro(mafResources::mafOperation);
 
 public:
     /// Object constructor.
-    testHeavyOperationforOperationManager(const QString code_location = "");
+    testEndlessOperation(const QString code_location = "");
+
+public slots:
+    /// execution method
+    /*virtual*/ void execute();
+};
+
+testEndlessOperation::testEndlessOperation(const QString code_location) : mafOperation(code_location) {
+    m_CanUnDo = false;
+    setObjectName("testEndlessOperation");
+}
+
+void testEndlessOperation::execute() {
+    while ( !m_Abort ) {
+        ;
+    }
+
+    if ( m_Abort ) {
+        return;
+    }
+
+    emit executionEnded();
+}
+
+//------------------------------------------------------------------------------------------------------------------------------------------------
+
+/**
+ Class name: testNotUndoOperation
+ This operation is an example of not undoable operation.
+ */
+class testNotUndoOperation : public mafResources::mafOperation {
+    Q_OBJECT
+    mafSuperclassMacro(mafResources::mafOperation);
+
+public:
+    /// Object constructor.
+    testNotUndoOperation(const QString code_location = "");
+
+    /// Return the internal variable value.
+    int val();
 
 public slots:
     /// execution method
     /*virtual*/ void execute();
 
 private:
-    int m_val;
+    int m_Val;
 };
 
-testHeavyOperationforOperationManager::testHeavyOperationforOperationManager(const QString code_location) : mafOperation(code_location), m_val(0) {
+testNotUndoOperation::testNotUndoOperation(const QString code_location) : mafOperation(code_location), m_Val(0) {
     m_CanUnDo = false;
-    setObjectName("ThreadedOperation");
+    setObjectName("NotUndoOperation");
 }
 
-void testHeavyOperationforOperationManager::execute() {
-    while ( !m_Abort ) {
-        ;
+int testNotUndoOperation::val() {
+    return m_Val;
+}
+
+void testNotUndoOperation::execute() {
+    m_Val = 0;
+    int i = 0;
+
+    while ( ++i < kMAX_COUNT ) {
+        if ( i % 1000 == 0 ) {
+            qDebug() << "Current not undo value " << m_Val;
+            m_Val += i;
+        }
     }
-//    for ( int i = 0; i < 10000; ++i ) {
-//        if ( i % 1000 == 0 ) {
-//            m_val += i;
-//            qDebug() << m_val;
-//        }
-//    }
 
-    //emit executionEnded();
+    emit executionEnded();
 }
+
+//------------------------------------------------------------------------------------------------------------------------------------------------
+
+/**
+ Class name: testUndoOperation
+ This operation is an example of undoable operation.
+ */
+class testUndoOperation : public mafResources::mafOperation {
+    Q_OBJECT
+    mafSuperclassMacro(mafResources::mafOperation);
+
+public:
+    /// Object constructor.
+    testUndoOperation(const QString code_location = "");
+
+    /// Return the internal variable value.
+    int val();
+
+public slots:
+    /// execution method
+    /*virtual*/ void execute();
+
+    /// Allows to call the piece of algorithm that is needed to restore the previous state of the operation's execution.
+    /*virtual*/ void unDo();
+
+    /// Allows to call the piece of algorithm that is needed to apply the operation again.
+    /*virtual*/ void reDo();
+
+private:
+    int m_Val;
+};
+
+testUndoOperation::testUndoOperation(const QString code_location) : mafOperation(code_location), m_Val(0) {
+    setObjectName("UndoOperation");
+}
+
+int testUndoOperation::val() {
+    return m_Val;
+}
+
+void testUndoOperation::execute() {
+    // Initialize variable
+    m_Val = 0;
+    int i = 0;
+
+    // do some heavy calculation...
+    while ( ++i < kMAX_COUNT ) {
+        if ( i % 1000 == 0 ) {
+            qDebug() << "\nCurrent undo value " << m_Val;
+            m_Val += i;
+        }
+    }
+
+    // set the final result value.
+    m_Val = kMAX_COUNT;
+
+    emit executionEnded();
+}
+
+void testUndoOperation::unDo() {
+    m_Val = 0;
+}
+
+void testUndoOperation::reDo() {
+    m_Val = kMAX_COUNT;
+}
+
+//==========================================================================================
+// Test Suite
+//==========================================================================================
 
 /**
  Class name: mafOperationManagerTest
@@ -80,22 +233,27 @@ private slots:
         m_VMEManager = mafVMEManager::instance();
         m_OperationManager = mafOperationManager::instance();
 
-        m_Vme = mafNEWFromString("mafResources::mafVME");
+        m_LoopManager = new testEventLoopTerminator();
 
-        mafRegisterObject(testHeavyOperationforOperationManager);
+        // Register custom operations.
+        mafRegisterObject(testEndlessOperation);
+        mafRegisterObject(testNotUndoOperation);
+        mafRegisterObject(testUndoOperation);
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         qDebug() << "cleanup test suite...";
         m_OperationManager->shutdown();
-
-        mafUnregisterObject(testHeavyOperationforOperationManager);
-
-        mafDEL(m_Vme);
-
-        // Shutdown eventbus singleton and core singletons.
         m_VMEManager->shutdown();
+
+        delete m_LoopManager;
+        m_LoopManager = NULL;
+
+        // Unregister custom operations.
+        mafUnregisterObject(testEndlessOperation);
+        mafUnregisterObject(testNotUndoOperation);
+        mafUnregisterObject(testUndoOperation);
 
         //restore vme manager status
         m_EventBus->notifyEvent("maf.local.resources.hierarchy.create");
@@ -107,59 +265,138 @@ private slots:
     /// mafOperationManager allocation test case.
     void mafOperationManagerAllocationTest();
 
-    /// Threaded execution test
-    void threadedExecutionTest();
+    /// Abort execution test
+    void abortExecutionTest();
+
+    /// Undo-Redo functionality test
+    void undoRedoExecutionTest();
+
+private:
+    /// Utility method to start operations. Return the operation started.
+    const mafCore::mafObjectBase *startOperation(QString opType);
+
+    /// Utility method to retrieve the execution pool.
+    const mafExecutionPool *retrievePool();
 
 private:
     mafEventBusManager *m_EventBus; ///< Reference to the event bus.
-    mafOperationManager *m_OperationManager;
-    mafVMEManager *m_VMEManager;
-    mafCore::mafObjectBase *m_Vme;
+    mafOperationManager *m_OperationManager; ///< Reference to the OperationManager.
+    const mafExecutionPool *m_ExecutionPool; ///< Pool of running thread.
+    testEventLoopTerminator *m_LoopManager; ///< Class responsible to terminate the event loop.
+    mafVMEManager *m_VMEManager; ///< Manager needed for the hierarchy.
 };
 
-void mafOperationManagerTest::mafOperationManagerAllocationTest() {
-    QVERIFY(m_OperationManager != NULL);
-}
-
-void mafOperationManagerTest::threadedExecutionTest() {
-    QString vt("testHeavyOperationforOperationManager");
+const mafCore::mafObjectBase *mafOperationManagerTest::startOperation(QString opType) {
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(QString, vt));
+    argList.append(mafEventArgument(QString, opType));
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
 
     const mafCore::mafObjectBase *op = NULL;
     QGenericReturnArgument ret_val = mafEventReturnArgument(const mafCore::mafObjectBase*, op);
     m_EventBus->notifyEvent("maf.local.resources.operation.currentRunning", mafEventTypeLocal, NULL, &ret_val);
+    return op;
+}
 
-    QVariant val(true);
-    ((mafCore::mafObjectBase *)op)->setProperty("executeOnThread", val);
+const mafExecutionPool *mafOperationManagerTest::retrievePool() {
+    const mafExecutionPool *executionPool = NULL;
+    QGenericReturnArgument pool_val = mafEventReturnArgument(const mafExecutionPool *, executionPool);
+    m_EventBus->notifyEvent("maf.local.resources.operation.executionPool", mafEventTypeLocal, NULL, &pool_val);
+    return executionPool;
+}
 
-    QEventLoop loop; // Event loop needed for the threaded execution signal emit.
-    QObject::connect(op, SIGNAL(executionEnded()), &loop, SLOT(quit()));
 
+void mafOperationManagerTest::mafOperationManagerAllocationTest() {
+    QVERIFY(m_OperationManager != NULL);
+
+    m_ExecutionPool = this->retrievePool();
+    QVERIFY(m_ExecutionPool != NULL);
+
+    int poolSize = m_ExecutionPool->size();
+    QVERIFY(poolSize == 0);
+}
+
+void mafOperationManagerTest::abortExecutionTest() {
+    // Event loop needed for signal notification in threads.
+    // ALL THE NOTIFICATIONS HAS TO BE DONE INTO THE EVENT LOOP SCOPE.
+    QEventLoop loop;
+
+    const mafCore::mafObjectBase *op = this->startOperation("testEndlessOperation");
+
+    // Start the operation's execution
     m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
-    qDebug() << mafTr("start background execution...");
+    // Print debug message (possible and done immediately because the operation execute in background).
+    qDebug() << mafTr("start background execution for ") << op->objectName();
 
+    // Create a timer to abort the endlass loop after a fixed amount of time.
     QTimer t;
     t.setSingleShot(true);
 
-    const mafExecutionPool *opWorker = NULL;
-    QGenericReturnArgument worker_val = mafEventReturnArgument(const mafExecutionPool *, opWorker);
-    m_EventBus->notifyEvent("maf.local.resources.operation.executionPool", mafEventTypeLocal, NULL, &worker_val);
-    int num = opWorker->size();
+    // Ask for the execution pool
+    int poolSize = m_ExecutionPool->size();
+    QVERIFY(poolSize == 1);
 
-    QVERIFY(num == 1);
+    // Get the operation's worker.
+    mafObjectBase *obj = m_ExecutionPool->at(0);
+    mafOperationWorker *worker = qobject_cast<mafResources::mafOperationWorker *>(obj);
 
-    mafObjectBase *obj = opWorker->at(0);
-    mafOperationWorker *w = qobject_cast<mafResources::mafOperationWorker *>(obj);
-
-    connect(&t, SIGNAL(timeout()), w, SLOT(abortExecution()));
+    // Connect the timeout to the abort slot to abort the operation's execution.
+    connect(&t, SIGNAL(timeout()), worker, SLOT(abortExecution()));
+    // The timer also quit the event loop.
     connect(&t, SIGNAL(timeout()), &loop, SLOT(quit()));
 
-    QVERIFY(w != NULL);
+    QVERIFY(worker != NULL);
 
+    // Start the timer and the event loop.
     t.start(2000);
     loop.exec();
+
+    // The endless operation has been aborted => removed from the execution pool.
+    poolSize = m_ExecutionPool->size();
+    QVERIFY(poolSize == 0);
+}
+
+void mafOperationManagerTest::undoRedoExecutionTest() {
+    // Event loop needed for signal notification in threads.
+    // ALL THE NOTIFICATIONS HAS TO BE DONE INTO THE EVENT LOOP SCOPE.
+    QEventLoop loop;
+
+    mafRegisterLocalCallback("maf.local.resources.operation.executed", m_LoopManager, "workDoneCounter()")
+
+    const mafCore::mafObjectBase *op = this->startOperation("testUndoOperation");
+    // Start the operation's execution
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
+    // Print debug message (possible and done immediately because the operation execute in background).
+    qDebug() << mafTr("start background execution for ") << op->objectName();
+
+    // Ask for the execution pool
+    int poolSize = m_ExecutionPool->size();
+    QVERIFY(poolSize == 1);
+
+    // Fill the undo stack with other operations...
+    this->startOperation("testUndoOperation");
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
+    this->startOperation("testUndoOperation");
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
+    this->startOperation("testUndoOperation");
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
+
+    poolSize = m_ExecutionPool->size();
+
+    m_LoopManager->setCounter(poolSize);
+
+    connect(m_LoopManager, SIGNAL(terminateLoop()), &loop, SLOT(quit()));
+
+    qDebug() << "Starting loop...";
+    loop.exec();
+
+    // The endless operation has been aborted => removed from the execution pool.
+    poolSize = m_ExecutionPool->size();
+    QVERIFY(poolSize == 0);
+
+    int undoStackSize;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(int, undoStackSize);
+    m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &ret_val);
+    QVERIFY(undoStackSize == 4);
 }
 
 MAF_REGISTER_TEST(mafOperationManagerTest);
