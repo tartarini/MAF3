@@ -13,5 +13,8 @@
 
 using namespace mafCore;
 
+mafCommand::mafCommand(const QString code_location) : mafObjectBase(code_location) {
+}
+
 mafCommand::~mafCommand() {
 }
