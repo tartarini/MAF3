@@ -17,9 +17,17 @@
 #include <mafPlugin.h>
 
 #ifdef WIN32
-    #define TEST_LIBRARY_NAME "mafPluginTest_d.mafplugin"
+    #ifdef QT_DEBUG
+        #define TEST_LIBRARY_NAME "mafPluginTest_d.mafplugin"
+    #else
+        #define TEST_LIBRARY_NAME "mafPluginTest.mafplugin"
+    #endif
 #else
-    #define TEST_LIBRARY_NAME "libmafPluginTest_debug.mafplugin"
+     #ifdef QT_DEBUG
+        #define TEST_LIBRARY_NAME "libmafPluginTest_debug.mafplugin"
+     #else
+        #define TEST_LIBRARY_NAME "libmafPluginTest.mafplugin"
+    #endif
 #endif
 
 using namespace mafCore;

@@ -24,8 +24,11 @@ mafMacroInitProject(0)
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SUFFIX ".mafplugin")
+
 ## #################################################################
 ## Installation
 ## #################################################################
 
 mafMacroInstallProject()
+

@@ -71,7 +71,9 @@ def execute():
     elif(str(os.sys.platform).lower() == 'win32'):
         suffix = "Test_d"
         
-
+    if(param['release-enable'] == True):
+        suffix = "Test" 
+        
     for dir in dirList:
         executable = dir  + suffix
         if(os.path.exists(executable) or os.path.exists(executable + ".exe")):
@@ -94,15 +96,18 @@ def usage():
     print "-h, --help                 show help (this)"
     print "-d, --directory=           select path in which find executables"
     print "-t, --test-suite=          choose the test suite from supported ones: QTest , cppunit"
+    print "-R, --release-enable       this flag activate the release execution"
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hd:t:", ["help", "directory=", "test-suite="] )
+        opts, args = getopt.getopt(sys.argv[1:], "hd:t:R", ["help", "directory=", "test-suite=", "release-enable"] )
     except getopt.GetoptError, err:
         # print help information and exit:
         print str(err) # will print something like "option -a not recognized"
         usage()
         sys.exit(2)
+        
+    param['release-enable'] = False
     
     for o, a in opts:
         if o in ("-h", "--help"):
@@ -112,6 +117,8 @@ def main():
             param['directory'] = os.path.abspath(os.path.normpath(a))
         elif o in ("-t", "--test-suite"):
             param['test-suite'] = a
+        elif o in ("-R", "--release-enable"):
+            param['release-enable'] = True
         else:
             assert False, "unhandled option"
     

@@ -13,15 +13,26 @@
 #include <mafQAManager.h>
 
 #ifdef WIN32
-    #define TEST_LIBRARY_NAME "mafPluginTest_d.dll"
-    #define TEST_SCRIPT_NAME "dir"
-#else
-    #ifdef __APPLE__
-        #define TEST_LIBRARY_NAME "libmafPluginTest_debug.dylib"
-        #define TEST_SCRIPT_NAME "whoami"
+#define TEST_SCRIPT_NAME "dir"
+    #ifdef QT_DEBUG
+        #define TEST_LIBRARY_NAME "mafPluginTest_d.dll"
     #else
-        #define TEST_LIBRARY_NAME "libmafPluginTest_debug.so"
-        #define TEST_SCRIPT_NAME "whoami"
+        #define TEST_LIBRARY_NAME "mafPluginTest.dll"
+    #endif
+#else
+    #define TEST_SCRIPT_NAME "whoami"
+    #ifdef __APPLE__
+        #ifdef QT_DEBUG
+            #define TEST_LIBRARY_NAME "libmafPluginTest_debug.dylib"
+        #else
+            #define TEST_LIBRARY_NAME "libmafPluginTest.dylib"
+        #endif
+    #else
+        #ifdef QT_DEBUG
+            #define TEST_LIBRARY_NAME "libmafPluginTest_debug.so"
+        #else
+            #define TEST_LIBRARY_NAME "libmafPluginTest.so"
+        #endif
     #endif
 #endif
 

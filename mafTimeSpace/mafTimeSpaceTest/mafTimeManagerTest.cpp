@@ -21,12 +21,24 @@
 #define interval 500
 
 #ifdef WIN32
-    #define TIME_SPACE_LIBRARY_NAME "mafTimeSpace_d.dll"
+    #ifdef QT_DEBUG
+        #define TIME_SPACE_LIBRARY_NAME "mafTimeSpace_d.dll"
+    #else
+        #define TIME_SPACE_LIBRARY_NAME "mafTimeSpace.dll"
+    #endif
 #else
     #ifdef __APPLE__
-        #define TIME_SPACE_LIBRARY_NAME "libmafTimeSpace_debug.dylib"
+        #ifdef QT_DEBUG
+            #define TIME_SPACE_LIBRARY_NAME "libmafTimeSpace_debug.dylib"
+        #else
+            #define TIME_SPACE_LIBRARY_NAME "libmafTimeSpace.dylib"
+        #endif
     #else
-        #define TIME_SPACE_LIBRARY_NAME "libmafTimeSpace_debug.so"
+        #ifdef QT_DEBUG
+            #define TIME_SPACE_LIBRARY_NAME "libmafTimeSpace_debug.so"
+        #else
+            #define TIME_SPACE_LIBRARY_NAME "libmafTimeSpace.so"
+        #endif
     #endif
 #endif
 

@@ -31,6 +31,7 @@ class MAFCORESHARED_EXPORT mafObject : public mafObjectBase {
     Q_PROPERTY(bool selected READ selected WRITE setSelected)
     Q_PROPERTY(QString iconFile READ iconFile WRITE setIconFile)
     Q_PROPERTY(int lockStatus READ lockStatus)
+    Q_PROPERTY(int progressStatus READ progressStatus WRITE setProgressStatus)
 
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
@@ -100,7 +101,13 @@ public:
     mafDictionary *dictionary() const;
 
     /// Return the lock status of the object.
-    int lockStatus () const;
+    int lockStatus() const;
+
+    /// Set value of progress status.
+    void setProgressStatus(int status);
+
+    /// Resturn status of progress to be used in a porgress bar.
+    int progressStatus() const;
 
 public slots:
     /// Method used to initialize the object's tag list.
@@ -111,7 +118,9 @@ protected:
     /* virtual */ ~mafObject();
     bool m_Selected; ///< Flag used to store the selection flag of the owned VME.
     QString m_IconFIle; ///< Filename associated to the icon file to use with the object.
-    mafObjectLock m_LockStatus; ///< Contains the status of object lock.
+    mafObjectLockStatus m_LockStatus; ///< Contains the status of object lock.
+    int m_ProgressStatus; ///< Contains the progress status.
+
 
 private:
     bool m_Modified; ///< Contains the modified state of the VME.
@@ -143,8 +152,12 @@ inline mafDictionary *mafObject::dictionary() const {
     return m_Dictionary;
 }
 
-inline int mafObject::lockStatus () const {
+inline int mafObject::lockStatus() const {
     return m_LockStatus;
+}
+
+inline int mafObject::progressStatus() const {
+    return m_ProgressStatus;
 }
 
 } // mafCore namespace

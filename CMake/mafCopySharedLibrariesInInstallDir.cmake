@@ -21,13 +21,6 @@ get_filename_component(fileName ${file} NAME)
 set(result)
 set(erro)
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i
-        COMMAND ${CMAKE_COMMAND} ARGS -E  make_directory ${CMAKE_BINARY_DIR}/modules
-        COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}.py ${CMAKE_BINARY_DIR}/modules
-        COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${SHARED_LIB_COPY_SOURCE} ${CMAKE_BINARY_DIR}/modules/${wrap_lib_name}
-        COMMENT "-- Moving python modules to ${CMAKE_BINARY_DIR}/modules")
-
 EXECUTE_PROCESS(
    COMMAND ${CMAKE_COMMAND} -E copy
    ${file}
