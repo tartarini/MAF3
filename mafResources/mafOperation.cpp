@@ -14,7 +14,8 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafOperation::mafOperation(const QString code_location) : mafResource(code_location), m_IsRunning(false), m_CanUnDo(true), m_ExecuteOnThread(false), m_OperationType(mafOperationTypeOperation), m_CanAbort(true), m_Abort(false) {
+mafOperation::mafOperation(const QString code_location) : mafResource(code_location), m_IsRunning(false), m_CanUnDo(true), m_OperationType(mafOperationTypeOperation), m_CanAbort(true), m_Abort(false), m_InputPreserve(true) {
+    setObjectName(this->metaObject()->className());
 }
 
 mafOperation::~mafOperation() {
@@ -30,8 +31,8 @@ void mafOperation::terminate() {
 }
 
 void mafOperation::abort() {
-    QMutexLocker locker(&mutex);
-    m_Abort = true;
+    QMutexLocker locker(&m_Mutex);
+    m_Abort = m_IsRunning;
 }
 
 void mafOperation::unDo() {
