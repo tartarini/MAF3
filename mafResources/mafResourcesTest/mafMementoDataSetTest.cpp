@@ -179,5 +179,3 @@ void mafMementoDataSetTest::mafMementoDataSetCustomAllocationTest() {
 
 MAF_REGISTER_TEST(mafMementoDataSetTest);
 #include "mafMementoDataSetTest.moc"
-
-

@@ -117,4 +117,3 @@ void mafDataBoundaryAlgorithmTest::mafBoundaryAlgorithmStrategyTest() {
 
 MAF_REGISTER_TEST(mafDataBoundaryAlgorithmTest);
 #include "mafDataBoundaryAlgorithmTest.moc"
-
