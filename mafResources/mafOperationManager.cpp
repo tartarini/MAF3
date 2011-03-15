@@ -28,9 +28,10 @@ mafOperationManager* mafOperationManager::instance() {
 }
 
 void mafOperationManager::shutdown() {
-    while ( m_ExecutionPool.size() > 0 ) {
-        // Wait that all threaded operations terminates...
-    }
+    qDebug() << "Execution pool size: " << m_ExecutionPool.size();
+//    while ( m_ExecutionPool.size() > 0 ) {
+//        // Wait that all threaded operations terminates...
+//    }
     flushUndoStack();
 }
 
