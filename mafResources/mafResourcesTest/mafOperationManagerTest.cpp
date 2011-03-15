@@ -26,30 +26,6 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
 
-class mafOperationManagerTest;
-
-class testEventLoopTerminator : public QObject {
-    Q_OBJECT
-
-public:
-    testEventLoopTerminator(mafOperationManagerTest *testClass);
-
-    void setCounter(int c);
-
-public slots:
-    void workDoneCounter();
-    void startOperation();
-
-signals:
-    void terminateLoop();
-
-private:
-    mutable QMutex mutex;
-    int m_Counter;
-    mafOperationManagerTest *m_TestClass;
-};
-
-
 //==========================================================================================
 // Objects used in test suite.
 //==========================================================================================
@@ -223,7 +199,6 @@ private slots:
         mafMessageHandler::instance()->installMessageHandler();
         m_EventBus = mafEventBusManager::instance();
 
-//        mafResourcesSingletons::mafSingletonsInitialize();
         m_VMEManager = mafVMEManager::instance();
         m_OperationManager = mafOperationManager::instance();
 
@@ -234,8 +209,6 @@ private slots:
         mafRegisterObject(testEndlessOperation);
         mafRegisterObject(testNotUndoOperation);
         mafRegisterObject(testUndoOperation);
-
-        m_LoopManager = new testEventLoopTerminator(this);
     }
 
     /// Cleanup test variables memory allocation.
@@ -244,15 +217,10 @@ private slots:
         m_OperationManager->shutdown();
         m_VMEManager->shutdown();
 
-        delete m_LoopManager;
-        m_LoopManager = NULL;
-
         // Unregister custom operations.
         mafUnregisterObject(testEndlessOperation);
         mafUnregisterObject(testNotUndoOperation);
         mafUnregisterObject(testUndoOperation);
-
-//        mafResourcesSingletons::mafSingletonsShutdown();
 
         //restore vme manager status
         m_EventBus->notifyEvent("maf.local.resources.hierarchy.create");
@@ -281,7 +249,7 @@ private:
     mafEventBusManager *m_EventBus; ///< Reference to the event bus.
     mafOperationManager *m_OperationManager; ///< Reference to the OperationManager.
     const mafExecutionPool *m_ExecutionPool; ///< Pool of running thread.
-    testEventLoopTerminator *m_LoopManager; ///< Class responsible to terminate the event loop.
+//    testEventLoopTerminator *m_LoopManager; ///< Class responsible to terminate the event loop.
     mafVMEManager *m_VMEManager; ///< Manager needed for the hierarchy.
 };
 
@@ -314,17 +282,15 @@ void mafOperationManagerTest::mafOperationManagerAllocationTest() {
     QVERIFY(poolSize == 0);
 }
 
-void mafOperationManagerTest::abortExecutionTest() {
-    return;
-
-    // Event loop needed for signal notification in threads.
-    // ALL THE NOTIFICATIONS HAS TO BE DONE INTO THE EVENT LOOP SCOPE.
+bool startEndlessOperationOnEventLoop(mafOperationManagerTest *opManagerTest) {
     QEventLoop loop;
 
-    const mafCore::mafObjectBase *op = this->startOperation("testEndlessOperation");
+    const mafExecutionPool *execPool = opManagerTest->retrievePool();
+
+    const mafCore::mafObjectBase *op = opManagerTest->startOperation("testEndlessOperation");
 
     // Start the operation's execution
-    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
     // Print debug message (possible and done immediately because the operation execute in background).
     qDebug() << mafTr("start background execution for ") << op->objectName();
 
@@ -332,78 +298,36 @@ void mafOperationManagerTest::abortExecutionTest() {
     QTimer t;
     t.setSingleShot(true);
 
-    // Ask for the execution pool
-    int poolSize = m_ExecutionPool->size();
-    QVERIFY(poolSize == 1);
-
     // Get the operation's worker.
-    mafObjectBase *obj = m_ExecutionPool->at(0);
+    mafObjectBase *obj = execPool->at(0);
     mafOperationWorker *worker = qobject_cast<mafResources::mafOperationWorker *>(obj);
 
     // Connect the timeout to the abort slot to abort the operation's execution.
-    connect(&t, SIGNAL(timeout()), worker, SLOT(abortExecution()));
+    QObject::connect(&t, SIGNAL(timeout()), worker, SLOT(abortExecution()));
     // The timer also quit the event loop.
-    connect(&t, SIGNAL(timeout()), &loop, SLOT(quit()));
-
-    QVERIFY(worker != NULL);
+    QObject::connect(&t, SIGNAL(timeout()), &loop, SLOT(quit()));
 
     // Start the timer and the event loop.
     t.start(2000);
     loop.exec();
+    return true;
+}
+
+void mafOperationManagerTest::abortExecutionTest() {
+    bool res = startEndlessOperationOnEventLoop(this);
+
+    QVERIFY(res);
+
+    qDebug() << "****************** Execution ABORTED ******************";
 
     // The endless operation has been aborted => removed from the execution pool.
-    poolSize = m_ExecutionPool->size();
+    int poolSize = m_ExecutionPool->size();
     QVERIFY(poolSize == 0);
 }
 
 bool startOperationOnEventLoop(mafOperationManagerTest *opManagerTest);
 
 void mafOperationManagerTest::undoRedoExecutionTest() {
-    // Event loop needed for signal notification in threads.
-    // ALL THE NOTIFICATIONS HAS TO BE DONE INTO THE EVENT LOOP SCOPE.
-//    QEventLoop loop; <-
-
-//    mafRegisterLocalCallback("maf.local.resources.operation.executed", m_LoopManager, "workDoneCounter()") <-
-    m_LoopManager->setCounter(2);
-
-//    QTimer t1, t2;
-//    t1.setSingleShot(true);
-//    t2.setSingleShot(true);
-
-//    connect(m_LoopManager, SIGNAL(terminateLoop()), &loop, SLOT(quit())); <-
-//    connect(&t1, SIGNAL(timeout()), m_LoopManager, SLOT(startOperation()));
-//    connect(&t2, SIGNAL(timeout()), m_LoopManager, SLOT(startOperation()));
-
-//    const mafCore::mafObjectBase *op = this->startOperation("testUndoOperation");
-    // Start the operation's execution
-//    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
-    // Print debug message (possible and done immediately because the operation execute in background).
-//    qDebug() << mafTr("start background execution for ") << op->objectName();
-
-    // Ask for the execution pool
-//    int poolSize = m_ExecutionPool->size();
-//    QVERIFY(poolSize == 1);
-
-    // Fill the undo stack with other operations...
-//    this->startOperation("testUndoOperation");
-//    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
-//    this->startOperation("testUndoOperation");
-//    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
-//    this->startOperation("testUndoOperation");
-//    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
-
-//    poolSize = m_ExecutionPool->size();
-//    m_LoopManager->setCounter(poolSize);
-
-
-//    qDebug() << "Starting loop...";
-//    t1.start(2000);
-//    t2.start(2000);
-//    loop.exec();
-
-    // The endless operation has been aborted => removed from the execution pool.
-//    poolSize = m_ExecutionPool->size();
-//    QVERIFY(poolSize == 0);
     bool res = startOperationOnEventLoop(this);
 
     QVERIFY(res);
@@ -416,7 +340,7 @@ void mafOperationManagerTest::undoRedoExecutionTest() {
 }
 
 bool startOperationOnEventLoop(mafOperationManagerTest *opManagerTest) {
-    QEventLoop loop; // Event loop needed for the timer.
+    QEventLoop loop; // Event loop needed for the threaded execution life cycle.
     QTimer timerLoop; // Timer that will terminate the event loop.
     timerLoop.setSingleShot(true);
     QObject::connect(&timerLoop, SIGNAL(timeout()), &loop, SLOT(quit()));
@@ -432,38 +356,6 @@ bool startOperationOnEventLoop(mafOperationManagerTest *opManagerTest) {
     loop.exec();
     return true;
 }
-
-
-///////////////////////////////
-testEventLoopTerminator::testEventLoopTerminator(mafOperationManagerTest *testClass) : QObject(), m_Counter(0), m_TestClass(testClass) {
-}
-
-void testEventLoopTerminator::setCounter(int c) {
-    m_Counter = c;
-}
-
-void testEventLoopTerminator::startOperation() {
-    ++m_Counter;
-    const mafCore::mafObjectBase *op = m_TestClass->startOperation("testUndoOperation");
-    QString n("Operation_");
-    n.append(QString::number(m_Counter));
-    ((QObject *)op)->setObjectName(n);
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
-    qDebug() << mafTr("start background execution for ") << op->objectName();
-}
-
-void testEventLoopTerminator::workDoneCounter() {
-    QMutexLocker locker(&mutex);
-    --m_Counter;
-
-    qDebug() << "Loop Terminator Counter = " << m_Counter;
-
-    if ( m_Counter == 0 ) {
-        qDebug() << "Terminating Loop...";
-        emit terminateLoop();
-    }
-}
-
 
 MAF_REGISTER_TEST(mafOperationManagerTest);
 #include "mafOperationManagerTest.moc"
