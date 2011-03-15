@@ -29,13 +29,16 @@ mafOperationWorker::mafOperationWorker(mafOperation *op, const QString code_loca
 mafOperationWorker::~mafOperationWorker() {
     m_StateMachine.stop();
     m_ExecutionThread->quit();
+    qDebug() << "Destroying operation " << m_Operation->objectName();
     mafDEL(m_Operation);
-    mafDELThread(m_ExecutionThread);
+//    mafDELThread(m_ExecutionThread);
 }
 
 void mafOperationWorker::initializeWorkflow() {
     connect(m_ExecutionThread, SIGNAL(started()), m_Operation, SIGNAL(startExecution()));
+    connect(m_Operation, SIGNAL(executionEnded()), m_ExecutionThread, SLOT(quit()));
     connect(m_Operation, SIGNAL(executionEnded()), this, SIGNAL(workDone()));
+    connect(this, SIGNAL(workAborted()), m_ExecutionThread, SLOT(quit()));
     connect(this, SIGNAL(workAborted()), m_Operation, SLOT(abort()));
     connect(this, SIGNAL(workAborted()), m_Operation, SLOT(terminate()));
 
