@@ -171,10 +171,21 @@ MACRO(mafMacroWrapBuild)
           set(lib_ext ".so")
         endif(APPLE)
       endif(WIN32)
+      
+      SET(realName)
+      if(CMAKE_BUILD_TYPE MATCHES Debug)
+        if(WIN32)
+            SET(realName "${PROJECT_NAME}_d" )
+        else(WIN32)
+            SET(realName "${PROJECT_NAME}_debug" )
+        endif(WIN32)
+      else(CMAKE_BUILD_TYPE MATCHES Debug)
+            SET(realName "${PROJECT_NAME}" )
+      endif(CMAKE_BUILD_TYPE MATCHES Debug)
 
-      set(lib_name ${lib_prefix}${PROJECT_NAME}${lib_ext})
+      set(lib_name ${lib_prefix}${realName}${lib_ext})
 	  set(wrap_lib_prefix "_")
-      set(wrap_lib_name ${wrap_lib_prefix}${PROJECT_NAME}${wrap_lib_ext})
+      set(wrap_lib_name ${wrap_lib_prefix}${realName}${wrap_lib_ext})
       
       set(SHARED_LIB_COPY_COMMAND)
       IF(MSVC)
@@ -186,11 +197,11 @@ MACRO(mafMacroWrapBuild)
       add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i
         COMMAND ${CMAKE_COMMAND} ARGS -E  make_directory ${CMAKE_BINARY_DIR}/modules
-        COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}.py ${CMAKE_BINARY_DIR}/modules
+        COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${${PROJECT_NAME}_BINARY_DIR}/${realName}.py ${CMAKE_BINARY_DIR}/modules
         COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${SHARED_LIB_COPY_SOURCE} ${CMAKE_BINARY_DIR}/modules/${wrap_lib_name}
         COMMENT "-- Moving python modules to ${CMAKE_BINARY_DIR}/modules")
 
-      set(${PROJECT_NAME}_MODULES ${CMAKE_BINARY_DIR}/modules/${PROJECT_NAME}.py)
+      set(${PROJECT_NAME}_MODULES ${CMAKE_BINARY_DIR}/modules/${realName}.py)
 
     endif(SWIG_FOUND AND PYTHONLIBS_FOUND)
   endif(${WRAP_LIST_FOUND})
