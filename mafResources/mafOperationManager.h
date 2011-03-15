@@ -186,6 +186,7 @@ private:
     */
     mafOperationWorker *removeWorkerFromPool(QObject *obj);
 
+    mutable QMutex m_Mutex;
     QList<mafOperation *> m_UndoStack;    ///< Undo stack which is a linked list of operations
     mafOperation *m_CurrentOperation;       ///< Current operation handled by th manager
     mafExecutionPool m_ExecutionPool; ///< Pool of running operations.
