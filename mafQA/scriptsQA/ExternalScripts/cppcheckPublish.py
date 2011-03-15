@@ -50,7 +50,7 @@ def publishReport():
        centerString = "".join(open(htmlDir + "/Styles/center.temp"))
        tailString = "".join(open(htmlDir + "/Styles/tail.temp"))
        
-       #modify headstring adding LCOV stylesheet, and substitute relative path
+       #modify headstring adding cppcheck stylesheet, and substitute relative path
        pos = headString.find("</head>")-1
        headStringNew = headString
                     
@@ -90,7 +90,6 @@ def publishReport():
        """)
        fileIndex.write(tailString)
        fileIndex.close()
-
          
     except Exception, e:
         print "Problem when publishing cppcheck, error:" , e
