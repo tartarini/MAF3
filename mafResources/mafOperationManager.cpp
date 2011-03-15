@@ -162,6 +162,7 @@ void mafOperationManager::executeOperation() {
             m_UndoStack.clear();
         }
 
+        qDebug() << "creating worker for operation " << m_CurrentOperation->objectName();
         // Create a resource worker and pass to it the resource to be execute in a separate thread.
         mafOperationWorker *worker = new mafOperationWorker(m_CurrentOperation, mafCodeLocation);
         // become observer wo be notified when the work is done.
@@ -170,6 +171,7 @@ void mafOperationManager::executeOperation() {
         // Put the worker into the pool.
         m_ExecutionPool << worker;
         // Start the work.
+        qDebug() << "Starting worker...";
         worker->doWork();
     } else {
         qWarning() << mafTr("No Current operation!! startOperation required before executeOperation.");
@@ -177,7 +179,10 @@ void mafOperationManager::executeOperation() {
 }
 
 mafOperationWorker *mafOperationManager::removeWorkerFromPool(QObject *obj) {
+    QMutexLocker locker(&m_Mutex);
+
     mafOperationWorker *worker = qobject_cast<mafResources::mafOperationWorker *>(obj);
+    qDebug() << "Removing worker associated to " << worker->operation()->objectName();
     if (worker) {
         int idx = m_ExecutionPool.indexOf(worker);
         if ( idx != -1 ) {
@@ -194,6 +199,8 @@ void mafOperationManager::executionEnded() {
     mafOperation *op = worker->operation();
     REQUIRE(op != NULL);
 
+    QString name = op->objectName();
+
     if ( !op->canUnDo() ) {
         mafDEL(op);
     } else {
@@ -206,7 +213,7 @@ void mafOperationManager::executionEnded() {
     m_CurrentOperation = NULL;
     mafDEL(worker);
 
-    qDebug() << "Sending operation.executed...";
+    qDebug() << "Sending operation.executed for operation " << name;
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.executed");
 }
 
