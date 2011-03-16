@@ -103,7 +103,7 @@ def publishReport():
      It directly measures the number of linearly independent paths through a program's source code.<br> 
      The concept, although not the method, is somewhat similar to that of general text complexity measured by the Flesch-Kincaid Readability Test.<br>
      The cyclomatic complexity of a section of source code is the count of the number of linearly independent paths through the source code.<br> For instance, if the source code contained no decision points such as IF statements or FOR loops, the complexity would be 1, since there is only a single path through the code. If the code had a single IF statement containing a single condition there would be two paths through the code, one path where the IF statement is evaluated as TRUE and one path where the IF statement is evaluated as FALSE.<br><br>
-Mathematically, the cyclomatic complexity of a structured programis defined with reference to a directed graph containing the basic blocks of the program, with an edge between two basic blocks if control may pass from the first to the second (the control flow graph of the program). The complexity is then defined as:<br>br>
+Mathematically, the cyclomatic complexity of a structured programis defined with reference to a directed graph containing the basic blocks of the program, with an edge between two basic blocks if control may pass from the first to the second (the control flow graph of the program). The complexity is then defined as:<br><br>
      M = E ? N + 2P
     """)
     fileIndex.write(tailString)
