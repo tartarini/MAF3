@@ -31,8 +31,7 @@ void mafOperation::terminate() {
 }
 
 void mafOperation::abort() {
-    QMutexLocker locker(&m_Mutex);
-    m_Abort = m_IsRunning;
+    m_Abort = true;
 }
 
 void mafOperation::unDo() {

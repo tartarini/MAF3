@@ -60,6 +60,7 @@ signals:
     void undoExecution();
 
 public slots:
+    
     /// Set parameters of operation.
     virtual void setParameters(QVariantList parameters);
 
@@ -75,6 +76,8 @@ public slots:
 private slots:
     /// Terminate the execution.
     void abort();
+    
+    
 
 protected:
     /// Object destructor.
@@ -84,11 +87,9 @@ protected:
     bool m_CanUnDo; ///< Flag that store the unDo capability of the operation.
     mafOperationType m_OperationType; ///< Describe the operation type (mafOperationTypeImporter, mafOperationTypeExporter or mafOperationTypeOperation).
     bool m_CanAbort;         ///< Flag indicating that the operation can abort its execution or no (default true).
-    bool m_Abort;               ///< Flag indicating that the operation has to be aborted. The code inside the execute slot has to take care about it.
+    volatile bool m_Abort;               ///< Flag indicating that the operation has to be aborted. The code inside the execute slot has to take care about it.
     bool m_InputPreserve;  ///< Flag represnting the behavior of the operationabout the input data. True value means that the input data is not modified (default true).
 
-private:
-    mutable QMutex m_Mutex; ///< Allows to lock the execution thread while the m_Abort flag is set.
 };
 
 /////////////////////////////////////////////////////////////
