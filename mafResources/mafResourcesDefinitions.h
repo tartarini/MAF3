@@ -78,7 +78,7 @@ typedef enum {
 } // namespace mafResources
 
 /// Vector of Operation Worker.
-typedef QList<mafCore::mafObjectBase *> mafExecutionPool;
+typedef QList<QPointer<QThread> > mafExecutionPool;
 typedef mafExecutionPool * mafExecutionPoolPointer;
 
 Q_DECLARE_METATYPE(mafExecutionPoolPointer);
