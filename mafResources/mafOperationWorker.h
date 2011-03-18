@@ -26,23 +26,23 @@ Class name: mafOperationWorker
 This class defines the class used to execute an algorithm in a separate thread.
 @sa mafOperationManager
 */
-class MAFRESOURCESSHARED_EXPORT mafOperationWorker : public mafCore::mafObjectBase {
+class MAFRESOURCESSHARED_EXPORT mafOperationWorker : public QThread {
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
 
 public:
     /// Object constructor.
-    mafOperationWorker(const QString code_location = "");
+    explicit mafOperationWorker();
 
     /// Object constructor.
-    mafOperationWorker(mafOperation *res, const QString code_location = "");
+    explicit mafOperationWorker(mafOperation *res);
 
     /// Return the owned resource.
     mafOperation *operation();
 
-    /// Start the background execution.
-    void doWork();
+    /// Object destructor.
+    /* virtual */ ~mafOperationWorker();
 
 public slots:
     /// Abort the operation execution thread.
@@ -55,17 +55,14 @@ signals:
     /// Signal emitted to notify that the worker has been aborted.
     void workAborted();
 
-protected:
-    /// Object destructor.
-    /* virtual */ ~mafOperationWorker();
-
 private:
     /// Initialize the operation's workflow executed by the state machine.
     void initializeWorkflow();
 
-    QThread *m_ExecutionThread; ///< Thread on which will be executed the operation
+    /// Start the execution.
+    void run();
+
     mafOperation *m_Operation;    ///< Operation to be executed on separate thread.
-    QStateMachine m_StateMachine;   ///< State machine responsible of the operation execution workflow.
 };
 
 inline mafOperation *mafOperationWorker::operation() {
