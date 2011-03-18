@@ -165,7 +165,7 @@ void mafOperationManager::executeOperation() {
 
         qDebug() << "creating worker for operation " << m_CurrentOperation->objectName();
         // Create a resource worker and pass to it the resource to be execute in a separate thread.
-        mafOperationWorker *worker = new mafOperationWorker(m_CurrentOperation, mafCodeLocation);
+        mafOperationWorker *worker = new mafOperationWorker(m_CurrentOperation);
         // become observer wo be notified when the work is done.
         connect(worker, SIGNAL(workDone()), this, SLOT(executionEnded()));
         connect(worker, SIGNAL(workAborted()), this, SLOT(stopOperation()));
@@ -173,23 +173,28 @@ void mafOperationManager::executeOperation() {
         m_ExecutionPool << worker;
         // Start the work.
         qDebug() << "Starting worker...";
-        worker->doWork();
+        worker->start();
     } else {
         qWarning() << mafTr("No Current operation!! startOperation required before executeOperation.");
     }
 }
 
 mafOperationWorker *mafOperationManager::removeWorkerFromPool(QObject *obj) {
-    QMutexLocker locker(&m_Mutex);
-
     mafOperationWorker *worker = qobject_cast<mafResources::mafOperationWorker *>(obj);
     qDebug() << "Removing worker associated to " << worker->operation()->objectName();
-    if (worker) {
-        int idx = m_ExecutionPool.indexOf(worker);
-        if ( idx != -1 ) {
-            m_ExecutionPool.removeAt(idx);
+
+    QMutableListIterator<QPointer<QThread> > i(m_ExecutionPool);
+    while (i.hasNext()) {
+        QThread *w = i.next();
+        if (w == worker) {
+            if (w->wait(100)) {
+                i.remove();
+            }
         }
     }
+
+
+
     return worker;
 }
 
@@ -203,7 +208,7 @@ void mafOperationManager::executionEnded() {
     QString name = op->objectName();
 
     if ( !op->canUnDo() ) {
-        mafDEL(op);
+        (op);
     } else {
         int idx = m_UndoStack.indexOf(op);
         if ( idx == -1 ) {
@@ -212,7 +217,7 @@ void mafOperationManager::executionEnded() {
     }
     // Current operation ended => reset the pointer.
     m_CurrentOperation = NULL;
-    mafDEL(worker);
+    delete worker;
 
     qDebug() << "Sending operation.executed for operation " << name;
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.executed");
@@ -225,7 +230,7 @@ void mafOperationManager::stopOperation() {
     if ( worker == NULL ) {
         // Operation not executing => Simply cancelled by the user.
         // m_CurrentOperation should be deleted.
-        mafDEL(m_CurrentOperation);
+        (m_CurrentOperation);
         return;
     }
 
@@ -241,7 +246,7 @@ void mafOperationManager::stopOperation() {
 
     // Current operation ended => reset the pointer.
     m_CurrentOperation = NULL;
-    mafDEL(worker);
+    delete worker;
 }
 
 void mafOperationManager::undoOperation() {
