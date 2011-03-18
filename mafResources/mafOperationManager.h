@@ -189,6 +189,8 @@ private:
     mutable QMutex m_Mutex;
     QList<mafOperation *> m_UndoStack;    ///< Undo stack which is a linked list of operations
     mafOperation *m_CurrentOperation;       ///< Current operation handled by th manager
+    mafOperation *m_LastUndoneOperation;       ///< Last undone operation 
+
     mafExecutionPool m_ExecutionPool; ///< Pool of running operations.
     mafVME *m_SelectedVME;                      ///< Vme that is currently selected
     mafCore::mafId m_ExecWithParameters; ///< Id associated with the EXECUTE_WITH_PARAMETERS event.

@@ -35,7 +35,7 @@ void mafOperationManager::shutdown() {
     flushUndoStack();
 }
 
-mafOperationManager::mafOperationManager(const QString code_location) : mafObjectBase(code_location), m_CurrentOperation(NULL) {
+mafOperationManager::mafOperationManager(const QString code_location) : mafObjectBase(code_location), m_CurrentOperation(NULL), m_LastUndoneOperation(NULL) {
     initializeConnections();
 
     //request of the selected vme
@@ -127,7 +127,9 @@ void mafOperationManager::startOperation(const QString operation) {
         QList<mafOperation*>::Iterator i;
         for ( i = m_UndoStack.begin() ; i != m_UndoStack.end(); ++i ) {
             if ( *i == m_CurrentOperation ) {
+                qDebug() << m_CurrentOperation->objectName();
                 ++i;
+                m_LastUndoneOperation = NULL;
                 break;
             }
         }
@@ -208,10 +210,11 @@ void mafOperationManager::executionEnded() {
     QString name = op->objectName();
 
     if ( !op->canUnDo() ) {
-        (op);
+        ;
     } else {
         int idx = m_UndoStack.indexOf(op);
         if ( idx == -1 ) {
+            qDebug() << op->objectName();
             mafDEL(op);
         }
     }
@@ -254,6 +257,9 @@ void mafOperationManager::undoOperation() {
         // No operations in the undo stack.
         return;
     }
+    
+    if(m_LastUndoneOperation) qDebug() << m_LastUndoneOperation->objectName();
+    if(m_CurrentOperation) qDebug() << m_CurrentOperation->objectName();
 
     mafOperation *opToExecute;
 
@@ -264,7 +270,8 @@ void mafOperationManager::undoOperation() {
         // At lease one undo has been done. Find which is the next op to undo.
         QList<mafOperation*>::Iterator i;
         for ( i = m_UndoStack.begin() ; i != m_UndoStack.end(); ++i ) {
-            if ( *i == m_CurrentOperation ) {
+            qDebug() << (*i)->objectName();
+            if ( *i == m_LastUndoneOperation ) {
                 if ( i == m_UndoStack.begin() ) {
                     opToExecute = NULL;
                 } else {
@@ -285,16 +292,36 @@ void mafOperationManager::undoOperation() {
         qWarning() << mafTr("Cannot perform the UnDo, because operation %1 is still running in background!").arg(opToExecute->objectName());
         return;
     }
+    
+    
+    m_LastUndoneOperation = opToExecute;
+    
 
-    m_CurrentOperation = opToExecute;
-
-    mafUndoStackCommand *usc = new mafUndoStackCommand(m_CurrentOperation, "undoExecution()");
+    mafUndoStackCommand *usc = new mafUndoStackCommand(opToExecute, "unDo()");
     usc->execute();
     mafDEL(usc);
+    
+    QList<mafOperation*>::Iterator i;
+    for ( i = m_UndoStack.begin() ; i != m_UndoStack.end(); ++i ) {
+        if ( *i == m_LastUndoneOperation ) {
+            if ( i == m_UndoStack.begin() ) {
+                m_CurrentOperation = NULL;
+            } else {
+                m_CurrentOperation = *(--i);
+                if(m_CurrentOperation == *(m_UndoStack.begin())) {
+                    m_CurrentOperation = NULL;
+                }
+            }
+            break;
+        }
+    }
+    
+    qDebug() << m_LastUndoneOperation->objectName();
+    qDebug() << m_CurrentOperation->objectName();
 }
 
 void mafOperationManager::redoOperation() {
-    if ( m_CurrentOperation == NULL ) {
+    if ( m_CurrentOperation == NULL || m_LastUndoneOperation == NULL) {
         return;
     }
 
@@ -325,9 +352,23 @@ void mafOperationManager::redoOperation() {
 
     m_CurrentOperation = opToExecute;
 
-    mafUndoStackCommand *usc = new mafUndoStackCommand(m_CurrentOperation, "startExecution()");
+    mafUndoStackCommand *usc = new mafUndoStackCommand(m_CurrentOperation, "reDo()");
     usc->execute();
     mafDEL(usc);
+    
+    for ( i = m_UndoStack.begin() ; i != m_UndoStack.end(); ++i ) {
+        if ( *i == m_CurrentOperation ) {
+            if ( i == m_UndoStack.end() ) {
+                m_LastUndoneOperation = NULL;
+            } else {
+                m_LastUndoneOperation = *(++i);
+            }
+            break;
+        }
+    }
+    
+    qDebug() << m_LastUndoneOperation->objectName();
+    qDebug() << m_CurrentOperation->objectName();
 }
 
 void mafOperationManager::cleanUndoStack() {

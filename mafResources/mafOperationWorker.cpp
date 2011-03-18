@@ -25,7 +25,7 @@ mafOperationWorker::mafOperationWorker(mafOperation *op) :  m_Operation(op) {
 }
 
 mafOperationWorker::~mafOperationWorker() {
-    qDebug() << "Destroying operation " << m_Operation->objectName();
+    qDebug() << "Destroying operation " << m_Operation->objectName() << " ref: " << m_Operation->referenceCount();
     mafDEL(m_Operation);
 }
 

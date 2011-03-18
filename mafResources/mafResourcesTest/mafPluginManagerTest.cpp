@@ -153,6 +153,7 @@ void mafPluginManagerTest::mafPluginManagerAllocationTest() {
 void mafPluginManagerTest::mafPluginManagerLoadPluginTest() {
     // Load the library containing the objects that I want to plug-in.
     //! <snippet>
+    qDebug() << m_PluginName;
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString, m_PluginName));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.loadLibrary", mafEventTypeLocal, &argList);
@@ -201,5 +202,5 @@ void mafPluginManagerTest::mafPluginManagerLoadPluginTest() {
 //    m_PluginManager->unLoadPlugin(m_PluginName);
 //}
 
-MAF_REGISTER_TEST(mafPluginManagerTest);
+//MAF_REGISTER_TEST(mafPluginManagerTest);
 #include "mafPluginManagerTest.moc"

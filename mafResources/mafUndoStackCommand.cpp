@@ -18,10 +18,10 @@ mafUndoStackCommand::mafUndoStackCommand(const QString code_location) : mafComma
 }
 
 mafUndoStackCommand::mafUndoStackCommand(mafOperation *rec, QString action, const QString code_location) : mafCommand(code_location) {
-    QString action_sig = SIGNAL_SIGNATURE;
+    QString action_sig = CALLBACK_SIGNATURE;
     action_sig.append(action);
 
-    connect(this, SIGNAL(executeCommand()), rec, action_sig.toAscii());
+    bool result = connect(this, SIGNAL(executeCommand()), rec, action_sig.toAscii(), Qt::DirectConnection);
 }
 
 mafUndoStackCommand::~mafUndoStackCommand() {

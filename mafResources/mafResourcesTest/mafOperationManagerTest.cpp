@@ -175,10 +175,12 @@ void testUndoOperation::execute() {
 }
 
 void testUndoOperation::unDo() {
+    qDebug() << this->objectName() << " performs unDo...";
     m_Val = 0;
 }
 
 void testUndoOperation::reDo() {
+    qDebug() << this->objectName() << " performs reDo...";
     m_Val = kMAX_COUNT;
 }
 
@@ -356,6 +358,42 @@ void mafOperationManagerTest::undoRedoExecutionTest() {
     m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &ret_val);
     
     QVERIFY(undoStackSize == 4);
+    
+    m_EventBus->notifyEvent("maf.local.resources.operation.undo", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.undo", mafEventTypeLocal);
+    
+    m_EventBus->notifyEvent("maf.local.resources.operation.redo", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.operation.undo", mafEventTypeLocal);
+    
+    op = this->startOperation("testUndoOperation");
+    ((QObject *)op)->setObjectName("Operation_5");
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
+    
+    dieTimeAFter = QTime::currentTime().addSecs(3);
+    while(QTime::currentTime() < dieTimeAFter) {
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 3);
+    }
+    
+    ret_val = mafEventReturnArgument(int, undoStackSize);
+    m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &ret_val);
+    
+    QVERIFY(undoStackSize == 3);
+    
+    op = this->startOperation("testNotUndoOperation");
+    ((QObject *)op)->setObjectName("Operation_6");
+    m_EventBus->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
+    
+    
+    dieTimeAFter = QTime::currentTime().addSecs(3);
+    while(QTime::currentTime() < dieTimeAFter) {
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 3);
+    }
+    
+    qDebug() << "****************** Execution ended ******************";
+    ret_val = mafEventReturnArgument(int, undoStackSize);
+    m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &ret_val);
+    
+    QVERIFY(undoStackSize == 0);
 }
 
 
