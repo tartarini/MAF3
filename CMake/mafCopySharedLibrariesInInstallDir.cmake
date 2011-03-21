@@ -21,11 +21,8 @@ get_filename_component(fileName ${file} NAME)
 set(result)
 set(erro)
 
-EXECUTE_PROCESS(
-   COMMAND ${CMAKE_COMMAND} -E copy
-   ${file}
-   ${CMAKE_BINARY_DIR}/Install/bin/${CMAKE_BUILD_TYPE}/${fileName}
-   RESULT_VARIABLE result
-   ERROR_VARIABLE erro)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy ${file} ${CMAKE_BINARY_DIR}/Install/bin/${CMAKE_BUILD_TYPE}/${fileName} )
+
 endforeach(file ${filelist})
 ENDMACRO()
