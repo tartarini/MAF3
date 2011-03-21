@@ -15,14 +15,17 @@ SET(result)
 SET(erro)
 FILE(GLOB file_list ${vardir}/*.*)
 
+get_target_property(TARGET_LOC mafCore LOCATION)
+get_filename_component(TARGET_ABSOLUTE_DIR ${TARGET_LOC} PATH)
+
 foreach(file ${file_list})
 get_filename_component(fileName ${file} NAME)
 
 set(result)
 set(erro)
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy ${file} ${CMAKE_BINARY_DIR}/Install/bin/${CMAKE_BUILD_TYPE}/${fileName} )
+add_custom_command(TARGET mafCore POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy ${file} ${TARGET_ABSOLUTE_DIR}/${fileName} )
 
 endforeach(file ${filelist})
 ENDMACRO()
