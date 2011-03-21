@@ -19,7 +19,7 @@ foreach(file ${tocopy_file_list})
   EXECUTE_PROCESS(
      COMMAND ${CMAKE_COMMAND} -E copy
      ${file}
-     ${CMAKE_BINARY_DIR}/Install/bin/${CMAKE_CFG_INTDIR}/${fileName}
+     ${CMAKE_BINARY_DIR}/Install/bin/${CMAKE_BUILD_TYPE}/${fileName}
      RESULT_VARIABLE result
      ERROR_VARIABLE erro)
      
