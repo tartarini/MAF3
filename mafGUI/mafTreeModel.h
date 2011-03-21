@@ -67,7 +67,6 @@ public slots:
 
     /*virtual*/ bool submit();
 
-private slots:
     /// Slot called when a new item has been attached to the tree hierarchy.
     void itemAttached(QObject *item, QObject *parent);
 
@@ -76,6 +75,9 @@ private slots:
 
     /// Append a tree to an item.
     void itemReparent(QObject *item, QObject *parent);
+
+private slots:
+
 
 signals:
     void itemAdded(QModelIndex index);
