@@ -186,8 +186,15 @@ MACRO(mafMacroWrapBuild)
       set(wrap_lib_name ${wrap_lib_prefix}${realName}${wrap_lib_ext})
       
       set(SHARED_LIB_COPY_COMMAND)
-     
-      set(SHARED_LIB_COPY_SOURCE ${LIBRARY_OUTPUT_PATH}${CMAKE_BUILD_TYPE}/${lib_name})
+
+      ##########################################################
+      ### Use mafCore target to extract the TAGET LOCATION 
+      ### according to the current compilation configuration:
+      ### Debug, Release, ...
+      ##########################################################
+      get_target_property(TARGET_LOC mafCore LOCATION)
+      get_filename_component(CUR_ABSOLUTE_DIR ${TARGET_LOC} PATH)
+      set(SHARED_LIB_COPY_SOURCE ${CUR_ABSOLUTE_DIR}/${lib_name})
       
       add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i
