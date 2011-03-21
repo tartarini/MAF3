@@ -192,6 +192,8 @@ MACRO(mafMacroWrapBuild)
       ### according to the current compilation configuration:
       ### Debug, Release, ...
       ##########################################################
+      set(TARGET_LOC)
+      set(CUR_ABSOLUTE_DIR)
       get_target_property(TARGET_LOC mafCore LOCATION)
       get_filename_component(CUR_ABSOLUTE_DIR ${TARGET_LOC} PATH)
       set(SHARED_LIB_COPY_SOURCE ${CUR_ABSOLUTE_DIR}/${lib_name})
