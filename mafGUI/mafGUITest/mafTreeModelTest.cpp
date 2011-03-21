@@ -98,17 +98,16 @@ void mafTreeModelTest::hierarchyAndInsertItemTest() {
     m_HierarchyToManage->addHierarchyNode(vmeChild2, vmeRoot); // maybe a signal is useful
 
 //    m_TreeModel->insertNewItem(mafTreeModel::AsChild,vmeChild2, m_TreeModel->currentIndex()); //currentIndex is in root
-    rows = m_TreeModel->rowCount();
+    rows = m_TreeModel->rowCount(m_TreeModel->indexFromData(vmeRoot));
     QVERIFY(rows == 3);
 
     // remove element
-    m_TreeModel->removeItem(m_TreeModel->currentIndex()); // trying to remove root, impossible
-    rows = m_TreeModel->rowCount();
+    m_TreeModel->itemDetached(vmeRoot); // trying to remove root, impossible
+    rows = m_TreeModel->rowCount(m_TreeModel->indexFromData(vmeRoot));
     QVERIFY(rows == 3);
 
-    m_TreeModel->selectItemFromData(vmeChild0);
-    m_TreeModel->removeItem(m_TreeModel->currentIndex()); // trying to remove child 2
-    rows = m_TreeModel->rowCount();
+    m_TreeModel->itemDetached(vmeChild0);
+    rows = m_TreeModel->rowCount(m_TreeModel->indexFromData(vmeRoot));
     QVERIFY(rows == 2);
 
     m_HierarchyToManage->clear();
