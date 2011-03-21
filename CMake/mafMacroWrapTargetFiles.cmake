@@ -160,10 +160,8 @@ MACRO(mafMacroWrapBuild)
     if(SWIG_FOUND AND PYTHONLIBS_FOUND)
       if(WIN32)
         set(lib_ext ".dll")
-        set(lib_prefix )
         set(wrap_lib_ext ".pyd")
       else(WIN32)
-        set(lib_prefix "lib")
         set(wrap_lib_ext ".so")
         if(APPLE)
           set(lib_ext ".dylib")
@@ -183,16 +181,13 @@ MACRO(mafMacroWrapBuild)
             SET(realName "${PROJECT_NAME}" )
       endif(CMAKE_BUILD_TYPE MATCHES Debug)
 
-      set(lib_name ${lib_prefix}${realName}${lib_ext})
+      set(lib_name ${realName}${lib_ext})
 	  set(wrap_lib_prefix "_")
       set(wrap_lib_name ${wrap_lib_prefix}${realName}${wrap_lib_ext})
       
       set(SHARED_LIB_COPY_COMMAND)
-      IF(MSVC)
-          set(SHARED_LIB_COPY_SOURCE ${LIBRARY_OUTPUT_PATH}${CMAKE_CFG_INTDIR}/${lib_name})
-      ELSE(MSVC)
-          set(SHARED_LIB_COPY_SOURCE ${LIBRARY_OUTPUT_PATH}${lib_name})
-      ENDIF(MSVC)
+     
+      set(SHARED_LIB_COPY_SOURCE ${LIBRARY_OUTPUT_PATH}${CMAKE_BUILD_TYPE}/${lib_name})
       
       add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i
