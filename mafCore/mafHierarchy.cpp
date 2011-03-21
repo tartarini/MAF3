@@ -75,6 +75,24 @@ void mafHierarchy::removeHierarchyNode(QObject *node) {
     removeCurrentHierarchyNode();
 }
 
+void mafHierarchy::reparentHierarchyNode(QObject *node, QObject *parentNode) {
+    moveTreeIteratorToNode(node);
+    mafTree<QObject *>::iterator temp_iterator = m_Tree->parent(m_TreeIterator);
+
+    //Remove subtree from m_Tree.
+    mafTree<QObject *> cutTree;
+    cutTree = m_Tree->cut(m_TreeIterator);
+    m_Tree->erase(m_TreeIterator);
+
+    //Insert subTree in new position.
+    moveTreeIteratorToNode(parentNode);
+    m_Tree->insert(m_TreeIterator, node->children().size(), cutTree);
+
+    m_TreeIterator = temp_iterator;
+    emit itemReparent(node, parentNode);
+}
+
+
 void mafHierarchy::moveTreeIteratorToParent() {
     m_TreeIterator = m_Tree->parent(m_TreeIterator);
 }
