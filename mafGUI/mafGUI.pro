@@ -20,7 +20,8 @@ SOURCES += mafGUIManager.cpp \
     mafGUIApplicationSettingsPage.cpp \
     mafLoggerWidget.cpp \
     mafOperationWidget.cpp \
-    mafTreeItemDelegate.cpp
+    mafTreeItemDelegate.cpp \
+    mafDragDropModel.cpp
 HEADERS += mafGUI_global.h \
     mafGUIManager.h \
     mafGUIRegistration.h \
@@ -37,7 +38,8 @@ HEADERS += mafGUI_global.h \
     mafGUIApplicationSettingsPage.h \
     mafLoggerWidget.h \
     mafOperationWidget.h \
-    mafTreeItemDelegate.h
+    mafTreeItemDelegate.h \
+    mafDragDropModel.h
 include(../mafInstallModule.pri)
 INCLUDEPATH += ../mafCore \
     ../mafEventBus \
