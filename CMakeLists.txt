@@ -20,6 +20,10 @@ PROJECT(MAF)
 OPTION(BUILD_TEST_SUITE "Build Module's Tests" ON)
 OPTION(BUILD_EXAMPLES "Build Examples" ON)
 
+if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
+
 #############################################################################################
 ### where to search modules
 #############################################################################################
@@ -48,13 +52,6 @@ mafMacroSetupQt()
 IF(QT4_FOUND)
   SET(MAF_BASE_LIBRARIES ${QT_LIBRARIES} CACHE INTERNAL "MAF base libraries" FORCE)
 ENDIF()
-
-#############################################################################################
-### OPTIONS
-#############################################################################################
-if(NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
-endif(NOT CMAKE_BUILD_TYPE)
 
 #############################################################################################
 ### where to place output binaries
