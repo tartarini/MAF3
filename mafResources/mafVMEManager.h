@@ -25,6 +25,7 @@ This class provides the management interface for MAF3 VMEs. The manager defines 
 a VME to/from the hierarchy tree and to select a vme. The topics are:
 - maf.local.resources.vme.add which allows to add a new VME to the hierarchy.
 - maf.local.resources.vme.remove which allows to remove a VME from the hierarchy.
+- maf.local.resources.vme.reparent which allows to reparent a VME to another.
 - maf.local.resources.vme.select which allows to select the active VME on which operate.
 - maf.local.resources.vme.selected which allows to retrieve the current selected VME.
 - maf.local.resources.hierarchy.create which allows to create the hierarchy of the vmes
@@ -51,6 +52,9 @@ signals:
     /// Signal emitted when a VME has to be removed from the hierarchy tree.
     void detachVMEFromHierarchy(mafCore::mafObjectBase *vme);
 
+    /// Signal emitted when a VME has to be removed from the hierarchy tree.
+    void reparentVMESignal(mafCore::mafObjectBase *vme, mafCore::mafObjectBase *vmeParent);
+
     /// Signal emitted when a VME has beed selected.
     void selectVME(mafCore::mafObjectBase *vme);
 
@@ -69,6 +73,9 @@ private slots:
 
     /// Remove the VME from the system. Each manager then can behave as it can to remove the resource from ite manage.
     void vmeRemove(mafCore::mafObjectBase *vme);
+
+    /// Reparent a VME to another.
+    void vmeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectBase *vmeParent);
 
     /// Method called when a VME has been destroyed (by someone else).
     void vmeDestroyed();
