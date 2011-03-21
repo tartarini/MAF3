@@ -50,7 +50,7 @@ void mafTreeModel::buildModel(bool init) {
         m_ItemsList.push_back(m_CurrentItem);
         buildModel(false);
         m_Hierarchy->moveTreeIteratorToParent();
-        m_CurrentItem = (mafTreeItem *)m_CurrentItem->parent();
+        m_CurrentItem = (mafTreeItem *)m_CurrentItem->parent();       
     }
 }
 
@@ -70,6 +70,7 @@ void mafTreeModel::setHierarchy(mafHierarchy *hierarchy) {
     m_Hierarchy = hierarchy;
     connect(m_Hierarchy, SIGNAL(itemAttached(QObject*,QObject*)), this, SLOT(itemAttached(QObject*,QObject*)));
     connect(m_Hierarchy, SIGNAL(itemDetached(QObject*)), this, SLOT(itemDetached(QObject*)));
+    connect(m_Hierarchy, SIGNAL(itemReparent(QObject*,QObject*)), this, SLOT(itemReparent(QObject*,QObject*)));
 
     initialize();
 }
@@ -81,30 +82,36 @@ void mafTreeModel::clear() {
 }
 
 void mafTreeModel::itemAttached(QObject *item, QObject *parent) {
-    this->selectItemFromData(parent);
-    QModelIndex index = this->currentIndex();
+    QModelIndex index = this->indexFromData(parent);
     this->insertNewItem(AsChild, item, index);
     emit itemAdded(index);
 }
 
 void mafTreeModel::itemDetached(QObject *item) {
-    this->selectItemFromData(item);
-    this->removeItem(this->currentIndex());
+    mafTreeItem *temp = (mafTreeItem *)this->itemFromIndex(this->indexFromData(item));
+    bool removed = this->removeRows(temp->index().row(), 1, this->indexFromData(item).parent());
 }
 
 mafTreeItem *mafTreeModel::createNewItem(mafTreeItem *parent, QObject *obj, bool done) {
     mafTreeItem *item = new mafTreeItem(obj,done);
     parent->appendRow(item);
-    setItem(parent->rowCount()-1, item);
     m_ItemsList.push_back(item);
     return item;
 }
 
-void mafTreeModel::selectItem(QModelIndex index) {
-    m_CurrentItem = (mafTreeItem *)this->itemFromIndex(index);
+void mafTreeModel::itemReparent(QObject *item, QObject *parent) {
+    QModelIndex index = this->indexFromData(parent);
+    this->insertNewItem(AsChild, item, index);
+
 }
 
-mafTreeItem *mafTreeModel::insertNewItem(Insert insert,
+void mafTreeModel::selectItem(const QItemSelection &selected, const QItemSelection &deselected) {
+    Q_UNUSED(deselected);
+    m_CurrentItem = (mafTreeItem *)this->itemFromIndex(selected.indexes().at(0));
+}
+
+
+void mafTreeModel::insertNewItem(Insert insert,
              QObject *obj, const QModelIndex &index) {
     mafTreeItem *parent;
     if (insert == AtTopLevel) {
@@ -113,35 +120,43 @@ mafTreeItem *mafTreeModel::insertNewItem(Insert insert,
         if (index.isValid()) {
             parent = (mafTreeItem *) itemFromIndex(index);
             if (!parent)
-                return 0;
+                return;
             if (insert == AsSibling)
                 parent = (mafTreeItem *)(parent->parent() ? parent->parent()
                                           : invisibleRootItem());
         } else {
-            return 0;
+            return;
         }
     }
-    return createNewItem(parent, obj, false);
+
+    mafTreeItem *oldItem = (mafTreeItem *)this->itemFromIndex(indexFromData(obj));
+    mafTreeItem *newItem = createNewItem(parent, obj, false);
+    if (oldItem) {
+        int i = 0, size = oldItem->rowCount();
+        for(; i < size; ++i) {
+            QObject *child = ((mafTreeItem *)oldItem->child(i))->data();
+            insertNewItem(AsChild, child, newItem->index());
+        }
+    }
 }
 
-void mafTreeModel::removeItem(const QModelIndex &index) {
+bool mafTreeModel::removeRows(int row, int count, const QModelIndex &parent) {
+    if (parent.isValid()) {
+        mafTreeItem *temp = (mafTreeItem *)this->itemFromIndex(parent.child(row,0));
+        removeFromList(temp->index());
+        return QStandardItemModel::removeRows(row, count, parent);
+    }
+}
+
+void mafTreeModel::removeFromList(const QModelIndex &index) {
     mafTreeItem *temp = (mafTreeItem *)this->itemFromIndex(index);
     if(temp->parent() == NULL) {
         qDebug() << mafTr("Impossible removing the root");
         return;
     }
-
     int i = 0, size = temp->rowCount();
     for(; i < size; ++i) {
-        removeItem(temp->index().child(i, 0));
-    }
-    // remove also from the hierarchy?
-    m_CurrentItem = (mafTreeItem *)temp->parent();
-
-    removeRow(index.row(), index.parent());
-
-    if(m_CurrentItem->parent() == NULL) {
-        setRowCount(m_CurrentItem->rowCount());
+        removeFromList(temp->index().child(i, 0));
     }
 
     m_ItemsList.removeOne(temp);
@@ -155,16 +170,20 @@ QModelIndex mafTreeModel::currentIndex() {
     return QModelIndex();
 }
 
-void mafTreeModel::selectItemFromData(QObject *data) {
+QModelIndex mafTreeModel::indexFromData(QObject *data) {
+    bool found = false;
     QListIterator<mafTreeItem *> it(m_ItemsList);
     while (it.hasNext()) {
         mafTreeItem *ci = it.next();
          QObject *check = ci->data();
          if(check == data) {
-             m_CurrentItem = ci;
-             return;
+             found = true;
+             return ci->index();
          }
      }
-
-    qDebug() << mafTr("Element not found");
+    if (!found) {
+        qDebug() << mafTr("Element not found");
+        return QModelIndex();
+    }
 }
+

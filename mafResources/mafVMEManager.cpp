@@ -42,6 +42,7 @@ void mafVMEManager::initializeConnections() {
     mafIdProvider *provider = mafIdProvider::instance();
     provider->createNewId("maf.local.resources.vme.add");
     provider->createNewId("maf.local.resources.vme.remove");
+    provider->createNewId("maf.local.resources.vme.reparent");
     provider->createNewId("maf.local.resources.vme.select");
     provider->createNewId("maf.local.resources.vme.selected");
     provider->createNewId("maf.local.resources.hierarchy.create");
@@ -49,6 +50,7 @@ void mafVMEManager::initializeConnections() {
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.vme.add", this, "attachVMEToHierarchy(mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.vme.remove", this, "detachVMEFromHierarchy(mafCore::mafObjectBase *)")
+    mafRegisterLocalSignal("maf.local.resources.vme.reparent", this, "reparentVMESignal(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.vme.select", this, "selectVME(mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.vme.selected", this, "selectedVMESignal()")
     mafRegisterLocalSignal("maf.local.resources.hierarchy.create", this, "createVMEHierarchySignal()")
@@ -56,6 +58,7 @@ void mafVMEManager::initializeConnections() {
     // Register private callbacks to the instance of the manager..
     mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)")
     mafRegisterLocalCallback("maf.local.resources.vme.remove", this, "vmeRemove(mafCore::mafObjectBase *)")
+    mafRegisterLocalCallback("maf.local.resources.vme.reparent", this, "vmeReparent(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)")
     mafRegisterLocalCallback("maf.local.resources.vme.selected", this, "selectedVME()")
     mafRegisterLocalCallback("maf.local.resources.hierarchy.create", this, "createVMEHierarchy()")
@@ -95,7 +98,14 @@ void mafVMEManager::vmeRemove(mafObjectBase *vme) {
     // VME has been removed.
     vme_to_remove->detatch();
     removeVME(vme_to_remove);
+
+    m_VMEHierarchy->removeHierarchyNode(vme);
 }
+
+void mafVMEManager::vmeReparent(mafObjectBase *vme, mafObjectBase *vmeParent) {
+    m_VMEHierarchy->reparentHierarchyNode(vme, vmeParent);
+}
+
 
 void mafVMEManager::vmeDestroyed() {
     mafVME *vme = (mafVME *)QObject::sender();

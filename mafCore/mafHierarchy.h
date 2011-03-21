@@ -44,6 +44,9 @@ public:
     /// Remove the current selected node from the tree. The node will be deleted.
     void removeHierarchyNode(QObject *node);
 
+    /// Reparent node to parentNode.
+    void reparentHierarchyNode(QObject *node, QObject *parentNode);
+
     /// Move the tree iterator to the parent of the current position pointed
     void moveTreeIteratorToParent();
 
@@ -77,6 +80,11 @@ signals:
 
     /// Signal emitted when an item is removed form the hierarchy.
     void itemDetached(QObject *item);
+
+    /// Signal emitted when an item is reparent to another item.
+    void itemReparent(QObject *item, QObject *parent);
+
+
 
 protected:
     /// Object destructor.

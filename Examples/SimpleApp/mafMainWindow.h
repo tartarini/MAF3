@@ -17,6 +17,7 @@
 #include <QMainWindow>
 
 #include <mafGUIManager.h>
+#include <mafDragDropModel.h>
 #include <mafMdiSubWindow.h>
 #include <mafTreeWidget.h>
 #include <mafTextEditWidget.h>
@@ -101,7 +102,7 @@ private:
 
     mafGUI::mafGUIManager *m_GUIManager; ///< Manager for the GUI widgets creation and initialization.
     mafGUI::mafTreeWidget  *m_Tree; ///< Manage the resource's tree hierarchy.
-    mafGUI::mafTreeModel  *m_Model; ///< Tree model of the mafResources.
+    mafGUI::mafDragDropModel  *m_Model; ///< Tree model of the mafResources with drag&Drop operation.
 
     mafGUI::mafTextEditWidget *m_LogWidget;
 
