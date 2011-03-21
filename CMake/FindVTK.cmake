@@ -11,7 +11,14 @@
 
 SET(VTK_DIR "$ENV{MAF3_FOUNDATION_LIB_DIR}/vtk-5.6/")
 INCLUDE_DIRECTORIES("${VTK_DIR}/include/")
-LINK_DIRECTORIES(${LINK_DIRECTORIES} "${VTK_DIR}/lib/")
+
+if(WIN32)
+    SET(link_dir "${VTK_DIR}lib/${CMAKE_BUILD_TYPE}")
+elseif(WIN32)
+    SET(link_dir "${VTK_DIR}lib")
+endif(WIN32)
+
+LINK_DIRECTORIES(${LINK_DIRECTORIES} ${link_dir})
 
 SET( VTK_LIBRARY )
 SET(VTK_LIBRARY_TEMP "MapReduceMPI"
@@ -65,5 +72,5 @@ ENDIF(CMAKE_BUILD_TYPE MATCHES Debug)
 
 SET(VTK_FOUND TRUE)
 include(mafCopySharedLibrariesInInstallDir)
-mafCopySharedLibrariesInInstallDir("${VTK_DIR}lib")   
+mafCopySharedLibrariesInInstallDir("${link_dir}")   
 
