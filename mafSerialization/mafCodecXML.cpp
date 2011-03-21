@@ -133,14 +133,14 @@ mafMemento *mafCodecXML::decode() {
     }
 
     while (!m_CurrentNode.isNull()) {
-       mafDomElement e = m_CurrentNode.toElement();
+       QDomElement e = m_CurrentNode.toElement();
 
        if(!e.isNull()) {
            QString name = e.tagName();
            if(name == "memento") {
                QString mementoType;
                QString objType;
-               mafDomNamedNodeMap attributes = e.attributes();
+               QDomNamedNodeMap attributes = e.attributes();
                if(attributes.contains("mementoType")) {
                    mementoType = e.attribute("mementoType","");
                }
@@ -154,19 +154,19 @@ mafMemento *mafCodecXML::decode() {
            }
 
            //collections, items or mementos
-           mafDomNodeList childNodeList = m_CurrentNode.childNodes();
+           QDomNodeList childNodeList = m_CurrentNode.childNodes();
            int i=0, size = childNodeList.size();
            for(;i<size;++i) {
                m_CurrentNode = childNodeList.at(i);
-               mafDomElement eChild = m_CurrentNode.toElement();
+               QDomElement eChild = m_CurrentNode.toElement();
                QString childName = eChild.tagName();
                if (childName == "dataSetCollection") {
                    //Find all items in dataSetCollection
-                   mafDomNodeList list = eChild.elementsByTagName("item");
+                   QDomNodeList list = eChild.elementsByTagName("item");
                    int l=0, listsize = list.size();
                    for(;l<listsize;++l) {
-                       mafDomNode node = list.at(l);
-                       mafDomElement eChild = node.toElement();
+                       QDomNode node = list.at(l);
+                       QDomElement eChild = node.toElement();
                        mafMementoPropertyItem item = setPropertyItem(eChild);
                        propList->append(item);
                    }
@@ -188,12 +188,12 @@ mafMemento *mafCodecXML::decode() {
     return memento;
 }
 
-mafMementoPropertyItem mafCodecXML::setPropertyItem(mafDomElement eChild){
+mafMementoPropertyItem mafCodecXML::setPropertyItem(QDomElement eChild){
     mafMementoPropertyItem item;
     QString itemName;
     int multiplicity = 1;
 
-    mafDomNamedNodeMap attributes = eChild.attributes();
+    QDomNamedNodeMap attributes = eChild.attributes();
     if(attributes.contains("name")) {
         itemName = eChild.attribute("name","");
     }
@@ -211,7 +211,7 @@ mafMementoPropertyItem mafCodecXML::setPropertyItem(mafDomElement eChild){
         url.append(path);
         url.append("/");
         url.append(value);
-        mafUrl u = QUrl::fromEncoded(url);
+        QUrl u = QUrl::fromEncoded(url);
         if (u.isValid()) {
             //write external file url
             item.m_Value = u.toString();
@@ -348,9 +348,9 @@ QVariant mafCodecXML::demarshall( const QDomElement &elem ) {
         return QVariant( elem.firstChild().toElement().text() );
     }
 
-    mafDomElement valueElem;
+    QDomElement valueElem;
     QString typeName;
-    mafDomNamedNodeMap attributes = elem.attributes();
+    QDomNamedNodeMap attributes = elem.attributes();
 
 
     if(elem.tagName().toLower() == "item" || elem.tagName().toLower() == "member") {
@@ -367,7 +367,7 @@ QVariant mafCodecXML::demarshall( const QDomElement &elem ) {
                 return QVariant();
             }
             valueElem = elem.firstChild().toElement();
-            mafDomNamedNodeMap attributesValue = valueElem.attributes();
+            QDomNamedNodeMap attributesValue = valueElem.attributes();
             if(attributesValue.contains("dataType")) {
                 typeName = valueElem.attribute("dataType","");
             }
@@ -375,7 +375,7 @@ QVariant mafCodecXML::demarshall( const QDomElement &elem ) {
     }
     else if (elem.tagName().toLower() == "value") {
         valueElem = elem;
-        mafDomNamedNodeMap attributesValue = valueElem.attributes();
+        QDomNamedNodeMap attributesValue = valueElem.attributes();
         if(attributesValue.contains("dataType")) {
             typeName = valueElem.attribute("dataType","");
         }
@@ -406,7 +406,7 @@ QVariant mafCodecXML::demarshall( const QDomElement &elem ) {
     }
     else if( typeName == "list" ) {
         QVariantList arr;
-        mafDomNode valueNode = elem.firstChild();
+        QDomNode valueNode = elem.firstChild();
         //QString name = valueNode.toElement().tagName();
         while( !valueNode.isNull() && m_Valid ) {
             arr.append(QVariant(demarshall( valueNode.toElement())) );
@@ -457,7 +457,7 @@ QVariant mafCodecXML::demarshall( const QDomElement &elem ) {
         QByteArray dest;
         QByteArray src = valueElem.text().toLatin1();
         dest = QByteArray::fromBase64( src );
-        QDataStream ds(&dest, mafIODevice::ReadOnly);
+        QDataStream ds(&dest, QIODevice::ReadOnly);
         ds.setVersion(QDataStream::Qt_4_6);
         ds >> returnVariant;
         if( returnVariant.isValid() ) {

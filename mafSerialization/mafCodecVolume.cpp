@@ -605,7 +605,7 @@ QVariant mafCodecVolume::demarshall(QString typeName, int multiplicity) {
         QByteArray src;
         m_DataStreamRead >> src;
         dest = QByteArray::fromBase64(src);
-        QDataStream ds(&dest, mafIODevice::ReadOnly);
+        QDataStream ds(&dest, QIODevice::ReadOnly);
         ds.setVersion(QDataStream::Qt_4_6);
         ds >> returnVariant;
         return returnVariant.isValid() ? returnVariant : QVariant(dest);
@@ -737,7 +737,7 @@ void * mafCodecVolume::extractVolumeData(void *data, int dataType, int component
 void mafCodecVolume::encode(QString url, void *data, int dataType, int componentNum, int dimensions[3], int levels) {
     // open file
     QFile file(url);
-    if (!file.open(mafIODevice::WriteOnly)) {
+    if (!file.open(QIODevice::WriteOnly)) {
         qCritical("%s", mafTr("Not able to open file '%1'").arg(url).toAscii().data());
         return;
     }
@@ -762,7 +762,7 @@ void mafCodecVolume::encode(QString url, void *data, int dataType, int component
 void * mafCodecVolume::decode(QString url, int dataType, int componentNum, int originalDimensions[3], int startPos[3], int dimensions[3], int level) {
     // open file
     QFile file(url);
-    if (!file.open(mafIODevice::ReadOnly)) {
+    if (!file.open(QIODevice::ReadOnly)) {
         qCritical("%s", mafTr("Not able to open file '%1'").arg(url).toAscii().data());
         return 0;
     } 

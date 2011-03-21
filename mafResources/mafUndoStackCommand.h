@@ -26,22 +26,23 @@ class mafOperation;
    Class which define a mafCommand for launch Undo or Redo methods of an operation.
 */
 class MAFRESOURCESSHARED_EXPORT mafUndoStackCommand : public mafCore::mafCommand {
+    Q_OBJECT
+    /// typedef macro.
+    mafSuperclassMacro(mafCore::mafCommand);
+
  public:
-    /// define the action (undo or redo) of an operation
-    typedef void(mafOperation::*Action)();
+    /// Object constructor.
+    mafUndoStackCommand(const QString code_location = "");
 
      /// Object constructor.
-     mafUndoStackCommand(mafOperation *rec, QString action);
+     mafUndoStackCommand(mafOperation *rec, QString action, const QString code_location = "");
 
      ///  Execute receiver function
      virtual void execute();
 
+protected:
      ///  Execute receiver function
      virtual ~mafUndoStackCommand();
-
-private:
-    mafOperation *m_Receiver; ///< represent the operation with which call undo or redo
-    QString m_Action; ///< Action to be executed by the command pattern.
 };
 
 } //namespace mafResource

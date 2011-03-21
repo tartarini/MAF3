@@ -18,6 +18,9 @@
 // Qt includes
 #include <QtCore>
 
+#define CALLBACK_SIGNATURE "1"
+#define SIGNAL_SIGNATURE   "2"
+
 namespace mafCore {
 
 #define mafCodeLocation __FILE__":"QTOSTRING(__LINE__)

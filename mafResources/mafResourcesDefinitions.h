@@ -32,10 +32,7 @@
 #include <vnl/vnl_double_4x4.h>
 #include <vnl/vnl_vector_fixed.h>
 
-
 namespace mafResources {
-
-#define mafUrl QUrl
 
 class mafDataSet;
 class mafDataSetCollection;
@@ -51,9 +48,6 @@ typedef QList<mafResource *> mafResourceList;
 /// Time varying data set map.
 typedef QMap<double, mafDataSet *> mafDataSetMap;
 
-/// List of dataset used as input list for mafPipe.
-typedef QList<mafDataSet *> mafDataSetList; //to be removed?
-
 /// List of VME used as input list for mafPipe.
 typedef QList<mafVME *> mafVMEList;
 
@@ -66,9 +60,6 @@ struct MAFRESOURCESSHARED_EXPORT mafPluginInfo {
     QString m_VendorHomepage; ///< Plug-in company homepage
     QString m_Description;    ///< Plug-in general description.
 };
-
-/// Hash of plugged objects coming from plig-ins.
-//typedef QHash<QString, mafCore::mafPluggedObjectInformation> mafPluggedObjectsHash;
 
 ///< Enumeration that define the Cartesian Axis.
 enum {
@@ -84,6 +75,12 @@ typedef enum {
     mafOperationTypeOperation
 } mafOperationType;
 
-}
+} // namespace mafResources
+
+/// Vector of Operation Worker.
+typedef QList<QPointer<QThread> > mafExecutionPool;
+typedef mafExecutionPool * mafExecutionPoolPointer;
+
+Q_DECLARE_METATYPE(mafExecutionPoolPointer);
 
 #endif // MAFRESOURCESDEFINITIONS_H

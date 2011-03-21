@@ -341,6 +341,7 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
     // Get the started operation
     QString guiFilename = operation->uiFilename();
     m_OperationWidget->setOperation(operation);
+    operation->setObjectName(m_OperationWidget->operationName());
 
     if(guiFilename.isEmpty()) {
         return;

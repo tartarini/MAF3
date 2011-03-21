@@ -108,7 +108,7 @@ void mafSerializerTest::openCloseDeviceTest() {
     QCOMPARE(m_Serializer->serializerString(), res);
 
     // check for the device.
-    mafIODevice *dev = m_Serializer->ioDevice();
+    QIODevice *dev = m_Serializer->ioDevice();
     QVERIFY(dev == NULL);
 
     // Close the device.
@@ -120,7 +120,7 @@ void mafSerializerTest::openCloseDeviceTest() {
 void mafSerializerTest::dataURLTest() {
     QString urlString("http://www.mysite.com/");
     m_Serializer->setDataURL(urlString);
-    mafUrl url = m_Serializer->dataURL();
+    QUrl url = m_Serializer->dataURL();
     QVERIFY(!url.isEmpty());
     QString res = url.toString();
     QCOMPARE(res, urlString);

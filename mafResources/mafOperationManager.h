@@ -19,16 +19,21 @@ namespace mafResources {
 // Class forwarding list
 class mafOperation;
 class mafVME;
+class mafOperationWorker;
 
+/// This class provides the manager class for MAF3 operations.
 /**
 Class name: mafOperationManager
-This class provides the manager class for MAF3 Operations.
-The mafOperationManager defines the SET_PARAMETERS id that allows to assign parameter to the operaiton to run.
-The manager defines these IDs:
+The mafOperationManager manage the creation and execution of operations. Operation are started in a separate thread
+and according to the user's specification at GUI level, the operation can execute in background (asynchronous execution)
+or no (synchronous execution). In the latter case the operation is always executed in a separate thread but the operation
+manager waits that the thread is finished.
+The manager defines these Topics:
 - maf.local.resources.operation.start create the instance and initialize the operation.
 - maf.local.resources.operation.started notify all the observer that the operation has started.
 - maf.local.resources.operation.setParameters asign the parameters to the current started operation.
 - maf.local.resources.operation.execute start the execution of operation.
+- maf.local.resources.operation.executed notify that the operation terminated its execution and the thread has been removed.
 - maf.local.resources.operation.executeWithParameters start the execution of operation.
 - maf.local.resources.operation.stop terminate the execution of the operation.
 - maf.local.resources.operation.undo allow to navigate in undo stack in order to restore data before current operation.
@@ -36,9 +41,10 @@ The manager defines these IDs:
 - maf.local.resources.operation.clearundoStack clear the undo stack.
 - maf.local.resources.operation.sizeUndoStack retrieve number of elements of undo stack.
 - maf.local.resources.operation.currentRunning retrieve current operation.
-- maf.local.resources.operation.lastExecuted retrieve last executed operation.
-*/
+- maf.local.resources.operation.executionPool Return the execution pool containing the running operations.
 
+@sa mafOperation mafOperationWorker
+*/
 class MAFRESOURCESSHARED_EXPORT mafOperationManager : public mafCore::mafObjectBase {
     Q_OBJECT
     /// typedef macro.
@@ -51,57 +57,66 @@ public:
     /// Destroy the singleton instance. To be called at the end of the application.
     void shutdown();
 
-    typedef QMap<QString, bool> OperationAcceptVMEMap; /// typedef for creating a map which stores if the current vme has been accepted as input by the operation
-
 signals:
-    /// start operation and set that operation as current one
+    /// Signal connected to the startOperation private slot.
     void startOperationSignal(const QString operation);
 
-    /// Notification signal for started operation.
+    /// Signal used notify that the operation has been started.
+    /**
+        @param operation Instance of the started operation.
+    */
     void operationDidStart(mafCore::mafObjectBase *operation);
 
-    /// set the parameters to the current started operation
+    /// Signal connected to the setOperationParameters slot.
     void setOperationParametersSignal(QVariantList parameters);
 
-    /// execute current operation
+    /// Signal connected to the executeOperation slot.
     void executeOperationSignal();
 
-    /// Signal that allows to start an operation with some optionals parameters.
+    /// Signal emitted to notify that the operation ended its execution and the associated thread has been deleted.
+    void executedOperationSignal();
+
+    /// Signal connected with executeWithParameters slot.
     void executeWithParametersSignal(QVariantList parameters);
 
-    /// stop current operation
+    /// Signal connected with stopOperation slot.
     void stopOperationSignal();
 
-    /// handle the undo stack removing last operation effect
+    /// Signal connecte dwith undoOperation slot.
     void undoOperationSignal();
 
-    /// reapply operation results
+    /// Signal connected with redoOperation slot.
     void redoOperationSignal();
 
-    /// clear undo stack destroying all allocated operations
-    void clearUndoStackSignal();
-
-    /// return the size of the stack undo in terms of operation numbers
+    /// Signal ocnnected with undoStackSize slot.
     int undoStackSizeSignal() const;
 
-    /// return current operation
+    /// Signal connected with currentOperation slot.
     const mafCore::mafObjectBase *currentOperationSignal() const;
 
-    /// return last executed operation
-    const mafCore::mafObjectBase *lastExecutedOperationSignal() const;
+    /// Signal connected with the executionPool slot.
+    const mafExecutionPool *executionPoolSignal();
 
 private slots:
-    /// start operation and set that operation as current one
+    /// Start operation and set that operation as current one
+    /**
+        This method allows to create and start a given operation's type. After its initialization an operationDidStart signal is
+        emitted, so that the requestor can be informed about the operation start status. The operation that has to be started
+        has to be registered with the mafObjectFactory.
+        @param operation Type of operation to create and start.
+    */
     void startOperation(const QString operation);
 
-    /// Set the parameters to the current started operation
+    /// Set the parameters to the current started operation.
+    /**
+        @param parameters List of parameters to be asigned to the current operation.
+    */
     void setOperationParameters(QVariantList parameters);
 
-    /// Execute current operation
+    /// Execute current operation.
     /**
-        This method check the executeOnThread operation's property to decide if the execution has to be done in the main
-        thread or in a separate one. If executeOnThread flag is "true" then the manager create an execution thread and move
-        the operation on that thread, link the start thread signal with the execute operation's slot and start the thread.
+        This method allows to execute the operation in a separat thread, by instantiating the mafOperationWorker and
+        giving to it the operation to execute. The worker that is put into the execution pool of the operation manager.
     */
     void executeOperation();
 
@@ -111,51 +126,71 @@ private slots:
         manager is notified and can finalize the operation execution lifetime by placing the operation into the undo stack
         if it support the undo or it is deleted.
     */
-    void operationExecuted();
+    void executionEnded();
 
-    /// initialize the given operation (first element of the list), pass to it the given (optionals) parameters as second element of the list and start the execution of the operation.
+    /// Execute the operation with given parameters.
+    /**
+        Initialize the given operation (first element of the list), pass to it the given (optionals) parameters as second element
+        of the list and start the execution of the operation.
+        @param op_with_parameters List containing as first element the operation's type to be executed. The rest of list elements are operation's parameters.
+    */
     void executeWithParameters(QVariantList op_with_parameters);
 
-    /// called when a vme has been selected.
+    /// Called when a vme has been selected.
     void vmeSelect(mafCore::mafObjectBase *vme);
 
-    /// stop current operation
+    /// Stop current operation
     void stopOperation();
 
-    /// handle the undo stack removing last operation effect
+    /// Handle the undo stack removing last operation effect
     void undoOperation();
 
-    /// reapply operation results
+    /// Reapply operation results
     void redoOperation();
 
-    /// clear undo stack destroying all allocated operations
-    void clearUndoStack();
+    /// Clear undo stack destroying all allocated operations before the execution of not-undoable operation.
+    /**
+        This method allows to clear all the operations present into the stack before that executed and can't undo.
+    */
+    void cleanUndoStack();
 
-    /// return the size of the stack undo in terms of operation numbers
+    /// Return the size of the stack undo in terms of operation numbers
     int undoStackSize() const;
 
-    /// return current operation
+    /// Return current operation
     const mafCore::mafObjectBase *currentOperation() const;
 
-    /// return last executed operation
-    const mafCore::mafObjectBase *lastExecutedOperation() const;
+    /// Return the execution pool containing the runngin operations in background.
+    const mafExecutionPool *executionPool() const;
 
 protected:
     /// Object destructor
     /*virtual*/ ~mafOperationManager();
 
 private:
-    /// create IDs and connect signals with slots for View create, destroy, select and VME show.
-    void initializeConnections();
-
     /// Object constructor.
     mafOperationManager(const QString code_location = "");
 
-    mafOperation *m_LastExecutedOperation; ///< Last executed operation
-    QLinkedList<mafOperation *> m_UndoStack; ///< Undo stack which is a linked list of operations
-    mafOperation *m_CurrentOperation; ///< Current operation handled by th manager
-    QThread *m_ExecutionThread; ///< Thread on which execute the operation.
-    mafVME *m_SelectedVME; ///< Vme that is currently selected
+    /// Create Topics and connect signals with slots.
+    void initializeConnections();
+
+    /// Remove all the objects present into the undo stack and free all the allocated memory.
+    void flushUndoStack();
+
+    /// Remove the passed object from the execution pool.
+    /**
+        This method check if the passed object is a mafOperationWorker and eventually remove it from the execution pool.
+        The method return to the caller a casted pointer to mafOperationWorker removed from the pool. NULL is returned
+        if the possed argument is not a mafOperationWorker.
+        @param obj Pointer to the mafOperationWorker.
+    */
+    mafOperationWorker *removeWorkerFromPool(QObject *obj);
+
+    mutable QMutex m_Mutex;
+    QList<mafOperation *> m_UndoStack;    ///< Undo stack which is a linked list of operations
+    mafOperation *m_CurrentOperation;       ///< Current operation handled by th manager
+    mafExecutionPool m_ExecutionPool; ///< Pool of running operations.
+    mafVME *m_SelectedVME;                      ///< Vme that is currently selected
     mafCore::mafId m_ExecWithParameters; ///< Id associated with the EXECUTE_WITH_PARAMETERS event.
 };
 
@@ -163,7 +198,7 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline const mafCore::mafObjectBase *mafOperationManager::currentOperation() const{
+inline const mafCore::mafObjectBase *mafOperationManager::currentOperation() const {
     return (mafCore::mafObjectBase *)m_CurrentOperation;
 }
 
@@ -171,6 +206,9 @@ inline int mafOperationManager::undoStackSize() const {
     return m_UndoStack.size();
 }
 
+inline const mafExecutionPool *mafOperationManager::executionPool() const {
+    return (const mafExecutionPool*)&m_ExecutionPool;
+}
 
 } // namespace mafResources
 

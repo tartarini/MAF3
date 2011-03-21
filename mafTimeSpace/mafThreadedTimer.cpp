@@ -22,11 +22,12 @@ mafThreadedTimer::mafThreadedTimer(mafTimer *timer, const QString code_location)
 }
 
 mafThreadedTimer::~mafThreadedTimer() {
+    // Delete the timer.
+    mafDEL(m_Timer);
+
     // If the timer has been moved over a different thread
     // before deleting it, the thread has to be exited and deleted.
     mafDELThread(m_Thread);
-    // Delete the timer.
-    mafDEL(m_Timer);
 }
 
 void mafThreadedTimer::start() {

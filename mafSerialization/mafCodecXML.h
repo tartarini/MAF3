@@ -46,14 +46,14 @@ private:
     void marshall(const QVariant &value );
 
     /// unmarshalling of QVariant data type in order to write the correct type.
-    QVariant demarshall( const mafDomElement &elem );
+    QVariant demarshall( const QDomElement &elem );
 
-    mafCore::mafMementoPropertyItem setPropertyItem(mafDomElement eChild);
+    mafCore::mafMementoPropertyItem setPropertyItem(QDomElement eChild);
 
-    mafXmlStreamWriter m_XMLStreamWriter; ///
+    QXmlStreamWriter m_XMLStreamWriter; ///
 
-    mafDomDocument m_XMLDocument;
-    mafDomNode m_CurrentNode;
+    QDomDocument m_XMLDocument;
+    QDomNode m_CurrentNode;
 
     int m_MementoLevel; ///
     bool m_Valid;

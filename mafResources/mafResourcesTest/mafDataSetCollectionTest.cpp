@@ -231,4 +231,3 @@ void mafDataSetCollectionTest::collectionRemoveItemTest() {
 
 MAF_REGISTER_TEST(mafDataSetCollectionTest);
 #include "mafDataSetCollectionTest.moc"
-

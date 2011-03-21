@@ -41,14 +41,14 @@ public:
     virtual mafCore::mafMemento *decode() = 0;
 
     /// Set device used to interface the physical media.
-    void setDevice(mafIODevice *d);
+    void setDevice(QIODevice *d);
 
 protected:
     /// Object destructor.
     /* virtual */ ~mafCodec();
 
     QString m_EncodingType; ///< Encoding type for the codec.
-    mafIODevice *m_Device; ///< Media device.
+    QIODevice *m_Device; ///< Media device.
     unsigned int m_Level; ///< Decoding level for compounded memento classes.
 };
 
@@ -60,7 +60,7 @@ inline const QString mafCodec::encodingType() {
     return m_EncodingType;
 }
 
-inline void mafCodec::setDevice(mafIODevice *d) {
+inline void mafCodec::setDevice(QIODevice *d) {
     m_Device = d;
 }
 

@@ -26,7 +26,7 @@ mafView::mafView(const QString code_location) : mafResource(code_location), m_Re
     m_Selected = false;
 
     // Callbacks related to the VME creation
-    mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)");
+    mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)")
 }
 
 mafView::~mafView() {

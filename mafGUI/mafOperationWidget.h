@@ -34,6 +34,8 @@ class mafObjectBase;
 */
 class mafOperationWidget : public QWidget {
     Q_OBJECT
+    Q_PROPERTY(QString operationName READ operationName WRITE setOperationName)
+
 public:
     /// Object constructor.
     mafOperationWidget(QWidget *parent = 0);
@@ -44,8 +46,11 @@ public:
     /// Assign the current operation
     void setOperation(mafCore::mafObjectBase *op);
 
-    /// Assign the operation's name
+    /// Assign the operation's name associated to the menu label.
     void setOperationName(QString name);
+
+    /// Return the operation name.
+    QString operationName() const;
 
     /// Assign the operation's GUI
     void setOperationGUI(QWidget *gui);

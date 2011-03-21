@@ -14,12 +14,19 @@
 
 using namespace mafResources;
 
+mafUndoStackCommand::mafUndoStackCommand(const QString code_location) : mafCommand(code_location) {
+}
+
+mafUndoStackCommand::mafUndoStackCommand(mafOperation *rec, QString action, const QString code_location) : mafCommand(code_location) {
+    QString action_sig = SIGNAL_SIGNATURE;
+    action_sig.append(action);
+
+    connect(this, SIGNAL(executeCommand()), rec, action_sig.toAscii());
+}
+
 mafUndoStackCommand::~mafUndoStackCommand() {
 }
 
-mafUndoStackCommand::mafUndoStackCommand(mafOperation *rec, QString action): m_Receiver(rec), m_Action(action) {
-}
-
 void mafUndoStackCommand::execute() {
-    m_Receiver->metaObject()->invokeMethod(m_Receiver, m_Action.toAscii());
+    emit executeCommand();
 }

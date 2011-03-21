@@ -37,7 +37,7 @@ public:
     void setDataURL(const QString &url);
 
     /// Return the URL of the file containing the data.
-    const mafUrl dataURL() const;
+    const QUrl dataURL() const;
 
     /// Initialize the IO device and make it ready to operate.
     virtual void openDevice(mafSerializerOpenMode mode) = 0;
@@ -45,16 +45,16 @@ public:
     /// Close the IO device and flush all the information into the media.
     virtual void closeDevice() = 0;
 
-    /// Return the mafIODevice to be connected to the active Codec.
-    mafIODevice *ioDevice();
+    /// Return the QIODevice to be connected to the active Codec.
+    QIODevice *ioDevice();
 
 protected:
     /// Object destructor
     /* virtual */ ~mafSerializer();
-    mafIODevice *m_IODevice; ///< IO device used to operate on the specific media defined by the strategy used.
+    QIODevice *m_IODevice; ///< IO device used to operate on the specific media defined by the strategy used.
 
 private:
-    mafUrl m_DataURL; ///< URL that will be written/read the data.
+    QUrl m_DataURL; ///< URL that will be written/read the data.
 };
 
 /////////////////////////////////////////////////////////////
@@ -65,11 +65,11 @@ inline void mafSerializer::setDataURL(const QString &url) {
     m_DataURL.setUrl(url);
 }
 
-inline const mafUrl mafSerializer::dataURL() const {
+inline const QUrl mafSerializer::dataURL() const {
     return m_DataURL;
 }
 
-inline mafIODevice *mafSerializer::ioDevice() {
+inline QIODevice *mafSerializer::ioDevice() {
     return m_IODevice;
 }
 

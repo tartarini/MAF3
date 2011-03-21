@@ -140,7 +140,7 @@ mafMemento *mafCodecRawASCII::decode() {
                 url.append(path);
                 url.append("/");
                 url.append(value);
-                mafUrl u = QUrl::fromEncoded(url);
+                QUrl u = QUrl::fromEncoded(url);
                 if (u.isValid()) {
                     //write external file url
                     item.m_Value = u.toString();
@@ -350,7 +350,7 @@ QVariant mafCodecRawASCII::demarshall( QString typeName, int multiplicity ) {
         QByteArray src;
         m_DataTextRead >> src;
         dest = QByteArray::fromBase64( src );
-        QDataStream ds(&dest, mafIODevice::ReadOnly);
+        QDataStream ds(&dest, QIODevice::ReadOnly);
         ds.setVersion(QDataStream::Qt_4_6);
         ds >> returnVariant;
         if( returnVariant.isValid() ) {

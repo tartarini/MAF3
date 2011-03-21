@@ -14,9 +14,6 @@
 #include "mafObjectRegistry.h"
 #include "mafVisitor.h"
 
-#define CALLBACK_SIGNATURE "1"
-#define SIGNAL_SIGNATURE   "2"
-
 using namespace mafCore;
 
 mafObjectBase::mafObjectBase(const QString code_location) : QObject(), m_UIFilename(""), m_ReferenceCount(1) {

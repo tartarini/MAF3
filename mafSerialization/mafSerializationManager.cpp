@@ -107,7 +107,7 @@ void mafSerializationManager::saveMemento(mafMemento *memento, const QString &ur
     mafCodec *codec = (mafCodec *)mafNEWFromString(codecType);
 
     // Check the protocol of the given 'url' and create the corresponding mafSerialize class
-    mafUrl u(url);
+    QUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
         qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
@@ -146,7 +146,7 @@ void mafSerializationManager::loadMemento(const QString &url, const QString &enc
     mafCodec *codec = (mafCodec *)mafNEWFromString(codecType);
 
     // Check the protocol of the given 'url' and create the corresponding mafSerialize class
-    mafUrl u(url);
+    QUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
         qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
@@ -209,7 +209,7 @@ void mafSerializationManager::exportExternalData(mafCore::mafContainerInterface 
     mafExternalDataCodec *codec = (mafExternalDataCodec *)mafNEWFromString(codecType);
 
     // Check the protocol of the given 'url' and create the corresponding mafSerialize class
-    mafUrl u(url);
+    QUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
         qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
@@ -246,7 +246,7 @@ void mafSerializationManager::saveExternalData(char *externalDataString, const Q
     REQUIRE(externalDataString != NULL);
 
     // Check the protocol of the given 'url' and create the corresponding mafSerialize class
-    mafUrl u(url);
+    QUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
         qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
@@ -284,7 +284,7 @@ void mafSerializationManager::importExternalData(const QString &url, const QStri
     mafExternalDataCodec *codec = (mafExternalDataCodec *)mafNEWFromString(codecType);
 
     // Check the protocol of the given 'url' and create the corresponding mafSerialize class
-    mafUrl u(url);
+    QUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
         qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
@@ -324,7 +324,7 @@ void mafSerializationManager::importExternalData(const QString &url, const QStri
 QByteArray mafSerializationManager::loadExternalData(const QString &url) {
 
     // Check the protocol of the given 'url' and create the corresponding mafSerialize class
-    mafUrl u(url);
+    QUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
         qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());

@@ -150,6 +150,5 @@ void mafVisualPipeTest::mafVisualPipeVmePickTest() {
     mafDEL(vme);
 }
 
-
 MAF_REGISTER_TEST(mafVisualPipeTest);
 #include "mafVisualPipeTest.moc"

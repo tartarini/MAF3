@@ -511,7 +511,7 @@ void mafCodecBrickedVolumeTest::encodeTest() {
     // test case 1
     // open the gray file in writing modality
     QFile file(m_GrayFileName);
-    bool success = file.open(mafIODevice::WriteOnly);
+    bool success = file.open(QIODevice::WriteOnly);
     QVERIFY(success);
 
     // assign the IODevice
@@ -528,7 +528,7 @@ void mafCodecBrickedVolumeTest::encodeTest() {
     // test case 2
     // open the RGB file in writing modality
     file.setFileName(m_RGBFileName);
-    success = file.open(mafIODevice::WriteOnly);
+    success = file.open(QIODevice::WriteOnly);
     QVERIFY(success);
 
     // assign the IODevice
@@ -545,7 +545,7 @@ void mafCodecBrickedVolumeTest::encodeTest() {
     // test case 3
     // open the float file in writing modality
     file.setFileName(m_FloatFileName);
-    success = file.open(mafIODevice::WriteOnly);
+    success = file.open(QIODevice::WriteOnly);
     QVERIFY(success);
 
     // assign the IODevice
@@ -564,7 +564,7 @@ void mafCodecBrickedVolumeTest::decodeTest() {
     // test case 1
     // open the gray file in reading modality
     QFile file(m_GrayFileName);
-    bool success = file.open(mafIODevice::ReadOnly);
+    bool success = file.open(QIODevice::ReadOnly);
     QVERIFY(success);
 
     // assign the IODevice
@@ -585,7 +585,7 @@ void mafCodecBrickedVolumeTest::decodeTest() {
     // test case 2
     // open the RGB file in reading modality
     file.setFileName(m_RGBFileName);
-    success = file.open(mafIODevice::ReadOnly);
+    success = file.open(QIODevice::ReadOnly);
     QVERIFY(success);
 
     // assign the IODevice
@@ -607,7 +607,7 @@ void mafCodecBrickedVolumeTest::decodeTest() {
     // test case 3
     // open the float file in reading modality
     file.setFileName(m_FloatFileName);
-    success = file.open(mafIODevice::ReadOnly);
+    success = file.open(QIODevice::ReadOnly);
     QVERIFY(success);
 
     // assign the IODevice
@@ -635,7 +635,7 @@ void mafCodecBrickedVolumeTest::updateTest() {
 
     // open the gray file in reading modality
     QFile file(m_GrayFileName);
-    bool success = file.open(mafIODevice::ReadOnly);
+    bool success = file.open(QIODevice::ReadOnly);
     QVERIFY(success);
 
     // assign the IODevice
@@ -746,7 +746,7 @@ void mafCodecBrickedVolumeTest::updateTest() {
 
     // open the RGB file in reading modality
     file.setFileName(m_RGBFileName);
-    success = file.open(mafIODevice::ReadOnly);
+    success = file.open(QIODevice::ReadOnly);
     QVERIFY(success);
 
     // assign the IODevice
@@ -857,7 +857,7 @@ void mafCodecBrickedVolumeTest::updateTest() {
 
     // open the float file in reading modality
     file.setFileName(m_FloatFileName);
-    success = file.open(mafIODevice::ReadOnly);
+    success = file.open(QIODevice::ReadOnly);
     QVERIFY(success);
 
     // assign the IODevice

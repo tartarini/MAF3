@@ -18,17 +18,17 @@ namespace mafResources {
 
 // Class forwarding list
 
+/// This class provides basic API for building elaboration algorithms for mafResources.
 /**
 Class name: mafOperation
 This class provides basic API for building elaboration algorithms for mafResources.
 An operation takes as input one or more mafVMEs and generate as output a mafVME. The algorithm executed on the input data
-is provided ad mafDataPipe. The mafOperation that manage the possibility to have the undo mechanism for the executed algorithm.
+is provided by a mafDataPipe. The mafOperation that manage the possibility to have the undo mechanism for the executed algorithm.
 */
 class MAFRESOURCESSHARED_EXPORT mafOperation : public mafResource {
     Q_OBJECT
     Q_PROPERTY(bool running READ isRunning)
-    Q_PROPERTY(bool executeOnThread READ executeOnThread WRITE setExecuteOnThread)
-    Q_PROPERTY(bool abortExecution READ abortExecution WRITE setAbortExecution)
+    Q_PROPERTY(bool canAbort READ canAbort)
 
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
@@ -46,27 +46,21 @@ public:
     /// check if the operation is running.
     bool isRunning() const;
 
-    /// Initialize the operation. Put here the initialization of operation's parameters
+    /// Initialize the operation. Put here the initialization of operation's parameters.
     virtual bool initialize();
 
-    /// Return the status of the execute on separate thread.
-    bool executeOnThread() const;
+    /// Return the abort capability of the operation.
+    bool canAbort() const;
 
-    /// Return the abort execution status.
-    bool abortExecution() const;
+    /// Return the status of the input preserve flag.
+    bool isInputPreserve() const;
 
 signals:
-    /// Notify that the operation execution is terminated.
-    void executionEnded();
+    /// Trigger the undo execution.
+    void undoExecution();
 
 public slots:
-    /// Set the flag to alert the Operation Manager to move the operation's execution on a separate thread.
-    void setExecuteOnThread(bool on_thread);
-
-    /// Allows to abort the execution.
-    /** This method is used when the execution has been moved on a separate thread and the user wants to stop it.*/
-    void setAbortExecution(bool a);
-
+    
     /// Set parameters of operation.
     virtual void setParameters(QVariantList parameters);
 
@@ -76,16 +70,14 @@ public slots:
     /// Allows to call the piece of algorithm that is needed to apply the operation again.
     virtual void reDo();
 
-    /// Execute the resource algorithm.
-    /**
-        Operation emit the executionEnded signal at the end of the execute code so that the operation manager
-        can finalize the execution mechanism. The subclassing mafOperation and overriding the execute slot, at the end of
-        the execution code the custom operation MUST call mafOperation::execute() or emit the executionEnded signal.
-    */
-    virtual void execute();
-
     /// Terminate the execution.
-    virtual bool terminate();
+    virtual void terminate();
+
+private slots:
+    /// Terminate the execution.
+    void abort();
+    
+    
 
 protected:
     /// Object destructor.
@@ -93,9 +85,11 @@ protected:
 
     bool m_IsRunning; ///< Flag that check if the operation is running, i.e. the execution is started
     bool m_CanUnDo; ///< Flag that store the unDo capability of the operation.
-    bool m_ExecuteOnThread; ///< Flag used to enable/disable the execution on separate thread.
-    bool m_AbortExecution;     ///< Flag used to stop the execution.
     mafOperationType m_OperationType; ///< Describe the operation type (mafOperationTypeImporter, mafOperationTypeExporter or mafOperationTypeOperation).
+    bool m_CanAbort;         ///< Flag indicating that the operation can abort its execution or no (default true).
+    volatile bool m_Abort;               ///< Flag indicating that the operation has to be aborted. The code inside the execute slot has to take care about it.
+    bool m_InputPreserve;  ///< Flag represnting the behavior of the operationabout the input data. True value means that the input data is not modified (default true).
+
 };
 
 /////////////////////////////////////////////////////////////
@@ -113,20 +107,12 @@ inline mafOperationType mafOperation::operationType() const {
     return m_OperationType;
 }
 
-inline bool mafOperation::executeOnThread() const {
-    return m_ExecuteOnThread;
+inline bool mafOperation::canAbort() const {
+    return m_CanAbort;
 }
 
-inline void mafOperation::setExecuteOnThread(bool on_thread) {
-    m_ExecuteOnThread = on_thread;
-}
-
-inline bool mafOperation::abortExecution() const {
-    return m_AbortExecution;
-}
-
-inline void mafOperation::setAbortExecution(bool a) {
-    m_AbortExecution = a;
+inline bool mafOperation::isInputPreserve() const {
+    return m_InputPreserve;
 }
 
 } // namespace mafResources

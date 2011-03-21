@@ -13,7 +13,7 @@
 #define MAFCOMMAND_H
 
 // Includes list
-#include "mafCore_global.h"
+#include "mafObjectBase.h"
 
 namespace mafCore {
 
@@ -24,13 +24,25 @@ Class name: mafCommand
 This class defines a pure interface for the command pattern, used for example in undo stack mechanism
 of operations.
 */
-class MAFCORESHARED_EXPORT mafCommand {
+class MAFCORESHARED_EXPORT mafCommand : public mafObjectBase {
+    Q_OBJECT
+    /// typedef macro.
+    mafSuperclassMacro(mafCore::mafObjectBase);
+
 public:
+    /// Object constructor.
+    mafCommand(const QString code_location = "");
+
     /// define the single API interface of all he classes that inherits from it
     virtual void execute() = 0;
 
+signals:
+    /// Signal used to trigger the start of the given command.
+    void executeCommand();
+
+protected:
     /// Object destructor.
-    virtual ~mafCommand();
+    /*virtual*/ ~mafCommand();
 };
 
 } //namespace mafCore
