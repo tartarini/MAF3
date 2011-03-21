@@ -18,7 +18,6 @@
 
 #include <mafGUIRegistration.h>
 #include <mafGUIApplicationSettingsDialog.h>
-#include <mafTreeModel.h>
 
 #include <vtkPolyDataMapper.h>
 #include <vtkRenderer.h>
@@ -78,7 +77,7 @@ void mafMainWindow::initializeMainWindow() {
     ui->propertiesBoxContainer->setLayout(ui->layoutPropertiesBox);
 
     //tree widget in sidebar
-    m_Model = new mafTreeModel();
+     m_Model = new mafDragDropModel();
 
     if(m_Logic) {
         m_Model->setHierarchy(m_Logic->hierarchy());
@@ -88,6 +87,10 @@ void mafMainWindow::initializeMainWindow() {
     m_Tree = m_GUIManager->createTreeWidget(m_Model, ui->hierarchyWidget);
     m_Tree->setSelectionBehavior(QAbstractItemView::SelectItems);
     m_Tree->setSelectionMode(QAbstractItemView::SingleSelection);
+    //allow drag&drop operation
+    m_Tree->setDragEnabled(true);
+    m_Tree->setAcceptDrops(true);
+    m_Tree->setDropIndicatorShown(false);
     QModelIndex index = m_Model->index(0, 0);
     m_Tree->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
 
@@ -102,7 +105,8 @@ void mafMainWindow::initializeMainWindow() {
     QObject *sideBarAction = m_GUIManager->actionByName("SideBar");
     connect(ui->dockSideBar, SIGNAL(visibilityChanged(bool)), sideBarAction, SLOT(setChecked(bool)));
     connect(sideBarAction, SIGNAL(triggered(bool)), ui->dockSideBar, SLOT(setVisible(bool)));
-
+    connect(m_Tree->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
+            m_Model, SLOT(selectItem(const QItemSelection &, const QItemSelection &)));
     // **** LogBar ****
     // LogBar Layout
     ui->logBarWidgetContents->setLayout(ui->gridLayoutLogBar);
