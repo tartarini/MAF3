@@ -16,6 +16,8 @@
 #include "mafGUIDefinitions.h"
 #include "mafTreeItem.h"
 #include <mafHierarchy.h>
+#include <QItemSelection>
+
 
 namespace mafGUI {
 
@@ -44,21 +46,24 @@ public:
     /// clear the model
     void clear();
 
-    /// insert a new item in the model
-    mafTreeItem *insertNewItem(Insert insert, QObject *obj, const QModelIndex &index);
+    /// Insert a new item in the model
+    void insertNewItem(Insert insert, QObject *obj, const QModelIndex &index);
+
+    /// Remove row form the model.
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
     /// remove item from the model
-    void removeItem(const QModelIndex &index);
+    void removeFromList(const QModelIndex &index);
 
-    /// utility function. This function is useful in test phase for select a tree item from data inside
-    void selectItemFromData(QObject *data);
+    /// This function return QModelIndex of the passed data.
+    QModelIndex indexFromData(QObject *data);
 
     /// retrieve index of current element
     QModelIndex currentIndex();
 
 public slots:
     /// select the object from the data, return true if selected, false otherwise.
-    void selectItem(QModelIndex index);
+    void selectItem(const QItemSelection &selected, const QItemSelection &deselected);
 
     /*virtual*/ bool submit();
 
@@ -68,6 +73,9 @@ private slots:
 
     /// Slot called when an item is going to be removed from the tree hierarchy
     void itemDetached(QObject *item);
+
+    /// Append a tree to an item.
+    void itemReparent(QObject *item, QObject *parent);
 
 signals:
     void itemAdded(QModelIndex index);
@@ -82,6 +90,8 @@ private:
 
     /// create new item starting by a parent item
     mafTreeItem *createNewItem(mafTreeItem *parent, QObject *obj, bool checked);
+
+
 
     mafCore::mafHierarchy *m_Hierarchy; ///< hierarchy from which construct the model
     mafTreeItem *m_CurrentItem; ///< current item of the model
