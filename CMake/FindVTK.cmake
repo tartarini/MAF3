@@ -14,7 +14,7 @@ INCLUDE_DIRECTORIES("${VTK_DIR}/include/")
 
 if(WIN32)
     SET(link_dir "${VTK_DIR}lib/${CMAKE_BUILD_TYPE}")
-elseif(WIN32)
+else(WIN32)
     SET(link_dir "${VTK_DIR}lib")
 endif(WIN32)
 
