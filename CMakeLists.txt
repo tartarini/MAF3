@@ -50,13 +50,20 @@ IF(QT4_FOUND)
 ENDIF()
 
 #############################################################################################
+### OPTIONS
+#############################################################################################
+if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
+
+#############################################################################################
 ### where to place output binaries
 #############################################################################################
 SET (LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/Install/bin/ CACHE INTERNAL
      "Single output directory for building all libraries.")
 SET (EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/Install/bin/ CACHE INTERNAL 
      "Single output directory for building all executables.")
-
+     
 MARK_AS_ADVANCED (
   LIBRARY_OUTPUT_PATH 
   EXECUTABLE_OUTPUT_PATH
