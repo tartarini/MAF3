@@ -10,7 +10,7 @@
 #
 
 
-SET(VXL_DIR "$ENV{MAF3_FOUNDATION_LIB_DIR}/vxl/")
+SET(VXL_DIR "${MafFoundationLibDir}/vxl/")
 INCLUDE_DIRECTORIES("${VXL_DIR}/include/core/")
 INCLUDE_DIRECTORIES("${VXL_DIR}/include/v3p/")
 INCLUDE_DIRECTORIES("${VXL_DIR}/include/vcl/")
