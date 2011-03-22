@@ -39,6 +39,7 @@ MACRO(mafMacroGetTargetLibraries varname)
     FOREACH(target_library ${target_libraries})
       LIST(APPEND ${varname} "${target_library}")
     ENDFOREACH()
+    
   ENDIF()
   
 ENDMACRO()
