@@ -25,6 +25,3 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
 ENDIF(CMAKE_BUILD_TYPE MATCHES Debug)
 
 SET(QXMLRPC_FOUND TRUE)
-include(mafCopySharedLibrariesInInstallDir)
-mafCopySharedLibrariesInInstallDir("${QXMLRPC_DIR}lib") 
-

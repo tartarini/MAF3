@@ -26,7 +26,4 @@ ENDIF(CMAKE_BUILD_TYPE MATCHES Debug)
 
 #message(${QTSOAP_LIBRARY})
 
-SET(QtSOAP_FOUND TRUE)   
-include(mafCopySharedLibrariesInInstallDir)
-mafCopySharedLibrariesInInstallDir("${QtSOAP_DIR}lib") 
-
+SET(QtSOAP_FOUND TRUE)

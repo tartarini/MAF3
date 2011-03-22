@@ -13,7 +13,7 @@ SET(VTK_DIR "$ENV{MAF3_FOUNDATION_LIB_DIR}/vtk-5.6/")
 INCLUDE_DIRECTORIES("${VTK_DIR}/include/")
 
 if(WIN32)
-    SET(link_dir "${VTK_DIR}lib/${CMAKE_BUILD_TYPE}")
+    SET(link_dir "${VTK_DIR}lib/${CMAKE_CFG_INTDIR}")
 else(WIN32)
     SET(link_dir "${VTK_DIR}lib")
 endif(WIN32)
@@ -71,6 +71,4 @@ ELSE(CMAKE_BUILD_TYPE MATCHES Debug)
 ENDIF(CMAKE_BUILD_TYPE MATCHES Debug)
 
 SET(VTK_FOUND TRUE)
-include(mafCopySharedLibrariesInInstallDir)
-mafCopySharedLibrariesInInstallDir("${link_dir}")   
 
