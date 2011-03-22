@@ -8,6 +8,20 @@
 #  See Licence at: http://tiny.cc/QXJ4D
 #
 #
+MACRO(filterForMoc outputList inputList)
+set(${outputList})
+
+foreach(file ${inputList})
+  file(READ ${file} _contents)
+  
+  string(REGEX MATCHALL "Q_OBJECT" _match "${_contents}")
+  if(_match)
+    LIST(APPEND ${outputList} ${file})
+  endif(_match)
+    
+endforeach(file ${inputList})
+
+ENDMACRO()
 
 MACRO(mafMacroInitProject test)
 
@@ -17,7 +31,9 @@ MACRO(mafMacroInitProject test)
   get_filename_component(DIR_NAME ${CUR_ABSOLUTE_DIR} NAME)
   PROJECT(${DIR_NAME})
 
-  FILE(GLOB include_file_list "${PROJECT_SOURCE_DIR}/*.h")
+  FILE(GLOB input_include_file_list "${PROJECT_SOURCE_DIR}/*.h")
+  filterForMoc(include_file_list "${input_include_file_list}")
+  
   FILE(GLOB implementation_file_list "${PROJECT_SOURCE_DIR}/*.cpp")
   FILE(GLOB templete_file_list1 "${PROJECT_SOURCE_DIR}/*.txx")
   FILE(GLOB templete_file_list2 "${PROJECT_SOURCE_DIR}/*.tpp")
@@ -26,7 +42,7 @@ MACRO(mafMacroInitProject test)
   # Set your list of sources here.
   SET(PROJECT_SRCS
 	${implementation_file_list}
-	${include_file_list}
+	${input_include_file_list}
 	${templete_file_list1}
 	${templete_file_list2}
 	${ui_file_list}
