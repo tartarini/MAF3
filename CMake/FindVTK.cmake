@@ -9,11 +9,11 @@
 #
 #
 
-SET(VTK_DIR "$ENV{MAF3_FOUNDATION_LIB_DIR}/vtk-5.6/")
+SET(VTK_DIR "${MafFoundationLibDir}/vtk-5.6/")
 INCLUDE_DIRECTORIES("${VTK_DIR}/include/")
 
 if(WIN32)
-    SET(link_dir "${VTK_DIR}lib/${CMAKE_CFG_INTDIR}")
+    SET(link_dir "${VTK_DIR}lib/${CMAKE_BUILD_TYPE}/")
 else(WIN32)
     SET(link_dir "${VTK_DIR}lib")
 endif(WIN32)
@@ -61,7 +61,7 @@ SET(VTK_LIBRARY_TEMP "MapReduceMPI"
 IF(CMAKE_BUILD_TYPE MATCHES Debug)
     IF(WIN32)
       FOREACH(target_library ${VTK_LIBRARY_TEMP})
-         LIST(APPEND VTK_LIBRARY "${target_library}_d")
+         LIST(APPEND VTK_LIBRARY "${target_library}")
       ENDFOREACH(target_library ${VTK_LIBRARY_TEMP})
     ELSE(WIN32)
       SET(VTK_LIBRARY ${VTK_LIBRARY_TEMP})
