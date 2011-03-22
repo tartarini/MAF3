@@ -4,8 +4,12 @@
 # This file should list the libraries required to build the current MAF module.
 # 
 
+SET(foundation_libraries 
+  ${QXMLRPC_LIBRARY} 
+  ${QTSOAP_LIBRARY}
+)
+
 SET(target_libraries
   ${MAF_BASE_LIBRARIES}
-  ${QTSOAP_LIBRARY}
-  ${QXMLRPC_LIBRARY}
+  ${foundation_libraries}
   )
