@@ -171,7 +171,7 @@ MACRO(mafMacroWrapBuild)
       endif(WIN32)
       
       SET(realName)
-      SEY(pyName "${PROJECT_NAME}")
+      SET(pyName "${PROJECT_NAME}")
       if(CMAKE_BUILD_TYPE MATCHES Debug)
         if(WIN32)
             SET(realName "${PROJECT_NAME}_d" )    
