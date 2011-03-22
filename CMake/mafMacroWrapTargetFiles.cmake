@@ -206,7 +206,7 @@ MACRO(mafMacroWrapBuild)
         COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${SHARED_LIB_COPY_SOURCE} ${CMAKE_BINARY_DIR}/modules/${wrap_lib_name}
         COMMENT "-- Moving python modules to ${CMAKE_BINARY_DIR}/modules")
 
-      set(${PROJECT_NAME}_MODULES ${CMAKE_BINARY_DIR}/modules/${realName}.py)
+      set(${PROJECT_NAME}_MODULES ${CMAKE_BINARY_DIR}/modules/${pyName}.py)
 
     endif(SWIG_FOUND AND PYTHONLIBS_FOUND)
   endif(${WRAP_LIST_FOUND})
