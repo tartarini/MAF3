@@ -12,6 +12,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 PROJECT(MAF)
+set(MafFoundationDir $ENV{MAF3_FOUNDATION_LIB_DIR})
+STRING(REPLACE "\\" "/" MafFoundationLibDir ${MafFoundationDir})
 
 #############################################################################################
 ### MAF3 Options
@@ -19,6 +21,10 @@ PROJECT(MAF)
 
 OPTION(BUILD_TEST_SUITE "Build Module's Tests" ON)
 OPTION(BUILD_EXAMPLES "Build Examples" ON)
+
+if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
 
 #############################################################################################
 ### where to search modules
