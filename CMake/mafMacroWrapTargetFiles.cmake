@@ -171,9 +171,10 @@ MACRO(mafMacroWrapBuild)
       endif(WIN32)
       
       SET(realName)
+      SEY(pyName "${PROJECT_NAME}")
       if(CMAKE_BUILD_TYPE MATCHES Debug)
         if(WIN32)
-            SET(realName "${PROJECT_NAME}_d" )
+            SET(realName "${PROJECT_NAME}_d" )    
         else(WIN32)
             SET(realName "${PROJECT_NAME}_debug" )
         endif(WIN32)
@@ -201,7 +202,7 @@ MACRO(mafMacroWrapBuild)
       add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i
         COMMAND ${CMAKE_COMMAND} ARGS -E  make_directory ${CMAKE_BINARY_DIR}/modules
-        COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${${PROJECT_NAME}_BINARY_DIR}/${realName}.py ${CMAKE_BINARY_DIR}/modules
+        COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${${PROJECT_NAME}_BINARY_DIR}/${pyName}.py ${CMAKE_BINARY_DIR}/modules
         COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${SHARED_LIB_COPY_SOURCE} ${CMAKE_BINARY_DIR}/modules/${wrap_lib_name}
         COMMENT "-- Moving python modules to ${CMAKE_BINARY_DIR}/modules")
 
