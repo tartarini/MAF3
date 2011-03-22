@@ -16,6 +16,6 @@ include(FindQtSOAP)
 include(FindQXMLRPC)
 include(FindQScxml)
 
-set(MAF_FOUNDATION_LIBRARIES ${QXMLRPC_LIBRARY} ${VXL_LIBRARY} ${QTSOAP_LIBRARY} ${QSCXML_LIBRARY})
+include(mafCopySharedLibrariesInInstallDir)
 
 ENDMACRO()
