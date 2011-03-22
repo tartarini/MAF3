@@ -9,7 +9,7 @@
 #
 #
 
-SET(QtSOAP_DIR "$ENV{MAF3_FOUNDATION_LIB_DIR}/qtsoap/")
+SET(QtSOAP_DIR "${MafFoundationLibDir}/qtsoap/")
 INCLUDE_DIRECTORIES("${QtSOAP_DIR}/include/")
 LINK_DIRECTORIES(${LINK_DIRECTORIES} "${QtSOAP_DIR}/lib/")
 
