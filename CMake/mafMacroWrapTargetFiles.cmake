@@ -188,13 +188,13 @@ MACRO(mafMacroWrapBuild)
       set(SHARED_LIB_COPY_COMMAND)
 
       ##########################################################
-      ### Use mafCore target to extract the TAGET LOCATION 
+      ### Use ${PROJECT_NAME} target to extract the TAGET LOCATION 
       ### according to the current compilation configuration:
       ### Debug, Release, ...
       ##########################################################
       set(TARGET_LOC)
       set(CUR_ABSOLUTE_DIR)
-      get_target_property(TARGET_LOC mafCore LOCATION)
+      get_target_property(TARGET_LOC ${PROJECT_NAME} LOCATION)
       get_filename_component(CUR_ABSOLUTE_DIR ${TARGET_LOC} PATH)
       set(SHARED_LIB_COPY_SOURCE ${CUR_ABSOLUTE_DIR}/${lib_name})
       
