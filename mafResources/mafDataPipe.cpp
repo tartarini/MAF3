@@ -22,6 +22,7 @@ mafDataPipe::~mafDataPipe() {
     if (!m_InPlace) {
         mafDEL(m_Output);
     }
+    mafDEL(m_DecoratorPipe);
 }
 
 int mafDataPipe::addInput(mafVME *vme) {
