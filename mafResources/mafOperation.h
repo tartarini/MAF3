@@ -70,7 +70,7 @@ public slots:
     /// Allows to call the piece of algorithm that is needed to apply the operation again.
     virtual void reDo();
 
-    /// Terminate the execution.
+    /// Terminate the execution by resetting the m_IsRunning at false.
     virtual void terminate();
 
 private slots:
