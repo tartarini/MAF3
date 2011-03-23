@@ -195,8 +195,6 @@ mafOperationWorker *mafOperationManager::removeWorkerFromPool(QObject *obj) {
         }
     }
 
-
-
     return worker;
 }
 
@@ -218,9 +216,10 @@ void mafOperationManager::executionEnded() {
             mafDEL(op);
         }
     }
+    delete worker;
+
     // Current operation ended => reset the pointer.
     m_CurrentOperation = NULL;
-    delete worker;
 
     qDebug() << "Sending operation.executed for operation " << name;
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.executed");
@@ -233,7 +232,7 @@ void mafOperationManager::stopOperation() {
     if ( worker == NULL ) {
         // Operation not executing => Simply cancelled by the user.
         // m_CurrentOperation should be deleted.
-        (m_CurrentOperation);
+        mafDEL(m_CurrentOperation);
         return;
     }
 
@@ -292,10 +291,8 @@ void mafOperationManager::undoOperation() {
         qWarning() << mafTr("Cannot perform the UnDo, because operation %1 is still running in background!").arg(opToExecute->objectName());
         return;
     }
-    
-    
+
     m_LastUndoneOperation = opToExecute;
-    
 
     mafUndoStackCommand *usc = new mafUndoStackCommand(opToExecute, "unDo()");
     usc->execute();
