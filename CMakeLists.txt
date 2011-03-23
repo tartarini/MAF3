@@ -21,8 +21,15 @@ STRING(REPLACE "\\" "/" MafFoundationLibDir ${MafFoundationDir})
 
 OPTION(BUILD_TEST_SUITE "Build Module's Tests" ON)
 OPTION(BUILD_EXAMPLES "Build Examples" ON)
+OPTION(MAF_USE_GIT_PROTOCOL "If ON use git protocol, otherwise http" OFF)
 
-if(NOT CMAKE_BUILD_TYPE)
+set(git_protocol "git")
+if(NOT MAF_USE_GIT_PROTOCOL)
+  set(git_protocol "http")
+endif()
+
+# modify CMAKE_BUILD_TYPE in order to set default configuration for non-IDE build
+if(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "MinGW Makefiles") 
    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 
