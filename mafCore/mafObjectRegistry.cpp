@@ -51,10 +51,11 @@ void mafObjectRegistry::dumpLiveObjects() {
     mafRegistryHashType::const_iterator iter = m_Registry.constBegin();
     while(iter != m_Registry.constEnd()) {
         QString name = iter.value().m_Object->metaObject()->className();
+        QString obj_name = iter.value().m_Object->objectName();
         QString loc = iter.value().m_InstantiateLocationInfo;
         QTime t = iter.value().m_AllocationTime;
         int refCount = iter.value().m_ReferenceCount;
-        qDebug() << "class name: " << name << ", refCount: " << refCount << ", allocated by: " << loc << ", at time: " << t.toString("hh:mm:ss");
+        qDebug() << "class name: " << name << ", obj name: " << obj_name << ", refCount: " << refCount << ", allocated by: " << loc << ", at time: " << t.toString("hh:mm:ss");
         ++iter;
     }
 }
