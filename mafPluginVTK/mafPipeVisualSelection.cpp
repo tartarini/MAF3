@@ -1,5 +1,5 @@
 /*
- *  mafVisualPipeSelection.cpp
+ *  mafPipeVisualSelection.cpp
  *  mafPluginVTK
  *
  *  Created by Paolo Quadrani on 11/11/10.
@@ -9,7 +9,7 @@
  *
  */
 
-#include "mafVisualPipeSelection.h"
+#include "mafPipeVisualSelection.h"
 
 #include <vtkSmartPointer.h>
 #include <vtkAlgorithmOutput.h>
@@ -22,13 +22,13 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafVisualPipeSelection::mafVisualPipeSelection(const QString code_location) : mafVisualPipe(code_location) {
+mafPipeVisualSelection::mafPipeVisualSelection(const QString code_location) : mafPipeVisual(code_location) {
 }
 
-mafVisualPipeSelection::~mafVisualPipeSelection() {
+mafPipeVisualSelection::~mafPipeVisualSelection() {
 }
 
-bool mafVisualPipeSelection::acceptObject(mafCore::mafObjectBase *obj) {
+bool mafPipeVisualSelection::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
         mafCore::mafContainerInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
@@ -42,7 +42,7 @@ bool mafVisualPipeSelection::acceptObject(mafCore::mafObjectBase *obj) {
     return false;
 }
 
-void mafVisualPipeSelection::createPipe() {
+void mafPipeVisualSelection::createPipe() {
     mafVME *inputVME = this->inputList()->at(0);
     mafDataSet *data = inputVME->dataSetCollection()->itemAtCurrentTime();
     mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
@@ -62,7 +62,7 @@ void mafVisualPipeSelection::createPipe() {
     m_Output = &m_Actor;
 }
 
-void mafVisualPipeSelection::updatePipe(double t) {
+void mafPipeVisualSelection::updatePipe(double t) {
     mafVMEList *inputList = this->inputList();
     mafDataSet *data = inputList->at(0)->dataSetCollection()->itemAt(t);
     if(data == NULL) {

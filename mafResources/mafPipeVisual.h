@@ -1,5 +1,5 @@
 /*
- *  mafVisualPipe.h
+ *  mafPipeVisual.h
  *  mafResources
  *
  *  Created by Roberto Mucci on 30/12/09.
@@ -21,18 +21,18 @@ namespace mafResources {
 // Class forwarding list
 
 /**
- Class name: mafVisualPipe
+ Class name: mafPipeVisual
  This is the base class for the MAF3 visual pipes. The class defines the topic used to pick VMEs:
  - maf.local.resources.interaction.vmePick
  */
-class MAFRESOURCESSHARED_EXPORT mafVisualPipe : public mafPipe {
+class MAFRESOURCESSHARED_EXPORT mafPipeVisual : public mafPipe {
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafPipe);
 
 public:
      /// Object constructor.
-    mafVisualPipe(const QString code_location = "");
+    mafPipeVisual(const QString code_location = "");
 
     /// Get output of the pipe.
     mafCore::mafContainerInterface *output();
@@ -63,7 +63,7 @@ private:
 
 protected:
     /// Object destructor.
-    /* virtual */ ~mafVisualPipe();
+    /* virtual */ ~mafPipeVisual();
 
     mafCore::mafContainerInterface *m_Output; ///< Output for visual pipe.
 };
@@ -72,11 +72,11 @@ protected:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline mafCore::mafContainerInterface *mafVisualPipe::output() {
+inline mafCore::mafContainerInterface *mafPipeVisual::output() {
     return m_Output;
 }
 
-inline bool mafVisualPipe::visibility() const {
+inline bool mafPipeVisual::visibility() const {
     return m_Visibility;
 }
 

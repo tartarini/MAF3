@@ -17,7 +17,7 @@
 namespace mafResources {
 
 // Class forwarding list
-class mafVisualPipe;
+class mafPipeVisual;
 class mafVME;
 
 /**
@@ -36,13 +36,13 @@ public:
     mafSceneNode(const QString code_location = "");
 
     /// Object constructor.
-    mafSceneNode(mafVME *vme, mafVisualPipe *visual_pipe = NULL, const QString code_location = "");
+    mafSceneNode(mafVME *vme, mafPipeVisual *visual_pipe = NULL, const QString code_location = "");
 
     /// Set visual pipe to the scene node
     void setVisualPipe(QString visualPipeType);
 
     /// Return the inner visual pipe.
-    mafVisualPipe *visualPipe() const;
+    mafPipeVisual *visualPipe() const;
 
     /// Return the inner vme.
     mafVME *vme() const;
@@ -77,7 +77,7 @@ private slots:
 
 private:
     mafVME *m_VME; ///< Represent the data object.
-    mafVisualPipe *m_VisualPipe;  ///< represente the renderable object inside the scene node
+    mafPipeVisual *m_VisualPipe;  ///< represente the renderable object inside the scene node
     bool m_Visibility; ///< Contains the visibility status of the owned object/s.
     bool m_CanVisualize; ///< Contains the canVisualize status of the owned object/s.
 };
@@ -86,7 +86,7 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline mafVisualPipe *mafSceneNode::visualPipe() const {
+inline mafPipeVisual *mafSceneNode::visualPipe() const {
     return m_VisualPipe;
 }
 

@@ -11,7 +11,7 @@
 
 #include <mafTestSuite.h>
 #include <mafResourcesRegistration.h>
-#include <mafDataPipe.h>
+#include <mafPipeData.h>
 #include <mafContainer.h>
 #include <mafInteractor.h>
 
@@ -24,10 +24,10 @@ using namespace mafResources;
  Class name: testVMEDataPipeCustom
  This class implements the data pipe to be tested.
  */
-class testVMEDataPipeCustom : public  mafDataPipe {
+class testVMEDataPipeCustom : public  mafPipeData {
     Q_OBJECT
     /// typedef macro.
-    mafSuperclassMacro(mafResources::mafDataPipe);
+    mafSuperclassMacro(mafResources::mafPipeData);
 
 public:
     /// Object constructor.
@@ -47,7 +47,7 @@ private:
     QString m_PipeLine; ///< Test Var.
 };
 
-testVMEDataPipeCustom::testVMEDataPipeCustom(const QString code_location) : mafDataPipe(code_location), m_PipeLine("") {
+testVMEDataPipeCustom::testVMEDataPipeCustom(const QString code_location) : mafPipeData(code_location), m_PipeLine("") {
 }
 
 void testVMEDataPipeCustom::createPipe() {
@@ -120,7 +120,7 @@ void mafVMETest::mafVMEAllocationTest() {
 }
 
 void mafVMETest::mafVMEDataPipeTest() {
-    mafDataPipe *dp = m_VME->dataPipe();
+    mafPipeData *dp = m_VME->dataPipe();
     QVERIFY(dp == NULL);
 
     m_VME->setDataPipe("testVMEDataPipeCustom");

@@ -97,7 +97,7 @@ void mafViewTest::mafViewShowSceneNodeTest() {
     mafSceneNode *node = new mafSceneNode(vme, NULL, mafCodeLocation);
 
     //try to show a node not added with a fake visual pipe.
-    m_View->showSceneNode(node, true,"mafPipesLibrary::mafVisualPipeVTKSurface");
+    m_View->showSceneNode(node, true,"mafPipesLibrary::mafPipeVisualVTKSurface");
 
     mafDEL(node);
 
@@ -113,7 +113,7 @@ void mafViewTest::mafViewShowSceneNodeTest() {
     node = v->sceneNode();
     mafDEL(v);
 
-    m_View->showSceneNode(node, false,"mafPipesLibrary::mafVisualPipeVTKSurface");
+    m_View->showSceneNode(node, false,"mafPipesLibrary::mafPipeVisualVTKSurface");
 
     // Remove the VME and its related classes.
     mafDEL(vme);
@@ -121,7 +121,7 @@ void mafViewTest::mafViewShowSceneNodeTest() {
 
 void mafViewTest::mafViewPlugVisualPipeTest() {
     // ?!?
-    m_View->plugVisualPipe("vtkPolyData","mafPipesLibrary::mafVisualPipeVTKSurface");
+    m_View->plugVisualPipe("vtkPolyData","mafPipesLibrary::mafPipeVisualVTKSurface");
 }
 
 void mafViewTest::mafViewRenderingWidgetTest() {

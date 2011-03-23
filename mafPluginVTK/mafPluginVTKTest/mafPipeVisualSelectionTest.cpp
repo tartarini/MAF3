@@ -1,5 +1,5 @@
 /*
- *  mafVisualPipeSelectionTest.cpp
+ *  mafPipeVisualSelectionTest.cpp
  *  mafPluginVTK
  *
  *  Created by Paolo Quadrani on 11/11/10.
@@ -11,7 +11,7 @@
 
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
-#include <mafVisualPipeSelection.h>
+#include <mafPipeVisualSelection.h>
 #include <mafVME.h>
 #include <mafDataSet.h>
 #include <mafContainer.h>
@@ -30,10 +30,10 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 
 /**
- Class name: mafVisualPipeSelectionTest
- This class creates a vtkPolyData and visualizes it trough the mafVisualPipeSelection
+ Class name: mafPipeVisualSelectionTest
+ This class creates a vtkPolyData and visualizes it trough the mafPipeVisualSelection
  */
-class mafVisualPipeSelectionTest : public QObject {
+class mafPipeVisualSelectionTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -44,9 +44,9 @@ private slots:
 
         // Register the mafResources objects and the visual pipe that has to be tested.
         mafResourcesRegistration::registerResourcesObjects();
-        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeSelection);
+        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualSelection);
 
-        m_VisualPipeSelection = mafNEW(mafPluginVTK::mafVisualPipeSelection);
+        m_VisualPipeSelection = mafNEW(mafPluginVTK::mafPipeVisualSelection);
 
         // Create the input data source and wrap through the mafContainer
         m_DataSourceLow = vtkSphereSource::New();
@@ -103,7 +103,7 @@ private slots:
         mafMessageHandler::instance()->shutdown();
     }
 
-    /// Allocation test for the mafVisualPipeSelection.
+    /// Allocation test for the mafPipeVisualSelection.
     void allocationTest();
 
     /// Test the creation of the visual pipe for the sphere source at low resolution (timestamp 0)
@@ -113,7 +113,7 @@ private slots:
     void updatePipeTest();
 
 private:
-    mafVisualPipeSelection *m_VisualPipeSelection; ///< Test variable.
+    mafPipeVisualSelection *m_VisualPipeSelection; ///< Test variable.
     vtkSphereSource *m_DataSourceLow; ///< Source data for the test suite.
     mafContainer<vtkAlgorithmOutput> m_DataSourceLowContainer; ///< Container of the Data Source
     mafContainer<vtkAlgorithmOutput> m_DataSourceHighContainer; ///< Container of the Data Source
@@ -127,13 +127,13 @@ private:
     vtkRenderWindowInteractor *m_Iren; ///< Accessory interactor.
 };
 
-void mafVisualPipeSelectionTest::allocationTest() {
+void mafPipeVisualSelectionTest::allocationTest() {
     QVERIFY(m_VisualPipeSelection != NULL);
-    QVERIFY(mafVisualPipeSelection::acceptObject(m_VME));
+    QVERIFY(mafPipeVisualSelection::acceptObject(m_VME));
     m_VisualPipeSelection->setInput(m_VME);
 }
 
-void mafVisualPipeSelectionTest::createPipeTest() {
+void mafPipeVisualSelectionTest::createPipeTest() {
     m_VisualPipeSelection->createPipe();
     mafContainer<vtkActor> *actor = mafContainerPointerTypeCast(vtkActor, m_VisualPipeSelection->output());
     QVERIFY(actor != NULL);
@@ -149,7 +149,7 @@ void mafVisualPipeSelectionTest::createPipeTest() {
     QTest::qSleep(2000);
 }
 
-void mafVisualPipeSelectionTest::updatePipeTest() {
+void mafPipeVisualSelectionTest::updatePipeTest() {
     m_VisualPipeSelection->updatePipe(3.0);
 
     mafDataSet *sphere = m_VME->dataSetCollection()->itemAt(3.0);
@@ -160,5 +160,5 @@ void mafVisualPipeSelectionTest::updatePipeTest() {
     QTest::qSleep(2000);
 }
 
-MAF_REGISTER_TEST(mafVisualPipeSelectionTest);
-#include "mafVisualPipeSelectionTest.moc"
+MAF_REGISTER_TEST(mafPipeVisualSelectionTest);
+#include "mafPipeVisualSelectionTest.moc"

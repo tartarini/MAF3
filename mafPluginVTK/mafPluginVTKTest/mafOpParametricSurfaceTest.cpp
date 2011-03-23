@@ -12,7 +12,7 @@
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafResourcesRegistration.h>
-#include <mafVisualPipeVTKSurface.h>
+#include <mafPipeVisualVTKSurface.h>
 #include <mafOpParametricSurface.h>
 #include <mafPluginManager.h>
 #include <mafVMEManager.h>
@@ -48,7 +48,7 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
-        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
+        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
 
         m_VMEManager = mafVMEManager::instance();
 
@@ -87,8 +87,8 @@ void mafOpParametricSurfaceTest::testExecute() {
 }
 
 void mafOpParametricSurfaceTest::SetGetTest() {
-    mafVisualPipeVTKSurface *pipe;
-    pipe = mafNEW(mafPluginVTK::mafVisualPipeVTKSurface);
+    mafPipeVisualVTKSurface *pipe;
+    pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSurface);
     pipe->setInput(m_VME);
     pipe->setProperty("scalarVisibility", 0);
     pipe->setProperty("immediateRendering", 1);

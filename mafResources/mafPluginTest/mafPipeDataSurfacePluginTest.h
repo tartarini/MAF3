@@ -1,5 +1,5 @@
 /*
- *  mafDataPipeSurfacePluginTest.h
+ *  mafPipeDataSurfacePluginTest.h
  *  mafPluginTest
  *
  *  Created by Roberto Mucci on 30/12/09.
@@ -14,22 +14,22 @@
 
 // Includes list
 #include "mafPluginTestDefinitions.h"
-#include <mafDataPipe.h>
+#include <mafPipeData.h>
 
 namespace mafPluginTest {
 
 /**
- Class name: mafDataPipeSurfacePluginTest
+ Class name: mafPipeDataSurfacePluginTest
  This class is an example data pipe that is plugged into the framework as plug-in.
  */
-class MAFPLUGINTESTSHARED_EXPORT mafDataPipeSurfacePluginTest : public mafResources::mafDataPipe {
+class MAFPLUGINTESTSHARED_EXPORT mafPipeDataSurfacePluginTest : public mafResources::mafPipeData {
     Q_OBJECT
     /// typedef macro.
-    mafSuperclassMacro(mafResources::mafDataPipe);
+    mafSuperclassMacro(mafResources::mafPipeData);
 
 public:
      /// Object constructor.
-    mafDataPipeSurfacePluginTest(const QString code_location = "");
+    mafPipeDataSurfacePluginTest(const QString code_location = "");
 
     /// Initialize ans create the pipeline
     /*virtual*/ void createPipe();
@@ -39,7 +39,7 @@ public slots:
     /*virtual*/ void updatePipe(double t = -1);
 
 protected:
-    /*virtual*/ ~mafDataPipeSurfacePluginTest();
+    /*virtual*/ ~mafPipeDataSurfacePluginTest();
 };
 
 } // namespace mafPluginTest

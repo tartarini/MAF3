@@ -12,7 +12,7 @@
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafResourcesRegistration.h>
-#include <mafVisualPipeVTKSurface.h>
+#include <mafPipeVisualVTKSurface.h>
 #include <mafVTKParametricSurfaceEllipsoid.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkAlgorithmOutput.h>
@@ -46,7 +46,7 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
-        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
+        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
 
         // Create the parametric ellipsoid.
         m_ParametricEllipsoid = mafNEW(mafPluginVTK::mafVTKParametricSurfaceEllipsoid);
@@ -84,8 +84,8 @@ private:
 };
 
 void mafVTKParametricSurfaceEllipsoidTest::SetGetTest() {
-    mafVisualPipeVTKSurface *pipe;
-    pipe = mafNEW(mafPluginVTK::mafVisualPipeVTKSurface);
+    mafPipeVisualVTKSurface *pipe;
+    pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSurface);
     pipe->setInput(m_VME);
     pipe->setProperty("scalarVisibility", 0);
     pipe->setProperty("immediateRendering", 1);

@@ -1,5 +1,5 @@
 /*
- *  mafDataPipeImageThresholdTest.cpp
+ *  mafPipeDataImageThresholdTest.cpp
  *  mafPluginVTK
  *
  *  Created by Paolo Quadrani on 16/04/10.
@@ -12,7 +12,7 @@
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafEventBusManager.h>
-#include <mafDataPipeImageThreshold.h>
+#include <mafPipeDataImageThreshold.h>
 #include <mafResourcesRegistration.h>
 #include <mafContainer.h>
 #include <mafVME.h>
@@ -26,18 +26,18 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 
 /**
- Class name: mafDataPipeImageThresholdTest
- This class is the test suite for mafDataPipeImageThreshold.
+ Class name: mafPipeDataImageThresholdTest
+ This class is the test suite for mafPipeDataImageThreshold.
  */
 
  //! <title>
-//mafDataPipeImageThreshold
+//mafPipeDataImageThreshold
 //! </title>
 //! <description>
-//mafDataPipeImageThreshold allows you to make a threshoding on input image data.
+//mafPipeDataImageThreshold allows you to make a threshoding on input image data.
 //! </description>
 
-class mafDataPipeImageThresholdTest : public QObject {
+class mafPipeDataImageThresholdTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -90,8 +90,8 @@ private:
     vtkSmartPointer<vtkImageCanvasSource2D> m_ImageCanvas; ///< Image source.
 };
 
-void mafDataPipeImageThresholdTest::updatePipeTest() {
-    mafDataPipeImageThreshold *datapipe = mafNEW(mafPluginVTK::mafDataPipeImageThreshold);
+void mafPipeDataImageThresholdTest::updatePipeTest() {
+    mafPipeDataImageThreshold *datapipe = mafNEW(mafPluginVTK::mafPipeDataImageThreshold);
     datapipe->setInput(m_VME);
     datapipe->createPipe();
     datapipe->updatePipe();
@@ -110,8 +110,8 @@ void mafDataPipeImageThresholdTest::updatePipeTest() {
     mafDEL(datapipe);
 }
 
-void mafDataPipeImageThresholdTest::setLowerThrehsoldTest() {
-    mafDataPipeImageThreshold *datapipe = mafNEW(mafPluginVTK::mafDataPipeImageThreshold);
+void mafPipeDataImageThresholdTest::setLowerThrehsoldTest() {
+    mafPipeDataImageThreshold *datapipe = mafNEW(mafPluginVTK::mafPipeDataImageThreshold);
     datapipe->setLowerThrehsold(5);
     int low = datapipe->lowerThrehsold();
     QVERIFY(low == 5);
@@ -119,8 +119,8 @@ void mafDataPipeImageThresholdTest::setLowerThrehsoldTest() {
     mafDEL(datapipe);
 }
 
-void mafDataPipeImageThresholdTest::setUpperThrehsoldTest() {
-    mafDataPipeImageThreshold *datapipe = mafNEW(mafPluginVTK::mafDataPipeImageThreshold);
+void mafPipeDataImageThresholdTest::setUpperThrehsoldTest() {
+    mafPipeDataImageThreshold *datapipe = mafNEW(mafPluginVTK::mafPipeDataImageThreshold);
     datapipe->setUpperThrehsold(60);
     int up = datapipe->upperThrehsold();
     QVERIFY(up == 60);
@@ -129,5 +129,5 @@ void mafDataPipeImageThresholdTest::setUpperThrehsoldTest() {
 }
 
 
-MAF_REGISTER_TEST(mafDataPipeImageThresholdTest);
-#include "mafDataPipeImageThresholdTest.moc"
+MAF_REGISTER_TEST(mafPipeDataImageThresholdTest);
+#include "mafPipeDataImageThresholdTest.moc"

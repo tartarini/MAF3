@@ -13,7 +13,7 @@
 #include <mafCoreSingletons.h>
 #include <mafResourcesRegistration.h>
 #include <mafDataSet.h>
-#include "mafDataPipe.h"
+#include "mafPipeData.h"
 #include <mafContainer.h>
 #include <mafExternalDataCodec.h>
 #include <mafContainer.h>
@@ -102,10 +102,10 @@ char *testExtDataCodecCustom::encode(bool binary) {
  Class name: testDataPipe
  This class implements the data pipe to be tested.
  */
-class testDataPipe : public  mafDataPipe {
+class testDataPipe : public  mafPipeData {
     Q_OBJECT
     /// typedef macro.
-    mafSuperclassMacro(mafResources::mafDataPipe);
+    mafSuperclassMacro(mafResources::mafPipeData);
 
 public:
     /// Object constructor.
@@ -125,7 +125,7 @@ private:
     QString m_PipeLine; ///< Test Var.
 };
 
-testDataPipe::testDataPipe(const QString code_location) : mafDataPipe(code_location), m_PipeLine("") {
+testDataPipe::testDataPipe(const QString code_location) : mafPipeData(code_location), m_PipeLine("") {
 }
 
 void testDataPipe::createPipe() {

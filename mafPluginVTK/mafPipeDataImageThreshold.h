@@ -1,5 +1,5 @@
 /*
- *  mafDataPipeImageThreshold.h
+ *  mafPipeDataImageThreshold.h
  *  mafPluginVTK
  *
  *  Created by Paolo Quadrani on 16/04/10.
@@ -14,7 +14,7 @@
 
 // Includes list
 #include "mafPluginVTKDefinitions.h"
-#include <mafDataPipe.h>
+#include <mafPipeData.h>
 #include <mafContainer.h>
 #include <vtkSmartPointer.h>
 
@@ -27,20 +27,20 @@ namespace mafPluginVTK {
 // Class forwarding list
 
 /**
- Class name: mafDataPipeImageThreshold
+ Class name: mafPipeDataImageThreshold
  This class allows you to make a threshoding on input image data.
  */
-class MAFPLUGINVTKSHARED_EXPORT mafDataPipeImageThreshold : public mafResources::mafDataPipe {
+class MAFPLUGINVTKSHARED_EXPORT mafPipeDataImageThreshold : public mafResources::mafPipeData {
     Q_OBJECT
     Q_PROPERTY(double lowerThrehsold READ lowerThrehsold WRITE setLowerThrehsold)
     Q_PROPERTY(double upperThrehsold READ upperThrehsold WRITE setUpperThrehsold)
     Q_PROPERTY(unsigned int thresholdMode READ thresholdMode WRITE setThresholdMode)
     /// typedef macro.
-    mafSuperclassMacro(mafResources::mafDataPipe);
+    mafSuperclassMacro(mafResources::mafPipeData);
 
 public:
     /// Object constructor.
-    mafDataPipeImageThreshold(const QString code_location = "");
+    mafPipeDataImageThreshold(const QString code_location = "");
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
@@ -79,7 +79,7 @@ public slots:
 
 protected:
     /// Object destructor.
-    /* virtual */ ~mafDataPipeImageThreshold();
+    /* virtual */ ~mafPipeDataImageThreshold();
 
 private:
     double m_LowerThreshold; ///< Variable that contains the lower threshold value for the Thresholding operation.
@@ -94,21 +94,21 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline double mafDataPipeImageThreshold::lowerThrehsold() {
+inline double mafPipeDataImageThreshold::lowerThrehsold() {
     return m_LowerThreshold;
 }
 
-inline double mafDataPipeImageThreshold::upperThrehsold() {
+inline double mafPipeDataImageThreshold::upperThrehsold() {
     return m_UpperThreshold;
 }
 
-inline void mafDataPipeImageThreshold::setThresholdMode(unsigned int mode) {
+inline void mafPipeDataImageThreshold::setThresholdMode(unsigned int mode) {
     if(m_ThresholdMode != mode) {
         m_ThresholdMode = mode;
     }
 }
 
-inline unsigned int mafDataPipeImageThreshold::thresholdMode() {
+inline unsigned int mafPipeDataImageThreshold::thresholdMode() {
     return m_ThresholdMode;
 }
 

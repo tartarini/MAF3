@@ -10,7 +10,7 @@
  */
 
 #include "mafMementoDataSet.h"
-#include "mafDataPipe.h"
+#include "mafPipeData.h"
 #include "mafDataSetCollection.h"
 #include "mafExternalDataCodec.h"
 

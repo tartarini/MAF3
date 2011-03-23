@@ -1,5 +1,5 @@
 /*
- *  mafDataPipeImageThreshold.cpp
+ *  mafPipeDataImageThreshold.cpp
  *  mafPluginVTK
  *
  *  Created by Paolo Quadrani on 16/04/10.
@@ -9,7 +9,7 @@
  *
  */
 
-#include "mafDataPipeImageThreshold.h"
+#include "mafPipeDataImageThreshold.h"
 
 #include <vtkDataSet.h>
 #include <vtkImageThreshold.h>
@@ -19,13 +19,13 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafDataPipeImageThreshold::mafDataPipeImageThreshold(const QString code_location) : mafDataPipe(code_location), m_LowerThreshold(0.0), m_UpperThreshold(1.0), m_ThresholdMode(BETWEEN) {
+mafPipeDataImageThreshold::mafPipeDataImageThreshold(const QString code_location) : mafPipeData(code_location), m_LowerThreshold(0.0), m_UpperThreshold(1.0), m_ThresholdMode(BETWEEN) {
 }
 
-mafDataPipeImageThreshold::~mafDataPipeImageThreshold() {
+mafPipeDataImageThreshold::~mafPipeDataImageThreshold() {
 }
 
-bool mafDataPipeImageThreshold::acceptObject(mafCore::mafObjectBase *obj) {
+bool mafPipeDataImageThreshold::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
         mafCore::mafContainerInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
@@ -39,7 +39,7 @@ bool mafDataPipeImageThreshold::acceptObject(mafCore::mafObjectBase *obj) {
     return false;
 }
 
-void mafDataPipeImageThreshold::createPipe() {
+void mafPipeDataImageThreshold::createPipe() {
     m_ThresholdFilter = vtkSmartPointer<vtkImageThreshold>::New();
     if(inputList()->size() == 0) {
         qWarning(mafTr("Assign an input VME before asking the creation of the data pipe!!").toAscii());
@@ -48,7 +48,7 @@ void mafDataPipeImageThreshold::createPipe() {
     m_Output = this->inputList()->at(0);
 }
 
-void mafDataPipeImageThreshold::updatePipe(double t) {
+void mafPipeDataImageThreshold::updatePipe(double t) {
     mafVME *inputVME = this->inputList()->at(0);
 
     mafDataSet *inputDataSet = inputVME->dataSetCollection()->itemAt(t);
@@ -80,13 +80,13 @@ void mafDataPipeImageThreshold::updatePipe(double t) {
     m_Output->dataSetCollection()->itemAtCurrentTime()->setDataValue(&m_OutputValue);
 }
 
-void mafDataPipeImageThreshold::setLowerThrehsold(double threshold) {
+void mafPipeDataImageThreshold::setLowerThrehsold(double threshold) {
     if(m_LowerThreshold != threshold) {
         m_LowerThreshold = threshold;
     }
 }
 
-void mafDataPipeImageThreshold::setUpperThrehsold(double threshold) {
+void mafPipeDataImageThreshold::setUpperThrehsold(double threshold) {
     if(m_UpperThreshold != threshold) {
         m_UpperThreshold = threshold;
     }

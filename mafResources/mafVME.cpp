@@ -10,7 +10,7 @@
  */
 
 #include "mafVME.h"
-#include "mafDataPipe.h"
+#include "mafPipeData.h"
 #include "mafDataSet.h"
 #include "mafMementoDataSet.h"
 #include "mafInteractor.h"
@@ -96,16 +96,16 @@ void mafVME::setInteractor(mafInteractor *i) {
 
 void mafVME::setDataPipe(const QString &pipe_type) {
     mafObjectBase *obj = mafNEWFromString(pipe_type);
-    mafDataPipe *new_pipe = qobject_cast<mafDataPipe *>(obj);
+    mafPipeData *new_pipe = qobject_cast<mafPipeData *>(obj);
     if ( new_pipe ) {
         setDataPipe(new_pipe);
     } else {
-        qWarning("%s", mafTr("%1 does not represent a type of mafDataPipe.").arg(pipe_type).toAscii().data());
+        qWarning("%s", mafTr("%1 does not represent a type of mafPipeData.").arg(pipe_type).toAscii().data());
     }
     mafDEL(obj);
 }
 
-void mafVME::setDataPipe(mafDataPipe *pipe) {
+void mafVME::setDataPipe(mafPipeData *pipe) {
     if ( m_DataPipe == pipe ) {
         return;
     }
@@ -209,7 +209,7 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
             }
             m_MementoDataSetHash.insert(mementoDataSet, time);
 
-        } else if(item.m_Name == "mafDataPipe") {
+        } else if(item.m_Name == "mafPipeData") {
             this->setDataPipe(item.m_Value.toString());
         } else if(item.m_Name == "vmeBounds") {
             this->setBounds(item.m_Value.toList());

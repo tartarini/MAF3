@@ -23,7 +23,7 @@ namespace mafResources {
 Class name: mafOperation
 This class provides basic API for building elaboration algorithms for MAF framework.
 An operation takes as input one or more mafVMEs and generate as output a mafVME. The algorithm executed on the input data
-is provided by a mafDataPipe. The mafOperation should be implemented to be able to perform an undo and be able to abort its execution. Operation's execution is managed by the mafOperationManager and is run on a separate thread.
+is provided by a mafPipeData. The mafOperation should be implemented to be able to perform an undo and be able to abort its execution. Operation's execution is managed by the mafOperationManager and is run on a separate thread.
  
  @sa mafOperationManager.
 */

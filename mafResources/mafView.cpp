@@ -13,7 +13,7 @@
 #include "mafVME.h"
 #include "mafVisitorFindSceneNodeByVMEHash.h"
 #include "mafSceneNode.h"
-#include "mafVisualPipe.h"
+#include "mafPipeVisual.h"
 #include "mafPluginManager.h"
 #include "mafPlugin.h"
 #include "mafDataSet.h"
@@ -97,7 +97,7 @@ void mafView::showSceneNode(mafSceneNode *node, bool show, const QString visualP
     if(m_Scenegraph != NULL) {
         if (show) {
             node->setVisualPipe(vp);
-            mafVisualPipe *pipe = node->visualPipe();
+            mafPipeVisual *pipe = node->visualPipe();
             if(pipe == NULL) {
                 qWarning() << mafTr("No visual pipe type '") << vp << mafTr("'' registered!!");
                 return;

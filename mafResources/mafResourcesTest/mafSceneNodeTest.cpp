@@ -13,7 +13,7 @@
 #include <mafCoreSingletons.h>
 #include <mafResourcesRegistration.h>
 #include <mafSceneNode.h>
-#include <mafVisualPipe.h>
+#include <mafPipeVisual.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -23,10 +23,10 @@ using namespace mafResources;
  Class name: testVisualPipeCustomForSceneNode
  This class implements the data pipe to be tested.
  */
-class  testVisualPipeCustomForSceneNode : public  mafResources::mafVisualPipe {
+class  testVisualPipeCustomForSceneNode : public  mafResources::mafPipeVisual {
     Q_OBJECT
     /// typedef macro.
-    mafSuperclassMacro(mafResources::mafVisualPipe);
+    mafSuperclassMacro(mafResources::mafPipeVisual);
 
 public:
     /// Object constructor.
@@ -46,7 +46,7 @@ private:
     QString m_PipeLine; ///< Test Var.
 };
 
-testVisualPipeCustomForSceneNode::testVisualPipeCustomForSceneNode(const QString code_location) : mafVisualPipe(code_location), m_PipeLine("") {
+testVisualPipeCustomForSceneNode::testVisualPipeCustomForSceneNode(const QString code_location) : mafPipeVisual(code_location), m_PipeLine("") {
 }
 
 void testVisualPipeCustomForSceneNode::createPipe() {

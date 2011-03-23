@@ -22,7 +22,7 @@
 namespace mafResources {
 
 // Class forwarding list
-class mafDataPipe;
+class mafPipeData;
 class mafMementoDataSet;
 class mafInteractor;
 
@@ -54,13 +54,13 @@ public:
     mafDataSetCollection *dataSetCollection();
 
     /// Return the data pipe of mafDataSet.
-    mafDataPipe *dataPipe();
+    mafPipeData *dataPipe();
 
     /// Assign a data pipe by giving its type as string.
     void setDataPipe(const QString &pipe_type);
 
     /// Set the data pipe for the VME.
-    void setDataPipe(mafDataPipe *pipe);
+    void setDataPipe(mafPipeData *pipe);
 
     /// Return the output data calculated through the data pipe or extracted from the collection.
     mafDataSet *outputData();
@@ -128,7 +128,7 @@ private:
     mutable QReadWriteLock *m_Lock; ///< Lock variable for thread safe access to VME.
     mafInteractor *m_Interactor; ///< Custom interactor associated with the VME.
     mafDataSetCollection *m_DataSetCollection; ///< Collection of timestamped data posed on homogeneous matrices.
-    mafDataPipe *m_DataPipe; ///< Data pipe associated with the VME and used to elaborate new data.
+    mafPipeData *m_DataPipe; ///< Data pipe associated with the VME and used to elaborate new data.
     QHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
     QVariantList m_Bounds; ///< List of bounds value of the binding box.
     bool m_CanRead;  ///< Flag used to indicate if the VME is readable.
@@ -139,7 +139,7 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline mafDataPipe *mafVME::dataPipe() {
+inline mafPipeData *mafVME::dataPipe() {
     QReadLocker locker(m_Lock);
     return m_DataPipe;
 }

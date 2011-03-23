@@ -10,7 +10,7 @@
  */
 
 #include "mafPluginRegistrator.h"
-#include "mafDataPipeSurfacePluginTest.h"
+#include "mafPipeDataSurfacePluginTest.h"
 
 
 using namespace mafCore;
@@ -20,20 +20,20 @@ using namespace mafResources;
 
 mafPluginRegistrator::mafPluginRegistrator() {
     // Register to the mafObjectFactory the plug-in object's types.
-    mafRegisterObject(mafPluginTest::mafDataPipeSurfacePluginTest);
+    mafRegisterObject(mafPluginTest::mafPipeDataSurfacePluginTest);
 }
 
 mafPluginRegistrator::~mafPluginRegistrator() {
     // When the library is Un-Loaded it has to remove from the mafObjectFactory its object's types.
-    mafUnregisterObject(mafPluginTest::mafDataPipeSurfacePluginTest);
+    mafUnregisterObject(mafPluginTest::mafPipeDataSurfacePluginTest);
 }
 
 void mafPluginRegistrator::registerObjects() {
     mafPluggedObjectsHash pluginHash;
 
-    mafPluggedObjectInformation dataPipeSurfacePluginTest("Data pipe Surface Plugin Test", "mafPluginTest::mafDataPipeSurfacePluginTest");
+    mafPluggedObjectInformation dataPipeSurfacePluginTest("Data pipe Surface Plugin Test", "mafPluginTest::mafPipeDataSurfacePluginTest");
 
-    pluginHash.insertMulti("mafResources::mafDataPipe", dataPipeSurfacePluginTest);
+    pluginHash.insertMulti("mafResources::mafPipeData", dataPipeSurfacePluginTest);
 
 
     mafEventBus::mafEventArgumentsList argList;

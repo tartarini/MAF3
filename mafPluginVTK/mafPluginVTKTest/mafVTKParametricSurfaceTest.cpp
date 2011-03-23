@@ -12,7 +12,7 @@
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafResourcesRegistration.h>
-//#include <mafVisualPipeVTKSurface.h>
+//#include <mafPipeVisualVTKSurface.h>
 #include <mafVTKParametricSurface.h>
 //#include <vtkRenderWindowInteractor.h>
 //#include <vtkAlgorithmOutput.h>

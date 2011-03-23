@@ -1,5 +1,5 @@
 /*
- *  mafVisualPipeVTKSurface.h
+ *  mafPipeVisualVTKSurface.h
  *  mafPluginVTK
  *
  *  Created by Roberto Mucci - Paolo Quadrani on 30/12/09.
@@ -14,7 +14,7 @@
 
 // Includes list
 #include "mafPluginVTKDefinitions.h"
-#include <mafVisualPipe.h>
+#include <mafPipeVisual.h>
 
 // Foundation Class forwarding list
 class vtkPolyDataMapper;
@@ -23,20 +23,20 @@ class vtkActor;
 namespace mafPluginVTK {
 
 /**
- Class name: mafVisualPipeVTKSurface
+ Class name: mafPipeVisualVTKSurface
  This class represents visual pipe used to render VTK polydata.
  */
 
-class MAFPLUGINVTKSHARED_EXPORT mafVisualPipeVTKSurface : public mafResources::mafVisualPipe {
+class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSurface : public mafResources::mafPipeVisual {
     Q_OBJECT
     Q_PROPERTY(int scalarVisibility READ scalarVisibility WRITE setScalarVisibility)
     Q_PROPERTY(int immediateRendering READ immediateRendering WRITE setImmediateRendering)
     /// typedef macro.
-    mafSuperclassMacro(mafResources::mafVisualPipe);
+    mafSuperclassMacro(mafResources::mafPipeVisual);
 
 public:
     /// Object constructor;
-    mafVisualPipeVTKSurface(const QString code_location = "");
+    mafPipeVisualVTKSurface(const QString code_location = "");
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
@@ -68,7 +68,7 @@ public slots:
 
 protected:
     /// Object destructor.
-    /* virtual */ ~mafVisualPipeVTKSurface();
+    /* virtual */ ~mafPipeVisualVTKSurface();
 
 private:
     vtkPolyDataMapper  *m_Mapper; ///< Class that maps polygonal data.
@@ -81,11 +81,11 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline int mafVisualPipeVTKSurface::scalarVisibility() {
+inline int mafPipeVisualVTKSurface::scalarVisibility() {
     return m_ScalarVisibility;
 }
 
-inline int mafVisualPipeVTKSurface::immediateRendering() {
+inline int mafPipeVisualVTKSurface::immediateRendering() {
     return m_ImmediateRendering;
 }
 

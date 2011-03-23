@@ -1,5 +1,5 @@
 /*
- *  mafVisualPipe.cpp
+ *  mafPipeVisual.cpp
  *  mafResources
  *
  *  Created by Roberto Mucci on 30/12/09.
@@ -9,7 +9,7 @@
  *
  */
 
-#include "mafVisualPipe.h"
+#include "mafPipeVisual.h"
 #include "mafVME.h"
 #include <mafContainerInterface.h>
 #include <mafEventBusManager.h>
@@ -19,16 +19,16 @@ using namespace mafEventBus;
 using namespace mafResources;
 
 
-mafVisualPipe::mafVisualPipe(const QString code_location) : mafPipe(code_location), m_Output(NULL) {
+mafPipeVisual::mafPipeVisual(const QString code_location) : mafPipe(code_location), m_Output(NULL) {
     initializeConnections();
 }
 
-mafVisualPipe::~mafVisualPipe() {
+mafPipeVisual::~mafPipeVisual() {
     mafEventBusManager::instance()->removeSignal(this, "maf.local.resources.interaction.vmePick");
     mafEventBusManager::instance()->removeSignal(this, "maf.local.resources.interaction.vmePicked");
 }
 
-void mafVisualPipe::initializeConnections() {
+void mafPipeVisual::initializeConnections() {
 
     //mafId vme_picked_id = mafIdProvider::instance()->idValue("maf.local.resources.interaction.vmePick");
     //mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePick");
@@ -43,7 +43,7 @@ void mafVisualPipe::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.interaction.vmePicked", this, "vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase *)");
 }
 
-void mafVisualPipe::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafContainerInterface *actor, QEvent * e) {
+void mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafContainerInterface *actor, QEvent * e) {
     Q_UNUSED(e);
     if (m_Output && m_Output->isEqual(actor)) {
         mafVME *vme = this->inputList()->at(0);
@@ -57,6 +57,6 @@ void mafVisualPipe::vmePick(double *pickPos, unsigned long modifiers, mafCore::m
     }
 }
 
-void mafVisualPipe::setVisibility(bool visible) {
+void mafPipeVisual::setVisibility(bool visible) {
     m_Visibility = visible;
 }

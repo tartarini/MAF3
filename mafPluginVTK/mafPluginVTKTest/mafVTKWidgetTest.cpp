@@ -13,7 +13,7 @@
 #include <mafCoreSingletons.h>
 #include <mafResourcesRegistration.h>
 #include <mafVTKWidget.h>
-#include <mafVisualPipeVTKSurface.h>
+#include <mafPipeVisualVTKSurface.h>
 #include <mafEventBusManager.h>
 
 #include <vtkSphereSource.h>
@@ -203,7 +203,7 @@ private slots:
 
     /// Initialize test variables
     void initTestCase() {
-        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
+        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
         initializeGraphicResources();
         m_CustomManager = mafNEW(testInteractionManagerCustom);
     }
