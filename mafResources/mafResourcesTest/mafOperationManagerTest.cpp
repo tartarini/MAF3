@@ -17,7 +17,6 @@
 #include <mafVMEManager.h>
 #include <mafOperationManager.h>
 #include <mafOperation.h>
-//#include <mafVME.h>
 #include <mafOperationWorker.h>
 
 #define kMAX_COUNT 50000
@@ -344,7 +343,6 @@ void mafOperationManagerTest::undoRedoExecutionTest() {
     while(QTime::currentTime() < dieTimeAFter) {
         QCoreApplication::processEvents(QEventLoop::AllEvents, 3);
     }
-
 
     qDebug() << "****************** Execution ended ******************";
     int undoStackSize;
