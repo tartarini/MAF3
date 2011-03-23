@@ -152,7 +152,7 @@ private slots:
     /**
         This method allows to clear all the operations present into the stack before that executed and can't undo.
     */
-    void cleanUndoStack();
+    void cleanUndoStack(QList<mafOperation*>::Iterator start, QList<mafOperation*>::Iterator end);
 
     /// Return the size of the stack undo in terms of operation numbers
     int undoStackSize() const;
