@@ -67,8 +67,6 @@ public:
     /// Object constructor.
     testExtDataCodecCustom(const QString code_location = "");
 
-
-
     /// Encode the memento into the output type.
     /*virtual*/ char *encode(bool binary = true);
 
@@ -104,7 +102,7 @@ char *testExtDataCodecCustom::encode(bool binary) {
  Class name: testDataPipe
  This class implements the data pipe to be tested.
  */
-class  testDataPipe : public  mafDataPipe {
+class testDataPipe : public  mafDataPipe {
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafDataPipe);
@@ -222,6 +220,7 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
 
     testDataPipe *dataPipe = mafNEW(testDataPipe);
     m_VME->setDataPipe(dataPipe);
+    dataPipe->deleteObject();
 
     //! <snippet>
     ////Create the VME Memento that stores dataSetCollection and dataPipe
