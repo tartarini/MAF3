@@ -251,7 +251,6 @@ private:
     mafEventBusManager *m_EventBus; ///< Reference to the event bus.
     mafOperationManager *m_OperationManager; ///< Reference to the OperationManager.
     const mafExecutionPool *m_ExecutionPool; ///< Pool of running thread.
-//    testEventLoopTerminator *m_LoopManager; ///< Class responsible to terminate the event loop.
     mafVMEManager *m_VMEManager; ///< Manager needed for the hierarchy.
 };
 
@@ -285,11 +284,6 @@ void mafOperationManagerTest::mafOperationManagerAllocationTest() {
 }
 
 void mafOperationManagerTest::abortExecutionTest() {
-//    bool res = startEndlessOperationOnEventLoop(this);
-
-//    QVERIFY(res);
-
-
     const mafCore::mafObjectBase *op = this->startOperation("testEndlessOperation");
 
     // Start the operation's execution
