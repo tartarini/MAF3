@@ -24,9 +24,9 @@
     #endif
 #else
      #ifdef QT_DEBUG
-        #define TEST_LIBRARY_NAME "libmafPluginTest_debug.mafplugin"
+        #define TEST_LIBRARY_NAME "mafPluginTest_debug.mafplugin"
      #else
-        #define TEST_LIBRARY_NAME "libmafPluginTest.mafplugin"
+        #define TEST_LIBRARY_NAME "mafPluginTest.mafplugin"
     #endif
 #endif
 
@@ -78,19 +78,8 @@ private:
 };
 
 void mafPluginTest::mafPluginAllocationTest() {
-    // instantiate an unexisting library.
-    try {
-         m_Plugin = new mafPlugin("myLibrary", mafCodeLocation);
-    }
-    catch(std::runtime_error error)
-    {
-        //prompt error message();
-        QString errorMsg("Could not load 'myLibrary'");
-        QVERIFY(errorMsg.compare(error.what()) == 0);
-        QVERIFY(m_Plugin == NULL);
-    }
-
-
+    m_Plugin = new mafPlugin("myLibrary", mafCodeLocation);
+    mafDEL(m_Plugin);
 
     // instantiate the plug in and load the library.
     m_Plugin = new mafPlugin(m_PluginName, mafCodeLocation);
