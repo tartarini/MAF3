@@ -16,5 +16,6 @@ SET(target_libraries
   mafCore
   mafEventBus
   mafResources
+  mafPluginTest
   mafQA
   )
