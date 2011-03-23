@@ -28,15 +28,15 @@ using namespace mafEventBus;
 #else
     #ifdef __APPLE__
         #ifdef QT_DEBUG
-            #define RESOURCES_LIBRARY_NAME "libmafResources_debug.dylib"
+            #define RESOURCES_LIBRARY_NAME "mafResources_debug.dylib"
         #else
-            #define RESOURCES_LIBRARY_NAME "libmafResources.dylib"
+            #define RESOURCES_LIBRARY_NAME "mafResources.dylib"
         #endif
     #else
         #ifdef QT_DEBUG
-            #define RESOURCES_LIBRARY_NAME "libmafResources_debug.so"
+            #define RESOURCES_LIBRARY_NAME "mafResources_debug.so"
         #else
-            #define RESOURCES_LIBRARY_NAME "libmafResources.so"
+            #define RESOURCES_LIBRARY_NAME "mafResources.so"
         #endif
     #endif
 #endif
