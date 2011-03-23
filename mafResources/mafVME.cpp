@@ -21,6 +21,7 @@ using namespace mafResources;
 using namespace mafEventBus;
 
 mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL), m_CanRead(true), m_CanWrite(true) {
+    m_Lock = new QReadWriteLock(QReadWriteLock::Recursive);
     mafId time_set_id = mafIdProvider::instance()->idValue("TIME_SET");
     if(time_set_id != -1) {
         mafRegisterLocalCallback("TIME_SET", this, "setTimestamp(double)")
@@ -41,9 +42,11 @@ mafVME::~mafVME() {
         ++iter;
     }
     m_MementoDataSetHash.clear();
+    delete m_Lock;
 }
 
 void mafVME::setBounds(QVariantList bounds) {
+    QWriteLocker locker(m_Lock);
     m_Bounds.clear();
     m_Bounds.append(bounds);
 }
@@ -52,12 +55,14 @@ void mafVME::setCanRead(bool lock) {
     if ( lock == m_CanRead ) {
         return;
     }
+    m_Lock->lockForWrite();
     m_CanRead = lock;
     if ( !m_CanRead ) {
         // VME can not be accessed in read mode => noway also for the write side.
         m_CanWrite = false;
     }
     m_LockStatus = m_CanRead ? mafObjectLockNone : mafObjectLockRead;
+    m_Lock->unlock();
     emit vmeLocked(m_LockStatus);
 }
 
@@ -65,18 +70,23 @@ void mafVME::setCanWrite(bool lock) {
     if ( lock == m_CanWrite || !m_CanRead ) {
         return;
     }
+    m_Lock->lockForWrite();
     m_CanWrite = lock;
     m_LockStatus = m_CanWrite ? mafObjectLockNone : mafObjectLockWrite;
+    m_Lock->unlock();
     emit vmeLocked(m_LockStatus);
 }
 
 void mafVME::setTimestamp(double t) {
+    m_Lock->lockForWrite();
     dataSetCollection()->setTimestamp(t);
     setModified();
+    m_Lock->unlock();
     execute();
 }
 
 void mafVME::setInteractor(mafInteractor *i) {
+    QWriteLocker locker(m_Lock);
     if ( i == m_Interactor ) {
         return;
     }
@@ -89,7 +99,6 @@ void mafVME::setDataPipe(const QString &pipe_type) {
     mafDataPipe *new_pipe = qobject_cast<mafDataPipe *>(obj);
     if ( new_pipe ) {
         setDataPipe(new_pipe);
-        return;
     } else {
         qWarning("%s", mafTr("%1 does not represent a type of mafDataPipe.").arg(pipe_type).toAscii().data());
     }
@@ -97,12 +106,18 @@ void mafVME::setDataPipe(const QString &pipe_type) {
 }
 
 void mafVME::setDataPipe(mafDataPipe *pipe) {
-    if ( m_DataPipe == pipe ) return;
+    if ( m_DataPipe == pipe ) {
+        return;
+    }
+    
     if ( pipe ) {
+        m_Lock->lockForWrite();
         pipe->setInput(this);
         mafDEL(m_DataPipe);
         m_DataPipe = pipe;
+        m_DataPipe->ref();
         setModified();
+        m_Lock->unlock();
         execute();
     }
 }
@@ -120,7 +135,9 @@ void mafVME::detatch() {
 
 void mafVME::setSelected(bool sel) {
     if(m_Selected != sel) {
+        m_Lock->lockForWrite();
         m_Selected = sel;
+        m_Lock->unlock();
         if(m_Selected) {
             // notify the VME selection.
             mafEventArgumentsList argList;
@@ -132,6 +149,7 @@ void mafVME::setSelected(bool sel) {
 
 mafDataSetCollection *mafVME::dataSetCollection() {
     if(m_DataSetCollection == NULL) {
+        QWriteLocker locker(m_Lock);
         m_DataSetCollection = new mafDataSetCollection(mafCodeLocation);
 
         //connect the data collection modified to the updateBounds slot
@@ -141,6 +159,7 @@ mafDataSetCollection *mafVME::dataSetCollection() {
 }
 
 mafDataSet *mafVME::outputData() {
+    QReadLocker locker(m_Lock);
     if(m_DataPipe != NULL) {
         return m_DataPipe->output()->dataSetCollection()->itemAtCurrentTime();
     }
@@ -227,5 +246,4 @@ void mafVME::updateBounds() {
             }
         }
     }
-
 }

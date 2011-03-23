@@ -125,6 +125,7 @@ protected:
     /* virtual */ ~mafVME();
 
 private:
+    mutable QReadWriteLock *m_Lock; ///< Lock variable for thread safe access to VME.
     mafInteractor *m_Interactor; ///< Custom interactor associated with the VME.
     mafDataSetCollection *m_DataSetCollection; ///< Collection of timestamped data posed on homogeneous matrices.
     mafDataPipe *m_DataPipe; ///< Data pipe associated with the VME and used to elaborate new data.
@@ -139,22 +140,27 @@ private:
 /////////////////////////////////////////////////////////////
 
 inline mafDataPipe *mafVME::dataPipe() {
+    QReadLocker locker(m_Lock);
     return m_DataPipe;
 }
 
 inline mafInteractor *mafVME::interactor() {
+    QReadLocker locker(m_Lock);
     return m_Interactor;
 }
 
 inline QVariantList mafVME::bounds()  {
+    QReadLocker locker(m_Lock);
     return m_Bounds;
 }
 
 inline bool mafVME::canRead() const {
+    QReadLocker locker(m_Lock);
     return m_CanRead;
 }
 
 inline bool mafVME::canWrite() const {
+    QReadLocker locker(m_Lock);
     return m_CanWrite;
 }
 
