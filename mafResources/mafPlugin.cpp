@@ -23,7 +23,10 @@ mafPlugin::mafPlugin(const QString &pluginFilename, const QString code_location)
     m_LibraryHandler = new QLibrary(pluginFilename);
     if(!m_LibraryHandler->load()) {
         QString err_msg(mafTr("Could not load '%1'").arg(pluginFilename));
-        throw std::runtime_error(err_msg.toAscii().constData());
+        qCritical() << err_msg;
+        delete m_LibraryHandler;
+        m_LibraryHandler = NULL;
+        return;
     }
 
     // Locate the plugin's exported functions
@@ -35,16 +38,21 @@ mafPlugin::mafPlugin(const QString &pluginFilename, const QString code_location)
         // a plain simple DLL and not one of our plugins
         if(!m_PluginInfo || !m_RegisterPlugin) {
             QString err_msg(mafTr("'%1' is not a valid MAF3 plugin").arg(pluginFilename));
-            throw std::runtime_error(err_msg.toAscii().constData());
+            qCritical() << err_msg;
+            delete m_LibraryHandler;
+            m_LibraryHandler = NULL;
+            return;
         }
 
         // Initialize a new DLL reference counter
         m_RefCount = new size_t(1);
     } catch(...) {
+        QString err_msg(mafTr("Unknoun error occourred loading plugin '%1'").arg(pluginFilename));
+        qCritical() << err_msg;
         m_LibraryHandler->unload();
         delete m_LibraryHandler;
         m_LibraryHandler = NULL;
-        throw;
+        return;
     }
 } 
 
@@ -57,7 +65,8 @@ mafPlugin::mafPlugin(const mafPlugin &Other, const QString code_location) : mafO
 
 mafPlugin::~mafPlugin() {
     // Only unload the DLL if there are no more references to it
-    if(!--*m_RefCount) {
+    // Check also if m_RefCount is not NULL (it could be NULL when plugin loading error occourr).
+    if(m_RefCount && !--*m_RefCount) {
         delete m_RefCount;
         //m_LibraryHandler->unload();
         delete m_LibraryHandler;
