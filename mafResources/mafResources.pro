@@ -16,8 +16,8 @@ SOURCES += mafResource.cpp \
     mafInterpolatorNearest.cpp \
     mafDataSet.cpp \
     mafPipe.cpp \
-    mafDataPipe.cpp \
-    mafVisualPipe.cpp \
+    mafPipeData.cpp \
+    mafPipeVisual.cpp \
     mafPlugin.cpp \
     mafPluginManager.cpp \
     mafOperation.cpp \
@@ -49,8 +49,8 @@ HEADERS += mafResource.h \
     mafInterpolatorNearest.h \
     mafDataSet.h \
     mafPipe.h \
-    mafDataPipe.h \
-    mafVisualPipe.h \
+    mafPipeData.h \
+    mafPipeVisual.h \
     mafPlugin.h \
     mafPluginManager.h \
     mafOperation.h \
