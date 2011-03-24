@@ -49,6 +49,7 @@ void mafVME::setBounds(QVariantList bounds) {
     QWriteLocker locker(m_Lock);
     m_Bounds.clear();
     m_Bounds.append(bounds);
+    setModified();
 }
 
 void mafVME::setCanRead(bool lock) {
