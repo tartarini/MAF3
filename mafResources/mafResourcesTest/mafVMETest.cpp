@@ -282,6 +282,7 @@ void mafVMETest::mafVMEConcurrentAccessTest() {
     }
     
     mafDEL(memento);
+    delete accessor;
     
     qDebug() << mafTr("**** End of VME concurrent access ****");
 }
