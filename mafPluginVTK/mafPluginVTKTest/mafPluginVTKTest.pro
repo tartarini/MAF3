@@ -6,16 +6,16 @@ CONFIG += qtestlib
 CONFIG += link_prl
 DEFINES +=VTK_BUILD_SHARED_LIBS
 SOURCES += main.cpp \
-    mafVisualPipeVTKSurfaceTest.cpp \
+    mafPipeVisualVTKSurfaceTest.cpp \
     mafViewVTKTest.cpp \
-    mafDataPipeImageThresholdTest.cpp \
+    mafPipeDataImageThresholdTest.cpp \
     mafExternalDataCodecVTKTest.cpp \
     mafSerializationVTKTest.cpp \
     mafSerializationExtDataTest.cpp \
     mafSerializationRawBinaryExtDataTest.cpp \
     mafSerializationRawASCIIExtDataTest.cpp \
     mafVTKWidgetTest.cpp \
-    mafVisualPipeSelectionTest.cpp \
+    mafPipeVisualSelectionTest.cpp \
     mafDataBoundaryAlgorithmVTKTest.cpp \
     mafVTKInteractorPickerTest.cpp \
     mafVTKParametricSurfaceSphereTest.cpp \
