@@ -157,6 +157,8 @@ bool mafEventBusManager::removeEventProperty(const mafEvent &props) const {
 }
 
 void mafEventBusManager::notifyEvent(const QString topic, mafEventType ev_type, mafEventArgumentsList *argList, QGenericReturnArgument *returnArg) const {
+    QMutex mutex;
+    QMutexLocker locker(&mutex);
     if(m_EnableEventLogging) {
         if(m_LogEventTopic == "*" || m_LogEventTopic == topic) {
             qDebug() << mafTr("Event notification for TOPIC: %1").arg(topic);
@@ -172,6 +174,8 @@ void mafEventBusManager::notifyEvent(const QString topic, mafEventType ev_type, 
 }
 
 void mafEventBusManager::notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList, QGenericReturnArgument *returnArg) const {
+    QMutex mutex;
+    QMutexLocker locker(&mutex);
     //event dispatched in remote channel
     if(event_dictionary[TYPE].toInt() == mafEventTypeLocal) {
         m_LocalDispatcher->notifyEvent(event_dictionary, argList, returnArg);
