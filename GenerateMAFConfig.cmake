@@ -1,0 +1,35 @@
+# Generate the MAFConfig.cmake file in the build tree and configure one
+# for the installation tree.  This file tells external project how to use
+# MAF.  This provides a mechanism for third party developers to build 
+# modules against a MAF installation.
+#
+#
+
+# The configuration process is very different for a build tree and an
+# installation. The resulting directory structures are vastly
+# different. So, the two configured files not only have different
+# settings, they have a different structure.
+
+# Settings that are the same for build trees and installation trees
+#
+#
+
+# Settings specific to build trees
+#
+#
+
+SET(MAF_ROOT_DIR ${MAF_SOURCE_DIR})
+SET(MAF_INTERNAL_BUILD_DIR ${MAF_BINARY_DIR}/build)
+SET(MAF_USE_FILE_CONFIG ${MAF_BINARY_DIR}/UseMAF.cmake)
+SET(MAF_SRC_DIRS_CONFIG ${MAF_SOURCE_DIR}/src)
+SET(MAF_BIN_DIRS_CONFIG ${MAF_INTERNAL_BUILD_DIR}/bin)
+
+SET(VTK_DIR_CONFIG ${VTK_DIR})
+#SET(PYTHON_INCLUDE_PATH_CONFIG ${PYTHON_INCLUDE_PATH})
+#SET(PYTHON_LIBRARIES_CONFIG ${PYTHON_LIBRARIES})
+
+# Configure MAFConfig.cmake for the install tree.
+CONFIGURE_FILE(
+  ${MAF_SOURCE_DIR}/MAFConfig.cmake.in
+  ${MAF_BINARY_DIR}/MAFConfig.cmake @ONLY)
+      

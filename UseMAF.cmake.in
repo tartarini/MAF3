@@ -1,0 +1,82 @@
+#
+# This file sets up the include directories, link directories and compiler
+# settings for a project to use MAF.  Such projects could provide new
+# MAF modules built against a MAF build tree or a MAF installation.
+#
+
+# Relax some constraints related to the build settings file. This was
+# preventing people from using the same compiler but with a different generator,
+# or just the same compiler installed in a non-standard location.
+
+set(SKIP_VTK_BUILD_SETTINGS_FILE 1)
+
+# Add compiler flags needed to use MAF.
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${MAF_REQUIRED_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MAF_REQUIRED_CXX_FLAGS}")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${MAF_REQUIRED_LINK_FLAGS}")
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${MAF_REQUIRED_LINK_FLAGS}")
+set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${MAF_REQUIRED_LINK_FLAGS}")
+
+if(NOT DEFINED BUILD_SHARED_LIBS)
+  set(BUILD_SHARED_LIBS ${MAF_BUILD_SHARED})
+endif(NOT DEFINED BUILD_SHARED_LIBS)
+
+# Add include directories needed to use MAF.
+include_directories(BEFORE 
+  ${MAF_INCLUDE_DIRS} 
+  )
+
+# Add link directories needed to use MAF.
+link_directories(
+  ${MAF_LIBRARY_DIRS}
+  )
+
+# Some people use Mesa instead of the default system OpenGL.
+# Try to help them a little.
+#if(NOT WIN32)
+#  foreach(dependency ${vtkftgl_LIB_DEPENDS})
+#    get_filename_component(dependency_lib "${dependency}" NAME_WE)
+#    if(dependency_lib STREQUAL "libGL")
+#      get_filename_component(OPENGL_gl_LIBRARY_PATH "${dependency}" PATH)
+#      link_directories("${OPENGL_gl_LIBRARY_PATH}")
+#    endif(dependency_lib STREQUAL "libGL")
+#  endforeach(dependency)
+#endif(NOT WIN32)
+
+#
+include("${CMAKE_CURRENT_BINARY_DIR}/../../MAFConfig.cmake")
+
+# Add cmake module path.
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${MAF_ROOT_DIR}/CMake")
+
+include(${CMAKE_MODULE_PATH}/mafMacroInitProject.cmake)
+include(${CMAKE_MODULE_PATH}/mafMacroInstallProject.cmake)
+include(${CMAKE_MODULE_PATH}/mafMacroSetupQt.cmake)
+include(${CMAKE_MODULE_PATH}/mafMacroWrapTargetFiles.cmake)
+include(${CMAKE_MODULE_PATH}/mafMacroTargetLibraries.cmake)
+include(${CMAKE_MODULE_PATH}/mafCopyFilesFromExtension.cmake)
+
+#-----------------------------------------------------------------------------
+# MAF3 Foundation Libraries.
+#
+include(${CMAKE_MODULE_PATH}/mafMacroFoundationLibraries.cmake)
+mafMacroFoundationLibraries()
+
+#-----------------------------------------------------------------------------
+# QT
+#
+
+mafMacroSetupQt()
+# Update MAF_BASE_LIBRARIES with QT libraries
+IF(QT4_FOUND)
+  SET(MAF_BASE_LIBRARIES ${QT_LIBRARIES} CACHE INTERNAL "MAF base libraries" FORCE)
+ENDIF()
+
+
+#-----------------------------------------------------------------------------
+# SET the target directories for libraries and executables
+#
+SET (LIBRARY_OUTPUT_PATH ${MAF_BIN_DIRS_CONFIG} CACHE INTERNAL
+    "Single output directory for building all libraries.")
+SET (EXECUTABLE_OUTPUT_PATH ${MAF_BIN_DIRS_CONFIG} CACHE INTERNAL 
+    "Single output directory for building all executables.")
