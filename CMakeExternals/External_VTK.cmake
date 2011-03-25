@@ -52,6 +52,7 @@ CMAKE_ARGS
         ${ep_common_args}
         ${additional_vtk_cmakevars}
         -DBUILD_TESTS:BOOL=OFF
+        -DBUILD_TESTING:BOOL=OFF
         -DBUILD_EXAMPLES:BOOL=OFF
         -DVTK_WRAP_TCL:BOOL=OFF
         -DVTK_USE_TK:BOOL=OFF
