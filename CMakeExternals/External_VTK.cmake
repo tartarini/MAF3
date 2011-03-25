@@ -7,85 +7,65 @@ set(proj VTK)
 if(NOT DEFINED VTK_DIR OR NOT DEFINED VTK_SOURCE_DIR)
 #  message(STATUS "Adding project:${proj}")
 
-  set(VTK_WRAP_TCL OFF)
-  set(VTK_WRAP_PYTHON OFF)
 
-
-  #if (MAF_USE_PYTHONQT)
-  #  set(VTK_WRAP_PYTHON ON)
-  #  list(APPEND VTK_DEPENDENCIES python)
-  #endif()
-
-  #set(VTK_PYTHON_ARGS)
-  #if(MAF_USE_PYTHON OR MAF_USE_PYTHONQT)
-  #  set(VTK_PYTHON_ARGS
-  #    -DPYTHON_INCLUDE_DIR:PATH=${MAF_PYTHON_INCLUDE}
-  #    -DPYTHON_LIBRARY:FILEPATH=${MAF_PYTHON_LIBRARY}
-  #    )
-  #endif()
+  SET(VTK_enabling_variable VTK_LIBRARIES)
   
-  set(VTK_QT_ARGS)
-  if(NOT APPLE)
-    if(MAF_USE_QT)
-      set(VTK_QT_ARGS
-        -DDESIRED_QT_VERSION:STRING=4
-        #-DVTK_USE_GUISUPPORT:BOOL=ON
-        -DVTK_USE_QVTK_QTOPENGL:BOOL=ON
-        -DVTK_USE_QT:BOOL=ON
-        -DQT_QMAKE_EXECUTABLE:FILEPATH=${QT_QMAKE_EXECUTABLE}
-        )
-    endif()
-  else()
-    if(MAF_USE_QT)
-      set(VTK_QT_ARGS
-        -DVTK_USE_CARBON:BOOL=OFF
-        -DVTK_USE_COCOA:BOOL=ON # Default to Cocoa, VTK/CMakeLists.txt will enable Carbon and disable cocoa if needed
-        -DVTK_USE_X:BOOL=OFF
-        #-DVTK_USE_RPATH:BOOL=ON
-        -DDESIRED_QT_VERSION:STRING=4
-        #-DVTK_USE_GUISUPPORT:BOOL=ON
-        -DVTK_USE_QVTK_QTOPENGL:BOOL=ON
-        -DVTK_USE_QT:BOOL=ON
-        -DQT_QMAKE_EXECUTABLE:FILEPATH=${QT_QMAKE_EXECUTABLE}
-        )
-    endif()
-  endif()
+  SET(ep_base "${MAF_EXTERNAL_BUILD_DIR}")
+  SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${ep_base})
+  
+  SET(ep_install_dir ${ep_base}/Install)
+  SET(ep_build_dir ${ep_base}/Build)
+  SET(ep_source_dir ${ep_base}/Source)
+  #SET(ep_parallelism_level)
+  SET(ep_build_shared_libs ON)
+  SET(ep_build_testing OFF)
+  
+  
+  SET(additional_vtk_cmakevars )
+  IF(MINGW)
+    LIST(APPEND additional_vtk_cmakevars -DCMAKE_USE_PTHREADS:BOOL=OFF)
+  ENDIF()
+  
+  #IF(CTK_LIB_Scripting/Python/Core_PYTHONQT_USE_VTK)
+  #  LIST(APPEND additional_vtk_cmakevars
+  #    -DPYTHON_EXECUTABLE:PATH=${PYTHON_EXECUTABLE}
+  #    -DPYTHON_LIBRARIES:FILEPATH=${PYTHON_LIBRARIES}
+  #    -DPYTHON_DEBUG_LIBRARIES:FILEPATH=${PYTHON_DEBUG_LIBRARIES}
+  #    )
+  #ENDIF()
 
+  SET(proj VTK)
+  SET(proj_DEPENDENCIES)
+  
+  
   # Disable Tk when Python wrapping is enabled
   #if (MAF_USE_PYTHONQT)
   #  list(APPEND VTK_QT_ARGS -DVTK_USE_TK:BOOL=OFF)
   #endif()
 
   ExternalProject_Add(${proj}
-    SOURCE_DIR ${CMAKE_BINARY_DIR}/${proj}
-    BINARY_DIR ${proj}-build
     GIT_REPOSITORY "${git_protocol}://vtk.org/VTK.git"
-    #GIT_TAG "origin/Slicer-4.0"
-    CMAKE_GENERATOR ${gen}
-    CMAKE_ARGS
-      ${ep_common_args}
-      -DBUILD_EXAMPLES:BOOL=OFF
-      -DBUILD_SHARED_LIBS:BOOL=ON
-      -DCMAKE_CXX_FLAGS:STRING=${ep_common_cxx_flags}
-      -DCMAKE_C_FLAGS:STRING=${ep_common_c_flags}
-      -DVTK_USE_PARALLEL:BOOL=OFF
-      #-DVTK_DEBUG_LEAKS:BOOL=${MAF_USE_VTK_DEBUG_LEAKS}
-      #-DVTK_WRAP_TCL:BOOL=${VTK_WRAP_TCL}
-      #-DVTK_USE_RPATH:BOOL=ON
-      -DDESIRED_QT_VERSION:STRING=4
-      #-DVTK_USE_GUISUPPORT:BOOL=ON
-      -DVTK_USE_QVTK_QTOPENGL:BOOL=ON
-      -DVTK_USE_QT:BOOL=ON
-      -DQT_QMAKE_EXECUTABLE:FILEPATH=${QT_QMAKE_EXECUTABLE}
-      ${VTK_TCL_ARGS}
-      -DVTK_WRAP_PYTHON:BOOL=${VTK_WRAP_PYTHON}
-      -DVTK_INSTALL_PYTHON_USING_CMAKE:BOOL=ON
-      ${VTK_PYTHON_ARGS}
-      ${VTK_QT_ARGS}
-      ${VTK_MAC_ARGS}
+    #GIT_TAG "origin"
     INSTALL_COMMAND ""
-    DEPENDS 
-      ${VTK_DEPENDENCIES}
+    CMAKE_GENERATOR ${gen}
+CMAKE_ARGS
+        ${ep_common_args}
+        ${additional_vtk_cmakevars}
+        -DBUILD_TESTS:BOOL=OFF
+        -DBUILD_EXAMPLES:BOOL=OFF
+        -DVTK_WRAP_TCL:BOOL=OFF
+        -DVTK_USE_TK:BOOL=OFF
+        -DVTK_WRAP_PYTHON:BOOL=${CTK_LIB_Scripting/Python/Core_PYTHONQT_USE_VTK}
+        -DVTK_WRAP_JAVA:BOOL=OFF
+        -DBUILD_SHARED_LIBS:BOOL=ON 
+        -DDESIRED_QT_VERSION:STRING=4
+        -DVTK_USE_GUISUPPORT:BOOL=ON
+        -DVTK_USE_QVTK_QTOPENGL:BOOL=ON
+        -DVTK_USE_QT:BOOL=ON
+        -DQT_QMAKE_EXECUTABLE:FILEPATH=${QT_QMAKE_EXECUTABLE}
+      DEPENDS
+        ${proj_DEPENDENCIES}
+
     )
   set(VTK_DIR ${CMAKE_BINARY_DIR}/${proj}-build)
   set(VTK_SOURCE_DIR ${CMAKE_BINARY_DIR}/${proj})

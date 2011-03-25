@@ -37,6 +37,29 @@ if(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "MinGW 
 endif(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "MinGW Makefiles")
 
 #############################################################################################
+### Available Modules
+#############################################################################################
+
+
+
+
+SET(MAF_CORE ON)
+SET(MAF_EVENT_BUS ON)
+OPTION(MAF_TIME_SPACE "Build mafTimeSpace module." ON)
+OPTION(MAF_SERIALIZATION "Build mafSerialization module." ON)
+OPTION(MAF_RESOURCES "Build mafResources module." ON)
+OPTION(MAF_PLUGINVTK "Build mafPluginVTK module." ON)
+OPTION(MAF_APPLICATION_LOGIC "Build mafApplicationLogic module." ON)
+OPTION(MAF_QTGUI "Build mafGUI module." ON)
+
+include(CMake/mafUtilities.cmake)
+if(MAF_PLUGINVTK)
+  SET( MAF_RESOURCES ON ) 
+  mafDependentOption(MAF_RESOURCES "Build mafResources module." ON MAF_PLUGINVTK ON)
+endif(MAF_PLUGINVTK)
+
+
+#############################################################################################
 ### Superbuild execution
 #############################################################################################
 

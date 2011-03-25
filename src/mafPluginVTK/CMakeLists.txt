@@ -12,8 +12,8 @@
 ## #################################################################
 ## Find the VTK package.
 ## #################################################################
-INCLUDE(ExternalProject)
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../CMakeExternals/External_VTK.cmake)
+
+include(${MAF_ROOT_DIR}/CMakeExternals/External_VTK.cmake)
 
 ## #################################################################
 ## Init Project
@@ -46,11 +46,4 @@ mafMacroWrapBuild()
 ## #################################################################
 
 mafMacroInstallProject()
-
-## #################################################################
-## Test suite.
-## #################################################################
-if(BUILD_TEST_SUITE)
-  #SUBDIRS("${PROJECT_NAME}Test")
-endif(BUILD_TEST_SUITE)
 

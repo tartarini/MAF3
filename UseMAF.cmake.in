@@ -44,6 +44,7 @@ link_directories(
 #endif(NOT WIN32)
 
 #
+INCLUDE(ExternalProject)
 include("${CMAKE_CURRENT_BINARY_DIR}/../../MAFConfig.cmake")
 
 # Add cmake module path.
@@ -72,11 +73,24 @@ IF(QT4_FOUND)
   SET(MAF_BASE_LIBRARIES ${QT_LIBRARIES} CACHE INTERNAL "MAF base libraries" FORCE)
 ENDIF()
 
-
-#-----------------------------------------------------------------------------
-# SET the target directories for libraries and executables
-#
+#############################################################################################
+### SET the target directories for libraries and executables
+#############################################################################################
 SET (LIBRARY_OUTPUT_PATH ${MAF_BIN_DIRS_CONFIG} CACHE INTERNAL
     "Single output directory for building all libraries.")
 SET (EXECUTABLE_OUTPUT_PATH ${MAF_BIN_DIRS_CONFIG} CACHE INTERNAL 
     "Single output directory for building all executables.")
+
+SET(ep_base "${CMAKE_BINARY_DIR}/ExternalLibraries")
+      
+#############################################################################################
+### find project subdirs and add include directories to the project
+#############################################################################################
+FILE(GLOB dir_list "${MAF_SRC_DIRS}/*")
+FOREACH(dir_name ${dir_list})
+  FILE(RELATIVE_PATH local_dir_name "${PROJECT_SOURCE_DIR}" ${dir_name})
+	IF(IS_DIRECTORY ${dir_name})
+    INCLUDE_DIRECTORIES("${dir_name}")
+	ENDIF(IS_DIRECTORY ${dir_name})
+ENDFOREACH(dir_name ${dir_list})
+

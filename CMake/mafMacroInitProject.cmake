@@ -49,14 +49,14 @@ MACRO(mafMacroInitProject test)
 	${resource_file_list}
   )
 
-  ## Add the project binary dir as include dir for the .moc files.
-  INCLUDE_DIRECTORIES("${PROJECT_BINARY_DIR}")
-
   IF(WIN32)
     ADD_DEFINITIONS(-DUNICODE)
   ELSE(WIN32)
     ADD_DEFINITIONS(-w)
   ENDIF(WIN32)
+  
+  ## Add the project binary dir as include dir for the .moc files.
+  INCLUDE_DIRECTORIES("${PROJECT_BINARY_DIR}")
 
   set(MY_MOC_CXX)
   set(MY_UI_CXX)
