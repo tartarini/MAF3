@@ -23,38 +23,38 @@ set(MAF_BUILD_SHARED "@BUILD_SHARED_LIBS@")
 # MAF options
 #set(MAF_USE_PYTHON "@MAF_USE_PYTHON@")
 
-# MAF home (top of the tree)
-set(MAF_HOME "@MAF_HOME@")
-
 # The CMake macros dir.
 set(MAF_ROOT_DIR "@MAF_ROOT_DIR@")
 
-# MAF Libs libraries.  Those listed here should
-# automatically pull in their dependencies.
+# MAF Internal Build dir contains internal builds of MAF modules
 set(MAF_INTERNAL_BUILD_DIR "@MAF_INTERNAL_BUILD_DIR@")
+
+# MAF External Build dir contains external libraries builds
+set(MAF_EXTERNAL_BUILD_DIR "@MAF_EXTERNAL_BUILD_DIR@")
 
 # MAF Libs library directories.
 set(MAF_SRC_DIRS "@MAF_SRC_DIRS_CONFIG@")
 
-# MAF Libs include file directories.
-set(MAF_INCLUDE_DIRS "@MAF_INCLUDE_DIRS_CONFIG@")
-
 # The location of the UseMAF.cmake file.
 set(MAF_USE_FILE "@MAF_USE_FILE_CONFIG@")
 
-# The build settings file.
-set(MAF_BUILD_SETTINGS_FILE "@MAF_BUILD_SETTINGS_FILE@")
-
 # The MAF binary directory where libraries and executables will be generated.
 set(MAF_BIN_DIRS_CONFIG "@MAF_BIN_DIRS_CONFIG@")
-
-# The MAF install prefix (*not* defined in the install tree)
-set(MAF_INSTALL_PREFIX  "@CMAKE_INSTALL_PREFIX@")
 
 # Components needed to build modules from outside a MAF build tree or 
 # from outside a MAF installation tree
 set(VTK_DIR "@VTK_DIR_CONFIG@")
 #set(PYTHON_INCLUDE_PATH "@PYTHON_INCLUDE_PATH@")
 #set(PYTHON_LIBRARIES "@PYTHON_LIBRARIES@")
+
+# copy options
+SET(MAF_CORE "@MAF_CORE@")
+SET(MAF_EVENT_BUS "@MAF_EVENT_BUS@")
+SET(MAF_TIME_SPACE "@MAF_TIME_SPACE@")
+SET(MAF_SERIALIZATION "@MAF_SERIALIZATION@")
+SET(MAF_RESOURCES "@MAF_RESOURCES@")
+SET(MAF_PLUGINVTK "@MAF_PLUGINVTK@")
+SET(MAF_APPLICATION_LOGIC "@MAF_APPLICATION_LOGIC@")
+SET(MAF_QTGUI "@MAF_QTGUI@")
 
 message (".......................... Exiting MAFConfig.cmake ............................")

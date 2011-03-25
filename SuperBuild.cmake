@@ -25,11 +25,6 @@
 
 option(MAF_USE_GIT_PROTOCOL "If behind a firewall turn this off to use http instead." ON)
 
-set(git_protocol "git")
-if(NOT MAF_USE_GIT_PROTOCOL)
-  set(git_protocol "http")
-endif()
-
 #-----------------------------------------------------------------------------
 # Qt - Let's check if a valid version of Qt is available
 #-----------------------------------------------------------------------------
@@ -49,15 +44,11 @@ ENDIF()
 
 INCLUDE(ExternalProject)
 
-SET(ep_base "${CMAKE_BINARY_DIR}/CMakeExternals")
+
+# this directory will be the root dir for external libraries.
+SET(ep_base "${CMAKE_BINARY_DIR}/ExternalLibraries")
 SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${ep_base})
 
-SET(ep_install_dir ${ep_base}/Install)
-SET(ep_build_dir ${ep_base}/Build)
-SET(ep_source_dir ${ep_base}/Source)
-#SET(ep_parallelism_level)
-SET(ep_build_shared_libs ON)
-SET(ep_build_testing OFF)
 
 # Compute -G arg for configuring external projects with the same CMake generator:
 IF(CMAKE_EXTRA_GENERATOR)
@@ -101,7 +92,6 @@ set(MAF_DEPENDENCIES
 #  endif()
 #endif()
 
-#include(CMakeExternals/External_VTK.cmake)
 
 #if(MAF_USE_QT)
 #  include(SuperBuild/External_CTK.cmake)
@@ -132,12 +122,6 @@ set(MAF_DEPENDENCIES
   #  endif()
   #endif()
 #endif()
-
-#------------------------------------------------------------------------------
-# List of external projects
-#------------------------------------------------------------------------------  
-
-#set(external_project_list tk tcl incrTcl iwidgets blt python weave CLAPACK NUMPY scipy VTK CTK KWWidgets Insight BatchMake OpenIGTLink teem cmcurl MAF)
 
 #-----------------------------------------------------------------------------
 # Dump external project dependencies
@@ -201,9 +185,6 @@ ExternalProject_Add(${proj}
     #-DITK_DIR:PATH=${ITK_DIR}
     # OpenIGTLink
     #-DOpenIGTLink_DIR:PATH=${OpenIGTLink_DIR}
-    # VTK
-    -DVTK_DIR:PATH=${VTK_DIR}
-    -DVTK_DEBUG_LEAKS:BOOL=${MAF_USE_VTK_DEBUG_LEAKS}
     # Python
     #-DMAF_USE_SYSTEM_PYTHON:BOOL=OFF
     -DPYTHON_EXECUTABLE:FILEPATH=${MAF_PYTHON_EXECUTABLE}

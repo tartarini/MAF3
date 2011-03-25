@@ -27,39 +27,5 @@ MACRO(mafMacroInstallProject)
     endif(${foundation_library} MATCHES "qscxml")
 
   ENDFOREACH()
-  
-  #FOREACH(target_library ${target_libraries})
-  #  if(${target_library} MATCHES "vtkCommon")
-  #    mafCopySharedLibrariesInInstallDir("${VTK_DIR}lib")
-  #  endif(${target_library} MATCHES "vtkCommon")
-  #ENDFOREACH()
-  
-  # END AWFUL CODE
-
-  SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES PREFIX "" )
-  if (CMAKE_BUILD_TYPE MATCHES Release)
-      SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}" )
-  endif(CMAKE_BUILD_TYPE MATCHES Release)
-
-  if(CMAKE_BUILD_TYPE MATCHES Debug)
-      if(WIN32)
-          SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}_d" )
-      else(WIN32)
-          SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}_debug" )
-      endif(WIN32)
-  else(CMAKE_BUILD_TYPE MATCHES Debug)
-          SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}" )
-  endif(CMAKE_BUILD_TYPE MATCHES Debug)
-
-  install(FILES ${${PROJECT_NAME}_HEADERS} DESTINATION include/${PROJECT_NAME})
-  
-  if(${WRAP_LIST_FOUND})
-    install(FILES ${${PROJECT_NAME}_MODULES} DESTINATION modules)
-  endif(${WRAP_LIST_FOUND})
-
-  install(TARGETS ${PROJECT_NAME}
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib)
 
 ENDMACRO()
