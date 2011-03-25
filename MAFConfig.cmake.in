@@ -1,0 +1,60 @@
+#
+# MAFConfig.cmake - MAF CMake configuration file for external projects
+#
+# This file is configured by MAF and used by UseMAF.cmake module
+# to load MAF's settings for an external project. External projects
+# can use these setting to build new modules against a MAF build tree
+# or a MAF installation.
+#
+message (".......................... Entering MAFConfig.cmake ............................")
+# The C and C++ flags added by MAF to the cmake-configured flags.
+set(MAF_REQUIRED_C_FLAGS "@MAF_REQUIRED_C_FLAGS@")
+set(MAF_REQUIRED_CXX_FLAGS "@MAF_REQUIRED_CXX_FLAGS@")
+set(MAF_REQUIRED_LINK_FLAGS "@MAF_REQUIRED_LINK_FLAGS@")
+
+# The MAF version number
+set(MAF_VERSION_MAJOR "@MAF_VERSION_MAJOR@")
+set(MAF_VERSION_MINOR "@MAF_VERSION_MINOR@")
+set(MAF_VERSION_PATCH "@MAF_VERSION_PATCH@")
+
+# Whether MAF was built with shared libraries.
+set(MAF_BUILD_SHARED "@BUILD_SHARED_LIBS@")
+
+# MAF options
+#set(MAF_USE_PYTHON "@MAF_USE_PYTHON@")
+
+# MAF home (top of the tree)
+set(MAF_HOME "@MAF_HOME@")
+
+# The CMake macros dir.
+set(MAF_ROOT_DIR "@MAF_ROOT_DIR@")
+
+# MAF Libs libraries.  Those listed here should
+# automatically pull in their dependencies.
+set(MAF_INTERNAL_BUILD_DIR "@MAF_INTERNAL_BUILD_DIR@")
+
+# MAF Libs library directories.
+set(MAF_SRC_DIRS "@MAF_SRC_DIRS_CONFIG@")
+
+# MAF Libs include file directories.
+set(MAF_INCLUDE_DIRS "@MAF_INCLUDE_DIRS_CONFIG@")
+
+# The location of the UseMAF.cmake file.
+set(MAF_USE_FILE "@MAF_USE_FILE_CONFIG@")
+
+# The build settings file.
+set(MAF_BUILD_SETTINGS_FILE "@MAF_BUILD_SETTINGS_FILE@")
+
+# The MAF binary directory where libraries and executables will be generated.
+set(MAF_BIN_DIRS_CONFIG "@MAF_BIN_DIRS_CONFIG@")
+
+# The MAF install prefix (*not* defined in the install tree)
+set(MAF_INSTALL_PREFIX  "@CMAKE_INSTALL_PREFIX@")
+
+# Components needed to build modules from outside a MAF build tree or 
+# from outside a MAF installation tree
+set(VTK_DIR "@VTK_DIR_CONFIG@")
+#set(PYTHON_INCLUDE_PATH "@PYTHON_INCLUDE_PATH@")
+#set(PYTHON_LIBRARIES "@PYTHON_LIBRARIES@")
+
+message (".......................... Exiting MAFConfig.cmake ............................")

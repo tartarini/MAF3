@@ -47,18 +47,9 @@ if(SWIG_FOUND)
 endif(SWIG_FOUND)
 
 ## #################################################################
-## Tcl
+## Other language
 ## #################################################################
 
-find_package(TCL QUIET)
-
-if(TCL_FOUND)
-  include_directories(${TCL_INCLUDE_PATH})
-endif(TCL_FOUND)
-
-if(TCL_FOUND)
-  add_definitions(-DHAVE_TCL)
-endif(TCL_FOUND)
 
 ## #################################################################
 ## Python
@@ -127,15 +118,7 @@ MACRO(mafMacroWrapTargetFiles)
         )
 
       endif(PYTHONLIBS_FOUND)
-  
-      if(TCL_FOUND)
-        mafMacroWrap(${PROJECT_NAME} ${PROJECT_NAME}_SOURCES_WRAP ${PROJECT_NAME} tcl    ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i ${${PROJECT_NAME}_WRAP_DEPENDS})
-        SET(PROJECT_SRCS 
-          ${PROJECT_SRCS}
-          ${${PROJECT_NAME}_SOURCES_WRAP}
-        )
-      endif(TCL_FOUND)
-    ENDIF()
+     ENDIF()
     
   endif(SWIG_FOUND AND ${length})
 
@@ -143,9 +126,6 @@ ENDMACRO()
 
 MACRO(mafMacroWrapBuild)
   if(${WRAP_LIST_FOUND})
-    if(TCL_FOUND)
-      target_link_libraries(${PROJECT_NAME} ${TCL_LIBRARY})
-    endif(TCL_FOUND)
 	
     if(PYTHONLIBS_FOUND)
       target_link_libraries(${PROJECT_NAME} ${PYTHON_LIBRARIES})

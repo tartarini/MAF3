@@ -9,6 +9,10 @@
 #
 #
 
+get_target_property(TARGET_LOC ${PROJECT_NAME} LOCATION)
+get_filename_component(TARGET_ABSOLUTE_DIR ${TARGET_LOC} PATH)
+message("******************** ${TARGET_ABSOLUTE_DIR}  ${CONFIGURATION}")
+
 SET(VTK_DIR "${MafFoundationLibDir}/vtk-5.6/")
 INCLUDE_DIRECTORIES("${VTK_DIR}/include/")
 

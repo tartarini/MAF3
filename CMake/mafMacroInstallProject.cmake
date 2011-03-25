@@ -28,11 +28,11 @@ MACRO(mafMacroInstallProject)
 
   ENDFOREACH()
   
-  FOREACH(target_library ${target_libraries})
-    if(${target_library} MATCHES "vtkCommon")
-      mafCopySharedLibrariesInInstallDir("${VTK_DIR}lib")
-    endif(${target_library} MATCHES "vtkCommon")
-  ENDFOREACH()
+  #FOREACH(target_library ${target_libraries})
+  #  if(${target_library} MATCHES "vtkCommon")
+  #    mafCopySharedLibrariesInInstallDir("${VTK_DIR}lib")
+  #  endif(${target_library} MATCHES "vtkCommon")
+  #ENDFOREACH()
   
   # END AWFUL CODE
 

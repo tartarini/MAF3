@@ -9,7 +9,7 @@
 #
 #
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 PROJECT(MAF)
 set(MafFoundationDir $ENV{MAF3_FOUNDATION_LIB_DIR})
@@ -22,6 +22,9 @@ STRING(REPLACE "\\" "/" MafFoundationLibDir ${MafFoundationDir})
 OPTION(BUILD_TEST_SUITE "Build Module's Tests" ON)
 OPTION(BUILD_EXAMPLES "Build Examples" ON)
 OPTION(MAF_USE_GIT_PROTOCOL "If ON use git protocol, otherwise http" OFF)
+OPTION(MAF_SUPERBUILD "Build MAF and the projects it depends on via SuperBuild.cmake." ON)
+MARK_AS_ADVANCED(MAF_SUPERBUILD)
+
 
 set(git_protocol "git")
 if(NOT MAF_USE_GIT_PROTOCOL)
@@ -34,62 +37,29 @@ if(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "MinGW 
 endif(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "MinGW Makefiles")
 
 #############################################################################################
-### where to search modules
+### Superbuild execution
 #############################################################################################
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
 
-include(mafMacroInitProject)
-include(mafMacroInstallProject)
-
-include(mafMacroSetupQt)
-include(mafMacroWrapTargetFiles)
-include(mafMacroTargetLibraries)
-include(mafCopyFilesFromExtension)
-
-#-----------------------------------------------------------------------------
-# MAF3 Foundation Libraries.
-#
-include(mafMacroFoundationLibraries)
-mafMacroFoundationLibraries()
-
-#-----------------------------------------------------------------------------
-# QT
-#
-
-mafMacroSetupQt()
-# Update MAF_BASE_LIBRARIES with QT libraries
-IF(QT4_FOUND)
-  SET(MAF_BASE_LIBRARIES ${QT_LIBRARIES} CACHE INTERNAL "MAF base libraries" FORCE)
-ENDIF()
+INCLUDE(${MAF_SOURCE_DIR}/GenerateMAFConfig.cmake)
+CONFIGURE_FILE(${MAF_SOURCE_DIR}/UseMAF.cmake.in
+  ${MAF_BINARY_DIR}/UseMAF.cmake COPYONLY IMMEDIATE)
+  
+IF(MAF_SUPERBUILD)
+  INCLUDE(SuperBuild.cmake)
+  RETURN()
+ELSE(MAF_SUPERBUILD)
+ENDIF(MAF_SUPERBUILD)
 
 #############################################################################################
-### where to place output binaries
+### SOURCES
 #############################################################################################
-SET (LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/Install/bin/ CACHE INTERNAL
-     "Single output directory for building all libraries.")
-SET (EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/Install/bin/ CACHE INTERNAL 
-     "Single output directory for building all executables.")
-     
-MARK_AS_ADVANCED (
-  LIBRARY_OUTPUT_PATH 
-  EXECUTABLE_OUTPUT_PATH
-)
 
-INCLUDE_DIRECTORIES(BEFORE ".")
+ADD_SUBDIRECTORY(src)
 
 #############################################################################################
-### find project subdirs avoiding the svn directory and make the SUBDIR CMake command on them.
+### TESTS
 #############################################################################################
-FILE(GLOB dir_list "${PROJECT_SOURCE_DIR}/*")
-FOREACH(dir_name ${dir_list})
-  FILE(RELATIVE_PATH local_dir_name "${PROJECT_SOURCE_DIR}" ${dir_name})
-	IF(IS_DIRECTORY ${dir_name} AND NOT ${local_dir_name} STREQUAL ".git" AND NOT ${local_dir_name} STREQUAL "CMake")
-    INCLUDE_DIRECTORIES("${dir_name}")
-		SUBDIRS("${local_dir_name}")
-	ENDIF(IS_DIRECTORY ${dir_name} AND NOT ${local_dir_name} STREQUAL ".git" AND NOT ${local_dir_name} STREQUAL "CMake")
-ENDFOREACH(dir_name ${dir_list})
 
-#############################################################################################
-### Export Build settings and library dependences
-#############################################################################################
-INCLUDE(CMakeExportBuildSettings)
+#ADD_SUBDIRECTORY(test)
+
+
