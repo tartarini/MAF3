@@ -49,6 +49,17 @@ INCLUDE(ExternalProject)
 SET(ep_base "${CMAKE_BINARY_DIR}/ExternalLibraries")
 SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${ep_base})
 
+SET(ep_install_dir ${ep_base}/Install)
+
+SET(ep_common_args
+  -DCMAKE_INSTALL_PREFIX:PATH=${ep_install_dir}
+  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+  -DBUILD_TESTING:BOOL=${ep_build_testing}
+  )
+SET(ep_common_c_flags "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_INIT} ${ADDITIONAL_C_FLAGS}")
+SET(ep_common_cxx_flags "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_INIT} ${ADDITIONAL_CXX_FLAGS}")
+SET(ep_exe_linker_flags "${CMAKE_EXE_LINKER_FLAGS}")
+
 
 # Compute -G arg for configuring external projects with the same CMake generator:
 IF(CMAKE_EXTRA_GENERATOR)
@@ -63,18 +74,18 @@ set(sep "^^")
 # Establish Target Dependencies based on Selected Options
 #------------------------------------------------------------------------------
 
-
-set(python_DEPENDENCIES)
-
-set(VTK_DEPENDENCIES)
-set(MAF_DEPENDENCIES VTK)
 #if(MAF_USE_PYTHONQT)
 #  list(APPEND MAF_DEPENDENCIES python)
 #endif()
 
-set(MAF_DEPENDENCIES 
-    #VTK 
-)
+#DEPENDENCIES
+set(MAF_DEPENDENCIES)
+if(MAF_PLUGINVTK)
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VTK)
+  include(CMakeExternals/External_VTK.cmake)
+endif(MAF_PLUGINVTK)
+
+
 
 #------------------------------------------------------------------------------
 # Conditionnaly include ExternalProject Target
@@ -123,15 +134,8 @@ set(MAF_DEPENDENCIES
   #endif()
 #endif()
 
-#-----------------------------------------------------------------------------
-# Dump external project dependencies
-#------------------------------------------------------------------------------
 
-#set(ep_dependency_graph "# External project dependencies")
-#foreach(ep ${external_project_list})
-#  set(ep_dependency_graph "${ep_dependency_graph}\n${ep}:${${ep}_DEPENDENCIES}")
-#endforeach()
-#file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/ExternalProjectDependencies.txt "${ep_dependency_graph}\n")
+
 
 #-----------------------------------------------------------------------------
 # Set superbuild boolean args
@@ -162,7 +166,7 @@ ENDFOREACH()
 # Configure and build MAF
 #------------------------------------------------------------------------------
 
-message (".......................... Entering ${CMAKE_CURRENT_LIST_FILE} ............................")
+#message (".......................... Entering ${CMAKE_CURRENT_LIST_FILE} ............................")
 set(proj MAF)
 ExternalProject_Add(${proj}
   DEPENDS ${MAF_DEPENDENCIES}
@@ -192,6 +196,9 @@ ExternalProject_Add(${proj}
     -DPYTHON_LIBRARY:FILEPATH=${MAF_PYTHON_LIBRARY}
     # Qt
     -DQT_QMAKE_EXECUTABLE:PATH=${QT_QMAKE_EXECUTABLE}
+    # VTK
+    -DVTK_DIR:PATH=${VTK_DIR}
+    #-DVTK_DEBUG_LEAKS:BOOL=${MAF_USE_VTK_DEBUG_LEAKS}
     # CTK
     #-DCTK_DIR:PATH=${CTK_DIR}
     # CTKAppLauncher
@@ -201,4 +208,4 @@ ExternalProject_Add(${proj}
   )
   
   
-message (".......................... Exiting ${CMAKE_CURRENT_LIST_FILE} ............................")
+#message (".......................... Exiting ${CMAKE_CURRENT_LIST_FILE} ............................")
