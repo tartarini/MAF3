@@ -10,10 +10,21 @@ SET(foundation_libraries
   ${VXL_LIBRARY}
 )
 
+SET(VTK_LIBRARIES
+  vtkHybrid 
+  vtkRendering 
+  vtkGraphics 
+  vtkImaging 
+  vtkIO 
+  vtkFiltering 
+  vtkCommon
+  QVTK
+)
+
 SET(target_libraries
   ${MAF_BASE_LIBRARIES}
   ${foundation_libraries}
-  ${VTK_LIBRARY}
+  ${VTK_LIBRARIES}
   mafCore
   mafEventBus
   mafResources
