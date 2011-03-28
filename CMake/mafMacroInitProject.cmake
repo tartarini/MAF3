@@ -60,6 +60,7 @@ MACRO(mafMacroInitProject test)
 
   set(MY_MOC_CXX)
   set(MY_UI_CXX)
+  set(QtApp_RCC_SRCS)
   if(${test})
     ## Moc the tests:
     foreach(FILE_NAME_ABS ${implementation_file_list})
@@ -74,17 +75,18 @@ MACRO(mafMacroInitProject test)
       endif(NOT ${FILE_NAME} STREQUAL "main")
     endforeach()
   else(${test})
+    QT4_WRAP_UI(MY_UI_CXX ${ui_file_list})
+    # generate rules for building source files from the resources
+    QT4_ADD_RESOURCES(QtApp_RCC_SRCS ${resource_file_list})
     ## Moc the library's .h files
     QT4_WRAP_CPP(MY_MOC_CXX ${include_file_list})
-    QT4_WRAP_UI(MY_UI_CXX ${ui_file_list})
-    #QT4_ADD_RESOURCES(MY_RESOURCE_CXX ${resource_file_list})
   endif(${test})
   
   SET(PROJECT_SRCS 
     ${PROJECT_SRCS}
     ${MY_MOC_CXX}
     ${MY_UI_CXX}
-    ${resource_file_list}
+    ${QtApp_RCC_SRCS}
     )
 
   # List libraries that are needed by this project.
