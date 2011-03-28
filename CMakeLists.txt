@@ -25,11 +25,21 @@ OPTION(MAF_USE_GIT_PROTOCOL "If ON use git protocol, otherwise http" OFF)
 OPTION(MAF_SUPERBUILD "Build MAF and the projects it depends on via SuperBuild.cmake." ON)
 MARK_AS_ADVANCED(MAF_SUPERBUILD)
 
+FIND_PACKAGE(Git)
+IF(NOT GIT_FOUND)
+  MESSAGE(FATAL_ERROR "error: Install Git and try to re-configure")
+ENDIF()
 
+# git protocol to be used
 set(git_protocol "git")
 if(NOT MAF_USE_GIT_PROTOCOL)
   set(git_protocol "http")
 endif()
+
+
+#############################################################################################
+### Compilers
+#############################################################################################
 
 # modify CMAKE_BUILD_TYPE in order to set default configuration for non-IDE build
 if(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "MinGW Makefiles") 
@@ -40,18 +50,17 @@ endif(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "Min
 ### Available Modules
 #############################################################################################
 
-
-
-
 SET(MAF_CORE ON)
 SET(MAF_EVENT_BUS ON)
-OPTION(MAF_TIME_SPACE "Build mafTimeSpace module." ON)
-OPTION(MAF_SERIALIZATION "Build mafSerialization module." ON)
-OPTION(MAF_RESOURCES "Build mafResources module." ON)
-OPTION(MAF_PLUGINVTK "Build mafPluginVTK module." ON)
-OPTION(MAF_APPLICATION_LOGIC "Build mafApplicationLogic module." ON)
-OPTION(MAF_QTGUI "Build mafGUI module." ON)
+OPTION(MAF_TIME_SPACE "Build mafTimeSpace module. mafCore and mafEventBus will be built anyway." ON)
+OPTION(MAF_SERIALIZATION "Build mafSerialization module. mafCore and mafEventBus will be built anyway." ON)
+OPTION(MAF_RESOURCES "Build mafResources module. mafCore and mafEventBus will be built anyway." ON)
+OPTION(MAF_PLUGINVTK "Build mafPluginVTK module. mafCore and mafEventBus will be built anyway." ON)
+OPTION(MAF_APPLICATION_LOGIC "Build mafApplicationLogic module.mafCore and mafEventBus will be built anyway." ON)
+OPTION(MAF_QTGUI "Build mafGUI module. mafCore and mafEventBus will be built anyway." ON)
 
+
+### set here dependencies between modules
 include(CMake/mafUtilities.cmake)
 if(MAF_PLUGINVTK)
   SET( MAF_RESOURCES ON ) 
@@ -76,7 +85,6 @@ ENDIF(MAF_SUPERBUILD)
 #############################################################################################
 ### SOURCES
 #############################################################################################
-
 ADD_SUBDIRECTORY(src)
 
 #############################################################################################
