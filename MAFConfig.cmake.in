@@ -6,7 +6,7 @@
 # can use these setting to build new modules against a MAF build tree
 # or a MAF installation.
 #
-message (".......................... Entering MAFConfig.cmake ............................")
+#message (".......................... Entering MAFConfig.cmake ............................")
 # The C and C++ flags added by MAF to the cmake-configured flags.
 set(MAF_REQUIRED_C_FLAGS "@MAF_REQUIRED_C_FLAGS@")
 set(MAF_REQUIRED_CXX_FLAGS "@MAF_REQUIRED_CXX_FLAGS@")
@@ -57,4 +57,4 @@ SET(MAF_PLUGINVTK "@MAF_PLUGINVTK@")
 SET(MAF_APPLICATION_LOGIC "@MAF_APPLICATION_LOGIC@")
 SET(MAF_QTGUI "@MAF_QTGUI@")
 
-message (".......................... Exiting MAFConfig.cmake ............................")
+#message (".......................... Exiting MAFConfig.cmake ............................")
