@@ -1,4 +1,4 @@
-message (".......................... Entering ${CMAKE_CURRENT_LIST_FILE} ............................")
+#message (".......................... Entering ${CMAKE_CURRENT_LIST_FILE} ............................")
 
 include(${MAF_USE_FILE_CONFIG})
 
@@ -29,4 +29,4 @@ if(${MAF_QTGUI})
   ADD_SUBDIRECTORY(mafGUI)
 endif(${MAF_QTGUI})
 
-message (".......................... Exiting ${CMAKE_CURRENT_LIST_FILE} ............................")
+#message (".......................... Exiting ${CMAKE_CURRENT_LIST_FILE} ............................")
