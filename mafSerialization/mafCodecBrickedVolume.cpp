@@ -147,8 +147,9 @@ void mafCodecBrickedVolume::encode(mafMemento *memento) {
 
     // encode the raw volume data
     int levels = 1;
-    if (multiresolution) 
+    if (multiresolution) {
         levels = calcMultiresolutionLevel(dataType, componentNum, dimensions, memoryLimit);
+    }
     encode(url, data, dataType, componentNum, dimensions, brickSize, levels);
     // encode the level number
     m_DataStreamWrite << QString("levels");;
