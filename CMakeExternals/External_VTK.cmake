@@ -37,12 +37,11 @@ if(NOT DEFINED VTK_DIR OR NOT DEFINED VTK_SOURCE_DIR)
   SET(proj VTK)
   SET(proj_DEPENDENCIES)
   
-  
   # Disable Tk when Python wrapping is enabled
   #if (MAF_USE_PYTHONQT)
   #  list(APPEND VTK_QT_ARGS -DVTK_USE_TK:BOOL=OFF)
   #endif()
-
+  
   ExternalProject_Add(${proj}
     GIT_REPOSITORY "${git_protocol}://vtk.org/VTK.git"
     #GIT_TAG "origin"
@@ -54,6 +53,10 @@ CMAKE_ARGS
         -DBUILD_TESTS:BOOL=OFF
         -DBUILD_TESTING:BOOL=OFF
         -DBUILD_EXAMPLES:BOOL=OFF
+        -DCMAKE_CXX_FLAGS:STRING=${ep_common_cxx_flags}
+        -DCMAKE_C_FLAGS:STRING=${ep_common_c_flags}
+        -DCMAKE_EXE_LINKER_FLAGS:STRING=${ep_exe_linker_flags}
+        -DCMAKE_OSX_ARCHITECTURES=x86_64
         -DVTK_WRAP_TCL:BOOL=OFF
         -DVTK_USE_TK:BOOL=OFF
         -DVTK_WRAP_PYTHON:BOOL=${CTK_LIB_Scripting/Python/Core_PYTHONQT_USE_VTK}
@@ -64,6 +67,9 @@ CMAKE_ARGS
         -DVTK_USE_QVTK_QTOPENGL:BOOL=ON
         -DVTK_USE_QT:BOOL=ON
         -DQT_QMAKE_EXECUTABLE:FILEPATH=${QT_QMAKE_EXECUTABLE}
+        ${VTK_PYTHON_ARGS}
+        ${VTK_QT_ARGS}
+        ${VTK_MAC_ARGS}
       DEPENDS
         ${proj_DEPENDENCIES}
 
@@ -76,3 +82,6 @@ else()
   # project may depend on VTK, let's add an 'empty' one
   MAFMacroEmptyExternalProject(${proj} "${VTK_DEPENDENCIES}")
 endif()
+
+  SET(${VTK_enabling_variable}_INCLUDE_DIRS VTK_INCLUDE_DIRS)
+  SET(${VTK_enabling_variable}_FIND_PACKAGE_CMD VTK)
