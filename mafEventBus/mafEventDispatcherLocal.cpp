@@ -48,7 +48,7 @@ void mafEventDispatcherLocal::notifyEvent(const mafEvent &event_dictionary, mafE
                 if (returnArg == NULL || returnArg->data() == NULL) { //don't use return value
                     switch (argList->count()) {
                         case 0:
-                            this->metaObject()->invokeMethod(obj, signal_to_emit.toAscii());
+                            this->metaObject()->invokeMethod(obj, signal_to_emit.toAscii(), Qt::DirectConnection);
                             break;
                         case 1:
                             this->metaObject()->invokeMethod(obj, signal_to_emit.toAscii(), \
@@ -100,7 +100,7 @@ void mafEventDispatcherLocal::notifyEvent(const mafEvent &event_dictionary, mafE
                  } else { //use return value
                     switch (argList->count()) {
                         case 0:
-                            this->metaObject()->invokeMethod(obj, signal_to_emit.toAscii(), *returnArg);
+                            this->metaObject()->invokeMethod(obj, signal_to_emit.toAscii(), Qt::DirectConnection, *returnArg);
                             break;
                         case 1:
                             this->metaObject()->invokeMethod(obj, signal_to_emit.toAscii(), Qt::DirectConnection,\
@@ -152,11 +152,10 @@ void mafEventDispatcherLocal::notifyEvent(const mafEvent &event_dictionary, mafE
                  }
             } else {
                 if (returnArg == NULL || returnArg->data() == NULL) { //don't use return value
-                    this->metaObject()->invokeMethod(obj, signal_to_emit.toAscii());
+                    this->metaObject()->invokeMethod(obj, signal_to_emit.toAscii(), Qt::DirectConnection);
                 } else {
-                    this->metaObject()->invokeMethod(obj, signal_to_emit.toAscii(), *returnArg);
+                    this->metaObject()->invokeMethod(obj, signal_to_emit.toAscii(), Qt::DirectConnection, *returnArg);
                 }
-
             }
         }
     }
