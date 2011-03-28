@@ -13,7 +13,12 @@
 ## Find the VTK package.
 ## #################################################################
 
-include(${MAF_ROOT_DIR}/CMakeExternals/External_VTK.cmake)
+  # need ${VTK_DIR} that is be set by ExternalProject_Add for vtk
+  SET(VTK_DIR "${MAF_EXTERNAL_BUILD_DIR}/Build/VTK")
+  FIND_PACKAGE(VTK REQUIRED)
+  #this set is because, inside VTK 5, nobody fills it
+  SET(VTK_CMAKE_DIR "${MAF_EXTERNAL_BUILD_DIR}/Source/VTK/Cmake")
+  INCLUDE(${VTK_USE_FILE})
 
 ## #################################################################
 ## Init Project
@@ -34,6 +39,7 @@ mafMacroWrapTargetFiles()
 # Create the library.
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
+LINK_DIRECTORIES(${VTK_LIBRARY_DIRS})
 
 ## #################################################################
 ## Wrapping Build rules
