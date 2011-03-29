@@ -14,9 +14,9 @@ MACRO(mafMacroInstallProject)
   # to be removed as soon as git repositories for foundation libraries comes !!!!!
   # 
   FOREACH(foundation_library ${foundation_libraries})
-    if(${foundation_library} MATCHES "qxmlrpc")
-      mafCopySharedLibrariesInInstallDir("${QXMLRPC_DIR}lib")
-    endif(${foundation_library} MATCHES "qxmlrpc")
+    #if(${foundation_library} MATCHES "qxmlrpc")
+    #  mafCopySharedLibrariesInInstallDir("${QXMLRPC_DIR}lib")
+    #endif(${foundation_library} MATCHES "qxmlrpc")
     
     if(${foundation_library} MATCHES "QtSolutions_SOAP-2.7")
       mafCopySharedLibrariesInInstallDir("${QtSOAP_DIR}lib")

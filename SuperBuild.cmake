@@ -80,6 +80,12 @@ set(sep "^^")
 
 #DEPENDENCIES
 set(MAF_DEPENDENCIES)
+
+if(MAF_EVENT_BUS)
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} qxmlrpc)
+  include(CMakeExternals/External_qxmlrpc.cmake)
+endif(MAF_EVENT_BUS)
+
 if(MAF_PLUGINVTK)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VTK)
   include(CMakeExternals/External_VTK.cmake)
@@ -199,6 +205,8 @@ ExternalProject_Add(${proj}
     # VTK
     -DVTK_DIR:PATH=${VTK_DIR}
     #-DVTK_DEBUG_LEAKS:BOOL=${MAF_USE_VTK_DEBUG_LEAKS}
+    # qxmlrpc
+    -Dqxmlrpc_DIR:PATH=${qxmlrpc_DIR} # Findqxmlrpc expects qxmlrpc_DIR variable to be defined
     # CTK
     #-DCTK_DIR:PATH=${CTK_DIR}
     # CTKAppLauncher
