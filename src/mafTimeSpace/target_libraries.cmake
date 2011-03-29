@@ -5,8 +5,6 @@
 #
 
 SET(foundation_libraries 
-  ${QXMLRPC_LIBRARY} 
-  ${QTSOAP_LIBRARY}
 )
 
 SET(target_libraries
