@@ -13,10 +13,7 @@
 ## Find the qxmlrpc package.
 ## #################################################################
 
-SET(qxmlrpc_DIR "${MAF_EXTERNAL_BUILD_DIR}/Build/qxmlrpc")
-  FIND_PACKAGE(qxmlrpc REQUIRED)
-  include(${qxmlrpc_DIR}/qxmlrpcConfig.cmake)
-  INCLUDE(${qxmlrpc_USE_FILE})
+include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
 
 ## #################################################################
 ## Init Project
