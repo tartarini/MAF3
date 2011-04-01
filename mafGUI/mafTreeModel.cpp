@@ -13,6 +13,7 @@
 
 using namespace mafCore;
 using namespace mafGUI;
+using namespace mafEventBus;
 
 mafTreeModel::mafTreeModel(QObject *parent)
     : QStandardItemModel(parent) , m_Hierarchy(NULL), m_CurrentItem(NULL) {
@@ -96,18 +97,25 @@ mafTreeItem *mafTreeModel::createNewItem(mafTreeItem *parent, QObject *obj, bool
     mafTreeItem *item = new mafTreeItem(obj,done);
     parent->appendRow(item);
     m_ItemsList.push_back(item);
+
     return item;
 }
 
 void mafTreeModel::itemReparent(QObject *item, QObject *parent) {
     QModelIndex index = this->indexFromData(parent);
     this->insertNewItem(AsChild, item, index);
-
 }
 
 void mafTreeModel::selectItem(const QItemSelection &selected, const QItemSelection &deselected) {
     Q_UNUSED(deselected);
     m_CurrentItem = (mafTreeItem *)this->itemFromIndex(selected.indexes().at(0));
+
+    // Notify the item selection.
+    mafObjectBase *obj = qobject_cast<mafCore::mafObjectBase *>(m_CurrentItem->data());
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase*, obj));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+
 }
 
 
@@ -186,4 +194,5 @@ QModelIndex mafTreeModel::indexFromData(QObject *data) {
         return QModelIndex();
     }
 }
+
 
