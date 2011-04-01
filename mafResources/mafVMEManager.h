@@ -42,6 +42,10 @@ public:
     /// Destroy the singleton instance. To be called at the end of the application.
     void shutdown();
 
+    /// Return hierarchy indicizing the mafVME
+    mafCore::mafHierarchy *hierarchy() const;
+
+
 signals:
     /// Return the current selected vme.
     mafCore::mafObjectBase *selectedVMESignal() const;
@@ -108,6 +112,10 @@ private:
 
 inline mafCore::mafObjectBase *mafVMEManager::selectedVME() const {
     return (mafCore::mafObjectBase *)m_SelectedVME;
+}
+
+inline mafCore::mafHierarchy *mafVMEManager::hierarchy() const {
+    return m_VMEHierarchy;
 }
 
 } // namespace mafResources
