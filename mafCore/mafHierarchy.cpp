@@ -150,6 +150,15 @@ void mafHierarchy::clear() {
     m_TreeIterator.null();
 }
 
+void mafHierarchy::setIterator(mafTree<QObject *>::iterator iterator) {
+    m_TreeIterator = iterator;
+}
+
+mafTree<QObject *>::iterator mafHierarchy::iterator() {
+    return m_TreeIterator;
+
+}
+
 void mafHierarchy::printInformation(QString &string) {
     for (mafTree<QObject *>::prefix_iterator i = m_Tree->prefix_begin(); i != m_Tree->prefix_end(); ++i) {
         mafTreeNode<QObject *> *n = i.simplify().node();

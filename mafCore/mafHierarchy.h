@@ -74,6 +74,12 @@ public:
     /// Remove all the nodes and delete them.
     void clear();
 
+    /// set current iterator.
+    void setIterator(mafTree<QObject *>::iterator iterator);
+
+    /// Return current iterator.
+    mafTree<QObject *>::iterator iterator();
+
 signals:
     /// Signal emitted when a new item is attached to the hierarchy.
     void itemAttached(QObject *item, QObject *parent);
