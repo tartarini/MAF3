@@ -90,6 +90,11 @@ if(MAF_EVENT_BUS)
 endif(MAF_EVENT_BUS)
 
 if(MAF_PLUGINVTK)
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VXL)
+  include(CMakeExternals/External_VXL.cmake)
+endif(MAF_PLUGINVTK)
+
+if(MAF_PLUGINVTK)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VTK)
   include(CMakeExternals/External_VTK.cmake)
 endif(MAF_PLUGINVTK)
@@ -212,6 +217,8 @@ ExternalProject_Add(${proj}
     -Dqxmlrpc_DIR:PATH=${qxmlrpc_DIR} # Findqxmlrpc expects qxmlrpc_DIR variable to be defined
     # QtSOAP
     -DQtSOAP_DIR:PATH=${QtSOAP_DIR} # FindQtSOAP expects QtSOAP_DIR variable to be defined
+    # VXL
+    -DVXL_DIR:PATH=${QtSOAP_DIR} # FindVXL expects VXL_DIR variable to be defined
     # CTK
     #-DCTK_DIR:PATH=${CTK_DIR}
     # CTKAppLauncher
