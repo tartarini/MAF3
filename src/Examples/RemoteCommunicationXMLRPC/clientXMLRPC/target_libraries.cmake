@@ -5,8 +5,8 @@
 #
 
 SET(foundation_libraries 
-  ${QXMLRPC_LIBRARY} 
-  ${QTSOAP_LIBRARY}
+  qxmlrpc
+  QtSOAP
   ${VXL_LIBRARY}
 )
 

@@ -84,6 +84,9 @@ set(MAF_DEPENDENCIES)
 if(MAF_EVENT_BUS)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} qxmlrpc)
   include(CMakeExternals/External_qxmlrpc.cmake)
+  
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} QtSOAP)
+  include(CMakeExternals/External_QtSOAP.cmake)
 endif(MAF_EVENT_BUS)
 
 if(MAF_PLUGINVTK)
@@ -207,6 +210,8 @@ ExternalProject_Add(${proj}
     #-DVTK_DEBUG_LEAKS:BOOL=${MAF_USE_VTK_DEBUG_LEAKS}
     # qxmlrpc
     -Dqxmlrpc_DIR:PATH=${qxmlrpc_DIR} # Findqxmlrpc expects qxmlrpc_DIR variable to be defined
+    # QtSOAP
+    -DQtSOAP_DIR:PATH=${QtSOAP_DIR} # FindQtSOAP expects QtSOAP_DIR variable to be defined
     # CTK
     #-DCTK_DIR:PATH=${CTK_DIR}
     # CTKAppLauncher
