@@ -39,9 +39,9 @@ void mafOperationSimpleApp::execute() {
 }
 
 void mafOperationSimpleApp::on_textTest_textEdited(QString text) {
-    qDebug() << "Text inserted: " << text;
+    qDebug() << mafTr("Text inserted: ") << text;
 }
 
 void mafOperationSimpleApp::on_checkScalar_clicked(bool state) {
-    qDebug() << "Scalar State: " << state;
+    qDebug() << mafTr("Scalar state: ") << state;
 }

@@ -98,14 +98,17 @@ void mafLogic::plugObject(const QString base_class, const QString class_type, co
 
 void mafLogic::loadPlugins(QString plugin_dir) {
     // Compose the plugin absolute directory.
-    QString pluginDir = plugin_dir.isEmpty() ? (m_ApplicationDirectory + QDir::toNativeSeparators("/plugins")) : plugin_dir;
+    QString pluginDir = plugin_dir.isEmpty() ? (m_ApplicationDirectory + QDir::toNativeSeparators("/plugins/")) : plugin_dir;
     pluginDir = QDir::cleanPath(pluginDir);
-
+    
     // Check for plugins to load
-    QDir dir(pluginDir);
     QStringList filters;
     filters << PLUGIN_EXTENSION_FILTER;
-    QStringList plugin_list = dir.entryList(filters);
+    QDir dir(pluginDir);
+    dir.setNameFilters(filters);
+    dir.setFilter(QDir::Files);
+    QStringList plugin_list = dir.entryList();
+
     mafEventArgumentsList argList;
 
     // For each plugin file ask the plugin manager to load it through the event bus.

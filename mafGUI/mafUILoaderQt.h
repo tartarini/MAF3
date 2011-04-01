@@ -38,7 +38,7 @@ protected:
     /* virtual */ ~mafUILoaderQt();
 
 private:
-    mafUiLoader m_UILoaderQt;///< instance of the .ui file loader
+    QUiLoader m_UILoaderQt;///< instance of the .ui file loader
 };
 
 } //end namespace mafGUI

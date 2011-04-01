@@ -33,7 +33,9 @@ void mafTextEditWidget::initialize() {
 
     m_TextEditor = new QTextEdit(this);
     m_TextEditor->setFont(font);
-
+    
+    bool res = connect(this, SIGNAL(updateText(const QString)), m_TextEditor, SLOT(append(const QString)));
+    
     if(m_Highlighter) {
         m_Highlighter->setDocument(m_TextEditor->document());
     }
@@ -44,7 +46,6 @@ void mafTextEditWidget::initialize() {
 }
 
 mafTextEditWidget::~mafTextEditWidget() {
-
 }
 
 void mafTextEditWidget::clear() {
@@ -52,7 +53,7 @@ void mafTextEditWidget::clear() {
 }
 
 void mafTextEditWidget::append(const QString text) {
-    m_TextEditor->append(text);
+    emit updateText(text);
 }
 
 void mafTextEditWidget::setHighlighter(QSyntaxHighlighter *highlighter) {

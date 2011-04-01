@@ -21,18 +21,20 @@ namespace mafGUI {
     - add syntax highlighting
 */
 class MAFGUISHARED_EXPORT mafTextEditWidget : public QWidget {
+    Q_OBJECT
+    
 public:
     /// Object constructor.
     mafTextEditWidget(QWidget *parent = 0);
 
     /// Overloaded object constructor
-    mafTextEditWidget(mafSyntaxHighlighter *highlighter, QWidget *parent = 0);
+    mafTextEditWidget(QSyntaxHighlighter *highlighter, QWidget *parent = 0);
 
     /// Object destructor.
     virtual ~mafTextEditWidget();
 
     /// Set the highlighter to the text widget
-    void setHighlighter(mafSyntaxHighlighter *highlighter);
+    void setHighlighter(QSyntaxHighlighter *highlighter);
 
     /// enable/disable editing
     void enableEditing(bool enable);
@@ -45,13 +47,17 @@ public:
 
     /// append Text in the area.
     void append(const QString text);
+    
+signals:
+    /// Signal needed to update the text into the Text Widget.
+    void updateText(const QString text);
 
 private:
     /// set the layout of this composite widget
     void initialize();
 
     QTextEdit *m_TextEditor; ///< text editor widget in which browse or edit text.
-    mafSyntaxHighlighter *m_Highlighter; ///< syntax highlighter to apply on text editor.
+    QSyntaxHighlighter *m_Highlighter; ///< syntax highlighter to apply on text editor.
 
     // GUARDARE l'esempio qcompleter!!
 

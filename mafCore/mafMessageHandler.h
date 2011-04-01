@@ -43,7 +43,7 @@ public:
     void setActiveLogger(mafLogger *logger);
 
     /// Return the current active logging system.
-    mafLogger *activeLogger() {return m_ActiveLogger;}
+    mafLogger *activeLogger();
 
     // Allow to turn On/Off the TestSuite Debug logging modality which puts as prefix a fixed string defined in mafCoreDefinitions.h
     void testSuiteLogMode(bool on = true);
@@ -57,7 +57,8 @@ private:
 
     /// Object destructor.
     ~mafMessageHandler();
-
+    
+    mutable QReadWriteLock *m_Lock; ///< Lock variable for thread safe access to object.
     mafLogMode m_LastLogMode; ///< Store the last log mode active for the current logger.
     QStack<mafMsgHandlingFunction> m_OldMsgHandlerStack; ///< Stack of Message handler callback pointers.
     mafLogger *m_ActiveLogger; ///< Current active logging system to which will be forwarded all the incoming messages.
