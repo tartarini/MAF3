@@ -11,7 +11,6 @@
 
 MACRO(mafMacroFoundationLibraries)
 
-include(FindVXL)
 include(FindQScxml)
 
 include(mafCopySharedLibrariesInInstallDir)

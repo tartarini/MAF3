@@ -10,11 +10,12 @@
 #
 
 ## #################################################################
-## Find the qxmlrpc package.
+## Find the external package.
 ## #################################################################
 
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
+include(${MAF_SOURCE_DIR}/CMakeExternals/Find_vxl.cmake)
 
 ## #################################################################
 ## Init Project
