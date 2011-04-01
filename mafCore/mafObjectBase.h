@@ -56,9 +56,6 @@ public:
     /// Return the hash associated to the object.
     const QString objectHash() const;
 
-    /// Create the hash code given the string as argument. The hash is calculated using the SHA1 encryption algorithm.
-//    void createHashCode(QString &token);
-
     /// Return the filename associated to the object's UI.
     const QString uiFilename() const;
 
@@ -101,7 +98,7 @@ private:
     //QByteArray m_ObjectHash; ///< Hash value for the current object.
     QUuid m_ObjectHash; ///< Hash value for the current object.
 
-    int m_ReferenceCount;
+    int m_ReferenceCount; ///< Index containing the reference count.
 };
 
 
