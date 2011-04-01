@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>250</width>
-    <height>393</height>
+    <width>297</width>
+    <height>414</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -31,10 +31,13 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
-   <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
+  <layout class="QGridLayout" name="gridLayout_4">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item row="0" column="0">
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="0">
       <widget class="QGroupBox" name="boxOperation">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -46,15 +49,18 @@
         <string>Operation Name</string>
        </property>
        <property name="flat">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="checkable">
         <bool>false</bool>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayoutBox">
-          <item>
+       <layout class="QGridLayout" name="gridLayout">
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
            <widget class="QScrollArea" name="scrollArea">
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
@@ -65,13 +71,16 @@
             <property name="widgetResizable">
              <bool>true</bool>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
             <widget class="QWidget" name="scrollAreaWidgetContents">
              <property name="geometry">
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>182</width>
-               <height>271</height>
+               <width>277</width>
+               <height>339</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -83,17 +92,11 @@
              <property name="autoFillBackground">
               <bool>true</bool>
              </property>
-             <widget class="QWidget" name="verticalLayoutWidget">
-              <property name="geometry">
-               <rect>
-                <x>-1</x>
-                <y>-1</y>
-                <width>181</width>
-                <height>271</height>
-               </rect>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayoutOperation"/>
-             </widget>
+             <layout class="QVBoxLayout" name="verticalLayout">
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayoutOperation"/>
+              </item>
+             </layout>
             </widget>
            </widget>
           </item>
@@ -102,8 +105,11 @@
        </layout>
       </widget>
      </item>
-     <item>
+     <item row="1" column="0">
       <widget class="QDialogButtonBox" name="buttonOkCancel">
+       <property name="toolTip">
+        <string>Press Ok to start the operation, Cancel to close it.</string>
+       </property>
        <property name="standardButtons">
         <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
        </property>
