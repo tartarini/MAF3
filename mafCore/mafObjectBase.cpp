@@ -23,8 +23,6 @@ mafObjectBase::mafObjectBase(const QString code_location) : QObject(), m_UIFilen
     mafObjectRegistry::instance()->addObject(this, code_location);
 
     m_ObjectHash = QUuid::createUuid();
-//    QString id_str = id.toString();
-//    createHashCode(id_str);
 }
 
 mafObjectBase::~mafObjectBase() {
@@ -165,8 +163,3 @@ void mafObjectBase::deleteObject() {
         delete this;
     }
 }
-
-
-//void mafObjectBase::createHashCode(QString &token) {
-//    m_ObjectHash = QCryptographicHash::hash(token.toLatin1(), QCryptographicHash::Sha1);
-//}
