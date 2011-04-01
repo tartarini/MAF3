@@ -31,28 +31,31 @@ class mafTextDocument;
    - QuotationFormat
    - FunctionFormat
 */
-class MAFGUISHARED_EXPORT mafTextHighlighter : public mafSyntaxHighlighter {
+class MAFGUISHARED_EXPORT mafTextHighlighter : public QSyntaxHighlighter {
     Q_OBJECT
 public:
     /// Object constructor.
     mafTextHighlighter(QTextDocument *parent = 0);
+    
+    /// Object destructor.
+    ~mafTextHighlighter();
 
     /// Insert new rule
     void insertRule(const QString &name, mafHighlightingRule rule);
 
     /// Insert new rule from a pattern and a format
-    void insertRule(const QString &name, mafRegExp pattern, mafTextCharFormat format);
+    void insertRule(const QString &name, QRegExp pattern, QTextCharFormat format);
 
     /// Remove rule
     void removeRule(const QString &name);
 
     /// Insert new rule
-    void insertFormat(const QString &name, mafTextCharFormat format);
+    void insertFormat(const QString &name, QTextCharFormat format);
     /// Remove rule
     void removeFormat(const QString &name);
 
     /// retrieve format from name
-    const mafTextCharFormat &format(const QString &name);
+    const QTextCharFormat &format(const QString &name);
 
 protected:
     /// Set the text which will be highlighted
@@ -62,12 +65,14 @@ private:
     /// initialize several patterns
     void initialize();
 
+    mutable QReadWriteLock *m_Lock; ///< Lock variable for thread safe access to object.
+
     QMap<QString, mafHighlightingRule> m_HighlightingRules; ///< container with the entire list of rules
-    QMap<QString, mafTextCharFormat> m_Formats; ///< container with the entire list of rules
+    QMap<QString, QTextCharFormat> m_Formats; ///< container with the entire list of rules
 
     //sample for multiline comment
-    mafRegExp m_CommentStartExpression; ///< variable which set the pattern for starting a comment
-    mafRegExp m_CommentEndExpression; ///< variable which set the pattern for ending a comment
+    QRegExp m_CommentStartExpression; ///< variable which set the pattern for starting a comment
+    QRegExp m_CommentEndExpression; ///< variable which set the pattern for ending a comment
 };
 
 } // end namespace
