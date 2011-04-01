@@ -71,6 +71,9 @@ protected slots:
     /// Observe the viewCreatedSignal emitted by the mafViewManager.
     virtual void viewCreated(mafCore::mafObjectBase *view);
 
+    /// Observe the viewSlectedSignal emitted by the mafViewManager.
+    void viewSelected(mafCore::mafObjectBase *view);
+
     /// Slot called when dynamic loaded GUI is available.
     virtual void loadedGUIAvailable(int type, QWidget *w);
 
