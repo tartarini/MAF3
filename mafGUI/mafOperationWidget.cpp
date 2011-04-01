@@ -19,11 +19,6 @@ mafOperationWidget::mafOperationWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::mafOperationWidget), m_Operation(NULL), m_OperationGUI(NULL) {
     ui->setupUi(this);
-
-    this->setLayout(ui->verticalLayout);
-    ui->boxOperation->setLayout(ui->verticalLayoutBox);
-    ui->scrollAreaWidgetContents->setLayout(ui->verticalLayoutOperation);
-    ui->scrollAreaWidgetContents->setBackgroundRole(QPalette::NoRole);
 }
 
 mafOperationWidget::~mafOperationWidget() {
@@ -76,11 +71,11 @@ void mafOperationWidget::changeEvent(QEvent *e) {
 }
 
 void mafOperationWidget::execute() {
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
     emit operationDismissed();
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 }
 
 void mafOperationWidget::cancel() {
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.stop", mafEventTypeLocal);
     emit operationDismissed();
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.stop", mafEventTypeLocal);
 }
