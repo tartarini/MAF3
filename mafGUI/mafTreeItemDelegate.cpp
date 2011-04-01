@@ -24,6 +24,7 @@
 
 using namespace mafCore;
 using namespace mafGUI;
+using namespace mafEventBus;
 
 mafTreeItemDelegate::mafTreeItemDelegate(QObject *parent) : QStyledItemDelegate(parent), m_isSceneNode(false ){
 }
@@ -114,13 +115,20 @@ bool mafTreeItemDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, 
     bool result = QStyledItemDelegate::editorEvent(event, model, option, index);
     QObject *sceneNode = objFromIndex(index);
     //If item is a SceneNode, set visibility property to item checked
-    if (sceneNode->metaObject()->className() == "mafResources::mafSceneNode") {
+    QString objName = "mafResources::mafSceneNode";
+    if (objName.compare(sceneNode->metaObject()->className())  == 0) {
         m_isSceneNode = true;
         QVariant value = index.data(Qt::CheckStateRole);
         if (!value.isValid())
             return result;
         bool state = (static_cast<Qt::CheckState>(value.toInt())) ? true : false;
         sceneNode->setProperty("visibility", state);
+
+        mafEventArgumentsList argList;
+        argList.append(mafEventArgument(mafCore::mafObjectBase*, (mafObjectBase*)sceneNode));
+        argList.append(mafEventArgument(bool, state));
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);
+
     } else {
         m_isSceneNode = false;
     }
