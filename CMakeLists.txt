@@ -19,7 +19,7 @@ STRING(REPLACE "\\" "/" MafFoundationLibDir ${MafFoundationDir})
 ### MAF3 Options
 #############################################################################################
 
-OPTION(BUILD_TEST_SUITE "Build Module's Tests" ON)
+OPTION(BUILD_TEST_SUITE "Build Module's Tests" OFF)
 OPTION(BUILD_EXAMPLES "Build Examples" ON)
 OPTION(MAF_USE_GIT_PROTOCOL "If ON use git protocol, otherwise http" OFF)
 OPTION(MAF_SUPERBUILD "Build MAF and the projects it depends on via SuperBuild.cmake." ON)
@@ -52,6 +52,7 @@ endif(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "Min
 
 SET(MAF_CORE ON)
 SET(MAF_EVENT_BUS ON)
+SET(MAF_QA ON)
 OPTION(MAF_TIME_SPACE "Build mafTimeSpace module. mafCore and mafEventBus will be built anyway." ON)
 OPTION(MAF_SERIALIZATION "Build mafSerialization module. mafCore and mafEventBus will be built anyway." ON)
 OPTION(MAF_RESOURCES "Build mafResources module. mafCore and mafEventBus will be built anyway." ON)
@@ -60,12 +61,60 @@ OPTION(MAF_APPLICATION_LOGIC "Build mafApplicationLogic module.mafCore and mafEv
 OPTION(MAF_QTGUI "Build mafGUI module. mafCore and mafEventBus will be built anyway." ON)
 
 
-### set here dependencies between modules
+### set modules interdependencies
 include(CMake/mafUtilities.cmake)
 if(MAF_PLUGINVTK)
   SET( MAF_RESOURCES ON ) 
   mafDependentOption(MAF_RESOURCES "Build mafResources module." ON MAF_PLUGINVTK ON)
 endif(MAF_PLUGINVTK)
+
+### tests
+IF(BUILD_TEST_SUITE)
+    OPTION(MAF_CORE_TEST "Test Suite for mafCore" ${MAF_CORE})
+    OPTION(MAF_EVENTBUS_TEST "Test Suite for mafEventBus" ${MAF_EVENT_BUS})
+    OPTION(MAF_TIME_SPACE_TEST "Test Suite for for mafTimeSpace" ${MAF_TIME_SPACE})
+    OPTION(MAF_SERIALIZATION_TEST "Test Suite for mafSerialization" ${MAF_SERIALIZATION})
+    OPTION(MAF_RESOURCES_TEST "Test Suite for mafResources" ${MAF_RESOURCES})
+    OPTION(MAF_PLUGINVTK_TEST "Test Suite for mafPluginVTK" ${MAF_PLUGINVTK})
+    OPTION(MAF_APPLICATION_LOGIC_TEST "Test Suite for mafApplicationLogic" ${MAF_APPLICATION_LOGIC})
+    OPTION(MAF_QTGUI_TEST "Test Suite for mafGUI" ${MAF_QTGUI})
+    
+#set test module interdependencies
+    if(MAF_TIME_SPACE_TEST)
+      SET( MAF_TIME_SPACE ON ) 
+      mafDependentOption(MAF_TIME_SPACE "Build Test module for mafTimeSpace." ON MAF_TIME_SPACE_TEST ON)
+    endif(MAF_TIME_SPACE_TEST)
+    
+    if(MAF_SERIALIZATION_TEST)
+      SET( MAF_SERIALIZATION ON ) 
+      mafDependentOption(MAF_SERIALIZATION "Build Test module for mafSerialization." ON MAF_SERIALIZATION_TEST ON)
+    endif(MAF_SERIALIZATION_TEST)
+    
+    if(MAF_RESOURCES_TEST)
+      SET( MAF_RESOURCES ON ) 
+      mafDependentOption(MAF_RESOURCES "Build Test module for mafResources." ON MAF_RESOURCES_TEST ON)
+    endif(MAF_RESOURCES_TEST)
+    
+    if(MAF_PLUGINVTK_TEST)
+      SET( MAF_PLUGINVTK ON ) 
+      mafDependentOption(MAF_PLUGINVTK "Build Test module for mafPluginVTK." ON MAF_PLUGINVTK_TEST ON)
+      SET( MAF_RESOURCES ON ) 
+      mafDependentOption(MAF_RESOURCES "Build mafResources module." ON MAF_PLUGINVTK ON)
+    endif(MAF_PLUGINVTK_TEST)
+    
+    if(MAF_APPLICATION_LOGIC_TEST)
+      SET( MAF_APPLICATION_LOGIC ON ) 
+      mafDependentOption(MAF_APPLICATION_LOGIC "Build Test module for mafApplicationLogic." ON MAF_APPLICATION_LOGIC_TEST ON)
+    endif(MAF_APPLICATION_LOGIC_TEST)
+    
+    if(MAF_QTGUI_TEST)
+      SET( MAF_QTGUI ON ) 
+      mafDependentOption(MAF_QTGUI "Build Test module for mafGUI." ON MAF_QTGUI_TEST ON)
+    endif(MAF_QTGUI_TEST)
+        
+ENDIF(BUILD_TEST_SUITE)
+
+
 
 
 #############################################################################################
@@ -91,6 +140,6 @@ ADD_SUBDIRECTORY(src)
 ### TESTS
 #############################################################################################
 
-#ADD_SUBDIRECTORY(test)
-
-
+IF(BUILD_TEST_SUITE)
+  ADD_SUBDIRECTORY(test)
+ENDIF(BUILD_TEST_SUITE)
