@@ -11,7 +11,6 @@
 
 #include "mafOpParametricSurface.h"
 #include <mafContainer.h>
-#include <mafContainerInterface.h>
 #include <vtkAlgorithmOutput.h>
 
 using namespace mafPluginVTK;
@@ -40,7 +39,6 @@ mafOpParametricSurface::~mafOpParametricSurface() {
     mafDEL(m_DataSet);
     mafDEL(m_VME);
 
-    //removed temporarly
     mafDEL(m_ParametricSphere);
     mafDEL(m_ParametricCube);
     mafDEL(m_ParametricCone);
