@@ -10,7 +10,7 @@
 #
 
 ## #################################################################
-## Find the qxmlrpc package.
+## Find the external packages.
 ## #################################################################
 
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
