@@ -30,6 +30,11 @@ namespace mafSerialization {
  It provides also the creation of 3 new IDs:
  - maf.local.serialization.load
  - maf.local.serialization.save
+ - maf.local.serialization.export
+ - maf.local.serialization.import
+ - maf.local.serialization.saveExternalData
+ - maf.local.serialization.loadExternalData
+ - maf.local.serialization.extDataImported
  - maf.local.serialization.mementoLoaded
  related to 'load' and 'save' slots and 'mementoLoaded' signal.
  */
