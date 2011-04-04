@@ -32,7 +32,7 @@ SET(VXL_DEPENDS)
     # library output directory to CTK_EXTERNAL_LIBRARY_DIRS
 
   ELSE()
-    ctkMacroEmptyExternalProject(${proj} "${proj_DEPENDENCIES}")
+    mafMacroEmptyExternalProject(${proj} "${proj_DEPENDENCIES}")
   ENDIF()
 
   SET(${VXL_enabling_variable}_LIBRARY_DIRS VXL_LIBRARY_DIRS)

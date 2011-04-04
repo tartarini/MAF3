@@ -74,13 +74,13 @@ CMAKE_ARGS
         ${proj_DEPENDENCIES}
 
     )
-  set(VTK_DIR ${CMAKE_BINARY_DIR}/${proj}-build)
+  set(VTK_DIR "${MAF_EXTERNAL_BUILD_DIR}/Build/VTK")
   set(VTK_SOURCE_DIR ${CMAKE_BINARY_DIR}/${proj})
 
 else()
   # The project is provided using VTK_DIR and VTK_SOURCE_DIR, nevertheless since other 
   # project may depend on VTK, let's add an 'empty' one
-  MAFMacroEmptyExternalProject(${proj} "${VTK_DEPENDENCIES}")
+  mafMacroEmptyExternalProject(${proj} "${VTK_DEPENDENCIES}")
 endif()
 
   SET(${VTK_enabling_variable}_INCLUDE_DIRS VTK_INCLUDE_DIRS)

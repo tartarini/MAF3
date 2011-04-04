@@ -34,7 +34,7 @@ set(proj VTK)
     # library output directory to CTK_EXTERNAL_LIBRARY_DIRS
   
   ELSE()
-    MAFMacroEmptyExternalProject(${proj} "${proj_DEPENDENCIES}")
+    mafMacroEmptyExternalProject(${proj} "${proj_DEPENDENCIES}")
   ENDIF()
   
   SET(${qxmlrpc_enabling_variable}_INCLUDE_DIRS qxmlrpc_INCLUDE_DIRS)
