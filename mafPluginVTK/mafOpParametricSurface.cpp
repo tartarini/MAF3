@@ -1,6 +1,6 @@
 /*
  *  mafOpParametricSurface.cpp
- *  SimpleApp
+ *  mafPluginVTK
  *
  *  Created by Roberto Mucci on 10/02/11.
  *  Copyright 2011 B3C. All rights reserved.
