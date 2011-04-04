@@ -50,18 +50,13 @@ include("${CMAKE_CURRENT_BINARY_DIR}/../../MAFConfig.cmake")
 # Add cmake module path.
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${MAF_ROOT_DIR}/CMake")
 
+include(${CMAKE_MODULE_PATH}/mafCopySharedLibrariesInInstallDir.cmake)
 include(${CMAKE_MODULE_PATH}/mafMacroInitProject.cmake)
 include(${CMAKE_MODULE_PATH}/mafMacroInstallProject.cmake)
 include(${CMAKE_MODULE_PATH}/mafMacroSetupQt.cmake)
 include(${CMAKE_MODULE_PATH}/mafMacroWrapTargetFiles.cmake)
 include(${CMAKE_MODULE_PATH}/mafMacroTargetLibraries.cmake)
 include(${CMAKE_MODULE_PATH}/mafCopyFilesFromExtension.cmake)
-
-#-----------------------------------------------------------------------------
-# MAF3 Foundation Libraries.
-#
-include(${CMAKE_MODULE_PATH}/mafMacroFoundationLibraries.cmake)
-mafMacroFoundationLibraries()
 
 #-----------------------------------------------------------------------------
 # QT
