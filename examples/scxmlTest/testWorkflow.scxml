@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!-- A wrapper state that contains all other states in this file
+- it represents the complete state machine --> <scxml xmlns="http://www.w3.org/2005/07/scxml"
+       version="1.0"
+       initial="Main">
+  <state id="Main">
+    <!-- its initial state is SibaState -->
+    <initial>
+      <transition target="SibaState"/>
+    </initial>
+    
+    <!-- SibaState -->
+    <state id="SibaState">
+      <invoke type="q-bindings">
+        <content>
+          [[stateMachineLogic,"currentstate", "SibaState"],
+           [model,"ip", "127.0.0.1"],
+           [model, "port", "8300"],
+           [model, "protocol", "QXMLRPC"],
+           [model, "parameters", ["input.aim", "output.aim", 0.42, 8, 50]]]
+   	    </content>
+   	  </invoke>
+   	  
+      <!-- entered in SibaState -->
+      <onentry>
+        <script>stateMachineLogic.useModel();</script>
+      </onentry>
+
+      <onexit>
+        <transition target="AnsysState"/>
+      </onexit>
+    </state>
+
+    <!-- AnsysState -->
+    <state id="AnsysState">
+      <!-- Parameters can be set also outside the onentry or onexit, scripts nust be inside those entries to be executed. -->
+      <invoke type="q-bindings">
+        <content>
+          [[stateMachineLogic,"currentstate", "AnsysState"],
+           [model,"ip", "127.0.0.1"],
+           [model, "port", "8500"],
+           [model, "protocol", "QXMLRPC"]]
+   	    </content>
+   	  </invoke>
+   	  
+      <!-- entered in AnsysState -->
+      <onentry>
+        <script>stateMachineLogic.useModel();</script>
+      </onentry>
+      
+      <onexit>
+        <transition target="ParallelExecutionState"/>
+      </onexit>
+    </state>
+
+      <!-- Fire off our parallel states -->
+    <parallel id="ParallelExecutionState">
+      <state id="Ansys1">
+        <onentry/>
+          <invoke type="q-bindings">
+            <content>[[stateMachineLogic,"currentstate", "Ansys1"]]</content>
+   	      </invoke>
+      </state>
+      
+      <state id="Ansys2">
+        <onentry/>
+          <invoke type="q-bindings">
+            <content>[[stateMachineLogic,"currentstate", "Ansys2"]]</content>
+   	      </invoke>
+      </state>
+      
+      <onexit>
+        <transition target="ReportState"/>
+      </onexit>
+    </parallel>
+
+    <!-- ReportState -->
+    <state id="ReportState">
+      <!-- entered in ReportState -->
+      <onentry>
+      </onentry>
+      
+      <invoke type="q-bindings">
+        <content>
+          [[stateMachineLogic,"currentstate", "ReportState"]]
+   	    </content>
+      </invoke>
+
+      <onexit>
+        <transition target="final"/>
+      </onexit>
+    </state>
+    
+  </state>
+  <final id="final"/>
+</scxml>
