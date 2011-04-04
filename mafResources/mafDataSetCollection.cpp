@@ -24,10 +24,10 @@ mafDataSetCollection::mafDataSetCollection(const QString code_location) : mafObj
 mafDataSetCollection::~mafDataSetCollection() {
     mafDataSetMap::iterator iter = m_CollectionMap->begin();
     while(iter != m_CollectionMap->end()) {
-        disconnect(iter.value(), SIGNAL(destroyed()),this, SLOT(itemDestroyed()));
         mafDEL(iter.value());
         ++iter;
     }
+
     m_CollectionMap->clear();
     delete m_CollectionMap;
     m_CollectionMap = NULL;
@@ -226,7 +226,6 @@ bool mafDataSetCollection::insertItem(mafDataSet *item, double t) {
     if(result) {
         m_CollectionMap->insert(ts, item);
         emit(modifiedObject());
-        connect(item, SIGNAL(destroyed()), this, SLOT(itemDestroyed()));
     }
 
     return result;
@@ -301,24 +300,9 @@ mafDataSet *mafDataSetCollection::itemAtCurrentTime() {
 bool mafDataSetCollection::removeItem(mafDataSet *item, bool keep_alive) {
     REQUIRE(item != NULL);
 
-    // Alternative code if that one below is slow.
-//    QList<mafDataSet *> items_list = m_CollectionMap->values();
-//    int index = items_list.indexOf(item);
-//    if(index != -1) {
-//        disconnect(item, SIGNAL(destroyed()),this, SLOT(itemDestroyed()));
-//        mafDataSetMap::iterator iter = m_CollectionMap->begin();
-//        iter += index;
-//        m_CollectionMap->erase(iter);
-//        if(!keep_alive) {
-//            mafDEL(item);
-//        }
-//        return true;
-//    }
-
     // Method below can be slow for big map. QMap is optimized for finding value starting from key and not viceversa.
     double timestamp = m_CollectionMap->key(item, -1.0);
     if(timestamp != -1) {
-        disconnect(item, SIGNAL(destroyed()),this, SLOT(itemDestroyed()));
         int removed_items = m_CollectionMap->remove(timestamp);
         emit(modifiedObject());
         if(!keep_alive) {

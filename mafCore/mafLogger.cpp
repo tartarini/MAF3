@@ -31,10 +31,6 @@ void mafLogger::logMessage(const QtMsgType type, QString &msg) {
             type == QtFatalMsg ||
             type == QtWarningMsg);
 
-    if(type == QtCriticalMsg && m_LogMode != mafLogModeTestSuite) {
-        QString failString(mafTr("FAIL! "));
-        msg.prepend(failString);
-    }
     loggedMessage(type, msg);
 }
 

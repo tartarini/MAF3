@@ -10,7 +10,7 @@
  */
 
 #include "mafSceneNode.h"
-#include "mafVisualPipe.h"
+#include "mafPipeVisual.h"
 #include "mafVME.h"
 
 using namespace mafCore;
@@ -20,7 +20,7 @@ using namespace mafEventBus;
 mafSceneNode::mafSceneNode(const QString code_location) : mafObject(code_location), m_VisualPipe(NULL) {
 }
 
-mafSceneNode::mafSceneNode(mafVME *vme, mafVisualPipe *visual_pipe, const QString code_location) : mafObject(code_location), m_VME(vme), m_VisualPipe(visual_pipe), m_Visibility(false), m_CanVisualize(false) {
+mafSceneNode::mafSceneNode(mafVME *vme, mafPipeVisual *visual_pipe, const QString code_location) : mafObject(code_location), m_VME(vme), m_VisualPipe(visual_pipe), m_Visibility(false), m_CanVisualize(false) {
     connect(vme, SIGNAL(destroyed()), this, SIGNAL(destroyNode()));
     connect(vme, SIGNAL(detatched()), this, SIGNAL(destroyNode()));
 }
@@ -52,7 +52,7 @@ void mafSceneNode::setVisualPipe(QString visualPipeType) {
     }
 
     mafDEL(this->m_VisualPipe);
-    this->m_VisualPipe = (mafVisualPipe *)mafNEWFromString(visualPipeType);
+    this->m_VisualPipe = (mafPipeVisual *)mafNEWFromString(visualPipeType);
     connect(m_VisualPipe, SIGNAL(destroyed()), this, SLOT(visualPipeDestroyed()));
 }
 

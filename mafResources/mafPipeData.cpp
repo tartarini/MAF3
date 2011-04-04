@@ -1,5 +1,5 @@
 /*
- *  mafDataPipe.cpp
+ *  mafPipeData.cpp
  *  mafResources
  *
  *  Created by Roberto Mucci - Paolo Quadrani on 30/12/09.
@@ -9,23 +9,23 @@
  *
  */
 
-#include "mafDataPipe.h"
+#include "mafPipeData.h"
 #include "mafDataSet.h"
 #include "mafVME.h"
 
 using namespace mafResources;
 
-mafDataPipe::mafDataPipe(const QString code_location) : mafPipe(code_location), m_DecoratorPipe(NULL), m_Output(NULL), m_InPlace(true) {
+mafPipeData::mafPipeData(const QString code_location) : mafPipe(code_location), m_DecoratorPipe(NULL), m_Output(NULL), m_InPlace(true) {
 }
 
-mafDataPipe::~mafDataPipe() {
+mafPipeData::~mafPipeData() {
     if (!m_InPlace) {
         mafDEL(m_Output);
     }
     mafDEL(m_DecoratorPipe);
 }
 
-int mafDataPipe::addInput(mafVME *vme) {
+int mafPipeData::addInput(mafVME *vme) {
     REQUIRE(vme != NULL);
     if(this->inputList()->contains(vme)) {
         qWarning("%s", mafTr("Object %1 already present in input list").arg(vme->objectName()).toAscii().data());
@@ -41,19 +41,19 @@ int mafDataPipe::addInput(mafVME *vme) {
 }
 
 
-void mafDataPipe::inputDestroyed() {
+void mafPipeData::inputDestroyed() {
     mafVME *vme = (mafVME *)QObject::sender();
     removeInput(vme);
     setModified();
 }
 
-void mafDataPipe::updatePipe(double t) {
+void mafPipeData::updatePipe(double t) {
     Q_UNUSED(t);
     //here update local output
     m_Output = inputList()->at(0);
 }
 
-mafVME *mafDataPipe::output(double t) {
+mafVME *mafPipeData::output(double t) {
     REQUIRE(inputList()->count() > 0);
 
     if(m_DecoratorPipe) {

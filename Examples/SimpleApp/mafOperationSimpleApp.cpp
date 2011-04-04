@@ -35,12 +35,13 @@ void mafOperationSimpleApp::setCheckScalar(bool s) {
 
 void mafOperationSimpleApp::execute() {
     qDebug() << mafTr("Executing demo operation...");
+    emit executionEnded();
 }
 
 void mafOperationSimpleApp::on_textTest_textEdited(QString text) {
-    qDebug() << "Text inserted: " << text;
+    qDebug() << mafTr("Text inserted: ") << text;
 }
 
 void mafOperationSimpleApp::on_checkScalar_clicked(bool state) {
-    qDebug() << "Scalar State: " << state;
+    qDebug() << mafTr("Scalar state: ") << state;
 }

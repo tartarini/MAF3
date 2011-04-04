@@ -1,5 +1,5 @@
 /*
- *  mafVisualPipeVTKSurface.cpp
+ *  mafPipeVisualVTKSurface.cpp
  *  mafPluginVTK
  *
  *  Created by Roberto Mucci - Paolo Quadrani on 30/12/09.
@@ -9,7 +9,7 @@
  *
  */
 
-#include "mafVisualPipeVTKSurface.h"
+#include "mafPipeVisualVTKSurface.h"
 #include <mafDataSet.h>
 #include <mafDataSetCollection.h>
 #include <vtkPolyDataMapper.h>
@@ -22,14 +22,14 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace std;
 
-mafVisualPipeVTKSurface::mafVisualPipeVTKSurface(const QString code_location) : mafVisualPipe(code_location), m_Mapper(NULL), m_ScalarVisibility(0), m_ImmediateRendering(0) {
+mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : mafPipeVisual(code_location), m_Mapper(NULL), m_ScalarVisibility(0), m_ImmediateRendering(0) {
 }
 
-mafVisualPipeVTKSurface::~mafVisualPipeVTKSurface() {
+mafPipeVisualVTKSurface::~mafPipeVisualVTKSurface() {
     m_Mapper->Delete();
 }
 
-bool mafVisualPipeVTKSurface::acceptObject(mafCore::mafObjectBase *obj) {
+bool mafPipeVisualVTKSurface::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
         mafCore::mafContainerInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
@@ -43,7 +43,7 @@ bool mafVisualPipeVTKSurface::acceptObject(mafCore::mafObjectBase *obj) {
     return false;
 }
 
-void mafVisualPipeVTKSurface::createPipe() {
+void mafPipeVisualVTKSurface::createPipe() {
     m_Mapper = vtkPolyDataMapper::New();
     m_Actor = vtkActor::New();
     m_Actor.setDestructionFunction(&vtkActor::Delete);
@@ -51,7 +51,7 @@ void mafVisualPipeVTKSurface::createPipe() {
     m_Output = &m_Actor;
 }
 
-void mafVisualPipeVTKSurface::updatePipe(double t) {
+void mafPipeVisualVTKSurface::updatePipe(double t) {
     Q_UNUSED(t);
 
     mafVME *inputVME = this->inputList()->at(0);
@@ -65,13 +65,13 @@ void mafVisualPipeVTKSurface::updatePipe(double t) {
     m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
 }
 
-void mafVisualPipeVTKSurface::setScalarVisibility(bool scalarVisibility) {
+void mafPipeVisualVTKSurface::setScalarVisibility(bool scalarVisibility) {
     if(m_ScalarVisibility != scalarVisibility) {
         m_ScalarVisibility = scalarVisibility;
     }
 }
 
-void mafVisualPipeVTKSurface::setImmediateRendering (bool immediateRendering) {
+void mafPipeVisualVTKSurface::setImmediateRendering (bool immediateRendering) {
     if(m_ImmediateRendering != immediateRendering) {
         m_ImmediateRendering = immediateRendering;
     }

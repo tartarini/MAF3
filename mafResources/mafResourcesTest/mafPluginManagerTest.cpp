@@ -14,22 +14,10 @@
 #include <mafResourcesRegistration.h>
 #include <mafEventBusManager.h>
 #include <mafPluginManager.h>
-#include <mafDataPipe.h>
+#include <mafPipeData.h>
 #include <mafPlugin.h>
 
-#ifdef WIN32
-    #ifdef QT_DEBUG
-        #define TEST_LIBRARY_NAME "mafPluginTest_d.mafplugin"
-    #else
-        #define TEST_LIBRARY_NAME "mafPluginTest.mafplugin"
-    #endif
-#else
-     #ifdef QT_DEBUG
-        #define TEST_LIBRARY_NAME "libmafPluginTest_debug.mafplugin"
-     #else
-        #define TEST_LIBRARY_NAME "libmafPluginTest.mafplugin"
-    #endif
-#endif
+#define TEST_LIBRARY_NAME "mafPluginTest.mafplugin"
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -49,14 +37,14 @@ public:
     /*virtual*/ ~testPluginObserver();
 
     /// Return the plugged pipe.
-    mafDataPipe *pluggedPipe();
+    mafPipeData *pluggedPipe();
 
 public slots:
     /// Slots that will receive the REGISTER_PLUGIN event.
     void pluggedObject(mafCore::mafPluggedObjectsHash pluginHash);
 
 private:
-    mafDataPipe *m_PluggedPipe; ///< Test var.
+    mafPipeData *m_PluggedPipe; ///< Test var.
 };
 
 testPluginObserver::testPluginObserver(const QString code_location) : mafObjectBase(code_location), m_PluggedPipe(NULL) {
@@ -74,8 +62,8 @@ void testPluginObserver::pluggedObject(mafCore::mafPluggedObjectsHash pluginHash
     while(iter != pluginHash.end()) {
         objInfo = iter.value();
         base_class = iter.key();
-        if(base_class == "mafResources::mafDataPipe" && m_PluggedPipe == NULL) {
-            m_PluggedPipe = (mafDataPipe *)mafNEWFromString(objInfo.m_ClassType);
+        if(base_class == "mafResources::mafPipeData" && m_PluggedPipe == NULL) {
+            m_PluggedPipe = (mafPipeData *)mafNEWFromString(objInfo.m_ClassType);
             m_PluggedPipe->setObjectName(objInfo.m_Label);
             break;
         }
@@ -83,7 +71,7 @@ void testPluginObserver::pluggedObject(mafCore::mafPluggedObjectsHash pluginHash
     }
 }
 
-mafDataPipe *testPluginObserver::pluggedPipe() {
+mafPipeData *testPluginObserver::pluggedPipe() {
     return m_PluggedPipe;
 }
 
@@ -167,11 +155,11 @@ void mafPluginManagerTest::mafPluginManagerLoadPluginTest() {
     qDebug() << "Vendor: " << info.m_Vendor;
     qDebug() << "Description: " << info.m_Description;
 
-    mafDataPipe *dp = m_Observer->pluggedPipe();
+    mafPipeData *dp = m_Observer->pluggedPipe();
     QVERIFY(dp != NULL);
 
     argList.clear();
-    QString baseClassType("mafResources::mafDataPipe");
+    QString baseClassType("mafResources::mafPipeData");
     argList.append(mafEventArgument(QString, baseClassType));
     mafPluggedObjectInformationList *pluggedObjectList = NULL;
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafPluggedObjectInformationList *, pluggedObjectList);
@@ -186,14 +174,14 @@ void mafPluginManagerTest::mafPluginManagerLoadPluginTest() {
     pluggedObjectList = NULL;
 
     mafPluggedObjectInformationList baseClassList;
-    QString pluggedClassType("mafPluginTest::mafDataPipeSurfacePluginTest");
+    QString pluggedClassType("mafPluginTest::mafPipeDataSurfacePluginTest");
     m_PluginManager->queryBaseClassType(pluggedClassType, &baseClassList);
 
     size = baseClassList.count();
     QVERIFY(size == 1);
 
     mafPluggedObjectInformation objInfo = baseClassList.first();
-    QString res("mafResources::mafDataPipe");
+    QString res("mafResources::mafPipeData");
     QCOMPARE(res, objInfo.m_ClassType);
 }
 

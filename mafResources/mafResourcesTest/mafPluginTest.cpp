@@ -16,19 +16,7 @@
 #include <mafEventBusManager.h>
 #include <mafPlugin.h>
 
-#ifdef WIN32
-    #ifdef QT_DEBUG
-        #define TEST_LIBRARY_NAME "mafPluginTest_d.mafplugin"
-    #else
-        #define TEST_LIBRARY_NAME "mafPluginTest.mafplugin"
-    #endif
-#else
-     #ifdef QT_DEBUG
-        #define TEST_LIBRARY_NAME "mafPluginTest_debug.mafplugin"
-     #else
-        #define TEST_LIBRARY_NAME "mafPluginTest.mafplugin"
-    #endif
-#endif
+#define TEST_LIBRARY_NAME "mafPluginTest.mafplugin"
 
 using namespace mafCore;
 using namespace mafEventBus;

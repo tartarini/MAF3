@@ -13,13 +13,18 @@
 
 using namespace mafGUI;
 
-mafTextHighlighter::mafTextHighlighter(QTextDocument *parent):mafSyntaxHighlighter(parent) {
+mafTextHighlighter::mafTextHighlighter(QTextDocument *parent):QSyntaxHighlighter(parent) {
+    m_Lock = new QReadWriteLock(QReadWriteLock::Recursive);
     initialize();
+}
+
+mafTextHighlighter::~mafTextHighlighter() {
+    delete m_Lock;
 }
 
 void mafTextHighlighter::initialize() {
     //initialize several Formats
-    mafTextCharFormat format;
+    QTextCharFormat format;
     format.setForeground(Qt::darkGreen);
     format.setFontWeight(QFont::Bold);
     m_Formats.insert("keywords", format);
@@ -56,7 +61,7 @@ void mafTextHighlighter::initialize() {
                     << "\\bvoid\\b" << "\\bvolatile\\b";
     int count = 0;
     foreach (const QString &pattern, keywordPatterns) {
-        rule.m_Pattern = mafRegExp(pattern);
+        rule.m_Pattern = QRegExp(pattern);
         rule.m_Format = m_Formats["keywords"];
         m_HighlightingRules.insert(QString::number(count++),rule);
     }
@@ -71,21 +76,23 @@ void mafTextHighlighter::initialize() {
     rule.m_Format = m_SingleLineCommentFormat;
     m_HighlightingRules.insert("silgeComment", rule);
 
-    rule.m_Pattern = mafRegExp("\".*\"");
+    rule.m_Pattern = QRegExp("\".*\"");
     rule.m_Format = m_QuotationFormat;
     m_HighlightingRules.insert("quotation",rule);
 
-    rule.m_Pattern = mafRegExp("\\b[A-Za-z0-9_]+(?=\\()");
+    rule.m_Pattern = QRegExp("\\b[A-Za-z0-9_]+(?=\\()");
     rule.m_Format = m_FunctionFormat;
     m_HighlightingRules.insert("function",rule);*/
 
-    m_CommentStartExpression = mafRegExp("/\\*");
-    m_CommentEndExpression = mafRegExp("\\*/");
+    m_CommentStartExpression = QRegExp("/\\*");
+    m_CommentEndExpression = QRegExp("\\*/");
 }
 
 void mafTextHighlighter::highlightBlock(const QString &text) {
+    m_Lock->lockForWrite();
+    
     foreach (const mafHighlightingRule &rule, m_HighlightingRules) {
-        mafRegExp expression(rule.m_Pattern);
+        QRegExp expression(rule.m_Pattern);
         int index = expression.indexIn(text);
         while (index >= 0) {
             int length = expression.matchedLength();
@@ -115,31 +122,39 @@ void mafTextHighlighter::highlightBlock(const QString &text) {
         setFormat(startIndex, commentLength, m_Formats["multiLineComment"]);
         startIndex = m_CommentStartExpression.indexIn(text, startIndex + commentLength);
     }
+    m_Lock->unlock();
 }
 
 void mafTextHighlighter::insertRule(const QString &name, mafHighlightingRule rule) {
+    QWriteLocker locker(m_Lock);
     m_HighlightingRules.insert(name, rule);
 }
 
-void mafTextHighlighter::insertRule(const QString &name, mafRegExp pattern, mafTextCharFormat format) {
+void mafTextHighlighter::insertRule(const QString &name, QRegExp pattern, QTextCharFormat format) {
+    m_Lock->lockForWrite();
     mafHighlightingRule rule;
     rule.m_Pattern = pattern;
     rule.m_Format = format;
+    m_Lock->unlock();
     insertRule(name, rule);
 }
 
 void mafTextHighlighter::removeRule(const QString& name) {
+    QWriteLocker locker(m_Lock);
     m_HighlightingRules.remove(name);
 }
 
-void mafTextHighlighter::insertFormat(const QString &name, mafTextCharFormat format) {
+void mafTextHighlighter::insertFormat(const QString &name, QTextCharFormat format) {
+    QWriteLocker locker(m_Lock);
     m_Formats.insert(name, format);
 }
 
 void mafTextHighlighter::removeFormat(const QString& name) {
+    QWriteLocker locker(m_Lock);
     m_Formats.remove(name);
 }
 
-const mafTextCharFormat &mafTextHighlighter::format(const QString &name) {
+const QTextCharFormat &mafTextHighlighter::format(const QString &name) {
+    QReadLocker locker(m_Lock);
     return m_Formats[name.toAscii()];
 }

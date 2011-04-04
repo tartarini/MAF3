@@ -1,5 +1,5 @@
 /*
- *  mafVisualPipeVTKSurfaceTest.cpp
+ *  mafPipeVisualVTKSurfaceTest.cpp
  *  mafPluginVTK
  *
  *  Created by Roberto Mucci on 01/03/10.
@@ -12,9 +12,9 @@
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafEventBusManager.h>
-#include <mafVisualPipeVTKSurface.h>
+#include <mafPipeVisualVTKSurface.h>
 #include <mafResourcesRegistration.h>
-#include <mafVisualPipe.h>
+#include <mafPipeVisual.h>
 #include <mafContainer.h>
 #include <mafPluginManager.h>
 #include <mafPlugin.h>
@@ -62,19 +62,19 @@ using namespace mafPluginVTK;
 
 
 /**
- Class name: mafVisualPipeVTKSurfaceTest
- This class creates a vtkSphereSource and visualizes it trough the mafVisualPipeVTKSurface
+ Class name: mafPipeVisualVTKSurfaceTest
+ This class creates a vtkSphereSource and visualizes it trough the mafPipeVisualVTKSurface
  */
 
 //! <title>
-//mafVisualPipeVTKSurface
+//mafPipeVisualVTKSurface
 //! </title>
 //! <description>
-//mafVisualPipeVTKSurface is a visual pipe used to render VTK polydata.
+//mafPipeVisualVTKSurface is a visual pipe used to render VTK polydata.
 //It takes a mafDataSet as input and returns a mafContainer<vtkActor>.
 //! </description>
 
-class mafVisualPipeVTKSurfaceTest : public QObject {
+class mafPipeVisualVTKSurfaceTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -82,7 +82,7 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
-        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
+        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
 
         // Create a sphere.
         vtkSmartPointer<vtkSphereSource> surfSphere = vtkSmartPointer<vtkSphereSource>::New();
@@ -139,9 +139,9 @@ private:
     vtkAppendPolyData *m_AppendData; /// Bunch of surfaces.
 };
 
-void mafVisualPipeVTKSurfaceTest::updatePipeTest() {
-    mafVisualPipeVTKSurface *pipe;
-    pipe = mafNEW(mafPluginVTK::mafVisualPipeVTKSurface);
+void mafPipeVisualVTKSurfaceTest::updatePipeTest() {
+    mafPipeVisualVTKSurface *pipe;
+    pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSurface);
     pipe->setInput(m_VME);
     pipe->setProperty("scalarVisibility", 0);
     pipe->setProperty("immediateRendering", 1);
@@ -182,7 +182,7 @@ void mafVisualPipeVTKSurfaceTest::updatePipeTest() {
     mafDEL(pipe);
 }
 
-void mafVisualPipeVTKSurfaceTest::updatePipeTestFromPlugIn() {
+void mafPipeVisualVTKSurfaceTest::updatePipeTestFromPlugIn() {
     mafPluginManager *pluginManager = mafPluginManager::instance();
     QString pluginName = TEST_LIBRARY_NAME;
 
@@ -208,7 +208,7 @@ void mafVisualPipeVTKSurfaceTest::updatePipeTestFromPlugIn() {
     }
 
     //! <snippet>
-    mafVisualPipe *visualPipe = (mafVisualPipe *)mafNEWFromString("mafPluginVTK::mafVisualPipeVTKSurface");
+    mafPipeVisual *visualPipe = (mafPipeVisual *)mafNEWFromString("mafPluginVTK::mafPipeVisualVTKSurface");
     visualPipe->setProperty("scalarVisibility", 1);
     visualPipe->setInput(m_VME);
     visualPipe->createPipe();
@@ -247,5 +247,5 @@ void mafVisualPipeVTKSurfaceTest::updatePipeTestFromPlugIn() {
     pluginManager->shutdown();
 }
 
-MAF_REGISTER_TEST(mafVisualPipeVTKSurfaceTest);
-#include "mafVisualPipeVTKSurfaceTest.moc"
+MAF_REGISTER_TEST(mafPipeVisualVTKSurfaceTest);
+#include "mafPipeVisualVTKSurfaceTest.moc"

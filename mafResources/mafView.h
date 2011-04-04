@@ -21,7 +21,7 @@ namespace mafResources {
 
 // Class forwarding list
 class mafSceneNode;
-class mafVisualPipe;
+class mafPipeVisual;
 
 /**
  Class name: mafView

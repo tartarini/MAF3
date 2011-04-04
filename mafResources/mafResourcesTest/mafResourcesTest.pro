@@ -15,13 +15,13 @@ SOURCES += main.cpp \
     mafResourcesRegistrationTest.cpp \
     mafHierarchyTest.cpp \
     mafViewManagerTest.cpp \
-    mafDataPipeTest.cpp \
+    mafPipeDataTest.cpp \
     mafInterpolatorTest.cpp \
     mafMementoResourceTest.cpp \
     mafPipeTest.cpp \
     mafPluginTest.cpp \
     mafSceneNodeTest.cpp \
-    mafVisualPipeTest.cpp \
+    mafPipeVisualTest.cpp \
     mafViewTest.cpp \
     mafDataBoundaryAlgorithmTest.cpp \
     mafVMEManagerTest.cpp \

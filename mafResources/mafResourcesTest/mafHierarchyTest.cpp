@@ -13,7 +13,7 @@
 #include <mafHierarchy.h>
 #include <mafSceneNode.h>
 #include <mafVME.h>
-#include <mafVisualPipe.h>
+#include <mafPipeVisual.h>
 #include <mafVisitorFindSceneNodeByVMEHash.h>
 #include <iostream>
 using namespace mafCore;
@@ -25,13 +25,13 @@ using namespace mafResources;
  Class name: testVisualPipeCustom
  This class implements a custom visual pipe.
  */
-class  testVisualPipeCustom : public mafVisualPipe {
+class  testVisualPipeCustom : public mafPipeVisual {
     Q_OBJECT
-    mafSuperclassMacro(mafResources::mafVisualPipe);
+    mafSuperclassMacro(mafResources::mafPipeVisual);
 
 public:
     /// Object constructor;
-    testVisualPipeCustom(const QString code_location = "") : mafVisualPipe(code_location) {};
+    testVisualPipeCustom(const QString code_location = "") : mafPipeVisual(code_location) {};
 
     /// Initialize ans create the pipeline.
     /*virtual*/ void createPipe() {};

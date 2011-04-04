@@ -1,5 +1,5 @@
 /*
- *  mafVisualPipeTest.cpp
+ *  mafPipeVisualTest.cpp
  *  mafResourcesTest
  *
  *  Created by Daniele Giunchi on 22/09/09.
@@ -11,7 +11,7 @@
 
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
-#include <mafVisualPipe.h>
+#include <mafPipeVisual.h>
 #include <mafVME.h>
 #include <mafContainer.h>
 
@@ -20,13 +20,13 @@ using namespace mafResources;
 
 //------------------------------------------------------------------------------------------
 /**
- Class name: mafVisualPipeCustom
+ Class name: mafPipeVisualCustom
  This class implements the data pipe to be tested.
  */
-class  testVisualPipeCustomForVisualPipe : public  mafVisualPipe {
+class  testVisualPipeCustomForVisualPipe : public  mafPipeVisual {
     Q_OBJECT
     /// typedef macro.
-    mafSuperclassMacro(mafResources::mafVisualPipe);
+    mafSuperclassMacro(mafResources::mafPipeVisual);
 
 public:
     /// Object constructor.
@@ -53,7 +53,7 @@ private:
 
 };
 
-testVisualPipeCustomForVisualPipe::testVisualPipeCustomForVisualPipe(const QString code_location) : mafVisualPipe(code_location), m_PipeLine("") {
+testVisualPipeCustomForVisualPipe::testVisualPipeCustomForVisualPipe(const QString code_location) : mafPipeVisual(code_location), m_PipeLine("") {
     mafRegisterLocalSignal("maf.local.resources.interaction.vmePicked", this, "vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.interaction.vmePicked", this, "vmePicked(double *, unsigned long, mafCore::mafObjectBase *)");
     m_RecivedPickEvent = false;
@@ -82,10 +82,10 @@ void testVisualPipeCustomForVisualPipe::vmePicked(double *pos, unsigned long mod
 //------------------------------------------------------------------------------------------
 
 /**
- Class name: mafVisualPipeTest
- This class implements the test suite for mafVisualPipe.
+ Class name: mafPipeVisualTest
+ This class implements the test suite for mafPipeVisual.
  */
-class mafVisualPipeTest : public QObject {
+class mafPipeVisualTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -102,22 +102,22 @@ private slots:
         mafEventBus::mafEventBusManager::instance()->shutdown();
     }
 
-    /// mafVisualPipe allocation test case.
-    void mafVisualPipeAllocationTest();
+    /// mafPipeVisual allocation test case.
+    void mafPipeVisualAllocationTest();
     /// Test the creation and update methods..
-    void mafVisualPipeCreationAndUpdateTest();
+    void mafPipeVisualCreationAndUpdateTest();
     /// Test the vmePick method.
-    void mafVisualPipeVmePickTest();
+    void mafPipeVisualVmePickTest();
 
 private:
     testVisualPipeCustomForVisualPipe *m_VisualPipe; ///< Test var.
 };
 
-void mafVisualPipeTest::mafVisualPipeAllocationTest() {
+void mafPipeVisualTest::mafPipeVisualAllocationTest() {
     QVERIFY(m_VisualPipe != NULL);
 }
 
-void mafVisualPipeTest::mafVisualPipeCreationAndUpdateTest() {
+void mafPipeVisualTest::mafPipeVisualCreationAndUpdateTest() {
     QString res("Created");
     m_VisualPipe->createPipe();
 
@@ -128,7 +128,7 @@ void mafVisualPipeTest::mafVisualPipeCreationAndUpdateTest() {
     QCOMPARE(m_VisualPipe->pipeline(), res);
 }
 
-void mafVisualPipeTest::mafVisualPipeVmePickTest() {
+void mafPipeVisualTest::mafPipeVisualVmePickTest() {
     double posPicked[3];
     unsigned long modifiers;
     QEvent *e;
@@ -150,5 +150,5 @@ void mafVisualPipeTest::mafVisualPipeVmePickTest() {
     mafDEL(vme);
 }
 
-MAF_REGISTER_TEST(mafVisualPipeTest);
-#include "mafVisualPipeTest.moc"
+MAF_REGISTER_TEST(mafPipeVisualTest);
+#include "mafPipeVisualTest.moc"

@@ -7,12 +7,12 @@ TEMPLATE = lib
 CONFIG += create_prl
 CONFIG += link_prl
 win32:CONFIG += dll
-DEFINES += mafPlugin_EXPORTS
-SOURCES += mafDataPipeSurfacePluginTest.cpp \
+DEFINES += mafPluginTest_EXPORTS
+SOURCES += mafPipeDataSurfacePluginTest.cpp \
     mafPluginRegistrator.cpp
 HEADERS += mafPluginTest_global.h \
     mafPluginTestDefinitions.h \
-    mafDataPipeSurfacePluginTest.h \
+    mafPipeDataSurfacePluginTest.h \
     mafPluginRegistrator.h
 include(../../mafInstallTest.pri)
 include(../../mafImportVXL.pri)

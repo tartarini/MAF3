@@ -1,5 +1,5 @@
 /*
- *  mafDataPipe.h
+ *  mafPipeData.h
  *  mafResources
  *
  *  Created by Roberto Mucci - Paolo Quadrani on 30/12/09.
@@ -22,26 +22,26 @@ namespace mafResources {
 // Class forwarding list
 
 /**
- Class name: mafDataPipe
+ Class name: mafPipeData
  This is the base class for the MAF3 data pipes.
  */
-class MAFRESOURCESSHARED_EXPORT mafDataPipe : public mafPipe {
+class MAFRESOURCESSHARED_EXPORT mafPipeData : public mafPipe {
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafPipe);
 
 public:
     /// Object constructor.
-    mafDataPipe(const QString code_location = "");
+    mafPipeData(const QString code_location = "");
 
     /// Append a new VME to the input list.
     /** This method allows to add a VME to the input list. It returns the index of the last VME added.*/
     int addInput(mafVME *vme);
 
-    /// Allow to add mafDataPipe to extend the elaboration following the pattern decorator.
+    /// Allow to add mafPipeData to extend the elaboration following the pattern decorator.
     /** This method allows to compose data pipes functionalities according to the decorator pattern and
     return the pointer to the decorator pipe, so you can add another decorator pipe in cascade.*/
-    void decorateWithDataPipe(mafDataPipe *pipe);
+    void decorateWithDataPipe(mafPipeData *pipe);
 
     /// Set to false, to create a new mafVME as output of the dataPipe
     void setWorksInPlace(bool inPlace);
@@ -60,9 +60,9 @@ private slots:
 
 protected:
     /// Object destructor.
-    /* virtual */ ~mafDataPipe();
+    /* virtual */ ~mafPipeData();
 
-    mafDataPipe *m_DecoratorPipe; ///< Pointer to the decorator data pipe class.
+    mafPipeData *m_DecoratorPipe; ///< Pointer to the decorator data pipe class.
     mafVME *m_Output; ///< Output Data.
     bool m_InPlace; ///< If false, dataPipe creates a new mafVME as output.
 };
@@ -72,14 +72,14 @@ protected:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline void mafDataPipe::decorateWithDataPipe(mafDataPipe *pipe) {
+inline void mafPipeData::decorateWithDataPipe(mafPipeData *pipe) {
     pipe->createPipe();
     pipe->setInput(this->output());
     m_DecoratorPipe = pipe;
     m_DecoratorPipe->ref();
 }
 
-inline void mafDataPipe::setWorksInPlace(bool inPlace) {
+inline void mafPipeData::setWorksInPlace(bool inPlace) {
     m_InPlace = inPlace;
 }
 

@@ -1,5 +1,5 @@
 /*
- *  mafDataPipeTest.cpp
+ *  mafPipeDataTest.cpp
  *  mafResourcesTest
  *
  *  Created by Paolo Quadrani on 22/09/09.
@@ -11,7 +11,7 @@
 
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
-#include <mafDataPipe.h>
+#include <mafPipeData.h>
 #include <mafResourcesRegistration.h>
 #include <mafVME.h>
 
@@ -23,10 +23,10 @@ using namespace mafResources;
  Class name: testDataPipeCustom
  This class implements the data pipe to be tested.
  */
-class  testDataPipeCustom : public  mafDataPipe {
+class  testDataPipeCustom : public  mafPipeData {
     Q_OBJECT
     /// typedef macro.
-    mafSuperclassMacro(mafResources::mafDataPipe);
+    mafSuperclassMacro(mafResources::mafPipeData);
 
 public:
     /// Object constructor.
@@ -46,7 +46,7 @@ private:
     QString m_PipeLine; ///< Test Var.
 };
 
-testDataPipeCustom::testDataPipeCustom(const QString code_location) : mafDataPipe(code_location), m_PipeLine("") {
+testDataPipeCustom::testDataPipeCustom(const QString code_location) : mafPipeData(code_location), m_PipeLine("") {
 }
 
 void testDataPipeCustom::createPipe() {
@@ -62,10 +62,10 @@ void testDataPipeCustom::updatePipe(double t) {
 //------------------------------------------------------------------------------------------
 
 /**
- Class name: mafDataPipeTest
- This class implements the test suite for mafDataPipe.
+ Class name: mafPipeDataTest
+ This class implements the test suite for mafPipeData.
  */
-class mafDataPipeTest : public QObject {
+class mafPipeDataTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -85,10 +85,10 @@ private slots:
         mafMessageHandler::instance()->shutdown();
     }
 
-    /// mafDataPipe allocation test case.
-    void mafDataPipeAllocationTest();
+    /// mafPipeData allocation test case.
+    void mafPipeDataAllocationTest();
     /// Test the creation and update methods..
-    void mafDataPipeCreationAndUpdateTest();
+    void mafPipeDataCreationAndUpdateTest();
 
     /// Test the data pipe decoration mechanism.
     void decorateTest();
@@ -104,11 +104,11 @@ private:
     mafVME *m_Vme; ///< vme assigned to the data pipe
 };
 
-void mafDataPipeTest::mafDataPipeAllocationTest() {
+void mafPipeDataTest::mafPipeDataAllocationTest() {
     QVERIFY(m_DataPipe != NULL);
 }
 
-void mafDataPipeTest::mafDataPipeCreationAndUpdateTest() {
+void mafPipeDataTest::mafPipeDataCreationAndUpdateTest() {
     QString res("Created");
     m_DataPipe->createPipe();
 
@@ -122,7 +122,7 @@ void mafDataPipeTest::mafDataPipeCreationAndUpdateTest() {
     QCOMPARE(pipe, res);
 }
 
-void mafDataPipeTest::decorateTest() {
+void mafPipeDataTest::decorateTest() {
     // Instantiate and create the decorator data pipe.
     testDataPipeCustom *dpDecorator = mafNEW(testDataPipeCustom);
     QString res("Updated1");
@@ -133,7 +133,7 @@ void mafDataPipeTest::decorateTest() {
     mafDEL(dpDecorator);
 }
 
-void mafDataPipeTest::addRemoveInputTest() {
+void mafPipeDataTest::addRemoveInputTest() {
     int num = 0;
 
     mafDataSet *data1 = mafNEW(mafResources::mafDataSet);
@@ -176,7 +176,7 @@ void mafDataPipeTest::addRemoveInputTest() {
     QVERIFY(num == 1);
 }
 
-void mafDataPipeTest::outputTest() {
+void mafPipeDataTest::outputTest() {
     // Instantiate and create the decorator data pipe.
     mafVME *vme1 = mafNEW(mafResources::mafVME);
     testDataPipeCustom *dp = mafNEW(testDataPipeCustom);
@@ -190,5 +190,5 @@ void mafDataPipeTest::outputTest() {
     mafDEL(vme1);
 }
 
-MAF_REGISTER_TEST(mafDataPipeTest);
-#include "mafDataPipeTest.moc"
+MAF_REGISTER_TEST(mafPipeDataTest);
+#include "mafPipeDataTest.moc"

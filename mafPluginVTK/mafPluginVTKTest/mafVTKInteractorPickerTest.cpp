@@ -13,7 +13,7 @@
 #include <mafCoreSingletons.h>
 #include <mafResourcesRegistration.h>
 #include <mafVTKWidget.h>
-#include <mafVisualPipeVTKSurface.h>
+#include <mafPipeVisualVTKSurface.h>
 #include <mafVTKInteractorPicker.h>
 #include <mafVTKParametricSurfaceSphere.h>
 
@@ -63,7 +63,7 @@ private slots:
 
     /// Initialize test variables
     void initTestCase() {
-        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
+        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
         initializeGraphicResources();
 
         m_Picker = mafNEW(mafPluginVTK::mafVTKInteractorPicker);
@@ -141,8 +141,8 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
 
     //Must create a visual pipe that send "maf.local.resources.interaction.vmePicked"
     //when its vme is picked
-    mafVisualPipeVTKSurface *pipe;
-    pipe = mafNEW(mafPluginVTK::mafVisualPipeVTKSurface);
+    mafPipeVisualVTKSurface *pipe;
+    pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSurface);
     pipe->setInput(vme);
     pipe->createPipe();
     pipe->updatePipe();

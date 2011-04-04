@@ -27,7 +27,7 @@ using namespace mafResources;
 //! <description>
 //mafOperation  provides basic API for building elaboration algorithms for mafResources.
 //An operation takes as input one or more mafVMEs and generate as output a mafVME.
-//The algorithm executed on the input data is provided ad mafDataPipe. The mafOperation
+//The algorithm executed on the input data is provided ad mafPipeData. The mafOperation
 //that manage the possibility to have the undo mechanism for the executed algorithm.
 //! </description>
 class mafOperationTest: public QObject {

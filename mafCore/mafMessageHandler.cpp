@@ -38,12 +38,12 @@ static void mafMessageHandlerOutput(QtMsgType type, const char *msg) {
 }
 
 
-mafMessageHandler::mafMessageHandler() :  m_ActiveLogger(NULL) {
-    m_DefaultLogger = mafNEW(mafCore::mafLoggerConsole);
-    setActiveLogger(m_DefaultLogger);
+mafMessageHandler::mafMessageHandler() : m_ActiveLogger(NULL) {
+    m_Lock = new QReadWriteLock(QReadWriteLock::Recursive);
 }
 
 mafMessageHandler::~mafMessageHandler() {
+    delete m_Lock;
 }
 
 mafMessageHandler* mafMessageHandler::instance() {
@@ -68,6 +68,14 @@ void mafMessageHandler::shutdown() {
 
 void mafMessageHandler::installMessageHandler() {
     m_OldMsgHandlerStack.push(qInstallMsgHandler(mafMessageHandlerOutput));
+}
+
+mafLogger *mafMessageHandler::activeLogger() {
+    if (m_ActiveLogger == NULL) {
+        m_DefaultLogger = mafNEW(mafCore::mafLoggerConsole);
+        setActiveLogger(m_DefaultLogger);
+    }
+    return m_ActiveLogger;
 }
 
 void mafMessageHandler::testSuiteLogMode(bool on) {

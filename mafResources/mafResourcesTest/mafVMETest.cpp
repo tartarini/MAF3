@@ -11,9 +11,10 @@
 
 #include <mafTestSuite.h>
 #include <mafResourcesRegistration.h>
-#include <mafDataPipe.h>
+#include <mafPipeData.h>
 #include <mafContainer.h>
 #include <mafInteractor.h>
+#include <mafMemento.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -21,17 +22,17 @@ using namespace mafResources;
 
 //------------------------------------------------------------------------------------------
 /**
- Class name: testVMEDataPipeCustom
+ Class name: testVMEPipeDataCustom
  This class implements the data pipe to be tested.
  */
-class testVMEDataPipeCustom : public  mafDataPipe {
+class testVMEPipeDataCustom : public  mafPipeData {
     Q_OBJECT
     /// typedef macro.
-    mafSuperclassMacro(mafResources::mafDataPipe);
+    mafSuperclassMacro(mafResources::mafPipeData);
 
 public:
     /// Object constructor.
-    testVMEDataPipeCustom(const QString code_location = "");
+    testVMEPipeDataCustom(const QString code_location = "");
 
     /// Initialize and create the pipeline
     /*virtual*/ void createPipe();
@@ -47,18 +48,89 @@ private:
     QString m_PipeLine; ///< Test Var.
 };
 
-testVMEDataPipeCustom::testVMEDataPipeCustom(const QString code_location) : mafDataPipe(code_location), m_PipeLine("") {
+testVMEPipeDataCustom::testVMEPipeDataCustom(const QString code_location) : mafPipeData(code_location), m_PipeLine("") {
 }
 
-void testVMEDataPipeCustom::createPipe() {
+void testVMEPipeDataCustom::createPipe() {
     m_PipeLine = "Created";
 }
 
-void testVMEDataPipeCustom::updatePipe(double t) {
+void testVMEPipeDataCustom::updatePipe(double t) {
     Superclass::updatePipe();
     m_PipeLine = "Updated";
     m_PipeLine.append(QString::number(t));
 }
+//------------------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------------------
+
+class testVMEConcurrentAccess : public QObject {
+    Q_OBJECT
+    
+public:
+    /// Constructor
+    testVMEConcurrentAccess(mafVME *vme);
+    
+signals:
+    /// Finish the threaded elaboration.
+    void finished();
+    
+public slots:
+    /// Start the VME access.
+    void startElaboration();
+    
+private:
+    mafVME *m_VME; ///< input vme.
+};
+
+testVMEConcurrentAccess::testVMEConcurrentAccess(mafVME *vme) : QObject(NULL), m_VME(vme) {
+    
+}
+
+void testVMEConcurrentAccess::startElaboration() {
+    mafPipeData *pipe = m_VME->dataPipe();
+    if (pipe == NULL) {
+        m_VME->setDataPipe("testVMEPipeDataCustom");
+    }
+    
+    QTime dieTime = QTime::currentTime().addSecs(1);
+    while(QTime::currentTime() < dieTime) {
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
+    }
+
+    QVariantList b;
+    int n = 0;
+    while (n < 100) {
+        for (int i = n; i < n+6; ++i) {
+            b.append(32.5 * i);
+        }
+        m_VME->setBounds(b);
+        b.clear();
+        ++n;
+    }
+    
+    QTime dieTime2 = QTime::currentTime().addSecs(1);
+    while(QTime::currentTime() < dieTime2) {
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
+    }
+
+    m_VME->setDataPipe(NULL);
+
+    QTime dieTime3 = QTime::currentTime().addSecs(1);
+    while(QTime::currentTime() < dieTime3) {
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
+    }
+
+    mafMemento *m = m_VME->createMemento();
+    if (m == NULL) {
+        qDebug() << mafTr("Problem creating VME memento");
+    }
+    mafDEL(m);
+    
+    emit finished();
+}
+
 //------------------------------------------------------------------------------------------
 
 
@@ -82,7 +154,7 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
-        mafRegisterObject(testVMEDataPipeCustom);
+        mafRegisterObject(testVMEPipeDataCustom);
         //! <snippet>
         m_VME = mafNEW(mafResources::mafVME);
         //! </snippet>
@@ -91,6 +163,7 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_VME);
+        mafUnregisterObject(testVMEPipeDataCustom);
         mafMessageHandler::instance()->shutdown();
     }
 
@@ -108,6 +181,9 @@ private slots:
 
     /// Output data test suite.
     void mafVMEOutputDataTest();
+    
+    /// Test the concurrent access to the VME.
+    void mafVMEConcurrentAccessTest();
 
 private:
     mafVME *m_VME; ///< Test var.
@@ -120,10 +196,10 @@ void mafVMETest::mafVMEAllocationTest() {
 }
 
 void mafVMETest::mafVMEDataPipeTest() {
-    mafDataPipe *dp = m_VME->dataPipe();
+    mafPipeData *dp = m_VME->dataPipe();
     QVERIFY(dp == NULL);
 
-    m_VME->setDataPipe("testVMEDataPipeCustom");
+    m_VME->setDataPipe("testVMEPipeDataCustom");
     dp = m_VME->dataPipe();
     QVERIFY(dp != NULL);
 }
@@ -177,6 +253,38 @@ void mafVMETest::mafVMEOutputDataTest() {
     // This time an empty mafDataSet will be returned.
     QVERIFY(output->dataBoundary() == NULL);
     QVERIFY(output->dataValue() == NULL);
+}
+
+void mafVMETest::mafVMEConcurrentAccessTest() {
+    QVariantList mainBounds;
+    mainBounds << 0.0;
+    mainBounds << 100.0;
+    mainBounds << 0.0;
+    mainBounds << 200.0;
+    mainBounds << -20.0;
+    mainBounds << 80.0;
+    
+    QThread thread;
+    testVMEConcurrentAccess *accessor = new testVMEConcurrentAccess(m_VME);
+    accessor->moveToThread(&thread);
+    connect(&thread, SIGNAL(started()), accessor, SLOT(startElaboration()));
+    connect(accessor, SIGNAL(finished()), &thread, SLOT(quit()), Qt::DirectConnection);
+    
+    thread.start();
+    qDebug() << mafTr("Thread started...");
+    
+    m_VME->setBounds(mainBounds);
+    
+    mafMemento *memento = m_VME->createMemento();
+    
+    while (thread.isRunning()) {
+        ;
+    }
+    
+    mafDEL(memento);
+    delete accessor;
+    
+    qDebug() << mafTr("**** End of VME concurrent access ****");
 }
 
 MAF_REGISTER_TEST(mafVMETest);

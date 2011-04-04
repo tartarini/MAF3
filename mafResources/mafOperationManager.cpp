@@ -175,7 +175,6 @@ void mafOperationManager::executeOperation() {
 
 mafOperationWorker *mafOperationManager::removeWorkerFromPool(QObject *obj) {
     mafOperationWorker *worker = qobject_cast<mafResources::mafOperationWorker *>(obj);
-    qDebug() << "Removing worker associated to " << worker->operation()->objectName();
 
     QMutableListIterator<QPointer<QThread> > i(m_ExecutionPool);
     while (i.hasNext()) {

@@ -18,12 +18,14 @@ namespace mafResources {
 
 // Class forwarding list
 
-/// This class provides basic API for building elaboration algorithms for mafResources.
+/// This class provides basic API for building elaboration algorithms called mafOperation.
 /**
 Class name: mafOperation
-This class provides basic API for building elaboration algorithms for mafResources.
+This class provides basic API for building elaboration algorithms for MAF framework.
 An operation takes as input one or more mafVMEs and generate as output a mafVME. The algorithm executed on the input data
-is provided by a mafDataPipe. The mafOperation that manage the possibility to have the undo mechanism for the executed algorithm.
+is provided by a mafPipeData. The mafOperation should be implemented to be able to perform an undo and be able to abort its execution. Operation's execution is managed by the mafOperationManager and is run on a separate thread.
+ 
+ @sa mafOperationManager.
 */
 class MAFRESOURCESSHARED_EXPORT mafOperation : public mafResource {
     Q_OBJECT

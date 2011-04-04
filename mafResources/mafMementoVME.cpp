@@ -11,7 +11,7 @@
 
 #include "mafMementoVME.h"
 #include "mafMementoDataSet.h"
-#include "mafDataPipe.h"
+#include "mafPipeData.h"
 #include "mafDataSetCollection.h"
 #include "mafDataSet.h"
 #include "mafVME.h"
@@ -51,11 +51,11 @@ mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const QString co
         }
     }
 
-    mafDataPipe *pipe = vme->dataPipe();
+    mafPipeData *pipe = vme->dataPipe();
     if(pipe) {
         mafMementoPropertyItem item;
         item.m_Multiplicity = 1;
-        item.m_Name = "mafDataPipe";
+        item.m_Name = "mafPipeData";
         item.m_Value = QVariant(pipe->metaObject()->className());
         list->append(item);
 

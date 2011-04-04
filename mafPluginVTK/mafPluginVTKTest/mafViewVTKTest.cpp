@@ -16,7 +16,7 @@
 #include <mafVMEManager.h>
 #include <mafView.h>
 #include <mafViewVTK.h>
-#include <mafVisualPipeVTKSurface.h>
+#include <mafPipeVisualVTKSurface.h>
 #include <mafSceneNode.h>
 #include <mafVME.h>
 #include <mafContainer.h>
@@ -58,7 +58,7 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
-        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafVisualPipeVTKSurface);
+        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
         mafVMEManager::instance();
 
         /// Create the view...
@@ -169,7 +169,7 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VmeCube));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 
-    m_View->plugVisualPipe("vtkAlgorithmOutput","mafPluginVTK::mafVisualPipeVTKSurface");
+    m_View->plugVisualPipe("vtkAlgorithmOutput","mafPluginVTK::mafPipeVisualVTKSurface");
     //! </snippet>
 
     // Visualize first cube
@@ -190,7 +190,7 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     mafObjectRegistry::instance()->findObjectsThreaded(v);
     mafSceneNode *cubeMovedNode = v->sceneNode();
     mafDEL(v);
-    m_View->showSceneNode(cubeMovedNode, true,  "mafPluginVTK::mafVisualPipeVTKSurface");
+    m_View->showSceneNode(cubeMovedNode, true,  "mafPluginVTK::mafPipeVisualVTKSurface");
     QTest::qSleep(2000);
 
     // Show off first cube

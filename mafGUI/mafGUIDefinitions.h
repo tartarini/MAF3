@@ -20,8 +20,6 @@
 #include <QSyntaxHighlighter>
 #include <QTextCharFormat>
 
-#define mafUiLoader QUiLoader
-
 #include <mafCoreDefinitions.h>
 #include <mafObjectFactory.h>
 #include <mafCoreSingletons.h>
@@ -33,14 +31,10 @@
 
 namespace mafGUI {
 
-#define mafSyntaxHighlighter QSyntaxHighlighter
-#define mafRegExp QRegExp
-#define mafTextCharFormat QTextCharFormat
-
 /// rule for determines which pattern the text will be highlighted and with which format
 struct mafHighlightingRule {
-    mafRegExp m_Pattern; ///< pattern which represents the keyword need to be highlighted
-    mafTextCharFormat m_Format; ///< which kind of highlight need to be applied
+    QRegExp m_Pattern; ///< pattern which represents the keyword need to be highlighted
+    QTextCharFormat m_Format; ///< which kind of highlight need to be applied
 };
 
 typedef enum {

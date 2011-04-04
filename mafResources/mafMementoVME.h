@@ -19,7 +19,7 @@
 namespace mafResources {
 
 // Class forwarding list
-class mafDataPipe;
+class mafPipeData;
 class mafVME;
 
 /**

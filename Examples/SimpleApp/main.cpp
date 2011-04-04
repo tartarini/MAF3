@@ -6,11 +6,7 @@
 
 #include <mafLogic.h>
 
-#ifdef WIN32
-    #define VTK_PLUGIN_NAME "mafPluginVTK_d.mafplugin"
-#else
-    #define VTK_PLUGIN_NAME "libmafPluginVTK_debug.mafplugin"
-#endif
+#define VTK_PLUGIN_NAME "mafPluginVTK.mafplugin"
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);

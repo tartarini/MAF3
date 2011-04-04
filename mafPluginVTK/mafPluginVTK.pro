@@ -11,11 +11,11 @@ DEFINES += mafPluginVTK_EXPORTS
 
 SOURCES += mafDataBoundaryAlgorithmVTK.cpp \
     mafPluginRegistrator.cpp \
-    mafVisualPipeVTKSurface.cpp \
+    mafPipeVisualVTKSurface.cpp \
     mafViewVTK.cpp \
-    mafDataPipeImageThreshold.cpp \
+    mafPipeDataImageThreshold.cpp \
     mafExternalDataCodecVTK.cpp \
-    mafVisualPipeSelection.cpp \
+    mafPipeVisualSelection.cpp \
     mafVTKWidget.cpp \
     mafVTKInteractorPicker.cpp \
     mafVTKParametricSurface.cpp \
@@ -29,11 +29,11 @@ SOURCES += mafDataBoundaryAlgorithmVTK.cpp \
 HEADERS += mafPluginVTK_global.h \
     mafPluginVTKDefinitions.h \
     mafPluginRegistrator.h \
-    mafVisualPipeVTKSurface.h \
+    mafPipeVisualVTKSurface.h \
     mafViewVTK.h \
-    mafDataPipeImageThreshold.h \
+    mafPipeDataImageThreshold.h \
     mafExternalDataCodecVTK.h \
-    mafVisualPipeSelection.h \
+    mafPipeVisualSelection.h \
     mafDataBoundaryAlgorithmVTK.h \
     mafVTKWidget.h \
     mafVTKInteractorPicker.h \

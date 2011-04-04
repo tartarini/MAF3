@@ -12,7 +12,7 @@
 
 #include "mafViewVTK.h"
 #include "mafVTKWidget.h"
-#include <mafVisualPipe.h>
+#include <mafPipeVisual.h>
 #include <mafVME.h>
 #include <mafHierarchy.h>
 #include <mafSceneNode.h>

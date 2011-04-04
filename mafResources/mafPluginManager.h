@@ -74,7 +74,7 @@ public slots:
 
     /// Plug-in registration callback.
     /** This method is called by the REGISTER_PLUGIN signal and receive as parameter the hash containing the information on the class type of the base MAF class
-    (mafResources::mafView, mafResources::mafOperation, mafResources::mafVisualPipe...), the type of the plugged object that extend the base class
+    (mafResources::mafView, mafResources::mafOperation, mafResources::mafPipeVisual...), the type of the plugged object that extend the base class
     and the default label that you want to be shown at the user interface level.*/
     void registerPlugin(mafCore::mafPluggedObjectsHash pluginHash);
 
