@@ -25,7 +25,7 @@
 # using for example <proj>_DIR. 
 # Doing so allows to keep the external project dependency system happy.
 #
-MACRO(MAFMacroEmptyExternalProject proj dependencies)
+MACRO(mafMacroEmptyExternalProject proj dependencies)
 
   ExternalProject_Add(${proj}
     SOURCE_DIR ${CMAKE_BINARY_DIR}/${proj}
