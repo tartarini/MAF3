@@ -21,7 +21,6 @@ using namespace mafCore;
 mafImporterVTK::mafImporterVTK(const QString code_location) : mafOperation(code_location), m_Filename(""), m_DataSet(NULL), m_VME(NULL), m_DataImported(false) {
     m_OperationType = mafOperationTypeImporter;
     m_UIFilename = "mafImporterVTK.ui";
-    mafRegisterLocalCallback("maf.local.serialization.extDataImported", this , "importedVTKData(mafCore::mafContainerInterface *)")
 }
 
 mafImporterVTK::~mafImporterVTK() {
@@ -43,6 +42,7 @@ void mafImporterVTK::execute() {
     if (m_Filename.isEmpty()) {
         qWarning() << mafTr("Filename of data to import is needed.");
     } else {
+        mafRegisterLocalCallback("maf.local.serialization.extDataImported", this , "importedVTKData(mafCore::mafContainerInterface *)")
         QString encodeType = "VTK";
         mafEventArgumentsList argList;
         argList.append(mafEventArgument(QString, m_Filename));
@@ -63,9 +63,11 @@ void mafImporterVTK::execute() {
 void mafImporterVTK::importedVTKData(mafCore::mafContainerInterface *data) {
     mafUnregisterLocalCallback("maf.local.serialization.extDataImported", this, "importedVTKData(mafCore::mafContainerInterface *)")
 
+    QFileInfo info(m_Filename);
+    
     //Insert data into VME
     m_VME = mafNEW(mafResources::mafVME);
-    m_VME->setObjectName(mafTr("Parametric Surface"));
+    m_VME->setObjectName(info.baseName());
     m_DataSet = mafNEW(mafResources::mafDataSet);
     m_DataSet->setDataValue(data);
     m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
