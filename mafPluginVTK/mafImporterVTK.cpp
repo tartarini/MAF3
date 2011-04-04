@@ -19,6 +19,7 @@ using namespace mafEventBus;
 using namespace mafCore;
 
 mafImporterVTK::mafImporterVTK(const QString code_location) : mafOperation(code_location), m_Filename(""), m_DataSet(NULL), m_VME(NULL), m_DataImported(false) {
+    m_OperationType = mafOperationTypeImporter;
     m_UIFilename = "mafImporterVTK.ui";
     mafRegisterLocalCallback("maf.local.serialization.extDataImported", this , "importedVTKData(mafCore::mafContainerInterface *)")
 }
