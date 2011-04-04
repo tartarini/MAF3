@@ -12,8 +12,6 @@
 cmake_minimum_required(VERSION 2.8)
 
 PROJECT(MAF)
-set(MafFoundationDir $ENV{MAF3_FOUNDATION_LIB_DIR})
-STRING(REPLACE "\\" "/" MafFoundationLibDir ${MafFoundationDir})
 
 #############################################################################################
 ### MAF3 Options
