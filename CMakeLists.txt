@@ -9,24 +9,35 @@
 #
 #
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 PROJECT(MAF)
-set(MafFoundationDir $ENV{MAF3_FOUNDATION_LIB_DIR})
-STRING(REPLACE "\\" "/" MafFoundationLibDir ${MafFoundationDir})
 
 #############################################################################################
 ### MAF3 Options
 #############################################################################################
 
-OPTION(BUILD_TEST_SUITE "Build Module's Tests" ON)
+OPTION(BUILD_TEST_SUITE "Build Module's Tests" OFF)
 OPTION(BUILD_EXAMPLES "Build Examples" ON)
 OPTION(MAF_USE_GIT_PROTOCOL "If ON use git protocol, otherwise http" OFF)
+OPTION(MAF_SUPERBUILD "Build MAF and the projects it depends on via SuperBuild.cmake." ON)
+MARK_AS_ADVANCED(MAF_SUPERBUILD)
 
+FIND_PACKAGE(Git)
+IF(NOT GIT_FOUND)
+  MESSAGE(FATAL_ERROR "error: Install Git and try to re-configure")
+ENDIF()
+
+# git protocol to be used
 set(git_protocol "git")
 if(NOT MAF_USE_GIT_PROTOCOL)
   set(git_protocol "http")
 endif()
+
+
+#############################################################################################
+### Compilers
+#############################################################################################
 
 # modify CMAKE_BUILD_TYPE in order to set default configuration for non-IDE build
 if(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "MinGW Makefiles") 
@@ -34,62 +45,87 @@ if(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "MinGW 
 endif(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "MinGW Makefiles")
 
 #############################################################################################
-### where to search modules
+### Available Modules
 #############################################################################################
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
 
-include(mafMacroInitProject)
-include(mafMacroInstallProject)
+SET(MAF_CORE ON)
+SET(MAF_EVENT_BUS ON)
+SET(MAF_QA ON)
+OPTION(MAF_TIME_SPACE "Build mafTimeSpace module. mafCore and mafEventBus will be built anyway." ON)
+OPTION(MAF_SERIALIZATION "Build mafSerialization module. mafCore and mafEventBus will be built anyway." ON)
+OPTION(MAF_RESOURCES "Build mafResources module. mafCore and mafEventBus will be built anyway." ON)
+OPTION(MAF_PLUGINVTK "Build mafPluginVTK module. mafCore and mafEventBus will be built anyway." ON)
+OPTION(MAF_APPLICATION_LOGIC "Build mafApplicationLogic module.mafCore and mafEventBus will be built anyway." ON)
+OPTION(MAF_QTGUI "Build mafGUI module. mafCore and mafEventBus will be built anyway." ON)
 
-include(mafMacroSetupQt)
-include(mafMacroWrapTargetFiles)
-include(mafMacroTargetLibraries)
-include(mafCopyFilesFromExtension)
+### set modules interdependencies
+include(CMake/mafUtilities.cmake)
+if(MAF_PLUGINVTK)
+  SET( MAF_RESOURCES ON ) 
+  mafDependentOption(MAF_RESOURCES "Build mafResources module." ON MAF_PLUGINVTK ON)
+endif(MAF_PLUGINVTK)
 
-#-----------------------------------------------------------------------------
-# MAF3 Foundation Libraries.
-#
-include(mafMacroFoundationLibraries)
-mafMacroFoundationLibraries()
-
-#-----------------------------------------------------------------------------
-# QT
-#
-
-mafMacroSetupQt()
-# Update MAF_BASE_LIBRARIES with QT libraries
-IF(QT4_FOUND)
-  SET(MAF_BASE_LIBRARIES ${QT_LIBRARIES} CACHE INTERNAL "MAF base libraries" FORCE)
-ENDIF()
-
-#############################################################################################
-### where to place output binaries
-#############################################################################################
-SET (LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/Install/bin/ CACHE INTERNAL
-     "Single output directory for building all libraries.")
-SET (EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/Install/bin/ CACHE INTERNAL 
-     "Single output directory for building all executables.")
-     
-MARK_AS_ADVANCED (
-  LIBRARY_OUTPUT_PATH 
-  EXECUTABLE_OUTPUT_PATH
-)
-
-INCLUDE_DIRECTORIES(BEFORE ".")
-
-#############################################################################################
-### find project subdirs avoiding the svn directory and make the SUBDIR CMake command on them.
-#############################################################################################
-FILE(GLOB dir_list "${PROJECT_SOURCE_DIR}/*")
-FOREACH(dir_name ${dir_list})
-  FILE(RELATIVE_PATH local_dir_name "${PROJECT_SOURCE_DIR}" ${dir_name})
-	IF(IS_DIRECTORY ${dir_name} AND NOT ${local_dir_name} STREQUAL ".git" AND NOT ${local_dir_name} STREQUAL "CMake")
-    INCLUDE_DIRECTORIES("${dir_name}")
-		SUBDIRS("${local_dir_name}")
-	ENDIF(IS_DIRECTORY ${dir_name} AND NOT ${local_dir_name} STREQUAL ".git" AND NOT ${local_dir_name} STREQUAL "CMake")
-ENDFOREACH(dir_name ${dir_list})
+### tests and examples dependencies 
+IF(BUILD_TEST_SUITE OR BUILD_EXAMPLES)
+    SET( MAF_TIME_SPACE ON ) 
+   mafDependentOption(MAF_TIME_SPACE "Build Test module for mafTimeSpace." ON BUILD_EXAMPLES ON)
+    
+   SET( MAF_SERIALIZATION ON ) 
+   mafDependentOption(MAF_SERIALIZATION "Build Test module for mafSerialization." ON BUILD_EXAMPLES ON)
+    
+   SET( MAF_RESOURCES ON ) 
+   mafDependentOption(MAF_RESOURCES "Build Test module for mafResources." ON BUILD_EXAMPLES ON)
+    
+   SET( MAF_PLUGINVTK ON ) 
+   mafDependentOption(MAF_PLUGINVTK "Build Test module for mafPluginVTK." ON BUILD_EXAMPLES ON)
+   
+   SET( MAF_RESOURCES ON ) 
+   mafDependentOption(MAF_RESOURCES "Build mafResources module." ON BUILD_EXAMPLES ON)
+    
+   SET( MAF_APPLICATION_LOGIC ON ) 
+   mafDependentOption(MAF_APPLICATION_LOGIC "Build Test module for mafApplicationLogic." ON BUILD_EXAMPLES ON)
+    
+   SET( MAF_QTGUI ON ) 
+   mafDependentOption(MAF_QTGUI "Build Test module for mafGUI." ON BUILD_EXAMPLES ON)
+ENDIF(BUILD_TEST_SUITE OR BUILD_EXAMPLES)
 
 #############################################################################################
-### Export Build settings and library dependences
+### Wrapping (find swig, python ...)
 #############################################################################################
-INCLUDE(CMakeExportBuildSettings)
+
+include(CMake/mafMacroFindWrap.cmake)
+
+#############################################################################################
+### Superbuild execution
+#############################################################################################
+
+INCLUDE(${MAF_SOURCE_DIR}/GenerateMAFConfig.cmake)
+CONFIGURE_FILE(${MAF_SOURCE_DIR}/UseMAF.cmake.in
+  ${MAF_BINARY_DIR}/UseMAF.cmake COPYONLY IMMEDIATE)
+  
+IF(MAF_SUPERBUILD)
+  INCLUDE(SuperBuild.cmake)
+  RETURN()
+ELSE(MAF_SUPERBUILD)
+ENDIF(MAF_SUPERBUILD)
+
+#############################################################################################
+### SOURCES
+#############################################################################################
+ADD_SUBDIRECTORY(src)
+
+#############################################################################################
+### TESTS
+#############################################################################################
+
+IF(BUILD_TEST_SUITE)
+  ADD_SUBDIRECTORY(test)
+ENDIF(BUILD_TEST_SUITE)
+
+#############################################################################################
+### EXAMPLES
+#############################################################################################
+
+IF(BUILD_EXAMPLES)
+  ADD_SUBDIRECTORY(examples)
+ENDIF(BUILD_EXAMPLES)

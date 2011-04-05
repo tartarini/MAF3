@@ -1,0 +1,84 @@
+#
+# MAFConfig.cmake - MAF CMake configuration file for external projects
+#
+# This file is configured by MAF and used by UseMAF.cmake module
+# to load MAF's settings for an external project. External projects
+# can use these setting to build new modules against a MAF build tree
+# or a MAF installation.
+#
+
+message (".......................... Entering MAFInstallConfig.cmake ............................")
+# The C and C++ flags added by MAF to the cmake-configured flags.
+set(MAF_REQUIRED_C_FLAGS "@MAF_REQUIRED_C_FLAGS@")
+set(MAF_REQUIRED_CXX_FLAGS "@MAF_REQUIRED_CXX_FLAGS@")
+set(MAF_REQUIRED_LINK_FLAGS "@MAF_REQUIRED_LINK_FLAGS@")
+
+# The MAF version number
+set(MAF_VERSION_MAJOR "@MAF_VERSION_MAJOR@")
+set(MAF_VERSION_MINOR "@MAF_VERSION_MINOR@")
+set(MAF_VERSION_PATCH "@MAF_VERSION_PATCH@")
+
+# Whether MAF was built with modules and CLI support.
+IF(MAF_USE_QT)
+  set(MAF_BUILD_QTLOADABLEMODULES "@MAF_BUILD_QTLOADABLEMODULES@")
+ENDIF(MAF_USE_QT)
+
+# Whether MAF was built with shared libraries.
+set(MAF_BUILD_SHARED "@BUILD_SHARED_LIBS@")
+
+# MAF options
+#set(MAF_USE_PYTHON "@MAF_USE_PYTHON@")
+
+# MAF could be installed anywhere, so set all paths based on where 
+# this file was found (which should be the lib/MAF3 directory of the 
+# installation)
+get_filename_component(MAF_CONFIG_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+# MAF home (top of the tree)
+set(MAF_HOME "${MAF_CONFIG_DIR}/../..")
+get_filename_component(MAF_HOME ${MAF_HOME} ABSOLUTE)
+
+# The CMake macros dir.
+set(MAF_CMAKE_DIR "${MAF_HOME}/@MAF_INSTALL_LIB_DIR@/CMake")
+
+# MAF Libs libraries.  Those listed here should
+# automatically pull in their dependencies.
+set(MAF_Libs_LIBRARIES "@MAF_Libs_LIBRARIES@")
+
+# MAF Base libraries.  Those listed here should
+# automatically pull in their dependencies.
+set(MAF_LIBRARIES "@MAF_Base_LIBRARIES@")
+
+# MAF Base library directories.
+set(MAF_LIBRARY_DIRS 
+  "${MAF_HOME}/@MAF_INSTALL_LIB_DIR@"
+  )
+
+# MAF Base include file directories.
+set(MAF_INCLUDE_DIRS 
+  "${MAF_HOME}/@MAF_INSTALL_INCLUDE_DIR@" 
+)
+
+# The location of the UseMAF.cmake file.
+set(MAF_USE_FILE "${MAF_CONFIG_DIR}/UseMAF.cmake")
+
+# The build settings file.
+set(MAF_BUILD_SETTINGS_FILE 
+  "${MAF_CONFIG_DIR}/MAFBuildSettings.cmake")
+
+# The MAF relative install directories.
+set(MAF_INSTALL_BIN_DIR "@MAF_INSTALL_BIN_DIR@")
+set(MAF_INSTALL_LIB_DIR "@MAF_INSTALL_LIB_DIR@")
+set(MAF_INSTALL_INCLUDE_DIR "@MAF_INSTALL_INCLUDE_DIR@")
+set(MAF_INSTALL_SHARE_DIR "@MAF_INSTALL_SHARE_DIR@")
+
+# Components needed to build modules from outside a MAF build tree or 
+# from outside a MAF installation tree
+set(VTK_DIR "${MAF_HOME}/lib/vtk-@VTK_MAJOR_VERSION@.@VTK_MINOR_VERSION@")
+#set(PYTHON_INCLUDE_PATH "@PYTHON_INCLUDE_PATH@")
+#get_filename_component(PYTHON_LIB_FILE "${PYTHON_LIBRARY}" NAME)
+#set(PYTHON_LIBRARIES "${MAF_HOME}/lib/Python/lib/${PYTHON_LIB_FILE}")
+#get_filename_component(PYTHON_INCLUDE_DIR "${PYTHON_INCLUDE_PATH}" NAME)
+#set(PYTHON_INCLUDE_PATH "${MAF_HOME}/lib/Python/include/${PYTHON_INCLUDE_DIR}")
+
+message (".......................... Exiting MAFInstallConfig.cmake ............................")
