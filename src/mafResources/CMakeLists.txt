@@ -49,11 +49,4 @@ mafMacroWrapBuild()
 
 mafMacroInstallProject()
 
-## #################################################################
-## Test suite.
-## #################################################################
-if(BUILD_TEST_SUITE)
-  #SUBDIRS("mafPluginTest")
-  #SUBDIRS("${PROJECT_NAME}Test")
-endif(BUILD_TEST_SUITE)
 
