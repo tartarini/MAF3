@@ -10,12 +10,18 @@
  */
 
 #include "mafPluginRegistrator.h"
+
 #include "mafPipeDataImageThreshold.h"
 #include "mafPipeVisualVTKSurface.h"
 #include "mafPipeVisualSelection.h"
+
 #include "mafViewVTK.h"
+
 #include "mafOpParametricSurface.h"
+#include "mafImporterVTK.h"
+
 #include "mafExternalDataCodecVTK.h"
+
 #include "mafVTKParametricSurfaceSphere.h"
 #include "mafVTKParametricSurfaceCube.h"
 #include "mafVTKParametricSurfaceCone.h"
@@ -33,6 +39,7 @@ mafPluginRegistrator::mafPluginRegistrator() {
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualSelection);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafOpParametricSurface);
+    mafRegisterObjectAndAcceptBind(mafPluginVTK::mafImporterVTK);
     mafRegisterObject(mafPluginVTK::mafViewVTK);
     mafRegisterObject(mafPluginVTK::mafExternalDataCodecVTK);
     mafRegisterObject(mafPluginVTK::mafVTKParametricSurfaceSphere);
@@ -49,6 +56,7 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKSurface);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualSelection);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafOpParametricSurface);
+    mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafImporterVTK);
     mafUnregisterObject(mafPluginVTK::mafViewVTK);
     mafUnregisterObject(mafPluginVTK::mafExternalDataCodecVTK);
     mafUnregisterObject(mafPluginVTK::mafVTKParametricSurfaceSphere);
@@ -66,6 +74,7 @@ void mafPluginRegistrator::registerObjects() {
     mafPluggedObjectInformation visualPipeSelection("Visual pipe used to represent selection of data", "mafPluginVTK::mafPipeVisualSelection");
     mafPluggedObjectInformation viewVTK("VTK view", "mafPluginVTK::mafViewVTK");
     mafPluggedObjectInformation opParametricSurface("Create Parametric Surface", "mafPluginVTK::mafOpParametricSurface");
+    mafPluggedObjectInformation importerVTK("Import VTK data", "mafPluginVTK::mafImporterVTK");
     mafPluggedObjectInformation externalDataCodecVTK("VTK codec", "mafPluginVTK::mafExternalDataCodecVTK");
 
     pluginHash.insertMulti("mafResources::mafPipeData", dataPipeImageThreshold);
@@ -73,6 +82,7 @@ void mafPluginRegistrator::registerObjects() {
     pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeSelection);
     pluginHash.insertMulti("mafResources::mafView", viewVTK);
     pluginHash.insertMulti("mafResources::mafOperation", opParametricSurface);
+    pluginHash.insertMulti("mafResources::mafImporter", importerVTK);
     pluginHash.insertMulti("mafCore::mafExternalDataCodec", externalDataCodecVTK);
 
     mafEventBus::mafEventArgumentsList argList;
