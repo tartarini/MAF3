@@ -1,6 +1,6 @@
 ################################################################################
 #
-#  Program: 3D MAF
+#  Program: MAF
 #
 #  Copyright (c) 2010 Kitware Inc.
 #
@@ -19,15 +19,15 @@
 #
 ################################################################################
 
-#-----------------------------------------------------------------------------
-# Git protocole option
-#-----------------------------------------------------------------------------
+#############################################################################################
+### Git protocol option
+#############################################################################################
 
 option(MAF_USE_GIT_PROTOCOL "If behind a firewall turn this off to use http instead." ON)
 
-#-----------------------------------------------------------------------------
-# Qt - Let's check if a valid version of Qt is available
-#-----------------------------------------------------------------------------
+#############################################################################################
+### Qt - Let's check if a valid version of Qt is available
+#############################################################################################
 
 FIND_PACKAGE(Qt4)
 IF(QT_FOUND)
@@ -38,12 +38,11 @@ ELSE()
   MESSAGE(FATAL_ERROR "error: Qt4 was not found on your system. You probably need to set the QT_QMAKE_EXECUTABLE variable")
 ENDIF()
 
-#-----------------------------------------------------------------------------
-# Enable and setup External project global properties
-#-----------------------------------------------------------------------------
+#############################################################################################
+### Enable and setup External project global properties
+#############################################################################################
 
 INCLUDE(ExternalProject)
-
 
 # this directory will be the root dir for external libraries.
 SET(ep_base "${CMAKE_BINARY_DIR}/ExternalLibraries")
@@ -70,9 +69,10 @@ ENDIF()
 
 # Use this value where semi-colons are needed in ep_add args:
 set(sep "^^")
-#------------------------------------------------------------------------------
-# Establish Target Dependencies based on Selected Options
-#------------------------------------------------------------------------------
+
+#############################################################################################
+### Establish Target Dependencies based on Selected Options
+#############################################################################################
 
 #if(MAF_USE_PYTHONQT)
 #  list(APPEND MAF_DEPENDENCIES python)
@@ -99,11 +99,9 @@ if(MAF_PLUGINVTK)
   include(CMakeExternals/External_VTK.cmake)
 endif(MAF_PLUGINVTK)
 
-
-
-#------------------------------------------------------------------------------
-# Conditionnaly include ExternalProject Target
-#------------------------------------------------------------------------------
+#############################################################################################
+### Conditionnaly include ExternalProject Target
+#############################################################################################
 
 #if(MAF_USE_PYTHON OR MAF_USE_PYTHONQT)
 #  include(SuperBuild/External_Python26.cmake)
@@ -125,9 +123,9 @@ endif(MAF_PLUGINVTK)
 #  endif()
 #endif()
 
-#-----------------------------------------------------------------------------
-# Update external project dependencies
-#------------------------------------------------------------------------------
+#############################################################################################
+### Update external project dependencies
+#############################################################################################
 
 # For now, tk and itcl are used only when MAF_USE_KWWIDGETS is ON
 
@@ -149,11 +147,9 @@ endif(MAF_PLUGINVTK)
 #endif()
 
 
-
-
-#-----------------------------------------------------------------------------
-# Set superbuild boolean args
-#
+#############################################################################################
+### Set superbuild boolean args
+#############################################################################################
 
 SET(MAF_cmake_boolean_args
   BUILD_DOCUMENTATION
@@ -175,10 +171,10 @@ ENDFOREACH()
 # FOREACH(arg ${MAF_superbuild_boolean_args})
 #   MESSAGE("  ${arg}")
 # ENDFOREACH()
-  
-#-----------------------------------------------------------------------------
-# Configure and build MAF
-#------------------------------------------------------------------------------
+
+#############################################################################################
+### Configure and build MAF
+#############################################################################################
 
 #message (".......................... Entering ${CMAKE_CURRENT_LIST_FILE} ............................")
 set(proj MAF)
@@ -206,9 +202,11 @@ ExternalProject_Add(${proj}
     #-DOpenIGTLink_DIR:PATH=${OpenIGTLink_DIR}
     # Python
     #-DMAF_USE_SYSTEM_PYTHON:BOOL=OFF
-    -DPYTHON_EXECUTABLE:FILEPATH=${MAF_PYTHON_EXECUTABLE}
-    -DPYTHON_INCLUDE_DIR:PATH=${MAF_PYTHON_INCLUDE}
-    -DPYTHON_LIBRARY:FILEPATH=${MAF_PYTHON_LIBRARY}
+    #-DPYTHON_EXECUTABLE:FILEPATH=${PYTHON_EXECUTABLE}
+    -DPYTHONLIBS_FOUND:BOOL=${PYTHONLIBS_FOUND}
+    -DPYTHON_LIBRARIES:FILEPATH=${PYTHON_LIBRARIES}
+    -DPYTHON_INCLUDE_DIR:PATH=${PYTHON_INCLUDE_DIR}
+    -DPYTHON_LIBRARY:FILEPATH=${PYTHON_LIBRARY}
     # Qt
     -DQT_QMAKE_EXECUTABLE:PATH=${QT_QMAKE_EXECUTABLE}
     # VTK
