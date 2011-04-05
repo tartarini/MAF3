@@ -68,13 +68,6 @@ enum {
     Z_AXIS
 };
 
-/// Enumeration that define the operation type.
-typedef enum {
-    mafOperationTypeImporter = 0,
-    mafOperationTypeExporter,
-    mafOperationTypeOperation
-} mafOperationType;
-
 } // namespace mafResources
 
 /// Vector of Operation Worker.
