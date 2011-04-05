@@ -46,6 +46,7 @@ if(NOT DEFINED VTK_DIR OR NOT DEFINED VTK_SOURCE_DIR)
     GIT_REPOSITORY "${git_protocol}://vtk.org/VTK.git"
     #GIT_TAG "origin"
     INSTALL_COMMAND ""
+    #INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/build/bin
     CMAKE_GENERATOR ${gen}
 CMAKE_ARGS
         ${ep_common_args}
@@ -85,3 +86,7 @@ endif()
 
   SET(${VTK_enabling_variable}_INCLUDE_DIRS VTK_INCLUDE_DIRS)
   SET(${VTK_enabling_variable}_FIND_PACKAGE_CMD VTK)
+  
+  #copy dll in bin directory of MAF project (only if shared)
+  include(${CMAKE_SOURCE_DIR}/CMake/mafCopySharedLibrariesInInstallDir.cmake)
+  mafCopySharedLibrariesInInstallDir("${VTK_DIR}/bin" proj)
