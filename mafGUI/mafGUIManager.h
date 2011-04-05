@@ -166,6 +166,8 @@ private:
     QString strippedName(const QString &fullFileName);
 
     QMenu *m_FileMenu; ///< Reference to the 'File' menu.
+    QMenu *m_ImportMenu; ///< Reference to the 'Import' menu.
+    QMenu *m_ExportMenu; ///< Reference to the 'Export' menu.
     QMenu *m_RecentFilesMenu; ///< Reference to 'Recent File' menu.
     QMenu *m_EditMenu; ///< Reference to the 'Edit' menu.
     QMenu *m_ViewMenu; ///< Reference to the 'View' menu.
