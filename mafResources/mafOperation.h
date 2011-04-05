@@ -42,9 +42,6 @@ public:
     /// Return true or false according to the unDo ability of the operation.
     bool canUnDo() const;
 
-    /// Return the operation type (can be: mafOperationTypeImporter, mafOperationTypeExporter or mafOperationTypeOperation).
-    mafOperationType operationType() const;
-
     /// check if the operation is running.
     bool isRunning() const;
 
@@ -87,7 +84,6 @@ protected:
 
     bool m_IsRunning; ///< Flag that check if the operation is running, i.e. the execution is started
     bool m_CanUnDo; ///< Flag that store the unDo capability of the operation.
-    mafOperationType m_OperationType; ///< Describe the operation type (mafOperationTypeImporter, mafOperationTypeExporter or mafOperationTypeOperation).
     bool m_CanAbort;         ///< Flag indicating that the operation can abort its execution or no (default true).
     volatile bool m_Abort;               ///< Flag indicating that the operation has to be aborted. The code inside the execute slot has to take care about it.
     bool m_InputPreserve;  ///< Flag represnting the behavior of the operationabout the input data. True value means that the input data is not modified (default true).
@@ -103,10 +99,6 @@ inline bool mafOperation::isRunning() const {
 
 inline bool mafOperation::canUnDo() const {
     return m_CanUnDo;
-}
-
-inline mafOperationType mafOperation::operationType() const {
-    return m_OperationType;
 }
 
 inline bool mafOperation::canAbort() const {
