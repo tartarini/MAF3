@@ -44,8 +44,10 @@ set(MAF_BIN_DIRS_CONFIG "@MAF_BIN_DIRS_CONFIG@")
 # Components needed to build modules from outside a MAF build tree or 
 # from outside a MAF installation tree
 set(VTK_DIR "@VTK_DIR_CONFIG@")
-#set(PYTHON_INCLUDE_PATH "@PYTHON_INCLUDE_PATH@")
-#set(PYTHON_LIBRARIES "@PYTHON_LIBRARIES@")
+set(PYTHONLIBS_FOUND "@PYTHONLIBS_FOUND@")
+set(PYTHON_LIBRARY "@PYTHON_LIBRARY@")
+set(PYTHON_INCLUDE_PATH "@PYTHON_INCLUDE_PATH@")
+set(PYTHON_LIBRARIES "@PYTHON_LIBRARIES@")
 
 # copy options
 SET(MAF_CORE "@MAF_CORE@")
