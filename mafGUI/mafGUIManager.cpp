@@ -179,13 +179,23 @@ void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pl
     while(iter != pluginHash.end()) {
         objInfo = iter.value();
         base_class = iter.key();
-        if(base_class == "mafResources::mafOperation" || base_class == "mafResources::mafView") {
+        if(base_class == "mafResources::mafOperation" || base_class == "mafResources::mafImporter" || 
+           base_class == "mafResources::mafExporter" || base_class == "mafResources::mafView") {
             QAction *action = new QAction(mafTr(objInfo.m_Label.toAscii()), NULL);
             QVariant data_type(objInfo.m_ClassType);
             action->setData(data_type);
+            char *bc = base_class.toAscii().data();
             if(base_class == "mafResources::mafOperation") {
                 // Add a new item to the operation's menu.
                 m_OpMenu->addAction(action);
+                connect(action, SIGNAL(triggered()), this, SLOT(startOperation()));
+            } else if(base_class == "mafResources::mafImporter") {
+                // Add a new item to the importer's menu.
+                m_ImportMenu->addAction(action);
+                connect(action, SIGNAL(triggered()), this, SLOT(startOperation()));
+            } else if(base_class == "mafResources::mafExporter") {
+                // Add a new item to the exporter's menu.
+                m_ExportMenu->addAction(action);
                 connect(action, SIGNAL(triggered()), this, SLOT(startOperation()));
             } else if(base_class == "mafResources::mafView") {
                 // Add a new item to the view's menu.
@@ -261,14 +271,22 @@ void mafGUIManager::createMenus() {
     }
 
     QMenuBar *menuBar = m_MainWindow->menuBar();
+    
+    m_ImportMenu = new QMenu(tr("&Import"));
+    m_ExportMenu = new QMenu(tr("&Export"));
 
     m_FileMenu = menuBar->addMenu(tr("&File"));
     m_FileMenu->addAction(m_NewAct);
-    m_FileMenu->addAction(m_CollaborateAct);
+    m_FileMenu->addSeparator();
     m_FileMenu->addAction(m_OpenAct);
+    m_FileMenu->addAction(m_CollaborateAct);
+    m_FileMenu->addSeparator();
+    m_FileMenu->addMenu(m_ImportMenu);
+    m_FileMenu->addMenu(m_ExportMenu);
+    m_FileMenu->addSeparator();
     m_FileMenu->addAction(m_SaveAct);
     m_FileMenu->addAction(m_SaveAsAct);
-
+    
     m_RecentFilesSeparatorAct = m_FileMenu->addSeparator();
     for (int i = 0; i < m_MaxRecentFiles; ++i) {
         m_FileMenu->addAction(m_RecentFileActs.at(i));
