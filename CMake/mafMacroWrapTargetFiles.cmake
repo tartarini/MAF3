@@ -9,67 +9,7 @@
 #
 #
 
-## #################################################################
-## Swig
-## #################################################################
-
-find_package(SWIG QUIET)
-
-if(SWIG_FOUND)
-  include(${SWIG_USE_FILE})
-  set(CMAKE_SWIG_FLAGS "")
-  
-  macro(mafMacroWrap project target name language input deps)
-    set(wrap_output ${project}_wrap_${language}.cpp)
-    add_custom_command(
-      OUTPUT ${wrap_output}
-      COMMAND ${SWIG_EXECUTABLE}
-      ARGS
-      "-${language}"
-      "-c++"
-      "-module" ${name}
-      "-I${CMAKE_SOURCE_DIR}/${name}"
-      "-outdir" ${CMAKE_CURRENT_BINARY_DIR}
-      "-o" ${wrap_output}
-      ${input}
-      MAIN_DEPENDENCY ${input}
-      COMMENT "Wrapping ${input} to ${language}")
-    set(${target} ${${target}} ${wrap_output})
-  endmacro(mafMacroWrap)
-  
-  mark_as_advanced(SWIG_DIR)
-  mark_as_advanced(SWIG_EXECUTABLE)
-  mark_as_advanced(SWIG_VERSION)
-endif(SWIG_FOUND)
-
-if(SWIG_FOUND)
-  add_definitions(-DHAVE_SWIG)
-endif(SWIG_FOUND)
-
-## #################################################################
-## Other language
-## #################################################################
-
-
-## #################################################################
-## Python
-## #################################################################
-
-find_package(PythonLibs QUIET)
-
-if(PYTHONLIBS_FOUND)
-  include_directories(${PYTHON_INCLUDE_PATH})
-  get_filename_component(PYTHON_PATH ${PYTHON_LIBRARIES} PATH)
-  link_directories(${PYTHON_PATH})
-endif(PYTHONLIBS_FOUND)
-
-if(PYTHONLIBS_FOUND)
-  add_definitions(-DHAVE_PYTHON)
-endif(PYTHONLIBS_FOUND)
-
-
-MACRO(mafMacroWrapTargetFiles)
-
+MACRO(mafMacroWrapTargetFiles) 
   SET(filepath ${CMAKE_CURRENT_SOURCE_DIR}/target_wrap_files.cmake)
 
   # Check if "target_wrap_files.cmake" file exists
@@ -92,7 +32,6 @@ MACRO(mafMacroWrapTargetFiles)
     ENDFOREACH()
 
     INCLUDE(${filepath})
-
     # Loop over all target files, let's resolve the variable to access its content
     FOREACH(wfile ${file_to_wrap})
       LIST(APPEND wrap_list ${CMAKE_CURRENT_SOURCE_DIR}/${wfile})
@@ -111,6 +50,7 @@ MACRO(mafMacroWrapTargetFiles)
     SET(i_filepath ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i)
     IF(EXISTS ${i_filepath})
       if(PYTHONLIBS_FOUND)
+      #message("************** >${PROJECT_NAME}< >${PROJECT_NAME}_SOURCES_WRAP< >${PROJECT_NAME}< python >${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i< >${${PROJECT_NAME}_WRAP_DEPENDS}<")
         mafMacroWrap(${PROJECT_NAME} ${PROJECT_NAME}_SOURCES_WRAP ${PROJECT_NAME} python ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i ${${PROJECT_NAME}_WRAP_DEPENDS})
         SET(PROJECT_SRCS 
           ${PROJECT_SRCS}
@@ -137,6 +77,7 @@ MACRO(mafMacroWrapBuild)
 
     set(${PROJECT_NAME}_MODULES)
 
+  
     if(SWIG_FOUND AND PYTHONLIBS_FOUND)
       if(WIN32)
         set(lib_ext ".dll")
@@ -149,18 +90,18 @@ MACRO(mafMacroWrapBuild)
           set(lib_ext ".so")
         endif(APPLE)
       endif(WIN32)
-      
+        
       SET(realName)
       SET(pyName "${PROJECT_NAME}")
-      if(CMAKE_BUILD_TYPE MATCHES Debug)
-        if(WIN32)
-            SET(realName "${PROJECT_NAME}_d" )    
-        else(WIN32)
-            SET(realName "${PROJECT_NAME}_debug" )
-        endif(WIN32)
-      else(CMAKE_BUILD_TYPE MATCHES Debug)
+      #if(CMAKE_BUILD_TYPE MATCHES Debug)
+      #  if(WIN32)
+      #      SET(realName "${PROJECT_NAME}_d" )    
+      #  else(WIN32)
+      #      SET(realName "${PROJECT_NAME}_debug" )
+      #  endif(WIN32)
+      #else(CMAKE_BUILD_TYPE MATCHES Debug)
             SET(realName "${PROJECT_NAME}" )
-      endif(CMAKE_BUILD_TYPE MATCHES Debug)
+      #endif(CMAKE_BUILD_TYPE MATCHES Debug)
 
       set(lib_name ${realName}${lib_ext})
 	  set(wrap_lib_prefix "_")
