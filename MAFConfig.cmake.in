@@ -1,0 +1,62 @@
+#
+# MAFConfig.cmake - MAF CMake configuration file for external projects
+#
+# This file is configured by MAF and used by UseMAF.cmake module
+# to load MAF's settings for an external project. External projects
+# can use these setting to build new modules against a MAF build tree
+# or a MAF installation.
+#
+#message (".......................... Entering MAFConfig.cmake ............................")
+# The C and C++ flags added by MAF to the cmake-configured flags.
+set(MAF_REQUIRED_C_FLAGS "@MAF_REQUIRED_C_FLAGS@")
+set(MAF_REQUIRED_CXX_FLAGS "@MAF_REQUIRED_CXX_FLAGS@")
+set(MAF_REQUIRED_LINK_FLAGS "@MAF_REQUIRED_LINK_FLAGS@")
+
+# The MAF version number
+set(MAF_VERSION_MAJOR "@MAF_VERSION_MAJOR@")
+set(MAF_VERSION_MINOR "@MAF_VERSION_MINOR@")
+set(MAF_VERSION_PATCH "@MAF_VERSION_PATCH@")
+
+# Whether MAF was built with shared libraries.
+set(MAF_BUILD_SHARED "@BUILD_SHARED_LIBS@")
+
+# MAF options
+#set(MAF_USE_PYTHON "@MAF_USE_PYTHON@")
+
+# The CMake macros dir.
+set(MAF_ROOT_DIR "@MAF_ROOT_DIR@")
+
+# MAF Internal Build dir contains internal builds of MAF modules
+set(MAF_INTERNAL_BUILD_DIR "@MAF_INTERNAL_BUILD_DIR@")
+
+# MAF External Build dir contains external libraries builds
+set(MAF_EXTERNAL_BUILD_DIR "@MAF_EXTERNAL_BUILD_DIR@")
+
+# MAF Libs library directories.
+set(MAF_SRC_DIRS "@MAF_SRC_DIRS_CONFIG@")
+
+# The location of the UseMAF.cmake file.
+set(MAF_USE_FILE "@MAF_USE_FILE_CONFIG@")
+
+# The MAF binary directory where libraries and executables will be generated.
+set(MAF_BIN_DIRS_CONFIG "@MAF_BIN_DIRS_CONFIG@")
+
+# Components needed to build modules from outside a MAF build tree or 
+# from outside a MAF installation tree
+set(VTK_DIR "@VTK_DIR_CONFIG@")
+set(PYTHONLIBS_FOUND "@PYTHONLIBS_FOUND@")
+set(PYTHON_LIBRARY "@PYTHON_LIBRARY@")
+set(PYTHON_INCLUDE_PATH "@PYTHON_INCLUDE_PATH@")
+set(PYTHON_LIBRARIES "@PYTHON_LIBRARIES@")
+
+# copy options
+SET(MAF_CORE "@MAF_CORE@")
+SET(MAF_EVENT_BUS "@MAF_EVENT_BUS@")
+SET(MAF_TIME_SPACE "@MAF_TIME_SPACE@")
+SET(MAF_SERIALIZATION "@MAF_SERIALIZATION@")
+SET(MAF_RESOURCES "@MAF_RESOURCES@")
+SET(MAF_PLUGINVTK "@MAF_PLUGINVTK@")
+SET(MAF_APPLICATION_LOGIC "@MAF_APPLICATION_LOGIC@")
+SET(MAF_QTGUI "@MAF_QTGUI@")
+
+#message (".......................... Exiting MAFConfig.cmake ............................")

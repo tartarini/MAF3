@@ -45,3 +45,6 @@ object_*
 Debug
 Release
 *.vcproj
+
+#ignore pyc files
+*.pyc

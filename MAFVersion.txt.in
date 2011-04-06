@@ -1,0 +1,4 @@
+build @MAF_BUILD@
+buildDate @MAF_BUILDDATE@
+svnurl @MAF_WC_URL@
+svnrevision @MAF_WC_REVISION@

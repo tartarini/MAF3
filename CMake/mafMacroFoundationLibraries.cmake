@@ -11,9 +11,6 @@
 
 MACRO(mafMacroFoundationLibraries)
 
-include(FindVXL)
-include(FindQtSOAP)
-include(FindQXMLRPC)
 include(FindQScxml)
 
 include(mafCopySharedLibrariesInInstallDir)
