@@ -122,13 +122,14 @@ bool mafTreeItemDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, 
         if (!value.isValid())
             return result;
         bool state = (static_cast<Qt::CheckState>(value.toInt())) ? true : false;
-        sceneNode->setProperty("visibility", state);
-
-        mafEventArgumentsList argList;
-        argList.append(mafEventArgument(mafCore::mafObjectBase*, (mafObjectBase*)sceneNode));
-        argList.append(mafEventArgument(bool, state));
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);
-
+        bool visibility = sceneNode->property("visibility").toBool();
+        if (visibility != state) {
+            sceneNode->setProperty("visibility", state);
+            mafEventArgumentsList argList;
+            argList.append(mafEventArgument(mafCore::mafObjectBase*, (mafObjectBase*)sceneNode));
+            argList.append(mafEventArgument(bool, state));
+            mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);
+        }
     } else {
         m_isSceneNode = false;
     }
