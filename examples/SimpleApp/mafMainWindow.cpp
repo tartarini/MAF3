@@ -18,7 +18,7 @@
 
 #include <mafGUIRegistration.h>
 #include <mafGUIApplicationSettingsDialog.h>
-;
+
 #include <vtkPolyDataMapper.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
@@ -90,7 +90,7 @@ void mafMainWindow::initializeMainWindow() {
     //allow drag&drop operation
     m_Tree->setDragEnabled(true);
     m_Tree->setAcceptDrops(true);
-    m_Tree->setDropIndicatorShown(true);
+    m_Tree->setDropIndicatorShown(false);
     QModelIndex index = m_Model->index(0, 0);
     m_Tree->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
 
@@ -143,7 +143,6 @@ void mafMainWindow::connectCallbacks() {
     mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "readSettings()");
 
     mafRegisterLocalCallback("maf.local.resources.view.created", this, "viewCreated(mafCore::mafObjectBase *)");
-
 }
 
 mafMainWindow::~mafMainWindow() {
