@@ -47,7 +47,7 @@ SET(VXL_DEPENDS)
       DEPENDS
         ${proj_DEPENDENCIES}
       )
-    SET(VXL_DIR "${ep_build_dir}/${proj}")
+    set(VXL_DIR "${MAF_EXTERNAL_BUILD_DIR}/Build/VXL")
     
     # Since VXL is statically build, there is not need to add its corresponding 
     # library output directory to CTK_EXTERNAL_LIBRARY_DIRS
