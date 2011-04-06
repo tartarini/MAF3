@@ -89,10 +89,10 @@ if(MAF_EVENT_BUS)
   include(CMakeExternals/External_QtSOAP.cmake)
 endif(MAF_EVENT_BUS)
 
-if(MAF_PLUGINVTK)
+if(MAF_RESOURCES)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VXL)
   include(CMakeExternals/External_VXL.cmake)
-endif(MAF_PLUGINVTK)
+endif(MAF_RESOURCES)
 
 if(MAF_PLUGINVTK)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VTK)
@@ -187,6 +187,7 @@ ExternalProject_Add(${proj}
   CMAKE_ARGS
     ${MAF_superbuild_boolean_args}
     -DBUILD_TEST_SUITE:BOOL=${BUILD_TEST_SUITE}
+    -DBUILD_EXAMPLES:BOOL=${BUILD_EXAMPLES}
     -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
     -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
     -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
@@ -217,7 +218,7 @@ ExternalProject_Add(${proj}
     # QtSOAP
     -DQtSOAP_DIR:PATH=${QtSOAP_DIR} # FindQtSOAP expects QtSOAP_DIR variable to be defined
     # VXL
-    -DVXL_DIR:PATH=${QtSOAP_DIR} # FindVXL expects VXL_DIR variable to be defined
+    -DVXL_DIR:PATH=${VXL_DIR} # FindVXL expects VXL_DIR variable to be defined
     # CTK
     #-DCTK_DIR:PATH=${CTK_DIR}
     # CTKAppLauncher
