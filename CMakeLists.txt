@@ -93,7 +93,12 @@ ENDIF(BUILD_TEST_SUITE OR BUILD_EXAMPLES)
 ### Wrapping (find swig, python ...)
 #############################################################################################
 
-include(CMake/mafMacroFindWrap.cmake)
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+  include(CMake/mafMacroFindWrap.cmake)
+else(CMAKE_BUILD_TYPE STREQUAL "Release")
+  SET(PYTHONLIBS_FOUND OFF)
+endif(CMAKE_BUILD_TYPE STREQUAL "Release")
+
 
 #############################################################################################
 ### Superbuild execution
