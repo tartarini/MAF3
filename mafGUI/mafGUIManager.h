@@ -136,6 +136,9 @@ private slots:
     /// Update the GUI associated to the selected view.
     void viewSelected(mafCore::mafObjectBase *view);
 
+    /// Set mafVMEManager hierarchy to the tree model.
+    void viewDestroyed();
+
     /// Allow to send a vme selection request when an item has been clicked into the mafTreWidget.
     void selectVME(QModelIndex);
 
@@ -208,6 +211,8 @@ private:
     QMainWindow *m_MainWindow; ///< Main window associated to the application.
     mafUILoaderQt *m_UILoader; ///< Class in charge to load the GUI.
     mafGUILoadedType m_GUILoadedType; ///< Type of GUI loaded.
+    mafTreeModel *m_Model; ///< Tree model of VME.
+    mafTreeWidget *m_TreeWidget; ///< Visualize the tree model.
 };
 
 /////////////////////////////////////////////////////////////
