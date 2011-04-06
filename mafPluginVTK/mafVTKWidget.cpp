@@ -28,6 +28,7 @@ mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f
 }
 
 mafVTKWidget::~mafVTKWidget() {
+    mafEventBusManager::instance()->removeSignal(this, "maf.local.resources.interaction.vmePick");
 }
 
 void mafVTKWidget::mousePressEvent(QMouseEvent* e) {
