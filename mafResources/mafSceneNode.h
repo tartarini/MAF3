@@ -69,7 +69,7 @@ protected:
     bool visibility() const;
 
     /// Return the canVisualize status
-    bool canVisualize() const;
+    bool canVisualize();
 
 private slots:
     /// monitor the visual pipe deletation.

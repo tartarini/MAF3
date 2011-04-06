@@ -23,6 +23,9 @@ mafSceneNode::mafSceneNode(const QString code_location) : mafObject(code_locatio
 mafSceneNode::mafSceneNode(mafVME *vme, mafPipeVisual *visual_pipe, const QString code_location) : mafObject(code_location), m_VME(vme), m_VisualPipe(visual_pipe), m_Visibility(false), m_CanVisualize(false) {
     connect(vme, SIGNAL(destroyed()), this, SIGNAL(destroyNode()));
     connect(vme, SIGNAL(detatched()), this, SIGNAL(destroyNode()));
+    m_VME = vme;
+    m_VisualPipe = visual_pipe;
+    this->setProperty("iconFile",m_VME->property("iconFile"));
 }
 
 mafSceneNode::~mafSceneNode() {
@@ -64,8 +67,9 @@ void mafSceneNode::setCanVisualize(bool canVisualize) {
     m_CanVisualize = canVisualize;
 }
 
-bool mafSceneNode::canVisualize() const {
-    m_CanVisualize ? m_VME->property("canRead").toBool() : m_CanVisualize;
+bool mafSceneNode::canVisualize() {
+    m_CanVisualize = m_VME->property("canRead").toBool() ? true : false;
+    m_CanVisualize = (m_VME->objectName() != "root");
     return m_CanVisualize;
 }
 
