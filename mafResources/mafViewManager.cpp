@@ -64,6 +64,7 @@ void mafViewManager::initializeConnections() {
     provider->createNewId("maf.local.resources.view.select");
     provider->createNewId("maf.local.resources.view.selected");
     provider->createNewId("maf.local.resources.view.sceneNodeShow");
+    provider->createNewId("maf.local.resources.view.noneViews");
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(QString)")
@@ -72,6 +73,7 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.view.select", this, "selectViewSignal(mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.view.selected", this, "selectedViewSignal(mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShowSignal(mafCore::mafObjectBase *, bool)")
+    mafRegisterLocalSignal("maf.local.resources.view.noneViews", this, "noneViewsSignal()")
 
     // Register private callbacks to the instance of the manager..
     mafRegisterLocalCallback("maf.local.resources.view.create", this, "createView(QString)")
@@ -106,7 +108,7 @@ void mafViewManager::sceneNodeShow(mafCore::mafObjectBase *node, bool show) {
     mafSceneNode *node_to_show = qobject_cast<mafResources::mafSceneNode *>(node);
     if(node_to_show != NULL) {
         if(m_SelectedView) {
-            m_SelectedView->showSceneNode(node_to_show, show);
+            m_SelectedView->showSceneNode(node_to_show, show, "mafPluginVTK::mafPipeVisualVTKSurface");
         }
     }
 }
@@ -135,6 +137,37 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
             // add the new created view to the list.
             m_CreatedViewList.append(v);
             v->create();
+
+            // create sceneNode hierarchy equal to vme hierarchy
+            mafCore::mafHierarchyPointer hierarchy;
+            QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+            mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+            mafTree<QObject *>::iterator temp_iterator = hierarchy->iterator();
+
+            //Create root node
+            v->selectSceneNode(NULL, false);
+            hierarchy->moveTreeIteratorToRootNode();
+            QObject* rootNode = hierarchy->currentData();
+            v->vmeAdd(qobject_cast<mafCore::mafObjectBase *>(rootNode));
+
+            int i = 0, size = hierarchy->currentNumberOfChildren();
+            for(i; i < size; i++) {
+                hierarchy->moveTreeIteratorToNthChild(i);
+                QObject *vme = hierarchy->currentData();
+                hierarchy->moveTreeIteratorToParent();
+                QObject *vmeParent = hierarchy->currentData();
+                mafSceneNode *parentNode = v->sceneNodeFromVme(qobject_cast<mafCore::mafObjectBase *>(vmeParent));
+                v->selectSceneNode(parentNode, parentNode->property("visibility").toBool());
+                v->vmeAdd(qobject_cast<mafCore::mafObjectBase *>(vme));
+            }
+            hierarchy->setIterator(temp_iterator);
+            QObject* selectedVME = hierarchy->currentData();
+            mafSceneNode *selectedNode = v->sceneNodeFromVme(qobject_cast<mafCore::mafObjectBase *>(selectedVME));
+            v->selectSceneNode(selectedNode, selectedNode->property("canVisualize").toBool());
+            // notify the VME selection.
+//            mafEventArgumentsList argList;
+//            argList.append(mafEventArgument(mafCore::mafObjectBase *, selectedNode->vme()));
+//            mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 
             // Notify the view creation.
             mafEventArgumentsList argList;
@@ -182,6 +215,8 @@ void mafViewManager::removeView(mafView *view) {
             selectView(obj);
         } else {
             m_SelectedView = NULL;
+            // View list empty
+            mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.noneViews");
         }
     }
 }
