@@ -69,10 +69,13 @@ public:
     /// Return sceneNode hierarchy.
     QVariant hierarchy() const;
 
-private slots:
+    /// return mafSceneNode containing vme.
+    mafSceneNode *sceneNodeFromVme(mafObjectBase *vme);
+public slots:
     /// Wrap the new VME into a mafSceneNode.
     void vmeAdd(mafCore::mafObjectBase *vme);
 
+private slots:
     /// Called when the scene node has been destroyed.
     void sceneNodeDestroy();
 
@@ -83,8 +86,7 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafView();
 
-    /// return mafSceneNode containing vme.
-    mafSceneNode *sceneNodeFromVme(mafObjectBase *vme);
+
 
     mafCore::mafContainerInterface *m_RenderWidget; ///< Rendering widget for the view.
     QString m_DefaultVisualPipe; ///< Name of the default visual pipe.
