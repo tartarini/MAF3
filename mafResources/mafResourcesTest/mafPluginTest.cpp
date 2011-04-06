@@ -49,7 +49,7 @@ private slots:
         mafResourcesSingletons::mafSingletonsShutdown();
 
         //restore vme manager status
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.create");
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request");
 
         mafEventBusManager::instance()->shutdown();
         mafMessageHandler::instance()->shutdown();

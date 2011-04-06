@@ -41,7 +41,7 @@ private slots:
         m_VMEManager->shutdown();
 
         //restore vme manager status
-        m_EventBus->notifyEvent("maf.local.resources.hierarchy.create");
+        m_EventBus->notifyEvent("maf.local.resources.hierarchy.request");
 
         // Shutdown eventbus singleton and core singletons.
         m_EventBus->shutdown();
@@ -93,7 +93,7 @@ void mafVMEManagerTest::vmeManagingTest() {
 void mafVMEManagerTest::createHierarchyTest() {
     // this test is a smke test for verifying that manager doesn't crash.
     // createHierarchy is a private method
-    m_EventBus->notifyEvent("maf.local.resources.hierarchy.create", mafEventTypeLocal);
+    m_EventBus->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal);
 }
 
 MAF_REGISTER_TEST(mafVMEManagerTest);
