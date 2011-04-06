@@ -22,7 +22,7 @@ mafTreeModel::mafTreeModel(QObject *parent)
 void mafTreeModel::initialize() {
     REQUIRE(m_Hierarchy != NULL);
     //header to write
-    setHorizontalHeaderLabels(QStringList() << tr("Item/Item/..."));
+    //setHorizontalHeaderLabels(QStringList() << tr("Item/Item/..."));
     for (int column = 1; column < columnCount(); ++column) {
         horizontalHeaderItem(column)->setTextAlignment(Qt::AlignVCenter|Qt::AlignRight);
     }
@@ -109,13 +109,6 @@ void mafTreeModel::itemReparent(QObject *item, QObject *parent) {
 void mafTreeModel::selectItem(const QItemSelection &selected, const QItemSelection &deselected) {
     Q_UNUSED(deselected);
     m_CurrentItem = (mafTreeItem *)this->itemFromIndex(selected.indexes().at(0));
-
-    // Notify the item selection.
-    mafObjectBase *obj = qobject_cast<mafCore::mafObjectBase *>(m_CurrentItem->data());
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase*, obj));
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
-
 }
 
 
