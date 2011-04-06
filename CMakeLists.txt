@@ -18,7 +18,7 @@ PROJECT(MAF)
 #############################################################################################
 
 OPTION(BUILD_TEST_SUITE "Build Module's Tests" OFF)
-OPTION(BUILD_EXAMPLES "Build Examples" ON)
+OPTION(BUILD_EXAMPLES "Build Examples" OFF)
 OPTION(MAF_USE_GIT_PROTOCOL "If ON use git protocol, otherwise http" OFF)
 OPTION(MAF_SUPERBUILD "Build MAF and the projects it depends on via SuperBuild.cmake." ON)
 MARK_AS_ADVANCED(MAF_SUPERBUILD)
