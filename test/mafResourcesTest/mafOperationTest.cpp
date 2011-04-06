@@ -56,8 +56,6 @@ private:
 
 void mafOperationTest::mafOperationAllocationTest() {
     QVERIFY(m_Operation != NULL);
-    mafOperationType op_type = m_Operation->operationType();
-    QVERIFY(op_type == mafOperationTypeOperation);
     QVERIFY(m_Operation->canUnDo());
 
     m_Operation->initialize();
