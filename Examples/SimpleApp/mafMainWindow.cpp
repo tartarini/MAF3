@@ -143,7 +143,6 @@ void mafMainWindow::connectCallbacks() {
     mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "readSettings()");
 
     mafRegisterLocalCallback("maf.local.resources.view.created", this, "viewCreated(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("maf.local.resources.view.selected", this, "viewSelected(mafCore::mafObjectBase *)");
 
 }
 
@@ -305,13 +304,6 @@ void mafMainWindow::viewCreated(mafCore::mafObjectBase *view) {
     widget->setParent(sub_win);
     sub_win->setMinimumSize(200, 200);
     sub_win->show();
-}
-
-void mafMainWindow::viewSelected(mafCore::mafObjectBase *view) {
-    REQUIRE(view != NULL);
-    mafHierarchyPointer sceneGraph;
-    sceneGraph = view->property("hierarchy").value<mafCore::mafHierarchyPointer>();
-    m_Model->setHierarchy(sceneGraph);
 }
 
 void mafMainWindow::viewWillBeSelected() {
