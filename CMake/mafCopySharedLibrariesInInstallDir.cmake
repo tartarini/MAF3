@@ -26,6 +26,14 @@ FILE(GLOB file_list ${vardir}/*.${lib_ext})
 FILE(GLOB file_list_debug ${vardir}/Debug/*.${lib_ext})
 FILE(GLOB file_list_release ${vardir}/Release/*.${lib_ext})
 
+#if dirs don't exist, create them
+add_custom_command(TARGET ${${proj}} POST_BUILD
+          COMMAND ${CMAKE_COMMAND} ARGS -E  make_directory ${CMAKE_BINARY_DIR}/build/bin/
+          COMMAND ${CMAKE_COMMAND} ARGS -E  make_directory ${CMAKE_BINARY_DIR}/build/bin/Debug
+          COMMAND ${CMAKE_COMMAND} ARGS -E  make_directory ${CMAKE_BINARY_DIR}/build/bin/Release
+          )
+
+
 foreach(file ${file_list})
   add_custom_command(TARGET ${${proj}} POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy ${file} ${CMAKE_BINARY_DIR}/build/bin/${fileName} )
