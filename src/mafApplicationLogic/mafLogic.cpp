@@ -20,7 +20,7 @@ using namespace mafEventBus;
 #define PLUGIN_EXTENSION_FILTER "*.mafplugin"
 
 #ifdef WIN32
-    #define RESOURCES_LIBRARY_NAME "mafResources_d.dll"
+    #define RESOURCES_LIBRARY_NAME "mafResources.dll"
 #else
     #ifdef __APPLE__
         #define RESOURCES_LIBRARY_NAME "mafResources.dylib"
