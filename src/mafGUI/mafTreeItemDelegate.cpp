@@ -59,6 +59,9 @@ void mafTreeItemDelegate::setModelData(QWidget * editor, QAbstractItemModel * mo
 }
 
 void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
+   if(!index.isValid()) {
+     return;
+   }
     mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
     QStyleOptionViewItemV4 options = option;
     initStyleOption(&options, index);
