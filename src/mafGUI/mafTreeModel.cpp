@@ -35,23 +35,21 @@ void mafTreeModel::buildModel(bool init) {
     if(init == true) {
         m_Hierarchy->moveTreeIteratorToRootNode();
         m_CurrentItem = new mafTreeItem(m_Hierarchy->currentData() , false);
+        //this->insertNewItem(AtTopLevel, m_Hierarchy->currentData(), m_CurrentItem->index());
         setItem(0, 0, m_CurrentItem);
         m_ItemsList.push_back(m_CurrentItem);
     }
 
-    int index = 0, size = m_Hierarchy->currentNumberOfChildren();
-    for(;index < size; ++index) {
-        m_Hierarchy->moveTreeIteratorToNthChild(index);
-        QObject *obj = m_Hierarchy->currentData();
-//        QString name = obj->objectName();
-        mafTreeItem *item = new mafTreeItem(obj , false);
-        m_CurrentItem->insertRow(index, item);
-        setItem(index, 0, m_CurrentItem);
-        m_CurrentItem = item;
-        m_ItemsList.push_back(m_CurrentItem);
-        buildModel(false);
-        m_Hierarchy->moveTreeIteratorToParent();
-        m_CurrentItem = (mafTreeItem *)m_CurrentItem->parent();       
+    int i = 0, size = m_Hierarchy->currentNumberOfChildren();
+    for(;i < size; ++i) {
+      m_Hierarchy->moveTreeIteratorToNthChild(i);
+      QObject *obj = m_Hierarchy->currentData();
+
+      mafTreeItem *item = this->createNewItem(m_CurrentItem, obj, false);
+      m_CurrentItem = item;
+      buildModel(false);
+      m_Hierarchy->moveTreeIteratorToParent();
+      m_CurrentItem = (mafTreeItem *)m_CurrentItem->parent();       
     }
 }
 
