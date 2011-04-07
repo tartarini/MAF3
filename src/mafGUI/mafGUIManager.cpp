@@ -459,6 +459,7 @@ void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
     sceneGraph = view->property("hierarchy").value<mafCore::mafHierarchyPointer>();
     if (m_Model) {
         // Set hierarchy of selected view and set the current index
+        m_Model->clear();
         m_Model->setHierarchy(sceneGraph);
         QModelIndex index = m_Model->index(0, 0);
         // TODO: select previous index
@@ -482,6 +483,7 @@ void mafGUIManager::viewDestroyed() {
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
     if (m_Model) {
         // Set hierarchy of selected view and set the current index
+        m_Model->clear();
         m_Model->setHierarchy(hierarchy);
         QModelIndex index = m_Model->index(0, 0);
         // TODO: select previous index
