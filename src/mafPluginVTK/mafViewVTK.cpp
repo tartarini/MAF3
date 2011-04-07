@@ -65,6 +65,7 @@ void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show, cons
     if (node != NULL) {
         mafContainer<vtkActor> *actor = mafContainerPointerTypeCast(vtkActor, node->visualPipe()->output());
         m_Renderer->AddActor(*actor);
+        m_Renderer->ResetCamera();
         if ((*actor)->GetVisibility() == 0) {
             // To be revised.
             //node->m_IsRendered = true;
