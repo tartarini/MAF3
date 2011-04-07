@@ -164,10 +164,6 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
             QObject* selectedVME = hierarchy->currentData();
             mafSceneNode *selectedNode = v->sceneNodeFromVme(qobject_cast<mafCore::mafObjectBase *>(selectedVME));
             v->selectSceneNode(selectedNode, selectedNode->property("canVisualize").toBool());
-            // notify the VME selection.
-//            mafEventArgumentsList argList;
-//            argList.append(mafEventArgument(mafCore::mafObjectBase *, selectedNode->vme()));
-//            mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 
             // Notify the view creation.
             mafEventArgumentsList argList;
