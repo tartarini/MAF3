@@ -118,6 +118,9 @@ private:
     /// Delete all created views
     void destroyAllViews();
 
+    /// Fill sceneGraph woth sceneNodes.
+    void fillSceneGraph(mafView *v, mafCore::mafHierarchy *hierarchy);
+
     mafResourceList m_CreatedViewList; ///< List of created views.
     mafView *m_SelectedView; ///< Keep trak of the current selected view.
 };

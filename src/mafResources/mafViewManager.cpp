@@ -149,17 +149,8 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
             hierarchy->moveTreeIteratorToRootNode();
             QObject* rootNode = hierarchy->currentData();
             v->vmeAdd(qobject_cast<mafCore::mafObjectBase *>(rootNode));
+            this->fillSceneGraph(v, hierarchy);
 
-            int i = 0, size = hierarchy->currentNumberOfChildren();
-            for(i; i < size; i++) {
-                hierarchy->moveTreeIteratorToNthChild(i);
-                QObject *vme = hierarchy->currentData();
-                hierarchy->moveTreeIteratorToParent();
-                QObject *vmeParent = hierarchy->currentData();
-                mafSceneNode *parentNode = v->sceneNodeFromVme(qobject_cast<mafCore::mafObjectBase *>(vmeParent));
-                v->selectSceneNode(parentNode, parentNode->property("visibility").toBool());
-                v->vmeAdd(qobject_cast<mafCore::mafObjectBase *>(vme));
-            }
             hierarchy->setIterator(temp_iterator);
             QObject* selectedVME = hierarchy->currentData();
             mafSceneNode *selectedNode = v->sceneNodeFromVme(qobject_cast<mafCore::mafObjectBase *>(selectedVME));
@@ -171,6 +162,22 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
             mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.created", mafEventTypeLocal, &argList);
         }
     }
+}
+
+void mafViewManager::fillSceneGraph(mafView *v, mafCore::mafHierarchy *hierarchy) {
+  int i = 0, size = hierarchy->currentNumberOfChildren();
+  for(i; i < size; i++) {
+    hierarchy->moveTreeIteratorToNthChild(i);
+    QObject *vme = hierarchy->currentData();
+    hierarchy->moveTreeIteratorToParent();
+    QObject *vmeParent = hierarchy->currentData();
+    mafSceneNode *parentNode = v->sceneNodeFromVme(qobject_cast<mafCore::mafObjectBase *>(vmeParent));
+    v->selectSceneNode(parentNode, parentNode->property("visibility").toBool());
+    v->vmeAdd(qobject_cast<mafCore::mafObjectBase *>(vme));
+    hierarchy->moveTreeIteratorToNthChild(i);
+    fillSceneGraph(v, hierarchy);
+    hierarchy->moveTreeIteratorToParent();
+  }
 }
 
 void mafViewManager::destroyView(mafCore::mafObjectBase *view) {
