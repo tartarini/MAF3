@@ -18,6 +18,7 @@
 #include "mafTextHighlighter.h"
 #include "mafGUIApplicationSettingsDialog.h"
 #include "mafTreeItemDelegate.h"
+#include "mafTreeItemSceneNodeDelegate.h"
 
 #include <mafOperationWidget.h>
 
@@ -464,6 +465,9 @@ void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
         QModelIndex index = m_Model->index(0, 0);
         // TODO: select previous index
         m_TreeWidget->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
+        mafTreeItemSceneNodeDelegate *itemSceneNodeDelegate = new mafTreeItemSceneNodeDelegate(this);
+        m_TreeWidget->setItemDelegate(itemSceneNodeDelegate);
+
     }
     // Get the selected view's UI file
     QString guiFilename = view->uiFilename();
@@ -488,6 +492,8 @@ void mafGUIManager::viewDestroyed() {
         QModelIndex index = m_Model->index(0, 0);
         // TODO: select previous index
         m_TreeWidget->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
+        mafTreeItemDelegate *itemDelegate = new mafTreeItemDelegate(this);
+        m_TreeWidget->setItemDelegate(itemDelegate);
     }
 }
 
