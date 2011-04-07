@@ -145,7 +145,7 @@ void mafVTKWidget::wheelEvent(QWheelEvent* e) {
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
     // Check if a VME has been picked
-    this->vmePickCheck(iren, e);
+    //this->vmePickCheck(iren, e);
 
     // invoke vtk event
     // if delta is positive, it is a forward wheel event
@@ -178,7 +178,7 @@ void mafVTKWidget::mouseMoveEvent(QMouseEvent* e) {
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
     // Check if a VME has been picked
-    this->vmePickCheck(iren, e);
+    //this->vmePickCheck(iren, e);
 
     // invoke vtk event
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseMove", mafEventTypeLocal, &argList);
