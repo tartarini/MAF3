@@ -3,8 +3,6 @@
 #
 
 SET(qxmlrpc_DEPENDS)
-
-set(proj VTK)
   
   SET(qxmlrpc_enabling_variable qxmlrpc_LIBRARY)
   
@@ -36,7 +34,7 @@ set(proj VTK)
   ELSE()
     mafMacroEmptyExternalProject(${proj} "${proj_DEPENDENCIES}")
   ENDIF()
-  
+
   SET(${qxmlrpc_enabling_variable}_INCLUDE_DIRS qxmlrpc_INCLUDE_DIRS)
   SET(${qxmlrpc_enabling_variable}_FIND_PACKAGE_CMD qxmlrpc)
     
