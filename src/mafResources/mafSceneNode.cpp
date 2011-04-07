@@ -59,6 +59,18 @@ void mafSceneNode::setVisualPipe(QString visualPipeType) {
     connect(m_VisualPipe, SIGNAL(destroyed()), this, SLOT(visualPipeDestroyed()));
 }
 
+void mafSceneNode::setVMEName(QString name) {
+  if(m_VME) {
+    m_VME->setProperty("objectName", name);
+  }
+}
+
+QString mafSceneNode::VMEName() {
+  if(m_VME) {
+    return m_VME->property("objectName").toString();
+  }
+}
+
 void mafSceneNode::setVisibility(bool visible) {
     m_Visibility = visible;
 }

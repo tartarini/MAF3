@@ -28,6 +28,7 @@ class MAFRESOURCESSHARED_EXPORT mafSceneNode : public mafCore::mafObject {
     Q_OBJECT
     Q_PROPERTY(bool visibility READ visibility WRITE setVisibility)
     Q_PROPERTY(bool canVisualize READ canVisualize WRITE setCanVisualize)
+    Q_PROPERTY(QString VMEName READ VMEName WRITE setVMEName)
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObject);
 
@@ -46,6 +47,12 @@ public:
 
     /// Return the inner vme.
     mafVME *vme() const;
+
+    /// Set name of VME contained by scene node.
+    void setVMEName(QString name);
+
+    /// Return name of contained VME.
+    QString VMEName();
 
     /// Allow to send the selection event for the owned VME.
     /*virtual*/ void setSelected(bool sel);
