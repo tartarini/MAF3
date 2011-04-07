@@ -569,15 +569,15 @@ WARN_LOGFILE           =
 # with spaces.
 
 INPUT                  = . \
-                         mafCore \
-                         mafQA \
-                         mafEventBus \
-                         mafTimeSpace \
-                         mafSerialization \
-                         mafResources \
-                         mafPluginVTK \
-                         mafApplicationLogic \
-                         mafGUI
+                         ../src/mafCore \
+                         ../src/mafQA \
+                         ../src/mafEventBus \
+                         ../src/mafTimeSpace \
+                         ../src/mafSerialization \
+                         ../src/mafResources \
+                         ../src/mafPluginVTK \
+                         ../src/mafApplicationLogic \
+                         ../src/mafGUI
 
 # This tag can be used to specify the character encoding of the source files 
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is 
