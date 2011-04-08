@@ -14,7 +14,7 @@
 
 using namespace mafCore;
 
-mafHierarchy::mafHierarchy(const QString code_location) : mafObjectBase(code_location), m_Tree(NULL) {
+mafHierarchy::mafHierarchy(const QString code_location) : mafObject(code_location), m_Tree(NULL) {
     //create Tree
     m_Tree = new mafTree<QObject *>();
     m_TreeIterator = m_Tree->root();

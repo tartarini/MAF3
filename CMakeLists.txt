@@ -1,6 +1,6 @@
 #
 #  CMakeLists.txt
-#  maf
+#  MAF
 #
 #  Created by Daniele Giunchi - Paolo Quadrani on 10/09/10.
 #  Copyright 2009 B3C. All rights reserved.
@@ -11,22 +11,23 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-PROJECT(MAF)
+project(MAF)
 
 #############################################################################################
 ### MAF3 Options
 #############################################################################################
 
-OPTION(BUILD_TEST_SUITE "Build Module's Tests" OFF)
-OPTION(BUILD_EXAMPLES "Build Examples" OFF)
-OPTION(MAF_USE_GIT_PROTOCOL "If ON use git protocol, otherwise http" OFF)
-OPTION(MAF_SUPERBUILD "Build MAF and the projects it depends on via SuperBuild.cmake." ON)
-MARK_AS_ADVANCED(MAF_SUPERBUILD)
+option(BUILD_TEST_SUITE "Build Module's Tests"      OFF)
+option(BUILD_EXAMPLES "Build Examples"              OFF)
+option(BUILD_DOCUMENTATION "Build documentation"    OFF)
+option(MAF_USE_GIT_PROTOCOL "If ON use git protocol, otherwise http"                   OFF)
+#option(MAF_SUPERBUILD "Build MAF and the projects it depends on via SuperBuild.cmake." ON)
+#mark_as_advanced(MAF_SUPERBUILD)
 
 FIND_PACKAGE(Git)
-IF(NOT GIT_FOUND)
-  MESSAGE(FATAL_ERROR "error: Install Git and try to re-configure")
-ENDIF()
+if(NOT GIT_FOUND)
+  message(FATAL_ERROR "error: Install Git and try to re-configure")
+endif()
 
 # git protocol to be used
 set(git_protocol "git")
@@ -48,15 +49,15 @@ endif(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "Min
 ### Available Modules
 #############################################################################################
 
-SET(MAF_CORE ON)
-SET(MAF_EVENT_BUS ON)
-SET(MAF_QA ON)
-OPTION(MAF_TIME_SPACE "Build mafTimeSpace module. mafCore and mafEventBus will be built anyway." ON)
-OPTION(MAF_SERIALIZATION "Build mafSerialization module. mafCore and mafEventBus will be built anyway." ON)
-OPTION(MAF_RESOURCES "Build mafResources module. mafCore and mafEventBus will be built anyway." ON)
-OPTION(MAF_PLUGINVTK "Build mafPluginVTK module. mafCore and mafEventBus will be built anyway." ON)
-OPTION(MAF_APPLICATION_LOGIC "Build mafApplicationLogic module.mafCore and mafEventBus will be built anyway." ON)
-OPTION(MAF_QTGUI "Build mafGUI module. mafCore and mafEventBus will be built anyway." ON)
+set(MAF_CORE ON)
+set(MAF_EVENT_BUS ON)
+set(MAF_QA ON)
+option(MAF_TIME_SPACE "Build mafTimeSpace module. mafCore and mafEventBus will be built anyway."              ON)
+option(MAF_SERIALIZATION "Build mafSerialization module. mafCore and mafEventBus will be built anyway."       ON)
+option(MAF_RESOURCES "Build mafResources module. mafCore and mafEventBus will be built anyway."               ON)
+option(MAF_PLUGINVTK "Build mafPluginVTK module. mafCore and mafEventBus will be built anyway."               ON)
+option(MAF_APPLICATION_LOGIC "Build mafApplicationLogic module.mafCore and mafEventBus will be built anyway." ON)
+option(MAF_QTGUI "Build mafGUI module. mafCore and mafEventBus will be built anyway."                         ON)
 
 ### set modules interdependencies
 include(CMake/mafUtilities.cmake)
@@ -66,28 +67,28 @@ if(MAF_PLUGINVTK)
 endif(MAF_PLUGINVTK)
 
 ### tests and examples dependencies 
-IF(BUILD_TEST_SUITE OR BUILD_EXAMPLES)
-    SET( MAF_TIME_SPACE ON ) 
+if(BUILD_TEST_SUITE OR BUILD_EXAMPLES)
+   set( MAF_TIME_SPACE ON ) 
    mafDependentOption(MAF_TIME_SPACE "Build Test module for mafTimeSpace." ON BUILD_EXAMPLES ON)
     
-   SET( MAF_SERIALIZATION ON ) 
+   set( MAF_SERIALIZATION ON ) 
    mafDependentOption(MAF_SERIALIZATION "Build Test module for mafSerialization." ON BUILD_EXAMPLES ON)
     
-   SET( MAF_RESOURCES ON ) 
+   set( MAF_RESOURCES ON ) 
    mafDependentOption(MAF_RESOURCES "Build Test module for mafResources." ON BUILD_EXAMPLES ON)
     
-   SET( MAF_PLUGINVTK ON ) 
+   set( MAF_PLUGINVTK ON ) 
    mafDependentOption(MAF_PLUGINVTK "Build Test module for mafPluginVTK." ON BUILD_EXAMPLES ON)
    
-   SET( MAF_RESOURCES ON ) 
+   set( MAF_RESOURCES ON ) 
    mafDependentOption(MAF_RESOURCES "Build mafResources module." ON BUILD_EXAMPLES ON)
     
-   SET( MAF_APPLICATION_LOGIC ON ) 
+   set( MAF_APPLICATION_LOGIC ON ) 
    mafDependentOption(MAF_APPLICATION_LOGIC "Build Test module for mafApplicationLogic." ON BUILD_EXAMPLES ON)
     
-   SET( MAF_QTGUI ON ) 
+   set( MAF_QTGUI ON ) 
    mafDependentOption(MAF_QTGUI "Build Test module for mafGUI." ON BUILD_EXAMPLES ON)
-ENDIF(BUILD_TEST_SUITE OR BUILD_EXAMPLES)
+endif(BUILD_TEST_SUITE OR BUILD_EXAMPLES)
 
 #############################################################################################
 ### Wrapping (find swig, python ...)
@@ -96,7 +97,7 @@ ENDIF(BUILD_TEST_SUITE OR BUILD_EXAMPLES)
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
   include(CMake/mafMacroFindWrap.cmake)
 else(CMAKE_BUILD_TYPE STREQUAL "Release")
-  SET(PYTHONLIBS_FOUND OFF)
+  set(PYTHONLIBS_FOUND OFF)
 endif(CMAKE_BUILD_TYPE STREQUAL "Release")
 
 
@@ -104,33 +105,41 @@ endif(CMAKE_BUILD_TYPE STREQUAL "Release")
 ### Superbuild execution
 #############################################################################################
 
-INCLUDE(${MAF_SOURCE_DIR}/GenerateMAFConfig.cmake)
-CONFIGURE_FILE(${MAF_SOURCE_DIR}/UseMAF.cmake.in
+include(${MAF_SOURCE_DIR}/GenerateMAFConfig.cmake)
+configure_file(${MAF_SOURCE_DIR}/UseMAF.cmake.in
   ${MAF_BINARY_DIR}/UseMAF.cmake COPYONLY IMMEDIATE)
   
-IF(MAF_SUPERBUILD)
-  INCLUDE(SuperBuild.cmake)
-  RETURN()
-ELSE(MAF_SUPERBUILD)
-ENDIF(MAF_SUPERBUILD)
+if(MAF_SUPERBUILD)
+  include(SuperBuild.cmake)
+  return()
+else(MAF_SUPERBUILD)
+endif(MAF_SUPERBUILD)
 
 #############################################################################################
 ### SOURCES
 #############################################################################################
-ADD_SUBDIRECTORY(src)
+add_subdirectory(src)
 
 #############################################################################################
 ### TESTS
 #############################################################################################
 
-IF(BUILD_TEST_SUITE)
-  ADD_SUBDIRECTORY(test)
-ENDIF(BUILD_TEST_SUITE)
+if(BUILD_TEST_SUITE)
+  add_subdirectory(test)
+endif(BUILD_TEST_SUITE)
 
 #############################################################################################
 ### EXAMPLES
 #############################################################################################
 
-IF(BUILD_EXAMPLES)
-  ADD_SUBDIRECTORY(examples)
-ENDIF(BUILD_EXAMPLES)
+if(BUILD_EXAMPLES)
+  add_subdirectory(examples)
+endif(BUILD_EXAMPLES)
+
+#############################################################################################
+### EXAMPLES
+#############################################################################################
+
+if(BUILD_DOCUMENTATION)
+  add_subdirectory(doc)
+endif(BUILD_DOCUMENTATION)

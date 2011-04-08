@@ -54,6 +54,7 @@ CMAKE_ARGS
         -DBUILD_TESTS:BOOL=OFF
         -DBUILD_TESTING:BOOL=OFF
         -DBUILD_EXAMPLES:BOOL=OFF
+        -DBUILD_DOCUMENTATION:BOOL=FALSE
         -DCMAKE_CXX_FLAGS:STRING=${ep_common_cxx_flags}
         -DCMAKE_C_FLAGS:STRING=${ep_common_c_flags}
         -DCMAKE_EXE_LINKER_FLAGS:STRING=${ep_exe_linker_flags}
