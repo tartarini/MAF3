@@ -52,7 +52,7 @@ private slots:
     void cleanupTestCase() {
         mafDEL(m_View);
         mafResourcesSingletons::mafSingletonsShutdown();
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.create");
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request");
         mafMessageHandler::instance()->shutdown();
     }
 

@@ -30,6 +30,7 @@ This class provides the manager class for MAF3 views. The topics are:
 - maf.local.resources.view.select allows to select the active View on which show/hide VMEs.
 - maf.local.resources.view.selected allows to retrieve the current selected View.
 - maf.local.resources.view.sceneNodeShow allow to show/hide a given mafSceneNode in the selected View.
+- maf.local.resources.view.noneViews emitted when all views are destroyed.
 */
 class MAFRESOURCESSHARED_EXPORT mafViewManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -61,6 +62,9 @@ signals:
 
     /// Notify the view creation to all observers.
     void viewCreatedSignal(mafCore::mafObjectBase *view);
+
+    /// Notify the destruction on all views
+    void noneViewsSignal();
 
 public slots:
     /// Create a memento class used to save the status of opened views. The caller has to delete the allocated memory he asked.
@@ -113,6 +117,9 @@ private:
 
     /// Delete all created views
     void destroyAllViews();
+
+    /// Fill sceneGraph woth sceneNodes.
+    void fillSceneGraph(mafView *v, mafCore::mafHierarchy *hierarchy);
 
     mafResourceList m_CreatedViewList; ///< List of created views.
     mafView *m_SelectedView; ///< Keep trak of the current selected view.

@@ -33,21 +33,20 @@ mafViewVTK::~mafViewVTK() {
     if(m_Renderer) {
         m_Renderer->Delete();
     }
+    //mafDEL(m_Widget);
 }
 
 void mafViewVTK::create() {
-    Superclass::create();
-
     // Craete the instance of the VTK Widget
     m_Widget = new mafVTKWidget();
     m_Widget->setObjectName("VTKWidget");
     // Initialize the conteiner interface pointer of the base class
     m_RenderWidget = &m_Widget;
-
     // Create the renderer
     m_Renderer = vtkRenderer::New();
     // and assign it to the widget.
     m_Widget->GetRenderWindow()->AddRenderer(m_Renderer);
+    Superclass::create();
 }
 
 void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
@@ -66,6 +65,7 @@ void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show, cons
     if (node != NULL) {
         mafContainer<vtkActor> *actor = mafContainerPointerTypeCast(vtkActor, node->visualPipe()->output());
         m_Renderer->AddActor(*actor);
+        m_Renderer->ResetCamera();
         if ((*actor)->GetVisibility() == 0) {
             // To be revised.
             //node->m_IsRendered = true;

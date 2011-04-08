@@ -166,10 +166,18 @@ void testUndoOperation::execute() {
         }
     }
 
+    //Notify vme add
+    mafVME *vme = mafNEW(mafResources::mafVME);
+    vme->setObjectName(mafTr("Test Vme"));
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add.test", mafEventTypeLocal, &argList);
+
     // set the final result value.
     m_Val = kMAX_COUNT;
 
     qDebug() << this->objectName() << " emitting executionEnded...";
+    mafDEL(vme);
     emit executionEnded();
 }
 
@@ -197,6 +205,8 @@ class mafOperationManagerTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        mafRegisterLocalSignal("maf.local.resources.vme.add.test", this, "vmeAddSignalTest(mafCore::mafObjectBase *)")
+        mafRegisterLocalCallback("maf.local.resources.vme.add.test", this, "vmeAddTest(mafCore::mafObjectBase *)")
         mafMessageHandler::instance()->installMessageHandler();
         m_EventBus = mafEventBusManager::instance();
 
@@ -224,7 +234,7 @@ private slots:
         mafUnregisterObject(testUndoOperation);
 
         //restore vme manager status
-        m_EventBus->notifyEvent("maf.local.resources.hierarchy.create");
+        m_EventBus->notifyEvent("maf.local.resources.hierarchy.request");
 
         mafEventBusManager::instance()->shutdown();
         mafMessageHandler::instance()->shutdown();
@@ -232,6 +242,9 @@ private slots:
 
     /// mafOperationManager allocation test case.
     void mafOperationManagerAllocationTest();
+
+    /// Start and cancel test case.
+    void cancelExecutionTest();
 
     /// Abort execution test
     void abortExecutionTest();
@@ -245,6 +258,14 @@ public:
 
     /// Utility method to retrieve the execution pool.
     const mafExecutionPool *retrievePool();
+
+public slots:
+    void vmeAddTest(mafCore::mafObjectBase *vme);
+
+signals:
+    void vmeAddSignalTest(mafCore::mafObjectBase *vme);
+
+
 
 private:
     mafEventBusManager *m_EventBus; ///< Reference to the event bus.
@@ -271,12 +292,26 @@ const mafExecutionPool *mafOperationManagerTest::retrievePool() {
     return executionPool;
 }
 
+ void mafOperationManagerTest::vmeAddTest(mafCore::mafObjectBase *vme) {
+     QVERIFY(vme);
+ }
 
 void mafOperationManagerTest::mafOperationManagerAllocationTest() {
     QVERIFY(m_OperationManager != NULL);
 
     m_ExecutionPool = this->retrievePool();
     QVERIFY(m_ExecutionPool != NULL);
+
+    int poolSize = m_ExecutionPool->size();
+    QVERIFY(poolSize == 0);
+}
+
+
+void mafOperationManagerTest::cancelExecutionTest() {
+    const mafCore::mafObjectBase *op = this->startOperation("testEndlessOperation");
+
+    // Cancel the operation's execution
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.stop", mafEventTypeLocal);
 
     int poolSize = m_ExecutionPool->size();
     QVERIFY(poolSize == 0);

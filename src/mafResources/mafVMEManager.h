@@ -28,7 +28,7 @@ a VME to/from the hierarchy tree and to select a vme. The topics are:
 - maf.local.resources.vme.reparent which allows to reparent a VME to another.
 - maf.local.resources.vme.select which allows to select the active VME on which operate.
 - maf.local.resources.vme.selected which allows to retrieve the current selected VME.
-- maf.local.resources.hierarchy.create which allows to create the hierarchy of the vmes
+- maf.local.resources.hierarchy.request which allows to request the hierarchy of the vmes
 */
 class MAFRESOURCESSHARED_EXPORT mafVMEManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -41,6 +41,10 @@ public:
 
     /// Destroy the singleton instance. To be called at the end of the application.
     void shutdown();
+
+    /// Return hierarchy indicizing the mafVME
+    mafCore::mafHierarchy *hierarchy() const;
+
 
 signals:
     /// Return the current selected vme.
@@ -58,8 +62,8 @@ signals:
     /// Signal emitted when a VME has beed selected.
     void selectVME(mafCore::mafObjectBase *vme);
 
-    /// Create hierarchy of vmes.
-    mafCore::mafHierarchyPointer createVMEHierarchySignal();
+    /// Request hierarchy of vmes.
+    mafCore::mafHierarchyPointer requestVMEHierarchySignal();
 
 private slots:
     /// Return the current selected vme.
@@ -81,7 +85,7 @@ private slots:
     void vmeDestroyed();
 
     /// Create a hierarchy of VMEs
-    mafCore::mafHierarchyPointer createVMEHierarchy();
+    mafCore::mafHierarchyPointer requestVMEHierarchy();
 
 protected:
     /// Object destructor
@@ -108,6 +112,10 @@ private:
 
 inline mafCore::mafObjectBase *mafVMEManager::selectedVME() const {
     return (mafCore::mafObjectBase *)m_SelectedVME;
+}
+
+inline mafCore::mafHierarchy *mafVMEManager::hierarchy() const {
+    return m_VMEHierarchy;
 }
 
 } // namespace mafResources

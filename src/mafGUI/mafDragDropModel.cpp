@@ -54,10 +54,16 @@ Qt::ItemFlags mafDragDropModel::flags(const QModelIndex &index) const
     Qt::ItemFlags defaultFlags = QStandardItemModel::flags(index);
     if (index.isValid()) {
         mafTreeItem *item = (mafTreeItem *)this->itemFromIndex(index);
-        if (item->data()->objectName().compare("root") == 0) {
-            // Not allow Drag of the Root
-            return Qt::ItemIsDropEnabled | defaultFlags;
+        if(item->parent() == 0) {
+          //Not allow Drag of the Root
+          return Qt::ItemIsDropEnabled | defaultFlags;
         }
+//         if (item->->data()) != NULL) {
+//             if (item->data()->objectName().compare("root") == 0) {
+//                 // Not allow Drag of the Root
+//                 return Qt::ItemIsDropEnabled | defaultFlags;
+//             }
+//         }
         return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
     } else
         return Qt::ItemIsDropEnabled | defaultFlags;

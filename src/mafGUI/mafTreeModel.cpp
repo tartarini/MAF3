@@ -13,6 +13,7 @@
 
 using namespace mafCore;
 using namespace mafGUI;
+using namespace mafEventBus;
 
 mafTreeModel::mafTreeModel(QObject *parent)
     : QStandardItemModel(parent) , m_Hierarchy(NULL), m_CurrentItem(NULL) {
@@ -21,7 +22,7 @@ mafTreeModel::mafTreeModel(QObject *parent)
 void mafTreeModel::initialize() {
     REQUIRE(m_Hierarchy != NULL);
     //header to write
-    setHorizontalHeaderLabels(QStringList() << tr("Item/Item/..."));
+    //setHorizontalHeaderLabels(QStringList() << tr("Item/Item/..."));
     for (int column = 1; column < columnCount(); ++column) {
         horizontalHeaderItem(column)->setTextAlignment(Qt::AlignVCenter|Qt::AlignRight);
     }
@@ -34,23 +35,21 @@ void mafTreeModel::buildModel(bool init) {
     if(init == true) {
         m_Hierarchy->moveTreeIteratorToRootNode();
         m_CurrentItem = new mafTreeItem(m_Hierarchy->currentData() , false);
+        //this->insertNewItem(AtTopLevel, m_Hierarchy->currentData(), m_CurrentItem->index());
         setItem(0, 0, m_CurrentItem);
         m_ItemsList.push_back(m_CurrentItem);
     }
 
-    int index = 0, size = m_Hierarchy->currentNumberOfChildren();
-    for(;index < size; ++index) {
-        m_Hierarchy->moveTreeIteratorToNthChild(index);
-        QObject *obj = m_Hierarchy->currentData();
-//        QString name = obj->objectName();
-        mafTreeItem *item = new mafTreeItem(obj , false);
-        m_CurrentItem->insertRow(index, item);
-        setItem(index, 0, m_CurrentItem);
-        m_CurrentItem = item;
-        m_ItemsList.push_back(m_CurrentItem);
-        buildModel(false);
-        m_Hierarchy->moveTreeIteratorToParent();
-        m_CurrentItem = (mafTreeItem *)m_CurrentItem->parent();       
+    int i = 0, size = m_Hierarchy->currentNumberOfChildren();
+    for(;i < size; ++i) {
+      m_Hierarchy->moveTreeIteratorToNthChild(i);
+      QObject *obj = m_Hierarchy->currentData();
+
+      mafTreeItem *item = this->createNewItem(m_CurrentItem, obj, false);
+      m_CurrentItem = item;
+      buildModel(false);
+      m_Hierarchy->moveTreeIteratorToParent();
+      m_CurrentItem = (mafTreeItem *)m_CurrentItem->parent();       
     }
 }
 
@@ -96,13 +95,13 @@ mafTreeItem *mafTreeModel::createNewItem(mafTreeItem *parent, QObject *obj, bool
     mafTreeItem *item = new mafTreeItem(obj,done);
     parent->appendRow(item);
     m_ItemsList.push_back(item);
+
     return item;
 }
 
 void mafTreeModel::itemReparent(QObject *item, QObject *parent) {
     QModelIndex index = this->indexFromData(parent);
     this->insertNewItem(AsChild, item, index);
-
 }
 
 void mafTreeModel::selectItem(const QItemSelection &selected, const QItemSelection &deselected) {
@@ -186,4 +185,5 @@ QModelIndex mafTreeModel::indexFromData(QObject *data) {
         return QModelIndex();
     }
 }
+
 

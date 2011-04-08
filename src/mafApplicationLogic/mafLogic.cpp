@@ -82,7 +82,7 @@ bool mafLogic::initialize() {
 
     // Initialize data hierarchy
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, m_Hierarchy);
-    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.create", mafEventTypeLocal, NULL, &ret_val);
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
 
     // Perform design by contract check.
     ENSURE(handler);
