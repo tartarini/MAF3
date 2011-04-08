@@ -43,7 +43,7 @@ if(NOT DEFINED VTK_DIR OR NOT DEFINED VTK_SOURCE_DIR)
   #endif()
 
   ExternalProject_Add(${proj}
-    GIT_REPOSITORY "${git_protocol}://vtk.org/VTK.git"
+    GIT_REPOSITORY "${git_protocol}://github.com/SCS-B3C/VTK.git"
     #GIT_TAG "origin"
     INSTALL_COMMAND ""
     #INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/build/bin
