@@ -13,7 +13,7 @@
 #define MAFHIERARCHY_H
 
 // Includes list
-#include "mafObjectBase.h"
+#include "mafObject.h"
 #include "mafTree.hpp"
 
 namespace mafCore {
@@ -26,10 +26,10 @@ This class represents the base class to manage objects' hierarchy. A hierarchy i
 A node may have many children but often only a single parent, with the effect of a parent applied to all its child nodes.
 The tree is managed towards the class stlplus::ntree, included in MAF3 Foundation in utility section.
 */
-class MAFCORESHARED_EXPORT mafHierarchy : public mafObjectBase {
+class MAFCORESHARED_EXPORT mafHierarchy : public mafObject {
     Q_OBJECT
     /// typedef macro.
-    mafSuperclassMacro(mafCore::mafObjectBase);
+    mafSuperclassMacro(mafCore::mafObject);
 
 public:
     /// Object constructor.
