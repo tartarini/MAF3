@@ -41,7 +41,7 @@ if(NOT DEFINED VTK_DIR OR NOT DEFINED VTK_SOURCE_DIR)
   #if (MAF_USE_PYTHONQT)
   #  list(APPEND VTK_QT_ARGS -DVTK_USE_TK:BOOL=OFF)
   #endif()
-  
+
   ExternalProject_Add(${proj}
     GIT_REPOSITORY "${git_protocol}://vtk.org/VTK.git"
     #GIT_TAG "origin"
@@ -82,6 +82,7 @@ CMAKE_ARGS
 else()
   # The project is provided using VTK_DIR and VTK_SOURCE_DIR, nevertheless since other 
   # project may depend on VTK, let's add an 'empty' one
+  include(CMake/mafMacroEmptyExternalProject.cmake)
   mafMacroEmptyExternalProject(${proj} "${VTK_DEPENDENCIES}")
 endif()
 

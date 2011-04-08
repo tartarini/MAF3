@@ -54,6 +54,7 @@ SET(VXL_DEPENDS)
     # library output directory to CTK_EXTERNAL_LIBRARY_DIRS
 
   ELSE()
+    include(CMake/mafMacroEmptyExternalProject.cmake)
     mafMacroEmptyExternalProject(${proj} "${proj_DEPENDENCIES}")
   ENDIF()
 
