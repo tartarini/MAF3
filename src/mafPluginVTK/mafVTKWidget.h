@@ -59,8 +59,8 @@ private:
     /// Check if VME has been picked
     void vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e);
 
-    vtkActor *m_Actor; ///<  Container of the actor.
-
+    vtkActor *m_Actor; ///<  Actor picked.
+    mafCore::mafContainer<vtkActor> m_ActorPicked; /// Container of the actor.
     unsigned long m_Modifiers;  ///< Optional modifiers for the button.
 };
 
