@@ -215,10 +215,8 @@ void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e) {
     int mousePosX = 0;
     int mousePosY = 0;
     double posPicked[3];
-
     m_Actor = NULL;
-    mafContainer<vtkActor> actorPicked;
-
+    
     iren->GetEventPosition(mousePosX, mousePosY);
     vtkSmartPointer<vtkCellPicker> cellPicker = vtkSmartPointer<vtkCellPicker>::New();;
     vtkRendererCollection *rc = iren->GetRenderWindow()->GetRenderers();
@@ -228,7 +226,7 @@ void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e) {
         if(cellPicker->Pick(mousePosX,mousePosY,0,r)) {
             cellPicker->GetPickPosition(posPicked);
             m_Actor = cellPicker->GetActor();
-            actorPicked = m_Actor;
+            m_ActorPicked = m_Actor;
         }
     }
 
@@ -236,7 +234,7 @@ void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e) {
         mafEventArgumentsList argList;
         argList.append(mafEventArgument(double *, (double *)posPicked));
         argList.append(mafEventArgument(unsigned long, m_Modifiers));
-        argList.append(mafEventArgument(mafCore::mafContainerInterface *, &actorPicked));
+        argList.append(mafEventArgument(mafCore::mafContainerInterface *, &m_ActorPicked));
         argList.append(mafEventArgument(QEvent *, e));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePick", mafEventTypeLocal, &argList);
     }
