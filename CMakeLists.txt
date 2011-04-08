@@ -21,8 +21,9 @@ option(BUILD_TEST_SUITE "Build Module's Tests"      OFF)
 option(BUILD_EXAMPLES "Build Examples"              OFF)
 option(BUILD_DOCUMENTATION "Build documentation"    OFF)
 option(MAF_USE_GIT_PROTOCOL "If ON use git protocol, otherwise http"                   OFF)
-#option(MAF_SUPERBUILD "Build MAF and the projects it depends on via SuperBuild.cmake." ON)
-#mark_as_advanced(MAF_SUPERBUILD)
+
+option(MAF_SUPERBUILD "Always keep ON superbuild" ON)
+mark_as_advanced(MAF_SUPERBUILD)
 
 FIND_PACKAGE(Git)
 if(NOT GIT_FOUND)
