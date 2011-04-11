@@ -82,21 +82,6 @@ public:
     /// Return the application's settings dialog.
     mafGUIApplicationSettingsDialog *settingsDialog() const;
 
-    /// Return the 'file' menu item created into the createMenus method.
-    QMenu *fileMenu() const;
-
-    /// Return the 'edit' menu item created into the createMenus method.
-    QMenu *editMenu() const;
-
-    /// Return the 'view' menu item created into the createMenus method.
-    QMenu *viewMenu() const;
-
-    /// Return the 'operation' menu item created into the createMenus method.
-    QMenu *operationMenu() const;
-
-    /// Return the 'help' menu item created into the createMenus method.
-    QMenu *helpMenu() const;
-
     /// Show the file dialog to select the file path given a window title, a starting directory and an optional file wildcard
     void chooseFileDialog(const QString title, const QString start_dir, const QString wildcard = mafTr("All files (*.*)"));
 
@@ -121,8 +106,8 @@ public slots:
     /// Fill the operation and view menu with the plugged objects.
     void fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash);
 
-    /// Return the Action associated with the given name.
-    QObject *actionByName(QString name);
+    /// Return the Action/Menu associated with the given name.
+    QObject *menuItemByName(QString name);
 
 private slots:
     /// Start the operation associated with the operation's action activated.
@@ -172,24 +157,18 @@ private:
     /// Allow to parse the XML tree hierarchy associated with the menu structure read from file.
     QDomNode parseMenuTree(QDomNode current);
 
+    /// Create the default menu for the application in case that the mnu file has not been found.
+    void createDefaultMenus();
+    
     /// Manage the filename of the recent file.
     QString strippedName(const QString &fullFileName);
 
-    QMenu *m_FileMenu; ///< Reference to the 'File' menu.
-    QMenu *m_ImportMenu; ///< Reference to the 'Import' menu.
-    QMenu *m_ExportMenu; ///< Reference to the 'Export' menu.
     QMenu *m_RecentFilesMenu; ///< Reference to 'Recent File' menu.
-    QMenu *m_EditMenu; ///< Reference to the 'Edit' menu.
-    QMenu *m_ViewMenu; ///< Reference to the 'View' menu.
-    QMenu *m_OpMenu;   ///< Reference to the 'Operation' menu.
-    QMenu *m_WindowMenu; ///< Reference to the 'Window' menu.
-    QMenu *m_HelpMenu; ///< Reference to the 'Help' menu.
-    QMenu *m_OptionsMenu; ///< Reference to the 'Options' menu.
 
     QToolBar *m_FileToolBar; ///< Toolbar related to File tasks
     QToolBar *m_EditToolBar; ///< Toolbar related to Edit tasks
 
-    QList<QAction *> m_ActionList; ///< List of created actions.
+    QList<QObject *> m_MenuItemList; ///< List of created actions/menus.
 
     QAction *m_NewAct; ///< Reference to the action associated to the 'New' Item creation.
     QAction *m_CollaborateAct; ///< Reference to the action associated to the 'Collaboration' chat Item.
@@ -228,32 +207,12 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline QMenu *mafGUIManager::fileMenu() const {
-    return m_FileMenu;
-}
-
 inline void mafGUIManager::setMaxRecentFiles(int max_recent_files) {
     m_MaxRecentFiles = max_recent_files;
 }
 
 inline int mafGUIManager::maxRecentFiles() {
     return m_MaxRecentFiles;
-}
-
-inline QMenu *mafGUIManager::editMenu() const {
-    return m_EditMenu;
-}
-
-inline QMenu *mafGUIManager::viewMenu() const {
-    return m_ViewMenu;
-}
-
-inline QMenu *mafGUIManager::operationMenu() const {
-    return m_OpMenu;
-}
-
-inline QMenu *mafGUIManager::helpMenu() const {
-    return m_HelpMenu;
 }
 
 inline mafGUIApplicationSettingsDialog *mafGUIManager::settingsDialog() const {
