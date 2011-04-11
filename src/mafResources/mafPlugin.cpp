@@ -18,7 +18,8 @@ using namespace mafResources;
 mafPlugin::mafPlugin(const QString &pluginFilename, const QString code_location) : mafObjectBase(code_location), m_LibraryHandler(0),
                                                           m_RefCount(0),
                                                           m_PluginInfo(0),
-                                                          m_RegisterPlugin(0)  {
+                                                          m_RegisterPlugin(0), 
+                                                          m_Loaded(false)  {
     // Try to load the plugin as a dynamic library
     m_LibraryHandler = new QLibrary(pluginFilename);
     if(!m_LibraryHandler->load()) {
@@ -54,6 +55,7 @@ mafPlugin::mafPlugin(const QString &pluginFilename, const QString code_location)
         m_LibraryHandler = NULL;
         return;
     }
+    m_Loaded = true;
 } 
 
 mafPlugin::mafPlugin(const mafPlugin &Other, const QString code_location) : mafObjectBase(code_location), m_LibraryHandler(Other.m_LibraryHandler),
