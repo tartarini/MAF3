@@ -102,7 +102,7 @@ void mafMainWindow::initializeMainWindow() {
     splitter->setStretchFactor(1, 1);
 
     // SideBar visibility management
-    QObject *sideBarAction = m_GUIManager->actionByName("SideBar");
+    QObject *sideBarAction = m_GUIManager->menuItemByName("SideBar");
     connect(ui->dockSideBar, SIGNAL(visibilityChanged(bool)), sideBarAction, SLOT(setChecked(bool)));
     connect(sideBarAction, SIGNAL(triggered(bool)), ui->dockSideBar, SLOT(setVisible(bool)));
     connect(m_Tree->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
@@ -111,13 +111,13 @@ void mafMainWindow::initializeMainWindow() {
     // LogBar Layout
     ui->logBarWidgetContents->setLayout(ui->gridLayoutLogBar);
 
-    QObject *logBarAction = m_GUIManager->actionByName("LogBar");
+    QObject *logBarAction = m_GUIManager->menuItemByName("LogBar");
     m_LogWidget = m_GUIManager->createLogWidget(ui->logBarWidgetContents);
     connect(ui->dockLogBarWidget, SIGNAL(visibilityChanged(bool)), logBarAction, SLOT(setChecked(bool)));
     connect(logBarAction, SIGNAL(triggered(bool)), ui->dockLogBarWidget, SLOT(setVisible(bool)));
 
     // **** Google chat ****
-    QObject *collaborateAction = m_GUIManager->actionByName("Collaborate");
+    QObject *collaborateAction = m_GUIManager->menuItemByName("Collaborate");
     m_DockGoogleChat = new QDockWidget(tr("Google Chat"));
     m_DockGoogleChat->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     m_DockGoogleChat->setWidget(new GoogleChat());
