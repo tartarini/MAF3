@@ -53,6 +53,32 @@ mafGUIManager::~mafGUIManager() {
     mafDEL(m_UILoader);
 }
 
+void mafGUIManager::parseMenuAttributes(QDomNode current) {
+    if (current.nodeType() == QDomNode::ElementNode) {
+        QDomElement ce = current.toElement();
+        qDebug() << ce.tagName();
+        QDomNamedNodeMap attributes = ce.attributes();
+        QDomNode att;
+        for (int i = 0; i < attributes.size(); ++i) {
+            att = attributes.item(i);
+            qDebug() << att.nodeName() << " = " << att.nodeValue();
+        }
+    }
+}
+
+QDomNode mafGUIManager::parseMenuTree(QDomNode current) {
+    // Get the menu items...
+    QDomNodeList dnl = current.childNodes();
+    for (int n=0; n < dnl.count(); ++n) {
+        QDomNode node = dnl.item(n);
+        parseMenuAttributes(node);
+        // Get the inner actions.
+        parseMenuTree(node);
+    }
+    
+    return current;
+}
+
 void mafGUIManager::createActions() {
     m_NewAct = new QAction(QIcon(":/images/new.png"), mafTr("&New"), this);
     m_NewAct->setIconText(mafTr("New"));
@@ -269,6 +295,23 @@ void mafGUIManager::registerEvents() {
 }
 
 void mafGUIManager::createMenus() {
+    int errorLine, errorColumn;
+    QString errorMsg;
+    QFile modelFile("Menu.xml");
+    QDomDocument document;
+    if (!document.setContent(&modelFile, &errorMsg, &errorLine, &errorColumn)) {
+        QString error(tr("Syntax error line %1, column %2:\n%3"));
+        error = error
+        .arg(errorLine)
+        .arg(errorColumn)
+        .arg(errorMsg);
+        qCritical() << error;
+        return;
+    }
+    
+    QDomNode m_CurrentNode = document.firstChild();
+    parseMenuTree(m_CurrentNode);
+    
     if(!m_ActionsCreated) {
         createActions();
     }
