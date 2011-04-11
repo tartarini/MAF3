@@ -45,7 +45,13 @@ bool mafDragDropModel::dropMimeData(const QMimeData *data,
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, obj));
     argList.append(mafEventArgument(mafCore::mafObjectBase *, objParent));
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.reparent", mafEventTypeLocal, &argList);
+
+    QString objName = "mafResources::mafSceneNode";
+    if (objName.compare(obj->metaObject()->className())  == 0) {
+      mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeReparent", mafEventTypeLocal, &argList);
+    } else {
+      mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.reparent", mafEventTypeLocal, &argList);
+    }
     return true;
 }
 
@@ -58,12 +64,6 @@ Qt::ItemFlags mafDragDropModel::flags(const QModelIndex &index) const
           //Not allow Drag of the Root
           return Qt::ItemIsDropEnabled | defaultFlags;
         }
-//         if (item->->data()) != NULL) {
-//             if (item->data()->objectName().compare("root") == 0) {
-//                 // Not allow Drag of the Root
-//                 return Qt::ItemIsDropEnabled | defaultFlags;
-//             }
-//         }
         return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
     } else
         return Qt::ItemIsDropEnabled | defaultFlags;
