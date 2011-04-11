@@ -297,7 +297,7 @@ void mafGUIManager::registerEvents() {
 void mafGUIManager::createMenus() {
     int errorLine, errorColumn;
     QString errorMsg;
-    QFile modelFile("Menu.xml");
+    QFile modelFile("Menu.mnu");
     QDomDocument document;
     if (!document.setContent(&modelFile, &errorMsg, &errorLine, &errorColumn)) {
         QString error(tr("Syntax error line %1, column %2:\n%3"));
