@@ -1,0 +1,7 @@
+import os
+
+#cmake autofilled paths
+mafSourcesDir = os.path.join("@MAF_SOURCE_DIR@","src")
+mafBinaryDir = os.path.join("@MAF_BINARY_DIR@","qa")
+mafDocOutput = os.path.join("@MAF_BINARY_DIR@","doc","DocOutput")
+mafDocWithTestsOutput = os.path.join("@MAF_BINARY_DIR@","doc","DocWithTestsOutput")

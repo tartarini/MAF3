@@ -1,0 +1,3 @@
+parameter="\Aclass.*\.xml"
+sourceDir="@MAF_BINARY_DIR@/doc/DocOutput/xml"
+groupDesc="Check that Class Structures follow basic MAF guidelines"
