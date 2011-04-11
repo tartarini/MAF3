@@ -7,6 +7,7 @@ from string import split
 import shutil
 from datetime import datetime
 import getopt
+import mafPathes
 
 def usage():
     print "Usage: python Formatter.py [--enable-LCOVCoverage]"
@@ -32,13 +33,13 @@ def search_file(filename, search_path):
 def run(param):
    #read xml file
    scriptsDir = os.getcwd()
-   os.chdir("../../")
+   os.chdir(mafPathes.mafBinaryDir)
    baseDir = os.getcwd()
    qaResultsDir = baseDir + "/QAResults/";
    xmlDir = baseDir + "/QAResults/xml"
 
    if not os.path.exists(xmlDir):
-     print "Xml Directory not present"
+     print "Xml Directory not present: ", xmlDir
      sys.exit(1)
     
    htmlDir = baseDir + "/QAResults/html"
@@ -49,19 +50,12 @@ def run(param):
      os.makedirs(htmlDir + "/Styles")
 
    if(os.path.exists(htmlDir + "/Styles")):
-     shutil.rmtree(htmlDir + "/Styles")
-     shutil.copytree(scriptsDir + "/Styles",htmlDir + "/Styles/")
-     if(os.path.exists(htmlDir+ "/Styles/.svn")):
-       for root, dirs, files in os.walk(htmlDir + "/Styles/.svn", topdown=False):
-         for name in files:
-             filename = os.path.join(root, name)
-             os.chmod(filename, stat.S_IWUSR)
-             os.remove(filename)
-         for name in dirs:
-             os.rmdir(os.path.join(root, name))
-       os.chmod(htmlDir + "/Styles/.svn", stat.S_IWUSR)
-       os.rmdir(htmlDir + "/Styles/.svn")
-     
+     origDir = scriptsDir + "/Styles/"
+     destDir = htmlDir + "/Styles/"
+     files = os.listdir(origDir)
+     for item in files:
+         shutil.copyfile(origDir + item, destDir + item)
+              
    xmlList=os.listdir(xmlDir)
    htmlList=[file.replace(".xml", ".html") for file in os.listdir(xmlDir)]
 
