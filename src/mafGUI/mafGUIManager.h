@@ -15,6 +15,7 @@
 // Includes list
 #include "mafGUIDefinitions.h"
 #include <QtGui>
+#include <QDomDocument>
 
 // Class forwarding list
 class mafOperationWidget;
@@ -164,6 +165,12 @@ private:
 
     /// Update the recent file action with new recent file items.
     void updateRecentFileActions();
+    
+    /// Allow to parse XML attributes associated with a menu item or action.
+    void parseMenuAttributes(QDomNode current);
+    
+    /// Allow to parse the XML tree hierarchy associated with the menu structure read from file.
+    QDomNode parseMenuTree(QDomNode current);
 
     /// Manage the filename of the recent file.
     QString strippedName(const QString &fullFileName);
