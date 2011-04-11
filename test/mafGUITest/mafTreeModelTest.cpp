@@ -90,7 +90,7 @@ void mafTreeModelTest::hierarchyAndInsertItemTest() {
     /// end hierarchy creation
 
     m_TreeModel->setHierarchy(m_HierarchyToManage);
-    int rows = m_TreeModel->rowCount();
+    int rows = m_TreeModel->rowCount(m_TreeModel->indexFromData(vmeRoot));
     QVERIFY(rows == 2);
 
     mafVME* vmeChild2 = mafNEW(mafResources::mafVME);
