@@ -90,7 +90,7 @@ void mafMainWindow::initializeMainWindow() {
     //allow drag&drop operation
     m_Tree->setDragEnabled(true);
     m_Tree->setAcceptDrops(true);
-    m_Tree->setDropIndicatorShown(false);
+    m_Tree->setDropIndicatorShown(true);
     QModelIndex index = m_Model->index(0, 0);
     m_Tree->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
 
