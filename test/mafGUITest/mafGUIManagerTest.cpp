@@ -68,24 +68,24 @@ void mafGUIManagerTest::mafGUIManagerCreateMenuTest() {
     m_GUIManager->createMenus();
     m_GUIManager->createToolBars();
 
-    QMenu *menu = m_GUIManager->fileMenu();
+    QObject *menu = m_GUIManager->menuItemByName("File");
     QVERIFY(menu != NULL);
 
-    menu = m_GUIManager->editMenu();
+    menu = m_GUIManager->menuItemByName("Edit");
     QVERIFY(menu != NULL);
 
-    menu = m_GUIManager->helpMenu();
+    menu = m_GUIManager->menuItemByName("Help");
     QVERIFY(menu != NULL);
 
-    menu = m_GUIManager->operationMenu();
+    menu = m_GUIManager->menuItemByName("Operations");
     QVERIFY(menu != NULL);
-    QList<QAction*> items = menu->actions();
+    QList<QAction*> items = ((QMenu *)menu)->actions();
     int num_items = items.count();
     QVERIFY(num_items == 0);
 
-    menu = m_GUIManager->viewMenu();
+    menu = m_GUIManager->menuItemByName("Views");
     QVERIFY(menu != NULL);
-    items = menu->actions();
+    items = ((QMenu *)menu)->actions();
     num_items = items.count();
     QVERIFY(num_items == 0);
 }
@@ -104,15 +104,15 @@ void mafGUIManagerTest::mafGUIManagerFillMenuTest() {
 
     m_GUIManager->fillMenuWithPluggedObjects(hash);
 
-    QMenu *menu = m_GUIManager->operationMenu();
+    QObject *menu = m_GUIManager->menuItemByName("Operations");
     QVERIFY(menu != NULL);
-    QList<QAction*> items = menu->actions();
+    QList<QAction*> items = ((QMenu *)menu)->actions();
     int num_items = items.count();
     QVERIFY(num_items == 1);
 
-    menu = m_GUIManager->viewMenu();
+    menu = m_GUIManager->menuItemByName("Views");
     QVERIFY(menu != NULL);
-    items = menu->actions();
+    items = ((QMenu *)menu)->actions();
     num_items = items.count();
     QVERIFY(num_items == 1);
 }
