@@ -1,9 +1,11 @@
 import os
 import sys
 import getopt
+import mafPathes
 
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
-modulesDir = os.path.abspath(os.path.join(currentPathScript, "..", ".."))
+modulesDir = mafPathes.mafSourcesDir
+outputDir = mafPathes.mafBinaryDir
 
 def run(param):
     scriptsDir = currentPathScript
@@ -20,7 +22,7 @@ def run(param):
     suffix = "QA.py"
     fileSuffix = "FilePattern.ini"
 
-    resultDir = os.path.abspath(os.path.join(modulesDir, "QAResults" , "xml"))
+    resultDir = os.path.abspath(os.path.join(outputDir, "QAResults" , "xml"))
     if not os.path.exists(resultDir):
         os.makedirs(resultDir)
 

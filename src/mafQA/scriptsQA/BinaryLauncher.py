@@ -1,9 +1,11 @@
 import os
 import sys
 import getopt
+import mafPathes
 
 extensionToAvoid = [".dll",".prl", ".a",".lib", ".dylib",".so", ".0", ".1"] # necessary to insert .N because of symbolic link of linux
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
+modulesDir = mafPathes.mafSourcesDir #need to be changed
 param = {}
 
 def find_executable(executable, path=None):
@@ -40,7 +42,6 @@ def validate(fileName):
 
 def execute():
     scriptsDir = currentPathScript
-    modulesDir = os.path.join(currentPathScript, "..", "..")
     dirList = [ name for name in os.listdir(modulesDir) if (name[0:3] == "maf" and os.path.isdir(os.path.join(modulesDir, name))) ] 
     print modulesDir, dirList
     #execDir = modulesDir + "/../Install/bin/Debug"
