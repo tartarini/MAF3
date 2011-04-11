@@ -59,8 +59,12 @@ mafPluginManager::~mafPluginManager() {
 }
 
 void mafPluginManager::loadPlugin( const QString &pluginFilename ) {
-    if(!m_PluginsHash.contains(pluginFilename))
-        m_PluginsHash.insert(pluginFilename, new mafPlugin(pluginFilename, mafCodeLocation)).value()->registerPlugin();
+  if(!m_PluginsHash.contains(pluginFilename)) {
+      mafPlugin *plugin = new mafPlugin(pluginFilename, mafCodeLocation);
+      if(plugin->loaded()) {
+          m_PluginsHash.insert(pluginFilename, plugin).value()->registerPlugin();
+      }
+  }
 }
 
 //void mafPluginManager::unLoadPlugin(const QString &pluginFilename) {

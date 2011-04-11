@@ -45,10 +45,13 @@ public:
         return m_PluginInfo();
     }
 
-    /// Register the plug-in to a kernel
+    /// Register the plug-in to a kernel.
     void registerPlugin() {
         m_RegisterPlugin();
     }
+
+    /// Return true if plug in has been loaded.
+    bool loaded();
 
 protected:
     /// Destroys the plugin, unloading its library when no more references to it exist.
@@ -65,7 +68,14 @@ private:
     size_t              *m_RefCount;   ///< Number of references to the dynamic library
     mafFnPluginInfo     *m_PluginInfo;  ///< Plug-in information query function
     mafFnRegisterPlugin *m_RegisterPlugin; ///< Plugin registration function
+    bool                 m_Loaded; ///< True if plug in has been correctly loaded.
 };
+
+
+inline bool mafPlugin::loaded() {
+  return m_Loaded;
+}
+
 
 } // mafResources
 
