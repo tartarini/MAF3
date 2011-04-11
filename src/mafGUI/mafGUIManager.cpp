@@ -85,7 +85,7 @@ void mafGUIManager::createActions() {
     m_NewAct->setObjectName("New");
     m_NewAct->setShortcuts(QKeySequence::New);
     m_NewAct->setStatusTip(mafTr("Create a new file"));
-    m_ActionList.append(m_NewAct);
+    m_MenuItemList.append(m_NewAct);
 
     m_CollaborateAct = new QAction(QIcon(":/images/collaborate.png"), mafTr("Collaborate"), this);
     m_CollaborateAct->setObjectName("Collaborate");
@@ -93,33 +93,33 @@ void mafGUIManager::createActions() {
     m_CollaborateAct->setChecked(false);
     m_CollaborateAct->setIconText(mafTr("Collaborate"));
     m_CollaborateAct->setStatusTip(mafTr("Collaborate with your conmtacts in gtalk."));
-    m_ActionList.append(m_CollaborateAct);
+    m_MenuItemList.append(m_CollaborateAct);
 
     m_OpenAct = new QAction(QIcon(":/images/open.png"), mafTr("&Open..."), this);
     m_OpenAct->setObjectName("Open");
     m_OpenAct->setIconText(mafTr("Open"));
     m_OpenAct->setShortcuts(QKeySequence::Open);
     m_OpenAct->setStatusTip(mafTr("Open an existing file"));
-    m_ActionList.append(m_OpenAct);
+    m_MenuItemList.append(m_OpenAct);
 
     m_SaveAct = new QAction(QIcon(":/images/save.png"), mafTr("&Save"), this);
     m_SaveAct->setObjectName("Save");
     m_SaveAct->setIconText(mafTr("Save"));
     m_SaveAct->setShortcuts(QKeySequence::Save);
     m_SaveAct->setStatusTip(mafTr("Save the document to disk"));
-    m_ActionList.append(m_SaveAct);
+    m_MenuItemList.append(m_SaveAct);
 
     m_SaveAsAct = new QAction(mafTr("Save &As..."), this);
     m_SaveAsAct->setObjectName("SaveAs");
     m_SaveAsAct->setIconText(mafTr("Save As"));
     m_SaveAsAct->setShortcuts(QKeySequence::SaveAs);
     m_SaveAsAct->setStatusTip(mafTr("Save the document under a new name"));
-    m_ActionList.append(m_SaveAsAct);
+    m_MenuItemList.append(m_SaveAsAct);
 
     m_RecentFileActs.clear();
     for (int i = 0; i < m_MaxRecentFiles; ++i) {
         QAction *recentFileAction = new QAction(this);
-        m_ActionList.append(recentFileAction);
+        m_MenuItemList.append(recentFileAction);
         recentFileAction->setVisible(false);
         connect(recentFileAction, SIGNAL(triggered()), this, SLOT(openRecentFile()));
         m_RecentFileActs.append(recentFileAction);
@@ -130,7 +130,7 @@ void mafGUIManager::createActions() {
     m_ExitAct->setIconText(mafTr("Exit"));
     m_ExitAct->setShortcuts(QKeySequence::Quit);
     m_ExitAct->setStatusTip(mafTr("Exit the application"));
-    m_ActionList.append(m_ExitAct);
+    m_MenuItemList.append(m_ExitAct);
     connect(m_ExitAct, SIGNAL(triggered()), m_MainWindow, SLOT(close()));
 
     m_CutAct = new QAction(QIcon(":/images/cut.png"), mafTr("Cu&t"), this);
@@ -139,7 +139,7 @@ void mafGUIManager::createActions() {
     m_CutAct->setShortcuts(QKeySequence::Cut);
     m_CutAct->setStatusTip(mafTr("Cut the current selection's contents to the "
                             "clipboard"));
-    m_ActionList.append(m_CutAct);
+    m_MenuItemList.append(m_CutAct);
 
     m_CopyAct = new QAction(QIcon(":/images/copy.png"), mafTr("&Copy"), this);
     m_CopyAct->setObjectName("Copy");
@@ -147,7 +147,7 @@ void mafGUIManager::createActions() {
     m_CopyAct->setShortcuts(QKeySequence::Copy);
     m_CopyAct->setStatusTip(mafTr("Copy the current selection's contents to the "
                              "clipboard"));
-    m_ActionList.append(m_CopyAct);
+    m_MenuItemList.append(m_CopyAct);
 
     m_PasteAct = new QAction(QIcon(":/images/paste.png"), tr("&Paste"), this);
     m_PasteAct->setObjectName("Paste");
@@ -155,32 +155,32 @@ void mafGUIManager::createActions() {
     m_PasteAct->setShortcuts(QKeySequence::Paste);
     m_PasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
                               "selection"));
-    m_ActionList.append(m_PasteAct);
+    m_MenuItemList.append(m_PasteAct);
 
     m_AboutAct = new QAction(tr("&About"), this);
     m_AboutAct->setObjectName("About");
     m_AboutAct->setIconText(mafTr("About"));
     m_AboutAct->setStatusTip(tr("Show the application's About box"));
-    m_ActionList.append(m_AboutAct);
+    m_MenuItemList.append(m_AboutAct);
 
     m_SettingsAction = new QAction(mafTr("Settings"), this);
     m_SettingsAction->setObjectName("Settings");
     m_SettingsAction->setIconText(mafTr("Settings"));
     m_SettingsAction->setStatusTip(tr("Show the application's Settings dialog"));
-    m_ActionList.append(m_SettingsAction);
+    m_MenuItemList.append(m_SettingsAction);
     connect(m_SettingsAction, SIGNAL(triggered()), SLOT(showSettingsDialog()));
 
     m_SideBarAct = new QAction(tr("Sidebar"), this);
     m_SideBarAct->setObjectName("SideBar");
     m_SideBarAct->setCheckable(true);
     m_SideBarAct->setChecked(true);
-    m_ActionList.append(m_SideBarAct);
+    m_MenuItemList.append(m_SideBarAct);
 
     m_LogBarAct = new QAction(tr("LogBar"), this);
     m_LogBarAct->setObjectName("LogBar");
     m_LogBarAct->setCheckable(true);
     m_LogBarAct->setChecked(true);
-    m_ActionList.append(m_LogBarAct);
+    m_MenuItemList.append(m_LogBarAct);
 
     m_ActionsCreated = true;
 
@@ -212,22 +212,27 @@ void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pl
             QAction *action = new QAction(mafTr(objInfo.m_Label.toAscii()), NULL);
             QVariant data_type(objInfo.m_ClassType);
             action->setData(data_type);
+            QMenu *menu;
             char *bc = base_class.toAscii().data();
             if(base_class == "mafResources::mafOperation") {
                 // Add a new item to the operation's menu.
-                m_OpMenu->addAction(action);
+                menu = (QMenu *)this->menuItemByName("Operations");
+                menu->addAction(action);
                 connect(action, SIGNAL(triggered()), this, SLOT(startOperation()));
             } else if(base_class == "mafResources::mafImporter") {
                 // Add a new item to the importer's menu.
-                m_ImportMenu->addAction(action);
+                menu = (QMenu *)this->menuItemByName("Import");
+                menu->addAction(action);
                 connect(action, SIGNAL(triggered()), this, SLOT(startOperation()));
             } else if(base_class == "mafResources::mafExporter") {
                 // Add a new item to the exporter's menu.
-                m_ExportMenu->addAction(action);
+                menu = (QMenu *)this->menuItemByName("Export");
+                menu->addAction(action);
                 connect(action, SIGNAL(triggered()), this, SLOT(startOperation()));
             } else if(base_class == "mafResources::mafView") {
                 // Add a new item to the view's menu.
-                m_ViewMenu->addAction(action);
+                menu = (QMenu *)this->menuItemByName("Views");
+                menu->addAction(action);
                 connect(action, SIGNAL(triggered()), this, SLOT(createView()));
             }
         }
@@ -237,12 +242,12 @@ void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pl
     this->updateMenuForSelectedVme(sel_vme);
 }
 
-QObject *mafGUIManager::actionByName(QString name) {
+QObject *mafGUIManager::menuItemByName(QString name) {
     if(!m_ActionsCreated || name.length() == 0) {
         return NULL;
     }
-    for (int i = 0; i < m_ActionList.size(); ++i) {
-        QObject *action = m_ActionList.at(i);
+    for (int i = 0; i < m_MenuItemList.size(); ++i) {
+        QObject *action = m_MenuItemList.at(i);
         QString an = action->objectName();
         if (an == name) {
             return action;
@@ -255,7 +260,8 @@ void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
     QStringList accepted_list;
     accepted_list = mafCoreRegistration::acceptObject(vme);
 
-    QList<QAction *> opActions = m_OpMenu->actions();
+    QMenu *opMenu = (QMenu *)this->menuItemByName("Operations");
+    QList<QAction *> opActions = opMenu->actions();
     QString op;
     foreach(QAction *action, opActions) {
         op = action->data().toString();
@@ -294,10 +300,93 @@ void mafGUIManager::registerEvents() {
     mafRegisterLocalCallback("maf.local.resources.view.noneViews", this, "viewDestroyed()");
 }
 
+void mafGUIManager::createDefaultMenus() {
+    if(!m_ActionsCreated) {
+        createActions();
+    }
+
+    QMenuBar *menuBar = m_MainWindow->menuBar();
+    
+    QMenu *importMenu = new QMenu(tr("Import"));
+    importMenu->setObjectName("Import");
+    QMenu *exportMenu = new QMenu(tr("Export"));
+    exportMenu->setObjectName("Export");
+    
+    QMenu *fileMenu = menuBar->addMenu(tr("File"));
+    fileMenu->setObjectName("File");
+    fileMenu->addAction(m_NewAct);
+    fileMenu->addSeparator();
+    fileMenu->addAction(m_OpenAct);
+    fileMenu->addAction(m_CollaborateAct);
+    fileMenu->addSeparator();
+    fileMenu->addMenu(importMenu);
+    fileMenu->addMenu(exportMenu);
+    fileMenu->addSeparator();
+    fileMenu->addAction(m_SaveAct);
+    fileMenu->addAction(m_SaveAsAct);
+    
+    m_RecentFilesSeparatorAct = fileMenu->addSeparator();
+    for (int i = 0; i < m_MaxRecentFiles; ++i) {
+        fileMenu->addAction(m_RecentFileActs.at(i));
+    }
+    
+    fileMenu->addSeparator();
+    fileMenu->addAction(m_ExitAct);
+    
+    m_MenuItemList.append(fileMenu);
+    
+    menuBar->addSeparator();
+    
+    QMenu *editMenu = menuBar->addMenu(tr("Edit"));
+    editMenu->setObjectName("Edit");
+    editMenu->addAction(m_CutAct);
+    editMenu->addAction(m_CopyAct);
+    editMenu->addAction(m_PasteAct);
+    m_MenuItemList.append(editMenu);
+    
+    menuBar->addSeparator();
+    
+    QMenu *viewMenu = menuBar->addMenu(tr("Views"));
+    viewMenu->setObjectName("Views");
+    m_MenuItemList.append(viewMenu);
+    
+    menuBar->addSeparator();
+    
+    QMenu *opMenu = menuBar->addMenu(tr("Operations"));
+    opMenu->setObjectName("Operations");
+    m_MenuItemList.append(opMenu);
+    
+    menuBar->addSeparator();
+    
+    QMenu *windowMenu = menuBar->addMenu(tr("Window"));
+    windowMenu->setObjectName("Window");
+    windowMenu->addAction(m_SideBarAct);
+    windowMenu->addAction(m_LogBarAct);
+    m_MenuItemList.append(windowMenu);
+    
+    menuBar->addSeparator();
+    
+    QMenu *helpMenu = menuBar->addMenu(tr("Help"));
+    helpMenu->setObjectName("Help");
+    helpMenu->addAction(m_AboutAct);
+    m_MenuItemList.append(helpMenu);
+    
+    QMenu *optionsMenu = menuBar->addMenu(tr("Options"));
+    optionsMenu->setObjectName("Options");
+    optionsMenu->addAction(m_SettingsAction);
+    m_MenuItemList.append(optionsMenu);
+}
+
 void mafGUIManager::createMenus() {
     int errorLine, errorColumn;
     QString errorMsg;
     QFile modelFile("Menu.mnu");
+    if (!modelFile.exists()) {
+        qWarning() << "Menu.mnu " << tr("doesn't exists. The default menu will be created");
+        createDefaultMenus();
+        return;
+    }
+
     QDomDocument document;
     if (!document.setContent(&modelFile, &errorMsg, &errorLine, &errorColumn)) {
         QString error(tr("Syntax error line %1, column %2:\n%3"));
@@ -311,64 +400,6 @@ void mafGUIManager::createMenus() {
     
     QDomNode m_CurrentNode = document.firstChild();
     parseMenuTree(m_CurrentNode);
-    
-    if(!m_ActionsCreated) {
-        createActions();
-    }
-
-    QMenuBar *menuBar = m_MainWindow->menuBar();
-    
-    m_ImportMenu = new QMenu(tr("&Import"));
-    m_ExportMenu = new QMenu(tr("&Export"));
-
-    m_FileMenu = menuBar->addMenu(tr("&File"));
-    m_FileMenu->addAction(m_NewAct);
-    m_FileMenu->addSeparator();
-    m_FileMenu->addAction(m_OpenAct);
-    m_FileMenu->addAction(m_CollaborateAct);
-    m_FileMenu->addSeparator();
-    m_FileMenu->addMenu(m_ImportMenu);
-    m_FileMenu->addMenu(m_ExportMenu);
-    m_FileMenu->addSeparator();
-    m_FileMenu->addAction(m_SaveAct);
-    m_FileMenu->addAction(m_SaveAsAct);
-    
-    m_RecentFilesSeparatorAct = m_FileMenu->addSeparator();
-    for (int i = 0; i < m_MaxRecentFiles; ++i) {
-        m_FileMenu->addAction(m_RecentFileActs.at(i));
-    }
-
-    m_FileMenu->addSeparator();
-    m_FileMenu->addAction(m_ExitAct);
-
-    menuBar->addSeparator();
-
-    m_EditMenu = menuBar->addMenu(tr("&Edit"));
-    m_EditMenu->addAction(m_CutAct);
-    m_EditMenu->addAction(m_CopyAct);
-    m_EditMenu->addAction(m_PasteAct);
-
-    menuBar->addSeparator();
-
-    m_ViewMenu = menuBar->addMenu(tr("Views"));
-
-    menuBar->addSeparator();
-
-    m_OpMenu = menuBar->addMenu(tr("Operations"));
-
-    menuBar->addSeparator();
-
-    m_WindowMenu = menuBar->addMenu(tr("&Window"));
-    m_WindowMenu->addAction(m_SideBarAct);
-    m_WindowMenu->addAction(m_LogBarAct);
-
-    menuBar->addSeparator();
-
-    m_HelpMenu = menuBar->addMenu(tr("&Help"));
-    m_HelpMenu->addAction(m_AboutAct);
-
-    m_OptionsMenu = menuBar->addMenu(tr("Options"));
-    m_OptionsMenu->addAction(m_SettingsAction);
 }
 
 void mafGUIManager::createToolBars() {
@@ -400,7 +431,8 @@ void mafGUIManager::startOperation() {
 }
 
 void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
-    m_OpMenu->setEnabled(false);
+    QMenu *opMenu = (QMenu *)this->menuItemByName("Operations");
+    opMenu->setEnabled(false);
 
     // Get the started operation
     QString guiFilename = operation->uiFilename();
@@ -417,7 +449,8 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
 }
 
 void mafGUIManager::removeOperationGUI() {
-    m_OpMenu->setEnabled(true);
+    QMenu *opMenu = (QMenu *)this->menuItemByName("Operations");
+    opMenu->setEnabled(true);
     m_GUILoadedType = mafGUILoadedTypeOperation;
     emit guiTypeToRemove(m_GUILoadedType);
 }
