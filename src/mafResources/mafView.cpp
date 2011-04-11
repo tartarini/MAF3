@@ -27,11 +27,16 @@ mafView::mafView(const QString code_location) : mafResource(code_location), m_Re
     m_VisualPipeHash.clear();
     m_SceneNodeList.clear();
 
+    // CallBack related to the Scene node reparent
+    mafRegisterLocalCallback("maf.local.resources.view.sceneNodeReparent", this, "sceneNodeReparent(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
+
+
     // Callbacks related to the VME creation
     mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)")
     // Callback related to the VME selection
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)")
 }
+
 
 mafView::~mafView() {
     if(m_Scenegraph != NULL) {
@@ -44,7 +49,12 @@ mafView::~mafView() {
 
 void mafView::create() {
     m_Scenegraph = mafNEW(mafCore::mafHierarchy);
+}
 
+void mafView::sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectBase *vmeParent) {
+  if(m_Scenegraph != NULL) {
+    m_Scenegraph->reparentHierarchyNode(vme, vmeParent);
+  }
 }
 
 void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
