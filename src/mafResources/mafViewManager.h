@@ -51,6 +51,9 @@ signals:
     /// Signal which allow to keep track of the selected view.
     void selectViewSignal(mafCore::mafObjectBase *view);
 
+    /// Signal which allow to reparetn scene nodes of the tree.
+    void sceneNodeReparentSignal(mafCore::mafObjectBase *, mafCore::mafObjectBase *);
+
     /// Signal which allow to show/hide the given node passed as argument.
     void sceneNodeShowSignal(mafCore::mafObjectBase *node, bool show = true);
 
