@@ -94,8 +94,13 @@ void mafTreeModel::itemDetached(QObject *item) {
 mafTreeItem *mafTreeModel::createNewItem(mafTreeItem *parent, QObject *obj, bool done) {
     mafTreeItem *item = new mafTreeItem(obj,done);
     parent->appendRow(item);
-    m_ItemsList.push_back(item);
+    //Update check state
+    bool visibility = obj->property("visibility").toBool();
+    if(item->isCheckable()){
+      item->setCheckState(visibility ? Qt::Checked : Qt::Unchecked);
+    }
 
+    m_ItemsList.push_back(item);
     return item;
 }
 
