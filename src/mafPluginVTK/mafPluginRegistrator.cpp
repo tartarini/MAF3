@@ -17,7 +17,7 @@
 
 #include "mafViewVTK.h"
 
-#include "mafOpParametricSurface.h"
+#include "mafOperationParametricSurface.h"
 #include "mafImporterVTK.h"
 
 #include "mafExternalDataCodecVTK.h"
@@ -38,7 +38,7 @@ mafPluginRegistrator::mafPluginRegistrator() {
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeDataImageThreshold);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualSelection);
-    mafRegisterObjectAndAcceptBind(mafPluginVTK::mafOpParametricSurface);
+    mafRegisterObjectAndAcceptBind(mafPluginVTK::mafOperationParametricSurface);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafImporterVTK);
     mafRegisterObject(mafPluginVTK::mafViewVTK);
     mafRegisterObject(mafPluginVTK::mafExternalDataCodecVTK);
@@ -55,7 +55,7 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeDataImageThreshold);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKSurface);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualSelection);
-    mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafOpParametricSurface);
+    mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafOperationParametricSurface);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafImporterVTK);
     mafUnregisterObject(mafPluginVTK::mafViewVTK);
     mafUnregisterObject(mafPluginVTK::mafExternalDataCodecVTK);
@@ -73,7 +73,7 @@ void mafPluginRegistrator::registerObjects() {
     mafPluggedObjectInformation visualPipeVTKSurface("Visual pipe VTK Surface", "mafPluginVTK::mafPipeVisualVTKSurface");
     mafPluggedObjectInformation visualPipeSelection("Visual pipe used to represent selection of data", "mafPluginVTK::mafPipeVisualSelection");
     mafPluggedObjectInformation viewVTK("VTK view", "mafPluginVTK::mafViewVTK");
-    mafPluggedObjectInformation opParametricSurface("Create Parametric Surface", "mafPluginVTK::mafOpParametricSurface");
+    mafPluggedObjectInformation opParametricSurface("Create Parametric Surface", "mafPluginVTK::mafOperationParametricSurface");
     mafPluggedObjectInformation importerVTK("Import VTK data", "mafPluginVTK::mafImporterVTK");
     mafPluggedObjectInformation externalDataCodecVTK("VTK codec", "mafPluginVTK::mafExternalDataCodecVTK");
 
