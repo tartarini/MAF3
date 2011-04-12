@@ -130,7 +130,7 @@ void mafVME::execute() {
     }
 }
 
-void mafVME::detatch() {
+void mafVME::detatchFromTree() {
     emit(detatched());
 }
 
