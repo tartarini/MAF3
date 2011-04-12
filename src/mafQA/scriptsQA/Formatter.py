@@ -35,26 +35,26 @@ def run(param):
    scriptsDir = os.getcwd()
    os.chdir(mafPathes.mafBinaryDir)
    baseDir = os.getcwd()
-   qaResultsDir = baseDir + "/QAResults/";
-   xmlDir = baseDir + "/QAResults/xml"
+   qaResultsDir = os.path.join(baseDir,"QAResults")
+   xmlDir = os.path.join(baseDir,"QAResults","xml")
 
    if not os.path.exists(xmlDir):
      print "Xml Directory not present: ", xmlDir
      sys.exit(1)
     
-   htmlDir = baseDir + "/QAResults/html"
+   htmlDir = os.path.join(baseDir,"QAResults","html")
 
    if not os.path.exists(htmlDir):
      os.makedirs(htmlDir)
-   if not os.path.exists(htmlDir+ "/Styles"):  
-     os.makedirs(htmlDir + "/Styles")
+   if not os.path.exists(os.path.join(htmlDir,"Styles")):  
+     os.makedirs(os.path.join(htmlDir,"Styles"))
 
-   if(os.path.exists(htmlDir + "/Styles")):
-     origDir = scriptsDir + "/Styles/"
-     destDir = htmlDir + "/Styles/"
+   if(os.path.exists(os.path.join(htmlDir,"Styles"))):
+     origDir = os.path.join(scriptsDir, "Styles")
+     destDir = os.path.join(htmlDir, "Styles")
      files = os.listdir(origDir)
      for item in files:
-         shutil.copyfile(origDir + item, destDir + item)
+         shutil.copyfile(os.path.join(origDir,item), os.path.join(destDir, item))
               
    xmlList=os.listdir(xmlDir)
    htmlList=[file.replace(".xml", ".html") for file in os.listdir(xmlDir)]
@@ -89,19 +89,19 @@ def run(param):
    </xsl:stylesheet>
    """
 
-   headString = "".join(open(htmlDir + "/Styles/head.temp"))
+   headString = "".join(open(os.path.join(htmlDir,"Styles" ,"head.temp")))
    headString = headString.replace("@@@_PUBLISH_DATE_@@@", str( datetime.now().date()))
-   centerString = "".join(open(htmlDir + "/Styles/center.temp"))
-   tailString = "".join(open(htmlDir + "/Styles/tail.temp"))
+   centerString = "".join(open(os.path.join(htmlDir,"Styles","center.temp")))
+   tailString = "".join(open(os.path.join(htmlDir, "Styles","tail.temp")))
    
    #check for external scripting
    pos = 0
    pos = headString.find("@@@_EXTERNAL_TOOLS_REPORT_@@@")-1
    if(param['LCOVCoverage']):
       #generateExternalLink
-      externalScriptDirectory = scriptsDir + "/ExternalScripts"
+      externalScriptDirectory = os.path.join(scriptsDir, "ExternalScripts")
       os.chdir(externalScriptDirectory)
-      os.system("python " + externalScriptDirectory + "/LCOVCoveragePublish.py")
+      os.system("python " + os.path.join(externalScriptDirectory, "LCOVCoveragePublish.py"))
       
       li = "<li><a href=\"../externalLCOVCoverage/index.html\">LCOV Coverage</a></li>";
       headString = headString[:pos] + li + headString[pos:]
@@ -110,9 +110,9 @@ def run(param):
 
    if(param['cppcheck']):
       #generateExternalLink
-      externalScriptDirectory = scriptsDir + "/ExternalScripts"
+      externalScriptDirectory = os.path.join(scriptsDir,"ExternalScripts")
       os.chdir(externalScriptDirectory)
-      os.system("python " + externalScriptDirectory + "/cppcheckPublish.py")
+      os.system("python " + os.path.join(externalScriptDirectory,"cppcheckPublish.py"))
       li = "<li><a href=\"../externalcppcheck/index.html\">Static Analysis</a></li>"
       headString = headString[:pos] + li + headString[pos:]
       pos = pos + len(li)
@@ -120,9 +120,9 @@ def run(param):
    
    if(param['cccc']):
       #generateExternalLink
-      externalScriptDirectory = scriptsDir + "/ExternalScripts"
+      externalScriptDirectory = os.path.join(scriptsDir,"ExternalScripts")
       os.chdir(externalScriptDirectory)
-      os.system("python " + externalScriptDirectory + "/ccccPublish.py")
+      os.system("python " + os.path.join(externalScriptDirectory, "ccccPublish.py"))
       li = "<li><a href=\"../externalcccc/index.html\">Code Complexity</a></li>"
       headString = headString[:pos] + li + headString[pos:]
       pos = pos + len(li)
@@ -156,7 +156,7 @@ def run(param):
        result = style.apply(xml)
            
        #print htmlDir + filename + ".html"
-       html = open(htmlDir + "/" + filename + ".html", 'w')
+       html = open(os.path.join(htmlDir, filename + ".html"), 'w')
        print >> html , style.tostring(result)
      except Exception, e:
        success = False
@@ -167,7 +167,7 @@ def run(param):
    if(success == True):
        print "PUBLISH SUCCESSFUL"
    
-   index = open(htmlDir + "/index.html", 'w')
+   index = open(os.path.join(htmlDir, "index.html"), 'w')
    
    
    introduction = """

@@ -9,7 +9,7 @@ modulesDir = mafPathes.mafSourcesDir #need to be changed
 param = {}
 
 def find_executable(executable, path=None):
-    fullPathName = path + "/" + executable
+    fullPathName = os.path.join(path, executable)
     if(os.access(fullPathName, os.X_OK)):
         ext = os.path.splitext(fullPathName)[-1]
         if(ext in  extensionToAvoid):
@@ -57,7 +57,7 @@ def execute():
         except KeyError:
             os.environ['LD_LIBRARY_PATH'] = execDir
             
-        suffix = "Test_debug"
+        suffix = "Test"
         #need to start X
         os.environ['DISPLAY'] = "localhost:0.0"
         os.system("Xvfb :0.0 &")
@@ -68,9 +68,9 @@ def execute():
         except KeyError:
             os.environ['DYLD_LIBRARY_PATH'] = execDir
         
-        suffix = "Test_debug"
+        suffix = "Test"
     elif(str(os.sys.platform).lower() == 'win32'):
-        suffix = "Test_d"
+        suffix = "Test"
         
     if(param['release-enable'] == True):
         suffix = "Test" 
