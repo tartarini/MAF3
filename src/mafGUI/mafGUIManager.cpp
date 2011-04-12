@@ -27,10 +27,7 @@ using namespace mafEventBus;
 using namespace mafGUI;
 
 mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location) : mafObjectBase(code_location)
-    , m_NewAct(NULL), m_CollaborateAct(NULL)
-    , m_OpenAct(NULL), m_SaveAct(NULL), m_SaveAsAct(NULL), m_RecentFilesSeparatorAct(NULL), m_ExitAct(NULL)
-    , m_CutAct(NULL), m_CopyAct(NULL), m_PasteAct(NULL), m_AboutAct(NULL)
-    , m_MaxRecentFiles(5), m_ActionsCreated(false), m_MainWindow(main_win)
+    , m_MaxRecentFiles(5), m_MainWindow(main_win)
     , m_Model(NULL), m_TreeWidget(NULL) {
 
     m_SettingsDialog = new mafGUIApplicationSettingsDialog();
@@ -53,21 +50,106 @@ mafGUIManager::~mafGUIManager() {
     mafDEL(m_UILoader);
 }
 
+void mafGUIManager::createToolbar(QDomElement node) {
+    QDomNamedNodeMap attributes = node.attributes();
+    QString title = attributes.namedItem("title").nodeValue();
+    QString actions = attributes.namedItem("actionList").nodeValue();
+
+    QToolBar *toolBar = m_MainWindow->addToolBar(tr(title.toAscii().constData()));
+
+    QStringList actionList = actions.split(",");
+    foreach (QString action, actionList) {
+        toolBar->addAction((QAction*)menuItemByName(action));
+    }
+
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+}
+
+void mafGUIManager::createAction(QDomElement node) {
+    QDomNamedNodeMap attributes = node.attributes();
+    QString title = attributes.namedItem("title").nodeValue();
+    QString icon = attributes.namedItem("icon").nodeValue();
+    QString tip = attributes.namedItem("tip").nodeValue();
+    QString checkable = attributes.namedItem("checkable").nodeValue();
+    QString checked = attributes.namedItem("checked").nodeValue();
+    QString slot = attributes.namedItem("slot").nodeValue();
+    QString topic = attributes.namedItem("topic").nodeValue();
+
+    QAction *action = new QAction(QIcon(icon), mafTr(title.toAscii().constData()), this);
+    action->setIconText(mafTr(title.toAscii().constData()));
+    action->setObjectName(title);
+//    action->setShortcuts(QKeySequence::New);
+    action->setStatusTip(mafTr(tip.toAscii().constData()));
+    action->setCheckable(checkable.toInt() != 0);
+    action->setChecked(checked.toInt() != 0);
+    if (!slot.isEmpty()) {
+        slot.prepend(CALLBACK_SIGNATURE);
+        connect(action, SIGNAL(triggered()), this, slot.toAscii().constData());
+    }
+    if (!topic.isEmpty()) {
+        mafIdProvider *provider = mafIdProvider::instance();
+        provider->createNewId(topic);
+        mafRegisterLocalSignal(topic, action, "triggered()");
+    }
+    
+    if (m_CurrentMenu != NULL) {
+        m_CurrentMenu->addAction(action);
+    }
+    
+    m_MenuItemList.append(action);
+}
+
+void mafGUIManager::createMenuItem(QDomElement node) {
+    QDomNamedNodeMap attributes = node.attributes();
+    QString title = attributes.namedItem("title").nodeValue();
+    QString parentName = attributes.namedItem("parent").nodeValue();
+
+    if (parentName.isEmpty()) {
+        // Create a new menu item.
+        QMenuBar *menuBar = m_MainWindow->menuBar();
+        m_CurrentMenu = menuBar->addMenu(mafTr(title.toAscii().constData()));
+        m_CurrentMenu->setObjectName(title);
+        m_MenuItemList.append(m_CurrentMenu);
+    } else {
+        // Create the new menu as child of the given parent.
+        QMenu *menu = new QMenu(mafTr(title.toAscii().constData()));
+        menu->setObjectName(title);
+        QMenu *parentMenu = (QMenu *)this->menuItemByName(parentName);
+        if (parentMenu) {
+            parentMenu->addMenu(menu);
+            m_MenuItemList.append(menu);
+        } else {
+            qWarning() << mafTr("Wrong parent name") << "' " << parentName << "' " << mafTr("for menu ") << title;
+            delete menu;
+        }
+    }
+}
+
 void mafGUIManager::parseMenuAttributes(QDomNode current) {
     if (current.nodeType() == QDomNode::ElementNode) {
         QDomElement ce = current.toElement();
-        qDebug() << ce.tagName();
-        QDomNamedNodeMap attributes = ce.attributes();
-        QDomNode att;
-        for (int i = 0; i < attributes.size(); ++i) {
-            att = attributes.item(i);
-            qDebug() << att.nodeName() << " = " << att.nodeValue();
+        QString name = ce.tagName();
+        if (name == "Menu") {
+            // Create the new menu item.
+            createMenuItem(ce);
+        } else if (name == "Action") {
+            // Create the new action.
+            createAction(ce);
+        } else if (name == "Separator" && m_CurrentMenu != NULL) {
+            // Add a separator to the current menu item.
+            m_CurrentMenu->addSeparator();
+        } else if (name == "Toolbar") {
+            // Add the new toolbar element
+            createToolbar(ce);
+        } else {
+            qWarning() << mafTr("Unknown DomElement: ") << name << " !!";
         }
     }
 }
 
 QDomNode mafGUIManager::parseMenuTree(QDomNode current) {
     // Get the menu items...
+    char *name = current.nodeName().toAscii().data();
     QDomNodeList dnl = current.childNodes();
     for (int n=0; n < dnl.count(); ++n) {
         QDomNode node = dnl.item(n);
@@ -80,41 +162,41 @@ QDomNode mafGUIManager::parseMenuTree(QDomNode current) {
 }
 
 void mafGUIManager::createActions() {
-    m_NewAct = new QAction(QIcon(":/images/new.png"), mafTr("&New"), this);
-    m_NewAct->setIconText(mafTr("New"));
-    m_NewAct->setObjectName("New");
-    m_NewAct->setShortcuts(QKeySequence::New);
-    m_NewAct->setStatusTip(mafTr("Create a new file"));
-    m_MenuItemList.append(m_NewAct);
+    QAction *newAct = new QAction(QIcon(":/images/new.png"), mafTr("&New"), this);
+    newAct->setIconText(mafTr("New"));
+    newAct->setObjectName("New");
+    newAct->setShortcuts(QKeySequence::New);
+    newAct->setStatusTip(mafTr("Create a new file"));
+    m_MenuItemList.append(newAct);
 
-    m_CollaborateAct = new QAction(QIcon(":/images/collaborate.png"), mafTr("Collaborate"), this);
-    m_CollaborateAct->setObjectName("Collaborate");
-    m_CollaborateAct->setCheckable(true);
-    m_CollaborateAct->setChecked(false);
-    m_CollaborateAct->setIconText(mafTr("Collaborate"));
-    m_CollaborateAct->setStatusTip(mafTr("Collaborate with your conmtacts in gtalk."));
-    m_MenuItemList.append(m_CollaborateAct);
+    QAction *collaborateAct = new QAction(QIcon(":/images/collaborate.png"), mafTr("Collaborate"), this);
+    collaborateAct->setObjectName("Collaborate");
+    collaborateAct->setCheckable(true);
+    collaborateAct->setChecked(false);
+    collaborateAct->setIconText(mafTr("Collaborate"));
+    collaborateAct->setStatusTip(mafTr("Collaborate with your conmtacts in gtalk."));
+    m_MenuItemList.append(collaborateAct);
 
-    m_OpenAct = new QAction(QIcon(":/images/open.png"), mafTr("&Open..."), this);
-    m_OpenAct->setObjectName("Open");
-    m_OpenAct->setIconText(mafTr("Open"));
-    m_OpenAct->setShortcuts(QKeySequence::Open);
-    m_OpenAct->setStatusTip(mafTr("Open an existing file"));
-    m_MenuItemList.append(m_OpenAct);
+    QAction *openAct = new QAction(QIcon(":/images/open.png"), mafTr("&Open..."), this);
+    openAct->setObjectName("Open");
+    openAct->setIconText(mafTr("Open"));
+    openAct->setShortcuts(QKeySequence::Open);
+    openAct->setStatusTip(mafTr("Open an existing file"));
+    m_MenuItemList.append(openAct);
 
-    m_SaveAct = new QAction(QIcon(":/images/save.png"), mafTr("&Save"), this);
-    m_SaveAct->setObjectName("Save");
-    m_SaveAct->setIconText(mafTr("Save"));
-    m_SaveAct->setShortcuts(QKeySequence::Save);
-    m_SaveAct->setStatusTip(mafTr("Save the document to disk"));
-    m_MenuItemList.append(m_SaveAct);
+    QAction *saveAct = new QAction(QIcon(":/images/save.png"), mafTr("&Save"), this);
+    saveAct->setObjectName("Save");
+    saveAct->setIconText(mafTr("Save"));
+    saveAct->setShortcuts(QKeySequence::Save);
+    saveAct->setStatusTip(mafTr("Save the document to disk"));
+    m_MenuItemList.append(saveAct);
 
-    m_SaveAsAct = new QAction(mafTr("Save &As..."), this);
-    m_SaveAsAct->setObjectName("SaveAs");
-    m_SaveAsAct->setIconText(mafTr("Save As"));
-    m_SaveAsAct->setShortcuts(QKeySequence::SaveAs);
-    m_SaveAsAct->setStatusTip(mafTr("Save the document under a new name"));
-    m_MenuItemList.append(m_SaveAsAct);
+    QAction *saveAsAct = new QAction(mafTr("Save &As..."), this);
+    saveAsAct->setObjectName("SaveAs");
+    saveAsAct->setIconText(mafTr("Save As"));
+    saveAsAct->setShortcuts(QKeySequence::SaveAs);
+    saveAsAct->setStatusTip(mafTr("Save the document under a new name"));
+    m_MenuItemList.append(saveAsAct);
 
     m_RecentFileActs.clear();
     for (int i = 0; i < m_MaxRecentFiles; ++i) {
@@ -125,66 +207,64 @@ void mafGUIManager::createActions() {
         m_RecentFileActs.append(recentFileAction);
     }
 
-    m_ExitAct = new QAction(mafTr("E&xit"), this);
-    m_ExitAct->setObjectName("Exit");
-    m_ExitAct->setIconText(mafTr("Exit"));
-    m_ExitAct->setShortcuts(QKeySequence::Quit);
-    m_ExitAct->setStatusTip(mafTr("Exit the application"));
-    m_MenuItemList.append(m_ExitAct);
-    connect(m_ExitAct, SIGNAL(triggered()), m_MainWindow, SLOT(close()));
+    QAction *exitAct = new QAction(mafTr("E&xit"), this);
+    exitAct->setObjectName("Exit");
+    exitAct->setIconText(mafTr("Exit"));
+    exitAct->setShortcuts(QKeySequence::Quit);
+    exitAct->setStatusTip(mafTr("Exit the application"));
+    m_MenuItemList.append(exitAct);
+    connect(exitAct, SIGNAL(triggered()), m_MainWindow, SLOT(close()));
 
-    m_CutAct = new QAction(QIcon(":/images/cut.png"), mafTr("Cu&t"), this);
-    m_CutAct->setObjectName("Cut");
-    m_CutAct->setIconText(mafTr("Cut"));
-    m_CutAct->setShortcuts(QKeySequence::Cut);
-    m_CutAct->setStatusTip(mafTr("Cut the current selection's contents to the "
+    QAction *cutAct = new QAction(QIcon(":/images/cut.png"), mafTr("Cu&t"), this);
+    cutAct->setObjectName("Cut");
+    cutAct->setIconText(mafTr("Cut"));
+    cutAct->setShortcuts(QKeySequence::Cut);
+    cutAct->setStatusTip(mafTr("Cut the current selection's contents to the "
                             "clipboard"));
-    m_MenuItemList.append(m_CutAct);
+    m_MenuItemList.append(cutAct);
 
-    m_CopyAct = new QAction(QIcon(":/images/copy.png"), mafTr("&Copy"), this);
-    m_CopyAct->setObjectName("Copy");
-    m_CopyAct->setIconText(mafTr("Copy"));
-    m_CopyAct->setShortcuts(QKeySequence::Copy);
-    m_CopyAct->setStatusTip(mafTr("Copy the current selection's contents to the "
+    QAction *copyAct = new QAction(QIcon(":/images/copy.png"), mafTr("&Copy"), this);
+    copyAct->setObjectName("Copy");
+    copyAct->setIconText(mafTr("Copy"));
+    copyAct->setShortcuts(QKeySequence::Copy);
+    copyAct->setStatusTip(mafTr("Copy the current selection's contents to the "
                              "clipboard"));
-    m_MenuItemList.append(m_CopyAct);
+    m_MenuItemList.append(copyAct);
 
-    m_PasteAct = new QAction(QIcon(":/images/paste.png"), tr("&Paste"), this);
-    m_PasteAct->setObjectName("Paste");
-    m_PasteAct->setIconText(mafTr("Paste"));
-    m_PasteAct->setShortcuts(QKeySequence::Paste);
-    m_PasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
+    QAction *pasteAct = new QAction(QIcon(":/images/paste.png"), tr("&Paste"), this);
+    pasteAct->setObjectName("Paste");
+    pasteAct->setIconText(mafTr("Paste"));
+    pasteAct->setShortcuts(QKeySequence::Paste);
+    pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
                               "selection"));
-    m_MenuItemList.append(m_PasteAct);
+    m_MenuItemList.append(pasteAct);
 
-    m_AboutAct = new QAction(tr("&About"), this);
-    m_AboutAct->setObjectName("About");
-    m_AboutAct->setIconText(mafTr("About"));
-    m_AboutAct->setStatusTip(tr("Show the application's About box"));
-    m_MenuItemList.append(m_AboutAct);
+    QAction *aboutAct = new QAction(tr("&About"), this);
+    aboutAct->setObjectName("About");
+    aboutAct->setIconText(mafTr("About"));
+    aboutAct->setStatusTip(tr("Show the application's About box"));
+    m_MenuItemList.append(aboutAct);
 
-    m_SettingsAction = new QAction(mafTr("Settings"), this);
-    m_SettingsAction->setObjectName("Settings");
-    m_SettingsAction->setIconText(mafTr("Settings"));
-    m_SettingsAction->setStatusTip(tr("Show the application's Settings dialog"));
-    m_MenuItemList.append(m_SettingsAction);
-    connect(m_SettingsAction, SIGNAL(triggered()), SLOT(showSettingsDialog()));
+    QAction *settingsAction = new QAction(mafTr("Settings"), this);
+    settingsAction->setObjectName("Settings");
+    settingsAction->setIconText(mafTr("Settings"));
+    settingsAction->setStatusTip(tr("Show the application's Settings dialog"));
+    m_MenuItemList.append(settingsAction);
+    connect(settingsAction, SIGNAL(triggered()), SLOT(showSettingsDialog()));
 
-    m_SideBarAct = new QAction(tr("Sidebar"), this);
-    m_SideBarAct->setObjectName("SideBar");
-    m_SideBarAct->setCheckable(true);
-    m_SideBarAct->setChecked(true);
-    m_MenuItemList.append(m_SideBarAct);
+    QAction *sideBarAct = new QAction(tr("Sidebar"), this);
+    sideBarAct->setObjectName("SideBar");
+    sideBarAct->setCheckable(true);
+    sideBarAct->setChecked(true);
+    m_MenuItemList.append(sideBarAct);
 
-    m_LogBarAct = new QAction(tr("LogBar"), this);
-    m_LogBarAct->setObjectName("LogBar");
-    m_LogBarAct->setCheckable(true);
-    m_LogBarAct->setChecked(true);
-    m_MenuItemList.append(m_LogBarAct);
+    QAction *logBarAct = new QAction(tr("LogBar"), this);
+    logBarAct->setObjectName("LogBar");
+    logBarAct->setCheckable(true);
+    logBarAct->setChecked(true);
+    m_MenuItemList.append(logBarAct);
 
-    m_ActionsCreated = true;
-
-    registerEvents();
+    registerDefaultEvents();
 }
 
 void mafGUIManager::showSettingsDialog() {
@@ -196,7 +276,7 @@ void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pl
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
 
-    if(!m_ActionsCreated) {
+    if(m_MenuItemList.size() == 0) {
         // Actions has not been created, so neither the menu.
         // Ask to create it which will crete also the actions.
         createMenus();
@@ -251,9 +331,6 @@ void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pl
 }
 
 QObject *mafGUIManager::menuItemByName(QString name) {
-    if(!m_ActionsCreated || name.length() == 0) {
-        return NULL;
-    }
     for (int i = 0; i < m_MenuItemList.size(); ++i) {
         QObject *action = m_MenuItemList.at(i);
         QString an = action->objectName();
@@ -277,7 +354,7 @@ void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
     }
 }
 
-void mafGUIManager::registerEvents() {
+void mafGUIManager::registerDefaultEvents() {
     mafIdProvider *provider = mafIdProvider::instance();
     provider->createNewId("maf.local.gui.action.new");
     provider->createNewId("maf.local.gui.action.open");
@@ -290,14 +367,23 @@ void mafGUIManager::registerEvents() {
     provider->createNewId("maf.local.gui.pathSelected");
 
     // Register API signals.
-    mafRegisterLocalSignal("maf.local.gui.action.new", m_NewAct, "triggered()");
-    mafRegisterLocalSignal("maf.local.gui.action.open", m_OpenAct, "triggered()");
-    mafRegisterLocalSignal("maf.local.gui.action.save", m_SaveAct, "triggered()");
-    mafRegisterLocalSignal("maf.local.gui.action.saveas", m_SaveAsAct, "triggered()");
-    mafRegisterLocalSignal("maf.local.gui.action.cut", m_CutAct, "triggered()");
-    mafRegisterLocalSignal("maf.local.gui.action.copy", m_CopyAct, "triggered()");
-    mafRegisterLocalSignal("maf.local.gui.action.paste", m_PasteAct, "triggered()");
-    mafRegisterLocalSignal("maf.local.gui.action.about", m_AboutAct, "triggered()");
+    QObject *action;
+    action = menuItemByName("New");
+    mafRegisterLocalSignal("maf.local.gui.action.new", action, "triggered()");
+    action = menuItemByName("Open");
+    mafRegisterLocalSignal("maf.local.gui.action.open", action, "triggered()");
+    action = menuItemByName("Save");
+    mafRegisterLocalSignal("maf.local.gui.action.save", action, "triggered()");
+    action = menuItemByName("SaveAs");
+    mafRegisterLocalSignal("maf.local.gui.action.saveas", action, "triggered()");
+    action = menuItemByName("Cut");
+    mafRegisterLocalSignal("maf.local.gui.action.cut", action, "triggered()");
+    action = menuItemByName("Copy");
+    mafRegisterLocalSignal("maf.local.gui.action.copy", action, "triggered()");
+    action = menuItemByName("Paste");
+    mafRegisterLocalSignal("maf.local.gui.action.paste", action, "triggered()");
+    action = menuItemByName("About");
+    mafRegisterLocalSignal("maf.local.gui.action.about", action, "triggered()");
     mafRegisterLocalSignal("maf.local.gui.pathSelected", this, "pathSelected(const QString)");
 
     // OperationManager's callback
@@ -309,7 +395,7 @@ void mafGUIManager::registerEvents() {
 }
 
 void mafGUIManager::createDefaultMenus() {
-    if(!m_ActionsCreated) {
+    if(m_MenuItemList.size() == 0) {
         createActions();
     }
 
@@ -322,16 +408,16 @@ void mafGUIManager::createDefaultMenus() {
     
     QMenu *fileMenu = menuBar->addMenu(tr("File"));
     fileMenu->setObjectName("File");
-    fileMenu->addAction(m_NewAct);
+    fileMenu->addAction((QAction*)menuItemByName("New"));
     fileMenu->addSeparator();
-    fileMenu->addAction(m_OpenAct);
-    fileMenu->addAction(m_CollaborateAct);
+    fileMenu->addAction((QAction*)menuItemByName("Open"));
+    fileMenu->addAction((QAction*)menuItemByName("Collaborate"));
     fileMenu->addSeparator();
     fileMenu->addMenu(importMenu);
     fileMenu->addMenu(exportMenu);
     fileMenu->addSeparator();
-    fileMenu->addAction(m_SaveAct);
-    fileMenu->addAction(m_SaveAsAct);
+    fileMenu->addAction((QAction*)menuItemByName("Save"));
+    fileMenu->addAction((QAction*)menuItemByName("SaveAs"));
     
     m_RecentFilesSeparatorAct = fileMenu->addSeparator();
     for (int i = 0; i < m_MaxRecentFiles; ++i) {
@@ -339,7 +425,7 @@ void mafGUIManager::createDefaultMenus() {
     }
     
     fileMenu->addSeparator();
-    fileMenu->addAction(m_ExitAct);
+    fileMenu->addAction((QAction*)menuItemByName("Exit"));
     
     m_MenuItemList.append(fileMenu);
     
@@ -347,9 +433,9 @@ void mafGUIManager::createDefaultMenus() {
     
     QMenu *editMenu = menuBar->addMenu(tr("Edit"));
     editMenu->setObjectName("Edit");
-    editMenu->addAction(m_CutAct);
-    editMenu->addAction(m_CopyAct);
-    editMenu->addAction(m_PasteAct);
+    editMenu->addAction((QAction*)menuItemByName("Cut"));
+    editMenu->addAction((QAction*)menuItemByName("Copy"));
+    editMenu->addAction((QAction*)menuItemByName("Paste"));
     m_MenuItemList.append(editMenu);
     
     menuBar->addSeparator();
@@ -368,23 +454,23 @@ void mafGUIManager::createDefaultMenus() {
     
     QMenu *windowMenu = menuBar->addMenu(tr("Window"));
     windowMenu->setObjectName("Window");
-    windowMenu->addAction(m_SideBarAct);
-    windowMenu->addAction(m_LogBarAct);
+    windowMenu->addAction((QAction*)menuItemByName("SideBar"));
+    windowMenu->addAction((QAction*)menuItemByName("LogBar"));
     m_MenuItemList.append(windowMenu);
     
     menuBar->addSeparator();
     
     QMenu *helpMenu = menuBar->addMenu(tr("Help"));
     helpMenu->setObjectName("Help");
-    helpMenu->addAction(m_AboutAct);
+    helpMenu->addAction((QAction*)menuItemByName("About"));
     m_MenuItemList.append(helpMenu);
     
     QMenu *optionsMenu = menuBar->addMenu(tr("Options"));
     optionsMenu->setObjectName("Options");
-    optionsMenu->addAction(m_SettingsAction);
+    optionsMenu->addAction((QAction*)menuItemByName("Settings"));
     m_MenuItemList.append(optionsMenu);
     
-    createToolBars();
+    createDefaultToolbars();
 }
 
 void mafGUIManager::createMenus() {
@@ -399,33 +485,33 @@ void mafGUIManager::createMenus() {
 
     QDomDocument document;
     if (!document.setContent(&modelFile, &errorMsg, &errorLine, &errorColumn)) {
-        QString error(tr("Syntax error line %1, column %2:\n%3"));
+        QString error(tr("Syntax error line %1, column %2:\n%3. Default menu will be created."));
         error = error
         .arg(errorLine)
         .arg(errorColumn)
         .arg(errorMsg);
         qCritical() << error;
+        createDefaultMenus();
         return;
     }
     
     QDomNode m_CurrentNode = document.firstChild();
     parseMenuTree(m_CurrentNode);
-    createDefaultMenus();
 }
 
-void mafGUIManager::createToolBars() {
-    m_FileToolBar = m_MainWindow->addToolBar(tr("File"));
-    m_FileToolBar->addAction(m_NewAct);
-    m_FileToolBar->addAction(m_CollaborateAct);
-    m_FileToolBar->addAction(m_OpenAct);
-    m_FileToolBar->addAction(m_SaveAct);
-    m_FileToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+void mafGUIManager::createDefaultToolbars() {
+    QToolBar *fileToolBar = m_MainWindow->addToolBar(tr("File"));
+    fileToolBar->addAction((QAction*)menuItemByName("New"));
+    fileToolBar->addAction((QAction*)menuItemByName("Collaborate"));
+    fileToolBar->addAction((QAction*)menuItemByName("Open"));
+    fileToolBar->addAction((QAction*)menuItemByName("Save"));
+    fileToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    m_EditToolBar = m_MainWindow->addToolBar(tr("Edit"));
-    m_EditToolBar->addAction(m_CutAct);
-    m_EditToolBar->addAction(m_CopyAct);
-    m_EditToolBar->addAction(m_PasteAct);
-    m_EditToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    QToolBar *editToolBar = m_MainWindow->addToolBar(tr("Edit"));
+    editToolBar->addAction((QAction*)menuItemByName("Cut"));
+    editToolBar->addAction((QAction*)menuItemByName("Copy"));
+    editToolBar->addAction((QAction*)menuItemByName("Paste"));
+    editToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 }
 
 void mafGUIManager::startOperation() {
