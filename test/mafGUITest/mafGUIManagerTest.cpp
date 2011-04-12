@@ -66,7 +66,7 @@ void mafGUIManagerTest::mafGUIManagerAllocationTest() {
 
 void mafGUIManagerTest::mafGUIManagerCreateMenuTest() {
     m_GUIManager->createMenus();
-    m_GUIManager->createToolBars();
+//    m_GUIManager->createToolBars();
 
     QObject *menu = m_GUIManager->menuItemByName("File");
     QVERIFY(menu != NULL);

@@ -217,23 +217,31 @@ void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pl
             if(base_class == "mafResources::mafOperation") {
                 // Add a new item to the operation's menu.
                 menu = (QMenu *)this->menuItemByName("Operations");
-                menu->addAction(action);
-                connect(action, SIGNAL(triggered()), this, SLOT(startOperation()));
+                if (menu) {
+                    menu->addAction(action);
+                    connect(action, SIGNAL(triggered()), this, SLOT(startOperation()));
+                }
             } else if(base_class == "mafResources::mafImporter") {
                 // Add a new item to the importer's menu.
                 menu = (QMenu *)this->menuItemByName("Import");
-                menu->addAction(action);
-                connect(action, SIGNAL(triggered()), this, SLOT(startOperation()));
+                if (menu) {
+                    menu->addAction(action);
+                    connect(action, SIGNAL(triggered()), this, SLOT(startOperation()));
+                }
             } else if(base_class == "mafResources::mafExporter") {
                 // Add a new item to the exporter's menu.
                 menu = (QMenu *)this->menuItemByName("Export");
-                menu->addAction(action);
-                connect(action, SIGNAL(triggered()), this, SLOT(startOperation()));
+                if (menu) {
+                    menu->addAction(action);
+                    connect(action, SIGNAL(triggered()), this, SLOT(startOperation()));
+                }
             } else if(base_class == "mafResources::mafView") {
                 // Add a new item to the view's menu.
                 menu = (QMenu *)this->menuItemByName("Views");
-                menu->addAction(action);
-                connect(action, SIGNAL(triggered()), this, SLOT(createView()));
+                if (menu) {
+                    menu->addAction(action);
+                    connect(action, SIGNAL(triggered()), this, SLOT(createView()));
+                }
             }
         }
         ++iter;
@@ -375,6 +383,8 @@ void mafGUIManager::createDefaultMenus() {
     optionsMenu->setObjectName("Options");
     optionsMenu->addAction(m_SettingsAction);
     m_MenuItemList.append(optionsMenu);
+    
+    createToolBars();
 }
 
 void mafGUIManager::createMenus() {
@@ -400,12 +410,10 @@ void mafGUIManager::createMenus() {
     
     QDomNode m_CurrentNode = document.firstChild();
     parseMenuTree(m_CurrentNode);
+    createDefaultMenus();
 }
 
 void mafGUIManager::createToolBars() {
-    if(!m_ActionsCreated) {
-        createActions();
-    }
     m_FileToolBar = m_MainWindow->addToolBar(tr("File"));
     m_FileToolBar->addAction(m_NewAct);
     m_FileToolBar->addAction(m_CollaborateAct);
