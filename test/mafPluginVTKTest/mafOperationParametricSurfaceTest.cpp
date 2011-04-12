@@ -1,5 +1,5 @@
 /*
- *  mafOpParametricSurfaceTest.cpp
+ *  mafOperationParametricSurfaceTest.cpp
  *  mafPluginVTKTest
  *
  *  Created by Roberto Mucci on 20/01/11.
@@ -13,7 +13,7 @@
 #include <mafCoreSingletons.h>
 #include <mafResourcesRegistration.h>
 #include <mafPipeVisualVTKSurface.h>
-#include <mafOpParametricSurface.h>
+#include <mafOperationParametricSurface.h>
 #include <mafPluginManager.h>
 #include <mafVMEManager.h>
 #include <vtkRenderWindowInteractor.h>
@@ -29,18 +29,18 @@ using namespace mafEventBus;
 using namespace mafPluginVTK;
 
 /**
- Class name: mafOpParametricSurfaceTest
- This class implements the test suite for mafOpParametricSurface.
+ Class name: mafOperationParametricSurfaceTest
+ This class implements the test suite for mafOperationParametricSurface.
  */
 
 //! <title>
-//mafOpParametricSurface
+//mafOperationParametricSurface
 //! </title>
 //! <description>
-//mafOpParametricSurface represent a VTK sphere surface with modificable parameters.
+//mafOperationParametricSurface represent a VTK sphere surface with modificable parameters.
 //! </description>
 
-class mafOpParametricSurfaceTest : public QObject {
+class mafOperationParametricSurfaceTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -53,7 +53,7 @@ private slots:
         m_VMEManager = mafVMEManager::instance();
 
         // Create the parametric operation.
-        m_OpParametric = mafNEW(mafPluginVTK::mafOpParametricSurface);
+        m_OpParametric = mafNEW(mafPluginVTK::mafOperationParametricSurface);
     }
 
     /// Cleanup test variables memory allocation.
@@ -70,13 +70,13 @@ private slots:
     void SetGetTest();
 
 private:
-    mafOpParametricSurface *m_OpParametric; ///< Parametric operation.
+    mafOperationParametricSurface *m_OpParametric; ///< Parametric operation.
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a surface.
     mafVME *m_VmeAdded; ///< test object.
     mafResources::mafVMEManager *m_VMEManager; ///< instance of mafVMEManager.
 };
 
-void mafOpParametricSurfaceTest::testExecute() {
+void mafOperationParametricSurfaceTest::testExecute() {
     // execute the operation
     m_OpParametric->execute();
 
@@ -86,7 +86,7 @@ void mafOpParametricSurfaceTest::testExecute() {
     QVERIFY(m_VME != NULL);
 }
 
-void mafOpParametricSurfaceTest::SetGetTest() {
+void mafOperationParametricSurfaceTest::SetGetTest() {
     mafPipeVisualVTKSurface *pipe;
     pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSurface);
     pipe->setInput(m_VME);
@@ -124,7 +124,7 @@ void mafOpParametricSurfaceTest::SetGetTest() {
 }
 
 
-MAF_REGISTER_TEST(mafOpParametricSurfaceTest);
-#include "mafOpParametricSurfaceTest.moc"
+MAF_REGISTER_TEST(mafOperationParametricSurfaceTest);
+#include "mafOperationParametricSurfaceTest.moc"
 
 

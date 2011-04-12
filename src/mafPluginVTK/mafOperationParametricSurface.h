@@ -1,5 +1,5 @@
 /*
- *  mafOpParametricSurface.h
+ *  mafOperationParametricSurface.h
  *  mafPluginVTK
  *
  *  Created by Roberto Mucci on 10/02/11.
@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef MAFOPPARAMETRICSURFACE_H
-#define MAFOPPARAMETRICSURFACE_H
+#ifndef MAFOPERTAIONPARAMETRICSURFACE_H
+#define MAFOPERATIONPARAMETRICSURFACE_H
 
 // Includes list
 #include "mafPluginVTKDefinitions.h"
@@ -26,10 +26,10 @@
 namespace mafPluginVTK {
 
 /**
-  Class Name: mafOpParametricSurface
+  Class Name: mafOperationParametricSurface
   This class represent an operation that creates a parametric surface.
   */
-class MAFPLUGINVTKSHARED_EXPORT mafOpParametricSurface : public mafResources::mafOperation {
+class MAFPLUGINVTKSHARED_EXPORT mafOperationParametricSurface : public mafResources::mafOperation {
     Q_OBJECT
     Q_PROPERTY(int parametricSurfaceType READ parametricSurfaceType WRITE setParametricSurfaceType)
     /// typedef macro.
@@ -37,7 +37,7 @@ class MAFPLUGINVTKSHARED_EXPORT mafOpParametricSurface : public mafResources::ma
 
 public:
     /// Object constructor.
-    mafOpParametricSurface(const QString code_location = "");
+    mafOperationParametricSurface(const QString code_location = "");
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
@@ -121,7 +121,7 @@ public slots:
 
 protected:
     /// Object destructor.
-    /* virtual */ ~mafOpParametricSurface();
+    /* virtual */ ~mafOperationParametricSurface();
 
 private:
     /// Create parametric surfaces.
@@ -153,4 +153,4 @@ enum {
 
 }
 
-#endif // MAFOPPARAMETRICSURFACE_H
+#endif // MAFOPERTAIONPARAMETRICSURFACE_H

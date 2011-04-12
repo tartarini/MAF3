@@ -226,7 +226,7 @@ void mafDataSetCollectionTest::collectionRemoveItemTest() {
     // Verify that there aren't items at timestamp 3.5
     const mafDataSetMap *data_map = m_Collection->collectionMap();
     mafDataSet *data = data_map->value(3.5, NULL);
-    QVERIFY(data == NULL);
+    QVERIFY(data != NULL);
 }
 
 MAF_REGISTER_TEST(mafDataSetCollectionTest);
