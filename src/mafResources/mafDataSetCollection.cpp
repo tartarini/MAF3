@@ -225,6 +225,8 @@ bool mafDataSetCollection::insertItem(mafDataSet *item, double t) {
 
     if(result) {
         m_CollectionMap->insert(ts, item);
+        item->ref();
+        
         emit(modifiedObject());
     }
 
