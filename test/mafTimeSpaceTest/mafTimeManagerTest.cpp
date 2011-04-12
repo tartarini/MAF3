@@ -29,15 +29,15 @@
 #else
     #ifdef __APPLE__
         #ifdef QT_DEBUG
-            #define TIME_SPACE_LIBRARY_NAME "libmafTimeSpace_debug.dylib"
+            #define TIME_SPACE_LIBRARY_NAME "mafTimeSpace.dylib"
         #else
-            #define TIME_SPACE_LIBRARY_NAME "libmafTimeSpace.dylib"
+            #define TIME_SPACE_LIBRARY_NAME "mafTimeSpace.dylib"
         #endif
     #else
         #ifdef QT_DEBUG
-            #define TIME_SPACE_LIBRARY_NAME "libmafTimeSpace_debug.so"
+            #define TIME_SPACE_LIBRARY_NAME "mafTimeSpace.so"
         #else
-            #define TIME_SPACE_LIBRARY_NAME "libmafTimeSpace.so"
+            #define TIME_SPACE_LIBRARY_NAME "mafTimeSpace.so"
         #endif
     #endif
 #endif

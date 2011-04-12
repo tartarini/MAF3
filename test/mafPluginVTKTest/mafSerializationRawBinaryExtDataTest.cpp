@@ -37,15 +37,15 @@
 #else
     #ifdef __APPLE__
         #ifdef QT_DEBUG
-            #define SERIALIZATION_LIBRARY_NAME "libmafSerialization_debug.dylib"
+            #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dylib"
         #else
-            #define SERIALIZATION_LIBRARY_NAME "libmafSerialization.dylib"
+            #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dylib"
         #endif
     #else
         #ifdef QT_DEBUG
-            #define SERIALIZATION_LIBRARY_NAME "libmafSerialization_debug.so"
+            #define SERIALIZATION_LIBRARY_NAME "mafSerialization.so"
         #else
-            #define SERIALIZATION_LIBRARY_NAME "libmafSerialization.so"
+            #define SERIALIZATION_LIBRARY_NAME "mafSerialization.so"
         #endif
     #endif
 #endif
