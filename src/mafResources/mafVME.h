@@ -83,7 +83,7 @@ public:
     mafInteractor *interactor();
 
     /// Allow to emit the detached signal, so to alert all the observers that the vme is not more inside the tree.
-    void detatch();
+    void detatchFromTree();
 
     /// Allow to send the selection event for itself.
     /*virtual*/ void setSelected(bool sel);
