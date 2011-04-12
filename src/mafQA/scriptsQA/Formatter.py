@@ -7,6 +7,7 @@ from string import split
 import shutil
 from datetime import datetime
 import getopt
+import mafPathes
 
 def usage():
     print "Usage: python Formatter.py [--enable-LCOVCoverage]"
@@ -32,36 +33,29 @@ def search_file(filename, search_path):
 def run(param):
    #read xml file
    scriptsDir = os.getcwd()
-   os.chdir("../../")
+   os.chdir(mafPathes.mafBinaryDir)
    baseDir = os.getcwd()
-   qaResultsDir = baseDir + "/QAResults/";
-   xmlDir = baseDir + "/QAResults/xml"
+   qaResultsDir = os.path.join(baseDir,"QAResults")
+   xmlDir = os.path.join(baseDir,"QAResults","xml")
 
    if not os.path.exists(xmlDir):
-     print "Xml Directory not present"
+     print "Xml Directory not present: ", xmlDir
      sys.exit(1)
     
-   htmlDir = baseDir + "/QAResults/html"
+   htmlDir = os.path.join(baseDir,"QAResults","html")
 
    if not os.path.exists(htmlDir):
      os.makedirs(htmlDir)
-   if not os.path.exists(htmlDir+ "/Styles"):  
-     os.makedirs(htmlDir + "/Styles")
+   if not os.path.exists(os.path.join(htmlDir,"Styles")):  
+     os.makedirs(os.path.join(htmlDir,"Styles"))
 
-   if(os.path.exists(htmlDir + "/Styles")):
-     shutil.rmtree(htmlDir + "/Styles")
-     shutil.copytree(scriptsDir + "/Styles",htmlDir + "/Styles/")
-     if(os.path.exists(htmlDir+ "/Styles/.svn")):
-       for root, dirs, files in os.walk(htmlDir + "/Styles/.svn", topdown=False):
-         for name in files:
-             filename = os.path.join(root, name)
-             os.chmod(filename, stat.S_IWUSR)
-             os.remove(filename)
-         for name in dirs:
-             os.rmdir(os.path.join(root, name))
-       os.chmod(htmlDir + "/Styles/.svn", stat.S_IWUSR)
-       os.rmdir(htmlDir + "/Styles/.svn")
-     
+   if(os.path.exists(os.path.join(htmlDir,"Styles"))):
+     origDir = os.path.join(scriptsDir, "Styles")
+     destDir = os.path.join(htmlDir, "Styles")
+     files = os.listdir(origDir)
+     for item in files:
+         shutil.copyfile(os.path.join(origDir,item), os.path.join(destDir, item))
+              
    xmlList=os.listdir(xmlDir)
    htmlList=[file.replace(".xml", ".html") for file in os.listdir(xmlDir)]
 
@@ -95,19 +89,19 @@ def run(param):
    </xsl:stylesheet>
    """
 
-   headString = "".join(open(htmlDir + "/Styles/head.temp"))
+   headString = "".join(open(os.path.join(htmlDir,"Styles" ,"head.temp")))
    headString = headString.replace("@@@_PUBLISH_DATE_@@@", str( datetime.now().date()))
-   centerString = "".join(open(htmlDir + "/Styles/center.temp"))
-   tailString = "".join(open(htmlDir + "/Styles/tail.temp"))
+   centerString = "".join(open(os.path.join(htmlDir,"Styles","center.temp")))
+   tailString = "".join(open(os.path.join(htmlDir, "Styles","tail.temp")))
    
    #check for external scripting
    pos = 0
    pos = headString.find("@@@_EXTERNAL_TOOLS_REPORT_@@@")-1
    if(param['LCOVCoverage']):
       #generateExternalLink
-      externalScriptDirectory = scriptsDir + "/ExternalScripts"
+      externalScriptDirectory = os.path.join(scriptsDir, "ExternalScripts")
       os.chdir(externalScriptDirectory)
-      os.system("python " + externalScriptDirectory + "/LCOVCoveragePublish.py")
+      os.system("python " + os.path.join(externalScriptDirectory, "LCOVCoveragePublish.py"))
       
       li = "<li><a href=\"../externalLCOVCoverage/index.html\">LCOV Coverage</a></li>";
       headString = headString[:pos] + li + headString[pos:]
@@ -116,9 +110,9 @@ def run(param):
 
    if(param['cppcheck']):
       #generateExternalLink
-      externalScriptDirectory = scriptsDir + "/ExternalScripts"
+      externalScriptDirectory = os.path.join(scriptsDir,"ExternalScripts")
       os.chdir(externalScriptDirectory)
-      os.system("python " + externalScriptDirectory + "/cppcheckPublish.py")
+      os.system("python " + os.path.join(externalScriptDirectory,"cppcheckPublish.py"))
       li = "<li><a href=\"../externalcppcheck/index.html\">Static Analysis</a></li>"
       headString = headString[:pos] + li + headString[pos:]
       pos = pos + len(li)
@@ -126,9 +120,9 @@ def run(param):
    
    if(param['cccc']):
       #generateExternalLink
-      externalScriptDirectory = scriptsDir + "/ExternalScripts"
+      externalScriptDirectory = os.path.join(scriptsDir,"ExternalScripts")
       os.chdir(externalScriptDirectory)
-      os.system("python " + externalScriptDirectory + "/ccccPublish.py")
+      os.system("python " + os.path.join(externalScriptDirectory, "ccccPublish.py"))
       li = "<li><a href=\"../externalcccc/index.html\">Code Complexity</a></li>"
       headString = headString[:pos] + li + headString[pos:]
       pos = pos + len(li)
@@ -162,7 +156,7 @@ def run(param):
        result = style.apply(xml)
            
        #print htmlDir + filename + ".html"
-       html = open(htmlDir + "/" + filename + ".html", 'w')
+       html = open(os.path.join(htmlDir, filename + ".html"), 'w')
        print >> html , style.tostring(result)
      except Exception, e:
        success = False
@@ -173,7 +167,7 @@ def run(param):
    if(success == True):
        print "PUBLISH SUCCESSFUL"
    
-   index = open(htmlDir + "/index.html", 'w')
+   index = open(os.path.join(htmlDir, "index.html"), 'w')
    
    
    introduction = """

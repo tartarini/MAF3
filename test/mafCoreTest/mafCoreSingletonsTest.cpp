@@ -20,15 +20,15 @@
 #else
     #ifdef __APPLE__
         #ifdef QT_DEBUG
-            #define TEST_LIBRARY_NAME "libmafResources_debug.dylib"
+            #define TEST_LIBRARY_NAME "mafResources.dylib"
         #else
-            #define TEST_LIBRARY_NAME "libmafResources.dylib"
+            #define TEST_LIBRARY_NAME "mafResources.dylib"
         #endif
     #else
         #ifdef QT_DEBUG
-            #define TEST_LIBRARY_NAME "libmafResources_debug.so"
+            #define TEST_LIBRARY_NAME "mafResources.so"
         #else
-            #define TEST_LIBRARY_NAME "libmafResources.so"
+            #define TEST_LIBRARY_NAME "mafResources.so"
         #endif
     #endif
 #endif

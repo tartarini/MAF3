@@ -63,6 +63,7 @@ void mafViewManager::initializeConnections() {
     provider->createNewId("maf.local.resources.view.destroy");
     provider->createNewId("maf.local.resources.view.select");
     provider->createNewId("maf.local.resources.view.selected");
+    provider->createNewId("maf.local.resources.view.sceneNodeReparent");
     provider->createNewId("maf.local.resources.view.sceneNodeShow");
     provider->createNewId("maf.local.resources.view.noneViews");
 
@@ -72,6 +73,7 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.view.destroy", this, "destroyViewSignal(mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.view.select", this, "selectViewSignal(mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.view.selected", this, "selectedViewSignal(mafCore::mafObjectBase *)")
+    mafRegisterLocalSignal("maf.local.resources.view.sceneNodeReparent", this, "sceneNodeReparentSignal(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShowSignal(mafCore::mafObjectBase *, bool)")
     mafRegisterLocalSignal("maf.local.resources.view.noneViews", this, "noneViewsSignal()")
 
@@ -155,7 +157,6 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
             QObject* selectedVME = hierarchy->currentData();
             mafSceneNode *selectedNode = v->sceneNodeFromVme(qobject_cast<mafCore::mafObjectBase *>(selectedVME));
             v->selectSceneNode(selectedNode, selectedNode->property("canVisualize").toBool());
-
             // Notify the view creation.
             mafEventArgumentsList argList;
             argList.append(mafEventArgument(mafCore::mafObjectBase*, v));

@@ -41,15 +41,15 @@
 #else
     #ifdef __APPLE__
         #ifdef QT_DEBUG
-            #define TEST_LIBRARY_NAME "libmafPluginVTK_debug.dylib"
+            #define TEST_LIBRARY_NAME "mafPluginVTK.dylib"
         #else
-            #define TEST_LIBRARY_NAME "libmafPluginVTK.dylib"
+            #define TEST_LIBRARY_NAME "mafPluginVTK.dylib"
         #endif
     #else
         #ifdef QT_DEBUG
-            #define TEST_LIBRARY_NAME "libmafPluginVTK_debug.so"
+            #define TEST_LIBRARY_NAME "mafPluginVTK.so"
         #else
-            #define TEST_LIBRARY_NAME "libmafPluginVTK.so"
+            #define TEST_LIBRARY_NAME "mafPluginVTK.so"
         #endif
     #endif
 #endif

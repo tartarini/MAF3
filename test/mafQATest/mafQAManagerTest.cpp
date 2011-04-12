@@ -23,15 +23,15 @@
     #define TEST_SCRIPT_NAME "whoami"
     #ifdef __APPLE__
         #ifdef QT_DEBUG
-            #define TEST_LIBRARY_NAME "libmafPluginTest_debug.dylib"
+            #define TEST_LIBRARY_NAME "mafPluginTest.dylib"
         #else
-            #define TEST_LIBRARY_NAME "libmafPluginTest.dylib"
+            #define TEST_LIBRARY_NAME "mafPluginTest.dylib"
         #endif
     #else
         #ifdef QT_DEBUG
-            #define TEST_LIBRARY_NAME "libmafPluginTest_debug.so"
+            #define TEST_LIBRARY_NAME "mafPluginTest.so"
         #else
-            #define TEST_LIBRARY_NAME "libmafPluginTest.so"
+            #define TEST_LIBRARY_NAME "mafPluginTest.so"
         #endif
     #endif
 #endif

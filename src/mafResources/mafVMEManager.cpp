@@ -103,7 +103,9 @@ void mafVMEManager::vmeRemove(mafObjectBase *vme) {
 }
 
 void mafVMEManager::vmeReparent(mafObjectBase *vme, mafObjectBase *vmeParent) {
+  if (m_VMEHierarchy != NULL) {
     m_VMEHierarchy->reparentHierarchyNode(vme, vmeParent);
+  }
 }
 
 

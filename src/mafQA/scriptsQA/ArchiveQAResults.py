@@ -1,14 +1,15 @@
 import os
 import shutil
-from datetime import datetime 
+from datetime import datetime
+import mafPathes
 
 scriptsDir = os.getcwd() #original directory
-os.chdir("../../")
+os.chdir(mafPathes.mafBinaryDir)
 baseDir = os.getcwd()
 
-currentResultDir = baseDir + "/QAResults"
+currentResultDir = os.path.join(baseDir,"QAResults")
 
-baseArchiveDir = baseDir + "/QAArchive"
+baseArchiveDir = os.path.join(baseDir,"QAArchive")
 archiveDir = baseArchiveDir + "/%s_results" % (str( datetime.now().date() )) 
 
 try:

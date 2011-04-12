@@ -1,13 +1,15 @@
 import os
 import sys
 import getopt
+import mafPathes
 
 extensionToAvoid = [".dll",".prl", ".a",".lib", ".dylib",".so", ".0", ".1"] # necessary to insert .N because of symbolic link of linux
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
+modulesDir = mafPathes.mafSourcesDir #need to be changed
 param = {}
 
 def find_executable(executable, path=None):
-    fullPathName = path + "/" + executable
+    fullPathName = os.path.join(path, executable)
     if(os.access(fullPathName, os.X_OK)):
         ext = os.path.splitext(fullPathName)[-1]
         if(ext in  extensionToAvoid):
@@ -40,7 +42,6 @@ def validate(fileName):
 
 def execute():
     scriptsDir = currentPathScript
-    modulesDir = os.path.join(currentPathScript, "..", "..")
     dirList = [ name for name in os.listdir(modulesDir) if (name[0:3] == "maf" and os.path.isdir(os.path.join(modulesDir, name))) ] 
     print modulesDir, dirList
     #execDir = modulesDir + "/../Install/bin/Debug"
@@ -56,7 +57,7 @@ def execute():
         except KeyError:
             os.environ['LD_LIBRARY_PATH'] = execDir
             
-        suffix = "Test_debug"
+        suffix = "Test"
         #need to start X
         os.environ['DISPLAY'] = "localhost:0.0"
         os.system("Xvfb :0.0 &")
@@ -67,9 +68,9 @@ def execute():
         except KeyError:
             os.environ['DYLD_LIBRARY_PATH'] = execDir
         
-        suffix = "Test_debug"
+        suffix = "Test"
     elif(str(os.sys.platform).lower() == 'win32'):
-        suffix = "Test_d"
+        suffix = "Test"
         
     if(param['release-enable'] == True):
         suffix = "Test" 
