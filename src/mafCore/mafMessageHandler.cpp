@@ -80,9 +80,9 @@ mafLogger *mafMessageHandler::activeLogger() {
 
 void mafMessageHandler::testSuiteLogMode(bool on) {
     if (on) {
-        m_ActiveLogger->setLogMode(mafLogModeTestSuite);
+        activeLogger()->setLogMode(mafLogModeTestSuite);
     } else {
-        m_ActiveLogger->setLogMode(m_LastLogMode);
+        activeLogger()->setLogMode(m_LastLogMode);
     }
 }
 
