@@ -29,6 +29,7 @@ This class provides the manager class for MAF3 views. The topics are:
 - maf.local.resources.view.destroy allows to destroy a given View.
 - maf.local.resources.view.select allows to select the active View on which show/hide VMEs.
 - maf.local.resources.view.selected allows to retrieve the current selected View.
+- maf.local.resources.view.sceneNodeReparent allows to reparent scene nodes.
 - maf.local.resources.view.sceneNodeShow allow to show/hide a given mafSceneNode in the selected View.
 - maf.local.resources.view.noneViews emitted when all views are destroyed.
 */
@@ -50,6 +51,9 @@ signals:
 
     /// Signal which allow to keep track of the selected view.
     void selectViewSignal(mafCore::mafObjectBase *view);
+
+    /// Signal which allow to reparent scene nodes of the tree.
+    void sceneNodeReparentSignal(mafCore::mafObjectBase *vme, mafCore::mafObjectBase *vmeParent);
 
     /// Signal which allow to show/hide the given node passed as argument.
     void sceneNodeShowSignal(mafCore::mafObjectBase *node, bool show = true);
