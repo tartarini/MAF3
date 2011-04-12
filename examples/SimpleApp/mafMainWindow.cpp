@@ -54,7 +54,7 @@ void mafMainWindow::initializeMainWindow() {
     m_GUIManager = new mafGUIManager(this, mafCodeLocation);
 
     m_GUIManager->createMenus();
-    m_GUIManager->createToolBars();
+//    m_GUIManager->createToolBars();
 
     connect(m_GUIManager, SIGNAL(guiLoaded(int,QWidget*)), this, SLOT(loadedGUIAvailable(int,QWidget*)));
     connect(m_GUIManager, SIGNAL(guiTypeToRemove(int)), this, SLOT(loadedGUIToRemove(int)));
