@@ -1,5 +1,5 @@
 /*
- *  mafOpParametricSurface.cpp
+ *  mafOperationParametricSurface.cpp
  *  mafPluginVTK
  *
  *  Created by Roberto Mucci on 10/02/11.
@@ -9,7 +9,7 @@
  *
  */
 
-#include "mafOpParametricSurface.h"
+#include "mafOperationParametricSurface.h"
 #include <mafContainer.h>
 #include <vtkAlgorithmOutput.h>
 
@@ -18,8 +18,8 @@ using namespace mafResources;
 using namespace mafEventBus;
 using namespace mafCore;
 
-mafOpParametricSurface::mafOpParametricSurface(const QString code_location) : mafOperation(code_location), m_VME(NULL), m_DataSet(NULL) {
-    m_UIFilename = "mafOpParametricSurface.ui";
+mafOperationParametricSurface::mafOperationParametricSurface(const QString code_location) : mafOperation(code_location), m_VME(NULL), m_DataSet(NULL) {
+    m_UIFilename = "mafParametricSurface.ui";
     m_ParametricSurfaceType = PARAMETRIC_SPHERE;
     m_ParametricSphere = NULL;
     m_ParametricCube = NULL;
@@ -32,7 +32,7 @@ mafOpParametricSurface::mafOpParametricSurface(const QString code_location) : ma
     initializeParametricSurfaces();
 }
 
-mafOpParametricSurface::~mafOpParametricSurface() {
+mafOperationParametricSurface::~mafOperationParametricSurface() {
     m_ParametricSurfaceList.clear();
     m_Output = NULL;
     m_ParametricContainer = NULL;
@@ -46,7 +46,7 @@ mafOpParametricSurface::~mafOpParametricSurface() {
     mafDEL(m_ParametricEllipsoid);
 }
 
-void mafOpParametricSurface::initializeParametricSurfaces(){
+void mafOperationParametricSurface::initializeParametricSurfaces(){
     m_ParametricSphere = (mafVTKParametricSurfaceSphere *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceSphere");
     m_ParametricSphere->setParent(this);
     m_ParametricSurfaceList.insert(PARAMETRIC_SPHERE, m_ParametricSphere);
@@ -68,7 +68,7 @@ void mafOpParametricSurface::initializeParametricSurfaces(){
     m_ParametricSurfaceList.insert(PARAMETRIC_ELLIPSOID, m_ParametricEllipsoid);
 }
 
-bool mafOpParametricSurface::acceptObject(mafCore::mafObjectBase *obj) {
+bool mafOperationParametricSurface::acceptObject(mafCore::mafObjectBase *obj) {
     if(obj == NULL) {
         return false;
     }
@@ -84,11 +84,11 @@ bool mafOpParametricSurface::acceptObject(mafCore::mafObjectBase *obj) {
     return result;
 }
 
-int mafOpParametricSurface::parametricSurfaceType() {
+int mafOperationParametricSurface::parametricSurfaceType() {
     return m_ParametricSurfaceType;
 }
 
-void mafOpParametricSurface::execute() {
+void mafOperationParametricSurface::execute() {
     mafVTKParametricSurface *currentSurface = m_ParametricSurfaceList.at(m_ParametricSurfaceType);
     m_ParametricContainer = currentSurface->output();
 
@@ -108,110 +108,110 @@ void mafOpParametricSurface::execute() {
     emit executionEnded();
 }
 
-void mafOpParametricSurface::setParameters(QVariantList parameters) {
+void mafOperationParametricSurface::setParameters(QVariantList parameters) {
     Q_UNUSED(parameters);
 }
 
-void mafOpParametricSurface::setParametricSurfaceType(int index){
+void mafOperationParametricSurface::setParametricSurfaceType(int index){
     m_ParametricSurfaceType = index;
 }
 
 
-void mafOpParametricSurface::on_parametricSurfaceType_currentChanged(int index){
+void mafOperationParametricSurface::on_parametricSurfaceType_currentChanged(int index){
     this->setParametricSurfaceType(index);
 }
 
-void mafOpParametricSurface::on_sphereRadius_valueChanged(double d) {
+void mafOperationParametricSurface::on_sphereRadius_valueChanged(double d) {
     m_ParametricSphere->setProperty("sphereRadius", d);
     m_ParametricSphere->updateSurface();
 }
 
-void mafOpParametricSurface::on_spherePhiRes_valueChanged(double d) {
+void mafOperationParametricSurface::on_spherePhiRes_valueChanged(double d) {
     m_ParametricSphere->setProperty("spherePhiRes", d);
     m_ParametricSphere->updateSurface();
 }
 
-void mafOpParametricSurface::on_sphereThetaRes_valueChanged(double d) {
+void mafOperationParametricSurface::on_sphereThetaRes_valueChanged(double d) {
     m_ParametricSphere->setProperty("sphereTheRes", d);
     m_ParametricSphere->updateSurface();
 }
 
-void mafOpParametricSurface::on_cubeXLength_valueChanged(double d){
+void mafOperationParametricSurface::on_cubeXLength_valueChanged(double d){
     m_ParametricCube->setProperty("cubeXLength", d);
     m_ParametricCube->updateSurface();
 }
 
-void mafOpParametricSurface::on_cubeYLength_valueChanged(double d) {
+void mafOperationParametricSurface::on_cubeYLength_valueChanged(double d) {
     m_ParametricCube->setProperty("cubeYLength", d);
     m_ParametricCube->updateSurface();
 }
 
-void mafOpParametricSurface::on_cubeZLength_valueChanged(double d) {
+void mafOperationParametricSurface::on_cubeZLength_valueChanged(double d) {
     m_ParametricCube->setProperty("cubeZLength", d);
     m_ParametricCube->updateSurface();
 }
 
-void mafOpParametricSurface::on_coneRadius_valueChanged(double d) {
+void mafOperationParametricSurface::on_coneRadius_valueChanged(double d) {
     m_ParametricCone->setProperty("coneRadius", d);
     m_ParametricCone->updateSurface();
 }
 
-void mafOpParametricSurface::on_coneHeight_valueChanged(double d) {
+void mafOperationParametricSurface::on_coneHeight_valueChanged(double d) {
     m_ParametricCone->setProperty("coneHeight", d);
     m_ParametricCone->updateSurface();
 }
 
-void mafOpParametricSurface::on_coneRes_valueChanged(double d) {
+void mafOperationParametricSurface::on_coneRes_valueChanged(double d) {
     m_ParametricCone->setProperty("coneRes", d);
     m_ParametricCone->updateSurface();
 }
 
-void mafOpParametricSurface::on_coneCapping_stateChanged(int state) {
+void mafOperationParametricSurface::on_coneCapping_stateChanged(int state) {
     m_ParametricCone->setProperty("coneCap", state);
     m_ParametricCone->updateSurface();
 }
 
-void mafOpParametricSurface::on_cylinderRadius_valueChanged(double d) {
+void mafOperationParametricSurface::on_cylinderRadius_valueChanged(double d) {
     m_ParametricCylinder->setProperty("cylinderRadius", d);
     m_ParametricCylinder->updateSurface();
 }
 
-void mafOpParametricSurface::on_cylinderHeight_valueChanged(double d) {
+void mafOperationParametricSurface::on_cylinderHeight_valueChanged(double d) {
     m_ParametricCylinder->setProperty("cylinderHeight", d);
     m_ParametricCylinder->updateSurface();
 }
 
-void mafOpParametricSurface::on_cylinderRes_valueChanged(double d) {
+void mafOperationParametricSurface::on_cylinderRes_valueChanged(double d) {
     m_ParametricCylinder->setProperty("cylinderRes", d);
     m_ParametricCylinder->updateSurface();
 }
 
-void mafOpParametricSurface::on_ellipsoidRadius_valueChanged(double d){
+void mafOperationParametricSurface::on_ellipsoidRadius_valueChanged(double d){
     m_ParametricEllipsoid->setProperty("ellipsoidRadius", d);
     m_ParametricEllipsoid->updateSurface();
 }
 
-void mafOpParametricSurface::on_ellipsoidPhiRes_valueChanged(double d) {
+void mafOperationParametricSurface::on_ellipsoidPhiRes_valueChanged(double d) {
     m_ParametricEllipsoid->setProperty("ellipsoidPhiRes", d);
     m_ParametricEllipsoid->updateSurface();
 }
 
-void mafOpParametricSurface::on_ellipsoidThetaRes_valueChanged(double d) {
+void mafOperationParametricSurface::on_ellipsoidThetaRes_valueChanged(double d) {
     m_ParametricEllipsoid->setProperty("ellipsoidThetaRes", d);
     m_ParametricEllipsoid->updateSurface();
 }
 
-void mafOpParametricSurface::on_ellipsoidXLength_valueChanged(double d) {
+void mafOperationParametricSurface::on_ellipsoidXLength_valueChanged(double d) {
     m_ParametricEllipsoid->setProperty("ellipsoidXLength", d);
     m_ParametricEllipsoid->updateSurface();
 }
 
-void mafOpParametricSurface::on_ellipsoidYLength_valueChanged(double d) {
+void mafOperationParametricSurface::on_ellipsoidYLength_valueChanged(double d) {
     m_ParametricEllipsoid->setProperty("ellipsoidYLength", d);
     m_ParametricEllipsoid->updateSurface();
 }
 
-void mafOpParametricSurface::on_ellipsoidZLength_valueChanged(double d) {
+void mafOperationParametricSurface::on_ellipsoidZLength_valueChanged(double d) {
     m_ParametricEllipsoid->setProperty("ellipsoidZLength", d);
     m_ParametricEllipsoid->updateSurface();
 }
