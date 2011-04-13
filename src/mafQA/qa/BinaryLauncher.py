@@ -1,7 +1,9 @@
 import os
 import sys
 import getopt
-import mafPathes
+
+sys.path.append(os.path.realpath(".."))
+from qa import mafPathes
 
 extensionToAvoid = [".dll",".prl", ".a",".lib", ".dylib",".so", ".0", ".1"] # necessary to insert .N because of symbolic link of linux
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]

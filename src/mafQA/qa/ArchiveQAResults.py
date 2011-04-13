@@ -1,10 +1,15 @@
 import os
 import shutil
 from datetime import datetime
-import mafPathes
+import sys
+
+try:
+    from qa import mafPathes
+except ImportError:
+    import mafPathes
 
 scriptsDir = os.getcwd() #original directory
-os.chdir(mafPathes.mafBinaryDir)
+os.chdir(mafPathes.mafQADir)
 baseDir = os.getcwd()
 
 currentResultDir = os.path.join(baseDir,"QAResults")

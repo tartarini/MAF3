@@ -7,14 +7,19 @@ import lxml.etree as etree
 from lxml.etree import XSLT,fromstring
 
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
-modulesDir = os.path.abspath(os.path.join(currentPathScript, "..", "..", ".."))
+
+sys.path.append(os.path.realpath(os.path.join(currentPathScript,"..","..")))
+from qa import mafPathes
+
+modulesDir = mafPathes.mafSourcesDir
+qaDir = mafPathes.mafQADir
 
 def usage():
     print "Usage:  python cppcheckPublish.py"
 
 def publishReport():
     extScriptDir = os.getcwd()
-    os.chdir("../../..")
+    os.chdir(qaDir)
     baseDir = os.getcwd()
     qaResultsDir = os.path.join(baseDir,"QAResults")
     htmlDir = os.path.join(baseDir,"QAResults","html")
@@ -45,10 +50,10 @@ def publishReport():
        print >> html , style.tostring(result)
        
        #create introduction for cppcheck
-       headString = "".join(open(htmlDir + "/Styles/head.temp"))
+       headString = "".join(open(os.path.join(htmlDir,  "Styles", "head.temp")))
        headString = headString.replace("@@@_PUBLISH_DATE_@@@", str( datetime.now().date()))
-       centerString = "".join(open(htmlDir + "/Styles/center.temp"))
-       tailString = "".join(open(htmlDir + "/Styles/tail.temp"))
+       centerString = "".join(open(os.path.join(htmlDir,"Styles", "center.temp")))
+       tailString = "".join(open(os.path.join(htmlDir, "Styles", "tail.temp")))
        
        #modify headstring adding cppcheck stylesheet, and substitute relative path
        pos = headString.find("</head>")-1
@@ -60,7 +65,7 @@ def publishReport():
        headStringNew = headStringNew.replace("<li><a href=\"index.html\">Introduction</a></li>", "<li><a href=\"../html/index.html\">Introduction</a></li>")
        headStringNew = headStringNew.replace("@@@_EXTERNAL_TOOLS_REPORT_@@@", "") #remove placeholder
        headStringNew = headStringNew.replace("Rule Scripts", "Static Analysis")
-       fileIndex = open(CPPCheckStaticAnalisysDir + "/index.html", 'w');
+       fileIndex = open(os.path.join(CPPCheckStaticAnalisysDir, "index.html"), 'w');
        fileIndex.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">")
         
        fileIndex.write(headStringNew)
