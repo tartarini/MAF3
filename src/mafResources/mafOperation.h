@@ -70,7 +70,7 @@ public slots:
     virtual void reDo();
 
     /// Terminate the execution by resetting the m_IsRunning at false.
-    virtual void terminate();
+    virtual void terminate(bool result);
 
 private slots:
     /// Terminate the execution.
