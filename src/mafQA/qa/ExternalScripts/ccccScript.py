@@ -3,7 +3,12 @@ import sys
 import getopt
 
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
-modulesDir = os.path.abspath(os.path.join(currentPathScript, "..", "..", ".."))
+
+sys.path.append(os.path.realpath(os.path.join(currentPathScript,"..","..")))
+from qa import mafPathes
+
+modulesDir = mafPathes.mafSourcesDir
+qaDir = mafPathes.mafQADir
 
 def usage():
     print "python ccccScript.py [-h] [-e ccccPath]"
@@ -15,7 +20,7 @@ def run(param):
     print "cccc working..."
     try:
         baseDir = modulesDir
-        qaResultsDir = os.path.join(baseDir, "QAResults")
+        qaResultsDir = os.path.join(qaDir, "QAResults")
         CCCCDir = os.path.join(qaResultsDir, "externalcccc") #need to parametrize this?
         
         if(os.path.exists(qaResultsDir) == False):

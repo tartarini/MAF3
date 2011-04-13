@@ -7,7 +7,10 @@ from string import split
 import shutil
 from datetime import datetime
 import getopt
-import mafPathes
+
+currentPathScript = os.path.split(os.path.realpath(__file__))[0]
+sys.path.append(os.path.realpath(os.path.join(currentPathScript, "..")))
+from qa import mafPathes
 
 def usage():
     print "Usage: python Formatter.py [--enable-LCOVCoverage]"
@@ -33,7 +36,7 @@ def search_file(filename, search_path):
 def run(param):
    #read xml file
    scriptsDir = os.getcwd()
-   os.chdir(mafPathes.mafBinaryDir)
+   os.chdir(mafPathes.mafQADir)
    baseDir = os.getcwd()
    qaResultsDir = os.path.join(baseDir,"QAResults")
    xmlDir = os.path.join(baseDir,"QAResults","xml")

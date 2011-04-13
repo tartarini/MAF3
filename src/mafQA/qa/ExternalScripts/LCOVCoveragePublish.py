@@ -4,21 +4,25 @@ import time
 from datetime import datetime
 import glob
 
+currentPathScript = os.path.split(os.path.realpath(__file__))[0]
+sys.path.append(os.path.realpath(os.path.join(currentPathScript,"..","..")))
+from qa import mafPathes
+
 def usage():
     print "Usage:  python LCOVCoveragePublish.py"
 
 def publishReport():
     extScriptDir = os.getcwd()
-    os.chdir("../../..")
+    os.chdir(mafPathes.mafQADir)
     baseDir = os.getcwd()
-    qaResultsDir = baseDir + "/QAResults"
-    htmlDir = baseDir + "/QAResults/html"
-    xmlDir = baseDir + "/QAResults/xml"
+    qaResultsDir = os.path.join(baseDir,"QAResults")
+    htmlDir = os.path.join(baseDir,"QAResults", "html")
+    xmlDir = os.path.join(baseDir, "QAResults", "xml")
     
     xmlList=os.listdir(xmlDir)
     htmlList=[file.replace(".xml", ".html") for file in os.listdir(xmlDir)]
     
-    LCOVExternalCoverageDir = qaResultsDir + "/externalLCOVCoverage" #need to parametrize this?
+    LCOVExternalCoverageDir = os.path.join(qaResultsDir,"externalLCOVCoverage")
     covList = os.listdir(LCOVExternalCoverageDir)
     
     if(os.path.exists(htmlDir) == False):
@@ -30,13 +34,13 @@ def publishReport():
         exit()
 
     try:
-        headString = "".join(open(htmlDir + "/Styles/head.temp"))
+        headString = "".join(open(os.path.join(htmlDir,"Styles", "head.temp")))
         headString = headString.replace("@@@_PUBLISH_DATE_@@@", str( datetime.now().date()))
-        centerString = "".join(open(htmlDir + "/Styles/center.temp"))
-        tailString = "".join(open(htmlDir + "/Styles/tail.temp"))
+        centerString = "".join(open(os.path.join(htmlDir, "Styles", "center.temp")))
+        tailString = "".join(open(os.path.join(htmlDir, "Styles" , "tail.temp")))
         #fileList = []
         
-        if(os.path.exists(LCOVExternalCoverageDir + "/index.html")):
+        if(os.path.exists(os.path.join(LCOVExternalCoverageDir, "index.html"))):
             print "************************* Warning ******************************"
             print "LCOV Report already Formatted, please remove directory and rerun Publishing script"
             print "************************* ------- ******************************"

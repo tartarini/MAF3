@@ -130,7 +130,7 @@ void mafVME::execute() {
     }
 }
 
-void mafVME::detatch() {
+void mafVME::detatchFromTree() {
     emit(detatched());
 }
 
@@ -228,6 +228,7 @@ void mafVME::updateData() {
         memento->setObjectClassType(dataSet->metaObject()->className());
         dataSet->setMemento(memento);
         this->dataSetCollection()->insertItem(dataSet, iter.value());
+        mafDEL(dataSet);
         ++iter;
     }
     this->setDataLoaded(true);

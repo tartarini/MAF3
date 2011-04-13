@@ -1,9 +1,11 @@
 import sys
 import os
-#import time
-
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
-modulesDir = os.path.abspath(os.path.join(currentPathScript, "..", "..", ".."))
+
+sys.path.append(os.path.realpath(os.path.join(currentPathScript,"..","..")))
+from qa import mafPathes
+
+modulesDir = os.path.abspath(mafPathes.mafSourcesDir)
 currentModule = ""
 
 def usage():
@@ -13,9 +15,9 @@ def createCoverageReport():
     extScriptDir = currentPathScript
     baseDir = modulesDir
     moduleDir = os.path.join(baseDir,currentModule)
-    testDir = os.path.join(moduleDir, currentModule + "Test")
-    binDir = os.path.join(baseDir, "..", "Install", "bin", "Debug")
-    qaResultsDir = os.path.join(baseDir, "QAResults")
+    testDir = os.path.join(mafPathes.mafTestsDir, currentModule + "Test")
+    binDir = os.path.join(mafPathes.mafBinaryDir, "bin") #here can be also with Debug
+    qaResultsDir = os.path.join(mafPathes.mafQADir, "QAResults")
     LCOVExternalCoverageDir = os.path.join(qaResultsDir, "externalLCOVCoverage")
 
     if(os.path.exists(moduleDir) == False):
@@ -42,38 +44,38 @@ def createCoverageReport():
     os.system("rm -fR "+ moduleCoverageReportDir)
     os.mkdir(moduleCoverageReportDir);
 
-    os.chdir(moduleDir)
+    gcdaDir = os.path.join(mafPathes.mafBinaryDir,"src",currentModule,"CMakeFiles",currentModule+".dir")
+    os.chdir(gcdaDir)
+
     os.system("find . -type f -name '*.gcda' -print | xargs /bin/rm -f")
 
-    executableTest = currentModule + "Test_debug"
+    executableTest = currentModule + "Test"
     
     os.chdir(binDir)
     os.environ['LD_LIBRARY_PATH'] = binDir
     os.environ['DISPLAY'] = "localhost:0.0"
     os.system("Xvfb :0.0 &")
     os.system("./" + executableTest)
-
-    os.chdir(moduleDir)
+    
+    os.chdir(gcdaDir)
     os.system("find . -type f -name 'moc_*.gcno' -print | xargs /bin/rm -f")
     os.system("find . -type f -name 'moc_*.gcda' -print | xargs /bin/rm -f")
-
-    dirList = os.listdir(moduleDir)
-    for d in dirList:
-        fullPathD = os.path.join(moduleDir, d)
-        if os.path.isdir(fullPathD) == True:
-            os.chdir(fullPathD)
-            os.system("find . -type f -name '*.gcno' -print | xargs /bin/rm -f")
-            os.system("find . -type f -name '*.gcda' -print | xargs /bin/rm -f")
-
-
     
-    os.chdir(moduleDir) 
+    os.system("find . -type f -name 'qrc_*.gcno' -print | xargs /bin/rm -f")
+    os.system("find . -type f -name 'qrc_*.gcda' -print | xargs /bin/rm -f")
+    
+    os.system("find . -type f -name 'ui_*.gcno' -print | xargs /bin/rm -f")
+    os.system("find . -type f -name 'ui_*.gcda' -print | xargs /bin/rm -f")
 
     commandLcov = "lcov  --directory . --capture --output-file " + moduleCoverageReportDir + "/" + currentModule + "_t.info"
-    commandLcovExtract = "lcov  --extract " + moduleCoverageReportDir + "/" + currentModule + "_t.info \"*/maf*\"  -o " + moduleCoverageReportDir + "/" + currentModule + ".info" 
+    commandLcovExtract = "lcov  --extract " + moduleCoverageReportDir + "/" + currentModule + "_t.info \"*/maf*\" -o " + moduleCoverageReportDir + "/" + currentModule + "ext.info"
+    
+    commandLcovRemove = "lcov  --remove " + moduleCoverageReportDir + "/" + currentModule + "ext.info \"*/ui_*\" -o " + moduleCoverageReportDir + "/" + currentModule + ".info" 
+
 
     os.system(commandLcov)
     os.system(commandLcovExtract)
+    os.system(commandLcovRemove)
 
     commandGenHtml = "genhtml -o " + moduleCoverageReportDir +  " --num-spaces 2 " + moduleCoverageReportDir + "/" + currentModule + ".info"
 
@@ -89,11 +91,17 @@ if __name__ == "__main__":
     ************************************************************
     This Coverage Test has been developed using gcov/lcov suite.
     It works only in unix-like systems and the code need to be builded
-    with these flags:
-    QMAKE_CXXFLAGS_DEBUG += -fprofile-arcs
-    QMAKE_CXXFLAGS_DEBUG += -ftest-coverage
+    with these flags, for qmake
+    QMAKE_CXX_FLAGS_DEBUG += -fprofile-arcs
+    QMAKE_CXX_FLAGS_DEBUG += -ftest-coverage
     QMAKE_LFLAGS_DEBUG += -fprofile-arcs
     QMAKE_LFLAGS_DEBUG += -ftest-coverage
+    and for cmake:
+    find_program( CODECOV_GCOV gcov )
+    add_definitions( -fprofile-arcs -ftest-coverage )
+    link_libraries( gcov )
+    set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}  --lgcov" )
+    set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  --lgcov" )
     ************************************************************\n
     """
 

@@ -1,11 +1,14 @@
 import os
 import sys
 import getopt
-import mafPathes
+
+currentPathScript = os.path.split(os.path.realpath(__file__))[0]
+sys.path.append(os.path.realpath(os.path.join(currentPathScript, "..")))
+from qa import mafPathes
 
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
 modulesDir = mafPathes.mafSourcesDir
-outputDir = mafPathes.mafBinaryDir
+outputDir = mafPathes.mafQADir
 
 def run(param):
     scriptsDir = currentPathScript
@@ -70,9 +73,9 @@ def run(param):
 def usage():
     print "Usage: python ScriptLauncher.py [-h] [-l] [-c]"
     print "-h, --help                    show help (this)"
-    print "-l, --enable-LCOVCoverage=    enable LCOV coverage"
-    print "-c, --enable-cppcheck=       enable cppcheck tool"
-    print "-C, --enable-cccc=           enable cccc tool"
+    print "-l, --enable-LCOVCoverage     enable LCOV coverage"
+    print "-c, --enable-cppcheck        enable cppcheck tool"
+    print "-C, --enable-cccc            enable cccc tool"
     print 
 
 def main():

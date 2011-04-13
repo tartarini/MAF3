@@ -31,7 +31,7 @@ def GeneratePythonQAScripts():
       f.write("import re\n")
       f.write("import math\n")
       f.write("import Executer\n")
-
+      
       for rule in rules:
         f.write("from Rules." + ruleGroup + " import " + rule + "\n")
 

@@ -7,18 +7,23 @@ import lxml.etree as etree
 from lxml.etree import XSLT,fromstring
 
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
-modulesDir = os.path.abspath(os.path.join(currentPathScript, "..", "..", ".."))
+
+sys.path.append(os.path.realpath(os.path.join(currentPathScript,"..","..")))
+from qa import mafPathes
+
+modulesDir = mafPathes.mafSourcesDir
+qaDir = mafPathes.mafQADir
 
 def usage():
     print "Usage:  python ccccPublish.py"
 
 def publishReport():
     extScriptDir = os.getcwd()
-    os.chdir("../../..")
+    os.chdir(qaDir)
     baseDir = os.getcwd()
-    qaResultsDir = baseDir + "/QAResults"
-    htmlDir = baseDir + "/QAResults/html"
-    xmlDir = baseDir + "/QAResults/xml"
+    qaResultsDir = os.path.join(baseDir, "QAResults")
+    htmlDir = os.path.join(baseDir, "QAResults","html")
+    xmlDir = os.path.join(baseDir, "QAResults", "xml")
     
     xmlList=os.listdir(xmlDir)
     htmlList=[file.replace(".xml", ".html") for file in os.listdir(xmlDir)]

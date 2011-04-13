@@ -236,7 +236,7 @@ private slots:
         //restore vme manager status
         m_EventBus->notifyEvent("maf.local.resources.hierarchy.request");
 
-        mafEventBusManager::instance()->shutdown();
+        m_EventBus->shutdown();
         mafMessageHandler::instance()->shutdown();
     }
 

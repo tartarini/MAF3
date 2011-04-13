@@ -31,6 +31,10 @@ bool mafImporter::acceptObject(mafCore::mafObjectBase *obj) {
     return true;
 }
 
+void mafImporter::setParameters(QVariantList parameters) {
+    m_Filename = parameters.at(0).toString();
+}
+
 void mafImporter::cleanup() {
     // Cleanup memory and deregister callback.
     mafDEL(m_DataSet);
