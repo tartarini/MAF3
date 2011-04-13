@@ -26,6 +26,16 @@ mafSceneNode::mafSceneNode(mafVME *vme, mafPipeVisual *visual_pipe, const QStrin
     m_VME = vme;
     m_VisualPipe = visual_pipe;
     this->setProperty("iconFile",m_VME->property("iconFile"));
+
+    bool visibility = m_VME->property("visibility").toBool();
+    if(visibility) {
+      //if VME is visible, then set property of scene node, and visualize it.
+      this->setProperty("visibility", visibility);
+      mafEventArgumentsList argList;
+      argList.append(mafEventArgument(mafCore::mafObjectBase*, (mafObjectBase*)this));
+      argList.append(mafEventArgument(bool, visibility));
+      mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);
+    }
 }
 
 mafSceneNode::~mafSceneNode() {
