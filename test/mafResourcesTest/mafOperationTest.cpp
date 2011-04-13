@@ -62,7 +62,7 @@ void mafOperationTest::mafOperationAllocationTest() {
     QVERIFY ( m_Operation->isRunning() );
     m_Operation->unDo();
     m_Operation->reDo();
-    m_Operation->terminate();
+    m_Operation->terminate(true);
     QVERIFY ( !m_Operation->isRunning() );
 }
 
