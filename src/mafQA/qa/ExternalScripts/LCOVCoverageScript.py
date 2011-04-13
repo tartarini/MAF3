@@ -92,10 +92,10 @@ if __name__ == "__main__":
     This Coverage Test has been developed using gcov/lcov suite.
     It works only in unix-like systems and the code need to be builded
     with these flags:
-    CMAKE_CXX_FLAGS_DEBUG += -fprofile-arcs
-    CMAKE_CXX_FLAGS_DEBUG += -ftest-coverage
-    CMAKE_LFLAGS_DEBUG += -fprofile-arcs
-    CMAKE_LFLAGS_DEBUG += -ftest-coverage
+    QMAKE_CXX_FLAGS_DEBUG += -fprofile-arcs
+    QMAKE_CXX_FLAGS_DEBUG += -ftest-coverage
+    QMAKE_LFLAGS_DEBUG += -fprofile-arcs
+    QMAKE_LFLAGS_DEBUG += -ftest-coverage
     ************************************************************\n
     """
 
