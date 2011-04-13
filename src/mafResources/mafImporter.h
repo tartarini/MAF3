@@ -51,6 +51,9 @@ public slots:
     /// Allows to call the piece of algorithm that is needed to apply the operation again.
     /*virtual*/ void reDo();
     
+    /// Set parameters of operation.
+    /*virtual*/ void setParameters(QVariantList parameters);
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafImporter();
