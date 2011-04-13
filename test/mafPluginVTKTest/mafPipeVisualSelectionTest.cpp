@@ -69,6 +69,8 @@ private slots:
         m_VME->dataSetCollection()->insertItem(dataLow, 0.0);
         m_VME->dataSetCollection()->insertItem(dataHigh, 3.0);
         m_VME->setTimestamp(0.0);
+        mafDEL(dataLow);
+        mafDEL(dataHigh);
 
         m_SphereMapper = vtkPolyDataMapper::New();
         m_SphereActor = vtkActor::New();

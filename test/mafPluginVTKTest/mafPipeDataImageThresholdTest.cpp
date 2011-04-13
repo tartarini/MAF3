@@ -64,6 +64,7 @@ private slots:
         mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
         dataSet->setDataValue(&m_ImageData);
         m_VME->dataSetCollection()->insertItem(dataSet);
+        mafDEL(dataSet);
         //! </snippet>
 
     }
