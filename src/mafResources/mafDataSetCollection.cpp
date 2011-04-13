@@ -283,12 +283,13 @@ mafDataSet *mafDataSetCollection::itemAt(double t) {
     mafDataSet *item = m_Interpolator->itemAt(m_CollectionMap, ts);
     if(item == NULL && m_CollectionMap->size() == 0) {
         // The collection is empty; this is the first item and can be added a default one.
-        item = new mafDataSet();
+        item = mafNEW(mafResources::mafDataSet);
         mafPoseMatrix *m;
         m = new mafPoseMatrix();
         m->set_identity();
         item->setPoseMatrix(m);
         insertItem(item, ts);
+        item->deleteObject();
         delete m;
         m = NULL;
     }
