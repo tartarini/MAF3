@@ -212,6 +212,7 @@ void mafDataSetCollectionTest::collectionRemoveItemTest() {
 
     // Add a new item at a new timestamp.
     bool result_insert = m_Collection->insertItem(item, 3.5);
+    item->deleteObject();
     QVERIFY(result_insert);
 
     // Test manual remove for the item but keep alive it so we can re-add later.
