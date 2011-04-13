@@ -98,6 +98,9 @@ public:
     if the operation fails. Anyway, if you want to insert new data items at new timestamp please refear to the 'insertItem' method.*/
     bool setDataSet(mafDataSet *data, double t = -1);
 
+    /// Rise modifiedObject() signal.
+    void updateData();
+
     /// Return the collection map.
     const mafDataSetMap *collectionMap() const;
 
