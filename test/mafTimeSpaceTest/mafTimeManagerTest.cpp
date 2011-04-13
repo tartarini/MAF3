@@ -22,7 +22,7 @@
 
 #ifdef WIN32
     #ifdef QT_DEBUG
-        #define TIME_SPACE_LIBRARY_NAME "mafTimeSpace_d.dll"
+        #define TIME_SPACE_LIBRARY_NAME "mafTimeSpace.dll"
     #else
         #define TIME_SPACE_LIBRARY_NAME "mafTimeSpace.dll"
     #endif
