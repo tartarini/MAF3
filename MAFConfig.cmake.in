@@ -20,6 +20,9 @@ set(MAF_VERSION_PATCH "@MAF_VERSION_PATCH@")
 # Whether MAF was built with shared libraries.
 set(MAF_BUILD_SHARED "@BUILD_SHARED_LIBS@")
 
+# build maf quality assurance
+set(BUILD_QA "@BUILD_QA@")
+
 # MAF options
 #set(MAF_USE_PYTHON "@MAF_USE_PYTHON@")
 

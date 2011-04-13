@@ -19,7 +19,9 @@ project(MAF)
 
 option(BUILD_TEST_SUITE "Build Module's Tests"      OFF)
 option(BUILD_EXAMPLES "Build Examples"              OFF)
+option(BUILD_QA "Build Q&A"                         OFF)
 option(BUILD_DOCUMENTATION "Build documentation"    OFF)
+
 option(MAF_USE_GIT_PROTOCOL "If ON use git protocol, otherwise http"                   OFF)
 
 option(MAF_SUPERBUILD "Always keep ON superbuild" ON)
@@ -42,9 +44,9 @@ endif()
 #############################################################################################
 
 # modify CMAKE_BUILD_TYPE in order to set default configuration for non-IDE build
-if(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "MinGW Makefiles") 
+if(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "MinGW Makefiles" AND NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
-endif(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "MinGW Makefiles")
+endif(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "MinGW Makefiles" AND NOT CMAKE_BUILD_TYPE)
 
 #############################################################################################
 ### Available Modules
@@ -69,27 +71,33 @@ endif(MAF_PLUGINVTK)
 
 ### tests and examples dependencies 
 if(BUILD_TEST_SUITE OR BUILD_EXAMPLES)
-   set( MAF_TIME_SPACE ON ) 
-   mafDependentOption(MAF_TIME_SPACE "Build Test module for mafTimeSpace." ON BUILD_EXAMPLES ON)
+    set( MAF_TIME_SPACE ON ) 
+    mafDependentOption(MAF_TIME_SPACE "Build Test module for mafTimeSpace." ON BUILD_EXAMPLES ON)
     
-   set( MAF_SERIALIZATION ON ) 
-   mafDependentOption(MAF_SERIALIZATION "Build Test module for mafSerialization." ON BUILD_EXAMPLES ON)
+    set( MAF_SERIALIZATION ON ) 
+    mafDependentOption(MAF_SERIALIZATION "Build Test module for mafSerialization." ON BUILD_EXAMPLES ON)
     
-   set( MAF_RESOURCES ON ) 
-   mafDependentOption(MAF_RESOURCES "Build Test module for mafResources." ON BUILD_EXAMPLES ON)
+    set( MAF_RESOURCES ON ) 
+    mafDependentOption(MAF_RESOURCES "Build Test module for mafResources." ON BUILD_EXAMPLES ON)
     
-   set( MAF_PLUGINVTK ON ) 
-   mafDependentOption(MAF_PLUGINVTK "Build Test module for mafPluginVTK." ON BUILD_EXAMPLES ON)
+    set( MAF_PLUGINVTK ON ) 
+    mafDependentOption(MAF_PLUGINVTK "Build Test module for mafPluginVTK." ON BUILD_EXAMPLES ON)
    
-   set( MAF_RESOURCES ON ) 
-   mafDependentOption(MAF_RESOURCES "Build mafResources module." ON BUILD_EXAMPLES ON)
+    set( MAF_RESOURCES ON ) 
+    mafDependentOption(MAF_RESOURCES "Build mafResources module." ON BUILD_EXAMPLES ON)
     
-   set( MAF_APPLICATION_LOGIC ON ) 
-   mafDependentOption(MAF_APPLICATION_LOGIC "Build Test module for mafApplicationLogic." ON BUILD_EXAMPLES ON)
+    set( MAF_APPLICATION_LOGIC ON ) 
+    mafDependentOption(MAF_APPLICATION_LOGIC "Build Test module for mafApplicationLogic." ON BUILD_EXAMPLES ON)
     
-   set( MAF_QTGUI ON ) 
-   mafDependentOption(MAF_QTGUI "Build Test module for mafGUI." ON BUILD_EXAMPLES ON)
+    set( MAF_QTGUI ON ) 
+    mafDependentOption(MAF_QTGUI "Build Test module for mafGUI." ON BUILD_EXAMPLES ON)
 endif(BUILD_TEST_SUITE OR BUILD_EXAMPLES)
+
+if(BUILD_QA)
+    set( BUILD_DOCUMENTATION ON ) 
+    mafDependentOption(BUILD_DOCUMENTATION "Build Documentation for QA." ON BUILD_QA ON)
+
+endif(BUILD_QA)
 
 #############################################################################################
 ### Wrapping (find swig, python ...)
@@ -100,7 +108,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
 else(CMAKE_BUILD_TYPE STREQUAL "Release")
   set(PYTHONLIBS_FOUND OFF)
 endif(CMAKE_BUILD_TYPE STREQUAL "Release")
-
 
 #############################################################################################
 ### Superbuild execution
