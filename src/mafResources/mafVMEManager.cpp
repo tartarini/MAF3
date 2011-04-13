@@ -96,7 +96,7 @@ void mafVMEManager::vmeRemove(mafObjectBase *vme) {
         return;
     }
     // VME has been removed.
-    vme_to_remove->detatch();
+    vme_to_remove->detatchFromTree();
     removeVME(vme_to_remove);
 
     m_VMEHierarchy->removeHierarchyNode(vme);

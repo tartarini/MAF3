@@ -65,7 +65,7 @@ public:
     virtual void createMenus();
 
     /// Create the toolbar for the vertical application and add them to the main window.
-    virtual void createToolBars();
+    virtual void createDefaultToolbars();
 
     /// Create the tree widget according to the given model passed as argument.
     virtual mafTreeWidget *createTreeWidget(mafTreeModel *model, QWidget *parent = 0);
@@ -146,7 +146,7 @@ private slots:
 
 private:
     /// Initialize the topics and register the signals with the mafEventBus.
-    void registerEvents();
+    void registerDefaultEvents();
 
     /// Update the recent file action with new recent file items.
     void updateRecentFileActions();
@@ -156,6 +156,15 @@ private:
     
     /// Allow to parse the XML tree hierarchy associated with the menu structure read from file.
     QDomNode parseMenuTree(QDomNode current);
+    
+    /// Create the action associated to the current menu item.
+    void createAction(QDomElement node);
+    
+    /// Create the menu associated to the dom node parsed.
+    void createMenuItem(QDomElement node);
+    
+    /// Create the toolbar associated to the dom node parsed.
+    void createToolbar(QDomElement node);
 
     /// Create the default menu for the application in case that the mnu file has not been found.
     void createDefaultMenus();
@@ -164,32 +173,13 @@ private:
     QString strippedName(const QString &fullFileName);
 
     QMenu *m_RecentFilesMenu; ///< Reference to 'Recent File' menu.
-
-    QToolBar *m_FileToolBar; ///< Toolbar related to File tasks
-    QToolBar *m_EditToolBar; ///< Toolbar related to Edit tasks
+    QMenu *m_CurrentMenu; ///< Current menu that has been created during the mnu file parsing.
 
     QList<QObject *> m_MenuItemList; ///< List of created actions/menus.
 
-    QAction *m_NewAct; ///< Reference to the action associated to the 'New' Item creation.
-    QAction *m_CollaborateAct; ///< Reference to the action associated to the 'Collaboration' chat Item.
-    QAction *m_OpenAct; ///< Reference to the action associated to the 'Open' existing data.
-    QAction *m_SaveAct; ///< Reference to the action associated to the 'Save' Items in a persistent way.
-    QAction *m_SaveAsAct; ///< Reference to the action associated to the 'Save As' Items in a persistent way by assigning a name.
     QAction *m_RecentFilesSeparatorAct; ///< Separator used to separate the recent files menu item from the previous one (if any recent is present)
-    QAction *m_ExitAct; ///< Reference to the action associated to the 'Exit'.
-
-    QAction *m_CutAct;  ///< Reference to the action associated to the 'Cut' of Items from actual loaded data.
-    QAction *m_CopyAct; ///< Reference to the action associated to the 'Copy' of Items from actual loaded data.
-    QAction *m_PasteAct; ///< Reference to the action associated to the 'Paste' of Items into actual loaded data.
-
-    QAction *m_AboutAct; ///< Reference to the action associated to the 'About' informative dialog.
-    QAction *m_SettingsAction; ///< Reference to the action associated to the application's settings.
-    QAction *m_SideBarAct; ///< Reference to the side bar close/show action.
-    QAction *m_LogBarAct; ///< Reference to the action associated to the 'LogBar' Item.
-
     int m_MaxRecentFiles; ///< Number of maximum recent files.
     QList<QAction *> m_RecentFileActs; ///< List of recent file's actions.
-    bool m_ActionsCreated; ///< Flag that store the actions' creation.
 
     mafGUIApplicationSettingsDialog *m_SettingsDialog; ///< Settings dialog
     mafLoggerWidget *m_Logger; ///< Logger
