@@ -37,6 +37,15 @@ void mafPipe::setInput(mafVME *vme) {
 
     // connect the input data destroyed to the inputDestroyed slot
     connect(vme, SIGNAL(destroyed()), this, SLOT(inputDestroyed()));
+
+    mafDataSetCollection *datSetCollection = vme->dataSetCollection();
+    if (datSetCollection)
+    {
+      //connect the data collection modified to the updatePipe slot
+      connect(datSetCollection, SIGNAL(modifiedObject()), this, SLOT(updatePipe()));
+    }
+
+
 }
 
 void mafPipe::removeInput(mafVME *vme) {
