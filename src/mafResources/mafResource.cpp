@@ -172,7 +172,7 @@ bool mafResource::initialize() {
     return true;
 }
 
-void mafResource::terminate() {
+void mafResource::terminate(bool result) {
 }
 
 void mafResource::execute() {
