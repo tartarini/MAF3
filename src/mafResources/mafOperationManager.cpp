@@ -214,11 +214,13 @@ void mafOperationManager::executionEnded() {
 
 void mafOperationManager::stopOperation() {
     // Remove the resource worker from the list.
-    mafOperationWorker *worker = removeWorkerFromPool(QObject::sender());
+
+  mafOperationWorker *worker = removeWorkerFromPool(QObject::sender());
 
     if ( worker == NULL ) {
         // Operation not executing => Simply cancelled by the user.
         // m_CurrentOperation should be deleted.
+        m_CurrentOperation->terminate(false);
         mafDEL(m_CurrentOperation);
         return;
     }
