@@ -75,3 +75,9 @@ void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show, cons
         //m_Iren->Start();
     }
 }
+
+void mafViewVTK::updateView() {
+  if (m_Widget->GetRenderWindow()) {
+    m_Widget->GetRenderWindow()->Render();
+  }
+}
