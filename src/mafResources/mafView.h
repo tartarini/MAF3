@@ -75,6 +75,9 @@ public slots:
     /// Wrap the new VME into a mafSceneNode.
     void vmeAdd(mafCore::mafObjectBase *vme);
 
+    /// Update view.
+    virtual void updateView();
+
 private slots:
 
     /// Called by reparent of items in tree.

@@ -35,7 +35,6 @@ void mafTreeModel::buildModel(bool init) {
     if(init == true) {
         m_Hierarchy->moveTreeIteratorToRootNode();
         m_CurrentItem = new mafTreeItem(m_Hierarchy->currentData() , false);
-        //this->insertNewItem(AtTopLevel, m_Hierarchy->currentData(), m_CurrentItem->index());
         setItem(0, 0, m_CurrentItem);
         m_ItemsList.push_back(m_CurrentItem);
     }
@@ -63,7 +62,9 @@ bool mafTreeModel::submit() {
 
 void mafTreeModel::setHierarchy(mafHierarchy *hierarchy) {
     if(m_Hierarchy) {
-        disconnect(m_Hierarchy);
+        disconnect(m_Hierarchy, SIGNAL(itemAttached(QObject*,QObject*)), this, SLOT(itemAttached(QObject*,QObject*)));
+        disconnect(m_Hierarchy, SIGNAL(itemDetached(QObject*)), this, SLOT(itemDetached(QObject*)));
+        disconnect(m_Hierarchy, SIGNAL(itemReparent(QObject*,QObject*)), this, SLOT(itemReparent(QObject*,QObject*)));
     }
 
     m_Hierarchy = hierarchy;

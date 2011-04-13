@@ -13,7 +13,7 @@
 
 #ifdef WIN32
     #ifdef QT_DEBUG
-        #define TEST_LIBRARY_NAME "mafResources_d.dll"
+        #define TEST_LIBRARY_NAME "mafResources.dll"
     #else
         #define TEST_LIBRARY_NAME "mafResources.dll"
     #endif

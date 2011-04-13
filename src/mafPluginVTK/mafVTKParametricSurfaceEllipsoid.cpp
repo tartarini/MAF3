@@ -24,7 +24,6 @@ using namespace mafPluginVTK;
 
 
 mafVTKParametricSurfaceEllipsoid::mafVTKParametricSurfaceEllipsoid(const QString code_location) : mafPluginVTK::mafVTKParametricSurface(code_location), m_EllipsoidSource(NULL), m_Ptf(NULL) {
-    m_EllipsoidRadius = 1.0;
     m_EllipsoidPhiRes = 20.0;
     m_EllipsoidTheRes = 20.0;
 
@@ -34,12 +33,13 @@ mafVTKParametricSurfaceEllipsoid::mafVTKParametricSurfaceEllipsoid(const QString
 
     m_EllipsoidSource = vtkSphereSource::New();
     m_Ptf = vtkTransformPolyDataFilter::New();
-    m_Transofrm = vtkTransform::New();
+    m_Transform = vtkTransform::New();
 
     // modify proportion of the sphere
-    m_Transofrm->Scale(m_EllipsoidXLength/m_EllipsoidYLength,1,m_EllipsoidZLength/m_EllipsoidYLength);
-    m_Transofrm->Update();
-    m_Ptf->SetTransform(m_Transofrm);
+    m_Transform->Scale(m_EllipsoidXLength/m_EllipsoidYLength,1,m_EllipsoidZLength/m_EllipsoidYLength);
+    m_Transform->Update();
+    m_Ptf->SetTransform(m_Transform);
+    
 
     m_Ptf->SetInputConnection(m_EllipsoidSource->GetOutputPort());
     m_Ptf->Update();
@@ -50,17 +50,20 @@ mafVTKParametricSurfaceEllipsoid::mafVTKParametricSurfaceEllipsoid(const QString
 }
 
 mafVTKParametricSurfaceEllipsoid::~mafVTKParametricSurfaceEllipsoid(){
-    m_Transofrm->Delete();
+    m_Transform->Delete();
     m_Ptf->Delete();
     m_EllipsoidSource->Delete();
 }
 
 void mafVTKParametricSurfaceEllipsoid::updateSurface(){
     //Set parameters to surface.
-    m_EllipsoidSource->SetRadius(m_EllipsoidRadius);
+    m_EllipsoidSource->SetRadius(m_EllipsoidYLength);
     m_EllipsoidSource->SetPhiResolution(m_EllipsoidPhiRes);
     m_EllipsoidSource->SetThetaResolution(m_EllipsoidTheRes);
     m_EllipsoidSource->SetCenter(m_Center);
-    m_Transofrm->Update();
+
+    m_Transform->Identity();
+    m_Transform->Scale(m_EllipsoidXLength/m_EllipsoidYLength,1,m_EllipsoidZLength/m_EllipsoidYLength);
+    m_Transform->Update();
     m_EllipsoidSource->Update();
 }

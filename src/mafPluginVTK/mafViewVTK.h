@@ -40,11 +40,17 @@ public:
     /// Object constructor.
     mafViewVTK(const QString code_location = "");
 
+    /// Crete view.
     /*virtual*/ void create();
 
+    /// Remove scene node passed as argument.
     /*virtual*/ void removeSceneNode(mafResources::mafSceneNode *node);
 
+    /// Show scene node passed as argument.
     /*virtual*/ void showSceneNode(mafResources::mafSceneNode *node, bool show = true, const QString visualPipeType = "");
+
+    /// Update view.
+    /*virtual*/ void updateView();
 
 protected:
     /// Object destructor.

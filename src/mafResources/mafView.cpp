@@ -17,6 +17,7 @@
 #include "mafPluginManager.h"
 #include "mafPlugin.h"
 #include "mafDataSet.h"
+#include "mafDataSetCollection.h"
 #include "mafVMEManager.h"
 
 using namespace mafCore;
@@ -63,6 +64,13 @@ void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
         mafSceneNode *node = new mafSceneNode(vme_to_add, NULL, mafCodeLocation);
         node->setObjectName(vme_to_add->objectName());
         connect(node, SIGNAL(destroyNode()), this, SLOT(sceneNodeDestroy()));
+
+        mafDataSetCollection *datSetCollection = vme_to_add->dataSetCollection();
+        if (datSetCollection)
+        {
+          connect(datSetCollection, SIGNAL(modifiedObject()), this, SLOT(updateView()));
+        }
+
         if(m_Scenegraph != NULL) {
             m_Scenegraph->addHierarchyNode(node, m_SelectedNode);
             m_SceneNodeList.push_back(node);
@@ -133,7 +141,9 @@ void mafView::showSceneNode(mafSceneNode *node, bool show, const QString visualP
                 return;
             }
             pipe->setInput(node->vme());
-            pipe->createPipe();
+            if (pipe->output() == NULL) {
+              pipe->createPipe();
+            }
             pipe->updatePipe();
             // TODO: Connect the visivility property of the VME with the visibile
             // slot of the visual pipe to put in synch both the opbjects.
@@ -143,6 +153,7 @@ void mafView::showSceneNode(mafSceneNode *node, bool show, const QString visualP
         }
     }
 }
+
 
 void mafView::plugVisualPipe(QString dataType, QString visualPipeType) {
     if (!dataType.isEmpty() && !visualPipeType.isEmpty()) {
@@ -162,5 +173,8 @@ mafSceneNode *mafView::sceneNodeFromVme(mafObjectBase *vme) {
      }
     if (!found)
         return NULL;
+}
+
+void mafView::updateView() {
 }
 

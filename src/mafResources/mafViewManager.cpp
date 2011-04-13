@@ -107,7 +107,13 @@ void mafViewManager::selectView(mafCore::mafObjectBase *view) {
 }
 
 void mafViewManager::sceneNodeShow(mafCore::mafObjectBase *node, bool show) {
-    mafSceneNode *node_to_show = qobject_cast<mafResources::mafSceneNode *>(node);
+    mafSceneNode *node_to_show = NULL;
+    QString nodeName = "mafResources::mafVME";
+    if (nodeName.compare(node->metaObject()->className()) == 0) {
+      node_to_show = m_SelectedView->sceneNodeFromVme(node);
+    } else {
+      node_to_show = qobject_cast<mafResources::mafSceneNode *>(node);
+    }
     if(node_to_show != NULL) {
         if(m_SelectedView) {
             m_SelectedView->showSceneNode(node_to_show, show, "mafPluginVTK::mafPipeVisualVTKSurface");

@@ -260,6 +260,10 @@ bool mafDataSetCollection::setDataSet(mafDataSet *data, double t) {
     return false;
 }
 
+void mafDataSetCollection::updateData() {
+  emit(modifiedObject());
+}
+
 bool mafDataSetCollection::acceptData(mafDataSet *data) {
     REQUIRE(data != NULL);
 

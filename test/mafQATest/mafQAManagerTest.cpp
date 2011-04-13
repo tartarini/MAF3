@@ -15,7 +15,7 @@
 #ifdef WIN32
 #define TEST_SCRIPT_NAME "dir"
     #ifdef QT_DEBUG
-        #define TEST_LIBRARY_NAME "mafPluginTest_d.dll"
+        #define TEST_LIBRARY_NAME "mafPluginTest.dll"
     #else
         #define TEST_LIBRARY_NAME "mafPluginTest.dll"
     #endif

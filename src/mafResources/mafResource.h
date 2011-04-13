@@ -118,7 +118,7 @@ public slots:
     virtual void execute();
 
     /// Terminate the execution.
-    virtual void terminate();
+    virtual void terminate(bool result);
 
 protected:
     /// Object destructor.

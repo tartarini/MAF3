@@ -35,13 +35,12 @@
 #ifdef WIN32
     #define TEST_LIBRARY_NAME "mafPluginVTK.dll"
 #else
-    #ifdef __APPLE__
-        #define TEST_LIBRARY_NAME "mafPluginVTK.dylib"
-    #else
-        #define TEST_LIBRARY_NAME "mafPluginVTK.so"
-    #endif
+  #ifdef __APPLE__
+    #define TEST_LIBRARY_NAME "mafPluginVTK.dylib"
+  #else
+    #define TEST_LIBRARY_NAME "mafPluginVTK.so"
+  #endif
 #endif
-
 
 using namespace mafCore;
 using namespace mafEventBus;
