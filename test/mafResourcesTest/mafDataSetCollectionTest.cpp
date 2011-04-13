@@ -150,6 +150,8 @@ void mafDataSetCollectionTest::collectionInsertItemTest() {
     mafPoseMatrix *m = m_Collection->poseMatrix(1.5);
     //! </snippet>
     QVERIFY(*m == *new_matrix);
+    
+    mafDEL(item);
 
     delete new_matrix;
     new_matrix = NULL;
