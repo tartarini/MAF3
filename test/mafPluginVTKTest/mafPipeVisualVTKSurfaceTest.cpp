@@ -33,24 +33,12 @@
 #include <vtkRenderWindowInteractor.h>
 
 #ifdef WIN32
-    #ifdef QT_DEBUG
-        #define TEST_LIBRARY_NAME "mafPluginVTK_d.dll"
-    #else
-        #define TEST_LIBRARY_NAME "mafPluginVTK.dll"
-    #endif
+    #define TEST_LIBRARY_NAME "mafPluginVTK.dll"
 #else
     #ifdef __APPLE__
-        #ifdef QT_DEBUG
-            #define TEST_LIBRARY_NAME "mafPluginVTK.dylib"
-        #else
-            #define TEST_LIBRARY_NAME "mafPluginVTK.dylib"
-        #endif
+        #define TEST_LIBRARY_NAME "mafPluginVTK.dylib"
     #else
-        #ifdef QT_DEBUG
-            #define TEST_LIBRARY_NAME "mafPluginVTK.so"
-        #else
-            #define TEST_LIBRARY_NAME "mafPluginVTK.so"
-        #endif
+        #define TEST_LIBRARY_NAME "mafPluginVTK.so"
     #endif
 #endif
 
