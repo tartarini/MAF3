@@ -253,6 +253,8 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
     out2 = string2->externalData()->toAscii();
     QCOMPARE(out2, testString2);
 
+    mafDEL(dataSet);
+    mafDEL(dataSet2);
     mafDEL(returnVME);
     mafDEL(m_MementoVME);
 }

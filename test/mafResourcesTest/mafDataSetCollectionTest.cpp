@@ -150,6 +150,8 @@ void mafDataSetCollectionTest::collectionInsertItemTest() {
     mafPoseMatrix *m = m_Collection->poseMatrix(1.5);
     //! </snippet>
     QVERIFY(*m == *new_matrix);
+    
+    mafDEL(item);
 
     delete new_matrix;
     new_matrix = NULL;
@@ -210,6 +212,7 @@ void mafDataSetCollectionTest::collectionRemoveItemTest() {
 
     // Add a new item at a new timestamp.
     bool result_insert = m_Collection->insertItem(item, 3.5);
+    item->deleteObject();
     QVERIFY(result_insert);
 
     // Test manual remove for the item but keep alive it so we can re-add later.

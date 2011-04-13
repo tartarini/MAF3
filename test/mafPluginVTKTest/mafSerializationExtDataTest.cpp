@@ -29,24 +29,12 @@
 #include <vtkTransformPolyDataFilter.h>
 
 #ifdef WIN32
-    #ifdef QT_DEBUG
-        #define SERIALIZATION_LIBRARY_NAME "mafSerialization_d.dll"
-    #else
-        #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
-    #endif
+    #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
 #else
     #ifdef __APPLE__
-        #ifdef QT_DEBUG
-            #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dylib"
-        #else
-            #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dylib"
-        #endif
+        #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dylib"
     #else
-        #ifdef QT_DEBUG
-            #define SERIALIZATION_LIBRARY_NAME "mafSerialization.so"
-        #else
-            #define SERIALIZATION_LIBRARY_NAME "mafSerialization.so"
-        #endif
+        #define SERIALIZATION_LIBRARY_NAME "mafSerialization.so"
     #endif
 #endif
 
