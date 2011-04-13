@@ -52,8 +52,17 @@ public slots:
     /// Set parameters of operation.
     virtual void setParameters(QVariantList parameters);
 
-    /// Execute the resource algorithm.
+    /// Execute the operation.
     /*virtual*/ void execute();
+
+    /// Terminate the operation.
+    /*virtual*/ void terminate(bool result);
+
+    /// Allows to call the piece of algorithm that is needed to restore the previous state of the operation's execution.
+    /*virtual*/ void unDo();
+
+    /// Allows to call the piece of algorithm that is needed to apply the operation again.
+    /*virtual*/ void reDo();
 
     /// Select surface type.
     void on_parametricSurfaceType_currentChanged(int index);
@@ -65,7 +74,7 @@ public slots:
     void on_spherePhiRes_valueChanged(double d);
 
     /// Set sphere theta resolution.
-    void on_sphereThetaRes_valueChanged(double d);
+    void on_sphereTheRes_valueChanged(double d);
 
     /// Set cube X length.
     void on_cubeXLength_valueChanged(double d);
@@ -97,14 +106,11 @@ public slots:
     /// Set sphere resolution.
     void on_cylinderRes_valueChanged(double d);
 
-    /// Set ellipsoid radius.
-    void on_ellipsoidRadius_valueChanged(double d);
-
     /// Set ellipsoid phi resolution.
     void on_ellipsoidPhiRes_valueChanged(double d);
 
     /// Set ellipsoid theta resolution.
-    void on_ellipsoidThetaRes_valueChanged(double d);
+    void on_ellipsoidTheRes_valueChanged(double d);
 
     /// Set ellipsoid X length.
     void on_ellipsoidXLength_valueChanged(double d);
@@ -115,10 +121,6 @@ public slots:
     /// Set ellipsoid Z length.
     void on_ellipsoidZLength_valueChanged(double d);
 
-
-    /// Terminate the execution.
-    //virtual bool terminate();
-
 protected:
     /// Object destructor.
     /* virtual */ ~mafOperationParametricSurface();
@@ -126,6 +128,12 @@ protected:
 private:
     /// Create parametric surfaces.
     void initializeParametricSurfaces();
+
+    /// Visualize parametric surface
+    void visualizeParametricSurface();
+
+    /// Update visualized surface.
+    void updateParametricSurface();
 
     int m_CurrentSurfaceIndex; ///< Index of the current parametric surface.
     int m_ParametricSurfaceType; ///< Kind of parametric surface.
