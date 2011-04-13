@@ -30,7 +30,7 @@
 
 #ifdef WIN32
     #ifdef QT_DEBUG
-        #define SERIALIZATION_LIBRARY_NAME "mafSerialization_d.dll"
+        #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
     #else
         #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
     #endif

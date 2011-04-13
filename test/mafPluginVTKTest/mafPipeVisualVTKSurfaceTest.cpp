@@ -34,7 +34,7 @@
 
 #ifdef WIN32
     #ifdef QT_DEBUG
-        #define TEST_LIBRARY_NAME "mafPluginVTK_d.dll"
+        #define TEST_LIBRARY_NAME "mafPluginVTK.dll"
     #else
         #define TEST_LIBRARY_NAME "mafPluginVTK.dll"
     #endif
