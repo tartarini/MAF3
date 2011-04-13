@@ -34,13 +34,13 @@ private slots:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
+        
         m_Importer = mafNEW(mafResources::mafImporter);
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_Importer);
-        mafEventBus::mafEventBusManager::instance()->shutdown();
         mafMessageHandler::instance()->shutdown();
     }
 
@@ -71,6 +71,14 @@ void mafImporterTest::filenameTest() {
     QString import_file("myFileToImport.ext");
     m_Importer->setFilename(import_file);
     QString f = m_Importer->filename();
+    QCOMPARE(import_file, f);
+    
+    m_Importer->setFilename("");
+    QVariantList parameters;
+    parameters.append(QVariant(import_file));
+    m_Importer->setParameters(parameters);
+
+    f = m_Importer->filename();
     QCOMPARE(import_file, f);
 }
 
