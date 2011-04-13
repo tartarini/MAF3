@@ -68,7 +68,7 @@ def createCoverageReport():
     os.system("find . -type f -name 'ui_*.gcda' -print | xargs /bin/rm -f")
 
     commandLcov = "lcov  --directory . --capture --output-file " + moduleCoverageReportDir + "/" + currentModule + "_t.info"
-    commandLcovExtract = "lcov  --extract " + moduleCoverageReportDir + "/" + currentModule + "_t.info \"*/maf*\" -o " + moduleCoverageReportDir + "/" + currentModule + "ext.info"
+    commandLcovExtract = "lcov  --extract " + moduleCoverageReportDir + "/" + currentModule + "_t.info \"*/"+currentModule+"*\" -o " + moduleCoverageReportDir + "/" + currentModule + "ext.info"
     
     commandLcovRemove = "lcov  --remove " + moduleCoverageReportDir + "/" + currentModule + "ext.info \"*/ui_*\" -o " + moduleCoverageReportDir + "/" + currentModule + ".info" 
 
