@@ -6,14 +6,14 @@ import glob
 
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
 sys.path.append(os.path.realpath(os.path.join(currentPathScript,"..","..")))
-from qa import mafPathes
+from qa import mafPath
 
 def usage():
     print "Usage:  python LCOVCoveragePublish.py"
 
 def publishReport():
     extScriptDir = os.getcwd()
-    os.chdir(mafPathes.mafQADir)
+    os.chdir(mafPath.mafQADir)
     baseDir = os.getcwd()
     qaResultsDir = os.path.join(baseDir,"QAResults")
     htmlDir = os.path.join(baseDir,"QAResults", "html")

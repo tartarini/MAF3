@@ -4,11 +4,11 @@ import getopt
 
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
 sys.path.append(os.path.realpath(os.path.join(currentPathScript, "..")))
-from qa import mafPathes
+from qa import mafPath
 
 extensionToAvoid = [".dll",".prl", ".a",".lib", ".dylib",".so", ".0", ".1"] # necessary to insert .N because of symbolic link of linux
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
-modulesDir = mafPathes.mafSourcesDir #need to be changed
+modulesDir = mafPath.mafSourcesDir #need to be changed
 param = {}
 
 def find_executable(executable, path=None):

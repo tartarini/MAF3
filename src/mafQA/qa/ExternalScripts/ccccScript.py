@@ -5,10 +5,10 @@ import getopt
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
 
 sys.path.append(os.path.realpath(os.path.join(currentPathScript,"..","..")))
-from qa import mafPathes
+from qa import mafPath
 
-modulesDir = mafPathes.mafSourcesDir
-qaDir = mafPathes.mafQADir
+modulesDir = mafPath.mafSourcesDir
+qaDir = mafPath.mafQADir
 
 def usage():
     print "python ccccScript.py [-h] [-e ccccPath]"
