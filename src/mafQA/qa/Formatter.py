@@ -10,7 +10,7 @@ import getopt
 
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
 sys.path.append(os.path.realpath(os.path.join(currentPathScript, "..")))
-from qa import mafPathes
+from qa import mafPath
 
 def usage():
     print "Usage: python Formatter.py [--enable-LCOVCoverage]"
@@ -36,7 +36,7 @@ def search_file(filename, search_path):
 def run(param):
    #read xml file
    scriptsDir = os.getcwd()
-   os.chdir(mafPathes.mafQADir)
+   os.chdir(mafPath.mafQADir)
    baseDir = os.getcwd()
    qaResultsDir = os.path.join(baseDir,"QAResults")
    xmlDir = os.path.join(baseDir,"QAResults","xml")

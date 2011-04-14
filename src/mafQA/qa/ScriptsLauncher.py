@@ -4,11 +4,11 @@ import getopt
 
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
 sys.path.append(os.path.realpath(os.path.join(currentPathScript, "..")))
-from qa import mafPathes
+from qa import mafPath
 
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
-modulesDir = mafPathes.mafSourcesDir
-outputDir = mafPathes.mafQADir
+modulesDir = mafPath.mafSourcesDir
+outputDir = mafPath.mafQADir
 
 def run(param):
     scriptsDir = currentPathScript

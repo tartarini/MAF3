@@ -3,9 +3,9 @@ import os
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
 
 sys.path.append(os.path.realpath(os.path.join(currentPathScript,"..","..")))
-from qa import mafPathes
+from qa import mafPath
 
-modulesDir = os.path.abspath(mafPathes.mafSourcesDir)
+modulesDir = os.path.abspath(mafPath.mafSourcesDir)
 currentModule = ""
 
 def usage():
@@ -15,9 +15,9 @@ def createCoverageReport():
     extScriptDir = currentPathScript
     baseDir = modulesDir
     moduleDir = os.path.join(baseDir,currentModule)
-    testDir = os.path.join(mafPathes.mafTestsDir, currentModule + "Test")
-    binDir = os.path.join(mafPathes.mafBinaryDir, "bin") #here can be also with Debug
-    qaResultsDir = os.path.join(mafPathes.mafQADir, "QAResults")
+    testDir = os.path.join(mafPath.mafTestsDir, currentModule + "Test")
+    binDir = os.path.join(mafPath.mafBinaryDir, "bin") #here can be also with Debug
+    qaResultsDir = os.path.join(mafPath.mafQADir, "QAResults")
     LCOVExternalCoverageDir = os.path.join(qaResultsDir, "externalLCOVCoverage")
 
     if(os.path.exists(moduleDir) == False):
@@ -44,7 +44,7 @@ def createCoverageReport():
     os.system("rm -fR "+ moduleCoverageReportDir)
     os.mkdir(moduleCoverageReportDir);
 
-    gcdaDir = os.path.join(mafPathes.mafBinaryDir,"src",currentModule,"CMakeFiles",currentModule+".dir")
+    gcdaDir = os.path.join(mafPath.mafBinaryDir,"src",currentModule,"CMakeFiles",currentModule+".dir")
     os.chdir(gcdaDir)
 
     os.system("find . -type f -name '*.gcda' -print | xargs /bin/rm -f")
@@ -68,7 +68,7 @@ def createCoverageReport():
     os.system("find . -type f -name 'ui_*.gcda' -print | xargs /bin/rm -f")
 
     commandLcov = "lcov  --directory . --capture --output-file " + moduleCoverageReportDir + "/" + currentModule + "_t.info"
-    commandLcovExtract = "lcov  --extract " + moduleCoverageReportDir + "/" + currentModule + "_t.info \"*/maf*\" -o " + moduleCoverageReportDir + "/" + currentModule + "ext.info"
+    commandLcovExtract = "lcov  --extract " + moduleCoverageReportDir + "/" + currentModule + "_t.info \"*/"+currentModule+"*\" -o " + moduleCoverageReportDir + "/" + currentModule + "ext.info"
     
     commandLcovRemove = "lcov  --remove " + moduleCoverageReportDir + "/" + currentModule + "ext.info \"*/ui_*\" -o " + moduleCoverageReportDir + "/" + currentModule + ".info" 
 

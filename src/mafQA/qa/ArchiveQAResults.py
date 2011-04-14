@@ -4,12 +4,12 @@ from datetime import datetime
 import sys
 
 try:
-    from qa import mafPathes
+    from qa import mafPath
 except ImportError:
-    import mafPathes
+    import mafPath
 
 scriptsDir = os.getcwd() #original directory
-os.chdir(mafPathes.mafQADir)
+os.chdir(mafPath.mafQADir)
 baseDir = os.getcwd()
 
 currentResultDir = os.path.join(baseDir,"QAResults")
