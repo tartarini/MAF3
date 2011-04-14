@@ -99,6 +99,13 @@ mafTreeItem *mafTreeModel::createNewItem(mafTreeItem *parent, QObject *obj, bool
     bool visibility = obj->property("visibility").toBool();
     if(item->isCheckable()){
       item->setCheckState(visibility ? Qt::Checked : Qt::Unchecked);
+      if(visibility) {
+        this->setProperty("visibility", visibility);
+        mafEventArgumentsList argList;
+        argList.append(mafEventArgument(mafCore::mafObjectBase*, (mafObjectBase*)obj));
+        argList.append(mafEventArgument(bool, visibility));
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);
+      }
     }
 
     m_ItemsList.push_back(item);
