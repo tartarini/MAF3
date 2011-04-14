@@ -44,6 +44,10 @@ void mafImporter::cleanup() {
 void mafImporter::requestToImportFile() {
     if (m_Filename.isEmpty()) {
         qWarning() << mafTr("Filename of data to import is needed.");
+        m_Abort = true;
+    } else if (!QFile::exists(m_Filename)) {
+        qCritical() << m_Filename << mafTr(" doesn't exists!!.");
+        m_Abort = true;
     } else {
         mafRegisterLocalCallback("maf.local.serialization.extDataImported", this , "importedData(mafCore::mafContainerInterface *)")
         mafEventArgumentsList argList;
