@@ -27,7 +27,7 @@ bool mafOperation::initialize() {
     return m_IsRunning;
 }
 
-void mafOperation::terminate(bool result) {
+void mafOperation::terminate() {
     m_IsRunning = false;
 }
 
