@@ -19,7 +19,7 @@ using namespace mafResources;
 using namespace mafEventBus;
 using namespace mafCore;
 
-mafImporter::mafImporter(const QString code_location) : mafOperation(code_location), m_EncodeType(""), m_Filename(""), m_DataSet(NULL), m_DataImported(false) {
+mafImporter::mafImporter(const QString code_location) : mafOperation(code_location), m_EncodeType(""), m_Filename(""), m_DataImported(false) {
     m_UIFilename = "mafImporter.ui";
 }
 
@@ -37,7 +37,6 @@ void mafImporter::setParameters(QVariantList parameters) {
 
 void mafImporter::cleanup() {
     // Cleanup memory and deregister callback.
-    mafDEL(m_DataSet);
     mafDEL(m_Output);
     mafUnregisterLocalCallback("maf.local.serialization.extDataImported", this, "importedData(mafCore::mafContainerInterface *)")
 }
@@ -62,9 +61,10 @@ void mafImporter::importedData(mafCore::mafContainerInterface *data) {
     //Insert data into VME
     m_VME = mafNEW(mafResources::mafVME);
     m_VME->setObjectName(info.baseName());
-    m_DataSet = mafNEW(mafResources::mafDataSet);
-    m_DataSet->setDataValue(data);
-    m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
+    mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
+    dataSet->setDataValue(data);
+    m_VME->dataSetCollection()->insertItem(dataSet, 0);
+    mafDEL(dataSet);
     this->m_Output = m_VME;
 
     //Notify vme add
