@@ -69,7 +69,7 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
-        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
+        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface)
 
         // Create a sphere.
         vtkSmartPointer<vtkSphereSource> surfSphere = vtkSmartPointer<vtkSphereSource>::New();
@@ -95,7 +95,7 @@ private slots:
         //// Create a container with the outputPort of a vtkCubeSource
         //// m_DataSourceContainer is the container of type vtkAlgorithmOutput
         //// to "wrap" the 'vtkCubeSource' of type vtkPolyData just simply use the code below.
-        m_DataSourceContainer = m_AppendData->GetOutputPort(0);;
+        m_DataSourceContainer = m_AppendData->GetOutputPort(0);
 
         //Insert data into VME
         m_VME = mafNEW(mafResources::mafVME);
