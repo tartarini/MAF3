@@ -60,22 +60,20 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         initializeTestData();
-
+        
         m_EventBus = mafEventBusManager::instance();
         
         m_VMEManager = mafVMEManager::instance();
         m_OperationManager = mafOperationManager::instance();
         
-        m_Importer = mafNEW(mafPluginVTK::mafImporterVTK);
         m_Observer = new testVMEAddObserver();
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         QFile::remove(m_VTKFile);
-        mafDEL(m_Importer);
         delete m_Observer;
-
+        
         m_OperationManager->shutdown();
         m_VMEManager->shutdown();
         
@@ -85,15 +83,11 @@ private slots:
         m_EventBus->shutdown();
         mafMessageHandler::instance()->shutdown();
     }
-
-    /// mafImporterVTK allocation test case.
-    void mafImporterVTKAllocationTest();
     
     /// Test the import of VTK file created.
     void importVTKFile();
 
 private:
-    mafImporterVTK *m_Importer; ///< Test var.
     QString m_VTKFile; ///< VTK filename to import.
     testVMEAddObserver *m_Observer; ///< Observer class to intercept the imported vme.
     
@@ -124,10 +118,6 @@ void mafImporterVTKTest::initializeTestData() {
     if (!written) {
         qCritical() << mafTr("Error writing test data file: ") << m_VTKFile;
     }
-}
-
-void mafImporterVTKTest::mafImporterVTKAllocationTest() {
-    QVERIFY(m_Importer != NULL);
 }
 
 void mafImporterVTKTest::importVTKFile() {
