@@ -189,5 +189,5 @@ void mafSerializationVTKTest::mafSerializationVTKSaveTest() {
     QFile::remove(test_file);
 }
 
-MAF_REGISTER_TEST(mafSerializationVTKTest);
+//MAF_REGISTER_TEST(mafSerializationVTKTest);
 #include "mafSerializationVTKTest.moc"
