@@ -62,15 +62,16 @@ bool mafTreeModel::submit() {
 
 void mafTreeModel::setHierarchy(mafHierarchy *hierarchy) {
     if(m_Hierarchy) {
-        disconnect(m_Hierarchy, SIGNAL(itemAttached(QObject*,QObject*)), this, SLOT(itemAttached(QObject*,QObject*)));
-        disconnect(m_Hierarchy, SIGNAL(itemDetached(QObject*)), this, SLOT(itemDetached(QObject*)));
-        disconnect(m_Hierarchy, SIGNAL(itemReparent(QObject*,QObject*)), this, SLOT(itemReparent(QObject*,QObject*)));
+         disconnect(m_Hierarchy, SIGNAL(itemAttached(QObject*,QObject*)), this, SLOT(itemAttached(QObject*,QObject*)));
+         disconnect(m_Hierarchy, SIGNAL(itemDetached(QObject*)), this, SLOT(itemDetached(QObject*)));
+         disconnect(m_Hierarchy, SIGNAL(itemReparent(QObject*,QObject*)), this, SLOT(itemReparent(QObject*,QObject*)));
     }
 
     m_Hierarchy = hierarchy;
     connect(m_Hierarchy, SIGNAL(itemAttached(QObject*,QObject*)), this, SLOT(itemAttached(QObject*,QObject*)));
     connect(m_Hierarchy, SIGNAL(itemDetached(QObject*)), this, SLOT(itemDetached(QObject*)));
     connect(m_Hierarchy, SIGNAL(itemReparent(QObject*,QObject*)), this, SLOT(itemReparent(QObject*,QObject*)));
+    connect(m_Hierarchy, SIGNAL(destroyed()), this, SLOT(hierarchyDestroyed()));
 
     initialize();
 }
@@ -111,6 +112,11 @@ mafTreeItem *mafTreeModel::createNewItem(mafTreeItem *parent, QObject *obj, bool
     m_ItemsList.push_back(item);
     return item;
 }
+
+void mafTreeModel::hierarchyDestroyed() {
+  m_Hierarchy = NULL;
+}
+
 
 void mafTreeModel::itemReparent(QObject *item, QObject *parent) {
     QModelIndex index = this->indexFromData(parent);

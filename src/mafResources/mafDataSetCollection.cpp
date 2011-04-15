@@ -27,11 +27,14 @@ mafDataSetCollection::~mafDataSetCollection() {
         mafDEL(iter.value());
         ++iter;
     }
+    emit(modifiedObject());
 
     m_CollectionMap->clear();
     delete m_CollectionMap;
     m_CollectionMap = NULL;
+    
     mafDEL(m_Interpolator);
+    
 }
 
 void mafDataSetCollection::setTimestamp(double t) {
