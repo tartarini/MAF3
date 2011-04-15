@@ -656,7 +656,7 @@ void mafGUIManager::viewDestroyed() {
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
     if (m_Model) {
-        // Set hierarchy of selected view and set the current index
+        // Set VME hierarchy
         m_Model->clear();
         m_Model->setHierarchy(hierarchy);
         QModelIndex index = m_Model->index(0, 0);
