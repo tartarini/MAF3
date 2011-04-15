@@ -220,7 +220,7 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
 
     testDataPipe *dataPipe = mafNEW(testDataPipe);
     m_VME->setDataPipe(dataPipe);
-    dataPipe->deleteObject();
+    dataPipe->release();
 
     //! <snippet>
     ////Create the VME Memento that stores dataSetCollection and dataPipe
