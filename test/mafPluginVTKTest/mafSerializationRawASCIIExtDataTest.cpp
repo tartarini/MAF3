@@ -83,7 +83,7 @@ void testExtRawASCIICustomManager::createdMemento(mafCore::mafMemento *memento) 
     QVERIFY(memento != NULL);
 
     mafVME *returnVME = mafNEW(mafResources::mafVME);
-    returnVME->setMemento(memento);
+    returnVME->setMemento(memento, false);
 
     //Now load dataValue
     returnVME->updateData();

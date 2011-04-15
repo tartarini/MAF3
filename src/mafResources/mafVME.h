@@ -75,7 +75,7 @@ public:
     serialization mechanism to serialize data into the selected storage type.
     The 'deep_memento' flag is used to avoid the copy of the object unique hash in normal operation like
     undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
-    /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
+    /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool binary = true, bool deep_memento = false);
 
     /// Assign to the VME the interactor that will be used when user interact with the VME.
     void setInteractor(mafInteractor *i);
@@ -138,6 +138,7 @@ private:
     mafPipeData *m_DataPipe; ///< Data pipe associated with the VME and used to elaborate new data.
     QHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
     QVariantList m_Bounds; ///< List of bounds value of the binding box.
+    bool m_Binary; /// Flag used to indicate if dataSet in binary or ASCII.
     bool m_CanRead;  ///< Flag used to indicate if the VME is readable.
     bool m_CanWrite; ///< Flag indicating if the vme is writable.
     bool m_Visibility; /// Flag used to set visibility to scene node

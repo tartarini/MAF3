@@ -20,7 +20,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL), m_CanRead(true), m_CanWrite(true) {
+mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL), m_Binary(true), m_CanRead(true), m_CanWrite(true) {
     m_Lock = new QReadWriteLock(QReadWriteLock::Recursive);
     mafId time_set_id = mafIdProvider::instance()->idValue("TIME_SET");
     if(time_set_id != -1) {
@@ -175,7 +175,8 @@ mafMemento *mafVME::createMemento() const {
     return mementoVME;
 }
 
-void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
+void mafVME::setMemento(mafMemento *memento, bool binary, bool deep_memento) {
+    m_Binary = binary;
     REQUIRE(memento != NULL);
     REQUIRE(memento->objectClassType() == this->metaObject()->className());
 
@@ -226,7 +227,7 @@ void mafVME::updateData() {
         mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
         mafMementoDataSet *memento = iter.key();
         memento->setObjectClassType(dataSet->metaObject()->className());
-        dataSet->setMemento(memento);
+        dataSet->setMemento(memento, m_Binary);
         this->dataSetCollection()->insertItem(dataSet, iter.value());
         mafDEL(dataSet);
         ++iter;
