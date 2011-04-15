@@ -29,17 +29,8 @@ mafMacroInitProject(0)
 ## Build rules
 ## #################################################################
 
-# Set some Win32 Specific Settings
-IF(WIN32)
-    SET(GUI_TYPE WIN32)
-ENDIF(WIN32)
-# Set some Apple MacOS Specific settings
-IF (APPLE)
-    SET(GUI_TYPE MACOSX_BUNDLE)
-ENDIF (APPLE)
-
 # Create the executable.
-ADD_EXECUTABLE(${PROJECT_NAME} ${GUI_TYPE} ${PROJECT_SRCS})
+ADD_EXECUTABLE(${PROJECT_NAME} ${PROJECT_SRCS})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 
 ## #################################################################

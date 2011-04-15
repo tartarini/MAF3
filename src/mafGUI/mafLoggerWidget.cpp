@@ -10,14 +10,40 @@
  */
 
 #include "mafLoggerWidget.h"
-#include "mafSyntaxHighlighterMAFLogger.h"
+#include "mafTextHighlighter.h"
 
 using namespace mafCore;
 using namespace mafGUI;
 
 mafLoggerWidget::mafLoggerWidget(const QString code_location): mafLogger(code_location) {
     m_TextWidgetLog = new mafTextEditWidget();
-    m_TextHighlighter = new mafSyntaxHighlighterMAFLogger();
+    m_TextHighlighter = new mafTextHighlighter();
+
+    QTextCharFormat format;
+    format.setForeground(Qt::darkGreen);
+    format.setFontWeight(QFont::Bold);
+    QRegExp patternDebug("\\bDebug\\b");
+    m_TextHighlighter->insertFormat("Debug", format);
+    m_TextHighlighter->insertRule("Debug", patternDebug, m_TextHighlighter->format("Debug"));
+
+    format.setForeground(Qt::darkYellow);
+    format.setFontWeight(QFont::Bold);
+    QRegExp patternWarning("\\bWarning\\b");
+    m_TextHighlighter->insertFormat("Warning", format);
+    m_TextHighlighter->insertRule("Warning", patternWarning, m_TextHighlighter->format("Warning"));
+
+    format.setForeground(Qt::red);
+    format.setFontWeight(QFont::Bold);
+    QRegExp patternFatal("\\bFatal\\b");
+    m_TextHighlighter->insertFormat("Fatal", format);
+    m_TextHighlighter->insertRule("Fatal", patternFatal, m_TextHighlighter->format("Fatal"));
+
+    format.setForeground(Qt::red);
+    format.setFontWeight(QFont::Bold);
+    QRegExp patternCritical("\\bCritical\\b");
+    m_TextHighlighter->insertFormat("Critical", format);
+    m_TextHighlighter->insertRule("Critical", patternCritical, m_TextHighlighter->format("Critical"));
+
 
     m_TextWidgetLog->setHighlighter(m_TextHighlighter);
 }
