@@ -71,7 +71,7 @@ mafMemento *mafDataSet::createMemento() const {
     return new mafMementoDataSet(this, m_Matrix, m_DataValue, mafCodeLocation);
 }
 
-void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
+void mafDataSet::setMemento(mafMemento *memento, bool binary, bool deep_memento) {
     Q_UNUSED(deep_memento);
 
     // Design by contract condition.
@@ -126,7 +126,7 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
             mafExternalDataCodec *codec = (mafExternalDataCodec *)mafNEWFromString(codecType);
 
             codec->setStringSize(dataSize);
-            codec->decode(value);
+            codec->decode(value, binary);
 
             this->setDataValue(codec->externalData());
             m_DataValue->setExternalCodecType(codecType);
