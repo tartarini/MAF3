@@ -56,7 +56,7 @@ public slots:
     /*virtual*/ void execute();
 
     /// Terminate the operation.
-    /*virtual*/ void terminate(bool result);
+//    /*virtual*/ void terminate(bool result);
 
     /// Allows to call the piece of algorithm that is needed to restore the previous state of the operation's execution.
     /*virtual*/ void unDo();

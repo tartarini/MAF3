@@ -220,7 +220,7 @@ void mafOperationManager::stopOperation() {
     if ( worker == NULL ) {
         // Operation not executing => Simply cancelled by the user.
         // m_CurrentOperation should be deleted.
-        m_CurrentOperation->terminate(false);
+        m_CurrentOperation->terminate();
         mafDEL(m_CurrentOperation);
         return;
     }

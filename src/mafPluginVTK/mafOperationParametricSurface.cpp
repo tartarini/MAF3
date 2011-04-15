@@ -113,14 +113,14 @@ void mafOperationParametricSurface::execute() {
     emit executionEnded();
 }
 
-void mafOperationParametricSurface::terminate(bool result) {
-  if(!result) {
-    //Notify vme remove
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.remove", mafEventTypeLocal, &argList);
-  }
-}
+//void mafOperationParametricSurface::terminate(bool result) {
+//  if(!result) {
+//    //Notify vme remove
+//    mafEventArgumentsList argList;
+//    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
+//    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.remove", mafEventTypeLocal, &argList);
+//  }
+//}
 
 void mafOperationParametricSurface::unDo() {
   mafEventArgumentsList argList;

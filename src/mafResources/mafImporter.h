@@ -78,7 +78,6 @@ private slots:
 private:
     QString m_EncodeType; ///< Encode type of the external data to be imported (e.g. VTK, STL, ...)
     QString m_Filename; ///< Filename of external data to import.
-    mafDataSet *m_DataSet; ///< Dataset of output VME;
 };
     
 inline void mafImporter::setFilename(const QString f) {
