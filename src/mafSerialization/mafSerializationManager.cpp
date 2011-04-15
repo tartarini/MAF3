@@ -280,20 +280,19 @@ void mafSerializationManager::importExternalData(const QString &url, const QStri
         return;
     }
 
-    QString codecType = m_CodecHash[encode_type];
-    mafExternalDataCodec *codec = (mafExternalDataCodec *)mafNEWFromString(codecType);
-
     // Check the protocol of the given 'url' and create the corresponding mafSerialize class
     QUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
         qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
-         return;
-     }
+        return;
+    }
 
     QString s = u.scheme();
     QString serializer_type = m_SerializerHash[s];
 
+    qDebug() << u;
+    
     // Create the instance of correct serializer
     mafSerializer *ser = (mafSerializer *)mafNEWFromString(serializer_type);
     // Give it the data URL
@@ -302,7 +301,7 @@ void mafSerializationManager::importExternalData(const QString &url, const QStri
     ser->openDevice(mafSerializerOpenModeIn);
 
     unsigned int size;
-    char * inputString;;
+    char * inputString;
     QDataStream stream(ser->ioDevice());
     stream.readBytes(inputString, size);
 
@@ -310,7 +309,9 @@ void mafSerializationManager::importExternalData(const QString &url, const QStri
     ser->closeDevice();
     mafDEL(ser);
 
-    // Give the device to the codec
+    QString codecType = m_CodecHash[encode_type];
+    mafExternalDataCodec *codec = (mafExternalDataCodec *)mafNEWFromString(codecType);
+    
     codec->setStringSize(size);
     codec->decode(inputString);
 
@@ -342,7 +343,7 @@ QByteArray mafSerializationManager::loadExternalData(const QString &url) {
     ser->openDevice(mafSerializerOpenModeIn);
 
     unsigned int size;
-    char * inputString;;
+    char * inputString;
     QDataStream stream(ser->ioDevice());
     stream.readBytes(inputString, size);
 
