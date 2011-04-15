@@ -16,6 +16,11 @@
 #include "mafPluginVTKDefinitions.h"
 #include <mafImporter.h>
 
+#include <mafContainer.h>
+#include <vtkAlgorithmOutput.h>
+
+class vtkDataSetReader;
+
 namespace mafPluginVTK {
 
 /**
@@ -38,6 +43,10 @@ public slots:
 protected:
     /// Object destructor.
     /* virtual */ ~mafImporterVTK();
+    
+private:
+    mafCore::mafContainer<vtkAlgorithmOutput> m_ImportedData; ///< Container of the Data Source
+    vtkDataSetReader *m_Reader; ///< Reader of the external data.
 };
 
 } // namespace mafPluginVTK
