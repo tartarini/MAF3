@@ -31,7 +31,7 @@
 
 #define mafDEL(object_pointer) \
     if(object_pointer != NULL) { \
-        object_pointer->deleteObject(); \
+        object_pointer->release(); \
         object_pointer = NULL; \
     }
 
