@@ -19,7 +19,7 @@
 namespace mafGUI {
 
 //forward class
-class mafTextHighlighter;
+class mafSyntaxHighlighter;
 
 /**
  Class name: mafLoggerWidget
@@ -52,7 +52,7 @@ protected:
 
 private:
     mafTextEditWidget *m_TextWidgetLog; ///< String containing all the logged messages for a specific session.
-    mafTextHighlighter *m_TextHighlighter;
+    mafSyntaxHighlighter *m_TextHighlighter;
 };
 
 /////////////////////////////////////////////////////////////
