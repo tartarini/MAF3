@@ -21,7 +21,7 @@ mafSceneNode::mafSceneNode(const QString code_location) : mafObject(code_locatio
 }
 
 mafSceneNode::mafSceneNode(mafVME *vme, mafPipeVisual *visual_pipe, const QString code_location) : mafObject(code_location), m_VME(vme), m_VisualPipe(visual_pipe), m_Visibility(false), m_CanVisualize(false) {
-    connect(vme, SIGNAL(destroyed()), this, SIGNAL(destroyNode()));
+//    connect(vme, SIGNAL(destroyed()), this, SIGNAL(destroyNode()));
     connect(vme, SIGNAL(detatched()), this, SIGNAL(destroyNode()));
     m_VME = vme;
     m_VisualPipe = visual_pipe;
