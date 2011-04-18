@@ -99,7 +99,7 @@ private:
     void initializeConnections();
 
     /// Remove the VME from the managed VME tree.
-    void removeVME(mafVME *vme);
+//    void removeVME(mafVME *vme);
 
     mafVME *m_SelectedVME; ///< Keep track of the selected VME.
     mafVME *m_Root; ///< Root of the tree.

@@ -99,9 +99,8 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         // Create before the instance of the Serialization manager, which will register signals.
-        bool res(false);
-        res = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
-        QVERIFY(res);
+        m_SerializationLibraryHandler = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
+        QVERIFY(m_SerializationLibraryHandler != NULL);
 
         mafEventBusManager::instance();
         m_CustomManager = mafNEW(testCustomManager);
@@ -121,6 +120,7 @@ private slots:
     void cleanupTestCase() {
         mafDEL(m_CustomManager);
         mafDEL(m_Codec);
+        mafShutdownModule(m_SerializationLibraryHandler);
         m_DataSource->Delete();
         mafEventBusManager::instance()->shutdown();
         mafMessageHandler::instance()->shutdown();
@@ -139,6 +139,7 @@ private:
 
     vtkCubeSource *m_DataSource; ///< Source data for the test suite.
     mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
+    QLibrary *m_SerializationLibraryHandler; ///< Handler of the serialization library.
 };
 
 void mafSerializationVTKTest::mafSerializationVTKAllocationTest() {
@@ -157,7 +158,6 @@ void mafSerializationVTKTest::mafSerializationVTKSaveTest() {
     test_file.append("/testVTKFile.vtk");
     QFile::remove(test_file);
 
-    //mafId plug_codec_id = mafIdProvider::instance()->idValue("maf.local.serialization.plugCodec");
     QString plug_codec_id = "maf.local.serialization.plugCodec";
     QString obj_type("vtkAlgorithmOutput");
     QString vtk = "VTK";
@@ -189,5 +189,5 @@ void mafSerializationVTKTest::mafSerializationVTKSaveTest() {
     QFile::remove(test_file);
 }
 
-MAF_REGISTER_TEST(mafSerializationVTKTest);
+//MAF_REGISTER_TEST(mafSerializationVTKTest);
 #include "mafSerializationVTKTest.moc"

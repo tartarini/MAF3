@@ -11,27 +11,33 @@
 
 #include "mafImporterVTK.h"
 
+#include <vtkDataSetReader.h>
+
 using namespace mafPluginVTK;
 using namespace mafResources;
 
 mafImporterVTK::mafImporterVTK(const QString code_location) : mafImporter(code_location) {
+    m_Reader = vtkDataSetReader::New();
 }
 
 mafImporterVTK::~mafImporterVTK() {
+    m_Reader->Delete();
 }
 
 void mafImporterVTK::execute() {
-    setEncodeType("VTK");
     if (!filename().isEmpty()) {
-        requestToImportFile();
-        while (!m_DataImported || !m_Abort) {
-            ;
-        }
+        checkImportFile();
         if (m_Abort) {
             cleanup();
             return;
         }
     }
+    
+    m_Reader->SetFileName(filename().toAscii().constData());
+    m_Reader->Update();
+    
+    m_ImportedData = m_Reader->GetOutputPort();
+    importedData(&m_ImportedData);
     
     emit executionEnded();
 }

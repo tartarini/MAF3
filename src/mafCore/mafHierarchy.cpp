@@ -37,9 +37,12 @@ void mafHierarchy::addHierarchyNode(QObject* node, QObject *parentNode) {
         int numberOfChildren = m_TreeIterator.node()->m_children.size();
         m_TreeIterator = m_Tree->insert(m_TreeIterator, numberOfChildren, node);
     }
-
-    this->metaObject()->invokeMethod(node, "ref");
-
+    
+    mafObjectBase *obj = qobject_cast<mafObjectBase *>(node);
+    if (obj) {
+        obj->retain();
+    }
+    
     emit itemAttached(node, parentNode);
 }
 
@@ -51,13 +54,13 @@ void mafHierarchy::removeCurrentHierarchyNode() {
     for (mafTree<QObject *>::prefix_iterator i = cutTree.prefix_begin(); i != cutTree.prefix_end(); ++i) {
         mafTreeNode<QObject *> *n = i.simplify().node();
         if(n->m_data) {
-            bool isMafObject = QObject::metaObject()->invokeMethod(n->m_data, "deleteObject");
-            if(isMafObject) {
-                n->m_data = NULL;
+            mafObjectBase *obj = qobject_cast<mafObjectBase *>(n->m_data);
+            if (obj) {
+                obj->release();
             } else {
                 delete n->m_data;
-                n->m_data = NULL;
             }
+            n->m_data = NULL;
         }
     }
     m_Tree->erase(m_TreeIterator);
@@ -135,14 +138,13 @@ void mafHierarchy::clear() {
     for (; i != iterEnd; ++i) {
         mafTreeNode<QObject *> *n = i.simplify().node();
         if(n->m_data) {
-            //qDebug() << n->m_children.size();
-            bool isMafObject = QObject::metaObject()->invokeMethod(n->m_data, "deleteObject");
-            if(isMafObject) {
-                n->m_data = NULL;
+            mafObjectBase *obj = qobject_cast<mafObjectBase *>(n->m_data);
+            if (obj) {
+                obj->release();
             } else {
                 delete n->m_data;
-                n->m_data = NULL;
             }
+            n->m_data = NULL;
         }
     }
     m_TreeIterator = m_Tree->root();

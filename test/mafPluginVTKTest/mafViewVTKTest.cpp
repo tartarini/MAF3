@@ -80,7 +80,7 @@ private slots:
         m_DataSetCube = mafNEW(mafResources::mafDataSet);
         m_DataSetCube->setDataValue(&m_DataSourceContainer);
         m_VmeCube->dataSetCollection()->insertItem(m_DataSetCube, 0);
-        m_DataSetCube->deleteObject();
+        m_DataSetCube->release();
 
         // Second test VME
         m_DataSourceMoved = vtkCubeSource::New();
@@ -108,7 +108,7 @@ private slots:
         m_VmeCubeMoved = mafNEW(mafResources::mafVME);
         m_VmeCubeMoved->setObjectName("Moved VME Cube");
         m_VmeCubeMoved->dataSetCollection()->insertItem(m_DataSetCubeMoved, 0);
-        m_DataSetCubeMoved->deleteObject();
+        m_DataSetCubeMoved->release();
     }
 
     /// Cleanup test variables memory allocation.

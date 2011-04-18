@@ -228,7 +228,7 @@ bool mafDataSetCollection::insertItem(mafDataSet *item, double t) {
 
     if(result) {
         m_CollectionMap->insert(ts, item);
-        item->ref();
+        item->retain();
         
         emit(modifiedObject());
     }
@@ -296,7 +296,7 @@ mafDataSet *mafDataSetCollection::itemAt(double t) {
         m->set_identity();
         item->setPoseMatrix(m);
         insertItem(item, ts);
-        item->deleteObject();
+        item->release();
         delete m;
         m = NULL;
     }

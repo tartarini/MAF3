@@ -23,6 +23,9 @@ mafObjectBase::mafObjectBase(const QString code_location) : QObject(), m_UIFilen
     mafObjectRegistry::instance()->addObject(this, code_location);
 
     m_ObjectHash = QUuid::createUuid();
+    
+    connect(this, SIGNAL(incrementReference()), this, SLOT(ref()), Qt::DirectConnection);
+    connect(this, SIGNAL(decreaseReference()), this, SLOT(deleteObject()), Qt::DirectConnection);
 }
 
 mafObjectBase::~mafObjectBase() {
@@ -32,6 +35,14 @@ mafObjectBase::~mafObjectBase() {
     // been already destroyed and its m_ObjectId is not more valid.
     mafObjectRegistry::instance()->removeObject(m_ObjectId);
     m_ObjectId = -1;
+}
+
+void mafObjectBase::retain() {
+    emit incrementReference();
+}
+
+void mafObjectBase::release() {
+    emit decreaseReference();
 }
 
 bool mafObjectBase::isEqual(const mafObjectBase *obj) const {
@@ -156,9 +167,13 @@ void mafObjectBase::initializeUI(QObject *selfUI) {
     }
 }
 
+void mafObjectBase::ref() {
+    ++m_ReferenceCount;
+}
+
 void mafObjectBase::deleteObject() {
     --m_ReferenceCount;
-    //qDebug() << m_ReferenceCount;
+    char *name = this->objectName().toAscii().data();
     if(m_ReferenceCount == 0) {
         delete this;
     }

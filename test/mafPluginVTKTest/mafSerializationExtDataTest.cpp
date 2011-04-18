@@ -269,5 +269,5 @@ void mafSerializationExtDataTest::mafSerializationVTKSaveTest() {
     }
 }
 
-MAF_REGISTER_TEST(mafSerializationExtDataTest);
+//MAF_REGISTER_TEST(mafSerializationExtDataTest);
 #include "mafSerializationExtDataTest.moc"

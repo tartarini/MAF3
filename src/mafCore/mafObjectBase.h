@@ -67,16 +67,22 @@ public:
 
     /// initialize ui widgets with properties, using USER flag in Q_PROPERTY.
     void initializeUI(QObject *selfUI);
+    
+    /// Allows to emit the incrementReference in a thread safe way.
+    void retain();
+    
+    /// Allows to decrease the reference count of the object.
+    void release();
+    
+    /// return the reference count.
+    int referenceCount();
 
-public slots:
+private slots:
     /// increment of 1 unit the reference count.
     void ref();
 
     /// delete the object.
     void deleteObject();
-
-    /// return the reference count.
-    int referenceCount();
 
 protected:
     /// set the hash code for the current object.
@@ -92,13 +98,19 @@ protected:
 signals:
     /// Signal emitted to alert all receivers that the object has been modified.
     void modifiedObject();
+    
+    /// Allows to increment the reference count.
+    void incrementReference();
+    
+    /// Allows to decrement the reference count.
+    void decreaseReference();
 
 private:
     mafId m_ObjectId; ///< Unique ID which identifies the object.
     //QByteArray m_ObjectHash; ///< Hash value for the current object.
     QUuid m_ObjectHash; ///< Hash value for the current object.
 
-    int m_ReferenceCount; ///< Index containing the reference count.
+    volatile int m_ReferenceCount; ///< Index containing the reference count.
 };
 
 
@@ -124,10 +136,6 @@ inline const QString mafObjectBase::uiFilename() const {
 
 inline bool mafObjectBase::operator ==(const mafObjectBase& obj) const {
     return this->isEqual(&obj);
-}
-
-inline void mafObjectBase::ref() {
-    ++m_ReferenceCount;
 }
 
 inline int mafObjectBase::referenceCount() {

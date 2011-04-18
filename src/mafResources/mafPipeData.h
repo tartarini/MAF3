@@ -76,7 +76,7 @@ inline void mafPipeData::decorateWithDataPipe(mafPipeData *pipe) {
     pipe->createPipe();
     pipe->setInput(this->output());
     m_DecoratorPipe = pipe;
-    m_DecoratorPipe->ref();
+    m_DecoratorPipe->retain();
 }
 
 inline void mafPipeData::setWorksInPlace(bool inPlace) {
