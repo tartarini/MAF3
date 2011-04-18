@@ -282,5 +282,5 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
 
 }
 
-MAF_REGISTER_TEST(mafSerializationRawASCIIExtDataTest);
+//MAF_REGISTER_TEST(mafSerializationRawASCIIExtDataTest);
 #include "mafSerializationRawASCIIExtDataTest.moc"

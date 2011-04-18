@@ -159,5 +159,5 @@ void mafExternalDataCodecVTKTest::mafCodecVTKEncodeDecodeTest() {
     sphereMapper->Delete();
 }
 
-MAF_REGISTER_TEST(mafExternalDataCodecVTKTest);
+//MAF_REGISTER_TEST(mafExternalDataCodecVTKTest);
 #include "mafExternalDataCodecVTKTest.moc"
