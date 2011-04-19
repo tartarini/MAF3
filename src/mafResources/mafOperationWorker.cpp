@@ -19,7 +19,7 @@ mafOperationWorker::mafOperationWorker() {
 }
 
 mafOperationWorker::mafOperationWorker(mafOperation *op) :  m_Operation(op) {
-    m_Operation->ref();
+    m_Operation->retain();
     m_Operation->moveToThread(this);
     initializeWorkflow();
 }

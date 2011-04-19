@@ -76,7 +76,7 @@ private slots:
         m_DataPipe = mafNEW(testDataPipeCustom);
         m_Vme = mafNEW(mafResources::mafVME);
         m_Vme->setDataPipe(m_DataPipe);
-        m_DataPipe->deleteObject();
+        m_DataPipe->release();
     }
 
     /// Cleanup test variables memory allocation.
@@ -182,7 +182,7 @@ void mafPipeDataTest::outputTest() {
     testDataPipeCustom *dp = mafNEW(testDataPipeCustom);
     vme1->setDataPipe(dp);
     dp->createPipe();
-    dp->deleteObject();
+    dp->release();
     mafVME *out = dp->output();
     
     QCOMPARE(out, vme1);

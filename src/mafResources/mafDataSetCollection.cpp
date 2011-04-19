@@ -27,11 +27,14 @@ mafDataSetCollection::~mafDataSetCollection() {
         mafDEL(iter.value());
         ++iter;
     }
+    emit(modifiedObject());
 
     m_CollectionMap->clear();
     delete m_CollectionMap;
     m_CollectionMap = NULL;
+    
     mafDEL(m_Interpolator);
+    
 }
 
 void mafDataSetCollection::setTimestamp(double t) {
@@ -225,7 +228,7 @@ bool mafDataSetCollection::insertItem(mafDataSet *item, double t) {
 
     if(result) {
         m_CollectionMap->insert(ts, item);
-        item->ref();
+        item->retain();
         
         emit(modifiedObject());
     }
@@ -293,7 +296,7 @@ mafDataSet *mafDataSetCollection::itemAt(double t) {
         m->set_identity();
         item->setPoseMatrix(m);
         insertItem(item, ts);
-        item->deleteObject();
+        item->release();
         delete m;
         m = NULL;
     }

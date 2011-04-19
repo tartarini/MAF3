@@ -22,9 +22,9 @@ mafVMEManager* mafVMEManager::instance() {
 }
 
 void mafVMEManager::shutdown() {
-    m_SelectedVME = NULL;
     m_VMEHierarchy->clear();
     mafDEL(m_Root);
+    m_SelectedVME = NULL;
 }
 
 mafVMEManager::mafVMEManager(const QString code_location) : mafObjectBase(code_location), m_SelectedVME(NULL), m_Root(NULL), m_VMEHierarchy(NULL) {
@@ -84,8 +84,7 @@ void mafVMEManager::vmeAdd(mafObjectBase *vme) {
         return;
     }
     // VME has been added.
-    // Connect the manager to the view destroyed signal **** DEPRECATED ****
-    connect(vme_to_add, SIGNAL(destroyed()), this, SLOT(vmeDestroyed()));
+    connect(vme, SIGNAL(destroyed()), this, SLOT(vmeDestroyed()), Qt::DirectConnection);
     m_VMEHierarchy->addHierarchyNode(vme, m_SelectedVME);
 }
 
@@ -97,7 +96,7 @@ void mafVMEManager::vmeRemove(mafObjectBase *vme) {
     }
     // VME has been removed.
     vme_to_remove->detatchFromTree();
-    removeVME(vme_to_remove);
+//    removeVME(vme_to_remove);
 
     m_VMEHierarchy->removeHierarchyNode(vme);
 }
@@ -111,18 +110,20 @@ void mafVMEManager::vmeReparent(mafObjectBase *vme, mafObjectBase *vmeParent) {
 
 void mafVMEManager::vmeDestroyed() {
     mafVME *vme = (mafVME *)QObject::sender();
-    removeVME(vme);
-}
-
-void mafVMEManager::removeVME(mafVME *vme) {
-    // Disconnect the manager from the vme
-    disconnect(vme, SIGNAL(destroyed()),this, SLOT(vmeDestroyed()));
-    // remove the VME from the managed resources and manage the active resource if the removed VME is the active one.
     if ( vme == m_SelectedVME ) {
         m_SelectedVME = NULL;
     }
-    //m_VMEHierarchy->removeHierarchyNode(vme); // DEPRECATED
 }
+
+//void mafVMEManager::removeVME(mafVME *vme) {
+    // Disconnect the manager from the vme
+//    disconnect(vme, SIGNAL(destroyed()),this, SLOT(vmeDestroyed()));
+    // remove the VME from the managed resources and manage the active resource if the removed VME is the active one.
+//    if ( vme == m_SelectedVME ) {
+//        m_SelectedVME = NULL;
+//    }
+    //m_VMEHierarchy->removeHierarchyNode(vme); // DEPRECATED
+//}
 
 mafCore::mafHierarchyPointer mafVMEManager::requestVMEHierarchy() {
      if ( m_VMEHierarchy == NULL ) {

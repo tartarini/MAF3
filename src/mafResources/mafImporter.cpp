@@ -19,7 +19,7 @@ using namespace mafResources;
 using namespace mafEventBus;
 using namespace mafCore;
 
-mafImporter::mafImporter(const QString code_location) : mafOperation(code_location), m_EncodeType(""), m_Filename(""), m_DataImported(false) {
+mafImporter::mafImporter(const QString code_location) : mafOperation(code_location), m_Filename("") {
     m_UIFilename = "mafImporter.ui";
 }
 
@@ -38,41 +38,33 @@ void mafImporter::setParameters(QVariantList parameters) {
 void mafImporter::cleanup() {
     // Cleanup memory and deregister callback.
     mafDEL(m_Output);
-    mafUnregisterLocalCallback("maf.local.serialization.extDataImported", this, "importedData(mafCore::mafContainerInterface *)")
 }
 
-void mafImporter::requestToImportFile() {
+void mafImporter::checkImportFile() {
     if (m_Filename.isEmpty()) {
         qWarning() << mafTr("Filename of data to import is needed.");
-    } else {
-        mafRegisterLocalCallback("maf.local.serialization.extDataImported", this , "importedData(mafCore::mafContainerInterface *)")
-        mafEventArgumentsList argList;
-        argList.append(mafEventArgument(QString, m_Filename));
-        argList.append(mafEventArgument(QString, m_EncodeType));
-        mafEventBusManager::instance()->notifyEvent("maf.local.serialization.import", mafEventTypeLocal, &argList);
+        m_Abort = true;
+    } else if (!QFile::exists(m_Filename)) {
+        qCritical() << m_Filename << mafTr(" doesn't exists!!.");
+        m_Abort = true;
     }
 }
 
 void mafImporter::importedData(mafCore::mafContainerInterface *data) {
-    mafUnregisterLocalCallback("maf.local.serialization.extDataImported", this, "importedData(mafCore::mafContainerInterface *)")
-
     QFileInfo info(m_Filename);
     
     //Insert data into VME
-    m_VME = mafNEW(mafResources::mafVME);
-    m_VME->setObjectName(info.baseName());
+    this->m_Output = mafNEW(mafResources::mafVME);
+    this->m_Output->setObjectName(info.baseName());
     mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
     dataSet->setDataValue(data);
-    m_VME->dataSetCollection()->insertItem(dataSet, 0);
+    ((mafVME *)this->m_Output)->dataSetCollection()->insertItem(dataSet, 0);
     mafDEL(dataSet);
-    this->m_Output = m_VME;
-
+    
     //Notify vme add
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Output));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
-    
-    m_DataImported = true;
 }
 
 void mafImporter::unDo() {

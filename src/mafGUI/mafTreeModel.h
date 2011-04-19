@@ -76,6 +76,9 @@ public slots:
     /// Append a tree to an item.
     void itemReparent(QObject *item, QObject *parent);
 
+    /// Slot called when hierarchy has been destroyd.
+    void hierarchyDestroyed();
+
 private slots:
 
 

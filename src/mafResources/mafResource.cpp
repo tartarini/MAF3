@@ -20,8 +20,6 @@ mafResource::mafResource(const QString code_location) : mafObject(code_location)
 }
 
 mafResource::~mafResource() {
-    //mafDEL(m_Output);
-
     m_InputList->clear();
     delete m_InputList;
     m_InputList = NULL;

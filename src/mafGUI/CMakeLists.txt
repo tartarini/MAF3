@@ -39,7 +39,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 ## copy mnu file
 ## #################################################################
 
-mafCopyFilesFromExtension("mnu" "mafGUI")
+mafCopyFilesFromExtension("mnu" ${PROJECT_NAME})
 
 ## #################################################################
 ## Wrapping Build rules
