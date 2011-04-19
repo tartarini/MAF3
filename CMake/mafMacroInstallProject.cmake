@@ -11,7 +11,7 @@
 
 MACRO(mafMacroInstallProject)
   #name of output library should be equal in all the platforms:   e.g. mafCore.dylib 
-  SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES PREFIX "" )
+  #SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES PREFIX "" )
   #if (CMAKE_BUILD_TYPE MATCHES Release)
     SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}" )
   #endif(CMAKE_BUILD_TYPE MATCHES Release)

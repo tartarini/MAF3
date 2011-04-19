@@ -21,6 +21,8 @@ option(BUILD_TEST_SUITE "Build Module's Tests"      OFF)
 option(BUILD_EXAMPLES "Build Examples"              OFF)
 option(BUILD_QA "Build Q&A"                         OFF)
 option(BUILD_DOCUMENTATION "Build documentation"    OFF)
+option(BUILD_WRAP "Build Wrap"                      OFF)
+
 
 option(MAF_USE_GIT_PROTOCOL "If ON use git protocol, otherwise http"                   OFF)
 
@@ -102,12 +104,9 @@ endif(BUILD_QA)
 #############################################################################################
 ### Wrapping (find swig, python ...)
 #############################################################################################
-
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
+if(BUILD_WRAP)
   include(CMake/mafMacroFindWrap.cmake)
-else(CMAKE_BUILD_TYPE STREQUAL "Release")
-  set(PYTHONLIBS_FOUND OFF)
-endif(CMAKE_BUILD_TYPE STREQUAL "Release")
+endif(BUILD_WRAP)
 
 #############################################################################################
 ### Superbuild execution

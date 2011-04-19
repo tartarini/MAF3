@@ -176,7 +176,6 @@ ENDFOREACH()
 #############################################################################################
 ### Configure and build MAF
 #############################################################################################
-
 #message (".......................... Entering ${CMAKE_CURRENT_LIST_FILE} ............................")
 set(proj MAF)
 ExternalProject_Add(${proj}
@@ -209,6 +208,7 @@ ExternalProject_Add(${proj}
     # Python
     #-DMAF_USE_SYSTEM_PYTHON:BOOL=OFF
     #-DPYTHON_EXECUTABLE:FILEPATH=${PYTHON_EXECUTABLE}
+    -DBUILD_WRAP:BOOL=${BUILD_WRAP}
     -DPYTHONLIBS_FOUND:BOOL=${PYTHONLIBS_FOUND}
     -DPYTHON_LIBRARIES:FILEPATH=${PYTHON_LIBRARIES}
     -DPYTHON_INCLUDE_DIR:PATH=${PYTHON_INCLUDE_DIR}
