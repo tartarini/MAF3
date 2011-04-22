@@ -40,6 +40,12 @@ public:
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
 
+    /// Encode property item.
+     virtual void encodeItem(QXmlStreamWriter *XMLStream, QDataStream *binaryStream, QTextStream *textStream, mafMementoPropertyItem item);
+
+    /// Decode property item.
+     virtual QVariant decodeItem(QXmlStreamWriter *XMLStream, QDataStream *binaryStream, QTextStream *textStream);
+
     /// this method de-serialize the member variables from the given stream.
     mafMementoPropertyList *mementoPropertyList();
 
@@ -47,7 +53,7 @@ public:
     QString objectClassType() const;
 
     /// Assign the object class type from the hinerited mementos.
-    void setObjectClassType (const QString &class_type);
+    void setObjectClassType(const QString &class_type);
 
 protected:
     /// Object destructor.
