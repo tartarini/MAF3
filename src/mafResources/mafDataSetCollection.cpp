@@ -213,6 +213,9 @@ bool mafDataSetCollection::insertItem(mafDataSet *item, double t) {
 
     double ts = t<0 ? m_CurrentTimestamp : t;
 
+    //TODO: move time information from vme to dataSet
+    item->setTimeStamp(ts);
+
     // If the timestamp is present, no new insert is needed, just
     // modify the old one.
     if(m_CollectionMap->contains(ts)) {
