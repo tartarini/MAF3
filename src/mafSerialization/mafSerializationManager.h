@@ -61,7 +61,7 @@ signals:
     void exportData(mafCore::mafContainerInterface *externalData, const QString &url, const QString &encode_type = "RAW");
 
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
-    void importData(const QString &url, const QString &encode_type);
+    mafCore::mafContainerInterface * importData(const QString &url, const QString &encode_type);
 
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
     void saveExtData(char *externalDataString, const QString &url, int stringSize);
@@ -99,10 +99,10 @@ private slots:
     void exportExternalData(mafCore::mafContainerInterface *externalData, const QString &url, const QString &encode_type);
 
     /// Manage the import of an external data from the given URL and decode it according to the given encoding type.
-    void importExternalData(const QString &url, const QString &encode_type);
+    mafCore::mafContainerInterface * importExternalData(const QString &url, const QString &encode_type);
 
     /// Manage the load of an external data from the given URL and decode it according to the given encoding type.
-    QByteArray loadExternalData(const QString &url);
+    QByteArray loadExternalData(const QString &fileName);
 
     /// Manage the save for the given object.
     void saveExternalData(char *externalDataString, const QString &url, int stringSize);
