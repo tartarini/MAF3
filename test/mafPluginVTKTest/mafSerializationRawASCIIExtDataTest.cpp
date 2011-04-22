@@ -92,9 +92,7 @@ void testExtRawASCIICustomManager::createdMemento(mafCore::mafMemento *memento) 
     QCOMPARE(boundsIn[4], boundsOut[4]);
     QCOMPARE(boundsIn[5], boundsOut[5]);
 
-    mafDEL(data);
     sphereMapper->Delete();
-    mafDEL(memento);
     mafDEL(returnVME);
 }
 
@@ -129,7 +127,7 @@ private slots:
         m_DataSource->SetYLength(3);
         m_DataSource->SetZLength(8);
 
-        m_DataSourceContainer.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
+        m_DataSourceContainer.setExternalCodecType("VTK");
         m_DataSourceContainer.setExternalDataType("vtkAlgorithmOutput");
         m_DataSourceContainer = m_DataSource->GetOutputPort(0);
 
@@ -155,7 +153,7 @@ private slots:
         m_PDataFilter->Update();
         t->Delete();
 
-        m_DataSourceContainerMoved.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
+        m_DataSourceContainerMoved.setExternalCodecType("VTK");
         m_DataSourceContainerMoved.setExternalDataType("vtkAlgorithmOutput");
         m_DataSourceContainerMoved = m_PDataFilter->GetOutputPort(0);
         m_DataSetCubeMoved = mafNEW(mafResources::mafDataSet);
@@ -210,32 +208,56 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKAllocationTest() {
 
 
 void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
-    // Create the temporary file into the temp directory of the current user.
     QString test_dir;
     test_dir = QDir::tempPath();
     test_dir.append("/maf3Logs");
+
+    QDir log_dir(test_dir);
+    log_dir.setFilter(QDir::Files);
+    QStringList list = log_dir.entryList();
+    int i = 0;
+
+    //remove files crested by test
+    for (; i < list.size(); ++i) {
+      QString fileName = test_dir;
+      fileName.append("/");
+      fileName.append(list.at(i));
+      QFile::remove(fileName);
+    }
+
+    // Create the temporary file into the temp directory of the current user.
     QString test_file = test_dir;
     test_file.append("/testExtFile.raw");
     qDebug() << test_file;
 
     QString plug_codec_id = "maf.local.serialization.plugCodec";
     QString obj_type("mafResources::mafVME");
-    QString cType = "RAW_ASCII";
+    QString encodeType = "RAW_ASCII";
     QString codec = "mafSerialization::mafCodecRawASCII";
 
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString, obj_type));
-    argList.append(mafEventArgument(QString, cType));
+    argList.append(mafEventArgument(QString, encodeType));
+    argList.append(mafEventArgument(QString, codec));
+    mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
+
+    
+    obj_type = "vtkAlgorithmOutput";
+    encodeType = "VTK";
+    codec = "mafPluginVTK::mafExternalDataCodecVTK";
+
+    argList.clear();
+    argList.append(mafEventArgument(QString, obj_type));
+    argList.append(mafEventArgument(QString, encodeType));
     argList.append(mafEventArgument(QString, codec));
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
 
     //Save VME with ASCII dataSet
-    mafMemento *m = m_Vme->mafResource::createMemento();
-    mafMementoVME *mementoVME = new mafMementoVME(m_Vme, false, mafCodeLocation);
+    mafMementoVME *mementoVME = (mafMementoVME *)m_Vme->createMemento();
     QVERIFY(mementoVME != NULL);
-    m->setParent(mementoVME);
 
-    QString encodeType = "RAW_ASCII";
+    argList.clear();
+    encodeType = "RAW_ASCII";
     argList.clear();
     argList.append(mafEventArgument(mafCore::mafMemento *, mementoVME));
     argList.append(mafEventArgument(QString, test_file));
@@ -255,11 +277,7 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
 
     mafDEL(mementoVME);
 
-    QDir log_dir(test_dir);
-    log_dir.setFilter(QDir::Files);
-    QStringList list = log_dir.entryList();
-    int i = 0;
-
+    i = 0;
     //remove files crested by test
     for (; i < list.size(); ++i) {
         QString fileName = test_dir;
@@ -270,5 +288,5 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
 
 }
 
-//MAF_REGISTER_TEST(mafSerializationRawASCIIExtDataTest);
+MAF_REGISTER_TEST(mafSerializationRawASCIIExtDataTest);
 #include "mafSerializationRawASCIIExtDataTest.moc"

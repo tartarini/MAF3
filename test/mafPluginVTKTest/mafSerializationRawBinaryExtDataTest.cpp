@@ -85,16 +85,13 @@ void testExtRawCustomManager::createdMemento(mafCore::mafMemento *memento) {
     double boundsIn[6] = {-2.5,2.5,-1.5,1.5,-4,4};
     double boundsOut[6];
     sphereMapper->GetBounds(boundsOut);
-    QCOMPARE(boundsIn[0], boundsOut[0]);
     QCOMPARE(boundsIn[1], boundsOut[1]);
     QCOMPARE(boundsIn[2], boundsOut[2]);
     QCOMPARE(boundsIn[3], boundsOut[3]);
     QCOMPARE(boundsIn[4], boundsOut[4]);
     QCOMPARE(boundsIn[5], boundsOut[5]);
 
-    mafDEL(data);
-	sphereMapper->Delete();
-    mafDEL(memento);
+	  sphereMapper->Delete();
     mafDEL(returnVME);
 }
 
@@ -129,7 +126,7 @@ private slots:
         m_DataSource->SetYLength(3);
         m_DataSource->SetZLength(8);
 
-        m_DataSourceContainer.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
+        m_DataSourceContainer.setExternalCodecType("VTK");
         m_DataSourceContainer.setExternalDataType("vtkAlgorithmOutput");
         m_DataSourceContainer = m_DataSource->GetOutputPort(0);
 
@@ -155,7 +152,7 @@ private slots:
         m_PDataFilter->Update();
         t->Delete();
 
-        m_DataSourceContainerMoved.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
+        m_DataSourceContainerMoved.setExternalCodecType("VTK");
         m_DataSourceContainerMoved.setExternalDataType("vtkAlgorithmOutput");
         m_DataSourceContainerMoved = m_PDataFilter->GetOutputPort(0);
         m_DataSetCubeMoved = mafNEW(mafResources::mafDataSet);
@@ -165,8 +162,6 @@ private slots:
         mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
         boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
         m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
-//        mafContainerInterface *boundary0 = m_Vme->dataSetCollection()->itemAt(0)->dataBoundary();
-
         m_Vme->dataSetCollection()->insertItem(m_DataSetCubeMoved, 1);
     }
 
@@ -209,30 +204,52 @@ void mafSerializationRawBinaryExtDataTest::mafSerializationVTKAllocationTest() {
 }
 
 void mafSerializationRawBinaryExtDataTest::mafSerializationVTKSaveTest() {
-    // Create the temporary file into the temp directory of the current user.
+
     QString test_dir;
     test_dir = QDir::tempPath();
     test_dir.append("/maf3Logs");
+
+    QDir log_dir(test_dir);
+    log_dir.setFilter(QDir::Files);
+    QStringList list = log_dir.entryList();
+    int i = 0;
+
+    //remove files crested by test
+    for (; i < list.size(); ++i) {
+      QString fileName = test_dir;
+      fileName.append("/");
+      fileName.append(list.at(i));
+      QFile::remove(fileName);
+    }
+    // Create the temporary file into the temp directory of the current user.
     QString test_file = test_dir;
     test_file.append("/testExtFile.raw");
 
     QString plug_codec_id = "maf.local.serialization.plugCodec";
     QString obj_type("mafResources::mafVME");
-    QString cType = "RAW";
+    QString encodeType = "RAW";
     QString codec = "mafSerialization::mafCodecRawBinary";
 
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString, obj_type));
-    argList.append(mafEventArgument(QString, cType));
+    argList.append(mafEventArgument(QString, encodeType));
     argList.append(mafEventArgument(QString, codec));
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
 
-    mafMemento *m = m_Vme->mafResource::createMemento();
-    mafMementoVME *mementoVME = new mafMementoVME(m_Vme, mafCodeLocation);
-    QVERIFY(mementoVME != NULL);
-    m->setParent(mementoVME);
+    obj_type = "vtkAlgorithmOutput";
+    encodeType = "VTK";
+    codec = "mafPluginVTK::mafExternalDataCodecVTK";
 
-    QString encodeType = "RAW";
+    argList.clear();
+    argList.append(mafEventArgument(QString, obj_type));
+    argList.append(mafEventArgument(QString, encodeType));
+    argList.append(mafEventArgument(QString, codec));
+    mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
+
+    mafMementoVME *mementoVME = (mafMementoVME *)m_Vme->createMemento();
+    QVERIFY(mementoVME != NULL);;
+
+    encodeType = "RAW";
     argList.clear();
     argList.append(mafEventArgument(mafCore::mafMemento *, mementoVME));
     argList.append(mafEventArgument(QString, test_file));
@@ -251,19 +268,15 @@ void mafSerializationRawBinaryExtDataTest::mafSerializationVTKSaveTest() {
 
     mafDEL(mementoVME);
 
-    QDir log_dir(test_dir);
-    log_dir.setFilter(QDir::Files);
-    QStringList list = log_dir.entryList();
-    int i = 0;
-
+    i = 0;
     //remove files crested by test
     for (; i < list.size(); ++i) {
-        QString fileName = test_dir;
-        fileName.append("/");
-        fileName.append(list.at(i));
-        QFile::remove(fileName);
+      QString fileName = test_dir;
+      fileName.append("/");
+      fileName.append(list.at(i));
+      QFile::remove(fileName);
     }
 }
 
-//MAF_REGISTER_TEST(mafSerializationRawBinaryExtDataTest);
+MAF_REGISTER_TEST(mafSerializationRawBinaryExtDataTest);
 #include "mafSerializationRawBinaryExtDataTest.moc"
