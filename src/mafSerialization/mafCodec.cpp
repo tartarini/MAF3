@@ -14,7 +14,7 @@
 using namespace mafCore;
 using namespace mafSerialization;
 
-mafCodec::mafCodec(const QString code_location) : mafObjectBase(code_location), m_EncodingType(""), m_Device(NULL), m_Level(0) {
+mafCodec::mafCodec(const QString code_location) : mafObjectBase(code_location), m_EncodingType(""), m_Device(NULL), m_LevelEncode(0), m_LevelDecode(-1) {
 }
 
 mafCodec::~mafCodec() {

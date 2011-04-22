@@ -49,7 +49,9 @@ protected:
 
     QString m_EncodingType; ///< Encoding type for the codec.
     QIODevice *m_Device; ///< Media device.
-    unsigned int m_Level; ///< Decoding level for compounded memento classes.
+    unsigned int m_LevelEncode; ///< Encoding level for compounded memento classes.
+    unsigned int m_LevelDecode; ///< Decoding level for compounded memento classes.
+    QMap<int, mafCore::mafMemento*> m_MementoMap; ///< Map of mafMemento and its hierarchy level.
 };
 
 /////////////////////////////////////////////////////////////
