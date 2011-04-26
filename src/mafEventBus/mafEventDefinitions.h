@@ -66,6 +66,12 @@
         }\
     }
 
+#define mafUnregisterLocalSignal(topic, sender, signature) \
+    {\
+        mafEventBus::mafEvent *properties = new mafEventBus::mafEvent(topic, mafEventBus::mafEventTypeLocal, mafEventBus::mafSignatureTypeSignal, static_cast<QObject*>(sender), signature); \
+        mafEventBus::mafEventBusManager::instance()->removeEventProperty(*properties);\
+    }
+
 #define mafUnregisterLocalCallback(topic, observer, signature) \
     {\
         mafEventBus::mafEvent *properties = new mafEventBus::mafEvent(topic, mafEventBus::mafEventTypeLocal, mafEventBus::mafSignatureTypeCallback, static_cast<QObject*>(observer), signature); \
