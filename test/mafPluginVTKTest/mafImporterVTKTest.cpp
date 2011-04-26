@@ -138,5 +138,5 @@ void mafImporterVTKTest::importVTKFile() {
     
 }
 
-//MAF_REGISTER_TEST(mafImporterVTKTest);
+MAF_REGISTER_TEST(mafImporterVTKTest);
 #include "mafImporterVTKTest.moc"
