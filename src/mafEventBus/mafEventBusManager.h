@@ -22,9 +22,10 @@ namespace mafEventBus {
 
 // Class forwarding list
 
+/// Manager class for the event management and dispatching.
 /**
  Class name: mafEventBusManager
- This singletone provides the access point of the Communication Bus for MAF3 framework.
+ This singleton provides the access point of the Communication Bus for MAF3 framework.
  mafEventBusManager defines also the mafId maf.local.eventBus.globalUpdate to be used as generic update notification mechanism that the event bus can send to all the observers.
  */
 class MAFEVENTBUSSHARED_EXPORT mafEventBusManager : public QObject {
