@@ -35,6 +35,35 @@ mafViewManager::mafViewManager(const QString code_location) : mafObjectBase(code
 
 mafViewManager::~mafViewManager() {
     destroyAllViews();
+    
+    // Unregister callbacks...
+    mafUnregisterLocalCallback("maf.local.resources.view.create", this, "createView(QString)")
+    mafUnregisterLocalCallback("maf.local.resources.view.destroy", this, "destroyView(mafCore::mafObjectBase *)")
+    mafUnregisterLocalCallback("maf.local.resources.view.select", this, "selectView(mafCore::mafObjectBase *)")
+    mafUnregisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShow(mafCore::mafObjectBase *, bool)")
+    mafUnregisterLocalCallback("maf.local.logic.status.viewmanager.store", this, "createMemento()")
+    mafUnregisterLocalCallback("maf.local.logic.status.viewmanager.restore", this, "setMemento(mafCore::mafMemento *, bool)")
+    
+    // Unregister signals...
+    mafUnregisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(QString)")
+    mafUnregisterLocalSignal("maf.local.resources.view.created", this, "viewCreatedSignal(mafCore::mafObjectBase *)")
+    mafUnregisterLocalSignal("maf.local.resources.view.destroy", this, "destroyViewSignal(mafCore::mafObjectBase *)")
+    mafUnregisterLocalSignal("maf.local.resources.view.select", this, "selectViewSignal(mafCore::mafObjectBase *)")
+    mafUnregisterLocalSignal("maf.local.resources.view.selected", this, "selectedViewSignal(mafCore::mafObjectBase *)")
+    mafUnregisterLocalSignal("maf.local.resources.view.sceneNodeReparent", this, "sceneNodeReparentSignal(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
+    mafUnregisterLocalSignal("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShowSignal(mafCore::mafObjectBase *, bool)")
+    mafUnregisterLocalSignal("maf.local.resources.view.noneViews", this, "noneViewsSignal()")
+    
+    // Remove IDs...
+    mafIdProvider *provider = mafIdProvider::instance();
+    provider->removeId("maf.local.resources.view.create");
+    provider->removeId("maf.local.resources.view.created");
+    provider->removeId("maf.local.resources.view.destroy");
+    provider->removeId("maf.local.resources.view.select");
+    provider->removeId("maf.local.resources.view.selected");
+    provider->removeId("maf.local.resources.view.sceneNodeReparent");
+    provider->removeId("maf.local.resources.view.sceneNodeShow");
+    provider->removeId("maf.local.resources.view.noneViews");
 }
 
 mafMemento *mafViewManager::createMemento() const {
