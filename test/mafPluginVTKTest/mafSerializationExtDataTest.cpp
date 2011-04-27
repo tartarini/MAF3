@@ -76,8 +76,6 @@ void testExtCustomManager::createdMemento(mafCore::mafMemento *memento) {
 
     //Now load dataValue
     returnVME->updateData();
-
-
     mafDataSet *data = returnVME->dataSetCollection()->itemAt(0);
 
     mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
@@ -94,8 +92,7 @@ void testExtCustomManager::createdMemento(mafCore::mafMemento *memento) {
     QCOMPARE(boundsIn[4], boundsOut[4]);
     QCOMPARE(boundsIn[5], boundsOut[5]);
 
-    mafDEL(data);
-    mafDEL(memento);
+    sphereMapper->Delete();
     mafDEL(returnVME);
 }
 
@@ -130,7 +127,7 @@ private slots:
         m_DataSource->SetYLength(3);
         m_DataSource->SetZLength(8);
 
-        m_DataSourceContainer.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
+        m_DataSourceContainer.setExternalCodecType("VTK");
         m_DataSourceContainer.setExternalDataType("vtkAlgorithmOutput");
         m_DataSourceContainer = m_DataSource->GetOutputPort(0);
 
@@ -156,7 +153,7 @@ private slots:
         m_PDataFilter->Update();
         t->Delete();
 
-        m_DataSourceContainerMoved.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
+        m_DataSourceContainerMoved.setExternalCodecType("VTK");
         m_DataSourceContainerMoved.setExternalDataType("vtkAlgorithmOutput");
         m_DataSourceContainerMoved = m_PDataFilter->GetOutputPort(0);
         m_DataSetCubeMoved = mafNEW(mafResources::mafDataSet);
@@ -213,61 +210,81 @@ void mafSerializationExtDataTest::mafSerializationVTKAllocationTest() {
 
 
 void mafSerializationExtDataTest::mafSerializationVTKSaveTest() {
-    // Create the temporary file into the temp directory of the current user.
-    QString test_dir;
-    test_dir = QDir::tempPath();
-    test_dir.append("/maf3Logs");
-    QString test_file = test_dir;
-    test_file.append("/testExtFile.xml");
+  QString test_dir;
+  test_dir = QDir::tempPath();
+  test_dir.append("/maf3Logs");
 
-    QString plug_codec_id = "maf.local.serialization.plugCodec";
-    QString obj_type("mafResources::mafVME");
-    QString cType = "XML";
-    QString codec = "mafSerialization::mafCodecXML";
+  QDir log_dir(test_dir);
+  log_dir.setFilter(QDir::Files);
+  QStringList list = log_dir.entryList();
+  int i = 0;
 
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(QString, obj_type));
-    argList.append(mafEventArgument(QString, cType));
-    argList.append(mafEventArgument(QString, codec));
-    mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
+  //remove files crested by test
+  for (; i < list.size(); ++i) {
+    QString fileName = test_dir;
+    fileName.append("/");
+    fileName.append(list.at(i));
+    QFile::remove(fileName);
+  }
 
-    mafMemento *m = m_Vme->mafResource::createMemento();
-    mafMementoVME *mementoVME = new mafMementoVME(m_Vme, mafCodeLocation);
-    QVERIFY(mementoVME != NULL);
-    m->setParent(mementoVME);
+  // Create the temporary file into the temp directory of the current user.
+  QString test_file = test_dir;
+  test_file.append("/testExtFile.xml");
 
-    QString encodeType = "XML";
-    argList.clear();
-    argList.append(mafEventArgument(mafCore::mafMemento *, mementoVME));
-    argList.append(mafEventArgument(QString, test_file));
-    argList.append(mafEventArgument(QString, encodeType));
-    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal, &argList);
+  QString plug_codec_id = "maf.local.serialization.plugCodec";
+  QString obj_type("mafResources::mafVME");
+  QString encodeType = "XML";
+  QString codec = "mafSerialization::mafCodecXML";
 
-    QVERIFY(QFile::exists(test_file));
-    QFileInfo fInfo3(test_file);
-    QVERIFY(fInfo3.size() > 0);
+  mafEventArgumentsList argList;
+  argList.append(mafEventArgument(QString, obj_type));
+  argList.append(mafEventArgument(QString, encodeType));
+  argList.append(mafEventArgument(QString, codec));
+  mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
 
-    encodeType = "XML";
-    argList.clear();
-    argList.append(mafEventArgument(QString, test_file));
-    argList.append(mafEventArgument(QString, encodeType));
-    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal, &argList);
+  obj_type = "vtkAlgorithmOutput";
+  encodeType = "VTK";
+  codec = "mafPluginVTK::mafExternalDataCodecVTK";
 
-    mafDEL(mementoVME);
+  argList.clear();
+  argList.append(mafEventArgument(QString, obj_type));
+  argList.append(mafEventArgument(QString, encodeType));
+  argList.append(mafEventArgument(QString, codec));
+  mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
 
-    QDir log_dir(test_dir);
-    log_dir.setFilter(QDir::Files);
-    QStringList list = log_dir.entryList();
-    int i = 0;
+  mafMemento *m = m_Vme->mafResource::createMemento();
+  mafMementoVME *mementoVME = new mafMementoVME(m_Vme, mafCodeLocation);
+  QVERIFY(mementoVME != NULL);
+  m->setParent(mementoVME);
 
-    //remove files crested by test
-    for (; i < list.size(); ++i) {
-        QString fileName = test_dir;
-        fileName.append("/");
-        fileName.append(list.at(i));
-        QFile::remove(fileName);
-    }
+  encodeType = "XML";
+  argList.clear();
+  argList.append(mafEventArgument(mafCore::mafMemento *, mementoVME));
+  argList.append(mafEventArgument(QString, test_file));
+  argList.append(mafEventArgument(QString, encodeType));
+  mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal, &argList);
+
+  QVERIFY(QFile::exists(test_file));
+  QFileInfo fInfo3(test_file);
+  QVERIFY(fInfo3.size() > 0);
+
+  encodeType = "XML";
+  argList.clear();
+  argList.append(mafEventArgument(QString, test_file));
+  argList.append(mafEventArgument(QString, encodeType));
+  mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal, &argList);
+
+  mafDEL(mementoVME);
+
+  i = 0;
+  //remove files crested by test
+  for (; i < list.size(); ++i) {
+    QString fileName = test_dir;
+    fileName.append("/");
+    fileName.append(list.at(i));
+    QFile::remove(fileName);
+  }
 }
 
-//MAF_REGISTER_TEST(mafSerializationExtDataTest);
+MAF_REGISTER_TEST(mafSerializationExtDataTest);
 #include "mafSerializationExtDataTest.moc"
