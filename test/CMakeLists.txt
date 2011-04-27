@@ -7,6 +7,7 @@ ADD_SUBDIRECTORY(mafEventBusTest)
 ADD_SUBDIRECTORY(mafQATest)
 
 
+ADD_SUBDIRECTORY(mafModuleTest)
 ADD_SUBDIRECTORY(mafTimeSpaceTest)
 ADD_SUBDIRECTORY(mafSerializationTest)
 ADD_SUBDIRECTORY(mafPluginTest)
