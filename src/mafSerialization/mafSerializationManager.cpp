@@ -320,7 +320,7 @@ QByteArray mafSerializationManager::loadExternalData(const QString &fileName) {
 
   /////////////////////////////////////////////////////
   ////////// TO BE REPLACED WITH "WORKING DIRECTORY"
-    QString path = "D:\Temp\maf3Logs";
+    QString path = "D:/Temp/maf3Logs";
   ////////// TO BE REPLACED WITH "WORKING DIRECTORY"
  /////////////////////////////////////////////////////
 
