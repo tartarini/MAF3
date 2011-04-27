@@ -29,10 +29,14 @@ mafCodecXML::~mafCodecXML() {
 void mafCodecXML::encode(mafMemento *memento) {
     REQUIRE(memento != NULL);
     REQUIRE(m_Device != NULL);
-    int dataSize = 0;
-    double dataTime = 0;
-    QString dataHash;
-    QString codecType;
+    
+    QString path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
+    mafMementoPropertyList *propList = memento->mementoPropertyList();
+    mafMementoPropertyItem item;
+
+    const QMetaObject* meta = memento->metaObject();
+    QString mementoType = meta->className();
+    QString ot = memento->objectClassType();
 
     ++m_MementoLevel;
 
@@ -40,188 +44,99 @@ void mafCodecXML::encode(mafMemento *memento) {
       m_XMLStreamWriter.setDevice(m_Device);
       m_XMLStreamWriter.setAutoFormatting(true);
       m_XMLStreamWriter.writeStartDocument();
+      m_XMLStreamWriter.writeStartElement("mementoRoot"); //start memento item
     }
-
-    mafMementoPropertyList *propList = memento->mementoPropertyList();
-    mafMementoPropertyItem item;
 
     m_XMLStreamWriter.writeStartElement("memento"); //start memento item
-
-    const QMetaObject* meta = memento->metaObject();
-    m_XMLStreamWriter.writeAttribute("mementoType", meta->className());
-    m_XMLStreamWriter.writeAttribute("objectClassType", memento->objectClassType());
-
-    QString className = meta->className();
-    if (className == "mafResources::mafMementoVME") {
-        m_XMLStreamWriter.writeStartElement("dataSetCollection");
-        m_XMLStreamWriter.writeAttribute("name", "dataSetCollection"); //Start DataSetCollection
-        //Add number of dataSet Contained by dataSetCollection
-    }
+    m_XMLStreamWriter.writeAttribute("mementoType", mementoType);
+    m_XMLStreamWriter.writeAttribute("levelEncode", QString::number(m_LevelEncode));
+    m_XMLStreamWriter.writeAttribute("objectClassType", ot);
 
     foreach(item, *propList) {
-        //If next value is DataSetItem, open DataSet element
-        if (item.m_Name == "mafDataSetTime") {
-            m_XMLStreamWriter.writeStartElement("dataSet");
-            m_XMLStreamWriter.writeAttribute("name", "dataSet");
-        }
-
         m_XMLStreamWriter.writeStartElement("item");
         m_XMLStreamWriter.writeAttribute("name", item.m_Name);
         m_XMLStreamWriter.writeAttribute("multiplicity", QString::number(item.m_Multiplicity));
-        if (item.m_Name == "dataSize" ) {
-            dataSize = item.m_Value.toInt();
-        }
-        if (item.m_Name == "mafDataSetTime" ) {
-            dataTime = item.m_Value.toDouble();
-        }
-        if (item.m_Name == "dataHash" ) {
-            dataHash = item.m_Value.toString();
-        }
-        if (item.m_Name == "codecType" ) {
-            codecType = item.m_Value.toString();
-        }
-
-        if (item.m_Name == "dataValue") {
-            //Generate file name and save external data
-            QString path = ((QFile *)this->m_Device)->fileName().section('/', 0, -2);
-            QString fileName;
-            QTextStream(&fileName) << dataHash << "_" << dataTime << ".vtk";
-            QString url;
-            QTextStream(&url) << path << "/" << fileName;
-
-            mafEventArgumentsList argList;
-            argList.append(mafEventArgument(char*, (char*)item.m_Value.toByteArray().constData()));
-            argList.append(mafEventArgument(QString, url));
-            argList.append(mafEventArgument(int, dataSize));
-            mafEventBusManager::instance()->notifyEvent("maf.local.serialization.saveExternalData", mafEventTypeLocal, &argList);
-            marshall(fileName);
-            m_XMLStreamWriter.writeEndElement();
-        } else {
-            marshall(item.m_Value);
-        }
-
+        marshall(item.m_Value);
+        if (mementoType == "mafResources::mafMementoDataSet") {
+          // use mafMementoDataSet to encode dataSet items.
+          memento->encodeItem(&item, path);
+        } 
+        
         m_XMLStreamWriter.writeEndElement();
     }
-    if (className == "mafResources::mafMementoVME") {
-        m_XMLStreamWriter.writeEndElement(); //end dataSetCollection item
-    }
+    m_XMLStreamWriter.writeEndElement(); //end memento item
 
     QObject *obj;
+    ++m_LevelEncode;
     foreach(obj, memento->children()) {
         this->encode((mafMemento *)obj);
     }
-
-    m_XMLStreamWriter.writeEndElement(); //end memento item
+    --m_LevelEncode;
 
     if(m_MementoLevel == 0) {
+        m_XMLStreamWriter.writeEndElement(); //memento root
         m_XMLStreamWriter.writeEndDocument();
     }
-
     m_MementoLevel--;
 }
 
 mafMemento *mafCodecXML::decode() {
     REQUIRE(m_Device != NULL);
 
-    m_XMLDocument.setContent(m_Device);
-
-    mafMemento *memento = NULL;
-    mafMementoPropertyList *propList;
-
-    if(m_CurrentNode.isNull()) {
-        m_CurrentNode = m_XMLDocument.firstChild();
+    if(m_LevelDecode == -1) {  
+      m_XMLStreamReader.setDevice(m_Device);
+      m_XMLStreamReader.readNextStartElement(); //start document item
+      m_XMLStreamReader.readNextStartElement(); //mementoRoot
     }
 
-    while (!m_CurrentNode.isNull()) {
-       QDomElement e = m_CurrentNode.toElement();
+    QString path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
+    QString mementoType;
+    QString objType;
 
-       if(!e.isNull()) {
-           QString name = e.tagName();
-           if(name == "memento") {
-               QString mementoType;
-               QString objType;
-               QDomNamedNodeMap attributes = e.attributes();
-               if(attributes.contains("mementoType")) {
-                   mementoType = e.attribute("mementoType","");
-               }
-               if(attributes.contains("objectClassType")) {
-                   objType = e.attribute("objectClassType","");
-               }
+    QString n = m_XMLStreamReader.name().toString();
+    mementoType = m_XMLStreamReader.attributes().value("mementoType").toString();
+    m_LevelDecode = m_XMLStreamReader.attributes().value("levelEncode").toString().toUInt();
+    objType = m_XMLStreamReader.attributes().value("objectClassType").toString();
 
-               memento = (mafMemento *)mafNEWFromString(mementoType);
-               memento->setObjectClassType(objType);
-               propList = memento->mementoPropertyList();
-           }
-
-           //collections, items or mementos
-           QDomNodeList childNodeList = m_CurrentNode.childNodes();
-           int i=0, size = childNodeList.size();
-           for(;i<size;++i) {
-               m_CurrentNode = childNodeList.at(i);
-               QDomElement eChild = m_CurrentNode.toElement();
-               QString childName = eChild.tagName();
-               if (childName == "dataSetCollection") {
-                   //Find all items in dataSetCollection
-                   QDomNodeList list = eChild.elementsByTagName("item");
-                   int l=0, listsize = list.size();
-                   for(;l<listsize;++l) {
-                       QDomNode node = list.at(l);
-                       QDomElement eChild = node.toElement();
-                       mafMementoPropertyItem item = setPropertyItem(eChild);
-                       propList->append(item);
-                   }
-               }
-               else if(childName == "item") {
-                   mafMementoPropertyItem item = setPropertyItem(eChild);
-                   propList->append(item);
-               }
-               else if (name == "memento") {
-                   mafMemento *mChild = decode();
-                   mChild->setParent(memento);
-                   m_CurrentNode = childNodeList.at(i);
-               }
-           }
-       }
-       m_CurrentNode = m_CurrentNode.nextSibling();
-     }
-
-    return memento;
-}
-
-mafMementoPropertyItem mafCodecXML::setPropertyItem(QDomElement eChild){
+    mafMemento* memento = (mafMemento *)mafNEWFromString(mementoType);
+    memento->setObjectClassType(objType);
+    mafMementoPropertyList *propList = memento->mementoPropertyList();
     mafMementoPropertyItem item;
-    QString itemName;
-    int multiplicity = 1;
 
-    QDomNamedNodeMap attributes = eChild.attributes();
-    if(attributes.contains("name")) {
-        itemName = eChild.attribute("name","");
-    }
-    if(attributes.contains("multiplicity")) {
-        multiplicity = eChild.attribute("multiplicity","").toInt();
-    }
-    item.m_Name = itemName;
-    item.m_Multiplicity = multiplicity;
+     //Fill the map of memento and levelDecode.
+     m_MementoMap[m_LevelDecode] = memento;
 
-    if (item.m_Name == "dataValue") {
-        //check if eChild is a file Name
-        QString value = demarshall(eChild).toString();
-        QString path = ((QFile *)this->m_Device)->fileName().section('/', 0, -2);
-        QByteArray url;
-        url.append(path);
-        url.append("/");
-        url.append(value);
-        QUrl u = QUrl::fromEncoded(url);
-        if (u.isValid()) {
-            //write external file url
-            item.m_Value = u.toString();
+     while (!m_XMLStreamReader.atEnd() && !m_XMLStreamReader.hasError()) {
+      if (!m_XMLStreamReader.readNextStartElement()) {
+        continue;
+      }
+
+      QString name = m_XMLStreamReader.name().toString();
+      if (name == "item") {
+        item.m_Name = m_XMLStreamReader.attributes().value("name").toString();
+        item.m_Multiplicity = m_XMLStreamReader.attributes().value("multiplicity").toString().toUInt();
+        item.m_Value = demarshall(&m_XMLStreamReader);
+        if (mementoType == "mafResources::mafMementoDataSet") {
+          memento->decodeItem(&item, path);
+        } 
+        propList->append(item);
+      }
+
+      if (name == "memento") {
+        int parentLevel = m_LevelDecode;
+        mafMemento *mChild = decode();
+        int parentRelation = m_LevelDecode - parentLevel;
+        if (parentRelation > 0) {
+          mChild->setParent(memento);
         } else {
-            item.m_Value = value;
+          QMap<int, mafMemento*>::const_iterator i = m_MementoMap.find(m_LevelDecode-1);
+          mafMemento *mementoParent = (mafMemento*)i.value();
+          mChild->setParent(mementoParent);
         }
-    } else {
-        item.m_Value = demarshall(eChild);
+        m_LevelDecode = parentLevel;
+      }
     }
-    return item;
+    return memento;
 }
 
 void mafCodecXML::marshall(const QVariant &value ){
@@ -269,7 +184,7 @@ void mafCodecXML::marshall(const QVariant &value ){
         case QVariant::List: {
                 m_XMLStreamWriter.writeAttribute("arrayType", "list");
                 foreach( QVariant item, value.toList() ) {
-                        marshall(  item );
+                        marshall( item );
                     }
                 break;
         }
@@ -336,136 +251,117 @@ void mafCodecXML::marshall(const QVariant &value ){
     }
 }
 
-QVariant mafCodecXML::demarshall( const QDomElement &elem ) {
-    if ( elem.tagName().toLower() != "item" && elem.tagName().toLower() != "value" \
-        && elem.tagName().toLower() != "member") {
+QVariant mafCodecXML::demarshall( QXmlStreamReader *xmlStream ) {
+    QString tagName = xmlStream->name().toString().toLower();
+    if ( tagName != "item" && tagName != "value" && tagName != "member") {
         m_Valid = false;
         qCritical() << QString("bad param value");
         return QVariant();
     }
 
-    if ( elem.tagName().toLower() == "item" && !elem.firstChild().isElement() ) {
-        return QVariant( elem.firstChild().toElement().text() );
-    }
-
-    QDomElement valueElem;
+    QVariant valueElem;
     QString typeName;
-    QDomNamedNodeMap attributes = elem.attributes();
+    int multiplicity = -1;
+    QXmlStreamAttributes attributes = xmlStream->attributes();
 
-
-    if(elem.tagName().toLower() == "item" || elem.tagName().toLower() == "member") {
-        int multiplicity = 0;
-        if(attributes.contains("multiplicity")) {
-            multiplicity = elem.attribute("multiplicity","").toInt();
+    if(tagName == "item" || tagName == "member") {
+        if(attributes.hasAttribute("multiplicity")) {
+            multiplicity = attributes.value("multiplicity").toString().toUInt();
+        } 
+        if (multiplicity < 1) {
+          qCritical() << QString("bad param value");
+          return QVariant();
+        } else {
+           typeName = attributes.value("arrayType").toString();
+        } 
+        xmlStream->readNextStartElement();
+        QXmlStreamAttributes attributesValue = xmlStream->attributes();
+        if(attributesValue.hasAttribute("dataType")) {
+          typeName = xmlStream->attributes().value("dataType").toString();
         }
-        if(multiplicity > 1) {
-            typeName = elem.attribute("arrayType","");
-        }
-        else
-        {
-            if(multiplicity == 0) {
-                return QVariant();
-            }
-            valueElem = elem.firstChild().toElement();
-            QDomNamedNodeMap attributesValue = valueElem.attributes();
-            if(attributesValue.contains("dataType")) {
-                typeName = valueElem.attribute("dataType","");
-            }
-        }
-    }
-    else if (elem.tagName().toLower() == "value") {
-        valueElem = elem;
-        QDomNamedNodeMap attributesValue = valueElem.attributes();
-        if(attributesValue.contains("dataType")) {
-            typeName = valueElem.attribute("dataType","");
+    } else if (tagName == "value") {
+        QXmlStreamAttributes attributesValue = xmlStream->attributes();
+        if(attributesValue.hasAttribute("dataType")) {
+          typeName = xmlStream->attributes().value("dataType").toString();
         }
     }
 
     if ( typeName == "string" ) {
-        return QVariant( valueElem.text() );
-    }
-    else if (typeName == "int" || typeName == "i4" ) {
+      xmlStream->readNext();
+      return QVariant(xmlStream->text().toString());
+    } else if (typeName == "int" || typeName == "i4" ) {
         bool ok = false;
-        QVariant val( valueElem.text().toInt( &ok ) );
+        xmlStream->readNext();
+        QVariant val( xmlStream->text().toString().toInt( &ok ) );
         if( ok )
                 return val;
-        qCritical() << QString("I was looking for an integer but data was courupt");
-    }
-    else if( typeName == "double" ) {
+        qCritical() << QString("I was looking for an integer but data was corrupted");
+    } else if( typeName == "double" ) {
         bool ok = false;
-        QVariant val( valueElem.text().toDouble( &ok ) );
+        xmlStream->readNext();
+        QVariant val( xmlStream->text().toString().toDouble( &ok ) );
         if( ok )
                 return val;
-        qCritical() << QString("I was looking for an double but data was courupt");
-    }
-    else if( typeName == "boolean" ) {
-        return QVariant( ( valueElem.text().toLower() == "true" || valueElem.text() == "1")?true:false );
-    }
-    else if( typeName == "datetime" || typeName == "dateTime.iso8601" ) {
-        return QVariant( QDateTime::fromString( valueElem.text(), Qt::ISODate ) );
-    }
-    else if( typeName == "list" ) {
-        QVariantList arr;
-        QDomNode valueNode = elem.firstChild();
-        //QString name = valueNode.toElement().tagName();
-        while( !valueNode.isNull() && m_Valid ) {
-            arr.append(QVariant(demarshall( valueNode.toElement())) );
-            valueNode = valueNode.nextSibling();
+        qCritical() << QString("I was looking for an double but data was corrupted");
+    }else if( typeName == "boolean" ) {
+      xmlStream->readNext();
+      return QVariant( ( xmlStream->text().toString().toLower() == "true" || xmlStream->text() == "1")?true:false );
+    } else if( typeName == "datetime" || typeName == "dateTime.iso8601" ) {
+      xmlStream->readNext();
+      return QVariant( QDateTime::fromString( xmlStream->text().toString(), Qt::ISODate ) );
+    } else if( typeName == "list" ) {
+      QVariantList arr;
+      int i = 0;
+      for (i; i < multiplicity; i++) {
+        if (!m_XMLStreamReader.readNextStartElement()) {
+          --i;
+          continue;
         }
-        return QVariant( arr );
-    }
-    else if( typeName == "map" )
+        arr.append(QVariant(demarshall(xmlStream)) );
+      }
+      return QVariant( arr );
+    } else if( typeName == "map" )
     {
-        QMap<QString,QVariant> stct;
-        valueElem = elem.firstChild().toElement();
-        QDomNode valueNode = valueElem.firstChild();
-        QString name = valueNode.toElement().tagName();
-        while( !valueNode.isNull() && m_Valid ) {
-            QString nodeName = valueNode.toElement().attribute("name");
-            if (valueNode.toElement().attribute("arrayType") != "") {
-                stct[ nodeName ] = demarshall( valueNode.toElement() );
-            } else {
-                const QDomElement dataNode = valueNode.toElement().elementsByTagName("value").item(0).toElement();
-                QString nameb = dataNode.tagName();
-                stct[ nodeName ] = demarshall( dataNode );
-            }
-            valueNode = valueNode.nextSibling();
+      QMap<QString,QVariant> map;
+      int i = 0;
+      for (i; i < multiplicity; i++) {
+        if (!m_XMLStreamReader.readNextStartElement()) {
+          --i;
+          continue;
         }
-        return QVariant(stct);
-    }
-    else if( typeName == "hash" )
+        QXmlStreamAttributes attributesValue = xmlStream->attributes();
+        QString nodeName = attributesValue.value("name").toString();
+        map[ nodeName ] = demarshall(xmlStream);
+      }
+      return QVariant(map);
+    } else if( typeName == "hash" )
     {
-        QHash<QString,QVariant> stct;
-        valueElem = elem.firstChild().toElement();
-        QDomNode valueNode = valueElem.firstChild();
-        QString name = valueNode.toElement().tagName();
-        while( !valueNode.isNull() && m_Valid ) {
-            QString nodeName = valueNode.toElement().attribute("name");
-            if (valueNode.toElement().attribute("arrayType") != "") {
-                stct[ nodeName ] = demarshall( valueNode.toElement() );
-            } else {
-                const QDomElement dataNode = valueNode.toElement().elementsByTagName("value").item(0).toElement();
-                QString nameb = dataNode.tagName();
-                stct[ nodeName ] = demarshall( dataNode );
-            }
-            valueNode = valueNode.nextSibling();
+      QHash<QString,QVariant> stct;
+      int i = 0;
+      for (i; i < multiplicity; i++) {
+        if (!m_XMLStreamReader.readNextStartElement()) {
+          --i;
+          continue;
         }
-        return QVariant(stct);
-    }
-    else if( typeName == "base64" ) {
-        QVariant returnVariant;
-        QByteArray dest;
-        QByteArray src = valueElem.text().toLatin1();
-        dest = QByteArray::fromBase64( src );
-        QDataStream ds(&dest, QIODevice::ReadOnly);
-        ds.setVersion(QDataStream::Qt_4_6);
-        ds >> returnVariant;
-        if( returnVariant.isValid() ) {
-            return returnVariant;
-        }
-        else {
-            return QVariant( dest );
-        }
+        QXmlStreamAttributes attributesValue = xmlStream->attributes();
+        QString nodeName = attributesValue.value("name").toString();
+        stct[ nodeName ] = demarshall( xmlStream );
+      }
+      return QVariant(stct);
+    } else if( typeName == "base64" ) {
+      xmlStream->readNext();
+      QVariant returnVariant;
+      QByteArray dest;
+      QByteArray src = xmlStream->text().toString().toLatin1();
+      dest = QByteArray::fromBase64( src );
+      QDataStream ds(&dest, QIODevice::ReadOnly);
+      ds.setVersion(QDataStream::Qt_4_6);
+      ds >> returnVariant;
+      if( returnVariant.isValid() ) {
+          return returnVariant;
+      } else {
+          return QVariant( dest );
+      }
     }
     qCritical() << QString( "Cannot handle type %1").arg(typeName);
     return QVariant();

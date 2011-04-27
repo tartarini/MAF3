@@ -41,10 +41,10 @@ public:
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
 
     /// Encode property item.
-     virtual void encodeItem(QXmlStreamWriter *XMLStream, QDataStream *binaryStream, QTextStream *textStream, mafMementoPropertyItem item);
+     virtual void encodeItem(mafMementoPropertyItem *item, QString path);
 
     /// Decode property item.
-     virtual QVariant decodeItem(QXmlStreamWriter *XMLStream, QDataStream *binaryStream, QTextStream *textStream);
+     virtual void decodeItem(mafMementoPropertyItem *item, QString path);
 
     /// this method de-serialize the member variables from the given stream.
     mafMementoPropertyList *mementoPropertyList();

@@ -56,18 +56,13 @@ bool mafMemento::isEqual(const mafObjectBase *obj) const {
     return true;
 }
 
-void mafMemento::encodeItem(QXmlStreamWriter *XMLStream, QDataStream *binaryStream, QTextStream *textStream, mafMementoPropertyItem item) {
-  Q_UNUSED(XMLStream);
-  Q_UNUSED(binaryStream);
-  Q_UNUSED(textStream);
+void mafMemento::encodeItem(mafMementoPropertyItem *item, QString path) {
   Q_UNUSED(item);
+  Q_UNUSED(path);
 }
 
-QVariant mafMemento::decodeItem(QXmlStreamWriter *XMLStream, QDataStream *binaryStream, QTextStream *textStream) {
-  Q_UNUSED(XMLStream);
-  Q_UNUSED(binaryStream);
-  Q_UNUSED(textStream);
-  return QVariant();
-
+void mafMemento::decodeItem(mafMementoPropertyItem *item, QString path) {
+  Q_UNUSED(item);
+  Q_UNUSED(path);
 }
 

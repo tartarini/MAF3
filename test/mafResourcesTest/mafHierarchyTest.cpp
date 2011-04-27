@@ -278,5 +278,5 @@ void mafHierarchyTest::unbalancedTreeDestruction() {
     m_Hierarchy->clear();
 }
 
-MAF_REGISTER_TEST(mafHierarchyTest);
+//MAF_REGISTER_TEST(mafHierarchyTest);
 #include "mafHierarchyTest.moc"

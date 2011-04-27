@@ -180,6 +180,9 @@ void mafVME::setMemento(mafMemento *memento, bool binary, bool deep_memento) {
     REQUIRE(memento != NULL);
     REQUIRE(memento->objectClassType() == this->metaObject()->className());
 
+    mafMemento *m = (mafMemento *)memento->children().at(0);
+    Superclass::setMemento(m, deep_memento);
+
     //If not exists, creates the mafDataSetCollection
     if (m_DataSetCollection == NULL) {
         m_DataSetCollection = this->dataSetCollection();

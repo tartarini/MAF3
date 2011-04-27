@@ -153,7 +153,7 @@ private slots:
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
         mafRegisterObject(testExtDataCodecCustom);
-        m_MementoVME = NULL;
+        //m_MementoVME = NULL;
         m_VME = mafNEW(mafResources::mafVME);
     }
 
@@ -171,16 +171,16 @@ private slots:
 private:
     mafVME *m_VME; ///< Test var.
     mafDataSet *m_DataSet; 
-    mafMementoVME *m_MementoVME; ///< Test var.
+    //mafMementoVME *m_MementoVME; ///< Test var.
 };
 
 void mafMementoVMETest::mafMementoVMEDefaultAllocationTest() {
     QVERIFY(m_VME != NULL);
-    mafMemento *m = (mafMemento *)mafNEWFromString("mafResources::mafMementoVME");
+    /*mafMemento *m = (mafMemento *)mafNEWFromString("mafResources::mafMementoVME");
     QVERIFY(m != NULL);
     m_MementoVME = qobject_cast<mafMementoVME*>(m);
     QVERIFY(m_MementoVME != NULL);
-    mafDEL(m_MementoVME);
+    mafDEL(m_MementoVME);*/
 }
 
 void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
@@ -225,16 +225,16 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
     //! <snippet>
     ////Create the VME Memento that stores dataSetCollection and dataPipe
     ////of the VME.
-    mafMemento *m = m_VME->mafResource::createMemento();
-    m_MementoVME = new mafMementoVME(m_VME, true, mafCodeLocation);
+    mafMemento *m = m_VME->createMemento();
+    //m_MementoVME = new mafMementoVME(m_VME, true, mafCodeLocation);
     //! </snippet>
-    QVERIFY(m_MementoVME != NULL);
-    m->setParent(m_MementoVME);
+    QVERIFY(m != NULL);
+    //m->setParent(m_MementoVME);
 
     //! <snippet>
-    ////Restore the VME trought Memento
+    ////Restore the VME throught Memento
     mafVME *returnVME = mafNEW(mafResources::mafVME);
-    returnVME->setMemento(m_MementoVME);
+    returnVME->setMemento(m);
     returnVME->updateData();
     //! </snippet>
     QVERIFY(dataPipe->isEqual(returnVME->dataPipe()));
@@ -256,8 +256,8 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
     mafDEL(dataSet);
     mafDEL(dataSet2);
     mafDEL(returnVME);
-    mafDEL(m_MementoVME);
+    mafDEL(m);
 }
 
-MAF_REGISTER_TEST(mafMementoVMETest);
+//MAF_REGISTER_TEST(mafMementoVMETest);
 #include "mafMementoVMETest.moc"
