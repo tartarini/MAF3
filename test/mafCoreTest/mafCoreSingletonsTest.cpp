@@ -12,24 +12,12 @@
 #include <mafTestSuite.h>
 
 #ifdef WIN32
-    #ifdef QT_DEBUG
-        #define TEST_LIBRARY_NAME "mafResources.dll"
-    #else
-        #define TEST_LIBRARY_NAME "mafResources.dll"
-    #endif
+    #define TEST_LIBRARY_NAME "mafModuleTest.dll"
 #else
     #ifdef __APPLE__
-        #ifdef QT_DEBUG
-            #define TEST_LIBRARY_NAME "mafResources.dylib"
-        #else
-            #define TEST_LIBRARY_NAME "mafResources.dylib"
-        #endif
+        #define TEST_LIBRARY_NAME "mafModuleTest.dylib"
     #else
-        #ifdef QT_DEBUG
-            #define TEST_LIBRARY_NAME "mafResources.so"
-        #else
-            #define TEST_LIBRARY_NAME "mafResources.so"
-        #endif
+        #define TEST_LIBRARY_NAME "mafModuleTest.so"
     #endif
 #endif
 
