@@ -67,7 +67,7 @@ QVariant mafMemento::decodeItem(QXmlStreamWriter *XMLStream, QDataStream *binary
   Q_UNUSED(XMLStream);
   Q_UNUSED(binaryStream);
   Q_UNUSED(textStream);
-  return NULL;
+  return QVariant();
 
 }
 
