@@ -35,6 +35,31 @@ mafVMEManager::mafVMEManager(const QString code_location) : mafObjectBase(code_l
 mafVMEManager::~mafVMEManager() {
     shutdown();
     mafDEL(m_VMEHierarchy);
+    
+    // Unregister callbacks...
+    mafUnregisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)")
+    mafUnregisterLocalCallback("maf.local.resources.vme.remove", this, "vmeRemove(mafCore::mafObjectBase *)")
+    mafUnregisterLocalCallback("maf.local.resources.vme.reparent", this, "vmeReparent(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
+    mafUnregisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)")
+    mafUnregisterLocalCallback("maf.local.resources.vme.selected", this, "selectedVME()")
+    mafUnregisterLocalCallback("maf.local.resources.hierarchy.request", this, "requestVMEHierarchy()")
+    
+    // Unregister signals...
+    mafUnregisterLocalSignal("maf.local.resources.vme.add", this, "attachVMEToHierarchy(mafCore::mafObjectBase *)")
+    mafUnregisterLocalSignal("maf.local.resources.vme.remove", this, "detachVMEFromHierarchy(mafCore::mafObjectBase *)")
+    mafUnregisterLocalSignal("maf.local.resources.vme.reparent", this, "reparentVMESignal(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
+    mafUnregisterLocalSignal("maf.local.resources.vme.select", this, "selectVME(mafCore::mafObjectBase *)")
+    mafUnregisterLocalSignal("maf.local.resources.vme.selected", this, "selectedVMESignal()")
+    mafUnregisterLocalSignal("maf.local.resources.hierarchy.request", this, "requestVMEHierarchySignal()")
+
+    // Remove IDs.
+    mafIdProvider *provider = mafIdProvider::instance();
+    provider->removeId("maf.local.resources.vme.add");
+    provider->removeId("maf.local.resources.vme.remove");
+    provider->removeId("maf.local.resources.vme.reparent");
+    provider->removeId("maf.local.resources.vme.select");
+    provider->removeId("maf.local.resources.vme.selected");
+    provider->removeId("maf.local.resources.hierarchy.request");
 }
 
 void mafVMEManager::initializeConnections() {

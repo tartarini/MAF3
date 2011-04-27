@@ -17,7 +17,7 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
 
-mafDataSet::mafDataSet(const QString code_location) : mafObject(code_location), m_DataValue(NULL), m_DataBoundary(NULL), m_Matrix(NULL), m_DataBoundaryAlgorithm(NULL) {
+mafDataSet::mafDataSet(const QString code_location) : mafObject(code_location), m_DataValue(NULL), m_DataBoundary(NULL), m_Matrix(NULL), m_DataBoundaryAlgorithm(NULL), m_TimeStamp(0) {
 }
 
 mafDataSet::~mafDataSet() {
@@ -77,9 +77,9 @@ void mafDataSet::setMemento(mafMemento *memento, bool binary, bool deep_memento)
     // Design by contract condition.
     REQUIRE(memento != NULL);
     REQUIRE(memento->objectClassType() == this->metaObject()->className());
-    QString codecType;
+    QString encodeType;
     QString dataType;
-    int dataSize = 0;
+    double timeStamp = 0;
 
     mafMementoPropertyList *list = memento->mementoPropertyList();
     mafMementoPropertyItem item;
@@ -98,40 +98,25 @@ void mafDataSet::setMemento(mafMemento *memento, bool binary, bool deep_memento)
                 }
             }
             this->setPoseMatrix(mat);
-        } else if (item.m_Name == "codecType") {
+        } else if (item.m_Name == "encodeType") {
             //Restore codec type
-            codecType = item.m_Value.toString();
+            encodeType = item.m_Value.toString();
         } else if (item.m_Name == "dataType") {
             //Restore data type
             dataType = item.m_Value.toString();
-        } else if (item.m_Name == "dataSize") {
-            //Restore data size
-            dataSize = item.m_Value.toInt();
-        } else if (item.m_Name == "dataValue") {
+        } else if (item.m_Name == "timeStamp") {
+            //Restore time stamp
+            this->setTimeStamp(item.m_Value.toDouble());
+        } else if (item.m_Name == "fileName") {
             //Read from external file
-            char *value;
-            QByteArray stringArray;
+            mafCore::mafContainerInterface *container;
             mafEventArgumentsList argList;
-            QUrl url = QUrl::fromEncoded(item.m_Value.toByteArray());
-            if (url.isValid()) {
-                QString urlString = url.toString();
-                argList.append(mafEventArgument(QString, urlString));
-                QGenericReturnArgument ret_val = mafEventReturnArgument(QByteArray, stringArray);
-                mafEventBusManager::instance()->notifyEvent("maf.local.serialization.loadExternalData", mafEventTypeLocal, &argList, &ret_val);
-                value = (char*)stringArray.constData();
-            } else {
-                value = (char*)item.m_Value.toByteArray().constData();
-            }
-            //Decode dataSet
-            mafExternalDataCodec *codec = (mafExternalDataCodec *)mafNEWFromString(codecType);
-
-            codec->setStringSize(dataSize);
-            codec->decode(value, binary);
-
-            this->setDataValue(codec->externalData());
-            m_DataValue->setExternalCodecType(codecType);
-            m_DataValue->setExternalDataType(dataType);
-            mafDEL(codec);
-        }
+            QString fileName = item.m_Value.toString();
+            argList.append(mafEventArgument(QString, fileName));
+            argList.append(mafEventArgument(QString, encodeType));
+            QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafContainerInterface *, container);
+            mafEventBusManager::instance()->notifyEvent("maf.local.serialization.import", mafEventTypeLocal, &argList, &ret_val);
+            m_DataValue = container;
+         }
     }
 }

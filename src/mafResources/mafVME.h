@@ -131,6 +131,9 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafVME();
 
+    /// Return a list mafMementoDataSet contained in memento passed as argument.
+    void mementoDataSetMap(mafCore::mafMemento *memento, QMap<double, mafMementoDataSet*> &mementoMap);
+
 private:
     mutable QReadWriteLock *m_Lock; ///< Lock variable for thread safe access to VME.
     mafInteractor *m_Interactor; ///< Custom interactor associated with the VME.

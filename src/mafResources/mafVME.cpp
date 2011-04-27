@@ -180,9 +180,6 @@ void mafVME::setMemento(mafMemento *memento, bool binary, bool deep_memento) {
     REQUIRE(memento != NULL);
     REQUIRE(memento->objectClassType() == this->metaObject()->className());
 
-    mafMemento *m = (mafMemento *)memento->children().at(0);
-    Superclass::setMemento(m, deep_memento);
-
     //If not exists, creates the mafDataSetCollection
     if (m_DataSetCollection == NULL) {
         m_DataSetCollection = this->dataSetCollection();
@@ -190,27 +187,16 @@ void mafVME::setMemento(mafMemento *memento, bool binary, bool deep_memento) {
 
     mafMementoPropertyList *list = memento->mementoPropertyList();
     mafMementoPropertyItem item;
+    //create a map of memento dataset
+    QMap<double, mafMementoDataSet*> mementoMap;
+    this->mementoDataSetMap(memento, mementoMap);
     int i = 0;
     for ( ; i < list->size(); ++i) {
         item = list->at(i);
         if(item.m_Name == "mafDataSetTime") {
             double time = item.m_Value.toDouble();
-            mafMementoDataSet *mementoDataSet = mafNEW(mafResources::mafMementoDataSet);
-            mafMementoPropertyList *propList = mementoDataSet->mementoPropertyList();
-
-            item = list->at(i+1);
-            if (item.m_Name == "poseMatrix") {
-                propList->append(item);
-                ++i; //
-            }
-            //append codecType, dataType, dataHash, dataSize and dataValue.
-            int n = 0;
-            for ( ; n < 5; ++n) {
-                ++i;
-                propList->append(list->at(i));
-            }
+            mafMementoDataSet *mementoDataSet = mementoMap.value(time);
             m_MementoDataSetHash.insert(mementoDataSet, time);
-
         } else if(item.m_Name == "mafPipeData") {
             this->setDataPipe(item.m_Value.toString());
         } else if(item.m_Name == "vmeBounds") {
@@ -253,4 +239,17 @@ void mafVME::updateBounds() {
 
 void mafVME::setVisibility(bool visible) {
   m_Visibility = visible;
+}
+
+void mafVME::mementoDataSetMap(mafMemento *memento,  QMap<double, mafMementoDataSet*> &mementoMap) {
+  int i = 0;
+  int size = memento->children().size();
+  for (i; i< size; i++) {
+    mafMementoDataSet* mem = (mafMementoDataSet*)memento->children().at(i);
+    QString mementoName = mem->metaObject()->className();
+    if (mementoName == "mafResources::mafMementoDataSet") {
+      double timeStamp = mem->timeStamp();
+      mementoMap[timeStamp] = mem;
+    }
+  }
 }

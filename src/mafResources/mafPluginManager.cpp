@@ -56,6 +56,22 @@ mafPluginManager::~mafPluginManager() {
         ++iter;
     }
     m_PluginsHash.clear();
+    
+    // Unregister callbacks...
+    mafUnregisterLocalCallback("maf.local.resources.plugin.loadLibrary", this, "loadPlugin(const QString &)");
+    mafUnregisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "registerPlugin(mafCore::mafPluggedObjectsHash)");
+    mafUnregisterLocalCallback("maf.local.resources.plugin.resourcesQuery", this, "queryPluggedObjects(const QString &)");
+    
+    // Unregister signals...
+    mafUnregisterLocalSignal("maf.local.resources.plugin.loadLibrary", this, "loadPluginLibrary(const QString &)");
+    mafUnregisterLocalSignal("maf.local.resources.plugin.registerLibrary", this, "registerPluginToManager(mafCore::mafPluggedObjectsHash)");
+    mafUnregisterLocalSignal("maf.local.resources.plugin.resourcesQuery", this, "queryPluggedObjectsSignal(const QString &)");
+    
+    // Removed IDs...
+    mafIdProvider *provider = mafIdProvider::instance();
+    provider->removeId("maf.local.resources.plugin.loadLibrary");
+    provider->removeId("maf.local.resources.plugin.registerLibrary");
+    provider->removeId("maf.local.resources.plugin.resourcesQuery");
 }
 
 void mafPluginManager::loadPlugin( const QString &pluginFilename ) {

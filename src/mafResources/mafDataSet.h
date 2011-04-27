@@ -31,6 +31,7 @@ class mafDataBoundaryAlgorithm;
  */
 class MAFRESOURCESSHARED_EXPORT mafDataSet : public mafCore::mafObject {
     Q_OBJECT
+    Q_PROPERTY(double timeStamp READ timeStamp WRITE setTimeStamp)
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObject);
 
@@ -76,6 +77,12 @@ public:
     undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool binary = true, bool deep_memento = false);
 
+    /// Return time stamp referred to this mafDataSet.
+    double timeStamp() const; 
+
+    /// Set time stamp.
+    void setTimeStamp(double time);
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafDataSet();
@@ -85,6 +92,7 @@ private:
     mafCore::mafContainerInterface *m_DataBoundary; ///< Represent the boundary of current data value at current timestamp.
     mafPoseMatrix *m_Matrix; ///< Pose matrix
     mafDataBoundaryAlgorithm *m_DataBoundaryAlgorithm; ///< Represent the class that will calculate the boundary of the m_DataValue and generate as output a boundary to be visualized.
+    double m_TimeStamp; ///< Time stamp referred to this mafDataSet.
 };
 
 /////////////////////////////////////////////////////////////
@@ -102,6 +110,15 @@ inline mafPoseMatrix *mafDataSet::poseMatrix() const {
 inline mafDataBoundaryAlgorithm *mafDataSet::boundaryAlgorithm() const {
     return m_DataBoundaryAlgorithm;
 }
+
+inline double mafDataSet::timeStamp() const {
+  return m_TimeStamp;
+}
+
+inline void mafDataSet::setTimeStamp(double time) {
+  m_TimeStamp = time;
+}
+
 
 } //mafResources
 

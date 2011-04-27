@@ -27,10 +27,6 @@ mafCodecRawBinary::~mafCodecRawBinary() {
 void mafCodecRawBinary::encode(mafMemento *memento) {
     REQUIRE(memento != NULL);
     REQUIRE(m_Device != NULL);
-    int dataSize = 0;
-    double dataTime = 0;
-    QString dataHash;
-    QString codecType;
 
     m_DataStreamWrite.setDevice(m_Device);
     m_DataStreamWrite.setVersion(QDataStream::Qt_4_6);
@@ -40,138 +36,89 @@ void mafCodecRawBinary::encode(mafMemento *memento) {
 
     const QMetaObject* meta = memento->metaObject();
     m_DataStreamWrite << QString("MementoType");
-    QString cn = meta->className();
-    m_DataStreamWrite << cn;
+    m_DataStreamWrite << m_LevelEncode;
+    QString mementoType = meta->className();
+    m_DataStreamWrite << mementoType;
     QString ot = memento->objectClassType();
     m_DataStreamWrite << ot;
 
-    if (cn == "mafResources::mafMementoVME") {
-        m_DataStreamWrite << QString("dataSetCollection");
-        //Add number of dataSet Contained by dataSetCollection
-    }
+    foreach(item, *propList) { //for should be inside each encodeItem
+      m_DataStreamWrite << item.m_Name;
+      m_DataStreamWrite << (int)item.m_Multiplicity;
 
-    foreach(item, *propList) {
-        //If next value is DataSetItem, open DataSet element
-        if (item.m_Name == "mafDataSetTime") {
-            m_DataStreamWrite << QString("dataSet");
-        }
-        m_DataStreamWrite << item.m_Name;
-        m_DataStreamWrite << (int)item.m_Multiplicity;
-
-        if (item.m_Name == "dataSize" ) {
-            dataSize = item.m_Value.toInt();
-            m_DataStreamWrite << (int)dataSize;
-        } else if (item.m_Name == "mafDataSetTime" ) {
-            dataTime = item.m_Value.toDouble();
-            m_DataStreamWrite << (double)dataTime;
-        } else if (item.m_Name == "dataHash" ) {
-            dataHash = item.m_Value.toString();
-            m_DataStreamWrite << dataHash;
-        } else if (item.m_Name == "codecType" ) {
-            codecType = item.m_Value.toString();
-            m_DataStreamWrite << codecType;
-        } else if (item.m_Name == "dataValue") {
-            //Generate file name and save external data
-            QString path = ((QFile *)this->m_Device)->fileName().section('/', 0, -2);
-            QString fileName;
-            QTextStream(&fileName) << dataHash << "_" << dataTime << ".vtk";
-            QString url;
-            QTextStream(&url) << path << "/" << fileName;
-
-            mafEventArgumentsList argList;
-            argList.append(mafEventArgument(char*, (char*)item.m_Value.toByteArray().constData()));
-            argList.append(mafEventArgument(QString, url));
-            argList.append(mafEventArgument(int, dataSize));
-            mafEventBusManager::instance()->notifyEvent("maf.local.serialization.saveExternalData", mafEventTypeLocal, &argList);
-            m_DataStreamWrite << fileName;
-        } else {
-            marshall(item.m_Value);
-        }
-
+      if (mementoType == "mafResources::mafMementoDataSet") {
+        // use mafMementoDataSet to encode dataSet items.
+        memento->encodeItem(NULL, &m_DataStreamWrite, NULL, item);
+      } else {
+        marshall(item.m_Value); //If will be removed: each memento will have its "encodeItem", and marshall will be moved in a separated class
+      }
     }
 
     QObject *obj;
+    ++m_LevelEncode;
     foreach(obj, memento->children()) {
-        this->encode((mafMemento *)obj);
+      this->encode((mafMemento *)obj);
     }
+    --m_LevelEncode;
 }
 
 mafMemento *mafCodecRawBinary::decode() {
     REQUIRE(m_Device != NULL);
-    int dataSize = 0;
-    double dataTime = 0;
-    QString dataHash;
-    QString codecType;
-
-
 
     QString mementoTagSeparator;
     QString mementoType;
     QString objType;
-    if(m_Level == 0) {
-        m_DataStreamRead.setDevice(m_Device);
-        m_DataStreamRead >> mementoTagSeparator;
+    if(m_LevelDecode == -1) {  
+      //-1 for initializing the file
+      m_DataStreamRead.setDevice(m_Device);
+      m_DataStreamRead >> mementoTagSeparator;
     }
 
+    m_DataStreamRead >> m_LevelDecode; //read memento level
     m_DataStreamRead >> mementoType;
     m_DataStreamRead >> objType;
 
     mafMemento *memento = (mafMemento *)mafNEWFromString(mementoType);
     memento->setObjectClassType(objType);
 
+    //Fill the map of memento and levelDecode.
+    m_MementoMap[m_LevelDecode] = memento;
+
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     mafMementoPropertyItem item;
 
     while(!m_DataStreamRead.atEnd()) {
+        int pos = m_Device->pos();
         m_DataStreamRead >> mementoTagSeparator;
         if(mementoTagSeparator != "MementoType") {
             item.m_Name = mementoTagSeparator;
-            if (mementoTagSeparator == "dataSetCollection" || mementoTagSeparator == "dataSet") {
+            if (mementoTagSeparator.isEmpty()) {
                 continue;
             } else {
                 m_DataStreamRead >> item.m_Multiplicity;
             }
-
-            if (item.m_Name == "dataValue") {
-                //check if eChild is a file Name
-                QString value;
-                m_DataStreamRead >> value;
-                QString path = ((QFile *)this->m_Device)->fileName().section('/', 0, -2);
-                QByteArray url;
-                url.append(path);
-                url.append("/");
-                url.append(value);
-                QUrl u = QUrl::fromEncoded(url);
-                if (u.isValid()) {
-                    //write external file url
-                    item.m_Value = u.toString();
-                } else {
-                    item.m_Value = value;
-                }
-            } else  if (item.m_Name == "dataSize" ) {
-                m_DataStreamRead >> dataSize;
-                item.m_Value = dataSize;
-            } else if (item.m_Name == "mafDataSetTime" ) {
-                m_DataStreamRead >> dataTime;
-                item.m_Value = dataTime;
-            } else if (item.m_Name == "dataHash" ) {
-                m_DataStreamRead >> dataHash;
-                item.m_Value = dataHash;
-            } else if (item.m_Name == "codecType" ) {
-                m_DataStreamRead >> codecType;
-                item.m_Value = codecType;
+            if(mementoType == "mafResources::mafMementoDataSet") {
+              m_Device->seek(pos);
+              // use mafMementoDataSet to encode dataSet items.
+              item.m_Value = memento->decodeItem(NULL, &m_DataStreamRead, NULL);
             } else {
-                QString codecType;
-                m_DataStreamRead >> codecType;
-                item.m_Value = demarshall(codecType, item.m_Multiplicity);
+              QString typeName;
+              m_DataStreamRead >> typeName;
+              item.m_Value = demarshall(typeName, item.m_Multiplicity);
             }
-
             propList->append(item);
         } else {
-            // To be continued...
-            ++m_Level;
+            int parentLevel = m_LevelDecode;
             mafMemento *mChild = decode();
-            mChild->setParent(memento);
+            int parentRelation = m_LevelDecode - parentLevel;
+            if (parentRelation > 0) {
+              mChild->setParent(memento);
+            } else {
+              QMap<int, mafMemento*>::const_iterator i = m_MementoMap.find(m_LevelDecode-1);
+              mafMemento *mementoParent = (mafMemento*)i.value();
+              mChild->setParent(mementoParent);
+            }
+            m_LevelDecode = parentLevel;
         }
     }
 

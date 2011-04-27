@@ -52,8 +52,7 @@ void mafSerializationManager::initializeConnections() {
     provider->createNewId("maf.local.serialization.loadExternalData");
     m_MementoLoadedId = "maf.local.serialization.mementoLoaded";
     provider->createNewId(m_MementoLoadedId);
-    m_ExtDataImportedId = "maf.local.serialization.extDataImported";
-    provider->createNewId(m_ExtDataImportedId);
+
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.serialization.plugCodec", this, "plugCodecInModule(const QString &, const QString &, const QString &)");
@@ -65,7 +64,6 @@ void mafSerializationManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.serialization.saveExternalData", this, "saveExtData(char *, const QString &, int)");
     mafRegisterLocalSignal("maf.local.serialization.loadExternalData", this, "loadExtData(const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.mementoLoaded", this, "mementoLoaded(mafCore::mafMemento *)");
-    mafRegisterLocalSignal("maf.local.serialization.extDataImported", this, "extDataImported(mafCore::mafContainerInterface *)");
 
     // Register private callbacks.
     mafRegisterLocalCallback("maf.local.serialization.plugCodec", this, "plugCodec(const QString &, const QString &, const QString &)");
@@ -274,10 +272,10 @@ void mafSerializationManager::saveExternalData(char *externalDataString, const Q
     mafDEL(ser);
 }
 
-void mafSerializationManager::importExternalData(const QString &url, const QString &encode_type) {
+mafCore::mafContainerInterface * mafSerializationManager::importExternalData(const QString &url, const QString &encode_type) {
     if(!m_CodecHash.contains(encode_type)) {
         qCritical("%s", mafTr("No codec associated with the '%1' encoding type.").arg(encode_type).toAscii().data());
-        return;
+        return NULL;
     }
 
     // Check the protocol of the given 'url' and create the corresponding mafSerialize class
@@ -285,7 +283,7 @@ void mafSerializationManager::importExternalData(const QString &url, const QStri
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
         qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
-        return;
+        return NULL;
     }
 
     QString s = u.scheme();
@@ -315,18 +313,24 @@ void mafSerializationManager::importExternalData(const QString &url, const QStri
     codec->setStringSize(size);
     codec->decode(inputString);
 
-    // Notify through the event bus that the Externaldata has beed imported by using the ID: "maf.local.serialization.extDataImported"
-    mafEventArgumentsList list;
-    list.append(mafEventArgument(mafCore::mafContainerInterface *, codec->externalData()));
-    mafEventBusManager::instance()->notifyEvent(m_ExtDataImportedId, mafEventTypeLocal, &list);
-    mafDEL(codec);
+    return codec->externalData();
 }
 
-QByteArray mafSerializationManager::loadExternalData(const QString &url) {
+QByteArray mafSerializationManager::loadExternalData(const QString &fileName) {
+
+  /////////////////////////////////////////////////////
+  ////////// TO BE REPLACED WITH "WORKING DIRECTORY"
+    QString path = "D:\Temp\maf3Logs";
+  ////////// TO BE REPLACED WITH "WORKING DIRECTORY"
+ /////////////////////////////////////////////////////
+
+    QString fileUrl(path);
+    fileUrl.append("/");
+    fileUrl.append(fileName);
 
     // Check the protocol of the given 'url' and create the corresponding mafSerialize class
-    QUrl u(url);
-    u =  QUrl::fromUserInput(url);
+    QUrl u(fileUrl);
+    u =  QUrl::fromUserInput(fileUrl);
     if (!u.isValid()) {
         qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
          return 0;

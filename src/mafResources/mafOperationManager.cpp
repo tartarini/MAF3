@@ -46,6 +46,47 @@ mafOperationManager::mafOperationManager(const QString code_location) : mafObjec
 }
 
 mafOperationManager::~mafOperationManager() {
+    // Unregister callbacks.
+    mafUnregisterLocalCallback("maf.local.resources.operation.start", this, "startOperation(const QString)")
+    mafUnregisterLocalCallback("maf.local.resources.operation.setParameters", this, "setOperationParameters(QVariantList)")
+    mafUnregisterLocalCallback("maf.local.resources.operation.execute", this, "executeOperation()")
+    mafUnregisterLocalCallback("maf.local.resources.operation.executeWithParameters", this, "executeWithParameters(QVariantList)")
+    mafUnregisterLocalCallback("maf.local.resources.operation.stop", this, "stopOperation()")
+    mafUnregisterLocalCallback("maf.local.resources.operation.undo", this, "undoOperation()")
+    mafUnregisterLocalCallback("maf.local.resources.operation.redo", this, "redoOperation()")
+    mafUnregisterLocalCallback("maf.local.resources.operation.sizeUndoStack", this, "undoStackSize()")
+    mafUnregisterLocalCallback("maf.local.resources.operation.currentRunning", this, "currentOperation()")
+    mafUnregisterLocalCallback("maf.local.resources.operation.executionPool", this, "executionPool()")
+    
+    mafUnregisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)")
+
+    // Unregister signals...
+    mafUnregisterLocalSignal("maf.local.resources.operation.start", this, "startOperationSignal(const QString)")
+    mafUnregisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)")
+    mafUnregisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(QVariantList)")
+    mafUnregisterLocalSignal("maf.local.resources.operation.execute", this, "executeOperationSignal()")
+    mafUnregisterLocalSignal("maf.local.resources.operation.executed", this, "executedOperationSignal()")
+    mafUnregisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(QVariantList)")
+    mafUnregisterLocalSignal("maf.local.resources.operation.stop", this, "stopOperationSignal()")
+    mafUnregisterLocalSignal("maf.local.resources.operation.undo", this, "undoOperationSignal()")
+    mafUnregisterLocalSignal("maf.local.resources.operation.redo", this, "redoOperationSignal()")
+    mafUnregisterLocalSignal("maf.local.resources.operation.sizeUndoStack", this, "undoStackSizeSignal()")
+    mafUnregisterLocalSignal("maf.local.resources.operation.currentRunning", this, "currentOperationSignal()")
+    mafUnregisterLocalSignal("maf.local.resources.operation.executionPool", this, "executionPoolSignal()")
+
+    mafIdProvider *provider = mafIdProvider::instance();
+    provider->removeId("maf.local.resources.operation.start");
+    provider->removeId("maf.local.resources.operation.setParameters");
+    provider->removeId("maf.local.resources.operation.execute");
+    provider->removeId("maf.local.resources.operation.executed");
+    provider->removeId("maf.local.resources.operation.executeWithParameters");
+    provider->removeId("maf.local.resources.operation.stop");
+    provider->removeId("maf.local.resources.operation.stopped");
+    provider->removeId("maf.local.resources.operation.undo");
+    provider->removeId("maf.local.resources.operation.redo");
+    provider->removeId("maf.local.resources.operation.sizeUndoStack");
+    provider->removeId("maf.local.resources.operation.currentRunning");
+    provider->removeId("maf.local.resources.operation.executionPool");
 }
 
 void mafOperationManager::initializeConnections() {

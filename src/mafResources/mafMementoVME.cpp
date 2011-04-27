@@ -22,8 +22,7 @@ using namespace mafResources;
 mafMementoVME::mafMementoVME(const QString code_location) : mafMemento(code_location) {
 }
 
-mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const QString code_location)  : mafMemento(obj, code_location) {
-    mafVME *vme = qobject_cast<mafResources::mafVME*>((mafObject *)obj);
+mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const QString code_location)  : mafMemento(obj, code_location) {    mafVME *vme = qobject_cast<mafResources::mafVME*>((mafObject *)obj);
     REQUIRE(vme);
 
     mafMementoPropertyList *list = mementoPropertyList();
@@ -40,13 +39,9 @@ mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const QString co
             list->append(item);
             mafDataSet *dataSet = iter.value();
             //call mafMementoDataSet
-            mafMementoPropertyItem dataSetItem;
-            mafMementoDataSet *mementoDataSet = new mafMementoDataSet(dataSet, dataSet->poseMatrix(), dataSet->dataValue(), binary, mafCodeLocation);
-            mafMementoPropertyList *dataSetList = mementoDataSet->mementoPropertyList();
-            foreach(dataSetItem, *dataSetList) {
-                list->append(dataSetItem);
-            }
-            mafDEL(mementoDataSet);
+            mafMementoDataSet *mementoDataSet = (mafMementoDataSet*)dataSet->createMemento();
+            mementoDataSet->setParent(this);
+            mementoDataSet->setTimeStamp(item.m_Value.toDouble());
             ++iter;
         }
     }
