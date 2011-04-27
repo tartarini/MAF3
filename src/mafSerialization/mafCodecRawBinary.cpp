@@ -31,6 +31,8 @@ void mafCodecRawBinary::encode(mafMemento *memento) {
     m_DataStreamWrite.setDevice(m_Device);
     m_DataStreamWrite.setVersion(QDataStream::Qt_4_6);
 
+    QString path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
+
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     mafMementoPropertyItem item;
 
@@ -42,15 +44,14 @@ void mafCodecRawBinary::encode(mafMemento *memento) {
     QString ot = memento->objectClassType();
     m_DataStreamWrite << ot;
 
-    foreach(item, *propList) { //for should be inside each encodeItem
+    foreach(item, *propList) { //for cycle should be inside each encodeItem
       m_DataStreamWrite << item.m_Name;
       m_DataStreamWrite << (int)item.m_Multiplicity;
+      marshall(item.m_Value); //If will be removed: each memento will have its "encodeItem", and marshall will be moved in a separated class
 
       if (mementoType == "mafResources::mafMementoDataSet") {
         // use mafMementoDataSet to encode dataSet items.
-        memento->encodeItem(NULL, &m_DataStreamWrite, NULL, item);
-      } else {
-        marshall(item.m_Value); //If will be removed: each memento will have its "encodeItem", and marshall will be moved in a separated class
+        memento->encodeItem(&item, path);
       }
     }
 
@@ -73,7 +74,7 @@ mafMemento *mafCodecRawBinary::decode() {
       m_DataStreamRead.setDevice(m_Device);
       m_DataStreamRead >> mementoTagSeparator;
     }
-
+    QString path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
     m_DataStreamRead >> m_LevelDecode; //read memento level
     m_DataStreamRead >> mementoType;
     m_DataStreamRead >> objType;
@@ -83,12 +84,10 @@ mafMemento *mafCodecRawBinary::decode() {
 
     //Fill the map of memento and levelDecode.
     m_MementoMap[m_LevelDecode] = memento;
-
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     mafMementoPropertyItem item;
 
     while(!m_DataStreamRead.atEnd()) {
-        int pos = m_Device->pos();
         m_DataStreamRead >> mementoTagSeparator;
         if(mementoTagSeparator != "MementoType") {
             item.m_Name = mementoTagSeparator;
@@ -97,15 +96,13 @@ mafMemento *mafCodecRawBinary::decode() {
             } else {
                 m_DataStreamRead >> item.m_Multiplicity;
             }
+            QString typeName;
+            m_DataStreamRead >> typeName;
+            item.m_Value = demarshall(typeName, item.m_Multiplicity);
             if(mementoType == "mafResources::mafMementoDataSet") {
-              m_Device->seek(pos);
               // use mafMementoDataSet to encode dataSet items.
-              item.m_Value = memento->decodeItem(NULL, &m_DataStreamRead, NULL);
-            } else {
-              QString typeName;
-              m_DataStreamRead >> typeName;
-              item.m_Value = demarshall(typeName, item.m_Multiplicity);
-            }
+              memento->decodeItem(&item, path);
+            } 
             propList->append(item);
         } else {
             int parentLevel = m_LevelDecode;
@@ -224,30 +221,25 @@ QVariant mafCodecRawBinary::demarshall( QString typeName, int multiplicity ) {
         QString value;
         m_DataStreamRead >> value;
         return QVariant( value );
-    }
-    else if (typeName == "int") {
+    } else if (typeName == "int") {
         int value = 0;
         m_DataStreamRead >> value;
         QVariant val( value );
         return val;
-    }
-    else if( typeName == "double" ) {
+    } else if( typeName == "double" ) {
         double value = 0;
         m_DataStreamRead >> value;
         QVariant val( value );
         return val;
-    }
-    else if( typeName == "boolean" ) {
+    } else if( typeName == "boolean" ) {
         bool value;
         m_DataStreamRead >> value;
         return QVariant( value );
-    }
-    else if( typeName == "datetime" || typeName == "dateTime.iso8601" ) {
+    } else if( typeName == "datetime" || typeName == "dateTime.iso8601" ) {
         QString value;
         m_DataStreamRead >> value;
         return QVariant( QDateTime::fromString( value, Qt::ISODate ) );
-    }
-    else if( typeName == "list" ) {
+    } else if( typeName == "list" ) {
         QVariantList value;
 
         int i = 0;
@@ -258,8 +250,7 @@ QVariant mafCodecRawBinary::demarshall( QString typeName, int multiplicity ) {
             value.append(QVariant(demarshall(type, multi)));
         }
         return QVariant( value );
-    }
-    else if( typeName == "map" )
+    } else if( typeName == "map" )
     {
         QMap<QString,QVariant> stct;
 
@@ -274,11 +265,9 @@ QVariant mafCodecRawBinary::demarshall( QString typeName, int multiplicity ) {
             stct[ nodeName ] = QVariant(demarshall( type, multi ));
         }
         return QVariant(stct);
-    }
-    else if( typeName == "hash" )
+    } else if( typeName == "hash" )
     {
         QHash<QString,QVariant> hash;
-
         int i = 0;
         for (; i < multiplicity; ++i) {
             QString type;
@@ -290,8 +279,7 @@ QVariant mafCodecRawBinary::demarshall( QString typeName, int multiplicity ) {
             hash[ nodeName ] = QVariant(demarshall( type, multi ));
         }
         return QVariant(hash);
-    }
-    else if( typeName == "base64" ) {
+    } else if( typeName == "base64" ) {
         QVariant returnVariant;
         QByteArray dest;
         QByteArray src;
@@ -302,8 +290,7 @@ QVariant mafCodecRawBinary::demarshall( QString typeName, int multiplicity ) {
         ds >> returnVariant;
         if( returnVariant.isValid() ) {
             return returnVariant;
-        }
-        else {
+        } else {
             return QVariant( dest );
         }
     }

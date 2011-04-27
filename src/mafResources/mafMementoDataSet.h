@@ -38,13 +38,13 @@ public:
     mafMementoDataSet(const QString code_location = "");
 
     /// object overloaded constructor.
-    mafMementoDataSet(const mafCore::mafObject *obj, mafPoseMatrix *matrix, mafCore::mafContainerInterface *dataValue, bool binary = true, const QString code_location = "");
+    mafMementoDataSet(const mafCore::mafObject *obj, bool binary = true, const QString code_location = "");
 
     /// Encode property item.
-    /* virtual */ void encodeItem(QXmlStreamWriter *XMLStream, QDataStream *binaryStream, QTextStream *textStream, mafCore::mafMementoPropertyItem item);
+    /* virtual */ void encodeItem(mafCore::mafMementoPropertyItem *item, QString path);
 
     /// Decode property item.
-    /* virtual */ QVariant decodeItem(QXmlStreamWriter *XMLStream, QDataStream *binaryStream, QTextStream *textStream);
+    /* virtual */ void decodeItem(mafCore::mafMementoPropertyItem *item, QString path);
 
     /// Return time stamp.
     double timeStamp() const; 
