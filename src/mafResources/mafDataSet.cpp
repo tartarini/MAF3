@@ -48,7 +48,6 @@ void mafDataSet::setDataValue(mafContainerInterface *data_value) {
     if(m_DataValue != NULL) {
         emit(dataValueDisconnected());
     }
-
     m_DataValue = data_value;
     if(m_DataValue != NULL) {
         emit(dataValueConnected());
@@ -59,16 +58,14 @@ void mafDataSet::setPoseMatrix(const mafPoseMatrix *matrix) {
     if(matrix == NULL) {
         return;
     }
-
     if(m_Matrix == NULL) {
         m_Matrix = new mafPoseMatrix();
     }
-
     *m_Matrix = *matrix;
 }
 
 mafMemento *mafDataSet::createMemento() const {
-    return new mafMementoDataSet(this, m_Matrix, m_DataValue, mafCodeLocation);
+    return new mafMementoDataSet(this, mafCodeLocation);
 }
 
 void mafDataSet::setMemento(mafMemento *memento, bool binary, bool deep_memento) {
@@ -78,14 +75,13 @@ void mafDataSet::setMemento(mafMemento *memento, bool binary, bool deep_memento)
     REQUIRE(memento != NULL);
     REQUIRE(memento->objectClassType() == this->metaObject()->className());
     QString encodeType;
-    QString dataType;
     double timeStamp = 0;
 
     mafMementoPropertyList *list = memento->mementoPropertyList();
     mafMementoPropertyItem item;
     foreach(item, *list) {
         if(item.m_Name == "poseMatrix") {
-            //Create the pose matrix
+            //Restore the pose matrix
             mafPoseMatrix *mat = new mafPoseMatrix();
             int counter = 0;
             int r = 0;
@@ -101,9 +97,6 @@ void mafDataSet::setMemento(mafMemento *memento, bool binary, bool deep_memento)
         } else if (item.m_Name == "encodeType") {
             //Restore codec type
             encodeType = item.m_Value.toString();
-        } else if (item.m_Name == "dataType") {
-            //Restore data type
-            dataType = item.m_Value.toString();
         } else if (item.m_Name == "timeStamp") {
             //Restore time stamp
             this->setTimeStamp(item.m_Value.toDouble());
