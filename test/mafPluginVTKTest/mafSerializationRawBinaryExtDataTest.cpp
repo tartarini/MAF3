@@ -278,5 +278,5 @@ void mafSerializationRawBinaryExtDataTest::mafSerializationVTKSaveTest() {
     }
 }
 
-MAF_REGISTER_TEST(mafSerializationRawBinaryExtDataTest);
+//MAF_REGISTER_TEST(mafSerializationRawBinaryExtDataTest);
 #include "mafSerializationRawBinaryExtDataTest.moc"

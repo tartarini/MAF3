@@ -58,9 +58,11 @@ bool mafMemento::isEqual(const mafObjectBase *obj) const {
 
 void mafMemento::encodeItem(mafMementoPropertyItem *item, QString path) {
   Q_UNUSED(item);
+  Q_UNUSED(path);
 }
 
 void mafMemento::decodeItem(mafMementoPropertyItem *item, QString path) {
   Q_UNUSED(item);
+  Q_UNUSED(path);
 }
 
