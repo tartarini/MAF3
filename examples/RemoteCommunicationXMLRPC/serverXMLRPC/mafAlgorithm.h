@@ -22,10 +22,6 @@ class mafAlgorithm : public mafResources::mafOperation {
     Q_OBJECT
     mafSuperclassMacro(mafResources::mafOperation);
 
-public:
-    /// Object constructor
-    mafAlgorithm(const QString code_location = "");
-
 signals:
     /// Trigger the start execution of the operation.
     void startExecution();
@@ -37,6 +33,14 @@ public slots:
     /// Execute the resource algorithm.
     /*virtual*/ void execute();
 
+public:
+    /// Object constructor
+    mafAlgorithm(const QString code_location = "");
+    
+protected:
+    /// Terminate the operation.
+    /*virtual*/ void terminated();
+    
 private:
     QString m_FileNameInput;
     QString m_FileNameOutput;
