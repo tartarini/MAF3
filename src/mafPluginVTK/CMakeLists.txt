@@ -60,5 +60,5 @@ mafMacroWrapBuild()
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject()
+mafMacroInstallPlugin()
 
