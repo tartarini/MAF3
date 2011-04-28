@@ -102,13 +102,20 @@ bool mafEventDispatcher::disconnectCallback(const mafEvent &props) {
     observer_sig.append(props[SIGNATURE].toString());
 
     mafEvent *itemSignal = m_SignalsHash.value(props[TOPIC].toString());
-    QString event_sig = SIGNAL_SIGNATURE;
-    event_sig.append((*itemSignal)[SIGNATURE].toString());
+    bool result(false);
+    if(itemSignal) {
+        QString event_sig = SIGNAL_SIGNATURE;
+        event_sig.append((*itemSignal)[SIGNATURE].toString());
 
-    QObject *objSignal = (*itemSignal)[OBJECT].value<QObject *>();
-    QObject *objSlot = props[OBJECT].value<QObject *>();
-
-    return disconnect(objSignal, event_sig.toAscii(), objSlot, observer_sig.toAscii());
+        QObject *objSignal = (*itemSignal)[OBJECT].value<QObject *>();
+        QObject *objSlot = props[OBJECT].value<QObject *>();
+    
+        result = disconnect(objSignal, event_sig.toAscii(), objSlot, observer_sig.toAscii());
+    } else {
+        qDebug() << mafTr("Callback has not corresponding signal.");
+    }
+    
+    return result;
 }
 
 bool mafEventDispatcher::removeEventItem(const mafEvent &props) {
