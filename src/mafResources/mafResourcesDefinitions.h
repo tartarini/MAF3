@@ -68,6 +68,15 @@ enum {
     Z_AXIS
 };
 
+/// Typedef to define the operation's status
+typedef enum {
+    IDLE,
+    STARTED,
+    EXECUTING,
+    CANCELED,
+    ABORTED
+} mafOperationStatus;
+    
 } // namespace mafResources
 
 /// Vector of Operation Worker.

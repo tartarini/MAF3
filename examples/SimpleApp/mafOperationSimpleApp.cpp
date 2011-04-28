@@ -45,3 +45,7 @@ void mafOperationSimpleApp::on_textTest_textEdited(QString text) {
 void mafOperationSimpleApp::on_checkScalar_clicked(bool state) {
     qDebug() << mafTr("Scalar state: ") << state;
 }
+
+void mafOperationSimpleApp::terminated() {
+    qDebug() << mafTr("Terminated with status: ") << m_Status;
+}

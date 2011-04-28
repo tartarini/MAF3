@@ -41,6 +41,10 @@ public:
     /// Object constructor.
     testEndlessOperation(const QString code_location = "");
 
+protected:
+    /// Terminate the execution.
+    /*virtual*/ void terminated();
+    
 public slots:
     /// execution method
     /*virtual*/ void execute();
@@ -52,15 +56,19 @@ testEndlessOperation::testEndlessOperation(const QString code_location) : mafOpe
 }
 
 void testEndlessOperation::execute() {
-    while ( !m_Abort ) {
+    while ( m_Status != ABORTED ) {
         ;
     }
 
-    if ( m_Abort ) {
+    if ( m_Status == ABORTED ) {
         return;
     }
 
     emit executionEnded();
+}
+
+void testEndlessOperation::terminated() {
+    
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------
@@ -80,6 +88,10 @@ public:
     /// Return the internal variable value.
     int val();
 
+protected:
+    /// Terminate the execution.
+    /*virtual*/ void terminated();
+    
 public slots:
     /// execution method
     /*virtual*/ void execute();
@@ -111,6 +123,10 @@ void testNotUndoOperation::execute() {
     emit executionEnded();
 }
 
+void testNotUndoOperation::terminated() {
+    
+}
+
 //------------------------------------------------------------------------------------------------------------------------------------------------
 
 /**
@@ -120,13 +136,6 @@ void testNotUndoOperation::execute() {
 class testUndoOperation : public mafResources::mafOperation {
     Q_OBJECT
     mafSuperclassMacro(mafResources::mafOperation);
-
-public:
-    /// Object constructor.
-    testUndoOperation(const QString code_location = "");
-
-    /// Return the internal variable value.
-    int val();
 
 public slots:
     /// execution method
@@ -138,6 +147,17 @@ public slots:
     /// Allows to call the piece of algorithm that is needed to apply the operation again.
     /*virtual*/ void reDo();
 
+public:
+    /// Object constructor.
+    testUndoOperation(const QString code_location = "");
+    
+    /// Return the internal variable value.
+    int val();
+    
+protected:
+    /// Terminate the execution.
+    /*virtual*/ void terminated();
+    
 private:
     int m_Val;
 };
@@ -189,6 +209,10 @@ void testUndoOperation::unDo() {
 void testUndoOperation::reDo() {
     qDebug() << this->objectName() << " performs reDo...";
     m_Val = kMAX_COUNT;
+}
+
+void testUndoOperation::terminated() {
+    
 }
 
 //==========================================================================================
@@ -264,8 +288,6 @@ public slots:
 
 signals:
     void vmeAddSignalTest(mafCore::mafObjectBase *vme);
-
-
 
 private:
     mafEventBusManager *m_EventBus; ///< Reference to the event bus.

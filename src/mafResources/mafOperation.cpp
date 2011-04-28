@@ -14,7 +14,7 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafOperation::mafOperation(const QString code_location) : mafResource(code_location), m_IsRunning(false), m_CanUnDo(true), m_CanAbort(true), m_Abort(false), m_InputPreserve(true) {
+mafOperation::mafOperation(const QString code_location) : mafResource(code_location), m_Status(IDLE), m_CanUnDo(true), m_CanAbort(true), m_InputPreserve(true) {
     setObjectName(this->metaObject()->className());
     connect(this, SIGNAL(executionEnded()), this, SLOT(terminate()));
 }
@@ -23,16 +23,21 @@ mafOperation::~mafOperation() {
 }
 
 bool mafOperation::initialize() {
-    m_IsRunning = true;
-    return m_IsRunning;
+    m_Status = STARTED;
+    return true;
 }
 
 void mafOperation::terminate() {
-    m_IsRunning = false;
+    if (m_Status == EXECUTING) {
+        m_Status = IDLE;
+    } else if (m_Status == STARTED) {
+        m_Status = CANCELED;
+    }
+    terminated();
 }
 
 void mafOperation::abort() {
-    m_Abort = true;
+    m_Status = ABORTED;
 }
 
 void mafOperation::unDo() {

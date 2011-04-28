@@ -16,6 +16,42 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
 
+
+/**
+ Class name: testOperation
+ This is an example of operation.
+ */
+class testOperation : public mafResources::mafOperation {
+    Q_OBJECT
+    mafSuperclassMacro(mafResources::mafOperation);
+    
+public:
+    /// Object constructor.
+    testOperation(const QString code_location = "");
+    
+protected:
+    /// Terminate the execution.
+    /*virtual*/ void terminated();
+    
+    public slots:
+    /// execution method
+    /*virtual*/ void execute();
+};
+
+testOperation::testOperation(const QString code_location) : mafOperation(code_location) {
+    setObjectName("testOperation");
+}
+
+void testOperation::execute() {
+    emit executionEnded();
+}
+
+void testOperation::terminated() {
+    
+}
+
+
+
 /**
  Class name: mafOperationTest
  This class implements the test suite for mafOperation.
@@ -37,7 +73,8 @@ private slots:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
-        m_Operation = mafNEW(mafResources::mafOperation);
+        mafRegisterObject(testOperation);
+        m_Operation = mafNEW(testOperation);
     }
 
     /// Cleanup test variables memory allocation.
@@ -58,8 +95,7 @@ void mafOperationTest::mafOperationAllocationTest() {
     QVERIFY(m_Operation != NULL);
     QVERIFY(m_Operation->canUnDo());
 
-    m_Operation->initialize();
-    QVERIFY ( m_Operation->isRunning() );
+    QVERIFY ( m_Operation->initialize() );
     m_Operation->unDo();
     m_Operation->reDo();
     m_Operation->terminate();

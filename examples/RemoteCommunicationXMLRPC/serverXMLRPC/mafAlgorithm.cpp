@@ -36,3 +36,7 @@ void mafAlgorithm::execute() {
 
     bool ok = QProcess::execute("./testProcess" ,commandAndParameters) == 0;
 }
+
+void mafAlgorithm::terminated() {
+    
+}

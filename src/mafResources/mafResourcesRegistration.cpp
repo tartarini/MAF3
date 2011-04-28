@@ -23,7 +23,6 @@ void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObject(mafResources::mafInterpolatorNearest);
     mafRegisterObject(mafResources::mafDataSet);
     mafRegisterObject(mafResources::mafDataSetCollection);
-    mafRegisterObject(mafResources::mafOperation);
     mafRegisterObject(mafResources::mafView);
     mafRegisterObject(mafResources::mafMementoResource);
     mafRegisterObject(mafResources::mafMementoDataSet);
@@ -41,7 +40,6 @@ void mafResourcesRegistration::unregisterResourcesObjects() {
     mafUnregisterObject(mafResources::mafInterpolatorNearest);
     mafUnregisterObject(mafResources::mafDataSet);
     mafUnregisterObject(mafResources::mafDataSetCollection);
-    mafUnregisterObject(mafResources::mafOperation);
     mafUnregisterObject(mafResources::mafView);
     mafUnregisterObject(mafResources::mafMementoResource);
     mafUnregisterObject(mafResources::mafMementoDataSet);

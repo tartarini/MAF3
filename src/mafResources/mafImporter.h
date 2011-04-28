@@ -48,6 +48,9 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafImporter();
     
+    /// Terminate the operation.
+    /*virtual*/ void terminated();
+    
     /// Request, through the mafEventBus, to import the data corresponding to the m_Filename.
     void checkImportFile();
     

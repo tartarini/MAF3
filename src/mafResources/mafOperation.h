@@ -35,25 +35,6 @@ class MAFRESOURCESSHARED_EXPORT mafOperation : public mafResource {
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
 
-public:
-    /// Object constructor.
-    mafOperation(const QString code_location = "");
-
-    /// Return true or false according to the unDo ability of the operation.
-    bool canUnDo() const;
-
-    /// check if the operation is running.
-    bool isRunning() const;
-
-    /// Initialize the operation. Put here the initialization of operation's parameters.
-    virtual bool initialize();
-
-    /// Return the abort capability of the operation.
-    bool canAbort() const;
-
-    /// Return the status of the input preserve flag.
-    bool isInputPreserve() const;
-
 signals:
     /// Trigger the undo execution.
     void undoExecution();
@@ -70,22 +51,41 @@ public slots:
     virtual void reDo();
 
     /// Terminate the execution by resetting the m_IsRunning at false.
-    virtual void terminate();
+    void terminate();
 
 private slots:
     /// Terminate the execution.
     void abort();
     
+public:
+    /// Object constructor.
+    mafOperation(const QString code_location = "");
     
-
+    /// Return true or false according to the unDo ability of the operation.
+    bool canUnDo() const;
+    
+    /// check if the operation is running.
+    bool isRunning() const;
+    
+    /// Initialize the operation. Put here the initialization of operation's parameters.
+    virtual bool initialize();
+    
+    /// Return the abort capability of the operation.
+    bool canAbort() const;
+    
+    /// Return the status of the input preserve flag.
+    bool isInputPreserve() const;
+    
 protected:
+    /// Virtual method to implement the cleanup of the operation when it ends.
+    virtual void terminated() = 0;
+    
     /// Object destructor.
     /* virtual */ ~mafOperation();
 
-    bool m_IsRunning; ///< Flag that check if the operation is running, i.e. the execution is started
+    volatile mafOperationStatus m_Status; ///< Operation status flag.
     bool m_CanUnDo; ///< Flag that store the unDo capability of the operation.
     bool m_CanAbort;         ///< Flag indicating that the operation can abort its execution or no (default true).
-    volatile bool m_Abort;               ///< Flag indicating that the operation has to be aborted. The code inside the execute slot has to take care about it.
     bool m_InputPreserve;  ///< Flag represnting the behavior of the operationabout the input data. True value means that the input data is not modified (default true).
 
 };
@@ -94,7 +94,7 @@ protected:
 // Inline methods
 /////////////////////////////////////////////////////////////
 inline bool mafOperation::isRunning() const {
-    return m_IsRunning;
+    return m_Status == EXECUTING;
 }
 
 inline bool mafOperation::canUnDo() const {
