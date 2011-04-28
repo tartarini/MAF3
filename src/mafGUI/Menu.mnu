@@ -32,7 +32,7 @@
   	<Action title="About" icon="" tip="Show the About dialog." checkable="0" checked="0" slot="" topic=""></Action>
   </Menu>
   <Menu title="Options" parent="">
-  	<Action title="Settings" icon="" tip="Show the application settings page." checkable="0" checked="0" slot="" topic=""></Action>
+  	<Action title="Settings" icon="" tip="Show the application settings page." checkable="0" checked="0" slot="showSettingsDialog()" topic=""></Action>
   </Menu>
   <Toolbar title="File" actionList="New,Collaborate,Open"></Toolbar>
   <Toolbar title="Edit" actionList="Cut,Copy,Paste"></Toolbar>
