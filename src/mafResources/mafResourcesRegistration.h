@@ -18,7 +18,6 @@
 #include "mafInterpolatorNearest.h"
 #include "mafDataSet.h"
 #include "mafDataSetCollection.h"
-#include "mafOperation.h"
 #include "mafView.h"
 #include "mafSceneNode.h"
 #include "mafHierarchy.h"

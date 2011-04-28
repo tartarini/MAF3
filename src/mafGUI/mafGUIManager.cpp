@@ -40,6 +40,12 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
 
     mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)")
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateMenuForSelectedVme(mafCore::mafObjectBase *)")
+    // OperationManager's callback
+    mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
+    
+    // ViewManager's callback.
+    mafRegisterLocalCallback("maf.local.resources.view.selected", this, "viewSelected(mafCore::mafObjectBase *)");
+    mafRegisterLocalCallback("maf.local.resources.view.noneViews", this, "viewDestroyed()");
 
     m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
     connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafContainerInterface*)), this, SLOT(uiLoaded(mafCore::mafContainerInterface*)));
@@ -385,13 +391,6 @@ void mafGUIManager::registerDefaultEvents() {
     action = menuItemByName("About");
     mafRegisterLocalSignal("maf.local.gui.action.about", action, "triggered()");
     mafRegisterLocalSignal("maf.local.gui.pathSelected", this, "pathSelected(const QString)");
-
-    // OperationManager's callback
-    mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
-
-    // ViewManager's callback.
-    mafRegisterLocalCallback("maf.local.resources.view.selected", this, "viewSelected(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("maf.local.resources.view.noneViews", this, "viewDestroyed()");
 }
 
 void mafGUIManager::createDefaultMenus() {

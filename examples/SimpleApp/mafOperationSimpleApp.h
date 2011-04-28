@@ -24,17 +24,6 @@ class mafOperationSimpleApp : public mafResources::mafOperation {
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafOperation);
 
-public:
-    /// Object constructor.
-    mafOperationSimpleApp(const QString code_location = "");
-
-    /// Accept function
-    static bool acceptObject(mafCore::mafObjectBase *obj);
-
-    void setCheckScalar(bool s);
-
-    bool checkScalar() const;
-
 public slots:
     /// Execute the resource algorithm.
     /*virtual*/ void execute();
@@ -43,6 +32,21 @@ public slots:
 
     void on_checkScalar_clicked(bool state);
 
+public:
+    /// Object constructor.
+    mafOperationSimpleApp(const QString code_location = "");
+    
+    /// Accept function
+    static bool acceptObject(mafCore::mafObjectBase *obj);
+    
+    void setCheckScalar(bool s);
+    
+    bool checkScalar() const;
+    
+protected:
+    /// Terminate the operation's execution.
+    /*virtual*/ void terminated();
+    
 private:
     bool m_CheckScalar;
 };

@@ -45,6 +45,12 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 LINK_DIRECTORIES(${VTK_LIBRARY_DIRS})
 
 ## #################################################################
+## copy ui files
+## #################################################################
+
+mafCopyFilesFromExtension("ui" "mafPluginVTK")
+
+## #################################################################
 ## Wrapping Build rules
 ## #################################################################
 

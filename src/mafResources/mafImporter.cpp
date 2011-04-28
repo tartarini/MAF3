@@ -35,6 +35,10 @@ void mafImporter::setParameters(QVariantList parameters) {
     m_Filename = parameters.at(0).toString();
 }
 
+void mafImporter::terminated() {
+    
+}
+
 void mafImporter::cleanup() {
     // Cleanup memory and deregister callback.
     mafDEL(m_Output);
@@ -43,10 +47,10 @@ void mafImporter::cleanup() {
 void mafImporter::checkImportFile() {
     if (m_Filename.isEmpty()) {
         qWarning() << mafTr("Filename of data to import is needed.");
-        m_Abort = true;
+        m_Status = ABORTED;
     } else if (!QFile::exists(m_Filename)) {
         qCritical() << m_Filename << mafTr(" doesn't exists!!.");
-        m_Abort = true;
+        m_Status = ABORTED;
     }
 }
 
