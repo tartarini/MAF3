@@ -55,9 +55,6 @@ public slots:
     /// Execute the operation.
     /*virtual*/ void execute();
 
-    /// Terminate the operation.
-//    /*virtual*/ void terminate(bool result);
-
     /// Allows to call the piece of algorithm that is needed to restore the previous state of the operation's execution.
     /*virtual*/ void unDo();
 
@@ -125,6 +122,9 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafOperationParametricSurface();
 
+    /// Terminate the operation.
+    /*virtual*/ void terminated();
+    
 private:
     /// Create parametric surfaces.
     void initializeParametricSurfaces();
