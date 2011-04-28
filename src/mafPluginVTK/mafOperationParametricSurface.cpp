@@ -110,6 +110,7 @@ int mafOperationParametricSurface::parametricSurfaceType() {
 }
 
 void mafOperationParametricSurface::execute() {
+    m_Status = EXECUTING;
     emit executionEnded();
 }
 
