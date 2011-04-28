@@ -4,9 +4,12 @@ import time
 from datetime import datetime
 import glob
 
+try:
+    from qa import mafPath
+except ImportError:
+    import mafPath
+
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
-sys.path.append(os.path.realpath(os.path.join(currentPathScript,"..","..")))
-from qa import mafPath
 
 def usage():
     print "Usage:  python LCOVCoveragePublish.py"

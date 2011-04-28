@@ -6,10 +6,12 @@ import glob
 import lxml.etree as etree
 from lxml.etree import XSLT,fromstring
 
-currentPathScript = os.path.split(os.path.realpath(__file__))[0]
+try:
+    from qa import mafPath
+except ImportError:
+    import mafPath
 
-sys.path.append(os.path.realpath(os.path.join(currentPathScript,"..","..")))
-from qa import mafPath
+currentPathScript = os.path.split(os.path.realpath(__file__))[0]
 
 modulesDir = mafPath.mafSourcesDir
 qaDir = mafPath.mafQADir

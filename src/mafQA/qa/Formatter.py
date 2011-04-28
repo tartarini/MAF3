@@ -8,9 +8,12 @@ import shutil
 from datetime import datetime
 import getopt
 
+try:
+    from qa import mafPath
+except ImportError:
+    import mafPath
+
 currentPathScript = os.path.split(os.path.realpath(__file__))[0]
-sys.path.append(os.path.realpath(os.path.join(currentPathScript, "..")))
-from qa import mafPath
 
 def usage():
     print "Usage: python Formatter.py [--enable-LCOVCoverage]"
@@ -103,33 +106,33 @@ def run(param):
    if(param['LCOVCoverage']):
       #generateExternalLink
       externalScriptDirectory = os.path.join(scriptsDir, "ExternalScripts")
-      os.chdir(externalScriptDirectory)
+      #os.chdir(externalScriptDirectory)
       os.system("python " + os.path.join(externalScriptDirectory, "LCOVCoveragePublish.py"))
       
       li = "<li><a href=\"../externalLCOVCoverage/index.html\">LCOV Coverage</a></li>";
       headString = headString[:pos] + li + headString[pos:]
       pos = pos + len(li)
-      os.chdir(scriptsDir)
+      #os.chdir(scriptsDir)
 
    if(param['cppcheck']):
       #generateExternalLink
       externalScriptDirectory = os.path.join(scriptsDir,"ExternalScripts")
-      os.chdir(externalScriptDirectory)
+      #os.chdir(externalScriptDirectory)
       os.system("python " + os.path.join(externalScriptDirectory,"cppcheckPublish.py"))
       li = "<li><a href=\"../externalcppcheck/index.html\">Static Analysis</a></li>"
       headString = headString[:pos] + li + headString[pos:]
       pos = pos + len(li)
-      os.chdir(scriptsDir)
+      #os.chdir(scriptsDir)
    
    if(param['cccc']):
       #generateExternalLink
       externalScriptDirectory = os.path.join(scriptsDir,"ExternalScripts")
-      os.chdir(externalScriptDirectory)
+      #os.chdir(externalScriptDirectory)
       os.system("python " + os.path.join(externalScriptDirectory, "ccccPublish.py"))
       li = "<li><a href=\"../externalcccc/index.html\">Code Complexity</a></li>"
       headString = headString[:pos] + li + headString[pos:]
       pos = pos + len(li)
-      os.chdir(scriptsDir)
+      #os.chdir(scriptsDir)
 
    #remove placeholder for external scripting
    headString = headString.replace("@@@_EXTERNAL_TOOLS_REPORT_@@@", "")
