@@ -49,9 +49,8 @@ bool mafDragDropModel::dropMimeData(const QMimeData *data,
     QString objName = "mafResources::mafSceneNode";
     if (objName.compare(obj->metaObject()->className())  == 0) {
       mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeReparent", mafEventTypeLocal, &argList);
-    } else {
-      mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.reparent", mafEventTypeLocal, &argList);
-    }
+    } 
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.reparent", mafEventTypeLocal, &argList);
     return true;
 }
 
