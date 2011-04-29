@@ -64,11 +64,9 @@ void testCustomManager::createdExtData(mafCore::mafContainerInterface *data) {
     qDebug("%s", mafTr("External data loaded!!").toAscii().data());
     QVERIFY(data != NULL);
 
-
     mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, data);
     vtkPolyDataMapper *sphereMapper = vtkPolyDataMapper::New();
     sphereMapper->SetInputConnection(*dataSet);
-
 
     double boundsIn[6] = {-2.5,2.5,-1.5,1.5,-4,4};
     double boundsOut[6];
