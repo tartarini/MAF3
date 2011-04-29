@@ -164,6 +164,7 @@ bool mafTreeModel::removeRows(int row, int count, const QModelIndex &parent) {
         removeFromList(temp->index());
         return QStandardItemModel::removeRows(row, count, parent);
     }
+    return false;
 }
 
 void mafTreeModel::removeFromList(const QModelIndex &index) {
