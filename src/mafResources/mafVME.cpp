@@ -235,21 +235,6 @@ void mafVME::setMemento(mafMemento *memento, bool binary, bool deep_memento) {
     execute();
 }
 
-/*void mafVME::updateData() {
-    QHash<mafMementoDataSet *, double>::iterator iter = m_MementoDataSetHash.begin();
-    while(iter != m_MementoDataSetHash.end()) {
-        mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
-        mafMementoDataSet *memento = iter.key();
-        memento->setObjectClassType(dataSet->metaObject()->className());
-        dataSet->setMemento(memento, m_Binary);
-        this->dataSetCollection()->insertItem(dataSet, iter.value());
-        mafDEL(dataSet);
-        ++iter;
-    }
-    this->setDataLoaded(true);
-    this->updateBounds();
-}*/
-
 void mafVME::updateBounds() {
     if (this->dataSetCollection()->itemAtCurrentTime() != NULL){
         mafDataBoundaryAlgorithm *boundary = NULL;
@@ -268,16 +253,3 @@ void mafVME::updateBounds() {
 void mafVME::setVisibility(bool visible) {
   m_Visibility = visible;
 }
-
-/*void mafVME::mementoDataSetMap(mafMemento *memento,  QMap<double, mafMementoDataSet*> &mementoMap) {
-  int i = 0;
-  int size = memento->children().size();
-  for (i; i< size; i++) {
-    mafMementoDataSet* mem = (mafMementoDataSet*)memento->children().at(i);
-    QString mementoName = mem->metaObject()->className();
-    if (mementoName == "mafResources::mafMementoDataSet") {
-      double timeStamp = mem->timeStamp();
-      mementoMap[timeStamp] = mem;
-    }
-  }
-}*/

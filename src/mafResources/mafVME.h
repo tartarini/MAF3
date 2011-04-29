@@ -115,9 +115,6 @@ public slots:
     /// Set the current timestamp for the VME.
     void setTimestamp(double t);
 
-    /// Load dataSet.
-    //void updateData();
-
     /// Update bounds of the bounding box.
     /*virtual*/ void updateBounds();
 
