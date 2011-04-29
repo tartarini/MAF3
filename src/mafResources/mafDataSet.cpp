@@ -54,6 +54,14 @@ void mafDataSet::setDataValue(mafContainerInterface *data_value) {
     }
 }
 
+mafContainerInterface *mafDataSet::dataValue() {
+  if (m_DataValue == NULL)
+  {
+    updateDataValue();
+  }
+  return m_DataValue;
+}
+
 void mafDataSet::setPoseMatrix(const mafPoseMatrix *matrix) {
     if(matrix == NULL) {
         return;
@@ -74,6 +82,24 @@ void mafDataSet::setMemento(mafMemento *memento, bool binary, bool deep_memento)
     // Design by contract condition.
     REQUIRE(memento != NULL);
     REQUIRE(memento->objectClassType() == this->metaObject()->className());
+
+    int n = 0;
+    int childrenNum = memento->children().size();
+    for (n; n < childrenNum; n++) {
+      mafMemento *m = (mafMemento *)memento->children().at(n);
+      mafMemento::MementoHierarchyType type = m->mementoHierarchyType();
+      if (type == mafMemento::MementoHierarchyType::INHERIT_MEMENTO) {
+        //set the memento of the superclass
+        Superclass::setMemento(m, deep_memento);
+      } else {
+        //set the memento of the children memento
+        QString objClassType = m->objectClassType();
+        mafCore::mafObjectBase *objBase = mafNEWFromString(objClassType);
+        mafCore::mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
+        obj->setMemento(m, deep_memento);
+      }
+    }
+
     QString encodeType;
     double timeStamp = 0;
 
@@ -102,14 +128,24 @@ void mafDataSet::setMemento(mafMemento *memento, bool binary, bool deep_memento)
             this->setTimeStamp(item.m_Value.toDouble());
         } else if (item.m_Name == "fileName") {
             //Read from external file
-            mafCore::mafContainerInterface *container;
-            mafEventArgumentsList argList;
-            QString fileName = item.m_Value.toString();
-            argList.append(mafEventArgument(QString, fileName));
-            argList.append(mafEventArgument(QString, encodeType));
-            QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafContainerInterface *, container);
-            mafEventBusManager::instance()->notifyEvent("maf.local.serialization.import", mafEventTypeLocal, &argList, &ret_val);
-            m_DataValue = container;
+            //Save informations, and load data later...
+            QString nameOfFile = item.m_Value.toString();
+            m_DataFileInfo.fileName = nameOfFile;
+            m_DataFileInfo.encodeType = encodeType;
          }
     }
+}
+
+void mafDataSet::updateDataValue() {
+  if (!m_DataFileInfo.fileName.isEmpty() && !m_DataFileInfo.encodeType.isEmpty()){
+    mafCore::mafContainerInterface *container;
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(QString, m_DataFileInfo.fileName));
+    argList.append(mafEventArgument(QString, m_DataFileInfo.encodeType));
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafContainerInterface *, container);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.import", mafEventTypeLocal, &argList, &ret_val);
+    m_DataValue = container;
+  } else {
+    qDebug() << mafTr("Unable to load data set!");
+  }
 }
