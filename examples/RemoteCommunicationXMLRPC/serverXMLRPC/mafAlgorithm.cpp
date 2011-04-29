@@ -27,6 +27,7 @@ void mafAlgorithm::setParameters(QList<QVariant> parameters) {
 }
 
 void mafAlgorithm::execute() {
+    m_Status = EXECUTING;
     qDebug("%s", mafTr("Executing testProcess!!!").toAscii().data());
 
     QStringList commandAndParameters;
@@ -35,6 +36,7 @@ void mafAlgorithm::execute() {
                         << QString::number(m_IterationParameter);
 
     bool ok = QProcess::execute("./testProcess" ,commandAndParameters) == 0;
+    emit executionEnded();
 }
 
 void mafAlgorithm::terminated() {
