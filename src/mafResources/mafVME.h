@@ -116,7 +116,7 @@ public slots:
     void setTimestamp(double t);
 
     /// Load dataSet.
-    void updateData();
+    //void updateData();
 
     /// Update bounds of the bounding box.
     /*virtual*/ void updateBounds();
