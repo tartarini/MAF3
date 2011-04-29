@@ -15,3 +15,6 @@ using namespace mafGUI;
 
 mafGUIApplicationSettingsPage::mafGUIApplicationSettingsPage(QWidget *parent) : QWidget(parent), m_PageText(mafTr("Settings Page")) {
 }
+
+mafGUIApplicationSettingsPage::~mafGUIApplicationSettingsPage(void) {
+}

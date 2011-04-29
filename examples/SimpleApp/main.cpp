@@ -6,34 +6,12 @@
 
 #include <mafLogic.h>
 
-#define VTK_PLUGIN_NAME "mafPluginVTK.mafplugin"
-
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     a.setOrganizationName("SCS");
     a.setOrganizationDomain("scsolutions.org");
     a.setApplicationName("SimpleApp");
     a.setApplicationVersion("1.0");
-
-    QString pluginVTK;
-    pluginVTK.append(VTK_PLUGIN_NAME);
-
-    QString p = QDir::currentPath();
-    p.append(QDir::separator());
-    p.append("plugins");
-
-    QDir pluginDir(p);
-    if(!pluginDir.exists(p)) {
-        pluginDir.mkdir(p);
-    }
-    p.append(QDir::separator());
-    p.append(VTK_PLUGIN_NAME);
-
-    // Remove a previous version of the plug-in just to be updated in a
-    // development phase.
-    bool res = QFile::remove(p);
-    // Copy the new one into the plugin directory.
-    res = QFile::copy(pluginVTK, p);
 
     // Create the application's logic instance
     mafApplicationLogic::mafLogic *logic = new mafApplicationLogic::mafLogic();

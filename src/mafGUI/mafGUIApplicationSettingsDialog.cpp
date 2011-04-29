@@ -67,6 +67,8 @@ void mafGUIApplicationSettingsDialog::setupSettingsDialog() {
     m_ContentsWidget->setCurrentRow(0);
 
     connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(m_ContentsWidget, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(changePage(QListWidgetItem *, QListWidgetItem *)));
+                                     
 
     QHBoxLayout *horizontalLayout = new QHBoxLayout;
     horizontalLayout->addWidget(m_ContentsWidget);

@@ -62,6 +62,10 @@
 //%ignore function(type parameter);
 
 %ignore modifiedObject();
+%ignore ref();
+%ignore incrementReference();
+%ignore decreaseReference();
+%ignore deleteObject();
 
 
 #ifdef SWIGPYTHON
