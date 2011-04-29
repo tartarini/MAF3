@@ -18,9 +18,20 @@
 #include <mafContainer.h>
 #include <mafContainerInterface.h>
 
+#ifdef WIN32
+#define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
+#else
+#ifdef __APPLE__
+#define SERIALIZATION_LIBRARY_NAME "mafSerialization.dylib"
+#else
+#define SERIALIZATION_LIBRARY_NAME "mafSerialization.so"
+#endif
+#endif
+
 
 using namespace mafCore;
 using namespace mafResources;
+using namespace mafEventBus;
 
 //! <title>
 //mafMementoDataSet
@@ -110,16 +121,19 @@ class mafMementoDataSetTest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        mafResourcesRegistration::registerResourcesObjects();
-        mafRegisterObject(testExternalDataCodecCustom);
-        m_MementoDataSet = NULL;
-        m_DataSet = mafNEW(mafResources::mafDataSet);
+      // Create before the instance of the Serialization manager, which will register signals.
+      bool res(false);
+      res = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
+      QVERIFY(res);
+
+      mafMessageHandler::instance()->installMessageHandler();
+      mafResourcesRegistration::registerResourcesObjects();
+      mafRegisterObject(testExternalDataCodecCustom);
+      m_DataSet = mafNEW(mafResources::mafDataSet);
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        mafDEL(m_MementoDataSet);
         mafDEL(m_DataSet);
         mafMessageHandler::instance()->shutdown();
     }
@@ -131,25 +145,19 @@ private slots:
 
 private:
     mafDataSet *m_DataSet; ///< Test var.
-    mafMementoDataSet *m_MementoDataSet; ///< Test var.
 };
 
 void mafMementoDataSetTest::mafMementoDataSetDefaultAllocationTest() {
     QVERIFY(m_DataSet != NULL);
-    mafMemento *m = (mafMemento *)mafNEWFromString("mafResources::mafMementoDataSet");
-    QVERIFY(m != NULL);
-    m_MementoDataSet = qobject_cast<mafMementoDataSet*>(m);
-    QVERIFY(m_MementoDataSet != NULL);
 }
 
 void mafMementoDataSetTest::mafMementoDataSetCustomAllocationTest() {
-    mafDEL(m_MementoDataSet);
     QString testString("testStringa");
 
     mafContainer<testExternalDataType> container;
     container = new testExternalDataType(testString);
     container.setExternalDataType("testExternalDataType");
-    container.setExternalCodecType("testExternalDataCodecCustom");
+    container.setExternalCodecType("CUSTOM");
     m_DataSet->setDataValue(&container);
 
     mafPoseMatrix *matrix = new mafPoseMatrix();
@@ -157,25 +165,36 @@ void mafMementoDataSetTest::mafMementoDataSetCustomAllocationTest() {
     matrix->put(0,0,3);
     m_DataSet->setPoseMatrix(matrix);
 
+    //Plug the codec
+    QString obj_type = "testExternalDataType";
+    QString encodeType = "CUSTOM";
+    QString codec = "testExternalDataCodecCustom";
+
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(QString, obj_type));
+    argList.append(mafEventArgument(QString, encodeType));
+    argList.append(mafEventArgument(QString, codec));
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal, &argList);
+
     //! <snippet>
     ////Create the DataSet memento that stores poseMatrix and dataValue
     ////of the DataSet.
-    m_MementoDataSet = new mafMementoDataSet(m_DataSet, mafCodeLocation);
+    mafMemento *memento = m_DataSet->createMemento();
     //! </snippet>
-    QVERIFY(m_MementoDataSet != NULL);
+    QVERIFY(memento != NULL);
 
-    //After setMemento, return value must be equal to the orginal value
-    //! <snippet>
-    ////Restore the DataSet throught the Memento
     mafDataSet *returnDataSet = mafNEW(mafResources::mafDataSet);
-    returnDataSet->setMemento(m_MementoDataSet);
-    //! </snippet>
-    mafContainer<QString> *string = mafContainerPointerTypeCast(QString, returnDataSet->dataValue());
-    QString out;
-    out = string->externalData()->toAscii();
-    QCOMPARE(out, testString);
+    returnDataSet->setMemento(memento);
+
+    //Check if m_DataSet memento is equal to returnDataSet memento.
+    mafMemento *returnMemento = returnDataSet->createMemento();
+    QVERIFY(memento->isEqual(returnDataSet));
+
+    delete matrix;
     mafDEL(returnDataSet);
+    mafDEL(returnMemento);
+    mafDEL(memento);
 }
 
-//MAF_REGISTER_TEST(mafMementoDataSetTest);
+MAF_REGISTER_TEST(mafMementoDataSetTest);
 #include "mafMementoDataSetTest.moc"

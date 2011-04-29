@@ -19,9 +19,20 @@
 #include <mafContainer.h>
 #include <mafContainerInterface.h>
 
+#ifdef WIN32
+#define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
+#else
+#ifdef __APPLE__
+#define SERIALIZATION_LIBRARY_NAME "mafSerialization.dylib"
+#else
+#define SERIALIZATION_LIBRARY_NAME "mafSerialization.so"
+#endif
+#endif
+
 
 using namespace mafCore;
 using namespace mafResources;
+using namespace mafEventBus;
 
 //! <title>
 //mafMementoVME
@@ -150,10 +161,14 @@ class mafMementoVMETest : public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
+        // Create before the instance of the Serialization manager, which will register signals.
+        bool res(false);
+        res = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
+        QVERIFY(res);
+
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
         mafRegisterObject(testExtDataCodecCustom);
-        //m_MementoVME = NULL;
         m_VME = mafNEW(mafResources::mafVME);
     }
 
@@ -171,16 +186,10 @@ private slots:
 private:
     mafVME *m_VME; ///< Test var.
     mafDataSet *m_DataSet; 
-    //mafMementoVME *m_MementoVME; ///< Test var.
 };
 
 void mafMementoVMETest::mafMementoVMEDefaultAllocationTest() {
     QVERIFY(m_VME != NULL);
-    /*mafMemento *m = (mafMemento *)mafNEWFromString("mafResources::mafMementoVME");
-    QVERIFY(m != NULL);
-    m_MementoVME = qobject_cast<mafMementoVME*>(m);
-    QVERIFY(m_MementoVME != NULL);
-    mafDEL(m_MementoVME);*/
 }
 
 void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
@@ -192,7 +201,7 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
     mafContainer<testExtDataType> container;
     container = new testExtDataType(testString);
     container.setExternalDataType("testExtDataType");
-    container.setExternalCodecType("testExtDataCodecCustom");
+    container.setExternalCodecType("CUSTOM");
     mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
     dataSet->setDataValue(&container);
 
@@ -205,7 +214,7 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
     mafContainer<testExtDataType> container2;
     container2 = new testExtDataType(testString2);
     container2.setExternalDataType("testExtDataType");
-    container2.setExternalCodecType("testExtDataCodecCustom");
+    container2.setExternalCodecType("CUSTOM");
     mafDataSet *dataSet2 = mafNEW(mafResources::mafDataSet);
     dataSet2->setDataValue(&container2);
 
@@ -222,42 +231,42 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
     m_VME->setDataPipe(dataPipe);
     dataPipe->release();
 
+    //Plug the codec
+    QString obj_type = "testExtDataType";
+    QString encodeType = "CUSTOM";
+    QString codec = "testExtDataCodecCustom";
+
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(QString, obj_type));
+    argList.append(mafEventArgument(QString, encodeType));
+    argList.append(mafEventArgument(QString, codec));
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal, &argList);
+
     //! <snippet>
     ////Create the VME Memento that stores dataSetCollection and dataPipe
     ////of the VME.
-    mafMemento *m = m_VME->createMemento();
-    //m_MementoVME = new mafMementoVME(m_VME, true, mafCodeLocation);
+    mafMemento *memento = m_VME->createMemento();
     //! </snippet>
-    QVERIFY(m != NULL);
-    //m->setParent(m_MementoVME);
+    QVERIFY(memento != NULL);
 
     //! <snippet>
     ////Restore the VME throught Memento
     mafVME *returnVME = mafNEW(mafResources::mafVME);
-    returnVME->setMemento(m);
-    returnVME->updateData();
+    returnVME->setMemento(memento);
+
     //! </snippet>
     QVERIFY(dataPipe->isEqual(returnVME->dataPipe()));
 
-    mafDataSet *returnDataSet;
-    returnDataSet = returnVME->dataSetCollection()->itemAt(0);
-    mafContainer<QString> *string = mafContainerPointerTypeCast(QString, returnDataSet->dataValue());
-    QString out;
-    out = string->externalData()->toAscii();
-    QCOMPARE(out, testString);
-
-    mafDataSet *returnDataSet2;
-    returnDataSet2 = returnVME->dataSetCollection()->itemAt(1);
-    mafContainer<QString> *string2 = mafContainerPointerTypeCast(QString, returnDataSet2->dataValue());
-    QString out2;
-    out2 = string2->externalData()->toAscii();
-    QCOMPARE(out2, testString2);
+    //Check if m_VME memento is equal to returnVME memento
+    mafMemento *returnMemento = returnVME->createMemento();
+    memento->isEqual(returnMemento);
 
     mafDEL(dataSet);
     mafDEL(dataSet2);
     mafDEL(returnVME);
-    mafDEL(m);
+    mafDEL(returnMemento);
+    mafDEL(memento);
 }
 
-//MAF_REGISTER_TEST(mafMementoVMETest);
+MAF_REGISTER_TEST(mafMementoVMETest);
 #include "mafMementoVMETest.moc"
