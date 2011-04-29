@@ -11,6 +11,7 @@
 
 #include "mafVMEManager.h"
 #include "mafVME.h"
+#include "mafSceneNode.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -128,7 +129,14 @@ void mafVMEManager::vmeRemove(mafObjectBase *vme) {
 
 void mafVMEManager::vmeReparent(mafObjectBase *vme, mafObjectBase *vmeParent) {
   if (m_VMEHierarchy != NULL) {
-    m_VMEHierarchy->reparentHierarchyNode(vme, vmeParent);
+    QString objName = "mafResources::mafSceneNode";
+    if (objName.compare(vme->metaObject()->className()) == 0) {
+      mafSceneNode *obj = qobject_cast<mafSceneNode *>(vme);
+      mafSceneNode *objParent = qobject_cast<mafSceneNode *>(vmeParent);
+      m_VMEHierarchy->reparentHierarchyNode(obj->vme(), objParent->vme());
+    } else {
+      m_VMEHierarchy->reparentHierarchyNode(vme, vmeParent);
+    }
   }
 }
 

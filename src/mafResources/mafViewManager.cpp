@@ -169,7 +169,7 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
         bool view_is_present = m_CreatedViewList.contains(v);
         if(!view_is_present) {
             // TODO: add to the new view all the created VME wrapped into the mafSceneNode each one.
-            // Connect the manager to the view destryed signal
+            // Connect the manager to the view destroyed signal
             connect(v, SIGNAL(destroyed()), this, SLOT(viewDestroyed()));
             // add the new created view to the list.
             m_CreatedViewList.append(v);
