@@ -32,12 +32,15 @@ public:
     /// Object constructor.
     mafGUIApplicationSettingsPage(QWidget *parent = 0);
 
+    /// Object destructor.
+    virtual ~mafGUIApplicationSettingsPage(void);
+    
     /// Return the icon associated with the setting's page.
     const QIcon &pageIcon() const;
 
     /// Return the text title associated with the text (the object's name)
     const QString &pageText() const;
-
+    
 protected:
     QString m_PageText; ///< text that will be shown into the dialog setting's list
     QIcon m_PageIcon; ///< Icon image associated with the setting page.
