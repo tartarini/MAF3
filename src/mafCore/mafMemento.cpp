@@ -18,7 +18,7 @@ mafMemento::mafMemento(const QString code_location) : mafObjectBase(code_locatio
     m_MementoPropertyList.clear();
 }
 
-mafMemento::mafMemento(const mafObject *obj, const QString code_location) : mafObjectBase(code_location), m_ObjectClassType(""), m_MementoHierarchyType(MementoHierarchyType::INHERIT_MEMENTO) {
+mafMemento::mafMemento(const mafObject *obj, const QString code_location) : mafObjectBase(code_location), m_ObjectClassType(""), m_MementoHierarchyType(INHERIT_MEMENTO) {
     REQUIRE(obj);
     const QMetaObject* meta = obj->metaObject();
     setObjectClassType(meta->className());
@@ -26,8 +26,8 @@ mafMemento::mafMemento(const mafObject *obj, const QString code_location) : mafO
     m_MementoPropertyList.clear();
 }
 
- mafMemento::~mafMemento() {
- }
+mafMemento::~mafMemento() {
+}
 
 bool mafMemento::isEqual(const mafObjectBase *obj) const {
     // First check the isEqual for the parent class.

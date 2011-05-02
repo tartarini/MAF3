@@ -42,7 +42,7 @@ mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const QString co
             mafMementoDataSet *mementoDataSet = (mafMementoDataSet*)dataSet->createMemento();
             mementoDataSet->setParent(this);
             //Set mementoDataSet has "COMPOSE MEMENTO" of mementoVME.
-            mementoDataSet->setProperty("mementoHierarchyType", mafMemento::MementoHierarchyType::COMPOSE_MEMENTO);
+            mementoDataSet->setProperty("mementoHierarchyType", COMPOSE_MEMENTO);
             mementoDataSet->setTimeStamp(item.m_Value.toDouble());
             ++iter;
         }

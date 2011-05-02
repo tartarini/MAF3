@@ -185,15 +185,15 @@ void mafVME::setMemento(mafMemento *memento, bool binary, bool deep_memento) {
     int childrenNum = memento->children().size();
     for (n; n < childrenNum; n++) {
       mafMemento *m = (mafMemento *)memento->children().at(n);
-      mafMemento::MementoHierarchyType type = m->mementoHierarchyType();
-      if (type == mafMemento::MementoHierarchyType::INHERIT_MEMENTO) {
+      MementoHierarchyType type = m->mementoHierarchyType();
+      if (type == INHERIT_MEMENTO) {
         //set the memento of the superclass
         Superclass::setMemento(m, deep_memento);
       } else {
         //set the memento of the children memento
         QString objClassType = m->objectClassType();
-        mafCore::mafObjectBase *objBase = mafNEWFromString(objClassType);
-        mafCore::mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
+        mafObjectBase *objBase = mafNEWFromString(objClassType);
+        mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
         obj->setMemento(m, deep_memento);
 
         //TODO: remove and create mafDataSetCollection

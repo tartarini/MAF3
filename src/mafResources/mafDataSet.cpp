@@ -87,8 +87,8 @@ void mafDataSet::setMemento(mafMemento *memento, bool binary, bool deep_memento)
     int childrenNum = memento->children().size();
     for (n; n < childrenNum; n++) {
       mafMemento *m = (mafMemento *)memento->children().at(n);
-      mafMemento::MementoHierarchyType type = m->mementoHierarchyType();
-      if (type == mafMemento::MementoHierarchyType::INHERIT_MEMENTO) {
+      MementoHierarchyType type = m->mementoHierarchyType();
+      if (type == INHERIT_MEMENTO) {
         //set the memento of the superclass
         Superclass::setMemento(m, deep_memento);
       } else {
