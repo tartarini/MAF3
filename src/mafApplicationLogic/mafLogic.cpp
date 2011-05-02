@@ -23,9 +23,9 @@ using namespace mafEventBus;
     #define RESOURCES_LIBRARY_NAME "mafResources.dll"
 #else
     #ifdef __APPLE__
-        #define RESOURCES_LIBRARY_NAME "mafResources.dylib"
+        #define RESOURCES_LIBRARY_NAME "libmafResources.dylib"
     #else
-        #define RESOURCES_LIBRARY_NAME "mafResources.so"
+        #define RESOURCES_LIBRARY_NAME "libmafResources.so"
     #endif
 #endif
 

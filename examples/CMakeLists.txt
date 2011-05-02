@@ -16,19 +16,13 @@
 
 include(${MAF_USE_FILE_CONFIG})
 
-if(BUILD_EXAMPLES)
 
-  file(GLOB CUR_FILE "CMakeLists.txt")
-  get_filename_component(CUR_ABSOLUTE_DIR ${CUR_FILE} PATH)  
+ADD_SUBDIRECTORY(qaCheck)
+ADD_SUBDIRECTORY(RemoteCommunicationXMLRPC)
+ADD_SUBDIRECTORY(SimpleApp)
 
-  FILE(GLOB dir_list "${CUR_ABSOLUTE_DIR}/*")
-  
-  FOREACH(dir_name ${dir_list})
-    FILE(RELATIVE_PATH local_dir_name "${CUR_ABSOLUTE_DIR}" ${dir_name})
-	  IF(IS_DIRECTORY ${dir_name} AND NOT ${dir_name} STREQUAL ".git")
-        INCLUDE_DIRECTORIES("${dir_name}")
-		SUBDIRS("${local_dir_name}")
-	  ENDIF(IS_DIRECTORY ${dir_name} AND NOT ${dir_name} STREQUAL ".git")
-  ENDFOREACH(dir_name ${dir_list})
+if(BUILD_WRAP)
+  ADD_SUBDIRECTORY(mafInterpreter)
+  ADD_SUBDIRECTORY(HyperModelMonitor)
+endif(BUILD_WRAP)
 
-endif(BUILD_EXAMPLES)

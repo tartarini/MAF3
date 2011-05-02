@@ -59,6 +59,7 @@ void mafLoggerWidget::loggedMessage(const QtMsgType type, const QString &msg) {
     }
     line.append(msg);
     m_TextWidgetLog->append(line);
+    line.clear();
 }
 
 bool mafLoggerWidget::isEqual(const mafObjectBase *obj) const {

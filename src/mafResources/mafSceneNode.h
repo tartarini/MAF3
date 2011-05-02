@@ -33,11 +33,11 @@ class MAFRESOURCESSHARED_EXPORT mafSceneNode : public mafCore::mafObject {
     mafSuperclassMacro(mafCore::mafObject);
 
 public:
-    /// Object constructor. USE CONSTRUCTOR BELOW WHICH TAKES VME AS INPUT.
+    /// Object constructor. USE THE CONSTRUCTOR WITH VME AS PARAMETER.
     mafSceneNode(const QString code_location = "");
 
     /// Object constructor.
-    mafSceneNode(mafVME *vme, mafPipeVisual *visual_pipe = NULL, const QString code_location = "");
+    mafSceneNode(mafVME *vme, const QString visualPipeType, const QString code_location = "");
 
     /// Set visual pipe to the scene node
     void setVisualPipe(QString visualPipeType);
@@ -84,6 +84,7 @@ private slots:
 
 private:
     mafVME *m_VME; ///< Represent the data object.
+    QString m_VisualPipeType; ///< type name of the current visual pipe
     mafPipeVisual *m_VisualPipe;  ///< represente the renderable object inside the scene node
     bool m_Visibility; ///< Contains the visibility status of the owned object/s.
     bool m_CanVisualize; ///< Contains the canVisualize status of the owned object/s.

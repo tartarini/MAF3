@@ -61,7 +61,7 @@ void mafView::sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectB
 void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
     mafVME *vme_to_add = qobject_cast<mafResources::mafVME *>(vme);
     if(vme_to_add != NULL) {
-        mafSceneNode *node = new mafSceneNode(vme_to_add, NULL, mafCodeLocation);
+        mafSceneNode *node = new mafSceneNode(vme_to_add, "mafResources::mafPipeVisualBox", mafCodeLocation);
         node->setObjectName(vme_to_add->objectName());
         connect(node, SIGNAL(destroyNode()), this, SLOT(sceneNodeDestroy()));
 
