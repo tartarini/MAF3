@@ -74,8 +74,6 @@ void testExtRawCustomManager::createdMemento(mafCore::mafMemento *memento) {
     returnVME->setMemento(memento);
 
     //Now load dataValue
-    returnVME->updateData();
-
     mafDataSet *data = returnVME->dataSetCollection()->itemAt(0);
 
     mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, data->dataValue());

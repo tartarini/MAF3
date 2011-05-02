@@ -77,6 +77,9 @@ public:
     undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool binary = true, bool deep_memento = false);
 
+    /// Load external data and fill the mafDataSet.
+    void updateDataValue();
+
     /// Return time stamp referred to this mafDataSet.
     double timeStamp() const; 
 
@@ -93,15 +96,17 @@ private:
     mafPoseMatrix *m_Matrix; ///< Pose matrix
     mafDataBoundaryAlgorithm *m_DataBoundaryAlgorithm; ///< Represent the class that will calculate the boundary of the m_DataValue and generate as output a boundary to be visualized.
     double m_TimeStamp; ///< Time stamp referred to this mafDataSet.
+
+    struct dataFileInfo {
+      QString fileName;            ///< Name of the file containing the datat.
+      QString encodeType;     ///< encode to be used to decode data.
+    } m_DataFileInfo; 
+
 };
 
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
-
-inline mafCore::mafContainerInterface *mafDataSet::dataValue() {
-    return m_DataValue;
-}
 
 inline mafPoseMatrix *mafDataSet::poseMatrix() const {
     return m_Matrix;

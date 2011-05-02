@@ -98,6 +98,10 @@ mafTreeItem *mafTreeModel::createNewItem(mafTreeItem *parent, QObject *obj, bool
     parent->appendRow(item);
     //Update check state
     bool visibility = obj->property("visibility").toBool();
+    // checkable means that a view at least exists
+    // see mafTreeItem: mafSceneNode that can be visible, will set Checkable State to True
+    // while in any other case (mafScenenode invisible or other data type like vme)
+    // it doesn't matter any visualization
     if(item->isCheckable()){
       item->setCheckState(visibility ? Qt::Checked : Qt::Unchecked);
       if(visibility) {
@@ -164,6 +168,7 @@ bool mafTreeModel::removeRows(int row, int count, const QModelIndex &parent) {
         removeFromList(temp->index());
         return QStandardItemModel::removeRows(row, count, parent);
     }
+    return false;
 }
 
 void mafTreeModel::removeFromList(const QModelIndex &index) {

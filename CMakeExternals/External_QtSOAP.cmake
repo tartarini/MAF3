@@ -15,7 +15,7 @@ SET(QtSOAP_DEPENDS)
   
     #     MESSAGE(STATUS "Adding project:${proj}")
     ExternalProject_Add(${proj}
-      GIT_REPOSITORY "${git_protocol}://github.com/commontk/QtSOAP.git"
+      GIT_REPOSITORY "${git_protocol}://github.com/SCS-B3C/QtSOAP.git"
       GIT_TAG "origin/master"
       CMAKE_GENERATOR ${gen}
       INSTALL_COMMAND ""
