@@ -39,13 +39,6 @@ public:
     /// mafMemento constructor.
     mafMemento(const mafObject *obj, const QString code_location = "");
 
-    ///< Enumeration that define type of memento.
-    enum MementoHierarchyType {
-      INHERIT_MEMENTO = 0,
-      COMPOSE_MEMENTO
-    };
-    
-
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
 
@@ -80,7 +73,6 @@ private:
     mafMementoPropertyList m_MementoPropertyList; ///< Vector containing the object status.
     MementoHierarchyType m_MementoHierarchyType; ///Enum to determinate if memento is of type INHERIT or COMPOSE.
 };
-Q_DECLARE_METATYPE(mafMemento::MementoHierarchyType)
 
 
 /////////////////////////////////////////////////////////////
@@ -103,7 +95,7 @@ inline void mafMemento::setMementoHierarchyType(MementoHierarchyType memType) {
   m_MementoHierarchyType = memType;
 }
 
-inline mafMemento::MementoHierarchyType mafMemento::mementoHierarchyType() const {
+inline MementoHierarchyType mafMemento::mementoHierarchyType() const {
   return m_MementoHierarchyType;
 }
 

@@ -63,10 +63,12 @@ enum mafObjectLock {
     mafObjectLockWrite = 0x2,
     mafObjectLockProgres = 0x4
                        };
-Q_DECLARE_FLAGS(mafObjectLockStatus, mafObjectLock);
-
-
-
+///< Enumeration that define type of memento.
+enum MementoHierarchyType {
+    INHERIT_MEMENTO = 0,
+    COMPOSE_MEMENTO
+};
+    
 /// Typedef representing an item property of the memento that has to be encoded or decoded.
 typedef struct {
     // Encoding valiables
@@ -98,7 +100,9 @@ typedef QList<mafObjectBase *> mafObjectsList;
 
 }  // mafCore
 
+Q_DECLARE_FLAGS(mafObjectLockStatus, mafCore::mafObjectLock);
 Q_DECLARE_METATYPE(mafCore::mafDictionaryPointer);
+Q_DECLARE_METATYPE(mafCore::MementoHierarchyType)
 
 #endif // MAFDEFINITIONS_H
 
