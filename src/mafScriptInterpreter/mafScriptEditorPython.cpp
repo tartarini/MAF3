@@ -113,6 +113,7 @@ mafScriptEditorPython::mafScriptEditorPython(QObject *parent) : mafScriptEditor(
     int stat;
 
     Py_Initialize();
+    int argc = 0;
 
     // -- Redirection
     init_redirector();
@@ -184,7 +185,6 @@ void mafScriptEditorPython::blockThreads(void)
 QString mafScriptEditorPython::interpret(const QString& command, int *stat)
 {
     redirection_occured = false;
-    char *ciao =  command.toAscii().data();
     blockThreads();
 
     switch(PyRun_SimpleString(command.toAscii().constData())) {
