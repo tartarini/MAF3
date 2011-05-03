@@ -83,6 +83,8 @@ private:
     QStringList  history;
     unsigned int history_index;
     bool         history_dirty;
+    
+    bool promptFlag;
 };
     
 } // end namespace

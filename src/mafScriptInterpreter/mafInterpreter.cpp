@@ -47,6 +47,9 @@ mafInterpreter::mafInterpreter(QWidget *parent) : mafTextEditor(parent)
     this->setShowLineNumbers(false);
     this->setShowCurrentLine(false);
     this->setShowRevisions(false);
+    
+    promptFlag = false;
+
 }
 
 mafInterpreter::~mafInterpreter(void)
@@ -294,6 +297,8 @@ void mafInterpreter::onKeyEnterPressed(void)
         emit input(line, &stat);
 
     }
+    
+    promptFlag = true;
 }
 
 void mafInterpreter::onKeyBackspacePressed(void)
@@ -310,7 +315,8 @@ void mafInterpreter::output(const QString& result,  int *stat)
     if(!text.simplified().isEmpty())
         this->appendPlainText(filter(text));
 
-    this->appendPlainText(filter(m_Interpreter->prompt()));
+    //this->appendPlainText(filter(m_Interpreter->prompt()));
+    
     
     QTextCursor cursor = textCursor();
     cursor.movePosition(QTextCursor::End);
@@ -358,10 +364,13 @@ bool mafInterpreter::eventFilter(QObject *object, QEvent *event)
     mafInterpreter *interpreter = dynamic_cast<mafInterpreter *>(object);
 
     if (log && interpreter) {
-        char *v = log->message().toAscii().data();
         int stat; interpreter->output(log->message(), &stat);
         return true;
     } else {
+        if(promptFlag) {
+            this->appendPlainText(filter(m_Interpreter->prompt()));
+            promptFlag = false;
+        }
         return QObject::eventFilter(object, event);
     }
 }
