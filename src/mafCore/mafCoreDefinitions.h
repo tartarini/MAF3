@@ -62,16 +62,12 @@ enum mafObjectLock {
     mafObjectLockRead = 0x1,
     mafObjectLockWrite = 0x2,
     mafObjectLockProgres = 0x4
-                       };
-///< Enumeration that define type of memento.
-enum MementoHierarchyType {
-    INHERIT_MEMENTO = 0,
-    COMPOSE_MEMENTO
 };
-    
+
+   
 /// Typedef representing an item property of the memento that has to be encoded or decoded.
 typedef struct {
-    // Encoding valiables
+    // Encoding variables
     QString m_Name; ///< Name for the encoded property.
     QVariant m_Value; ///< Value for the encoded property.
     int m_Multiplicity; ///< Multiplicity for the encoded property.
@@ -85,10 +81,16 @@ struct mafPluggedObjectInformation{
     QString m_ClassType;  ///< Class type of the plugged object.
 };
 
+///< Enum that define the Serialization pattern. For "Composition" or for "Inheritance"
+typedef enum {
+  mafSerializationPatternInheritance = 0,
+  mafSerializationPatternComposition,
+} mafSerializationPattern;
+
 /// Typedef that defines the list of information related to the same extended base MAF class type. It is used through the mafPluggedObjectsHash defined in mafPluginManager.
 typedef QList<mafPluggedObjectInformation> mafPluggedObjectInformationList;
 
-/// Hash of plugged objects coming from plig-ins.
+/// Hash of plugged objects coming from pluig-ins.
 typedef QHash<QString, mafPluggedObjectInformation> mafPluggedObjectsHash;
 
 /// Define the property list vector that hold properties to be serialized through mafCodec.
@@ -100,9 +102,8 @@ typedef QList<mafObjectBase *> mafObjectsList;
 
 }  // mafCore
 
-Q_DECLARE_FLAGS(mafObjectLockStatus, mafCore::mafObjectLock);
-Q_DECLARE_METATYPE(mafCore::mafDictionaryPointer);
-Q_DECLARE_METATYPE(mafCore::MementoHierarchyType)
+Q_DECLARE_FLAGS(mafObjectLockStatus, mafCore::mafObjectLock)
+Q_DECLARE_METATYPE(mafCore::mafDictionaryPointer)
 
 #endif // MAFDEFINITIONS_H
 
