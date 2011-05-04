@@ -37,6 +37,8 @@ void mafCodecXML::encode(mafMemento *memento) {
     const QMetaObject* meta = memento->metaObject();
     QString mementoType = meta->className();
     QString ot = memento->objectClassType();
+    QString serializationPattern = (memento->serializationPattern() == mafSerializationPatternInheritance) ? "H" : "C"; 
+    serializationPattern.append(QString::number(m_LevelEncode));
 
     ++m_MementoLevel;
 
@@ -49,7 +51,7 @@ void mafCodecXML::encode(mafMemento *memento) {
 
     m_XMLStreamWriter.writeStartElement("memento"); //start memento item
     m_XMLStreamWriter.writeAttribute("mementoType", mementoType);
-    m_XMLStreamWriter.writeAttribute("levelEncode", QString::number(m_LevelEncode));
+    m_XMLStreamWriter.writeAttribute("serializationPattern", serializationPattern);
     m_XMLStreamWriter.writeAttribute("objectClassType", ot);
 
     foreach(item, *propList) {
@@ -95,13 +97,20 @@ mafMemento *mafCodecXML::decode() {
 
     QString n = m_XMLStreamReader.name().toString();
     mementoType = m_XMLStreamReader.attributes().value("mementoType").toString();
-    m_LevelDecode = m_XMLStreamReader.attributes().value("levelEncode").toString().toUInt();
+    QString serializationPatternString = m_XMLStreamReader.attributes().value("serializationPattern").toString();
     objType = m_XMLStreamReader.attributes().value("objectClassType").toString();
 
     mafMemento* memento = (mafMemento *)mafNEWFromString(mementoType);
     memento->setObjectClassType(objType);
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     mafMementoPropertyItem item;
+
+    if (serializationPatternString.contains("H")) {
+      memento->setSerializationPattern(mafSerializationPatternInheritance);
+    } else if (serializationPatternString.contains("C")) {
+      memento->setSerializationPattern(mafSerializationPatternComposition);
+    }
+    m_LevelDecode = serializationPatternString.right(1).toUInt();
 
      //Fill the map of memento and levelDecode.
      m_MementoMap[m_LevelDecode] = memento;
