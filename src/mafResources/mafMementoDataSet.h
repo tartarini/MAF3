@@ -29,7 +29,7 @@ This class defines the MAF3 memento class for storing a mafDataSet state.
 */
 class MAFRESOURCESSHARED_EXPORT mafMementoDataSet : public mafCore::mafMemento {
     Q_OBJECT
-    Q_PROPERTY(double timeStamp READ timeStamp WRITE setTimeStamp)
+    //Q_PROPERTY(double timeStamp READ timeStamp WRITE setTimeStamp)
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafMemento);
 
@@ -47,10 +47,10 @@ public:
     /* virtual */ void decodeItem(mafCore::mafMementoPropertyItem *item, QString path);
 
     /// Return time stamp.
-    double timeStamp() const; 
+    //double timeStamp() const; 
 
     /// Set time stamp.
-    void setTimeStamp(double time);
+    //void setTimeStamp(double time);
 
 protected:
     /// Object destructor.
@@ -62,20 +62,20 @@ private:
     int m_DataSizeImported; ///< Size of file to be imported.
     QString m_EncodeType; ///< Encode type used to encode/decode data.
     mafResources::mafDataSet *m_DataSet; ///< Data set to be stored.
-    double m_TimeStamp; ///< Time stamp referred to this mafDataSet.
+    //double m_TimeStamp; ///< Time stamp referred to this mafDataSet.
 };
 
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline double mafMementoDataSet::timeStamp() const {
+/*inline double mafMementoDataSet::timeStamp() const {
   return m_TimeStamp;
 }
 
 inline void mafMementoDataSet::setTimeStamp(double time) {
   m_TimeStamp = time;
-}
+}*/
 
 } // namespace mafResources
 
