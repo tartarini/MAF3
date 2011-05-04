@@ -55,8 +55,7 @@ void mafDataSet::setDataValue(mafContainerInterface *data_value) {
 }
 
 mafContainerInterface *mafDataSet::dataValue() {
-  if (m_DataValue == NULL)
-  {
+  if (m_DataValue == NULL) {
     updateDataValue();
   }
   return m_DataValue;
@@ -76,7 +75,7 @@ mafMemento *mafDataSet::createMemento() const {
     return new mafMementoDataSet(this, mafCodeLocation);
 }
 
-void mafDataSet::setMemento(mafMemento *memento, bool binary, bool deep_memento) {
+void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
     Q_UNUSED(deep_memento);
 
     // Design by contract condition.
@@ -87,8 +86,7 @@ void mafDataSet::setMemento(mafMemento *memento, bool binary, bool deep_memento)
     int childrenNum = memento->children().size();
     for (n; n < childrenNum; n++) {
       mafMemento *m = (mafMemento *)memento->children().at(n);
-      MementoHierarchyType type = m->mementoHierarchyType();
-      if (type == INHERIT_MEMENTO) {
+      if (m->serializationPattern() == mafSerializationPatternInheritance) {
         //set the memento of the superclass
         Superclass::setMemento(m, deep_memento);
       } else {
@@ -123,12 +121,8 @@ void mafDataSet::setMemento(mafMemento *memento, bool binary, bool deep_memento)
         } else if (item.m_Name == "encodeType") {
             //Restore codec type
             encodeType = item.m_Value.toString();
-        } else if (item.m_Name == "timeStamp") {
-            //Restore time stamp
-            this->setTimeStamp(item.m_Value.toDouble());
         } else if (item.m_Name == "fileName") {
-            //Read from external file
-            //Save informations, and load data later...
+            //Save informations about external file, and load data later, when the data is needed.
             QString nameOfFile = item.m_Value.toString();
             m_DataFileInfo.fileName = nameOfFile;
             m_DataFileInfo.encodeType = encodeType;
