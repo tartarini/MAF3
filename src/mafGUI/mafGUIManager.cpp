@@ -28,7 +28,7 @@ using namespace mafGUI;
 
 mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location) : mafObjectBase(code_location)
     , m_MaxRecentFiles(5), m_MainWindow(main_win)
-    , m_Model(NULL), m_TreeWidget(NULL) {
+    , m_Model(NULL), m_TreeWidget(NULL), m_Logic(NULL) {
 
     m_SettingsDialog = new mafGUIApplicationSettingsDialog();
     m_OperationWidget = new mafOperationWidget();
@@ -54,6 +54,17 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
 mafGUIManager::~mafGUIManager() {
     mafDEL(m_Logger);
     mafDEL(m_UILoader);
+}
+
+void mafGUIManager::newWorkingSession() {
+    mafHierarchyPointer h = m_Logic->requestNewHierarchy();
+
+    m_Model->clear();
+    m_Model->setHierarchy(h);
+}
+
+void mafGUIManager::quitApplication() {
+    // post the closeEvent
 }
 
 void mafGUIManager::createToolbar(QDomElement node) {

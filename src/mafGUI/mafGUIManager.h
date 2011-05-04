@@ -16,6 +16,7 @@
 #include "mafGUIDefinitions.h"
 #include <QtGui>
 #include <QDomDocument>
+#include <mafLogic.h>
 
 // Class forwarding list
 class mafOperationWidget;
@@ -36,9 +37,9 @@ class mafGUIApplicationSettingsPage;
  This is represent the manager for the GUI layer.
  The class will allow the creation of the basic elements composing the vertical application
  like the menu, the toolbar and the actions linked to them.
- The methods are virtuals and can be easyly redefined to create brand new toolbar or menu
+ The methods are virtual and can be easily redefined to create brand new toolbar or menu
  or extend the existing one by introducing new items.
- The manager defines also the topics related to the actions linked to the menubar and toolbar:
+ The manager defines also the topics related to the actions linked to the menu bar and toolbar:
  - maf.local.gui.action.new
  - maf.local.gui.action.open
  - maf.local.gui.action.save
@@ -60,6 +61,9 @@ class MAFGUISHARED_EXPORT mafGUIManager : public mafCore::mafObjectBase {
 public:
     /// Object constructor.
     mafGUIManager(QMainWindow *main_win, const QString code_location = "");
+
+    /// Assign the application's logic.
+    void setLogic(mafApplicationLogic::mafLogic *logic);
 
     /// Create the menu for the vertical application.
     virtual void createMenus();
@@ -92,6 +96,55 @@ protected:
     /// Create the actions associated with the menu items.
     virtual void createActions();
 
+private:
+    /// Initialize the topics and register the signals with the mafEventBus.
+    void registerDefaultEvents();
+
+    /// Update the recent file action with new recent file items.
+    void updateRecentFileActions();
+
+    /// Allow to parse XML attributes associated with a menu item or action.
+    void parseMenuAttributes(QDomNode current);
+
+    /// Allow to parse the XML tree hierarchy associated with the menu structure read from file.
+    QDomNode parseMenuTree(QDomNode current);
+
+    /// Create the action associated to the current menu item.
+    void createAction(QDomElement node);
+
+    /// Create the menu associated to the Dom node parsed.
+    void createMenuItem(QDomElement node);
+
+    /// Create the toolbar associated to the Dom node parsed.
+    void createToolbar(QDomElement node);
+
+    /// Create the default menu for the application in case that the mnu file has not been found.
+    void createDefaultMenus();
+
+    /// Manage the filename of the recent file.
+    QString strippedName(const QString &fullFileName);
+
+    QMenu *m_RecentFilesMenu; ///< Reference to 'Recent File' menu.
+    QMenu *m_CurrentMenu; ///< Current menu that has been created during the mnu file parsing.
+
+    QList<QObject *> m_MenuItemList; ///< List of created actions/menus.
+
+    QAction *m_RecentFilesSeparatorAct; ///< Separator used to separate the recent files menu item from the previous one (if any recent is present)
+    int m_MaxRecentFiles; ///< Number of maximum recent files.
+    QList<QAction *> m_RecentFileActs; ///< List of recent file's actions.
+
+    mafGUIApplicationSettingsDialog *m_SettingsDialog; ///< Settings dialog
+    mafLoggerWidget *m_Logger; ///< Logger
+
+    mafOperationWidget *m_OperationWidget; ///< Widget on whith will be visible the operation's GUI.
+
+    QMainWindow     *m_MainWindow;  ///< Main window associated to the application.
+    mafUILoaderQt   *m_UILoader;    ///< Class in charge to load the GUI.
+    mafGUILoadedType m_GUILoadedType; ///< Type of GUI loaded.
+    mafTreeModel    *m_Model;       ///< Tree model of VME.
+    mafTreeWidget   *m_TreeWidget;  ///< Visualize the tree model.
+    mafApplicationLogic::mafLogic *m_Logic; ///< Logic of the application.
+
 signals:
     /// Signal emitted on path selection using the dialog.
     void pathSelected(const QString path);
@@ -108,6 +161,12 @@ public slots:
 
     /// Return the Action/Menu associated with the given name.
     QObject *menuItemByName(QString name);
+
+    /// Slot connected with the New Action.
+    virtual void newWorkingSession();
+
+    /// Slot called by the Quit Action.
+    virtual void quitApplication();
 
 private slots:
     /// Start the operation associated with the operation's action activated.
@@ -144,53 +203,6 @@ private slots:
     /// Slot called when the UI is loaded from the mafUILoaderQt.
     void uiLoaded(mafCore::mafContainerInterface *guiWidget);
 
-private:
-    /// Initialize the topics and register the signals with the mafEventBus.
-    void registerDefaultEvents();
-
-    /// Update the recent file action with new recent file items.
-    void updateRecentFileActions();
-    
-    /// Allow to parse XML attributes associated with a menu item or action.
-    void parseMenuAttributes(QDomNode current);
-    
-    /// Allow to parse the XML tree hierarchy associated with the menu structure read from file.
-    QDomNode parseMenuTree(QDomNode current);
-    
-    /// Create the action associated to the current menu item.
-    void createAction(QDomElement node);
-    
-    /// Create the menu associated to the dom node parsed.
-    void createMenuItem(QDomElement node);
-    
-    /// Create the toolbar associated to the dom node parsed.
-    void createToolbar(QDomElement node);
-
-    /// Create the default menu for the application in case that the mnu file has not been found.
-    void createDefaultMenus();
-    
-    /// Manage the filename of the recent file.
-    QString strippedName(const QString &fullFileName);
-
-    QMenu *m_RecentFilesMenu; ///< Reference to 'Recent File' menu.
-    QMenu *m_CurrentMenu; ///< Current menu that has been created during the mnu file parsing.
-
-    QList<QObject *> m_MenuItemList; ///< List of created actions/menus.
-
-    QAction *m_RecentFilesSeparatorAct; ///< Separator used to separate the recent files menu item from the previous one (if any recent is present)
-    int m_MaxRecentFiles; ///< Number of maximum recent files.
-    QList<QAction *> m_RecentFileActs; ///< List of recent file's actions.
-
-    mafGUIApplicationSettingsDialog *m_SettingsDialog; ///< Settings dialog
-    mafLoggerWidget *m_Logger; ///< Logger
-
-    mafOperationWidget *m_OperationWidget; ///< Widget on whith will be visible the operation's GUI.
-
-    QMainWindow *m_MainWindow; ///< Main window associated to the application.
-    mafUILoaderQt *m_UILoader; ///< Class in charge to load the GUI.
-    mafGUILoadedType m_GUILoadedType; ///< Type of GUI loaded.
-    mafTreeModel *m_Model; ///< Tree model of VME.
-    mafTreeWidget *m_TreeWidget; ///< Visualize the tree model.
 };
 
 /////////////////////////////////////////////////////////////
@@ -207,6 +219,10 @@ inline int mafGUIManager::maxRecentFiles() {
 
 inline mafGUIApplicationSettingsDialog *mafGUIManager::settingsDialog() const {
     return m_SettingsDialog;
+}
+
+inline void mafGUIManager::setLogic(mafApplicationLogic::mafLogic *logic) {
+    m_Logic = logic;
 }
 
 } // namespace mafGUI
