@@ -15,8 +15,8 @@ SET(qxmlrpc_DEPENDS)
     #MESSAGE("Adding project:${proj}")
     
     ExternalProject_Add(${proj}
-      GIT_REPOSITORY "${git_protocol}://github.com/commontk/qxmlrpc.git"
-      GIT_TAG "origin/patched"
+      GIT_REPOSITORY "${git_protocol}://github.com/SCS-B3C/qxmlrpc.git"
+      GIT_TAG "origin/master"
       CMAKE_GENERATOR ${gen}
       INSTALL_COMMAND ""
       CMAKE_ARGS
