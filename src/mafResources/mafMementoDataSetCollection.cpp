@@ -50,41 +50,5 @@ mafMementoDataSetCollection::mafMementoDataSetCollection(const mafObject *obj, c
 mafMementoDataSetCollection::~mafMementoDataSetCollection() {
 }
 
-/*void mafMementoDataSetCollection::encodeItem(mafMementoPropertyItem *item, QString path) {
-  if (item->m_Name == "encodeType" ) {
-    m_EncodeType = item->m_Value.toString();
-  } else if (item->m_Name == "fileName") {
-    //Generate file name and save external data
-    QString fileName(item->m_Value.toString());
-    QString url;
-    QTextStream(&url) << path << "/" << fileName;
-    mafContainerInterface *container = m_DataSet->dataValue();
-
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafContainerInterface *, container));
-    argList.append(mafEventArgument(QString, url));
-    argList.append(mafEventArgument(QString, m_EncodeType));
-    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.export", mafEventTypeLocal, &argList);
-  }
-}
-
-void mafMementoDataSetCollection::decodeItem(mafMementoPropertyItem *item, QString path) {
-  if (item->m_Name == "fileName") {
-    //check if eChild is a file Name
-    QString fileName;
-    fileName = item->m_Value.toString();
-    QByteArray url;
-    url.append(path);
-    url.append("/");
-    url.append(fileName);
-    QUrl u = QUrl::fromEncoded(url);
-    if (u.isValid()) {
-      //write external file url
-      item->m_Value = u.toString();
-    } 
-  } else if (item->m_Name == "timeStamp" ) {
-    this->setTimeStamp(item->m_Value.toDouble());
-  } 
-}*/
  
 
