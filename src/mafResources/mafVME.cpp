@@ -20,7 +20,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL), m_Binary(true), m_CanRead(true), m_CanWrite(true) {
+mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL), m_CanRead(true), m_CanWrite(true) {
     m_Lock = new QReadWriteLock(QReadWriteLock::Recursive);
     mafId time_set_id = mafIdProvider::instance()->idValue("TIME_SET");
     if(time_set_id != -1) {
@@ -175,8 +175,7 @@ mafMemento *mafVME::createMemento() const {
     return mementoVME;
 }
 
-void mafVME::setMemento(mafMemento *memento, bool binary, bool deep_memento) {
-    m_Binary = binary;
+void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
     REQUIRE(memento != NULL);
     REQUIRE(memento->objectClassType() == this->metaObject()->className());
     QMap<double, mafMementoDataSet*> mementoMap;
@@ -185,8 +184,7 @@ void mafVME::setMemento(mafMemento *memento, bool binary, bool deep_memento) {
     int childrenNum = memento->children().size();
     for (n; n < childrenNum; n++) {
       mafMemento *m = (mafMemento *)memento->children().at(n);
-      MementoHierarchyType type = m->mementoHierarchyType();
-      if (type == INHERIT_MEMENTO) {
+      if (m->serializationPattern() == mafSerializationPatternInheritance) {
         //set the memento of the superclass
         Superclass::setMemento(m, deep_memento);
       } else {
@@ -195,37 +193,22 @@ void mafVME::setMemento(mafMemento *memento, bool binary, bool deep_memento) {
         mafObjectBase *objBase = mafNEWFromString(objClassType);
         mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
         obj->setMemento(m, deep_memento);
-
-        //TODO: remove and create mafDataSetCollection
-        QString mementoName = m->metaObject()->className();
-        if (mementoName == "mafResources::mafMementoDataSet") {
-          mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
-          mafMementoDataSet *memento = (mafMementoDataSet*)m;
-          memento->setObjectClassType(dataSet->metaObject()->className());
-          dataSet->setMemento(memento, m_Binary);
-          this->dataSetCollection()->insertItem(dataSet, memento->timeStamp());
+        if (objClassType == "mafResources::mafDataSetCollection") {
+          mafDataSetCollection *dataSetCollection = qobject_cast<mafDataSetCollection*>(obj);
+          m_DataSetCollection = dataSetCollection;
         }
       }
     }
 
-    //If not exists, creates the mafDataSetCollection
-    if (m_DataSetCollection == NULL) {
-        m_DataSetCollection = this->dataSetCollection();
-    }
+    
 
     mafMementoPropertyList *list = memento->mementoPropertyList();
     mafMementoPropertyItem item;
     //create a map of memento dataset
-    
-
     int i = 0;
     for ( ; i < list->size(); ++i) {
         item = list->at(i);
-        if(item.m_Name == "mafDataSetTime") {
-            double time = item.m_Value.toDouble();
-            mafMementoDataSet *mementoDataSet = mementoMap.value(time);
-            m_MementoDataSetHash.insert(mementoDataSet, time);
-        } else if(item.m_Name == "mafPipeData") {
+        if(item.m_Name == "mafPipeData") {
             this->setDataPipe(item.m_Value.toString());
         } else if(item.m_Name == "vmeBounds") {
             this->setBounds(item.m_Value.toList());

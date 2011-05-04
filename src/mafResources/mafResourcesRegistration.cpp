@@ -26,6 +26,7 @@ void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObject(mafResources::mafView);
     mafRegisterObject(mafResources::mafMementoResource);
     mafRegisterObject(mafResources::mafMementoDataSet);
+    mafRegisterObject(mafResources::mafMementoDataSetCollection);
     mafRegisterObject(mafResources::mafMementoVME);
     mafRegisterObject(mafResources::mafSceneNode);
     mafRegisterObject(mafResources::mafInteractor);
@@ -43,6 +44,7 @@ void mafResourcesRegistration::unregisterResourcesObjects() {
     mafUnregisterObject(mafResources::mafView);
     mafUnregisterObject(mafResources::mafMementoResource);
     mafUnregisterObject(mafResources::mafMementoDataSet);
+    mafUnregisterObject(mafResources::mafMementoDataSetCollection);
     mafUnregisterObject(mafResources::mafMementoVME);
     mafUnregisterObject(mafResources::mafSceneNode);
     mafUnregisterObject(mafResources::mafInteractor);
