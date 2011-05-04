@@ -43,8 +43,6 @@ using namespace mafEventBus;
 //! </description>
 
 
-//------------------------------------------------------------------------------------------
-
 /**
  Class name: mafMementoDataSetCollectionTest
  This class implements the test suite for mafMementoDataSetCollection.
@@ -89,23 +87,21 @@ void mafMementoDataSetCollectionTest::mafMementoDataSetCollectionAllocationTest(
     mafVME *vme = mafNEW(mafResources::mafVME);
     mafDataSetCollection *collection = vme->dataSetCollection();
 
-    //Fill the mafDataSetCollection
+    //Create dataset for the collection
     mafDataSet *firstData = mafNEW(mafResources::mafDataSet);
     mafDataSet *secondData = mafNEW(mafResources::mafDataSet);
-
     mafPoseMatrix *matrix = new mafPoseMatrix();
     matrix->set_identity();
     matrix->put(0,0,3);
-
     firstData->setPoseMatrix(matrix);
+
+    //Fill the mafDataSetCollection
     collection->insertItem(firstData, 0);
     collection->insertItem(secondData, 1);
 
     mafMemento *memento = collection->createMemento();
-
     mafVME *newVme = mafNEW(mafResources::mafVME);
     mafDataSetCollection *newCollection = newVme->dataSetCollection();
-
     newCollection->setMemento(memento);
 
     //Check if memento is equal to newCollection memento.
