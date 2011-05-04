@@ -2,7 +2,7 @@
  *  mafCodecXML.cpp
  *  mafSerialization
  *
- *  Created by Daniele Giunchi on 19/01/10.
+ *  Created by Daniele Giunchi and Roberto Mucci on 19/01/10.
  *  Copyright 2009 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
@@ -37,7 +37,8 @@ void mafCodecXML::encode(mafMemento *memento) {
     const QMetaObject* meta = memento->metaObject();
     QString mementoType = meta->className();
     QString ot = memento->objectClassType();
-    QString serializationPattern = (memento->serializationPattern() == mafSerializationPatternInheritance) ? "H" : "C"; 
+    // "I" if is an Inheritance memento, "C" if is a Composition memento.
+    QString serializationPattern = (memento->serializationPattern() == mafSerializationPatternInheritance) ? "I" : "C"; 
     serializationPattern.append(QString::number(m_LevelEncode));
 
     ++m_MementoLevel;
@@ -105,7 +106,8 @@ mafMemento *mafCodecXML::decode() {
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     mafMementoPropertyItem item;
 
-    if (serializationPatternString.contains("H")) {
+    //Set the serializationPattern for the memento: "I" if is an Inheritance memento, "C" if is a Composition memento.
+    if (serializationPatternString.contains("I")) {
       memento->setSerializationPattern(mafSerializationPatternInheritance);
     } else if (serializationPatternString.contains("C")) {
       memento->setSerializationPattern(mafSerializationPatternComposition);

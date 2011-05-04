@@ -2,7 +2,7 @@
  *  mafCodecXML.h
  *  mafSerialization
  *
- *  Created by Daniele Giunchi on 19/01/10.
+ *  Created by Daniele Giunchi and Roberto Mucci on 19/01/10.
  *  Copyright 2009 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
