@@ -27,7 +27,7 @@ class mafInterpolator;
 class MAFRESOURCESSHARED_EXPORT mafDataSetCollection : public mafCore::mafObject {
     Q_OBJECT
     /// typedef macro.
-    mafSuperclassMacro(mafCore::mafObjectBase);
+    mafSuperclassMacro(mafCore::mafObject);
 
 public:
      /// Object constructor.
@@ -103,6 +103,17 @@ public:
 
     /// Return the collection map.
     const mafDataSetMap *collectionMap() const;
+
+    /// Return the instance of the resource's status. The caller has to delete the allocated memory he asked.
+    /*virtual*/ mafCore::mafMemento *createMemento() const;
+
+     /// Allows setting a previous saved object's state.
+    /**
+     This is used to implement a sort of undo mechanism for the object's state, but can be used also by the
+    serialization mechanism to serialize data into the selected storage type.
+    The 'deep_memento' flag is used to avoid the copy of the object unique hash in normal operation like
+    undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
+    /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
 private slots:
     /// Method callen when an item has been destroyed
