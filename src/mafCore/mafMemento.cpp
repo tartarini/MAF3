@@ -18,7 +18,7 @@ mafMemento::mafMemento(const QString code_location) : mafObjectBase(code_locatio
     m_MementoPropertyList.clear();
 }
 
-mafMemento::mafMemento(const mafObject *obj, const QString code_location) : mafObjectBase(code_location), m_ObjectClassType(""), m_MementoHierarchyType(INHERIT_MEMENTO) {
+mafMemento::mafMemento(const mafObject *obj, const QString code_location) : mafObjectBase(code_location), m_ObjectClassType(""), m_SerializationPattern(mafSerializationPatternInheritance) {
     REQUIRE(obj);
     const QMetaObject* meta = obj->metaObject();
     setObjectClassType(meta->className());
