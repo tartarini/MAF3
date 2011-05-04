@@ -23,6 +23,7 @@
 #include "mafHierarchy.h"
 #include "mafMementoResource.h"
 #include "mafMementoDataSet.h"
+#include "mafMementoDataSetCollection.h"
 #include "mafMementoVME.h"
 #include "mafInteractor.h"
 #include "mafVisitorFindSceneNodeByVMEHash.h"
