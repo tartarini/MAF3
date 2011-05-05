@@ -66,7 +66,7 @@ public:
 
     /// Method used to add custom object defined in vertical application.
     /** This type of addition to the framework is the same of that one done by the plug-in
-    but is used to add a small number of objects without incapsulating them into a plug-in,
+    but is used to add a small number of objects without encapsulating them into a plug-in,
     because for example are still in beta testing phase or because is needed to plug only one
     custom class.*/
     void plugObject(const QString base_class, const QString class_type, const QString object_label);
@@ -80,6 +80,9 @@ public slots:
 
     /// Orchestrate the requests for restoring the application's settings.
     void restoreSettings();
+
+    /// Create a new VME Hierarchy.
+    mafCore::mafHierarchy *requestNewHierarchy();
 
 signals:
     /// Signal emitted when a recent file is asked to be opened. The argument of the signal contains the filename.

@@ -12,6 +12,7 @@
 #include "mafDataSetCollection.h"
 #include "mafInterpolator.h"
 #include "mafDataSet.h"
+#include "mafMementoDataSetCollection.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -214,7 +215,7 @@ bool mafDataSetCollection::insertItem(mafDataSet *item, double t) {
     double ts = t<0 ? m_CurrentTimestamp : t;
 
     //TODO: move time information from vme to dataSet
-    item->setTimeStamp(ts);
+    //item->setTimeStamp(ts);
 
     // If the timestamp is present, no new insert is needed, just
     // modify the old one.
@@ -329,4 +330,50 @@ bool mafDataSetCollection::removeItem(mafDataSet *item, bool keep_alive) {
 void mafDataSetCollection::itemDestroyed() {
     mafDataSet *item = (mafDataSet *)QObject::sender();
     removeItem(item, true);
+}
+
+mafMemento *mafDataSetCollection::createMemento() const {
+  return new mafMementoDataSetCollection(this, mafCodeLocation);
+}
+
+void mafDataSetCollection::setMemento(mafMemento *memento, bool deep_memento) {
+  Q_UNUSED(deep_memento);
+
+  // Design by contract condition.
+  REQUIRE(memento != NULL);
+  REQUIRE(memento->objectClassType() == this->metaObject()->className());
+
+  mafMementoPropertyList *list = memento->mementoPropertyList();
+  mafMementoPropertyItem item;
+
+  QList<double> timeList;
+  foreach(item, *list) {
+    if(item.m_Name == "timeStamp") {
+      //Fill the collection with timeStamps. Later will be filled with data set.
+      timeList.append(item.m_Value.toDouble());
+    }
+  }
+
+  int timeIndex = 0;
+  int n = 0;
+  int childrenNum = memento->children().size();
+  for (n; n < childrenNum; n++) {
+    mafMemento *m = (mafMemento *)memento->children().at(n);
+    if (m->serializationPattern() == mafSerializationPatternInheritance) {
+      //set the memento of the superclass
+      Superclass::setMemento(m, deep_memento);
+    } else {
+      //set the memento of the children memento
+      QString objClassType = m->objectClassType();
+      mafCore::mafObjectBase *objBase = mafNEWFromString(objClassType);
+      mafCore::mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
+      obj->setMemento(m, deep_memento);
+      if (objClassType == "mafResources::mafDataSet") {
+        mafDataSet *data = qobject_cast<mafDataSet*>(obj);
+        //Fill collection with dataSet. Time stamp will be set later, reading the memento property list.
+        m_CollectionMap->insert(timeIndex, data);
+        timeIndex++;
+      }
+    }
+  }
 }

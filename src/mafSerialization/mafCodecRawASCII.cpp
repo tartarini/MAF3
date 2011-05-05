@@ -2,7 +2,7 @@
  *  mafCodecRawASCII.cpp
  *  mafSerialization
  *
- *  Created by Paolo Quadrani on 14/12/09.
+ *  Created by Paolo Quadrani and Roberto Mucci on 14/12/09.
  *  Copyright 2009 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
@@ -37,7 +37,11 @@ void mafCodecRawASCII::encode(mafMemento *memento) {
 
     const QMetaObject* meta = memento->metaObject();
     m_DataTextWrite << QString("MementoType");
-    m_DataTextWrite << ' ' << m_LevelEncode << endl;
+    // "I" if is an Inheritance memento, "C" if is a Composition memento.
+    QString serializationPattern = (memento->serializationPattern() == mafSerializationPatternInheritance) ? "I" : "C"; 
+    serializationPattern.append(QString::number(m_LevelEncode));
+    m_DataTextWrite << ' ' << serializationPattern << endl;
+
     QString mementoType = meta->className();
     m_DataTextWrite << mementoType << endl;
     QString ot = memento->objectClassType();
@@ -64,23 +68,30 @@ void mafCodecRawASCII::encode(mafMemento *memento) {
 
 mafMemento *mafCodecRawASCII::decode() {
     REQUIRE(m_Device != NULL);
-
     QString mementoTagSeparator;
     QString mementoType;
+    QString serializationPatternString;
     QString objType;
     if(m_LevelDecode == -1) {  
       //-1 for initializing the file
         m_DataTextRead.setDevice(m_Device);
         m_DataTextRead >> mementoTagSeparator;
     }
-
     QString path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
-    m_DataTextRead >> m_LevelDecode; //read memento level
+    m_DataTextRead >> serializationPatternString;
     m_DataTextRead >> mementoType;
     m_DataTextRead >> objType;
 
     mafMemento *memento = (mafMemento *)mafNEWFromString(mementoType);
     memento->setObjectClassType(objType);
+
+    //Set the serializationPattern for the memento: "I" if is an Inheritance memento, "C" if is a Composition memento.
+    if (serializationPatternString.contains("I")) {
+      memento->setSerializationPattern(mafSerializationPatternInheritance);
+    } else if (serializationPatternString.contains("C")) {
+      memento->setSerializationPattern(mafSerializationPatternComposition);
+    }
+    m_LevelDecode = serializationPatternString.right(1).toUInt();
 
     //Fill the map of memento and levelDecode.
     m_MementoMap[m_LevelDecode] = memento;

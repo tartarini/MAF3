@@ -106,7 +106,7 @@ public:
     /// Set value of progress status.
     void setProgressStatus(int status);
 
-    /// Resturn status of progress to be used in a porgress bar.
+    /// Return status of progress to be used in a porgress bar.
     int progressStatus() const;
 
 public slots:

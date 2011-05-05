@@ -23,11 +23,9 @@ class mafObject;
 /**
  Class name: mafMementoObject
  This class defines the MAF3 base object for storing a mafObject state.
- This can be used to restore a previous stored object state (for undo mechanism or serialization porpouses).
+ This can be used to restore a previous stored object state (for undo mechanism or serialization purpose).
  */
 class MAFCORESHARED_EXPORT mafMemento : public mafObjectBase {
-    Q_ENUMS(MementoHierarchyType)
-    Q_PROPERTY(MementoHierarchyType mementoHierarchyType READ mementoHierarchyType WRITE setMementoHierarchyType)
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
@@ -57,11 +55,11 @@ public:
     /// Assign the object class type from the inherited mementos.
     void setObjectClassType(const QString &class_type);
 
-    /// Set the type of memento (INHERIT or COMPOSE).
-    void setMementoHierarchyType(MementoHierarchyType memType);
+    /// Return isInheritMemento
+    mafSerializationPattern serializationPattern() const;
 
-    /// Return the type of memento (INHERIT or COMPOSE).
-    MementoHierarchyType mementoHierarchyType() const;
+    /// Set InheritMemento.
+    inline void setSerializationPattern(mafSerializationPattern serializationPattern);
 
 protected:
     /// Object destructor.
@@ -71,7 +69,7 @@ private:
     friend class mafObject;
     QString m_ObjectClassType; ///< Store the object's class type.
     mafMementoPropertyList m_MementoPropertyList; ///< Vector containing the object status.
-    MementoHierarchyType m_MementoHierarchyType; ///Enum to determinate if memento is of type INHERIT or COMPOSE.
+    mafSerializationPattern m_SerializationPattern; ///Defines is an INHERIT or a COMPOSED memento.
 };
 
 
@@ -91,12 +89,12 @@ inline QString mafMemento::objectClassType() const {
     return m_ObjectClassType;
 }
 
-inline void mafMemento::setMementoHierarchyType(MementoHierarchyType memType) {
-  m_MementoHierarchyType = memType;
+inline mafSerializationPattern mafMemento::serializationPattern() const {
+  return m_SerializationPattern;
 }
 
-inline MementoHierarchyType mafMemento::mementoHierarchyType() const {
-  return m_MementoHierarchyType;
+inline void mafMemento::setSerializationPattern(mafSerializationPattern serializationPattern) {
+  m_SerializationPattern = serializationPattern;
 }
 
 

@@ -38,7 +38,11 @@ void mafCodecRawBinary::encode(mafMemento *memento) {
 
     const QMetaObject* meta = memento->metaObject();
     m_DataStreamWrite << QString("MementoType");
-    m_DataStreamWrite << m_LevelEncode;
+    // "I" if is an Inheritance memento, "C" if is a Composition memento.
+    QString serializationPattern = (memento->serializationPattern() == mafSerializationPatternInheritance) ? "I" : "C"; 
+    serializationPattern.append(QString::number(m_LevelEncode));
+    m_DataStreamWrite << serializationPattern;
+
     QString mementoType = meta->className();
     m_DataStreamWrite << mementoType;
     QString ot = memento->objectClassType();
@@ -65,9 +69,9 @@ void mafCodecRawBinary::encode(mafMemento *memento) {
 
 mafMemento *mafCodecRawBinary::decode() {
     REQUIRE(m_Device != NULL);
-
     QString mementoTagSeparator;
     QString mementoType;
+    QString serializationPatternString;
     QString objType;
     if(m_LevelDecode == -1) {  
       //-1 for initializing the file
@@ -75,12 +79,20 @@ mafMemento *mafCodecRawBinary::decode() {
       m_DataStreamRead >> mementoTagSeparator;
     }
     QString path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
-    m_DataStreamRead >> m_LevelDecode; //read memento level
+    m_DataStreamRead >> serializationPatternString;
     m_DataStreamRead >> mementoType;
     m_DataStreamRead >> objType;
 
     mafMemento *memento = (mafMemento *)mafNEWFromString(mementoType);
     memento->setObjectClassType(objType);
+
+    //Set the serializationPattern for the memento: "I" if is an Inheritance memento, "C" if is a Composition memento.
+    if (serializationPatternString.contains("I")) {
+      memento->setSerializationPattern(mafSerializationPatternInheritance);
+    } else if (serializationPatternString.contains("C")) {
+      memento->setSerializationPattern(mafSerializationPatternComposition);
+    }
+    m_LevelDecode = serializationPatternString.right(1).toUInt();
 
     //Fill the map of memento and levelDecode.
     m_MementoMap[m_LevelDecode] = memento;

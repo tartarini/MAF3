@@ -10,7 +10,7 @@
  */
 
 #include "mafMementoVME.h"
-#include "mafMementoDataSet.h"
+#include "mafMementoDataSetCollection.h"
 #include "mafPipeData.h"
 #include "mafDataSetCollection.h"
 #include "mafDataSet.h"
@@ -22,30 +22,19 @@ using namespace mafResources;
 mafMementoVME::mafMementoVME(const QString code_location) : mafMemento(code_location) {
 }
 
-mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const QString code_location)  : mafMemento(obj, code_location) {    mafVME *vme = qobject_cast<mafResources::mafVME*>((mafObject *)obj);
+mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const QString code_location)  : mafMemento(obj, code_location) {    
+    mafVME *vme = qobject_cast<mafResources::mafVME*>((mafObject *)obj);
     REQUIRE(vme);
 
     mafMementoPropertyList *list = mementoPropertyList();
-    mafDataSetCollection *collection = vme->dataSetCollection();
-    if(collection) {
-        const mafDataSetMap *map = collection->collectionMap();
-        mafMementoPropertyItem item;
-
-        mafDataSetMap::const_iterator iter = map->constBegin();
-        while(iter != map->constEnd()) {
-            item.m_Name = "mafDataSetTime";
-            item.m_Multiplicity = 1;
-            item.m_Value = iter.key();
-            list->append(item);
-            mafDataSet *dataSet = iter.value();
-            //call mafMementoDataSet
-            mafMementoDataSet *mementoDataSet = (mafMementoDataSet*)dataSet->createMemento();
-            mementoDataSet->setParent(this);
-            //Set mementoDataSet has "COMPOSE MEMENTO" of mementoVME.
-            mementoDataSet->setProperty("mementoHierarchyType", COMPOSE_MEMENTO);
-            mementoDataSet->setTimeStamp(item.m_Value.toDouble());
-            ++iter;
-        }
+    
+    if (vme->dataSetCollection()) {
+      mafDataSetCollection *collection = vme->dataSetCollection();
+      mafMementoDataSetCollection *mementoDataSetCollection = (mafMementoDataSetCollection *)collection->createMemento();
+      //Set serializationPattern of the memento created as "Composition" because is not an ancestor of this memento
+      mementoDataSetCollection->setSerializationPattern(mafSerializationPatternComposition);
+      mementoDataSetCollection->setParent(this);
+      //This memento IS NOT an Inherit memento.
     }
 
     mafPipeData *pipe = vme->dataPipe();
