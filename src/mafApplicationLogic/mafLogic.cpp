@@ -80,13 +80,18 @@ bool mafLogic::initialize() {
         m_LibraryHandlersHash.insert(RESOURCES_LIBRARY_NAME, handler);
     }
 
-    // Initialize data hierarchy
-    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, m_Hierarchy);
-    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+    requestNewHierarchy();
 
     // Perform design by contract check.
     ENSURE(handler);
     return handler != NULL;
+}
+
+mafCore::mafHierarchy *mafLogic::requestNewHierarchy() {
+    // Initialize data hierarchy
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, m_Hierarchy);
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.new", mafEventTypeLocal, NULL, &ret_val);
+    return m_Hierarchy;
 }
 
 void mafLogic::plugObject(const QString base_class, const QString class_type, const QString object_label) {
@@ -119,7 +124,7 @@ void mafLogic::loadPlugins(QString plugin_dir) {
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.loadLibrary", mafEventTypeLocal, &argList);
     }
 
-    // Plug also the custom objects plugged from the vertical appliation.
+    // Plug also the custom objects plugged from the vertical application.
     argList.clear();
     argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, m_CustomPluggedObjectsHash));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.registerLibrary", mafEventTypeLocal, &argList);

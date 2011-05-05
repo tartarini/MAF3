@@ -15,7 +15,6 @@
 #include "mafTreeModel.h"
 #include "mafLoggerWidget.h"
 #include "mafTextEditWidget.h"
-#include "mafSyntaxHighlighter.h"
 #include "mafGUIApplicationSettingsDialog.h"
 #include "mafTreeItemDelegate.h"
 #include "mafTreeItemSceneNodeDelegate.h"
@@ -28,7 +27,7 @@ using namespace mafGUI;
 
 mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location) : mafObjectBase(code_location)
     , m_MaxRecentFiles(5), m_MainWindow(main_win)
-    , m_Model(NULL), m_TreeWidget(NULL) {
+    , m_Model(NULL), m_TreeWidget(NULL), m_Logic(NULL) {
 
     m_SettingsDialog = new mafGUIApplicationSettingsDialog();
     m_OperationWidget = new mafOperationWidget();
@@ -54,6 +53,17 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
 mafGUIManager::~mafGUIManager() {
     mafDEL(m_Logger);
     mafDEL(m_UILoader);
+}
+
+void mafGUIManager::newWorkingSession() {
+    mafHierarchyPointer h = m_Logic->requestNewHierarchy();
+
+    m_Model->clear();
+    m_Model->setHierarchy(h);
+}
+
+void mafGUIManager::quitApplication() {
+    // post the closeEvent
 }
 
 void mafGUIManager::createToolbar(QDomElement node) {
@@ -629,14 +639,14 @@ void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
     sceneGraph = view->property("hierarchy").value<mafCore::mafHierarchyPointer>();
     if (m_Model) {
         // Set hierarchy of selected view and set the current index
-        m_Model->clear();
-        m_Model->setHierarchy(sceneGraph);
-        QModelIndex index = m_Model->index(0, 0);
-        // TODO: select previous index
-        m_TreeWidget->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
-        mafTreeItemSceneNodeDelegate *itemSceneNodeDelegate = new mafTreeItemSceneNodeDelegate(this);
+        //m_Model->clear();
+        mafTreeItemSceneNodeDelegate *itemSceneNodeDelegate = new mafTreeItemSceneNodeDelegate(this);//LEAKS!
         m_TreeWidget->setItemDelegate(itemSceneNodeDelegate);
-
+        
+        m_Model->setHierarchy(sceneGraph);
+        //QModelIndex index = m_Model->index(0, 0);
+        // TODO: select previous index
+        //m_TreeWidget->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
     }
     // Get the selected view's UI file
     QString guiFilename = view->uiFilename();
@@ -649,20 +659,20 @@ void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
     m_UILoader->uiLoad(guiFilename);
 }
 
-void mafGUIManager::viewDestroyed() {
+void mafGUIManager::viewDestroyed() { //ALL THE VIEWS ARE DESTROYED
     // Get hierarchy from mafVMEManager
-    mafCore::mafHierarchyPointer hierarchy;
-    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+    mafCore::mafHierarchyPointer vmeHierarchy;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, vmeHierarchy);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
     if (m_Model) {
         // Set VME hierarchy
-        m_Model->clear();
-        m_Model->setHierarchy(hierarchy);
-        QModelIndex index = m_Model->index(0, 0);
+        //m_Model->clear();
         // TODO: select previous index
-        m_TreeWidget->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
         mafTreeItemDelegate *itemDelegate = new mafTreeItemDelegate(this);
         m_TreeWidget->setItemDelegate(itemDelegate);
+        
+        m_Model->setHierarchy(vmeHierarchy);
+        
     }
 }
 

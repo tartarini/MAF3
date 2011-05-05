@@ -31,7 +31,7 @@ class mafDataBoundaryAlgorithm;
  */
 class MAFRESOURCESSHARED_EXPORT mafDataSet : public mafCore::mafObject {
     Q_OBJECT
-    Q_PROPERTY(double timeStamp READ timeStamp WRITE setTimeStamp)
+    //Q_PROPERTY(double timeStamp READ timeStamp WRITE setTimeStamp)
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObject);
 
@@ -75,16 +75,16 @@ public:
     serialization mechanism to serialize data into the selected storage type.
     The 'deep_memento' flag is used to avoid the copy of the object unique hash in normal operation like
     undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
-    /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool binary = true, bool deep_memento = false);
+    /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
     /// Load external data and fill the mafDataSet.
     void updateDataValue();
 
     /// Return time stamp referred to this mafDataSet.
-    double timeStamp() const; 
+    //double timeStamp() const; 
 
     /// Set time stamp.
-    void setTimeStamp(double time);
+    //void setTimeStamp(double time);
 
 protected:
     /// Object destructor.
@@ -116,13 +116,13 @@ inline mafDataBoundaryAlgorithm *mafDataSet::boundaryAlgorithm() const {
     return m_DataBoundaryAlgorithm;
 }
 
-inline double mafDataSet::timeStamp() const {
+/*inline double mafDataSet::timeStamp() const {
   return m_TimeStamp;
 }
 
 inline void mafDataSet::setTimeStamp(double time) {
   m_TimeStamp = time;
-}
+}*/
 
 
 } //mafResources

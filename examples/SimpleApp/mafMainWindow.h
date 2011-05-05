@@ -69,6 +69,7 @@ public slots:
 
 protected slots:
     /// Observe the viewCreatedSignal emitted by the mafViewManager.
+    /* Attach the render context to the gui widget */
     virtual void viewCreated(mafCore::mafObjectBase *view);
 
     /// Slot called when dynamic loaded GUI is available.
@@ -89,6 +90,9 @@ private slots:
 
     /// Shows the About dialog.
     void showAbout();
+    
+    /// Called when a subWindow has been destroyed.
+    void subWindowDestroyed();
 
 protected:
     /// Method used to catch events related to changes.
@@ -110,6 +114,8 @@ private:
 
     QDockWidget *m_DockGoogleChat; ///< Dock widget containing the google chat widget.
 
+    QHash<QMdiSubWindow *, mafCore::mafObjectBase *> m_ViewSubWindowHash; ///< hash which binds mafViews with qt sub windows
+    
     /// Connect the slots to the signal defined into the mafGUIManager through the mafEventBus
     void connectCallbacks();
 

@@ -36,7 +36,6 @@ class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_OBJECT
     Q_PROPERTY(bool canRead READ canRead WRITE setCanRead)
     Q_PROPERTY(bool canWrite READ canWrite WRITE setCanWrite)
-    Q_PROPERTY(bool visibility READ visibility WRITE setVisibility)
 
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
@@ -75,7 +74,7 @@ public:
     serialization mechanism to serialize data into the selected storage type.
     The 'deep_memento' flag is used to avoid the copy of the object unique hash in normal operation like
     undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
-    /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool binary = true, bool deep_memento = false);
+    /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
     /// Assign to the VME the interactor that will be used when user interact with the VME.
     void setInteractor(mafInteractor *i);
@@ -109,9 +108,6 @@ signals:
     void vmeLocked(int);
 
 public slots:
-    /// Set the visibility of its rendering scene.
-    void setVisibility(bool visible);
-
     /// Set the current timestamp for the VME.
     void setTimestamp(double t);
 
@@ -122,9 +118,6 @@ public slots:
     /*virtual*/ void execute();
 
 protected:
-    /// Return the visibility status
-    bool visibility() const;
-
     /// Object destructor.
     /* virtual */ ~mafVME();
 
@@ -138,10 +131,8 @@ private:
     mafPipeData *m_DataPipe; ///< Data pipe associated with the VME and used to elaborate new data.
     QHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
     QVariantList m_Bounds; ///< List of bounds value of the binding box.
-    bool m_Binary; /// Flag used to indicate if dataSet in binary or ASCII.
     bool m_CanRead;  ///< Flag used to indicate if the VME is readable.
     bool m_CanWrite; ///< Flag indicating if the vme is writable.
-    bool m_Visibility; /// Flag used to set visibility to scene node
 };
 
 /////////////////////////////////////////////////////////////
@@ -173,9 +164,6 @@ inline bool mafVME::canWrite() const {
     return m_CanWrite;
 }
 
-inline bool mafVME::visibility() const {
-  return m_Visibility;
-}
 
 } // mafResources
 

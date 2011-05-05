@@ -62,9 +62,7 @@ public slots:
 };
 
 testExtCustomManager::testExtCustomManager(QString code_location) : mafObjectBase(code_location) {
-    //mafCore::mafId id = mafIdProvider::instance()->idValue("maf.local.serialization.mementoLoaded");
     mafRegisterLocalCallback("maf.local.serialization.mementoLoaded", this, "createdMemento(mafCore::mafMemento *)")
-
 }
 
 void testExtCustomManager::createdMemento(mafCore::mafMemento *memento) {

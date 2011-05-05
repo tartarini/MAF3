@@ -74,7 +74,7 @@ public slots:
     void itemDetached(QObject *item);
 
     /// Append a tree to an item.
-    void itemReparent(QObject *item, QObject *parent);
+    void itemReparent(QObject *obj, QObject *parent);
 
     /// Slot called when hierarchy has been destroyd.
     void hierarchyDestroyed();
@@ -83,15 +83,21 @@ private slots:
 
 
 signals:
+    /// signal emitted when an item has been added to the hierarchy.
     void itemAdded(QModelIndex index);
     //void save();
 
 private:
     /// initialization of the header which will be visualized by a view
     void initialize();
+    
+    /// return the vme hash
+    QString dataHash(QObject *obj);
 
     /// recursive function which is able to reconstruct from a hierarchy, the current model
     void buildModel(bool init = true);
+    
+    void replaceDataModel(bool init = true);
 
     /// create new item starting by a parent item
     mafTreeItem *createNewItem(mafTreeItem *parent, QObject *obj, bool checked);
@@ -99,7 +105,9 @@ private:
     mafCore::mafHierarchy *m_Hierarchy; ///< hierarchy from which construct the model
     mafTreeItem *m_CurrentItem; ///< current item of the model
 
-    QList<mafTreeItem *> m_ItemsList; ///< variable useful for rapid iteration between mafTreeItem
+    QHash<QString, mafTreeItem *> m_ItemsHash; ///< variable useful for rapid iteration between mafTreeItem
+
+    int m_ItemCounter;
 };
 
 } //end namespace

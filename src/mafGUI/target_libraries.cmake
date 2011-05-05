@@ -14,4 +14,5 @@ SET(target_libraries
   ${foundation_libraries}
   mafCore
   mafEventBus
+  mafApplicationLogic
   )

@@ -25,6 +25,8 @@
 #include <vtkSphereSource.h>
 #include <vtkSmartPointer.h>
 
+#include <QDebug>
+
 using namespace mafCore;
 using namespace mafGUI;
 
@@ -52,9 +54,9 @@ void mafMainWindow::initializeMainWindow() {
 
     mafGUIRegistration::registerGUIObjects();
     m_GUIManager = new mafGUIManager(this, mafCodeLocation);
+    m_GUIManager->setLogic(m_Logic);
 
     m_GUIManager->createMenus();
-//    m_GUIManager->createToolBars();
 
     connect(m_GUIManager, SIGNAL(guiLoaded(int,QWidget*)), this, SLOT(loadedGUIAvailable(int,QWidget*)));
     connect(m_GUIManager, SIGNAL(guiTypeToRemove(int)), this, SLOT(loadedGUIToRemove(int)));
@@ -298,17 +300,41 @@ void mafMainWindow::viewCreated(mafCore::mafObjectBase *view) {
     sub_win->setAttribute(Qt::WA_DeleteOnClose);
     sub_win->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     connect(sub_win, SIGNAL(aboutToActivate()), this, SLOT(viewWillBeSelected()));
+    connect(sub_win, SIGNAL(destroyed()), this, SLOT(subWindowDestroyed()));
     connect(sub_win, SIGNAL(destroyed()), view, SLOT(deleteLater()));
 
+    m_ViewSubWindowHash.insert(sub_win, view);
+    
     widget->setParent(sub_win);
     sub_win->setMinimumSize(200, 200);
     sub_win->show();
 }
+
+void mafMainWindow::subWindowDestroyed() {
+    QMdiSubWindow *subWindow = qobject_cast<QMdiSubWindow *>(QObject::sender());
+    mafEventBus::mafEventArgumentsList argList;
+    mafObjectBase *view = m_ViewSubWindowHash.value(subWindow);
+    if(view == NULL) {
+        qCritical(mafTr("View doesn't exist!!").toAscii().constData());
+        return;
+    }
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, view));
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.destroy", mafEventBus::mafEventTypeLocal, &argList);
+    
+}
+
 
 void mafMainWindow::viewWillBeSelected() {
     qDebug() << "View will be selected!!";
 }
 
 void mafMainWindow::subWindowSelected(QMdiSubWindow *sub_win) {
-    qDebug() << "View selected!!";
+    mafEventBus::mafEventArgumentsList argList;
+    mafObjectBase *view = m_ViewSubWindowHash.value(sub_win);
+    if(view == NULL) {
+        qCritical(mafTr("View doesn't exist!!").toAscii().constData());
+        return;
+    }
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, view));
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.select", mafEventBus::mafEventTypeLocal, &argList);
 }

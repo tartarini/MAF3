@@ -107,7 +107,6 @@ void mafView::removeSceneNode(mafSceneNode *node) {
 
 void mafView::selectSceneNode(mafSceneNode *node, bool select) {
     m_SelectedNode = node;
-    Q_UNUSED(node);
     Q_UNUSED(select);
 }
 
@@ -126,7 +125,8 @@ void mafView::showSceneNode(mafSceneNode *node, bool show, const QString visualP
         if  (data != NULL) {
             dataType = data->dataValue()->externalDataType();
         }
-        vp = m_VisualPipeHash.value(dataType);
+        //vp = m_VisualPipeHash.value(dataType);
+        vp = node->visualPipeType();
         if (vp == "") {
            qDebug("%s", mafTr("Visual pipe not found for '%1' of data!").arg(vp).toAscii().data());
            return;
@@ -135,22 +135,9 @@ void mafView::showSceneNode(mafSceneNode *node, bool show, const QString visualP
     if(m_Scenegraph != NULL) {
         if (show) {
             node->setVisualPipe(vp);
-            mafPipeVisual *pipe = node->visualPipe();
-            if(pipe == NULL) {
-                qWarning() << mafTr("No visual pipe type '") << vp << mafTr("'' registered!!");
-                return;
-            }
-            pipe->setInput(node->vme());
-            if (pipe->output() == NULL) {
-              pipe->createPipe();
-            }
-            pipe->updatePipe();
-            // TODO: Connect the visivility property of the VME with the visibile
-            // slot of the visual pipe to put in synch both the opbjects.
-        } else {
-            // TODO: Implement the case the show is false => destroy the
-            // visualVipie?? Hide its actor ??
-        }
+            node->visualPipe()->setGraphicObject(m_RenderWidget);
+        } 
+        node->setVisibility(show);
     }
 }
 

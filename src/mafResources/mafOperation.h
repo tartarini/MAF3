@@ -94,7 +94,7 @@ protected:
 // Inline methods
 /////////////////////////////////////////////////////////////
 inline bool mafOperation::isRunning() const {
-    return m_Status == EXECUTING;
+    return m_Status == mafOperationStatusExecuting;
 }
 
 inline bool mafOperation::canUnDo() const {

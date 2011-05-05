@@ -1,6 +1,6 @@
 <data>
   <Menu title="File" parent="">
-	<Action title="New" icon=":/images/new.png" tip="Create a new file." checkable="0" checked="0" slot="" topic=""></Action>
+	<Action title="New" icon=":/images/new.png" tip="Create a new file." checkable="0" checked="0" slot="newWorkingSession()" topic=""></Action>
 	<Separator></Separator>
 	<Action title="Open" icon=":/images/open.png" tip="Open an existing file." checkable="0" checked="0" slot="" topic=""></Action>
 	<Action title="Collaborate" icon=":/images/collaborate.png" tip="Stay connected with yours gtalk contacts." checkable="1" checked="0" slot="" topic=""></Action>
@@ -13,7 +13,7 @@
 	<Separator></Separator>
 	<Menu title="Open Recent" parent="File"></Menu>
 	<Separator></Separator>
-	<Action title="Exit" icon="" tip="Exit the application." checkable="0" checked="0" slot="" topic=""></Action>
+	<Action title="Exit" icon="" tip="Exit the application." checkable="0" checked="0" slot="quitApplication()" topic=""></Action>
   </Menu>
   <Menu title="Edit" parent="">
   	<Action title="Cut" icon=":/images/cut.png" tip="Cut the selected item." checkable="0" checked="0" slot="" topic=""></Action>
@@ -28,11 +28,11 @@
   	<Action title="SideBar" icon="" tip="Show-Hide the sidebar." checkable="1" checked="1" slot="" topic=""></Action>
   	<Action title="LogBar" icon="" tip="Show-Hide the log bar." checkable="1" checked="1" slot="" topic=""></Action>
   </Menu>
-  <Menu title="Help" parent="">
-  	<Action title="About" icon="" tip="Show the About dialog." checkable="0" checked="0" slot="" topic=""></Action>
-  </Menu>
   <Menu title="Options" parent="">
   	<Action title="Settings" icon="" tip="Show the application settings page." checkable="0" checked="0" slot="showSettingsDialog()" topic=""></Action>
+  </Menu>
+  <Menu title="Help" parent="">
+  	<Action title="About" icon="" tip="Show the About dialog." checkable="0" checked="0" slot="" topic=""></Action>
   </Menu>
   <Toolbar title="File" actionList="New,Collaborate,Open"></Toolbar>
   <Toolbar title="Edit" actionList="Cut,Copy,Paste"></Toolbar>

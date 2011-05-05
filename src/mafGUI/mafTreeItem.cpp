@@ -17,16 +17,29 @@ mafTreeItem::mafTreeItem(QObject *obj, bool done) : QStandardItem(obj->objectNam
     setIcon(QIcon(obj->property("iconFile").toString()));
     setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|
              Qt::ItemIsEditable);
-    bool canVisualize = false;
-    QString nodeName(obj->metaObject()->className()); ;
-    if (nodeName == "mafResources::mafSceneNode"){
-        //set icon from VME
-        canVisualize = obj->property("canVisualize").toBool();
-        if (canVisualize) {
-            setCheckState(done ? Qt::Checked : Qt::Unchecked);
-            this->flags() |= Qt::ItemIsUserCheckable;
-        }
-    }
-    setCheckable(canVisualize);
     m_Data = obj;
+    setStatus(mafItemStatusNotCheckable, false);
+}
+
+void mafTreeItem::setData(QObject *data) {
+    m_Data = data;
+}
+
+void mafTreeItem::setStatus(unsigned int status, bool active) {
+    switch(status) {
+        case mafItemStatusCheckable:
+            setCheckable(true);
+            setCheckState(active ? Qt::Checked : Qt::Unchecked);
+            break;
+        case mafItemStatusNotCheckable:
+        {
+            setCheckable(false);
+            //due to a bug in Qt it is not disable CheckStateRole
+            this->QStandardItem::setData(QVariant(), Qt::CheckStateRole);
+        }
+            break;
+        case mafItemStatusMutexCheckable:
+            qDebug() << "MUTEX STATUS";
+            break;
+    }
 }

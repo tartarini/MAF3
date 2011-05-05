@@ -120,6 +120,9 @@ void mafViewManager::initializeConnections() {
 void mafViewManager::selectView(mafCore::mafObjectBase *view) {
     REQUIRE(view != NULL);
     mafView *v = qobject_cast<mafResources::mafView *>(view);
+    if(m_SelectedView == view) {
+        return;
+    }
     if(v != NULL) {
         // A new mafView has been selected; update the m_ActiveResource variable.
         if(m_SelectedView != NULL) {
@@ -179,7 +182,7 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
             mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
             mafTree<QObject *>::iterator temp_iterator = hierarchy->iterator();
 
-            //Create root node
+            //Create root scenenode
             v->selectSceneNode(NULL, false);
             hierarchy->moveTreeIteratorToRootNode();
             QObject* rootNode = hierarchy->currentData();
@@ -189,7 +192,9 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
             hierarchy->setIterator(temp_iterator);
             QObject* selectedVME = hierarchy->currentData();
             mafSceneNode *selectedNode = v->sceneNodeFromVme(qobject_cast<mafCore::mafObjectBase *>(selectedVME));
-            v->selectSceneNode(selectedNode, selectedNode->property("canVisualize").toBool());
+            
+            v->selectSceneNode(selectedNode, selectedNode->property("visualizationStatus").toUInt() == mafVisualizationStatusVisible);
+            
             // Notify the view creation.
             mafEventArgumentsList argList;
             argList.append(mafEventArgument(mafCore::mafObjectBase*, v));
@@ -249,7 +254,6 @@ void mafViewManager::removeView(mafView *view) {
     if(m_CreatedViewList.removeOne(view)) {
         if(idx > 0) {
             mafObjectBase *obj = m_CreatedViewList.at(idx - 1);
-            selectView(obj);
         } else {
             m_SelectedView = NULL;
             // View list empty

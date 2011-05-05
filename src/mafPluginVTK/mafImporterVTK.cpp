@@ -27,7 +27,7 @@ mafImporterVTK::~mafImporterVTK() {
 void mafImporterVTK::execute() {
     if (!filename().isEmpty()) {
         checkImportFile();
-        if (m_Status == ABORTED) {
+        if (m_Status == mafOperationStatusAborted) {
             cleanup();
             return;
         }

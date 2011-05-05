@@ -10,8 +10,13 @@
  */
 
 #include "mafPipeVisualVTKSurface.h"
+#include "mafVTKWidget.h"
+
 #include <mafDataSet.h>
 #include <mafDataSetCollection.h>
+#include <vtkRendererCollection.h>
+#include <vtkRenderWindow.h>
+#include <vtkRenderer.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkDataArray.h>
 #include <vtkPointData.h>
@@ -22,7 +27,7 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace std;
 
-mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : mafPipeVisual(code_location), m_Mapper(NULL), m_ScalarVisibility(0), m_ImmediateRendering(0) {
+mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : mafPipeVisual(code_location), m_Mapper(NULL), m_ScalarVisibility(0), m_ImmediateRendering(0), m_Renderer(NULL) {
 }
 
 mafPipeVisualVTKSurface::~mafPipeVisualVTKSurface() {
@@ -65,6 +70,19 @@ void mafPipeVisualVTKSurface::updatePipe(double t) {
     m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
 }
 
+/// Set the visibility of its rendering scene.
+void mafPipeVisualVTKSurface::setVisibility(bool visible) {
+    Superclass::setVisibility(visible);
+    m_Actor->SetVisibility(visible);
+    
+    if(visible) {
+        m_Renderer->AddActor(m_Actor);
+    } else {
+        m_Renderer->RemoveActor(m_Actor);
+    }
+}
+
+
 void mafPipeVisualVTKSurface::setScalarVisibility(bool scalarVisibility) {
     if(m_ScalarVisibility != scalarVisibility) {
         m_ScalarVisibility = scalarVisibility;
@@ -77,3 +95,7 @@ void mafPipeVisualVTKSurface::setImmediateRendering (bool immediateRendering) {
     }
 }
 
+void mafPipeVisualVTKSurface::setGraphicObject(mafCore::mafContainerInterface *graphicObject) {
+    vtkRendererCollection *rc = mafContainerPointerTypeCast(mafVTKWidget, graphicObject)->externalData()->GetRenderWindow()->GetRenderers();
+    m_Renderer = rc->GetFirstRenderer();
+}
