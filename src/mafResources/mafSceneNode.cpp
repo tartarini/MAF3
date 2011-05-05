@@ -21,8 +21,6 @@ mafSceneNode::mafSceneNode(const QString code_location) : mafObject(code_locatio
 }
 
 mafSceneNode::mafSceneNode(mafVME *vme, const QString visualPipeType, const QString code_location): mafObject(code_location), m_VME(vme), m_VisualPipe(NULL),m_VisualPipeType(visualPipeType), m_Visibility(false), m_VisualizationStatus(mafVisualizationStatusVisible), m_VisibilityPolicy(mafVisibilityPolicyDestroyOnHide) {
-
-    REQUIRE(!visualPipeType.isEmpty());
     connect(vme, SIGNAL(detatched()), this, SIGNAL(destroyNode()));
     m_VME = vme;
     this->setProperty("iconFile",m_VME->property("iconFile"));
@@ -57,21 +55,26 @@ void mafSceneNode::setVisualPipe(QString visualPipeType) {
     }
     
     m_VisualPipeType = visualPipeType;
-    mafDEL(this->m_VisualPipe);
-    this->m_VisualPipe = (mafPipeVisual *)mafNEWFromString(m_VisualPipeType);
-    
-    if(m_VisualPipe == NULL) {
-        qWarning() << mafTr("No visual pipe type '") << m_VisualPipeType << mafTr("'' registered!!");
-        return;
-    }
-    
-    connect(m_VisualPipe, SIGNAL(destroyed()), this, SLOT(visualPipeDestroyed()));
-    m_VisualPipe->setInput(m_VME);
+    createVisualPipe();
+}
 
-    //if (m_VisualPipe->output() == NULL) {
-    m_VisualPipe->createPipe();
-    //}
-    m_VisualPipe->updatePipe();
+bool mafSceneNode::createVisualPipe() {
+  mafDEL(this->m_VisualPipe);
+  this->m_VisualPipe = (mafPipeVisual *)mafNEWFromString(m_VisualPipeType);
+
+  if(m_VisualPipe == NULL) {
+    qWarning() << mafTr("No visual pipe type '") << m_VisualPipeType << mafTr("'' registered!!");
+    return false;
+  }
+
+  connect(m_VisualPipe, SIGNAL(destroyed()), this, SLOT(visualPipeDestroyed()));
+  m_VisualPipe->setInput(m_VME);
+
+  //if (m_VisualPipe->output() == NULL) {
+  m_VisualPipe->createPipe();
+  //}
+  m_VisualPipe->updatePipe();
+  return true;
 }
 
 void mafSceneNode::setVMEName(QString name) {
@@ -87,10 +90,17 @@ QString mafSceneNode::VMEName() {
 }
 
 void mafSceneNode::setVisibility(bool visible) {
-    m_Visibility = visible;
-    if(m_VisualPipe == NULL) {
-        return;
+    if (m_VisualPipeType.isEmpty()) {
+      return;
     }
+    
+    if(m_VisualPipe == NULL) {
+      if (!createVisualPipe()) {
+        return;
+      }
+    }
+    m_Visibility = visible;
+
     m_VisualPipe->setVisibility(visible);
     
     if(!visible) {
