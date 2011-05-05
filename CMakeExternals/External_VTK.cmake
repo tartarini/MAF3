@@ -89,6 +89,3 @@ endif()
   SET(${VTK_enabling_variable}_INCLUDE_DIRS VTK_INCLUDE_DIRS)
   SET(${VTK_enabling_variable}_FIND_PACKAGE_CMD VTK)
   
-  #copy dll in bin directory of MAF project (only if shared)
-  include(${CMAKE_SOURCE_DIR}/CMake/mafCopySharedLibrariesInInstallDir.cmake)
-  mafCopySharedLibrariesInInstallDir("${VTK_DIR}/bin" proj)

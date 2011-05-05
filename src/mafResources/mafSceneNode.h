@@ -93,15 +93,18 @@ protected:
     unsigned int visualizationStatus();
 
 private slots:
-    /// monitor the visual pipe deletation.
+    /// monitor the visual pipe deletion.
     void visualPipeDestroyed();
 
 private:
+    /// Create instance of visual pipe.
+    bool createVisualPipe();
+
     mafVME *m_VME; ///< Represent the data object.
     QString m_VisualPipeType; ///< type name of the current visual pipe
-    mafPipeVisual *m_VisualPipe;  ///< represente the renderable object inside the scene node
+    mafPipeVisual *m_VisualPipe;  ///< represents the renderable object inside the scene node
     bool m_Visibility; ///< Contains the visibility status of the owned object/s.
-    mafVisualizationStatus m_VisualizationStatus; ///< contains the visibility status for that scenenode.
+    mafVisualizationStatus m_VisualizationStatus; ///< contains the visibility status for that scene node.
     mafVisibilityPolicy m_VisibilityPolicy; ///< Visibility policy determines in which way, on show/hide , the visual pipe will be treated.
 };
 
