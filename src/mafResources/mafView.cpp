@@ -135,7 +135,9 @@ void mafView::showSceneNode(mafSceneNode *node, bool show, const QString visualP
     if(m_Scenegraph != NULL) {
         if (show) {
             node->setVisualPipe(vp);
-            node->visualPipe()->setGraphicObject(m_RenderWidget);
+            if (node->visualPipe() != NULL) {
+                node->visualPipe()->setGraphicObject(m_RenderWidget);
+            }
         } 
         node->setVisibility(show);
     }
