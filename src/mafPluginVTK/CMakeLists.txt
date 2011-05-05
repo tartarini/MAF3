@@ -51,6 +51,13 @@ LINK_DIRECTORIES(${VTK_LIBRARY_DIRS})
 mafCopyFilesFromExtension("ui" "mafPluginVTK")
 
 ## #################################################################
+## copy VTK libraries
+## #################################################################
+
+#message(FATAL_ERROR "${VTK_DIR}")
+mafCopySharedLibrariesInInstallDir("${VTK_DIR}/bin")
+
+## #################################################################
 ## Wrapping Build rules
 ## #################################################################
 
