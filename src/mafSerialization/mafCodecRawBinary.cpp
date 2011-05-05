@@ -31,8 +31,12 @@ void mafCodecRawBinary::encode(mafMemento *memento) {
     m_DataStreamWrite.setDevice(m_Device);
     m_DataStreamWrite.setVersion(QDataStream::Qt_4_6);
 
-    QString path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
-
+    //TODO: I presume m_Device is a file...
+    QString path;
+    QFile *file = qobject_cast<QFile*>(m_Device);
+    if(file) {
+        path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
+    }
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     mafMementoPropertyItem item;
 
@@ -78,7 +82,13 @@ mafMemento *mafCodecRawBinary::decode() {
       m_DataStreamRead.setDevice(m_Device);
       m_DataStreamRead >> mementoTagSeparator;
     }
-    QString path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
+    
+    //TODO: I presume m_Device is a file...
+    QString path;
+    QFile *file = qobject_cast<QFile*>(m_Device);
+    if(file) {
+        path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
+    }
     m_DataStreamRead >> serializationPatternString;
     m_DataStreamRead >> mementoType;
     m_DataStreamRead >> objType;
