@@ -30,7 +30,12 @@ void mafCodecXML::encode(mafMemento *memento) {
     REQUIRE(memento != NULL);
     REQUIRE(m_Device != NULL);
     
-    QString path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
+    //TODO: I presume m_Device is a file...
+    QString path;
+    QFile *file = qobject_cast<QFile*>(m_Device);
+    if(file) {
+        path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
+    }
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     mafMementoPropertyItem item;
 
@@ -92,7 +97,12 @@ mafMemento *mafCodecXML::decode() {
       m_XMLStreamReader.readNextStartElement(); //mementoRoot
     }
 
-    QString path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
+    //TODO: I presume m_Device is a file...
+    QString path;
+    QFile *file = qobject_cast<QFile*>(m_Device);
+    if(file) {
+        path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
+    }
     QString mementoType;
     QString objType;
 
@@ -280,15 +290,16 @@ QVariant mafCodecXML::demarshall( QXmlStreamReader *xmlStream ) {
             multiplicity = attributes.value("multiplicity").toString().toUInt();
         } 
         if (multiplicity < 1) {
-          qCritical() << QString("bad param value");
-          return QVariant();
-        } else {
-           typeName = attributes.value("arrayType").toString();
-        } 
-        xmlStream->readNextStartElement();
-        QXmlStreamAttributes attributesValue = xmlStream->attributes();
-        if(attributesValue.hasAttribute("dataType")) {
-          typeName = xmlStream->attributes().value("dataType").toString();
+            qCritical() << QString("bad param value");
+            return QVariant();
+        } else if (multiplicity > 1){
+            typeName = attributes.value("arrayType").toString();
+        }  else {
+            xmlStream->readNextStartElement();
+            QXmlStreamAttributes attributesValue = xmlStream->attributes();
+            if(attributesValue.hasAttribute("dataType")) {
+              typeName = xmlStream->attributes().value("dataType").toString();
+            }
         }
     } else if (tagName == "value") {
         QXmlStreamAttributes attributesValue = xmlStream->attributes();
