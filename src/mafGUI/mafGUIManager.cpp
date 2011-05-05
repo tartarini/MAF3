@@ -15,7 +15,6 @@
 #include "mafTreeModel.h"
 #include "mafLoggerWidget.h"
 #include "mafTextEditWidget.h"
-#include "mafSyntaxHighlighter.h"
 #include "mafGUIApplicationSettingsDialog.h"
 #include "mafTreeItemDelegate.h"
 #include "mafTreeItemSceneNodeDelegate.h"
