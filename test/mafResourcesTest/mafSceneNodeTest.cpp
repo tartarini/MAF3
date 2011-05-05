@@ -73,33 +73,26 @@ private slots:
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
         mafRegisterObject(testVisualPipeCustomForSceneNode);
-        m_SceneNode = mafNEW(mafSceneNode);
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        mafDEL(m_SceneNode);
         mafMessageHandler::instance()->shutdown();
     }
-
-    /// mafSceneNode allocation test case.
-    void mafSceneNodeAllocationTest();
 
     /// set visual pipe test case.
     void mafSceneNodeSetVisualPipeTest();
 
-private:
-    mafSceneNode *m_SceneNode; ///< Test var.
 };
-
-void mafSceneNodeTest::mafSceneNodeAllocationTest() {
-    QVERIFY(m_SceneNode != NULL);
-}
 
 
 void mafSceneNodeTest::mafSceneNodeSetVisualPipeTest() {
-    m_SceneNode->setVisualPipe("testVisualPipeCustomForSceneNode");
-    QVERIFY(m_SceneNode->visualPipe() != NULL);
+    mafVME* vme = mafNEW(mafResources::mafVME);
+    vme->setObjectName("vme");
+    mafSceneNode *sceneNode = new mafSceneNode(vme, "testVisualPipeCustomForSceneNode", mafCodeLocation);
+    sceneNode->setVisibility(true);
+
+    QVERIFY(sceneNode->visualPipe() != NULL);
 }
 
 MAF_REGISTER_TEST(mafSceneNodeTest);
