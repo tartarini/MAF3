@@ -135,7 +135,7 @@ void mafVMEManager::vmeReparent(mafObjectBase *vme, mafObjectBase *vmeParent) {
       mafSceneNode *objParent = qobject_cast<mafSceneNode *>(vmeParent);
       m_VMEHierarchy->reparentHierarchyNode(obj->vme(), objParent->vme());
     } else {
-      m_VMEHierarchy->reparentHierarchyNode(vme, vmeParent);
+        m_VMEHierarchy->reparentHierarchyNode(vme, vmeParent);
     }
   }
 }

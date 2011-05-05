@@ -63,12 +63,14 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
      return;
    }
     mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
+    bool check = item->isCheckable();
     QStyleOptionViewItemV4 options = option;
     initStyleOption(&options, index);
     QPixmap iconPixmap;
 
     //Get lock status
     QObject *objItem = objFromIndex(index);
+
     uint lockStatus = objItem->property("lockStatus").toUInt();
     if (lockStatus & mafCore::mafObjectLockNone) {
        item->setIcon(QIcon(objItem->property("iconFile").toString()));

@@ -117,6 +117,7 @@ void mafTreeItemSceneNodeDelegate::paint(QPainter *painter, const QStyleOptionVi
 bool mafTreeItemSceneNodeDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) {
     bool result = QStyledItemDelegate::editorEvent(event, model, option, index);
     QObject *sceneNode = objFromIndex(index);
+    char *vmeName = sceneNode->property("VMEName").toString().toAscii().data();
     //If item is a SceneNode, set visibility property to item checked
     QString objName = "mafResources::mafSceneNode";
     m_isSceneNode = true;

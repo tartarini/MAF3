@@ -31,6 +31,11 @@ public:
     /// Retrieve the current data inside the item
     QObject *data() const { return m_Data; }
 
+    /// set the data inside the item.
+    void setData(QObject *data);
+    
+    /// set the status of the item, i.e. if is checkable or not.
+    void setStatus(unsigned int status = mafItemStatusNotCheckable, bool active = false );
 private:
     QObject * m_Data; ///< variable which point to the data inside item
 };

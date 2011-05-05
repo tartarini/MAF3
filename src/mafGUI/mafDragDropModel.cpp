@@ -31,16 +31,19 @@ bool mafDragDropModel::dropMimeData(const QMimeData *data,
         return true;
 
     mafTreeItem *itemParent;
+    mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)currentIndex().model())->itemFromIndex(currentIndex());
+
     if (!parent.isValid()) {
-        QString root("root");
-        itemParent = (mafTreeItem *)this->findItems(root).at(0);
+        return false;
     } else {
         itemParent = (mafTreeItem *)((QStandardItemModel *)parent.model())->itemFromIndex(parent);
     }
     mafObjectBase *objParent = qobject_cast<mafObjectBase*>(itemParent->data());
-    mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)currentIndex().model())->itemFromIndex(currentIndex());
     mafObjectBase *obj = qobject_cast<mafObjectBase*>(item->data());
 
+    char *v = obj->objectName().toAscii().data();
+    char *vp = objParent->objectName().toAscii().data();
+    
     //Notify vme reparent
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, obj));

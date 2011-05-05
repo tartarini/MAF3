@@ -43,6 +43,13 @@ typedef enum {
     mafGUILoadedTypeVisualPipe,
     mafGUILoadedTypeVme
 } mafGUILoadedType;
+    
+
+typedef enum {
+    mafItemStatusCheckable,
+    mafItemStatusNotCheckable,
+    mafItemStatusMutexCheckable,
+} mafItemStatus;
 
 } //end namespace
 
