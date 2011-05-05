@@ -110,12 +110,12 @@ int mafOperationParametricSurface::parametricSurfaceType() {
 }
 
 void mafOperationParametricSurface::execute() {
-    m_Status = EXECUTING;
+    m_Status = mafOperationStatusExecuting;
     emit executionEnded();
 }
 
 void mafOperationParametricSurface::terminated() {
-    if (m_Status == CANCELED || m_Status == ABORTED) {
+    if (m_Status == mafOperationStatusCanceled || m_Status == mafOperationStatusAborted) {
         mafEventArgumentsList argList;
         argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.remove", mafEventTypeLocal, &argList);

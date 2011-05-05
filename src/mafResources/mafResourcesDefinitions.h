@@ -70,12 +70,27 @@ enum {
 
 /// Typedef to define the operation's status
 typedef enum {
-    IDLE,
-    STARTED,
-    EXECUTING,
-    CANCELED,
-    ABORTED
+    mafOperationStatusIdle,
+    mafOperationStatusStarted,
+    mafOperationStatusExecuting,
+    mafOperationStatusCanceled,
+    mafOperationStatusAborted,
 } mafOperationStatus;
+    
+/// Typedef to define the policy for creating/destroying the visual pipes
+typedef enum {
+    mafVisibilityPolicyKeepAlive,
+    mafVisibilityPolicyDestroyOnHide,
+    mafVisibilityPolicySmartMemory,
+} mafVisibilityPolicy;
+
+    
+/// Typedef to define the status of a scenenode when used inside a view    
+typedef enum {
+    mafVisualizationStatusVisible,
+    mafVisualizationStatusNotVisible,
+    mafVisualizationStatusMutex,
+} mafVisualizationStatus;
     
 } // namespace mafResources
 

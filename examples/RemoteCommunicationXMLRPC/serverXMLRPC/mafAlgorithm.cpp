@@ -27,7 +27,7 @@ void mafAlgorithm::setParameters(QList<QVariant> parameters) {
 }
 
 void mafAlgorithm::execute() {
-    m_Status = EXECUTING;
+    m_Status = mafOperationStatusExecuting;
     qDebug("%s", mafTr("Executing testProcess!!!").toAscii().data());
 
     QStringList commandAndParameters;
