@@ -4,3 +4,6 @@ FIND_PACKAGE(VTK REQUIRED)
 #this set is because, inside VTK 5, nobody fills it
 SET(VTK_CMAKE_DIR "${MAF_EXTERNAL_BUILD_DIR}/Source/VTK/CMake")
 INCLUDE(${VTK_USE_FILE})
+
+#copy files
+mafCopySharedLibrariesInInstallDir("${VTK_DIR}lib")
