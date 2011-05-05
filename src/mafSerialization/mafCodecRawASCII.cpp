@@ -31,7 +31,12 @@ void mafCodecRawASCII::encode(mafMemento *memento) {
     m_DataTextWrite.setDevice(m_Device);
     m_DataTextWrite.setFieldAlignment(QTextStream::AlignLeft);
 
-    QString path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
+    //TODO: I presume m_Device is a file...
+    QString path;
+    QFile *file = qobject_cast<QFile*>(m_Device);
+    if(file) {
+        path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
+    }
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     mafMementoPropertyItem item;
 
@@ -77,7 +82,14 @@ mafMemento *mafCodecRawASCII::decode() {
         m_DataTextRead.setDevice(m_Device);
         m_DataTextRead >> mementoTagSeparator;
     }
-    QString path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
+
+    //TODO: I presume m_Device is a file...
+    QString path;
+    QFile *file = qobject_cast<QFile*>(m_Device);
+    if(file) {
+        path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
+    }
+
     m_DataTextRead >> serializationPatternString;
     m_DataTextRead >> mementoType;
     m_DataTextRead >> objType;
