@@ -27,18 +27,23 @@ This class represents a scene node which owns the pointer to the mafVME and the 
 class MAFRESOURCESSHARED_EXPORT mafSceneNode : public mafCore::mafObject {
     Q_OBJECT
     Q_PROPERTY(bool visibility READ visibility WRITE setVisibility)
-    Q_PROPERTY(bool canVisualize READ canVisualize WRITE setCanVisualize)
+    Q_PROPERTY(unsigned int visualizationStatus READ visualizationStatus WRITE setVisualizationStatus)
     Q_PROPERTY(QString VMEName READ VMEName WRITE setVMEName)
+    Q_PROPERTY(QString dataHash READ dataHash)
+    Q_PROPERTY(unsigned int VisibilityPolicy READ visibilityPolicy WRITE setVisibilityPolicy)
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObject);
 
 public:
-    /// Object constructor. USE CONSTRUCTOR BELOW WHICH TAKES VME AS INPUT.
+    /// Object constructor. USE THE CONSTRUCTOR WITH VME AS PARAMETER.
     mafSceneNode(const QString code_location = "");
 
     /// Object constructor.
-    mafSceneNode(mafVME *vme, mafPipeVisual *visual_pipe = NULL, const QString code_location = "");
+    mafSceneNode(mafVME *vme, const QString visualPipeType, const QString code_location = "");
 
+    /// Return the type name of the pipe.
+    QString visualPipeType() const;
+    
     /// Set visual pipe to the scene node
     void setVisualPipe(QString visualPipeType);
 
@@ -53,16 +58,25 @@ public:
 
     /// Return name of contained VME.
     QString VMEName();
+    
+    /// Return hash of the current Data (vme).
+    QString dataHash() const;
 
     /// Allow to send the selection event for the owned VME.
     /*virtual*/ void setSelected(bool sel);
+    
+    /// Set visibility policy of the scene node
+    void setVisibilityPolicy(unsigned int visibilityPolicy);
+    
+    /// Return visibility policy of the scene node
+    unsigned int visibilityPolicy() const;
 
 public slots:
     /// Set the visibility of its rendering scene.
     virtual void setVisibility(bool visible);
 
-    /// Set the canVisualize property.
-    virtual void setCanVisualize(bool canVisualize);
+    /// Set the visualization status property.
+    virtual void setVisualizationStatus(bool visualizationStatus);
 
 signals:
     /// Alert the view that the node can be deleted because its inner vme has been destroyed.
@@ -75,8 +89,8 @@ protected:
     /// Return the visibility status
     bool visibility() const;
 
-    /// Return the canVisualize status
-    bool canVisualize();
+    /// Return the visibility status
+    unsigned int visualizationStatus();
 
 private slots:
     /// monitor the visual pipe deletation.
@@ -84,14 +98,20 @@ private slots:
 
 private:
     mafVME *m_VME; ///< Represent the data object.
+    QString m_VisualPipeType; ///< type name of the current visual pipe
     mafPipeVisual *m_VisualPipe;  ///< represente the renderable object inside the scene node
     bool m_Visibility; ///< Contains the visibility status of the owned object/s.
-    bool m_CanVisualize; ///< Contains the canVisualize status of the owned object/s.
+    mafVisualizationStatus m_VisualizationStatus; ///< contains the visibility status for that scenenode.
+    mafVisibilityPolicy m_VisibilityPolicy; ///< Visibility policy determines in which way, on show/hide , the visual pipe will be treated.
 };
 
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
+
+inline QString mafSceneNode::visualPipeType() const {
+    return m_VisualPipeType;
+}    
 
 inline mafPipeVisual *mafSceneNode::visualPipe() const {
     return m_VisualPipe;
@@ -104,6 +124,10 @@ inline mafVME *mafSceneNode::vme() const {
 inline bool mafSceneNode::visibility() const {
     return m_Visibility;
 }
+
+inline unsigned int mafSceneNode::visibilityPolicy() const {
+    return m_VisibilityPolicy;
+}    
 
 
 } //namespace mafResources

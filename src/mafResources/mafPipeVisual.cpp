@@ -60,3 +60,7 @@ void mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::m
 void mafPipeVisual::setVisibility(bool visible) {
     m_Visibility = visible;
 }
+
+void mafPipeVisual::setGraphicObject(mafCore::mafContainerInterface *graphicObject) {
+    Q_UNUSED(graphicObject)
+}

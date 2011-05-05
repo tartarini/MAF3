@@ -17,25 +17,15 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-mafSceneNode::mafSceneNode(const QString code_location) : mafObject(code_location), m_VisualPipe(NULL) {
+mafSceneNode::mafSceneNode(const QString code_location) : mafObject(code_location), m_VisualPipe(NULL), m_VisualPipeType(""), m_VME(NULL), m_VisibilityPolicy(mafVisibilityPolicyDestroyOnHide) {
 }
 
-mafSceneNode::mafSceneNode(mafVME *vme, mafPipeVisual *visual_pipe, const QString code_location) : mafObject(code_location), m_VME(vme), m_VisualPipe(visual_pipe), m_Visibility(false), m_CanVisualize(false) {
-//    connect(vme, SIGNAL(destroyed()), this, SIGNAL(destroyNode()));
+mafSceneNode::mafSceneNode(mafVME *vme, const QString visualPipeType, const QString code_location): mafObject(code_location), m_VME(vme), m_VisualPipe(NULL),m_VisualPipeType(visualPipeType), m_Visibility(false), m_VisualizationStatus(mafVisualizationStatusVisible), m_VisibilityPolicy(mafVisibilityPolicyDestroyOnHide) {
+
+    REQUIRE(!visualPipeType.isEmpty());
     connect(vme, SIGNAL(detatched()), this, SIGNAL(destroyNode()));
     m_VME = vme;
-    m_VisualPipe = visual_pipe;
     this->setProperty("iconFile",m_VME->property("iconFile"));
-
-    bool visibility = m_VME->property("visibility").toBool();
-    if(visibility) {
-      //if VME is visible, then set property of scene node, and visualize it.
-      this->setProperty("visibility", visibility);
-      mafEventArgumentsList argList;
-      argList.append(mafEventArgument(mafCore::mafObjectBase*, (mafObjectBase*)this));
-      argList.append(mafEventArgument(bool, visibility));
-      mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);
-    }
 }
 
 mafSceneNode::~mafSceneNode() {
@@ -57,16 +47,31 @@ void mafSceneNode::visualPipeDestroyed() {
 }
 
 void mafSceneNode::setVisualPipe(QString visualPipeType) {
-    if(m_VisualPipe != NULL) {
-        QString currentVisualPipeType = this->m_VisualPipe->metaObject()->className();
-        if (visualPipeType.compare(currentVisualPipeType) == 0) {
-            return;
-        }
+    if(m_VisualPipe != NULL && visualPipeType.compare(m_VisualPipeType) == 0) {
+        return;
     }
-
+    
+    if(visualPipeType.isEmpty()) {
+        qCritical(mafTr("Pipe name is empty string, impossible to instantiate Visual pipe!").toAscii().constData());
+        return;
+    }
+    
+    m_VisualPipeType = visualPipeType;
     mafDEL(this->m_VisualPipe);
-    this->m_VisualPipe = (mafPipeVisual *)mafNEWFromString(visualPipeType);
+    this->m_VisualPipe = (mafPipeVisual *)mafNEWFromString(m_VisualPipeType);
+    
+    if(m_VisualPipe == NULL) {
+        qWarning() << mafTr("No visual pipe type '") << m_VisualPipeType << mafTr("'' registered!!");
+        return;
+    }
+    
     connect(m_VisualPipe, SIGNAL(destroyed()), this, SLOT(visualPipeDestroyed()));
+    m_VisualPipe->setInput(m_VME);
+
+    //if (m_VisualPipe->output() == NULL) {
+    m_VisualPipe->createPipe();
+    //}
+    m_VisualPipe->updatePipe();
 }
 
 void mafSceneNode::setVMEName(QString name) {
@@ -83,16 +88,45 @@ QString mafSceneNode::VMEName() {
 
 void mafSceneNode::setVisibility(bool visible) {
     m_Visibility = visible;
+    if(m_VisualPipe == NULL) {
+        return;
+    }
+    m_VisualPipe->setVisibility(visible);
+    
+    if(!visible) {
+        // TODO NEED TO IMPLEMENT A STRATEGY
+        switch(m_VisibilityPolicy) {
+            case mafVisibilityPolicyKeepAlive:
+            {
+                //will forward to visual pipe
+            }
+                break;
+            case mafVisibilityPolicyDestroyOnHide:
+            {
+                mafDEL(m_VisualPipe);    
+            }
+            break;
+            case mafVisibilityPolicySmartMemory:
+                break;
+        }
+    }
 }
 
-void mafSceneNode::setCanVisualize(bool canVisualize) {
-    m_CanVisualize = canVisualize;
+void mafSceneNode::setVisualizationStatus(bool visualizationStatus) {
+    m_VisualizationStatus = (mafVisualizationStatus) visualizationStatus;
 }
 
-bool mafSceneNode::canVisualize() {
-    m_CanVisualize = m_VME->property("canRead").toBool() ? true : false;
-    m_CanVisualize = (m_VME->objectName() != "root");
-    return m_CanVisualize;
+unsigned int mafSceneNode::visualizationStatus() {
+    return m_VisualizationStatus;
 }
+
+void mafSceneNode::setVisibilityPolicy(unsigned int visibilityPolicy) {
+    m_VisibilityPolicy = (mafVisibilityPolicy) visibilityPolicy;
+}
+
+QString mafSceneNode::dataHash() const {
+    return m_VME->objectHash();
+}
+
 
 

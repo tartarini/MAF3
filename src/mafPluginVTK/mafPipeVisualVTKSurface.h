@@ -19,6 +19,7 @@
 // Foundation Class forwarding list
 class vtkPolyDataMapper;
 class vtkActor;
+class vtkRenderer;
 
 namespace mafPluginVTK {
 
@@ -55,10 +56,18 @@ public:
 
     /// Return the flag to activate immediate rendering mode.
     int immediateRendering();
+    
+    /// Pass vtkRenderer to the visual pipe
+    /*virtual*/ void setGraphicObject(mafCore::mafContainerInterface *graphicObject);
+
 
 public slots:
     /// Allow to execute and update the pipeline when something change.
     /*virtual*/ void updatePipe(double t = -1);
+    
+    /// Set the visibility of its rendering scene.
+    /*virtual*/ void setVisibility(bool visible);
+
 
     /// Set the flag to activate scalar visibility.
     void setScalarVisibility(bool scalarVisibility);
@@ -72,6 +81,7 @@ protected:
 
 private:
     vtkPolyDataMapper  *m_Mapper; ///< Class that maps polygonal data.
+    vtkRenderer * m_Renderer; ///< Current VTK Renderer. 
     mafCore::mafContainer<vtkActor> m_Actor; ///< Output container.
     int m_ScalarVisibility; ///< Flag to activate scalar visibility.
     int m_ImmediateRendering; ///< Flag to activate immediate rendering mode.

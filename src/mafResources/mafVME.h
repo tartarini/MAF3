@@ -36,7 +36,6 @@ class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_OBJECT
     Q_PROPERTY(bool canRead READ canRead WRITE setCanRead)
     Q_PROPERTY(bool canWrite READ canWrite WRITE setCanWrite)
-    Q_PROPERTY(bool visibility READ visibility WRITE setVisibility)
 
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
@@ -109,9 +108,6 @@ signals:
     void vmeLocked(int);
 
 public slots:
-    /// Set the visibility of its rendering scene.
-    void setVisibility(bool visible);
-
     /// Set the current timestamp for the VME.
     void setTimestamp(double t);
 
@@ -122,9 +118,6 @@ public slots:
     /*virtual*/ void execute();
 
 protected:
-    /// Return the visibility status
-    bool visibility() const;
-
     /// Object destructor.
     /* virtual */ ~mafVME();
 
@@ -141,7 +134,6 @@ private:
     bool m_Binary; /// Flag used to indicate if dataSet in binary or ASCII.
     bool m_CanRead;  ///< Flag used to indicate if the VME is readable.
     bool m_CanWrite; ///< Flag indicating if the vme is writable.
-    bool m_Visibility; /// Flag used to set visibility to scene node
 };
 
 /////////////////////////////////////////////////////////////
@@ -173,9 +165,6 @@ inline bool mafVME::canWrite() const {
     return m_CanWrite;
 }
 
-inline bool mafVME::visibility() const {
-  return m_Visibility;
-}
 
 } // mafResources
 

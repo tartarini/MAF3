@@ -249,7 +249,3 @@ void mafVME::updateBounds() {
         }
     }
 }
-
-void mafVME::setVisibility(bool visible) {
-  m_Visibility = visible;
-}

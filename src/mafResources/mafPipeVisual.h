@@ -39,6 +39,10 @@ public:
 
     /// Return the visibility status
     bool visibility() const;
+    
+    /// Pass to the visual pipe an object (or a group of objects) via mafContainerInterface
+    /** graphicObject parameter  represents the graphic components for that specific pipeline, for example, VTK use vtkRenderer */
+    virtual void setGraphicObject(mafCore::mafContainerInterface *graphicObject);
 
 signals:
     /// Signal emitted when the pick hits the owned object.

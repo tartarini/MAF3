@@ -46,7 +46,7 @@ public:
     virtual void removeSceneNode(mafSceneNode *node);
 
     /// Select a scene node.
-    virtual void selectSceneNode(mafSceneNode *node, bool select);
+    void selectSceneNode(mafSceneNode *node, bool select);
 
     /// Called to show/hide scene node.
     virtual void showSceneNode(mafSceneNode *node, bool show = true, const QString visualPipeType = "");
