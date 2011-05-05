@@ -56,11 +56,11 @@ testEndlessOperation::testEndlessOperation(const QString code_location) : mafOpe
 }
 
 void testEndlessOperation::execute() {
-    while ( m_Status != ABORTED ) {
+    while ( m_Status != mafOperationStatusAborted ) {
         ;
     }
 
-    if ( m_Status == ABORTED ) {
+    if ( m_Status == mafOperationStatusAborted ) {
         return;
     }
 
