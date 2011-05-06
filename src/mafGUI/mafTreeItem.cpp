@@ -13,7 +13,7 @@
 
 using namespace mafGUI;
 
-mafTreeItem::mafTreeItem(QObject *obj, bool done) : QStandardItem(obj->objectName()) {
+mafTreeItem::mafTreeItem(QObject *obj) : QStandardItem(obj->objectName()) {
     setIcon(QIcon(obj->property("iconFile").toString()));
     setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|
              Qt::ItemIsEditable);
@@ -26,6 +26,7 @@ void mafTreeItem::setData(QObject *data) {
 }
 
 void mafTreeItem::setStatus(unsigned int status, bool active) {
+    m_Status = (mafItemStatus)status;
     switch(status) {
         case mafItemStatusCheckable:
             setCheckable(true);
@@ -42,4 +43,8 @@ void mafTreeItem::setStatus(unsigned int status, bool active) {
             qDebug() << "MUTEX STATUS";
             break;
     }
+}
+
+mafItemStatus mafTreeItem::status() const {
+    return m_Status;
 }

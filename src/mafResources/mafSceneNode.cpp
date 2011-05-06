@@ -20,7 +20,7 @@ using namespace mafEventBus;
 mafSceneNode::mafSceneNode(const QString code_location) : mafObject(code_location), m_VisualPipe(NULL), m_VisualPipeType(""), m_VME(NULL), m_VisibilityPolicy(mafVisibilityPolicyDestroyOnHide) {
 }
 
-mafSceneNode::mafSceneNode(mafVME *vme, const QString visualPipeType, const QString code_location): mafObject(code_location), m_VME(vme), m_VisualPipe(NULL),m_VisualPipeType(visualPipeType), m_Visibility(false), m_VisualizationStatus(mafVisualizationStatusVisible), m_VisibilityPolicy(mafVisibilityPolicyDestroyOnHide) {
+mafSceneNode::mafSceneNode(mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location): mafObject(code_location), m_VME(vme), m_VisualPipe(NULL),m_VisualPipeType(visualPipeType), m_Visibility(false), m_VisualizationStatus(mafVisualizationStatusVisible), m_VisibilityPolicy(mafVisibilityPolicyDestroyOnHide), m_GraphicObject(graphicObject) {
     connect(vme, SIGNAL(detatched()), this, SIGNAL(destroyNode()));
     m_VME = vme;
     this->setProperty("iconFile",m_VME->property("iconFile"));
@@ -61,11 +61,11 @@ void mafSceneNode::setVisualPipe(QString visualPipeType) {
 bool mafSceneNode::createVisualPipe() {
   mafDEL(this->m_VisualPipe);
   this->m_VisualPipe = (mafPipeVisual *)mafNEWFromString(m_VisualPipeType);
-
   if(m_VisualPipe == NULL) {
     qWarning() << mafTr("No visual pipe type '") << m_VisualPipeType << mafTr("'' registered!!");
     return false;
   }
+  this->m_VisualPipe->setGraphicObject(m_GraphicObject);
 
   connect(m_VisualPipe, SIGNAL(destroyed()), this, SLOT(visualPipeDestroyed()));
   m_VisualPipe->setInput(m_VME);

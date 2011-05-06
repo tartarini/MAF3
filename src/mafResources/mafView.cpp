@@ -61,7 +61,7 @@ void mafView::sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectB
 void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
     mafVME *vme_to_add = qobject_cast<mafResources::mafVME *>(vme);
     if(vme_to_add != NULL) {
-        mafSceneNode *node = new mafSceneNode(vme_to_add, "mafResources::mafPipeVisualBox", mafCodeLocation);
+        mafSceneNode *node = new mafSceneNode(vme_to_add, m_RenderWidget, "mafResources::mafPipeVisualBox", mafCodeLocation);
         node->setObjectName(vme_to_add->objectName());
         connect(node, SIGNAL(destroyNode()), this, SLOT(sceneNodeDestroy()));
 
@@ -135,9 +135,6 @@ void mafView::showSceneNode(mafSceneNode *node, bool show, const QString visualP
     if(m_Scenegraph != NULL) {
         if (show) {
             node->setVisualPipe(vp);
-            if (node->visualPipe() != NULL) {
-                node->visualPipe()->setGraphicObject(m_RenderWidget);
-            }
         } 
         node->setVisibility(show);
     }

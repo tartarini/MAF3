@@ -33,7 +33,7 @@ private slots:
         mafGUIRegistration::registerGUIObjects();
         m_BaseObject = mafNEW(mafCore::mafObjectBase);
         m_BaseObject->setObjectName("TestObjectName");
-        m_TreeItem = new mafTreeItem(m_BaseObject, false);
+        m_TreeItem = new mafTreeItem(m_BaseObject);
     }
 
     /// Cleanup test variables memory allocation.

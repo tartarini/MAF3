@@ -52,7 +52,7 @@ void mafTreeModel::buildModel(bool init) {
     //create root
     if(init) {
         m_Hierarchy->moveTreeIteratorToRootNode();
-        m_CurrentItem = new mafTreeItem(m_Hierarchy->currentData() , false);
+        m_CurrentItem = new mafTreeItem(m_Hierarchy->currentData());
         setItem(0, 0, m_CurrentItem);
         QObject *data = m_Hierarchy->currentData();
         char *v = data->objectName().toAscii().data();
@@ -64,7 +64,7 @@ void mafTreeModel::buildModel(bool init) {
         m_Hierarchy->moveTreeIteratorToNthChild(i);
         QObject *obj = m_Hierarchy->currentData();
         
-        mafTreeItem *item = this->createNewItem(m_CurrentItem, obj, false);
+        mafTreeItem *item = this->createNewItem(m_CurrentItem, obj);
         m_CurrentItem = item;
         buildModel(false);
         m_Hierarchy->moveTreeIteratorToParent();
@@ -144,8 +144,8 @@ void mafTreeModel::itemDetached(QObject *item) {
     bool removed = this->removeRows(temp->index().row(), 1, this->indexFromData(item).parent());
 }
 
-mafTreeItem *mafTreeModel::createNewItem(mafTreeItem *parent, QObject *obj, bool done) {
-    mafTreeItem *item = new mafTreeItem(obj,done);
+mafTreeItem *mafTreeModel::createNewItem(mafTreeItem *parent, QObject *obj) {
+    mafTreeItem *item = new mafTreeItem(obj);
     parent->appendRow(item);
     //Update check state
     QVariant vs = obj->property("visualizationStatus"); 
@@ -186,7 +186,8 @@ void mafTreeModel::itemReparent(QObject *obj, QObject *parent) {
     mafTreeItem * oldParent = (mafTreeItem *)this->itemFromIndex(oldParentIndex);
 
     int rows = newParent->rowCount();
-    mafTreeItem *newItem = new mafTreeItem(obj, child->checkState());
+    mafTreeItem *newItem = new mafTreeItem(obj);
+    newItem->setStatus(child->status(), child->checkState());
     newParent->appendRow(newItem);
     m_ItemsHash.insert(dataHash(obj), newItem);
 
@@ -222,7 +223,7 @@ void mafTreeModel::insertNewItem(Insert insert,
     }
     
     //mafTreeItem *oldItem = (mafTreeItem *)this->itemFromIndex(indexFromData(obj));
-    mafTreeItem *newItem = createNewItem(parent, obj, false);
+    mafTreeItem *newItem = createNewItem(parent, obj);
     /*if (oldItem) {
         int i = 0, size = oldItem->rowCount();
         for(; i < size; ++i) {

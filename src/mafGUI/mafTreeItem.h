@@ -27,7 +27,7 @@ class MAFGUISHARED_EXPORT mafTreeItem : public QStandardItem
 {
 public:
     /// Object constructor.
-    mafTreeItem(QObject *obj, bool done = false);
+    mafTreeItem(QObject *obj);
     /// Retrieve the current data inside the item
     QObject *data() const { return m_Data; }
 
@@ -36,8 +36,12 @@ public:
     
     /// set the status of the item, i.e. if is checkable or not.
     void setStatus(unsigned int status = mafItemStatusNotCheckable, bool active = false );
+
+    /// return checkable status.
+    mafItemStatus status() const;
 private:
     QObject * m_Data; ///< variable which point to the data inside item
+    mafItemStatus m_Status; ///< variable for checkable status.
 };
 
 } // end namespace
