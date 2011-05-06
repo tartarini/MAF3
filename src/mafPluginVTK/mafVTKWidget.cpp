@@ -18,17 +18,16 @@
 #include <vtkRendererCollection.h>
 #include <vtkCellPicker.h>
 #include <vtkSmartPointer.h>
+#include <vtkProp.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafPluginVTK;
 
 mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f) {
-    mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
 }
 
 mafVTKWidget::~mafVTKWidget() {
-    mafEventBusManager::instance()->removeSignal(this, "maf.local.resources.interaction.vmePick");
 }
 
 void mafVTKWidget::mousePressEvent(QMouseEvent* e) {
@@ -215,18 +214,19 @@ void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e) {
     int mousePosX = 0;
     int mousePosY = 0;
     double posPicked[3];
+    mafCore::mafContainer<vtkProp> actorPicked;
     m_Actor = NULL;
-    
-    iren->GetEventPosition(mousePosX, mousePosY);
-    vtkSmartPointer<vtkCellPicker> cellPicker = vtkSmartPointer<vtkCellPicker>::New();;
-    vtkRendererCollection *rc = iren->GetRenderWindow()->GetRenderers();
-    vtkRenderer *r = NULL;
-    rc->InitTraversal();
-    while(r = rc->GetNextItem()) {
+     
+     iren->GetEventPosition(mousePosX, mousePosY);
+     vtkSmartPointer<vtkCellPicker> cellPicker = vtkSmartPointer<vtkCellPicker>::New();;
+     vtkRendererCollection *rc = iren->GetRenderWindow()->GetRenderers();
+     vtkRenderer *r = NULL;
+     rc->InitTraversal();
+     while(r = rc->GetNextItem()) {
         if(cellPicker->Pick(mousePosX,mousePosY,0,r)) {
             cellPicker->GetPickPosition(posPicked);
             m_Actor = cellPicker->GetActor();
-            m_ActorPicked = m_Actor;
+            actorPicked = m_Actor;
         }
     }
 
@@ -234,7 +234,7 @@ void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e) {
         mafEventArgumentsList argList;
         argList.append(mafEventArgument(double *, (double *)posPicked));
         argList.append(mafEventArgument(unsigned long, m_Modifiers));
-        argList.append(mafEventArgument(mafCore::mafContainerInterface *, &m_ActorPicked));
+        argList.append(mafEventArgument(mafCore::mafContainerInterface *, &actorPicked));
         argList.append(mafEventArgument(QEvent *, e));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePick", mafEventTypeLocal, &argList);
     }

@@ -37,16 +37,15 @@ mafViewVTK::~mafViewVTK() {
 }
 
 void mafViewVTK::create() {
-    // Craete the instance of the VTK Widget
-    m_Widget = new mafVTKWidget();
-    m_Widget->setObjectName("VTKWidget");
-    // Initialize the conteiner interface pointer of the base class
-    m_RenderWidget = &m_Widget;
+    Superclass::create();
+       
+    // Create the instance of the VTK Widget
+    m_RenderWidget = new mafVTKWidget();
+    m_RenderWidget->setObjectName("VTKWidget");
     // Create the renderer
     m_Renderer = vtkRenderer::New();
     // and assign it to the widget.
-    m_Widget->GetRenderWindow()->AddRenderer(m_Renderer);
-    Superclass::create();
+    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->AddRenderer(m_Renderer);
 }
 
 void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
@@ -73,11 +72,11 @@ void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show, cons
 //        m_Widget->GetRenderWindow()->Render();
 //        //m_Iren->Start();
 //    }
-    m_Widget->GetRenderWindow()->Render();
+    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
 }
 
 void mafViewVTK::updateView() {
-  if (m_Widget->GetRenderWindow()) {
-    m_Widget->GetRenderWindow()->Render();
+  if (((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()) {
+    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
   }
 }

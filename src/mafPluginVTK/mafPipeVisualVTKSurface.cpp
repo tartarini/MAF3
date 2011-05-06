@@ -95,7 +95,8 @@ void mafPipeVisualVTKSurface::setImmediateRendering (bool immediateRendering) {
     }
 }
 
-void mafPipeVisualVTKSurface::setGraphicObject(mafCore::mafContainerInterface *graphicObject) {
-    vtkRendererCollection *rc = mafContainerPointerTypeCast(mafVTKWidget, graphicObject)->externalData()->GetRenderWindow()->GetRenderers();
+void mafPipeVisualVTKSurface::setGraphicObject(QObject *graphicObject) {
+    mafVTKWidget* widget = qobject_cast<mafVTKWidget*>(graphicObject);
+    vtkRendererCollection *rc = widget->GetRenderWindow()->GetRenderers();
     m_Renderer = rc->GetFirstRenderer();
 }
