@@ -39,7 +39,7 @@ public:
     mafSceneNode(const QString code_location = "");
 
     /// Object constructor.
-    mafSceneNode(mafVME *vme, const QString visualPipeType, const QString code_location = "");
+    mafSceneNode(mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location = "");
 
     /// Return the type name of the pipe.
     QString visualPipeType() const;
@@ -106,6 +106,7 @@ private:
     bool m_Visibility; ///< Contains the visibility status of the owned object/s.
     mafVisualizationStatus m_VisualizationStatus; ///< contains the visibility status for that scene node.
     mafVisibilityPolicy m_VisibilityPolicy; ///< Visibility policy determines in which way, on show/hide , the visual pipe will be treated.
+    QObject *m_GraphicObject; ///< Render device.
 };
 
 /////////////////////////////////////////////////////////////

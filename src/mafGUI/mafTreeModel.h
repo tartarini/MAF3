@@ -100,7 +100,7 @@ private:
     void replaceDataModel(bool init = true);
 
     /// create new item starting by a parent item
-    mafTreeItem *createNewItem(mafTreeItem *parent, QObject *obj, bool checked);
+    mafTreeItem *createNewItem(mafTreeItem *parent, QObject *obj);
 
     mafCore::mafHierarchy *m_Hierarchy; ///< hierarchy from which construct the model
     mafTreeItem *m_CurrentItem; ///< current item of the model

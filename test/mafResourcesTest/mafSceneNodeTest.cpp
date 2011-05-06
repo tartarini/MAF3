@@ -89,7 +89,7 @@ private slots:
 void mafSceneNodeTest::mafSceneNodeSetVisualPipeTest() {
     mafVME* vme = mafNEW(mafResources::mafVME);
     vme->setObjectName("vme");
-    mafSceneNode *sceneNode = new mafSceneNode(vme, "testVisualPipeCustomForSceneNode", mafCodeLocation);
+    mafSceneNode *sceneNode = new mafSceneNode(vme, NULL,  "testVisualPipeCustomForSceneNode", mafCodeLocation);
     sceneNode->setVisibility(true);
 
     QVERIFY(sceneNode->visualPipe() != NULL);
