@@ -67,8 +67,9 @@ Qt::ItemFlags mafDragDropModel::flags(const QModelIndex &index) const
           return Qt::ItemIsDropEnabled | defaultFlags;
         }
         return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
-    } else
-        return Qt::ItemIsDropEnabled | defaultFlags;
+    } else {
+        return Qt::ItemIsSelectable|Qt::ItemIsEnabled| Qt::ItemIsEditable;
+    }
 }
 
 QStringList mafDragDropModel::mimeTypes() const
