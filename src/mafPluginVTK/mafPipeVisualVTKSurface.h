@@ -58,7 +58,7 @@ public:
     int immediateRendering();
     
     /// Pass vtkRenderer to the visual pipe
-    /*virtual*/ void setGraphicObject(mafCore::mafContainerInterface *graphicObject);
+    /*virtual*/ void setGraphicObject(QObject *graphicObject);
 
 
 public slots:

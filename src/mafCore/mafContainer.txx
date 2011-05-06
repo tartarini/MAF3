@@ -38,7 +38,6 @@ mafContainer<T>::~mafContainer() {
     if(m_ExternalDestructor != NULL) {
         (m_ExternalData->*m_ExternalDestructor)();
     }
-    setExternalDataType("");
 }
 
 template<typename T>
@@ -48,12 +47,8 @@ T *mafContainer<T>::externalData() {
 
 template<typename T>
 bool mafContainer<T>::isEqual(mafContainerInterface *container) {
-bool result = this->externalDataType().compare(container->externalDataType()) == 0;
-if (result) {
-    mafContainer<T> *data = static_cast<mafContainer<T> *>(container);
-    result = m_ExternalData == data->externalData();
-}
-return result;
+	mafContainer<T> *data = static_cast<mafContainer<T> *>(container);
+	return m_ExternalData == data->externalData();
 }
 
 template<typename T>

@@ -95,7 +95,7 @@ protected:
 
 
 
-    mafCore::mafContainerInterface *m_RenderWidget; ///< Rendering widget for the view.
+    QObject *m_RenderWidget; ///< Rendering widget for the view.
     QString m_DefaultVisualPipe; ///< Name of the default visual pipe.
     mafCore::mafHierarchyPointer m_Scenegraph; ///< Scenegraph
     QHash<QString, QString> m_VisualPipeHash; ///< Bind between dataType and Visual pipe.
@@ -117,12 +117,12 @@ inline bool mafView::isSelected() {
 }
 
 inline void mafView::setRenderingWidget(QVariant renWidget) {
-    m_RenderWidget = renWidget.value<mafCore::mafContainerInterfacePointer>();
+    m_RenderWidget = renWidget.value<QObject*>();
 }
 
 inline QVariant mafView::renderingWidget() const {
     QVariant v;
-    v.setValue<mafCore::mafContainerInterfacePointer>(m_RenderWidget);
+    v.setValue<QObject*>(m_RenderWidget);
     return v;
 }
 
