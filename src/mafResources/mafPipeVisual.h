@@ -42,7 +42,7 @@ public:
     
     /// Pass to the visual pipe an object (or a group of objects) via mafContainerInterface
     /** graphicObject parameter  represents the graphic components for that specific pipeline, for example, VTK use vtkRenderer */
-    virtual void setGraphicObject(mafCore::mafContainerInterface *graphicObject);
+    virtual void setGraphicObject(QObject *graphicObject);
 
 signals:
     /// Signal emitted when the pick hits the owned object.

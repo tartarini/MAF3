@@ -61,6 +61,6 @@ void mafPipeVisual::setVisibility(bool visible) {
     m_Visibility = visible;
 }
 
-void mafPipeVisual::setGraphicObject(mafCore::mafContainerInterface *graphicObject) {
+void mafPipeVisual::setGraphicObject(QObject *graphicObject) {
     Q_UNUSED(graphicObject)
 }

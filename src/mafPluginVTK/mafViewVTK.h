@@ -57,7 +57,8 @@ protected:
     /* virtual */ ~mafViewVTK();
 
 private:
-    mafCore::mafContainer<mafPluginVTK::mafVTKWidget> m_Widget; ///< VTK Widget on which will be rendered the scene.
+    //mafCore::mafContainer<mafPluginVTK::mafVTKWidget> m_Widget; ///< VTK Widget on which will be rendered the scene.
+    mafVTKWidget *m_Widget; ///< VTK Widget on which will be rendered the scene.
     vtkRenderer *m_Renderer; ///< VTK render.
 };
 
