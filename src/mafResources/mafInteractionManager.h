@@ -41,22 +41,22 @@ public:
 
 signals:
     /// left button pressed.
-    void leftButtonPressSignal();
+    void leftButtonPressSignal(unsigned long modifier);
 
     /// left button released.
-    void leftButtonReleaseSignal();
+    void leftButtonReleaseSignal(unsigned long modifier);
 
     /// middle button pressed.
-    void middleButtonPressSignal();
+    void middleButtonPressSignal(unsigned long modifier);
 
     /// middle button released.
-    void middleButtonReleaseSignal();
+    void middleButtonReleaseSignal(unsigned long modifier);
 
     /// right button pressed.
-    void rightButtonPressSignal();
+    void rightButtonPressSignal(unsigned long modifier);
 
     /// right button released.
-    void rightButtonReleaseSignal();
+    void rightButtonReleaseSignal(unsigned long modifier);
 
     /// enter..
     void enterSignal();
@@ -74,13 +74,13 @@ signals:
     void charSignal();
 
     /// mouse moved.
-    void mouseMoveSignal();
+    void mouseMoveSignal(unsigned long modifier);
 
-    /// mouse wheel mouved forward.
-    void mouseWheelForwardSignal();
+    /// mouse wheel moved forward.
+    void mouseWheelForwardSignal(unsigned long modifier);
 
-    /// mouse wheel mouved backward
-    void mouseWheelBackwardSignal();
+    /// mouse wheel moved backward
+    void mouseWheelBackwardSignal(unsigned long modifier);
 
     /// pick..
     void pickSignal();
@@ -91,22 +91,22 @@ private slots:
     void vmeSelected(mafVME *vme);
 
     /// called when left mouse button is pressed.
-    void leftButtonPress();
+    void leftButtonPress(unsigned long modifier);
 
     /// called when left mouse button is released.
-    void leftButtonRelease();
+    void leftButtonRelease(unsigned long modifier);
 
     /// called when middle mouse button is pressed.
-    void middleButtonPress();
+    void middleButtonPress(unsigned long modifier);
 
-    /// called when middle mouse button is relesed.
-    void middleButtonRelease();
+    /// called when middle mouse button is released.
+    void middleButtonRelease(unsigned long modifier);
 
     /// called when right mouse button is pressed.
-    void rightButtonPress();
+    void rightButtonPress(unsigned long modifier);
 
     /// called when right mouse button is released.
-    void rightButtonRelease();
+    void rightButtonRelease(unsigned long modifier);
 
     /// called when left mouse button is pressed.
     void enter();
@@ -124,13 +124,13 @@ private slots:
     void keyChar();
 
     /// called when left mouse button is pressed.
-    void mouseMove();
+    void mouseMove(unsigned long modifier);
 
     /// called when left mouse button is pressed.
-    void mouseWheelForward();
+    void mouseWheelForward(unsigned long modifier);
 
     /// called when left mouse button is pressed.
-    void mouseWheelBackward();
+    void mouseWheelBackward(unsigned long modifier);
 
     /// called when left mouse button is pressed.
     void pick();
