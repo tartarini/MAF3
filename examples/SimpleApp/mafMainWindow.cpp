@@ -18,13 +18,6 @@
 
 #include <mafGUIRegistration.h>
 #include <mafGUIApplicationSettingsDialog.h>
-
-#include <vtkPolyDataMapper.h>
-#include <vtkRenderer.h>
-#include <vtkRenderWindow.h>
-#include <vtkSphereSource.h>
-#include <vtkSmartPointer.h>
-
 #include <QDebug>
 
 using namespace mafCore;
@@ -292,10 +285,9 @@ void mafMainWindow::updateCollaborationDockVisibility(bool visible) {
 }
 
 void mafMainWindow::viewCreated(mafCore::mafObjectBase *view) {
-    mafContainerInterfacePointer widgetContainer;
-    widgetContainer = view->property("renderWidget").value<mafCore::mafContainerInterfacePointer>();
+    QObject *widgetObj = view->property("renderWidget").value<QObject*>();
+    QWidget *widget = qobject_cast<QWidget*>(widgetObj);
 
-    QWidget *widget = mafContainerPointerTypeCast(QWidget, widgetContainer)->externalData();
     QMdiSubWindow *sub_win = ui->mdiArea->addSubWindow(widget);
     sub_win->setAttribute(Qt::WA_DeleteOnClose);
     sub_win->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
