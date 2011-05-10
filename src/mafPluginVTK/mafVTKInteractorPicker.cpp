@@ -38,12 +38,13 @@ mafVTKInteractorPicker::mafVTKInteractorPicker(const QString code_location) : ma
 }
 
 mafVTKInteractorPicker::~mafVTKInteractorPicker(){
-    mafEventBusManager::instance()->removeSignal(this, "maf.local.resources.interaction.vmePicked");
-    mafEventBusManager::instance()->removeSignal(this, "maf.local.operation.VTK.nextPick");
-    mafEventBusManager::instance()->removeSignal(this, "maf.local.operation.VTK.OK");
+    mafUnregisterLocalSignal("maf.local.resources.interaction.vmePicked", this, "vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase *)");
+    mafUnregisterLocalSignal("maf.local.operation.VTK.nextPick", this, "nextPickSignal()");
+    mafUnregisterLocalSignal("maf.local.operation.VTK.OK", this, "OKSignal()");
     mafDEL(m_ParametricSurface);
     m_AppendData->RemoveAllInputs();
     m_AppendData->Delete();
+    m_Mapper->Delete();
 }
 
 void mafVTKInteractorPicker::initializeConnections() {
