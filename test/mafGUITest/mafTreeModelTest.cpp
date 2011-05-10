@@ -122,7 +122,7 @@ void mafTreeModelTest::hierarchyAndInsertItemTest() {
 
 
 void mafTreeModelTest::clearTest() {    
-    m_TreeModel->clear();
+    m_TreeModel->clearModel();
 }
 
 
