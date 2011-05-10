@@ -114,9 +114,8 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         //To close widget window
-        mafContainerInterfacePointer widgetContainer;
-        widgetContainer = m_View->property("renderWidget").value<mafCore::mafContainerInterfacePointer>();
-        QWidget *widget = mafContainerPointerTypeCast(QWidget, widgetContainer)->externalData();
+        QObject *widgetObj = m_View->property("renderWidget").value<QObject*>();
+        QWidget *widget = qobject_cast<QWidget*>(widgetObj);
         widget->close();
 
         mafDEL(m_View);
@@ -157,14 +156,13 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     m_View->create();
 
     // Ask for the inner widget.
-    mafContainerInterfacePointer resultWidget;
-    resultWidget = m_View->property("renderWidget").value<mafCore::mafContainerInterfacePointer>();
+    QObject *widgetObj = m_View->property("renderWidget").value<QObject*>();
+    QWidget *widget = qobject_cast<QWidget*>(widgetObj);
 
-    QWidget *resultObject = mafContainerPointerTypeCast(QWidget, resultWidget)->externalData();
-    resultObject->resize(QSize(400, 400));
-    resultObject->show();
+    widget->resize(QSize(400, 400));
+    widget->show();
 
-    QString name_result = resultObject->objectName();
+    QString name_result = widget->objectName();
     QCOMPARE(name_result, QString("VTKWidget"));
 
     mafEventArgumentsList argList;

@@ -126,30 +126,22 @@ void mafViewTest::mafViewPlugVisualPipeTest() {
 
 void mafViewTest::mafViewRenderingWidgetTest() {
     // Create a fake widget...
-    mafObject *obj = mafNEW(mafCore::mafObject);
-    mafContainer<mafObject> w;
-    w = obj;
-    w->setObjectName("My Widget");
+    QObject *obj = new QObject;
+    obj->setObjectName("My Widget");
 
     // Assign the widget to the mafView.
     QVariant vw;
-    vw.setValue<mafContainerInterfacePointer>(&w);
+    vw.setValue<QObject*>(obj);
     m_View->setRenderingWidget(vw);
 
     // Try to retrieve the widget through the properties API
     mafObjectBase *v = m_View;
     // Result variable.
-    mafContainerInterfacePointer resultWidget;
+    QObject *widgetObj = m_View->property("renderWidget").value<QObject*>();
 
-    resultWidget = v->property("renderWidget").value<mafCore::mafContainerInterfacePointer>();
-
-    mafObject *resultObject = mafContainerPointerTypeCast(mafCore::mafObject, resultWidget)->externalData();
-
-    QString name_result = resultObject->objectName();
+    QString name_result = widgetObj->objectName();
     QCOMPARE(name_result, QString("My Widget"));
-
-    mafDEL(obj);
-
+    delete obj;
 }
 
 MAF_REGISTER_TEST(mafViewTest);

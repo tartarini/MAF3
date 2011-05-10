@@ -190,5 +190,5 @@ void mafPluginManagerTest::mafPluginManagerLoadPluginTest() {
 //    m_PluginManager->unLoadPlugin(m_PluginName);
 //}
 
-//MAF_REGISTER_TEST(mafPluginManagerTest);
+MAF_REGISTER_TEST(mafPluginManagerTest);
 #include "mafPluginManagerTest.moc"

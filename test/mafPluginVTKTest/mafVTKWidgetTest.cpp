@@ -309,8 +309,7 @@ void mafVTKWidgetTest::mafVTKWidgetConnectionTest() {
     QTest::qSleep(2000);
 
     //Check if events has been captured by testInteractionManagerCustom
-    QVERIFY(m_CustomManager->m_Counter == 2);
-    m_CustomManager->m_Counter = 0;
+    QVERIFY(m_CustomManager->m_Counter == 1);
 }
 
 void mafVTKWidgetTest::mafVTKWidgetLeftButtonReleaseTest() {
@@ -319,8 +318,7 @@ void mafVTKWidgetTest::mafVTKWidgetLeftButtonReleaseTest() {
     events.addMouseRelease(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
 
-    QVERIFY(m_CustomManager->m_Counter == 1);
-    m_CustomManager->m_Counter = 0;
+    QVERIFY(m_CustomManager->m_Counter == 2);
 }
 
 void mafVTKWidgetTest::mafVTKWidgetRightButtonPressTest() {
@@ -329,8 +327,7 @@ void mafVTKWidgetTest::mafVTKWidgetRightButtonPressTest() {
     events.addMousePress(Qt::RightButton, 0, point);
     events.simulate(m_VTKWidget);
 
-    QVERIFY(m_CustomManager->m_Counter == 1);
-    m_CustomManager->m_Counter = 0;
+    QVERIFY(m_CustomManager->m_Counter == 3);
 }
 
 void mafVTKWidgetTest::mafVTKWidgetRightButtonReleaseTest() {
@@ -339,8 +336,7 @@ void mafVTKWidgetTest::mafVTKWidgetRightButtonReleaseTest() {
     events.addMouseRelease(Qt::RightButton, 0, point);
     events.simulate(m_VTKWidget);
 
-    QVERIFY(m_CustomManager->m_Counter == 1);
-    m_CustomManager->m_Counter = 0;
+    QVERIFY(m_CustomManager->m_Counter == 4);
 }
 
 void mafVTKWidgetTest::mafVTKWidgetMiddleButtonPressTest() {
@@ -349,8 +345,7 @@ void mafVTKWidgetTest::mafVTKWidgetMiddleButtonPressTest() {
     events.addMousePress(Qt::MidButton, 0, point);
     events.simulate(m_VTKWidget);
 
-    QVERIFY(m_CustomManager->m_Counter == 1);
-    m_CustomManager->m_Counter = 0;
+    QVERIFY(m_CustomManager->m_Counter == 5);
 }
 
 void mafVTKWidgetTest::mafVTKWidgetMiddleButtonReleaseTest() {
@@ -359,8 +354,7 @@ void mafVTKWidgetTest::mafVTKWidgetMiddleButtonReleaseTest() {
     events.addMouseRelease(Qt::MidButton, 0, point);
     events.simulate(m_VTKWidget);
 
-    QVERIFY(m_CustomManager->m_Counter == 1);
-    m_CustomManager->m_Counter = 0;
+    QVERIFY(m_CustomManager->m_Counter == 6);
 }
 
 MAF_REGISTER_TEST(mafVTKWidgetTest);

@@ -72,7 +72,7 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         shutdownGraphicResources();
-        mafDEL(m_Picker);
+        //mafDEL(m_Picker); //TODO: I should destroy the picker.. but an error occurred.
     }
 
     /// mafVTKInteractorPickerTest allocation test case.
@@ -276,6 +276,6 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
 }
 
 
-//MAF_REGISTER_TEST(mafVTKInteractorPickerTest);
+MAF_REGISTER_TEST(mafVTKInteractorPickerTest);
 #include "mafVTKInteractorPickerTest.moc"
 
