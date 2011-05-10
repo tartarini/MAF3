@@ -40,16 +40,26 @@ mafView::mafView(const QString code_location) : mafResource(code_location), m_Re
 
 
 mafView::~mafView() {
+    foreach(mafSceneNode *sn, m_SceneNodeList) {
+        if(sn->visualPipe()) {
+            sn->visualPipe()->setGraphicObject(NULL);
+        }
+    }
+    
+    clearScene();
+}
+
+void mafView::clearScene() {
     if(m_Scenegraph != NULL) {
         m_Scenegraph->clear();
     }
     mafDEL(m_Scenegraph);
     m_SelectedNode = NULL;
+    
     m_SceneNodeList.clear();
 }
 
 void mafView::create() {
-    m_Scenegraph = mafNEW(mafCore::mafHierarchy);
 }
 
 void mafView::sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectBase *vmeParent) {
@@ -71,10 +81,13 @@ void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
           connect(datSetCollection, SIGNAL(modifiedObject()), this, SLOT(updateView()));
         }
 
-        if(m_Scenegraph != NULL) {
-            m_Scenegraph->addHierarchyNode(node, m_SelectedNode);
-            m_SceneNodeList.push_back(node);
+        if(m_Scenegraph == NULL) {
+            m_Scenegraph = mafNEW(mafCore::mafHierarchy);
         }
+        
+        m_Scenegraph->addHierarchyNode(node, m_SelectedNode);
+        m_SceneNodeList.push_back(node);
+        
         mafDEL(node);
     }
 }

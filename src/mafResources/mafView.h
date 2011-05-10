@@ -71,6 +71,10 @@ public:
 
     /// return mafSceneNode containing vme.
     mafSceneNode *sceneNodeFromVme(mafObjectBase *vme);
+    
+    /// clear and delete the scenegraphs.
+    void clearScene();
+    
 public slots:
     /// Wrap the new VME into a mafSceneNode.
     void vmeAdd(mafCore::mafObjectBase *vme);
