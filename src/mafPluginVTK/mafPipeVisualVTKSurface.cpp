@@ -31,6 +31,7 @@ mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : 
 }
 
 mafPipeVisualVTKSurface::~mafPipeVisualVTKSurface() {
+    setVisibility(false);
     m_Mapper->Delete();
 }
 
@@ -80,6 +81,7 @@ void mafPipeVisualVTKSurface::setVisibility(bool visible) {
     } else {
         m_Renderer->RemoveActor(m_Actor);
     }
+    m_Renderer->GetRenderWindow()->Render();
 }
 
 
@@ -96,6 +98,11 @@ void mafPipeVisualVTKSurface::setImmediateRendering (bool immediateRendering) {
 }
 
 void mafPipeVisualVTKSurface::setGraphicObject(QObject *graphicObject) {
+    if(graphicObject == NULL){
+        m_Renderer = NULL;
+        return;
+    }
+    
     mafVTKWidget* widget = qobject_cast<mafVTKWidget*>(graphicObject);
     vtkRendererCollection *rc = widget->GetRenderWindow()->GetRenderers();
     m_Renderer = rc->GetFirstRenderer();
