@@ -90,7 +90,8 @@ signals:
     /// Signal emitted when an item is reparent to another item.
     void itemReparent(QObject *item, QObject *parent);
 
-
+    /// Signal emitted when the tree is cleared.
+    void clearTree();
 
 protected:
     /// Object destructor.

@@ -21,6 +21,7 @@ mafHierarchy::mafHierarchy(const QString code_location) : mafObject(code_locatio
 }
 
 mafHierarchy::~mafHierarchy() {
+    clear();
     delete m_Tree;
 }
 
@@ -154,6 +155,8 @@ void mafHierarchy::clear() {
     m_TreeIterator = m_Tree->root();
     m_Tree->erase(m_TreeIterator);
     m_TreeIterator.null();
+    
+    emit clearTree();
 }
 
 void mafHierarchy::setIterator(mafTree<QObject *>::iterator iterator) {
