@@ -61,17 +61,6 @@ void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
 void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show, const QString visualPipeType) {
     Superclass::showSceneNode(node, show, visualPipeType);
 
-//    if (node != NULL) {
-//        mafContainer<vtkActor> *actor = mafContainerPointerTypeCast(vtkActor, node->visualPipe()->output());
-//        m_Renderer->AddActor(*actor);
-//        if ((*actor)->GetVisibility() == 0) {
-//            // To be revised.
-//            //node->m_IsRendered = true;
-//        }
-//        (*actor)->SetVisibility(show);
-//        m_Widget->GetRenderWindow()->Render();
-//        //m_Iren->Start();
-//    }
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
 }
 
