@@ -43,6 +43,8 @@ mafViewManager::~mafViewManager() {
     mafUnregisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShow(mafCore::mafObjectBase *, bool)")
     mafUnregisterLocalCallback("maf.local.logic.status.viewmanager.store", this, "createMemento()")
     mafUnregisterLocalCallback("maf.local.logic.status.viewmanager.restore", this, "setMemento(mafCore::mafMemento *, bool)")
+    mafUnregisterLocalCallback("maf.local.resources.view.clearViews", this, "clearViews()")
+
     
     // Unregister signals...
     mafUnregisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(QString)")
@@ -53,6 +55,8 @@ mafViewManager::~mafViewManager() {
     mafUnregisterLocalSignal("maf.local.resources.view.sceneNodeReparent", this, "sceneNodeReparentSignal(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
     mafUnregisterLocalSignal("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShowSignal(mafCore::mafObjectBase *, bool)")
     mafUnregisterLocalSignal("maf.local.resources.view.noneViews", this, "noneViewsSignal()")
+    mafUnregisterLocalSignal("maf.local.resources.view.clearViews", this, "clearViewsSignal()")
+
     
     // Remove IDs...
     mafIdProvider *provider = mafIdProvider::instance();
@@ -64,6 +68,8 @@ mafViewManager::~mafViewManager() {
     provider->removeId("maf.local.resources.view.sceneNodeReparent");
     provider->removeId("maf.local.resources.view.sceneNodeShow");
     provider->removeId("maf.local.resources.view.noneViews");
+    provider->removeId("maf.local.resources.view.clearViews");
+
 }
 
 mafMemento *mafViewManager::createMemento() const {
@@ -95,7 +101,8 @@ void mafViewManager::initializeConnections() {
     provider->createNewId("maf.local.resources.view.sceneNodeReparent");
     provider->createNewId("maf.local.resources.view.sceneNodeShow");
     provider->createNewId("maf.local.resources.view.noneViews");
-
+    provider->createNewId("maf.local.resources.view.clearViews");
+    
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(QString)")
     mafRegisterLocalSignal("maf.local.resources.view.created", this, "viewCreatedSignal(mafCore::mafObjectBase *)")
@@ -105,13 +112,15 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.view.sceneNodeReparent", this, "sceneNodeReparentSignal(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShowSignal(mafCore::mafObjectBase *, bool)")
     mafRegisterLocalSignal("maf.local.resources.view.noneViews", this, "noneViewsSignal()")
+    mafRegisterLocalSignal("maf.local.resources.view.clearViews", this, "clearViewsSignal()")
 
     // Register private callbacks to the instance of the manager..
     mafRegisterLocalCallback("maf.local.resources.view.create", this, "createView(QString)")
     mafRegisterLocalCallback("maf.local.resources.view.destroy", this, "destroyView(mafCore::mafObjectBase *)")
     mafRegisterLocalCallback("maf.local.resources.view.select", this, "selectView(mafCore::mafObjectBase *)")
     mafRegisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShow(mafCore::mafObjectBase *, bool)")
-
+    mafRegisterLocalCallback("maf.local.resources.view.clearViews", this, "clearViews()")
+    
     // Register callback to allows settings serialization.
     mafRegisterLocalCallback("maf.local.logic.status.viewmanager.store", this, "createMemento()")
     mafRegisterLocalCallback("maf.local.logic.status.viewmanager.restore", this, "setMemento(mafCore::mafMemento *, bool)")
@@ -259,5 +268,28 @@ void mafViewManager::removeView(mafView *view) {
             // View list empty
             mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.noneViews");
         }
+    }
+}
+
+void mafViewManager::clearView(mafCore::mafObjectBase *view) {
+    mafView *v = qobject_cast<mafResources::mafView *>(view);
+    if(v) {
+        // Check if the view is present in the list
+        bool view_is_present = m_CreatedViewList.contains(v);
+        if(view_is_present) {
+            v->clearScene();
+        }
+    }
+}
+
+void mafViewManager::clearViews() {
+    mafResourceList viewList = m_CreatedViewList;
+    mafCore::mafHierarchyPointer hierarchy;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+    
+    foreach(mafResource *v, viewList) {
+        clearView(v);
+        fillSceneGraph((mafView *)v, hierarchy);
     }
 }
