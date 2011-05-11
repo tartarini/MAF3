@@ -43,7 +43,7 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
     
     // ViewManager's callback.
-    mafRegisterLocalCallback("maf.local.resources.view.selected", this, "viewSelected(mafCore::mafObjectBase *)");
+    mafRegisterLocalCallback("maf.local.resources.view.select", this, "viewSelected(mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.view.noneViews", this, "viewDestroyed()");
 
     m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
@@ -56,8 +56,24 @@ mafGUIManager::~mafGUIManager() {
 }
 
 void mafGUIManager::newWorkingSession() {
+    m_Model->setTreeModelStatus(mafTreeModelStatusGenerate);
     mafHierarchyPointer h = m_Logic->requestNewHierarchy();
+
+    /// view select
+    mafCore::mafObjectBase *sel_view;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_view);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
+
+    QVariant v;
+    if (sel_view) {
+        v = sel_view->property("hierarchy");
+        h = v.value<mafCore::mafHierarchyPointer>();
+    }
+    
     m_Model->setHierarchy(h);
+        
+    QModelIndex index = m_Model->index(0, 0);
+    m_TreeWidget->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
 }
 
 void mafGUIManager::quitApplication() {
