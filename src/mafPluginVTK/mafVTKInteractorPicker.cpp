@@ -34,14 +34,12 @@ mafVTKInteractorPicker::mafVTKInteractorPicker(const QString code_location) : ma
     m_Center = NULL;
     m_PointList.clear();
     this->initializeConnections();
-    m_ParametricSurfaceType = "mafVTKParametricSurfaceSphere";
+    m_ParametricSurfaceType = "mafPluginVTK::mafVTKParametricSurfaceSphere";
 }
 
 mafVTKInteractorPicker::~mafVTKInteractorPicker(){
-    mafUnregisterLocalSignal("maf.local.resources.interaction.vmePicked", this, "vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase *)");
     mafUnregisterLocalSignal("maf.local.operation.VTK.nextPick", this, "nextPickSignal()");
     mafUnregisterLocalSignal("maf.local.operation.VTK.OK", this, "OKSignal()");
-    mafUnregisterLocalCallback("maf.local.resources.interaction.vmePicked", this, "vmePicked(double *, unsigned long, mafCore::mafObjectBase *)");
     mafUnregisterLocalCallback("maf.local.operation.VTK.nextPick", this, "nextPick()");
     mafUnregisterLocalCallback("maf.local.operation.VTK.OK", this, "OK()");
     mafDEL(m_ParametricSurface);
@@ -54,24 +52,12 @@ mafVTKInteractorPicker::~mafVTKInteractorPicker(){
 void mafVTKInteractorPicker::initializeConnections() {
     this->createPipe();
 
-    //mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePicked");
-
-    // Register API signals.
-    mafRegisterLocalSignal("maf.local.resources.interaction.vmePicked", this, "vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase *)");
-
-    // Register private callbacks.
-    mafRegisterLocalCallback("maf.local.resources.interaction.vmePicked", this, "vmePicked(double *, unsigned long, mafCore::mafObjectBase *)");
-
     // Register API signals.
     mafRegisterLocalSignal("maf.local.operation.VTK.nextPick", this, "nextPickSignal()");
-
-    // Register private callbacks.
-    mafRegisterLocalCallback("maf.local.operation.VTK.nextPick", this, "nextPick()");
-
-    // Register API signals.
     mafRegisterLocalSignal("maf.local.operation.VTK.OK", this, "OKSignal()");
 
     // Register private callbacks.
+    mafRegisterLocalCallback("maf.local.operation.VTK.nextPick", this, "nextPick()");
     mafRegisterLocalCallback("maf.local.operation.VTK.OK", this, "OK()");
 }
 
@@ -103,6 +89,9 @@ void mafVTKInteractorPicker::vmePicked(double *pickPos, unsigned long modifiers,
         vtkIdType cellId;
         int subId;
         int InputNumber = m_AppendData->GetNumberOfInputConnections(0);
+        if (InputNumber == 0) {
+            
+        }
         int closestMarkerIndex = 0;
         int i = 0;
 
@@ -184,6 +173,6 @@ void mafVTKInteractorPicker::setScalarValue(vtkPolyData *data, double scalarValu
     for(int x=0 ; x<data->GetPointData()->GetNumberOfTuples() ; ++x){
         scalars->InsertValue(x, scalarValue);
     }
-  data->GetPointData()->SetScalars(scalars);
+    data->GetPointData()->SetScalars(scalars);
 }
 
