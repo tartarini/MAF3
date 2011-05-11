@@ -67,6 +67,9 @@ signals:
     /// Notify the view creation to all observers.
     void viewCreatedSignal(mafCore::mafObjectBase *view);
 
+    /// Notify the clear of all the scenegraphs.
+    void clearViewsSignal();
+    
     /// Notify the destruction on all views
     void noneViewsSignal();
 
@@ -101,6 +104,9 @@ private slots:
 
     /// Method called when a view has been destroyed (by someone else).
     void viewDestroyed();
+    
+    /// Clear the scenegraphs of each view. 
+    void clearViews();
 
 protected:
     /// Object destructor
@@ -124,6 +130,10 @@ private:
 
     /// Fill sceneGraph woth sceneNodes.
     void fillSceneGraph(mafView *v, mafCore::mafHierarchy *hierarchy);
+    
+    /// Clear the scenegraph for view in the argument.
+    void clearView(mafCore::mafObjectBase *view);
+
 
     mafResourceList m_CreatedViewList; ///< List of created views.
     mafView *m_SelectedView; ///< Keep trak of the current selected view.

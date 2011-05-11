@@ -57,8 +57,6 @@ mafGUIManager::~mafGUIManager() {
 
 void mafGUIManager::newWorkingSession() {
     mafHierarchyPointer h = m_Logic->requestNewHierarchy();
-
-    m_Model->clear();
     m_Model->setHierarchy(h);
 }
 

@@ -30,6 +30,32 @@ tree structure.
 class MAFGUISHARED_EXPORT mafTreeModel : public QStandardItemModel {
     Q_OBJECT
 
+public slots:
+    /// select the object from the data, return true if selected, false otherwise.
+    void selectItem(const QItemSelection &selected, const QItemSelection &deselected);
+    
+    /*virtual*/ bool submit();
+    
+    /// Slot called when a new item has been attached to the tree hierarchy.
+    void itemAttached(QObject *item, QObject *parent);
+    
+    /// Slot called when an item is going to be removed from the tree hierarchy
+    void itemDetached(QObject *item);
+    
+    /// Append a tree to an item.
+    void itemReparent(QObject *obj, QObject *parent);
+    
+    /// Slot called when hierarchy has been destroyd.
+    void hierarchyDestroyed();
+    
+    /// clear the model
+    void clearModel();
+    
+signals:
+    /// signal emitted when an item has been added to the hierarchy.
+    void itemAdded(QModelIndex index);
+    //void save();
+    
 public:
     /// enum for the type of insertion
     enum Insert {AtTopLevel, AsSibling, AsChild};
@@ -42,9 +68,6 @@ public:
 
     /// set the current hierrchy to a new hierarchy
     void setHierarchy(mafCore::mafHierarchy *hierarchy);
-
-    /// clear the model
-    void clear();
 
     /// Insert a new item in the model
     void insertNewItem(Insert insert, QObject *obj, const QModelIndex &index);
@@ -60,32 +83,6 @@ public:
 
     /// retrieve index of current element
     QModelIndex currentIndex();
-
-public slots:
-    /// select the object from the data, return true if selected, false otherwise.
-    void selectItem(const QItemSelection &selected, const QItemSelection &deselected);
-
-    /*virtual*/ bool submit();
-
-    /// Slot called when a new item has been attached to the tree hierarchy.
-    void itemAttached(QObject *item, QObject *parent);
-
-    /// Slot called when an item is going to be removed from the tree hierarchy
-    void itemDetached(QObject *item);
-
-    /// Append a tree to an item.
-    void itemReparent(QObject *obj, QObject *parent);
-
-    /// Slot called when hierarchy has been destroyd.
-    void hierarchyDestroyed();
-
-private slots:
-
-
-signals:
-    /// signal emitted when an item has been added to the hierarchy.
-    void itemAdded(QModelIndex index);
-    //void save();
 
 private:
     /// initialization of the header which will be visualized by a view
@@ -107,7 +104,7 @@ private:
 
     QHash<QString, mafTreeItem *> m_ItemsHash; ///< variable useful for rapid iteration between mafTreeItem
 
-    int m_ItemCounter;
+    bool m_TreeManagementStatus; ///< variable for manage if the model need to be built or the items need to be replaced (optimization)
 };
 
 } //end namespace

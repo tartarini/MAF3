@@ -31,8 +31,11 @@
 
 #define mafDEL(object_pointer) \
     if(object_pointer != NULL) { \
+        bool rc = object_pointer->referenceCount() == 1; \
         object_pointer->release(); \
-        object_pointer = NULL; \
+        if(rc) { \
+            object_pointer = NULL; \
+        } \
     }
 
 #ifdef WIN32

@@ -16,7 +16,7 @@ using namespace mafGUI;
 using namespace mafEventBus;
 
 mafTreeModel::mafTreeModel(QObject *parent)
-: QStandardItemModel(parent) , m_Hierarchy(NULL), m_CurrentItem(NULL), m_ItemCounter(-1) {
+: QStandardItemModel(parent) , m_Hierarchy(NULL), m_CurrentItem(NULL), m_TreeManagementStatus(true) {
 }
 
 void mafTreeModel::initialize() {
@@ -27,12 +27,12 @@ void mafTreeModel::initialize() {
         horizontalHeaderItem(column)->setTextAlignment(Qt::AlignVCenter|Qt::AlignRight);
     }
     
-    if(m_ItemCounter == -1) {
+    if(m_TreeManagementStatus) {
         buildModel();
+        m_TreeManagementStatus = false;
     } else {
         replaceDataModel();
     }
-    m_ItemCounter = 0;
 }
 
 QString mafTreeModel::dataHash(QObject *obj) {
@@ -116,24 +116,33 @@ void mafTreeModel::setHierarchy(mafHierarchy *hierarchy) {
         disconnect(m_Hierarchy, SIGNAL(itemAttached(QObject*,QObject*)), this, SLOT(itemAttached(QObject*,QObject*)));
         disconnect(m_Hierarchy, SIGNAL(itemDetached(QObject*)), this, SLOT(itemDetached(QObject*)));
         disconnect(m_Hierarchy, SIGNAL(itemReparent(QObject*,QObject*)), this, SLOT(itemReparent(QObject*,QObject*)));
+        
+        disconnect(m_Hierarchy, SIGNAL(clearTree()), this, SLOT(clearModel()));
+        disconnect(m_Hierarchy, SIGNAL(destroyed()), this, SLOT(hierarchyDestroyed()));
     }
     
     m_Hierarchy = hierarchy;
     connect(m_Hierarchy, SIGNAL(itemAttached(QObject*,QObject*)), this, SLOT(itemAttached(QObject*,QObject*)));
     connect(m_Hierarchy, SIGNAL(itemDetached(QObject*)), this, SLOT(itemDetached(QObject*)));
     connect(m_Hierarchy, SIGNAL(itemReparent(QObject*,QObject*)), this, SLOT(itemReparent(QObject*,QObject*)));
+    connect(m_Hierarchy, SIGNAL(clearTree()), this, SLOT(clearModel()));
     connect(m_Hierarchy, SIGNAL(destroyed()), this, SLOT(hierarchyDestroyed()));
     
     initialize();
 }
 
-void mafTreeModel::clear() {
+void mafTreeModel::clearModel() {
     QStandardItemModel::clear();
     m_ItemsHash.clear();
+    m_TreeManagementStatus = true;
     //initialize();
 }
 
 void mafTreeModel::itemAttached(QObject *item, QObject *parent) {
+    // @TODO here set the code because if a view is present, need to attach an item
+    // with a scenenode (check with Roberto)
+    
+    
     QModelIndex index = this->indexFromData(parent);
     this->insertNewItem(AsChild, item, index);
     emit itemAdded(index);

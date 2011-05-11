@@ -10,10 +10,13 @@
 #
 
 MACRO(mafMacroInstallPlugin)
-  set(lib_ext "*")
+
+set(lib_pref "")
+set(lib_ext "*")
 if(WIN32)
   set(lib_ext "dll")
 else(WIN32)
+   set(lib_pref "lib")
    if(APPLE)
      set(lib_ext "dylib")
    else(APPLE)
@@ -21,10 +24,10 @@ else(WIN32)
    endif(APPLE)
 endif(WIN32)
 
-  SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES PREFIX "" )
+  #SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES PREFIX "" )
   SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}" )
   
-  #rename file and copy directly in mafplugin directory
+# CREATE PLUGIN DIRECTORY
   add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
           COMMAND ${CMAKE_COMMAND} ARGS -E  make_directory ${CMAKE_BINARY_DIR}/bin/plugins
           )
@@ -35,6 +38,7 @@ endif(WIN32)
           COMMAND ${CMAKE_COMMAND} ARGS -E  make_directory ${CMAKE_BINARY_DIR}/bin/Release/plugins
           )        
 
+# REMOVE OLD PLUGIN
   IF(EXISTS "${CMAKE_BINARY_DIR}/bin/plugins/${PROJECT_NAME}.mafplugin")  
   add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
           COMMAND ${CMAKE_COMMAND} ARGS -E  remove ${CMAKE_BINARY_DIR}/bin/plugins/${PROJECT_NAME}.mafplugin
@@ -53,20 +57,22 @@ endif(WIN32)
           )
   ENDIF(EXISTS "${CMAKE_BINARY_DIR}/bin/Release/plugins/${PROJECT_NAME}.mafplugin")
 
-  IF(EXISTS "${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.${lib_ext}")  
+
+# COPY NEW PLUGIN
+  IF(EXISTS "${CMAKE_BINARY_DIR}/bin/${lib_pref}${PROJECT_NAME}.${lib_ext}")  
   add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-          COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.${lib_ext} ${CMAKE_BINARY_DIR}/bin/plugins/${PROJECT_NAME}.mafplugin)
-  ENDIF(EXISTS "${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.${lib_ext}")
-  
-  IF(EXISTS "${CMAKE_BINARY_DIR}/bin/Debug/${PROJECT_NAME}.${lib_ext}")  
+          COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${CMAKE_BINARY_DIR}/bin/${lib_pref}${PROJECT_NAME}.${lib_ext} ${CMAKE_BINARY_DIR}/bin/plugins/${PROJECT_NAME}.mafplugin)
+  ENDIF(EXISTS "${CMAKE_BINARY_DIR}/bin/${lib_pref}${PROJECT_NAME}.${lib_ext}")
+
+  IF(EXISTS "${CMAKE_BINARY_DIR}/bin/Debug/${lib_pref}${PROJECT_NAME}.${lib_ext}")  
   add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-          COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${CMAKE_BINARY_DIR}/bin/Debug/${PROJECT_NAME}.${lib_ext} ${CMAKE_BINARY_DIR}/bin/Debug/plugins/${PROJECT_NAME}.mafplugin)
-  ENDIF(EXISTS "${CMAKE_BINARY_DIR}/bin/Debug/${PROJECT_NAME}.${lib_ext}")
-  
-  IF(EXISTS "${CMAKE_BINARY_DIR}/bin/Release/${PROJECT_NAME}.${lib_ext}")  
+          COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${CMAKE_BINARY_DIR}/bin/Debug/${lib_pref}${PROJECT_NAME}.${lib_ext} ${CMAKE_BINARY_DIR}/bin/Debug/plugins/${PROJECT_NAME}.mafplugin)
+  ENDIF(EXISTS "${CMAKE_BINARY_DIR}/bin/Debug/${lib_pref}${PROJECT_NAME}.${lib_ext}")
+
+  IF(EXISTS "${CMAKE_BINARY_DIR}/bin/Release/${lib_pref}${PROJECT_NAME}.${lib_ext}")  
   add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-          COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${CMAKE_BINARY_DIR}/bin/Release/${PROJECT_NAME}.${lib_ext} ${CMAKE_BINARY_DIR}/bin/Release/plugins/${PROJECT_NAME}.mafplugin)
-  ENDIF(EXISTS "${CMAKE_BINARY_DIR}/bin/Release/${PROJECT_NAME}.${lib_ext}")
+          COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${CMAKE_BINARY_DIR}/bin/Release/${lib_pref}${PROJECT_NAME}.${lib_ext} ${CMAKE_BINARY_DIR}/bin/Release/plugins/${PROJECT_NAME}.mafplugin)
+  ENDIF(EXISTS "${CMAKE_BINARY_DIR}/bin/Release/${lib_pref}${PROJECT_NAME}.${lib_ext}")
 
   
 ENDMACRO()

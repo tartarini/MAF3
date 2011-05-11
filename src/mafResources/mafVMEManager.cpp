@@ -23,7 +23,7 @@ mafVMEManager* mafVMEManager::instance() {
 }
 
 void mafVMEManager::shutdown() {
-    m_VMEHierarchy->clear();
+    mafDEL(m_VMEHierarchy);
     mafDEL(m_Root);
     m_SelectedVME = NULL;
 }
@@ -35,7 +35,6 @@ mafVMEManager::mafVMEManager(const QString code_location) : mafObjectBase(code_l
 
 mafVMEManager::~mafVMEManager() {
     shutdown();
-    mafDEL(m_VMEHierarchy);
     
     // Unregister callbacks...
     mafUnregisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)")
