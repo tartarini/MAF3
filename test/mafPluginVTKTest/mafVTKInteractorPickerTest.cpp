@@ -147,6 +147,9 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     pipe->createPipe();
     pipe->updatePipe();
 
+    //Connect visual pipe and interactor
+    connect(pipe, SIGNAL(vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase* )), (QObject*)m_Picker, SLOT(vmePicked(double *, unsigned long, mafCore::mafObjectBase *)));
+
     mafContainer<vtkActor> *sphereActor = mafContainerPointerTypeCast(vtkActor, pipe->output());
     m_Renderer->AddActor(*sphereActor);
     m_VTKWidget->GetRenderWindow()->Render();
