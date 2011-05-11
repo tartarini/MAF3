@@ -29,7 +29,6 @@ mafPipeVisual::~mafPipeVisual() {
 }
 
 void mafPipeVisual::initializeConnections() {
-
     //mafId vme_picked_id = mafIdProvider::instance()->idValue("maf.local.resources.interaction.vmePick");
     //mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePick");
 
@@ -52,7 +51,7 @@ void mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::m
             argList.append(mafEventArgument(double *, pickPos));
             argList.append(mafEventArgument(unsigned long, modifiers));
             argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
-            mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePicked", mafEventTypeLocal, &argList);
+            emit vmePickedSignal(pickPos, modifiers, vme);
         }
     }
 }
