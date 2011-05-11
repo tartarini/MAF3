@@ -30,6 +30,8 @@ a VME to/from the hierarchy tree and to select a vme. The topics are:
 - maf.local.resources.vme.selected which allows to retrieve the current selected VME.
 - maf.local.resources.hierarchy.request which allows to request the hierarchy of the vmes
 - maf.local.resources.hierarchy.new which allows to create a new hierarchy deleting the old one.
+- maf.local.resources.hierarchy.root retrieve root vme
+
 */
 class MAFRESOURCESSHARED_EXPORT mafVMEManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -68,6 +70,9 @@ signals:
     /// Return a new hierarchy deleting the old one.
     mafCore::mafHierarchyPointer newVMEHierarchySignal();
 
+    /// Signal for returning the root
+    mafCore::mafObject *rootSignal() const;
+    
 private slots:
     /// Return the current selected vme.
     mafCore::mafObjectBase *selectedVME() const;
@@ -92,6 +97,9 @@ private slots:
 
     /// Return a new hierarchy deleting the old one.
     mafCore::mafHierarchyPointer newVMEHierarchy();
+    
+    /// Return a current root
+    mafCore::mafObject *root() const;
 
 protected:
     /// Object destructor
@@ -107,8 +115,8 @@ private:
     /// Remove the VME from the managed VME tree.
 //    void removeVME(mafVME *vme);
 
-    mafVME *m_SelectedVME; ///< Keep track of the selected VME.
-    mafVME *m_Root; ///< Root of the tree.
+    mafCore::mafObject *m_SelectedVME; ///< Keep track of the selected VME.
+    mafCore::mafObject *m_Root; ///< Root of the tree.
     mafCore::mafHierarchy *m_VMEHierarchy; ///< Hierarchy indicizing the mafVME.
 };
 
@@ -122,6 +130,10 @@ inline mafCore::mafObjectBase *mafVMEManager::selectedVME() const {
 
 inline mafCore::mafHierarchy *mafVMEManager::hierarchy() const {
     return m_VMEHierarchy;
+}
+    
+inline mafCore::mafObject *mafVMEManager::root() const {
+    return m_Root;
 }
 
 } // namespace mafResources
