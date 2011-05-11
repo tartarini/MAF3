@@ -23,6 +23,8 @@ class vtkPolyDataMapper;
 class vtkActor;
 class vtkAppendPolyData;
 
+class vtkRenderer;
+
 namespace mafPluginVTK {
 
 /**
@@ -41,7 +43,7 @@ public:
     mafVTKInteractorPicker(const QString code_location = "");
 
     /// Get output of the pipe.
-    mafCore::mafContainerInterface *output();
+    vtkActor *output();
 
 signals:
     /// Signal for VME picked.
@@ -90,9 +92,8 @@ private:
 
     vtkPolyDataMapper *m_Mapper; ///< Class that maps polygonal data.
     vtkAppendPolyData *m_AppendData; /// Bunch of surfaces.
-    mafCore::mafContainer<vtkActor> m_Actor; ///< Output container.
     QList<double*> m_PointList;
-    mafCore::mafContainerInterface *m_Output; ///< Output for visual pipe.
+    vtkActor *m_Output; ///< Output for visual pipe.
     mafVTKParametricSurface *m_ParametricSurface; ///< Parametric surface used as marker.
     QString m_ParametricSurfaceType; ///< Type of parametric surface to be used as marker.
 
@@ -102,7 +103,7 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline mafCore::mafContainerInterface *mafVTKInteractorPicker::output() {
+inline vtkActor *mafVTKInteractorPicker::output() {
     return m_Output;
 }
 

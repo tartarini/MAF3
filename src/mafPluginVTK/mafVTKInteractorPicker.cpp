@@ -41,10 +41,14 @@ mafVTKInteractorPicker::~mafVTKInteractorPicker(){
     mafUnregisterLocalSignal("maf.local.resources.interaction.vmePicked", this, "vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase *)");
     mafUnregisterLocalSignal("maf.local.operation.VTK.nextPick", this, "nextPickSignal()");
     mafUnregisterLocalSignal("maf.local.operation.VTK.OK", this, "OKSignal()");
+    mafUnregisterLocalCallback("maf.local.resources.interaction.vmePicked", this, "vmePicked(double *, unsigned long, mafCore::mafObjectBase *)");
+    mafUnregisterLocalCallback("maf.local.operation.VTK.nextPick", this, "nextPick()");
+    mafUnregisterLocalCallback("maf.local.operation.VTK.OK", this, "OK()");
     mafDEL(m_ParametricSurface);
+    m_Output->Delete();
+    m_Mapper->Delete();
     m_AppendData->RemoveAllInputs();
     m_AppendData->Delete();
-    m_Mapper->Delete();
 }
 
 void mafVTKInteractorPicker::initializeConnections() {
@@ -79,10 +83,8 @@ void mafVTKInteractorPicker::createPipe() {
     m_Mapper->SetScalarRange(FIXED_MARKER_COLOR-1, TMP_MARKER_COLOR);
     m_Mapper->SetInputConnection(m_AppendData->GetOutputPort());
 
-    m_Actor = vtkActor::New();
-    m_Actor.setDestructionFunction(&vtkActor::Delete);
-    m_Actor->SetMapper(m_Mapper);
-    m_Output = &m_Actor;
+    m_Output = vtkActor::New();
+    m_Output->SetMapper(m_Mapper);
 }
 
 void mafVTKInteractorPicker::vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj) {
