@@ -165,6 +165,12 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     QString name_result = widget->objectName();
     QCOMPARE(name_result, QString("VTKWidget"));
 
+    //Request VME Hierarchy.
+    mafCore::mafHierarchyPointer hierarchy;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+    QVERIFY(hierarchy != NULL);
+
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VmeCube));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
