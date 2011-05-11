@@ -76,6 +76,9 @@ void mafPipeVisualVTKSurface::setVisibility(bool visible) {
     Superclass::setVisibility(visible);
     m_Actor->SetVisibility(visible);
     
+    if (m_Renderer == NULL) {
+        return;
+    }
     if(visible) {
         m_Renderer->AddActor(m_Actor);
     } else {
