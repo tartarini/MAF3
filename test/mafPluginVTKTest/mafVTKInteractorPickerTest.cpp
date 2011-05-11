@@ -71,8 +71,8 @@ private slots:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
+        mafDEL(m_Picker);
         shutdownGraphicResources();
-        //mafDEL(m_Picker); //TODO: I should destroy the picker.. but an error occurred.
     }
 
     /// mafVTKInteractorPickerTest allocation test case.
@@ -162,9 +162,9 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     events.addMousePress(Qt::LeftButton);
     events.simulate(m_VTKWidget);
 
-    mafContainer<vtkActor> *actor = mafContainerPointerTypeCast(vtkActor, m_Picker->output());
+    vtkActor *actor = m_Picker->output();
     QVERIFY(actor != NULL);
-    m_Renderer->AddActor(*actor);
+    m_Renderer->AddActor(actor);
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
 
@@ -262,17 +262,6 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     mafDEL(pipe);
     mafDEL(vme);
 
-    //Simulate operation event "Undo pick".
-    /*mafEventArgumentsList argList1;
-    mafEventBusManager::instance()->notifyEvent("maf.local.operation.VTK.unDoPick", mafEventTypeLocal, &argList1);
-
-    mafContainer<vtkActor> *actor6 = mafContainerPointerTypeCast(vtkActor, m_Picker->output());
-    QVERIFY(actor6 != NULL);
-    m_Renderer->AddActor(*actor6);
-    m_VTKWidget->GetRenderWindow()->Render();
-    QTest::qSleep(1000);*/
-
-    //qDebug() << "Finished Interactor Picker Test";
 }
 
 
