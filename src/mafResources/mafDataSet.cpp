@@ -138,8 +138,11 @@ void mafDataSet::updateDataValue() {
     argList.append(mafEventArgument(QString, m_DataFileInfo.encodeType));
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafContainerInterface *, container);
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.import", mafEventTypeLocal, &argList, &ret_val);
-    m_DataValue = container;
-  } else {
-    qDebug() << mafTr("Unable to load data set!");
+    if (container != NULL) {
+         m_DataValue = container;
+    } else {
+        QString err_msg(mafTr("Unable to load data form file '%1'").arg(m_DataFileInfo.fileName));
+        qCritical() << err_msg;
+    }
   }
 }
