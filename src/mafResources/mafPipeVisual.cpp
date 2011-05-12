@@ -25,21 +25,14 @@ mafPipeVisual::mafPipeVisual(const QString code_location) : mafPipe(code_locatio
 
 mafPipeVisual::~mafPipeVisual() {
     mafEventBusManager::instance()->removeSignal(this, "maf.local.resources.interaction.vmePick");
-    mafEventBusManager::instance()->removeSignal(this, "maf.local.resources.interaction.vmePicked");
 }
 
 void mafPipeVisual::initializeConnections() {
-    //mafId vme_picked_id = mafIdProvider::instance()->idValue("maf.local.resources.interaction.vmePick");
-    //mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePick");
-
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
 
     // Register private callbacks.
     mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
-
-    // Register API signals.
-    mafRegisterLocalSignal("maf.local.resources.interaction.vmePicked", this, "vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase *)");
 }
 
 void mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafContainerInterface *actor, QEvent * e) {
@@ -55,6 +48,33 @@ void mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::m
         }
     }
 }
+
+void mafPipeVisual::setInput(mafVME *vme) { 
+    if (m_InputList->count() != 0) {
+        if(!m_InputList->at(0)->isEqual(vme)) {
+            disconnect(this, SIGNAL(vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase* )), (QObject*)m_InputList->at(0)->interactor(), SLOT(vmePicked(double *, unsigned long, mafCore::mafObjectBase *)));
+            disconnect(m_InputList->at(0), SIGNAL(interactorDetach()), this, SLOT(interactorDetach()));
+            disconnect(m_InputList->at(0), SIGNAL(interactorAttached()), this, SLOT(interactorAttached()));
+        } else {
+            return;
+        }
+    }
+    connect(this, SIGNAL(vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase* )), (QObject*)vme->interactor(), SLOT(vmePicked(double *, unsigned long, mafCore::mafObjectBase *)));
+    connect(vme, SIGNAL(interactorDetach()), this, SLOT(interactorDetach()));
+    connect(vme, SIGNAL(interactorAttached()), this, SLOT(interactorAttached()));
+    Superclass::setInput(vme);
+}
+
+void mafPipeVisual::interactorDetach() {
+    mafVME *vme = (mafVME *)QObject::sender();
+    disconnect(this, SIGNAL(vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase* )), (QObject*)vme->interactor(), SLOT(vmePicked(double *, unsigned long, mafCore::mafObjectBase *)));
+}
+
+void mafPipeVisual::interactorAttached() {
+    mafVME *vme = (mafVME *)QObject::sender();
+    connect(this, SIGNAL(vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase* )), (QObject*)vme->interactor(), SLOT(vmePicked(double *, unsigned long, mafCore::mafObjectBase *)));
+}
+
 
 void mafPipeVisual::setVisibility(bool visible) {
     m_Visibility = visible;
