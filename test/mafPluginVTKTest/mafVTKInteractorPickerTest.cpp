@@ -147,9 +147,6 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     pipe->createPipe();
     pipe->updatePipe();
 
-    //Connect visual pipe and interactor
-    connect(pipe, SIGNAL(vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase* )), (QObject*)m_Picker, SLOT(vmePicked(double *, unsigned long, mafCore::mafObjectBase *)));
-
     mafContainer<vtkActor> *sphereActor = mafContainerPointerTypeCast(vtkActor, pipe->output());
     m_Renderer->AddActor(*sphereActor);
     m_VTKWidget->GetRenderWindow()->Render();
@@ -170,6 +167,13 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     m_Renderer->AddActor(actor);
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
+
+    //set another interactor picker
+    mafVTKInteractorPicker *picker = mafNEW(mafPluginVTK::mafVTKInteractorPicker);
+    vme->setInteractor(picker);
+
+    //re attached old interactor picker
+    vme->setInteractor(m_Picker);
 
     //picking the actor in another point
     events.clear();
@@ -262,6 +266,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
 
+    mafDEL(picker);
     mafDEL(pipe);
     mafDEL(vme);
 
