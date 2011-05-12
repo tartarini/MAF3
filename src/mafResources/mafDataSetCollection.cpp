@@ -225,7 +225,7 @@ bool mafDataSetCollection::insertItem(mafDataSet *item, double t) {
 
     // New timestamp; need to insert it into the collection if data value is acceptable.
     bool result(true);
-    mafContainerInterface *data_value = item->dataValue();
+    mafProxyInterface *data_value = item->dataValue();
     if(data_value != NULL) {
         result = acceptData(item);
     }
@@ -275,7 +275,7 @@ bool mafDataSetCollection::acceptData(mafDataSet *data) {
     REQUIRE(data != NULL);
 
     bool result(true);
-    mafContainerInterface *new_data_value = data->dataValue();
+    mafProxyInterface *new_data_value = data->dataValue();
     QString new_data_type = new_data_value->externalDataType();
     if(m_DataTypeAccepted == "") {
         // the collection doesn't contain yet any data; initialize the acceptable

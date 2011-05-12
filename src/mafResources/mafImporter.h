@@ -58,7 +58,7 @@ protected:
     void cleanup();
     
     /// Obtain the imported data, put it into a mafVME add it to the data hierarchy.
-    virtual void importedData(mafCore::mafContainerInterface *data);
+    virtual void importedData(mafCore::mafProxyInterface *data);
     
     mafVME *m_VME;  ///< VME containing the imported data coming from the mafSerialization module.
 

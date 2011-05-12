@@ -73,7 +73,7 @@ public slots:
     void middleButtonRelease(unsigned long modifiers);
 
     /// observer needed to receive the 'maf.local.resources.interaction.vmePick' signal
-    void vmePick(double *pos, unsigned long modifiers, mafCore::mafContainerInterface *interface, QEvent *e);
+    void vmePick(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *interface, QEvent *e);
 
 signals:
     /// left button pressed.
@@ -120,7 +120,7 @@ testInteractionManagerCustom::testInteractionManagerCustom(QString code_location
     mafRegisterLocalSignal("maf.local.resources.interaction.middleButtonRelease", this, "middleButtonReleaseSignal(unsigned long)");
     mafRegisterLocalCallback("maf.local.resources.interaction.middleButtonRelease", this, "middleButtonRelease(unsigned long)");
 
-    mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafContainerInterface *,QEvent *)");
+    mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafProxyInterface *,QEvent *)");
     m_Counter = 0;
 }
 
@@ -161,7 +161,7 @@ void testInteractionManagerCustom::middleButtonRelease(unsigned long modifiers) 
     qDebug() << "middleButtonRelease";
 }
 
-void testInteractionManagerCustom::vmePick(double *pos, unsigned long modifiers,  mafCore::mafContainerInterface *interface, QEvent * e) {
+void testInteractionManagerCustom::vmePick(double *pos, unsigned long modifiers,  mafCore::mafProxyInterface *interface, QEvent * e) {
     Q_UNUSED(interface);
 
      ++m_Counter;

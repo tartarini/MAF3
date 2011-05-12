@@ -13,10 +13,10 @@
 #include <mafCoreSingletons.h>
 #include <mafResourcesRegistration.h>
 #include <mafDataSetCollection.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <mafExternalDataCodec.h>
-#include <mafContainer.h>
-#include <mafContainerInterface.h>
+#include <mafProxy.h>
+#include <mafProxyInterface.h>
 
 #ifdef WIN32
 #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"

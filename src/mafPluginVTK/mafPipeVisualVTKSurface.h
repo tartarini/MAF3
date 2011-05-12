@@ -82,7 +82,7 @@ protected:
 private:
     vtkPolyDataMapper  *m_Mapper; ///< Class that maps polygonal data.
     vtkRenderer * m_Renderer; ///< Current VTK Renderer. 
-    mafCore::mafContainer<vtkActor> m_Actor; ///< Output container.
+    mafCore::mafProxy<vtkActor> m_Actor; ///< Output container.
     int m_ScalarVisibility; ///< Flag to activate scalar visibility.
     int m_ImmediateRendering; ///< Flag to activate immediate rendering mode.
 };

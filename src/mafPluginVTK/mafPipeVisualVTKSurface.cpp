@@ -38,7 +38,7 @@ mafPipeVisualVTKSurface::~mafPipeVisualVTKSurface() {
 bool mafPipeVisualVTKSurface::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
-        mafCore::mafContainerInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
+        mafCore::mafProxyInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
         if(data != NULL) {
             QString dataType = data->externalDataType();
             if(dataType == "vtkAlgorithmOutput") {
@@ -62,9 +62,9 @@ void mafPipeVisualVTKSurface::updatePipe(double t) {
 
     mafVME *inputVME = this->inputList()->at(0);
     mafDataSet *data = inputVME->dataSetCollection()->itemAtCurrentTime();
-    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
+    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
 
-    //Get data contained in the mafContainer
+    //Get data contained in the mafProxy
     m_Mapper->SetInputConnection(*dataSet);
 
     m_Mapper->SetScalarVisibility(m_ScalarVisibility);

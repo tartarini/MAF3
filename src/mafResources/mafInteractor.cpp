@@ -17,20 +17,20 @@ using namespace mafResources;
 mafInteractor::mafInteractor(const QString code_location) : mafObjectBase(code_location), m_DefaultInteractorStyle(NULL), m_EditingInteractorStyle(NULL) {
 }
 
-mafInteractor::mafInteractor(mafContainerInterfacePointer default_is, mafContainerInterfacePointer edit_is, const QString code_location) : mafObjectBase(code_location), m_DefaultInteractorStyle(default_is), m_EditingInteractorStyle(edit_is) {
+mafInteractor::mafInteractor(mafProxyInterfacePointer default_is, mafProxyInterfacePointer edit_is, const QString code_location) : mafObjectBase(code_location), m_DefaultInteractorStyle(default_is), m_EditingInteractorStyle(edit_is) {
 }
 
 mafInteractor::~mafInteractor() {
 }
 
-void mafInteractor::setDefaultInteractionStyle(mafContainerInterfacePointer is) {
+void mafInteractor::setDefaultInteractionStyle(mafProxyInterfacePointer is) {
     if(is == m_DefaultInteractorStyle) {
         return;
     }
     m_DefaultInteractorStyle = is;
 }
 
-void mafInteractor::setEditingInteractionStyle(mafContainerInterfacePointer is) {
+void mafInteractor::setEditingInteractionStyle(mafProxyInterfacePointer is) {
     if(is == m_EditingInteractorStyle) {
         return;
     }

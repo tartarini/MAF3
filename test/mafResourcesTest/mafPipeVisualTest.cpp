@@ -13,7 +13,7 @@
 #include <mafCoreSingletons.h>
 #include <mafPipeVisual.h>
 #include <mafVME.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -38,20 +38,17 @@ public:
     /// Return the string variable initializated and updated from the data pipe.
     QString pipeline() {return m_PipeLine;}
 
-    bool m_RecivedPickEvent; /// True if maf.local.resources.interaction.vmePicked has been catched.
-
 public slots:
     /// Allow to execute and update the pipeline when something change
     /*virtual*/ void updatePipe(double t = -1);
 
 private:
     QString m_PipeLine; ///< Test var.
-    mafCore::mafContainer<QString> m_Container; ///< Test var.
+    mafCore::mafProxy<QString> m_Container; ///< Test var.
 
 };
 
 testVisualPipeCustomForVisualPipe::testVisualPipeCustomForVisualPipe(const QString code_location) : mafPipeVisual(code_location), m_PipeLine("") {
-    m_RecivedPickEvent = false;
 }
 
 void testVisualPipeCustomForVisualPipe::createPipe() {
@@ -113,7 +110,6 @@ void mafPipeVisualTest::mafPipeVisualCreationAndUpdateTest() {
     m_VisualPipe->updatePipe(1);
     QCOMPARE(m_VisualPipe->pipeline(), res);
 }
-
 
 MAF_REGISTER_TEST(mafPipeVisualTest);
 #include "mafPipeVisualTest.moc"

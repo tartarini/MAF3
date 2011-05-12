@@ -11,7 +11,7 @@
 
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <mafEventBusManager.h>
 #include <mafUILoaderQt.h>
 
@@ -35,22 +35,22 @@ public:
 
 public slots:
     /// UI loader callback.
-    void uiQtLoaded(mafCore::mafContainerInterface *widget);
+    void uiQtLoaded(mafCore::mafProxyInterface *widget);
 
 private:
     QWidget *m_Widget; ///< Test var containing the loaded UI
 };
 
 testUILoaderRequestor::testUILoaderRequestor() : QObject(), m_Widget(NULL) {
-    mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "uiQtLoaded(mafCore::mafContainerInterface *)");
+    mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "uiQtLoaded(mafCore::mafProxyInterface *)");
 }
 
 QWidget *testUILoaderRequestor::widgetLoaded() {
     return m_Widget;
 }
 
-void testUILoaderRequestor::uiQtLoaded(mafCore::mafContainerInterface *widget) {
-    mafContainer<QWidget> *w = mafContainerPointerTypeCast(QWidget, widget);
+void testUILoaderRequestor::uiQtLoaded(mafCore::mafProxyInterface *widget) {
+    mafProxy<QWidget> *w = mafProxyPointerTypeCast(QWidget, widget);
     m_Widget = *w;
 }
 

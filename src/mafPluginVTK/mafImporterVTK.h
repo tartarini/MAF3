@@ -16,7 +16,7 @@
 #include "mafPluginVTKDefinitions.h"
 #include <mafImporter.h>
 
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <vtkAlgorithmOutput.h>
 
 class vtkDataSetReader;
@@ -45,7 +45,7 @@ protected:
     /* virtual */ ~mafImporterVTK();
     
 private:
-    mafCore::mafContainer<vtkAlgorithmOutput> m_ImportedData; ///< Container of the Data Source
+    mafCore::mafProxy<vtkAlgorithmOutput> m_ImportedData; ///< Container of the Data Source
     vtkDataSetReader *m_Reader; ///< Reader of the external data.
 };
 

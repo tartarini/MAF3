@@ -12,7 +12,7 @@
 #include <mafTestSuite.h>
 #include <mafResourcesRegistration.h>
 #include <mafPipeData.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <mafInteractor.h>
 #include <mafMemento.h>
 

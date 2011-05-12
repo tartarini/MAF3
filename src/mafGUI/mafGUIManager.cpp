@@ -47,7 +47,7 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     mafRegisterLocalCallback("maf.local.resources.view.noneViews", this, "viewDestroyed()");
 
     m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
-    connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafContainerInterface*)), this, SLOT(uiLoaded(mafCore::mafContainerInterface*)));
+    connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*)), this, SLOT(uiLoaded(mafCore::mafProxyInterface*)));
 }
 
 mafGUIManager::~mafGUIManager() {
@@ -615,9 +615,9 @@ mafTextEditWidget *mafGUIManager::createLogWidget(QWidget *parent) {
 }
 
 
-void mafGUIManager::uiLoaded(mafCore::mafContainerInterface *guiWidget) {
+void mafGUIManager::uiLoaded(mafCore::mafProxyInterface *guiWidget) {
     // Get the widget from the container
-    mafContainer<QWidget> *w = mafContainerPointerTypeCast(QWidget, guiWidget);
+    mafProxy<QWidget> *w = mafProxyPointerTypeCast(QWidget, guiWidget);
     QWidget *widget = *w;
 
     switch(m_GUILoadedType) {

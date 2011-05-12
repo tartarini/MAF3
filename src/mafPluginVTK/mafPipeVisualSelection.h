@@ -52,7 +52,7 @@ protected:
     /* virtual */ ~mafPipeVisualSelection();
 
 private:
-    mafCore::mafContainer<vtkActor> m_Actor; ///< Output container.
+    mafCore::mafProxy<vtkActor> m_Actor; ///< Output container.
     vtkOutlineCornerFilter *m_OutlineCornerFilter; ///< Filter used to generate the outline corners for representing the selected object.
 };
 

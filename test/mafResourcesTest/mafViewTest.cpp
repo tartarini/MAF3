@@ -12,7 +12,7 @@
 #include <mafTestSuite.h>
 #include <mafResourcesRegistration.h>
 #include <mafResourcesSingletons.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <mafView.h>
 #include <mafVME.h>
 #include <mafSceneNode.h>

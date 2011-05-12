@@ -15,7 +15,7 @@
 // Includes list
 #include "mafResourcesDefinitions.h"
 #include "mafMementoDataSet.h"
-#include <mafContainerInterface.h>
+#include <mafProxyInterface.h>
 
 namespace mafResources {
 
@@ -46,13 +46,13 @@ public:
     mafDataSet(const QString code_location = "");
 
     /// Return the data boundary.
-    mafCore::mafContainerInterface *dataBoundary();
+    mafCore::mafProxyInterface *dataBoundary();
 
     /// Return the data value contained into the dataset.
-    mafCore::mafContainerInterface *dataValue();
+    mafCore::mafProxyInterface *dataValue();
 
     /// Assign the given data value to the dataset.
-    void setDataValue(mafCore::mafContainerInterface *data_value);
+    void setDataValue(mafCore::mafProxyInterface *data_value);
 
     /// Set the pose for the current data.
     void setPoseMatrix(const mafPoseMatrix *matrix);
@@ -91,8 +91,8 @@ protected:
     /* virtual */ ~mafDataSet();
 
 private:
-    mafCore::mafContainerInterface *m_DataValue; ///< Data value present into the current dataset at current timestamp.
-    mafCore::mafContainerInterface *m_DataBoundary; ///< Represent the boundary of current data value at current timestamp.
+    mafCore::mafProxyInterface *m_DataValue; ///< Data value present into the current dataset at current timestamp.
+    mafCore::mafProxyInterface *m_DataBoundary; ///< Represent the boundary of current data value at current timestamp.
     mafPoseMatrix *m_Matrix; ///< Pose matrix
     mafDataBoundaryAlgorithm *m_DataBoundaryAlgorithm; ///< Represent the class that will calculate the boundary of the m_DataValue and generate as output a boundary to be visualized.
     double m_TimeStamp; ///< Time stamp referred to this mafDataSet.

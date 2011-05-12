@@ -13,10 +13,10 @@
 #include <mafCoreSingletons.h>
 #include <mafResourcesRegistration.h>
 #include <mafDataSet.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <mafExternalDataCodec.h>
-#include <mafContainer.h>
-#include <mafContainerInterface.h>
+#include <mafProxy.h>
+#include <mafProxyInterface.h>
 
 #ifdef WIN32
 #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
@@ -83,7 +83,7 @@ public:
     /*virtual*/ void decode(const char *input_string, bool binary = true);
 
 private:
-    mafContainer<QString> *m_Cont; ///< Test Var.
+    mafProxy<QString> *m_Cont; ///< Test Var.
 };
 
 testExternalDataCodecCustom::testExternalDataCodecCustom(const QString code_location) : mafExternalDataCodec(code_location) {
@@ -92,7 +92,7 @@ testExternalDataCodecCustom::testExternalDataCodecCustom(const QString code_loca
 void testExternalDataCodecCustom::decode(const char *input_string, bool binary) {
     Q_UNUSED(binary);
     REQUIRE(input_string != NULL);
-    m_Cont = new mafContainer<QString>();
+    m_Cont = new mafProxy<QString>();
     *m_Cont = new QString;
     m_Cont->externalData()->append(input_string);
     this->m_ExternalData = m_Cont;
@@ -100,7 +100,7 @@ void testExternalDataCodecCustom::decode(const char *input_string, bool binary) 
 
 char *testExternalDataCodecCustom::encode(bool binary) {
     Q_UNUSED(binary);
-    mafContainer<QString> *dataSet = mafContainerPointerTypeCast(QString, this->externalData());
+    mafProxy<QString> *dataSet = mafProxyPointerTypeCast(QString, this->externalData());
     QString dataString = dataSet->externalData()->toAscii();
     char *output_string = new char[dataString.size()+1];
     memcpy(output_string,dataString.toAscii().data(),dataString.size()+1);
@@ -154,7 +154,7 @@ void mafMementoDataSetTest::mafMementoDataSetDefaultAllocationTest() {
 void mafMementoDataSetTest::mafMementoDataSetCustomAllocationTest() {
     QString testString("testStringa");
 
-    mafContainer<testExternalDataType> container;
+    mafProxy<testExternalDataType> container;
     container = new testExternalDataType(testString);
     container.setExternalDataType("testExternalDataType");
     container.setExternalCodecType("CUSTOM");

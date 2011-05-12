@@ -31,7 +31,7 @@ mafPipeVisualSelection::~mafPipeVisualSelection() {
 bool mafPipeVisualSelection::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
-        mafCore::mafContainerInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
+        mafCore::mafProxyInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
         if(data != NULL) {
             QString dataType = data->externalDataType();
             if(dataType.startsWith("vtkAlgorithmOutput", Qt::CaseSensitive)) {
@@ -45,7 +45,7 @@ bool mafPipeVisualSelection::acceptObject(mafCore::mafObjectBase *obj) {
 void mafPipeVisualSelection::createPipe() {
     mafVME *inputVME = this->inputList()->at(0);
     mafDataSet *data = inputVME->dataSetCollection()->itemAtCurrentTime();
-    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
+    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
 
     vtkSmartPointer<vtkCompositeDataPipeline> compositeDataPipeline;
 
@@ -69,7 +69,7 @@ void mafPipeVisualSelection::updatePipe(double t) {
         return;
     }
 
-    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
+    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
     m_OutlineCornerFilter->SetInputConnection(*dataSet);
     m_OutlineCornerFilter->Update();
 }

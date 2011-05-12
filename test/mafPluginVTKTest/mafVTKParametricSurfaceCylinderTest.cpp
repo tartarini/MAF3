@@ -16,7 +16,7 @@
 #include <mafVTKParametricSurfaceCylinder.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkAlgorithmOutput.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkActor.h>
@@ -80,7 +80,7 @@ private:
     mafVTKParametricSurfaceCylinder *m_ParametricCylinder; ///< Parametric sphere.
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a cylinder.
     mafResources::mafDataSet *m_DataSet;
-    mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
+    mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
 };
 
 void mafVTKParametricSurfaceCylinderTest::SetGetTest() {
@@ -93,8 +93,8 @@ void mafVTKParametricSurfaceCylinderTest::SetGetTest() {
     pipe->updatePipe();
 
     // Get the vtkActor from the visual pipe
-    // And assign to a mafContainer
-    mafContainer<vtkActor> *actor = mafContainerPointerTypeCast(vtkActor, pipe->output());
+    // And assign to a mafProxy
+    mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, pipe->output());
     QVERIFY(actor != NULL);
 
     vtkRenderWindow *renWin = vtkRenderWindow::New();

@@ -14,7 +14,7 @@
 
 // Includes list
 #include "mafResource.h"
-#include <mafContainerInterface.h>
+#include <mafProxyInterface.h>
 #include <mafHierarchy.h>
 
 namespace mafResources {

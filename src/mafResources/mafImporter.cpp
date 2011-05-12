@@ -13,7 +13,7 @@
 #include "mafVME.h"
 #include "mafDataSet.h"
 
-#include <mafContainer.h>
+#include <mafProxy.h>
 
 using namespace mafResources;
 using namespace mafEventBus;
@@ -54,7 +54,7 @@ void mafImporter::checkImportFile() {
     }
 }
 
-void mafImporter::importedData(mafCore::mafContainerInterface *data) {
+void mafImporter::importedData(mafCore::mafProxyInterface *data) {
     QFileInfo info(m_Filename);
     
     //Insert data into VME

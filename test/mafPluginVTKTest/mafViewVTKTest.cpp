@@ -19,7 +19,7 @@
 #include <mafPipeVisualVTKSurface.h>
 #include <mafSceneNode.h>
 #include <mafVME.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <mafDataSet.h>
 
 #include <vtkPolyData.h>
@@ -141,8 +141,8 @@ private:
     vtkCubeSource *m_DataSource;
     vtkCubeSource *m_DataSourceMoved;
     vtkTransformPolyDataFilter *m_PDataFilter; ///< Filter used to transform the bounding box.
-    mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
-    mafContainer<vtkAlgorithmOutput> m_DataSourceContainerMoved; ///< Container of the Data S
+    mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
+    mafProxy<vtkAlgorithmOutput> m_DataSourceContainerMoved; ///< Container of the Data S
     mafResources::mafDataSet *m_DataSetCube;
     mafResources::mafDataSet *m_DataSetCubeMoved;
 };
