@@ -38,14 +38,9 @@ public:
     /// Return the string variable initializated and updated from the data pipe.
     QString pipeline() {return m_PipeLine;}
 
-    bool m_RecivedPickEvent; /// True if maf.local.resources.interaction.vmePicked has been catched.
-
 public slots:
     /// Allow to execute and update the pipeline when something change
     /*virtual*/ void updatePipe(double t = -1);
-
-    /// Called when if maf.local.resources.interaction.vmePicked has been catched
-    void vmePicked(double *pos, unsigned long modifiers, mafCore::mafObjectBase *vme);
 
 private:
     QString m_PipeLine; ///< Test var.
@@ -54,9 +49,6 @@ private:
 };
 
 testVisualPipeCustomForVisualPipe::testVisualPipeCustomForVisualPipe(const QString code_location) : mafPipeVisual(code_location), m_PipeLine("") {
-    mafRegisterLocalSignal("maf.local.resources.interaction.vmePicked", this, "vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("maf.local.resources.interaction.vmePicked", this, "vmePicked(double *, unsigned long, mafCore::mafObjectBase *)");
-    m_RecivedPickEvent = false;
 }
 
 void testVisualPipeCustomForVisualPipe::createPipe() {
@@ -72,12 +64,6 @@ void testVisualPipeCustomForVisualPipe::updatePipe(double t) {
     m_Container.externalData()->append(m_PipeLine);
 }
 
-void testVisualPipeCustomForVisualPipe::vmePicked(double *pos, unsigned long modifiers, mafCore::mafObjectBase *vme){
-    Q_UNUSED(pos);
-    Q_UNUSED(modifiers);
-    Q_UNUSED(vme);
-    m_RecivedPickEvent = true;
-}
 
 //------------------------------------------------------------------------------------------
 
@@ -106,9 +92,6 @@ private slots:
     void mafPipeVisualAllocationTest();
     /// Test the creation and update methods..
     void mafPipeVisualCreationAndUpdateTest();
-    /// Test the vmePick method.
-    void mafPipeVisualVmePickTest();
-
 private:
     testVisualPipeCustomForVisualPipe *m_VisualPipe; ///< Test var.
 };
@@ -126,28 +109,6 @@ void mafPipeVisualTest::mafPipeVisualCreationAndUpdateTest() {
     res = "Updated1";
     m_VisualPipe->updatePipe(1);
     QCOMPARE(m_VisualPipe->pipeline(), res);
-}
-
-void mafPipeVisualTest::mafPipeVisualVmePickTest() {
-    double posPicked[3];
-    unsigned long modifiers;
-    QEvent *e;
-
-    mafVME *vme = mafNEW(mafResources::mafVME);
-    mafCore::mafProxyInterface *stringContainer = m_VisualPipe->output();
-
-    m_VisualPipe->setInput(vme);
-
-    mafEventBus::mafEventArgumentsList argList;
-    argList.append(mafEventArgument(double *, (double *)posPicked));
-    argList.append(mafEventArgument(unsigned long, modifiers));
-    argList.append(mafEventArgument(mafCore::mafProxyInterface *, stringContainer));
-    argList.append(mafEventArgument(QEvent *, e));
-    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePick", mafEventBus::mafEventTypeLocal, &argList);
-    QVERIFY(m_VisualPipe->m_RecivedPickEvent == true);
-
-
-    mafDEL(vme);
 }
 
 MAF_REGISTER_TEST(mafPipeVisualTest);

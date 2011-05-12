@@ -39,6 +39,9 @@ public:
 
     /// Return the visibility status
     bool visibility() const;
+
+    /// Set the input VME to be used as input data for the pipeline./*
+    void setInput(mafVME *vme);
     
     /// Pass to the visual pipe an object (or a group of objects) via mafProxyInterface
     /** graphicObject parameter  represents the graphic components for that specific pipeline, for example, VTK use vtkRenderer */
@@ -58,6 +61,12 @@ public slots:
 private slots:
     /// Forward the vmePick event if the pick hits the current visualized VME.
     void vmePick(double *pickPos, unsigned long, mafCore::mafProxyInterface *actor, QEvent *);
+
+    /// Disconnect old interactor.
+    void interactorDetach();
+    
+    /// Connect new interactor.
+    void interactorAttached();
 
 private:
     /// Register signals and slots connections with the event bus.

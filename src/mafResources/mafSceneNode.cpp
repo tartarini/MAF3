@@ -68,7 +68,6 @@ bool mafSceneNode::createVisualPipe() {
   this->m_VisualPipe->setGraphicObject(m_GraphicObject);
 
   connect(m_VisualPipe, SIGNAL(destroyed()), this, SLOT(visualPipeDestroyed()));
-  connect(m_VisualPipe, SIGNAL(vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase* )), (QObject*)m_VME->interactor(), SLOT(vmePicked(double *, unsigned long, mafCore::mafObjectBase *)));
   m_VisualPipe->setInput(m_VME);
 
   //if (m_VisualPipe->output() == NULL) {
@@ -138,6 +137,4 @@ void mafSceneNode::setVisibilityPolicy(unsigned int visibilityPolicy) {
 QString mafSceneNode::dataHash() const {
     return m_VME->objectHash();
 }
-
-
 

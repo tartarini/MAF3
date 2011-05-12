@@ -34,6 +34,11 @@ private slots:
         mafResourcesRegistration::registerResourcesObjects();
         m_EventBus = mafEventBusManager::instance();
         m_VMEManager = mafVMEManager::instance();
+        //Select root
+        mafObject *root;
+        QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
+        mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
+        root->setSelected(true);
     }
 
     /// Cleanup test variables memory allocation.

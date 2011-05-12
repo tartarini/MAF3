@@ -56,12 +56,12 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafPipe();
 
+    mafVMEList *m_InputList; ///< VME input List
+
 private slots:
     /// Method called when an input mafVME has been destroyed (by someone else).
     void inputDestroyed();
-
-private:
-    mafVMEList *m_InputList; ///< VME input List
+    
 };
 
 /////////////////////////////////////////////////////////////

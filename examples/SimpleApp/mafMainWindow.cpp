@@ -321,12 +321,14 @@ void mafMainWindow::viewWillBeSelected() {
 }
 
 void mafMainWindow::subWindowSelected(QMdiSubWindow *sub_win) {
-    mafEventBus::mafEventArgumentsList argList;
-    mafObjectBase *view = m_ViewSubWindowHash.value(sub_win);
-    if(view == NULL) {
-        qCritical(mafTr("View doesn't exist!!").toAscii().constData());
-        return;
+    if(sub_win != NULL) {
+        mafEventBus::mafEventArgumentsList argList;
+        mafObjectBase *view = m_ViewSubWindowHash.value(sub_win);
+        if(view == NULL) {
+            qCritical(mafTr("View doesn't exist!!").toAscii().constData());
+            return;
+        }
+        argList.append(mafEventArgument(mafCore::mafObjectBase *, view));
+        mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.select", mafEventBus::mafEventTypeLocal, &argList);
     }
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, view));
-    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.select", mafEventBus::mafEventTypeLocal, &argList);
 }
