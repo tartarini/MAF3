@@ -28,7 +28,7 @@ mafPipeDataImageThreshold::~mafPipeDataImageThreshold() {
 bool mafPipeDataImageThreshold::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
-        mafCore::mafContainerInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
+        mafCore::mafProxyInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
         if(data != NULL) {
             QString dataType = data->externalDataType();
             if(dataType == "vtkImageData") {
@@ -56,8 +56,8 @@ void mafPipeDataImageThreshold::updatePipe(double t) {
         return;
     }
 
-    //Get data contained in the mafContainer
-    mafContainer<vtkImageData> *image = mafContainerPointerTypeCast(vtkImageData, inputDataSet->dataValue());
+    //Get data contained in the mafProxy
+    mafProxy<vtkImageData> *image = mafProxyPointerTypeCast(vtkImageData, inputDataSet->dataValue());
 
     m_ThresholdFilter->SetInputConnection((*image)->GetProducerPort());
     switch(m_ThresholdMode) {

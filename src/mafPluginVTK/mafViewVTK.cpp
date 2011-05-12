@@ -50,7 +50,7 @@ void mafViewVTK::create() {
 
 void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
     if (node != NULL && node->visualPipe()) {
-        mafContainer<vtkActor> *actor = mafContainerPointerTypeCast(vtkActor, node->visualPipe()->output());
+        mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, node->visualPipe()->output());
         if ((*actor)->GetVisibility() != 0) {
             m_Renderer->RemoveActor(*actor);
         }

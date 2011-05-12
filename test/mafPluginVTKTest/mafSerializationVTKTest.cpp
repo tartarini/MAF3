@@ -11,7 +11,7 @@
 
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <mafMementoVME.h>
 #include <mafExternalDataCodecVTK.h>
 #include <mafEventBusManager.h>
@@ -53,18 +53,18 @@ public:
 
 public slots:
     /// observer needed to receive the 'extDataLoaded' signal
-    void createdExtData(mafCore::mafContainerInterface *data);
+    void createdExtData(mafCore::mafProxyInterface *data);
 };
 
 testCustomManager::testCustomManager(QString code_location) : mafObjectBase(code_location) {
-    mafRegisterLocalCallback("maf.local.serialization.extDataImported", this , "createdExtData(mafCore::mafContainerInterface *)");
+    mafRegisterLocalCallback("maf.local.serialization.extDataImported", this , "createdExtData(mafCore::mafProxyInterface *)");
 }
 
-void testCustomManager::createdExtData(mafCore::mafContainerInterface *data) {
+void testCustomManager::createdExtData(mafCore::mafProxyInterface *data) {
     qDebug("%s", mafTr("External data loaded!!").toAscii().data());
     QVERIFY(data != NULL);
 
-    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, data);
+    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data);
     vtkPolyDataMapper *sphereMapper = vtkPolyDataMapper::New();
     sphereMapper->SetInputConnection(*dataSet);
 
@@ -136,7 +136,7 @@ private:
     testCustomManager *m_CustomManager; ///< Manager test var
 
     vtkCubeSource *m_DataSource; ///< Source data for the test suite.
-    mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
+    mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
     QLibrary *m_SerializationLibraryHandler; ///< Handler of the serialization library.
 };
 
@@ -169,7 +169,7 @@ void mafSerializationVTKTest::mafSerializationVTKSaveTest() {
 
     QString encodeType = "VTK";
     argList.clear();
-    argList.append(mafEventArgument(mafCore::mafContainerInterface *, &m_DataSourceContainer));
+    argList.append(mafEventArgument(mafCore::mafProxyInterface *, &m_DataSourceContainer));
     argList.append(mafEventArgument(QString, test_file));
     argList.append(mafEventArgument(QString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.export", mafEventTypeLocal, &argList);

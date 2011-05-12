@@ -1,5 +1,5 @@
 /*
- *  mafContainerTest.cpp
+ *  mafProxyTest.cpp
  *  mafCoreTest
  *
  *  Created by Paolo Quadrani on 27/03/09.
@@ -10,14 +10,14 @@
  */
 
 #include <mafTestSuite.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 
 
 using namespace mafCore;
 
 /**
  Class name: testCustomDataType
- This class is a custom data type to be wrapped from mafContainer.
+ This class is a custom data type to be wrapped from mafProxy.
  */
 
 class testCustomDataType {
@@ -51,18 +51,18 @@ testCustomDataType::~testCustomDataType() {
 }
 
 /**
- Class name: mafContainerTest
- This class implements the test suite for mafContainer.
+ Class name: mafProxyTest
+ This class implements the test suite for mafProxy.
  */
 
 //! <title>
-//mafContainer
+//mafProxy
 //! </title>
 //! <description>
-//mafContainer This class defines the base concrete class container for the MAF3 dataset values.
+//mafProxy This class defines the base concrete class container for the MAF3 dataset values.
 //! </description>
 
-class mafContainerTest : public QObject {
+class mafProxyTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -77,21 +77,21 @@ private slots:
     }
 
     /// create new object and check that is not NULL test case.
-    void mafContainerAllocationTest();
+    void mafProxyAllocationTest();
     /// Check internal data type existance.
-    void mafContainerInternalDataTest();
-    /// Check mafContainerInterface 'wrapped' into QVariant.
-    void mafContainerToVariant();
+    void mafProxyInternalDataTest();
+    /// Check mafProxyInterface 'wrapped' into QVariant.
+    void mafProxyToVariant();
 
 private:
     //! <snippet>
-    mafContainer<testCustomDataType> m_Wrapper; ///< Test var.
+    mafProxy<testCustomDataType> m_Wrapper; ///< Test var.
     //! </snippet>
     testCustomDataType *t;  ///< First object of external to MAF type.
     testCustomDataType *tw; ///< Second object of external to MAF type.
 };
 
-void mafContainerTest::mafContainerAllocationTest() {
+void mafProxyTest::mafProxyAllocationTest() {
     // Create the istance of external data object.
     t = new testCustomDataType;
 
@@ -104,7 +104,7 @@ void mafContainerTest::mafContainerAllocationTest() {
     m_Wrapper = tw;
 }
 
-void mafContainerTest::mafContainerInternalDataTest() {
+void mafProxyTest::mafProxyInternalDataTest() {
     // Assign a custom value to the first object to modify its default value.
     t->setCustomValue();
 
@@ -122,34 +122,34 @@ void mafContainerTest::mafContainerInternalDataTest() {
     // vw should be 60 + 10 => 70
     QVERIFY(vw == 70);
 
-    mafContainerInterface *dwi = &m_Wrapper;
+    mafProxyInterface *dwi = &m_Wrapper;
     QString dt2 = dwi->externalDataType();
     QString dt = m_Wrapper.externalDataType();
 
     QCOMPARE(dt, dt2);
 }
 
-void mafContainerTest::mafContainerToVariant() {
+void mafProxyTest::mafProxyToVariant() {
     // Get the initial values befor assigning it to the QVariant type.
-    mafContainerInterface *dwi = &m_Wrapper;
+    mafProxyInterface *dwi = &m_Wrapper;
     testCustomDataType *data_source = m_Wrapper.externalData();
     int val_source = data_source->value();
 
-    // Create the QVariant and assign to it the mafContainer
+    // Create the QVariant and assign to it the mafProxy
     QVariant var;
     var.setValue(dwi);
     // Check that it can be converted to the registered type.
-    bool ok = var.canConvert<mafContainerInterfacePointer>();
+    bool ok = var.canConvert<mafProxyInterfacePointer>();
     QVERIFY(ok);
 
     // Extract the value from the QVariant and make some checks to ensure that it is equal
     // to the previous one assigned.
-    mafContainerInterface *dwi_from_variant = var.value<mafContainerInterfacePointer>();
+    mafProxyInterface *dwi_from_variant = var.value<mafProxyInterfacePointer>();
     QString edt = dwi_from_variant->externalDataType();
     QCOMPARE(edt, dwi->externalDataType());
 
-    // Check the internal data owned by the mafContainer
-    mafContainer<testCustomDataType> *cdt = mafContainerPointerTypeCast(testCustomDataType, dwi_from_variant);
+    // Check the internal data owned by the mafProxy
+    mafProxy<testCustomDataType> *cdt = mafProxyPointerTypeCast(testCustomDataType, dwi_from_variant);
     QVERIFY(cdt != NULL);
     testCustomDataType *data = cdt->externalData();
     QVERIFY(data != NULL);
@@ -158,5 +158,5 @@ void mafContainerTest::mafContainerToVariant() {
     QVERIFY(val_source == val);
 }
 
-MAF_REGISTER_TEST(mafContainerTest);
-#include "mafContainerTest.moc"
+MAF_REGISTER_TEST(mafProxyTest);
+#include "mafProxyTest.moc"

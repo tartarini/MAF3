@@ -35,8 +35,8 @@ typedef QtMsgHandler mafMsgHandlingFunction;
     protected: \
     typedef superclass Superclass;
 
-#define mafContainerPointerTypeCast(dataType, containerInterfacePointer) \
-    static_cast<mafContainer<dataType> *>(containerInterfacePointer)
+#define mafProxyPointerTypeCast(dataType, containerInterfacePointer) \
+    static_cast<mafProxy<dataType> *>(containerInterfacePointer)
     
 /// typedef that represents dictionary entries ( key  , value )
 typedef QHash<QString, QVariant> mafDictionary;

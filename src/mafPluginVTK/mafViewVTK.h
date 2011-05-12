@@ -15,8 +15,8 @@
 // Includes list
 #include "mafPluginVTKDefinitions.h"
 #include <mafView.h>
-#include <mafContainer.h>
-#include <mafContainerInterface.h>
+#include <mafProxy.h>
+#include <mafProxyInterface.h>
 #include <mafSceneNode.h>
 
 // Class forwarding list
@@ -57,7 +57,7 @@ protected:
     /* virtual */ ~mafViewVTK();
 
 private:
-    //mafCore::mafContainer<mafPluginVTK::mafVTKWidget> m_Widget; ///< VTK Widget on which will be rendered the scene.
+    //mafCore::mafProxy<mafPluginVTK::mafVTKWidget> m_Widget; ///< VTK Widget on which will be rendered the scene.
     mafVTKWidget *m_Widget; ///< VTK Widget on which will be rendered the scene.
     vtkRenderer *m_Renderer; ///< VTK render.
 };

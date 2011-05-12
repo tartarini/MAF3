@@ -14,12 +14,12 @@
 
 // Includes list
 #include "mafSerialization_global.h"
-#include <mafContainerInterface.h>
+#include <mafProxyInterface.h>
 
 
 
 // Class forwarding list
-class mafContainerInterface;
+class mafProxyInterface;
 
 
 namespace mafSerialization {
@@ -58,10 +58,10 @@ signals:
     void load(const QString &url, const QString &encode_type);
 
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
-    void exportData(mafCore::mafContainerInterface *externalData, const QString &url, const QString &encode_type = "RAW");
+    void exportData(mafCore::mafProxyInterface *externalData, const QString &url, const QString &encode_type = "RAW");
 
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
-    mafCore::mafContainerInterface * importData(const QString &url, const QString &encode_type);
+    mafCore::mafProxyInterface * importData(const QString &url, const QString &encode_type);
 
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
     void saveExtData(char *externalDataString, const QString &url, int stringSize);
@@ -73,7 +73,7 @@ signals:
     void mementoLoaded(mafCore::mafMemento *m);
 
     /// Alert all the observers that a new external data has been loaded from the media.
-    void extDataImported(mafCore::mafContainerInterface *data);
+    void extDataImported(mafCore::mafProxyInterface *data);
 
        /// Signal needed to register new type of custom codec.
     void plugCodecInModule(const QString &object_type, const QString &encoding_type, const QString &codecType = "RAW");
@@ -96,10 +96,10 @@ private slots:
     void loadMemento(const QString &url, const QString &encode_type);
 
     /// Manage the export for the given object.
-    void exportExternalData(mafCore::mafContainerInterface *externalData, const QString &url, const QString &encode_type);
+    void exportExternalData(mafCore::mafProxyInterface *externalData, const QString &url, const QString &encode_type);
 
     /// Manage the import of an external data from the given URL and decode it according to the given encoding type.
-    mafCore::mafContainerInterface * importExternalData(const QString &url, const QString &encode_type);
+    mafCore::mafProxyInterface * importExternalData(const QString &url, const QString &encode_type);
 
     /// Manage the load of an external data from the given URL and decode it according to the given encoding type.
     QByteArray loadExternalData(const QString &fileName);

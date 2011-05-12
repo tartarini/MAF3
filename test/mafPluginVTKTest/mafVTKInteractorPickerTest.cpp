@@ -17,7 +17,7 @@
 #include <mafVTKInteractorPicker.h>
 #include <mafVTKParametricSurfaceSphere.h>
 
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <vtkAlgorithmOutput.h>
 #include <vtkSphereSource.h>
 #include <vtkSmartPointer.h>
@@ -128,7 +128,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //// Create a container with the outputPort of a vtkCubeSource
     //// m_DataSourceContainer is the container of type vtkAlgorithmOutput
     //// to "wrap" the 'vtkCubeSource' of type vtkPolyData just simply use the code below.
-    mafContainer<vtkAlgorithmOutput> dataSourceContainer;
+    mafProxy<vtkAlgorithmOutput> dataSourceContainer;
     dataSourceContainer = dataSource->GetOutputPort(0);
     //! </snippet>
 
@@ -150,7 +150,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //Connect visual pipe and interactor
     connect(pipe, SIGNAL(vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase* )), (QObject*)m_Picker, SLOT(vmePicked(double *, unsigned long, mafCore::mafObjectBase *)));
 
-    mafContainer<vtkActor> *sphereActor = mafContainerPointerTypeCast(vtkActor, pipe->output());
+    mafProxy<vtkActor> *sphereActor = mafProxyPointerTypeCast(vtkActor, pipe->output());
     m_Renderer->AddActor(*sphereActor);
     m_VTKWidget->GetRenderWindow()->Render();
     m_VTKWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCamera();

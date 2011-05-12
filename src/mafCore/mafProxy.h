@@ -1,5 +1,5 @@
 /*
- *  mafContainer.h
+ *  mafProxy.h
  *  mafCore
  *
  *  Created by Paolo Quadrani on 30/12/09.
@@ -13,7 +13,7 @@
 #define MAFCONTAINER_H
 
 // Includes list
-#include "mafContainerInterface.h"
+#include "mafProxyInterface.h"
 #include <typeinfo>
 
 namespace mafCore {
@@ -21,21 +21,21 @@ namespace mafCore {
 // Class forwarding list
 
 /**
-Class name: mafContainer
+Class name: mafProxy
 This class defines the base concrete class container for the MAF3 dataset values.
 */
 template<typename T>
-class mafContainer : public mafContainerInterface {
+class mafProxy : public mafProxyInterface {
     /// typedef macro.
-    mafSuperclassMacro(mafCore::mafContainerInterface);
+    mafSuperclassMacro(mafCore::mafProxyInterface);
     typedef void (T::*mafExternalDataDestructorPointer)();
 
 public:
     /// Object constructor.
-    mafContainer();
+    mafProxy();
 
     /// Object destructor.
-    ~mafContainer();
+    ~mafProxy();
 
     /// Redefined operator to have access to the external data owned.
     operator T *() const;
@@ -53,7 +53,7 @@ public:
     void setDestructionFunction(mafExternalDataDestructorPointer destruc_function);
 
     /// Check if the object is equal to that passed as argument.
-    /*virtual*/ bool isEqual(mafContainerInterface *container);
+    /*virtual*/ bool isEqual(mafProxyInterface *container);
 
 private:
     /// Update the string containing the data type related to the external wrapped data.
@@ -63,7 +63,7 @@ private:
     mafExternalDataDestructorPointer m_ExternalDestructor; ///< Pointer to external destructor
 };
 
-#include "mafContainer.txx"
+#include "mafProxy.txx"
 
 } // namespace mafCore
 

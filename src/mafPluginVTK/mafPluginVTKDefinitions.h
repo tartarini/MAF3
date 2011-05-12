@@ -18,7 +18,7 @@
 #include <mafCoreRegistration.h>
 #include <mafResourcesRegistration.h>
 #include <mafResourcesDefinitions.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 
 namespace mafPluginVTK {
 

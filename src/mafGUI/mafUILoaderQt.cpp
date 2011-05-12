@@ -10,7 +10,7 @@
  */
 
 #include "mafUILoaderQt.h"
-#include <mafContainer.h>
+#include <mafProxy.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -25,12 +25,12 @@ mafUILoaderQt::~mafUILoaderQt() {
 void mafUILoaderQt::uiLoad(const QString &fileName) {
     QFile file(fileName.toAscii());
     file.open(QFile::ReadOnly);
-    mafContainer<QWidget> *arg = new mafContainer<QWidget>();
+    mafProxy<QWidget> *arg = new mafProxy<QWidget>();
     *arg = m_UILoaderQt.load(&file);
     file.close();
 
-    mafContainerInterface *gui = arg;
+    mafProxyInterface *gui = arg;
     mafEventArgumentsList list;
-    list.append(mafEventArgument(mafCore::mafContainerInterface *, gui));
+    list.append(mafEventArgument(mafCore::mafProxyInterface *, gui));
     mafEventBusManager::instance()->notifyEvent("maf.local.gui.uiloaded", mafEventTypeLocal, &list);
 }

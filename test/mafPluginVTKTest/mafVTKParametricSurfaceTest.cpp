@@ -16,7 +16,7 @@
 #include <mafVTKParametricSurface.h>
 //#include <vtkRenderWindowInteractor.h>
 //#include <vtkAlgorithmOutput.h>
-//#include <mafContainer.h>
+//#include <mafProxy.h>
 //#include <vtkRenderWindow.h>
 //#include <vtkRenderer.h>
 //#include <vtkActor.h>

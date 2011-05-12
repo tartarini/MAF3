@@ -15,7 +15,7 @@
 // Includes list
 #include "mafPluginVTKDefinitions.h"
 #include <mafExternalDataCodec.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 
 // Class forwarding list
 class vtkAlgorithmOutput;
@@ -48,7 +48,7 @@ protected:
 
 private:
     vtkDataSetReader *m_Reader; ///< Reader of the vtkDataSet
-    mafCore::mafContainer<vtkAlgorithmOutput> *m_Data; ///< External data type do be coded/encoded.
+    mafCore::mafProxy<vtkAlgorithmOutput> *m_Data; ///< External data type do be coded/encoded.
 };
 
 } // mafPluginVTK

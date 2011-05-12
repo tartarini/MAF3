@@ -14,10 +14,10 @@
 #include <mafResourcesRegistration.h>
 #include <mafDataSet.h>
 #include "mafPipeData.h"
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <mafExternalDataCodec.h>
-#include <mafContainer.h>
-#include <mafContainerInterface.h>
+#include <mafProxy.h>
+#include <mafProxyInterface.h>
 
 #ifdef WIN32
 #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
@@ -85,7 +85,7 @@ public:
     /*virtual*/ void decode(const char *input_string, bool binary = true);
 
 private:
-    mafContainer<QString> *m_Cont; ///< Test Var.
+    mafProxy<QString> *m_Cont; ///< Test Var.
 };
 
 testExtDataCodecCustom::testExtDataCodecCustom(const QString code_location) : mafExternalDataCodec(code_location) {
@@ -94,7 +94,7 @@ testExtDataCodecCustom::testExtDataCodecCustom(const QString code_location) : ma
 void testExtDataCodecCustom::decode(const char *input_string, bool binary) {
     Q_UNUSED(binary);
     REQUIRE(input_string != NULL);
-    m_Cont = new mafContainer<QString>();
+    m_Cont = new mafProxy<QString>();
     *m_Cont = new QString;
     m_Cont->externalData()->append(input_string);
     this->m_ExternalData = m_Cont;
@@ -102,7 +102,7 @@ void testExtDataCodecCustom::decode(const char *input_string, bool binary) {
 
 char *testExtDataCodecCustom::encode(bool binary) {
     Q_UNUSED(binary);
-    mafContainer<QString> *dataSet = mafContainerPointerTypeCast(QString, this->externalData());
+    mafProxy<QString> *dataSet = mafProxyPointerTypeCast(QString, this->externalData());
     QString dataString = dataSet->externalData()->toAscii();
     char *output_string = new char[dataString.size()+1];
     memcpy(output_string,dataString.toAscii().data(),dataString.size()+1);
@@ -198,7 +198,7 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
     QString testString2("testString2");
 
     //Create first dataSet
-    mafContainer<testExtDataType> container;
+    mafProxy<testExtDataType> container;
     container = new testExtDataType(testString);
     container.setExternalDataType("testExtDataType");
     container.setExternalCodecType("CUSTOM");
@@ -211,7 +211,7 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
     dataSet->setPoseMatrix(matrix);
 
     //Create second dataSet
-    mafContainer<testExtDataType> container2;
+    mafProxy<testExtDataType> container2;
     container2 = new testExtDataType(testString2);
     container2.setExternalDataType("testExtDataType");
     container2.setExternalCodecType("CUSTOM");

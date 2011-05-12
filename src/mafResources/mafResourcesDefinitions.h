@@ -25,7 +25,7 @@
 #include <mafCoreSingletons.h>
 #include <mafObject.h>
 #include <mafHierarchy.h>
-#include <mafContainerInterface.h>
+#include <mafProxyInterface.h>
 
 
 // vnl includes

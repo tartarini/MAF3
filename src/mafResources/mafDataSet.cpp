@@ -34,14 +34,14 @@ void mafDataSet::setBoundaryAlgorithm(mafDataBoundaryAlgorithm *algorithm) {
     }
 }
 
-mafCore::mafContainerInterface *mafDataSet::dataBoundary() {
+mafCore::mafProxyInterface *mafDataSet::dataBoundary() {
     if(m_DataBoundaryAlgorithm != NULL) {
         m_DataBoundary = m_DataBoundaryAlgorithm->calculateBoundary(m_DataValue, m_Matrix);
     }
     return m_DataBoundary;
 }
 
-void mafDataSet::setDataValue(mafContainerInterface *data_value) {
+void mafDataSet::setDataValue(mafProxyInterface *data_value) {
     if(m_DataValue == data_value)
         return; // Data is equal to that one already present.
 
@@ -54,7 +54,7 @@ void mafDataSet::setDataValue(mafContainerInterface *data_value) {
     }
 }
 
-mafContainerInterface *mafDataSet::dataValue() {
+mafProxyInterface *mafDataSet::dataValue() {
   if (m_DataValue == NULL) {
     updateDataValue();
   }
@@ -132,11 +132,11 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
 
 void mafDataSet::updateDataValue() {
   if (!m_DataFileInfo.fileName.isEmpty() && !m_DataFileInfo.encodeType.isEmpty()){
-    mafCore::mafContainerInterface *container;
+    mafCore::mafProxyInterface *container;
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString, m_DataFileInfo.fileName));
     argList.append(mafEventArgument(QString, m_DataFileInfo.encodeType));
-    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafContainerInterface *, container);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafProxyInterface *, container);
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.import", mafEventTypeLocal, &argList, &ret_val);
     if (container != NULL) {
          m_DataValue = container;
