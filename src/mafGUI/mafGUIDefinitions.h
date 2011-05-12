@@ -51,6 +51,12 @@ typedef enum {
     mafItemStatusMutexCheckable,
 } mafItemStatus;
 
+    
+typedef enum {
+    mafTreeModelStatusUpdate,
+    mafTreeModelStatusGenerate,
+} mafTreeModelStatus;
+    
 } //end namespace
 
 #endif // MAFGUIDEFINITIONS_H

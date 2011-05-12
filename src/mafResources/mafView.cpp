@@ -50,9 +50,6 @@ mafView::~mafView() {
 }
 
 void mafView::clearScene() {
-    if(m_Scenegraph != NULL) {
-        m_Scenegraph->clear();
-    }
     mafDEL(m_Scenegraph);
     m_SelectedNode = NULL;
     
@@ -87,6 +84,10 @@ void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
         
         m_Scenegraph->addHierarchyNode(node, m_SelectedNode);
         m_SceneNodeList.push_back(node);
+        
+        if(m_SelectedNode == NULL) {
+            vmeSelect(node);
+        }
         
         mafDEL(node);
     }

@@ -75,6 +75,8 @@ void mafVMEManager::initializeConnections() {
     provider->createNewId("maf.local.resources.vme.selected");
     provider->createNewId("maf.local.resources.hierarchy.request");
     provider->createNewId("maf.local.resources.hierarchy.new");
+    provider->createNewId("maf.local.resources.hierarchy.root");
+
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.vme.add", this, "attachVMEToHierarchy(mafCore::mafObjectBase *)")
@@ -84,7 +86,9 @@ void mafVMEManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.vme.selected", this, "selectedVMESignal()")
     mafRegisterLocalSignal("maf.local.resources.hierarchy.request", this, "requestVMEHierarchySignal()")
     mafRegisterLocalSignal("maf.local.resources.hierarchy.new", this, "newVMEHierarchySignal()")
+    mafRegisterLocalSignal("maf.local.resources.hierarchy.root", this, "rootSignal()")
 
+    
     // Register private callbacks to the instance of the manager..
     mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)")
     mafRegisterLocalCallback("maf.local.resources.vme.remove", this, "vmeRemove(mafCore::mafObjectBase *)")
@@ -93,6 +97,8 @@ void mafVMEManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.resources.vme.selected", this, "selectedVME()")
     mafRegisterLocalCallback("maf.local.resources.hierarchy.request", this, "requestVMEHierarchy()")
     mafRegisterLocalCallback("maf.local.resources.hierarchy.new", this, "newVMEHierarchy()")
+    mafRegisterLocalCallback("maf.local.resources.hierarchy.root", this, "root()")
+
 }
 
 void mafVMEManager::vmeSelect(mafObjectBase *vme) {
@@ -174,10 +180,14 @@ mafCore::mafHierarchyPointer mafVMEManager::requestVMEHierarchy() {
          m_Root->setObjectName("root");
          m_Root->setProperty("iconFile", ":/images/root.png");
 
-         m_VMEHierarchy->addHierarchyNode(m_Root);
+         //m_VMEHierarchy->addHierarchyNode(m_Root);
+         mafEventArgumentsList argList;
+         argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Root));
+         mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+
 
          // Select the root node.
-         m_Root->setSelected(true);
+         //m_Root->setSelected(true);
      }
 
      return m_VMEHierarchy;

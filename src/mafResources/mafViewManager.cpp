@@ -108,7 +108,7 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.view.created", this, "viewCreatedSignal(mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.view.destroy", this, "destroyViewSignal(mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.view.select", this, "selectViewSignal(mafCore::mafObjectBase *)")
-    mafRegisterLocalSignal("maf.local.resources.view.selected", this, "selectedViewSignal(mafCore::mafObjectBase *)")
+    mafRegisterLocalSignal("maf.local.resources.view.selected", this, "selectedViewSignal()")
     mafRegisterLocalSignal("maf.local.resources.view.sceneNodeReparent", this, "sceneNodeReparentSignal(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShowSignal(mafCore::mafObjectBase *, bool)")
     mafRegisterLocalSignal("maf.local.resources.view.noneViews", this, "noneViewsSignal()")
@@ -118,6 +118,7 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.resources.view.create", this, "createView(QString)")
     mafRegisterLocalCallback("maf.local.resources.view.destroy", this, "destroyView(mafCore::mafObjectBase *)")
     mafRegisterLocalCallback("maf.local.resources.view.select", this, "selectView(mafCore::mafObjectBase *)")
+    mafRegisterLocalCallback("maf.local.resources.view.selected", this, "selectedView()")
     mafRegisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShow(mafCore::mafObjectBase *, bool)")
     mafRegisterLocalCallback("maf.local.resources.view.clearViews", this, "clearViews()")
     
@@ -171,6 +172,10 @@ void mafViewManager::createView(QString view_type) {
     } else {
         mafDEL(obj);
     }
+}
+
+mafObjectBase *mafViewManager::selectedView() {
+    return m_SelectedView;
 }
 
 void mafViewManager::addViewToCreatedList(mafView *v) {

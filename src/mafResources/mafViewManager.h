@@ -47,7 +47,7 @@ public:
 
 signals:
     /// Return the selected view
-    void selectedViewSignal(mafCore::mafObjectBase *view);
+    mafCore::mafObjectBase * selectedViewSignal();
 
     /// Signal which allow to keep track of the selected view.
     void selectViewSignal(mafCore::mafObjectBase *view);
@@ -91,8 +91,11 @@ public slots:
 
 private slots:
     /// Allow to keep track of the selected view.
-    void selectView(mafCore::mafObjectBase *view);
+    mafCore::mafObjectBase *selectedView();
 
+    /// Allow to keep track of the selected view.
+    void selectView(mafCore::mafObjectBase *view);
+    
     /// Allow to show/hide the given scene node passed as argument.
     void sceneNodeShow(mafCore::mafObjectBase *node, bool show = true);
 

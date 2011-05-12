@@ -30,6 +30,8 @@ tree structure.
 class MAFGUISHARED_EXPORT mafTreeModel : public QStandardItemModel {
     Q_OBJECT
 
+    Q_PROPERTY(unsigned int treeModelStatus READ treeModelStatus WRITE setTreeModelStatus)
+    
 public slots:
     /// select the object from the data, return true if selected, false otherwise.
     void selectItem(const QItemSelection &selected, const QItemSelection &deselected);
@@ -83,7 +85,14 @@ public:
 
     /// retrieve index of current element
     QModelIndex currentIndex();
-
+    
+    /// retrieve model status (mafTreeModelStatusGenerate, mafTreeModelStatusUpdate)
+    /** mafTreeModelStatusGenerate means that the model is in a state which build new tree, mafTreeModelStatusUpdate which switch existing items*/
+    unsigned int treeModelStatus() const;
+    
+    /// set the tree model status variable
+    void setTreeModelStatus(unsigned int status);
+    
 private:
     /// initialization of the header which will be visualized by a view
     void initialize();
@@ -104,8 +113,20 @@ private:
 
     QHash<QString, mafTreeItem *> m_ItemsHash; ///< variable useful for rapid iteration between mafTreeItem
 
-    bool m_TreeManagementStatus; ///< variable for manage if the model need to be built or the items need to be replaced (optimization)
+    mafTreeModelStatus m_TreeModelStatus; ///< variable for manage if the model need to be built or the items need to be replaced (optimization)
 };
+    
+/// inline methods
+
+inline unsigned int mafTreeModel::treeModelStatus() const {
+    return m_TreeModelStatus;
+}
+
+/// set the tree model status variable
+inline void mafTreeModel::setTreeModelStatus(unsigned int status) {
+    m_TreeModelStatus = (mafTreeModelStatus) status;
+}
+
 
 } //end namespace
 

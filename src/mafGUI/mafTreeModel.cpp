@@ -16,7 +16,7 @@ using namespace mafGUI;
 using namespace mafEventBus;
 
 mafTreeModel::mafTreeModel(QObject *parent)
-: QStandardItemModel(parent) , m_Hierarchy(NULL), m_CurrentItem(NULL), m_TreeManagementStatus(true) {
+: QStandardItemModel(parent) , m_Hierarchy(NULL), m_CurrentItem(NULL), m_TreeModelStatus(mafTreeModelStatusGenerate) {
 }
 
 void mafTreeModel::initialize() {
@@ -27,9 +27,9 @@ void mafTreeModel::initialize() {
         horizontalHeaderItem(column)->setTextAlignment(Qt::AlignVCenter|Qt::AlignRight);
     }
     
-    if(m_TreeManagementStatus) {
+    if(m_TreeModelStatus == mafTreeModelStatusGenerate) {
         buildModel();
-        m_TreeManagementStatus = false;
+        m_TreeModelStatus = mafTreeModelStatusUpdate;
     } else {
         replaceDataModel();
     }
@@ -55,7 +55,6 @@ void mafTreeModel::buildModel(bool init) {
         m_CurrentItem = new mafTreeItem(m_Hierarchy->currentData());
         setItem(0, 0, m_CurrentItem);
         QObject *data = m_Hierarchy->currentData();
-        char *v = data->objectName().toAscii().data();
         m_ItemsHash.insert(dataHash(data) , m_CurrentItem);
     }
     
@@ -132,10 +131,10 @@ void mafTreeModel::setHierarchy(mafHierarchy *hierarchy) {
 }
 
 void mafTreeModel::clearModel() {
-    QStandardItemModel::clear();
-    m_ItemsHash.clear();
-    m_TreeManagementStatus = true;
-    //initialize();
+    if(m_TreeModelStatus == mafTreeModelStatusGenerate) {
+        QStandardItemModel::clear();
+        m_ItemsHash.clear();
+    }
 }
 
 void mafTreeModel::itemAttached(QObject *item, QObject *parent) {

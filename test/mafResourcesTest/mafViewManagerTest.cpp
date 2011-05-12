@@ -46,7 +46,7 @@ private:
 
 testViewManagerObserver::testViewManagerObserver() : m_View(NULL) {
     mafRegisterLocalCallback("maf.local.resources.view.created", this, "viewCreatedSlot(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("maf.local.resources.view.selected", this, "viewSelectedSlot(mafCore::mafObjectBase *)");
+    mafRegisterLocalCallback("maf.local.resources.view.select", this, "viewSelectedSlot(mafCore::mafObjectBase *)");
 }
 
 mafObjectBase *testViewManagerObserver::view() {
