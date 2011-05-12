@@ -201,7 +201,7 @@ private slots:
     void operationDidStart(mafCore::mafObjectBase *operation);
 
     /// Slot called when the UI is loaded from the mafUILoaderQt.
-    void uiLoaded(mafCore::mafContainerInterface *guiWidget);
+    void uiLoaded(mafCore::mafProxyInterface *guiWidget);
 
 };
 

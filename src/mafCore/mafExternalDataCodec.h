@@ -13,7 +13,7 @@
 #define MAFEXTERNALDATACODEC_H
 
 // Includes list
-#include "mafContainerInterface.h"
+#include "mafProxyInterface.h"
 #include "mafObjectBase.h"
 
 namespace mafCore {
@@ -31,7 +31,7 @@ public:
     mafExternalDataCodec(const QString &code_location = "");
 
     /// Object constructor.
-    mafExternalDataCodec(mafContainerInterface *data, const QString &code_location = "");
+    mafExternalDataCodec(mafProxyInterface *data, const QString &code_location = "");
 
     /// Encode external data into a QDataStream.
     virtual char *encode(bool binary = true) = 0;
@@ -40,10 +40,10 @@ public:
     virtual void decode(const char *input_string, bool binary = true) = 0;
 
     /// Allow to set the reference to the external data type. The memory deallocation is in charge at the caller.
-    void setExternalData(mafContainerInterface *data);
+    void setExternalData(mafProxyInterface *data);
 
     /// Allow to retrieve external data. The memory deallocation is in charge at the caller.
-    mafContainerInterface *externalData();
+    mafProxyInterface *externalData();
 
     /// Set the dimension of input_string
     void setStringSize(unsigned int size);
@@ -55,7 +55,7 @@ protected:
     /// Object destructor.
     /* virtual */~mafExternalDataCodec();
 
-    mafContainerInterface *m_ExternalData; ///< External data type do be coded/encoded into/from file.
+    mafProxyInterface *m_ExternalData; ///< External data type do be coded/encoded into/from file.
     unsigned int m_StringSize; ///< Size of the input/output string.
 };
 
@@ -63,11 +63,11 @@ protected:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline void mafExternalDataCodec::setExternalData(mafContainerInterface *data) {
+inline void mafExternalDataCodec::setExternalData(mafProxyInterface *data) {
     m_ExternalData = data;
 }
 
-inline mafContainerInterface *mafExternalDataCodec::externalData() {
+inline mafProxyInterface *mafExternalDataCodec::externalData() {
     return m_ExternalData;
 }
 

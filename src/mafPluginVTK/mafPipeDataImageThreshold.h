@@ -15,7 +15,7 @@
 // Includes list
 #include "mafPluginVTKDefinitions.h"
 #include <mafPipeData.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <vtkSmartPointer.h>
 
 // Foundation Class forwarding list
@@ -87,7 +87,7 @@ private:
     unsigned int m_ThresholdMode; ///< Threshold mode: LOWER, UPPER, BETWEEN.
 
     vtkSmartPointer<vtkImageThreshold> m_ThresholdFilter; ///< VTK threshold filter used to thresholding input image data.
-    mafCore::mafContainer<vtkImageData> m_OutputValue; ///< Output value coming from the elaboration data pipe.
+    mafCore::mafProxy<vtkImageData> m_OutputValue; ///< Output value coming from the elaboration data pipe.
 };
 
 /////////////////////////////////////////////////////////////

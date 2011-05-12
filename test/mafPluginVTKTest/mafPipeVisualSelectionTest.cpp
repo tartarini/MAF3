@@ -14,7 +14,7 @@
 #include <mafPipeVisualSelection.h>
 #include <mafVME.h>
 #include <mafDataSet.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 
 #include <vtkAlgorithmOutput.h>
 #include <vtkSphereSource.h>
@@ -48,7 +48,7 @@ private slots:
 
         m_VisualPipeSelection = mafNEW(mafPluginVTK::mafPipeVisualSelection);
 
-        // Create the input data source and wrap through the mafContainer
+        // Create the input data source and wrap through the mafProxy
         m_DataSourceLow = vtkSphereSource::New();
         m_DataSourceLow->SetRadius(2.0);
         m_DataSourceLowContainer = m_DataSourceLow->GetOutputPort(0);
@@ -117,8 +117,8 @@ private slots:
 private:
     mafPipeVisualSelection *m_VisualPipeSelection; ///< Test variable.
     vtkSphereSource *m_DataSourceLow; ///< Source data for the test suite.
-    mafContainer<vtkAlgorithmOutput> m_DataSourceLowContainer; ///< Container of the Data Source
-    mafContainer<vtkAlgorithmOutput> m_DataSourceHighContainer; ///< Container of the Data Source
+    mafProxy<vtkAlgorithmOutput> m_DataSourceLowContainer; ///< Container of the Data Source
+    mafProxy<vtkAlgorithmOutput> m_DataSourceHighContainer; ///< Container of the Data Source
     vtkSphereSource *m_DataSourceHigh; ///< Source data for the test suite.
     mafVME *m_VME; ///< VME holding the input data source.
 
@@ -137,11 +137,11 @@ void mafPipeVisualSelectionTest::allocationTest() {
 
 void mafPipeVisualSelectionTest::createPipeTest() {
     m_VisualPipeSelection->createPipe();
-    mafContainer<vtkActor> *actor = mafContainerPointerTypeCast(vtkActor, m_VisualPipeSelection->output());
+    mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, m_VisualPipeSelection->output());
     QVERIFY(actor != NULL);
 
     mafDataSet *sphere = m_VME->dataSetCollection()->itemAt(0);
-    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, sphere->dataValue());
+    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, sphere->dataValue());
     m_SphereMapper->SetInputConnection(*dataSet);
 
     // Connect the actor (contained into the container) with the renderer.
@@ -155,7 +155,7 @@ void mafPipeVisualSelectionTest::updatePipeTest() {
     m_VisualPipeSelection->updatePipe(3.0);
 
     mafDataSet *sphere = m_VME->dataSetCollection()->itemAt(3.0);
-    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, sphere->dataValue());
+    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, sphere->dataValue());
     m_SphereMapper->SetInputConnection(*dataSet);
 
     m_RenWin->Render();

@@ -15,7 +15,7 @@
 // Includes list
 #include "mafGUIDefinitions.h"
 #include <mafObjectBase.h>
-#include <mafContainerInterface.h>
+#include <mafProxyInterface.h>
 
 namespace mafGUI {
 /**
@@ -31,7 +31,7 @@ class MAFGUISHARED_EXPORT mafUILoader : public mafCore::mafObjectBase {
 
 signals:
     /// signal for inform that the user interface has been loaded from file
-    void uiLoadedSignal(mafCore::mafContainerInterface *guiWidget);
+    void uiLoadedSignal(mafCore::mafProxyInterface *guiWidget);
 
 public:
     /// Object constructor.

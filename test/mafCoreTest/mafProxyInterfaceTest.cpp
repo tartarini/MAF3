@@ -1,5 +1,5 @@
 /*
- *  mafContainerInterfaceTest.cpp
+ *  mafProxyInterfaceTest.cpp
  *  mafCoreTest
  *
  *  Created by Paolo Quadrani on 27/03/09.
@@ -11,21 +11,21 @@
 
 #include <mafTestSuite.h>
 #include <mafCoreRegistration.h>
-#include <mafContainerInterface.h>
+#include <mafProxyInterface.h>
 
 using namespace mafCore;
 
 /**
- Class name: mafContainerInterfaceTest
- This class implements the test suite for mafContainerInterface.
+ Class name: mafProxyInterfaceTest
+ This class implements the test suite for mafProxyInterface.
  */
-class mafContainerInterfaceTest : public QObject {
+class mafProxyInterfaceTest : public QObject {
     Q_OBJECT
 
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        m_ContainerInterface = new mafContainerInterface();
+        m_ContainerInterface = new mafProxyInterface();
     }
 
     /// Cleanup tes variables memory allocation.
@@ -34,26 +34,26 @@ private slots:
     }
 
     /// Create new object and check that is not NULL test case.
-    void mafContainerInterfaceAllocationTest();
+    void mafProxyInterfaceAllocationTest();
 
     /// Test the set/get external data type.
     void externalDataTypeTest();
 
 private:
-    mafContainerInterface *m_ContainerInterface; ///< Test var.
+    mafProxyInterface *m_ContainerInterface; ///< Test var.
 };
 
-void mafContainerInterfaceTest::mafContainerInterfaceAllocationTest() {
+void mafProxyInterfaceTest::mafProxyInterfaceAllocationTest() {
     QVERIFY(m_ContainerInterface != NULL);
 }
 
-void mafContainerInterfaceTest::externalDataTypeTest() {
+void mafProxyInterfaceTest::externalDataTypeTest() {
     QString ext("myCustomType");
     m_ContainerInterface->setExternalDataType(ext);
     QCOMPARE(m_ContainerInterface->externalDataType(), ext);
 }
 
 
-MAF_REGISTER_TEST(mafContainerInterfaceTest);
-#include "mafContainerInterfaceTest.moc"
+MAF_REGISTER_TEST(mafProxyInterfaceTest);
+#include "mafProxyInterfaceTest.moc"
 

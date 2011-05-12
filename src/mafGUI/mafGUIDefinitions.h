@@ -25,7 +25,7 @@
 #include <mafCoreSingletons.h>
 #include <mafCoreRegistration.h>
 #include <mafObjectBase.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 
 #include <mafEventBusManager.h>
 

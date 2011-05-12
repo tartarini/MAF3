@@ -11,7 +11,7 @@
 
 #include "mafPipeVisual.h"
 #include "mafVME.h"
-#include <mafContainerInterface.h>
+#include <mafProxyInterface.h>
 #include <mafEventBusManager.h>
 
 using namespace mafCore;
@@ -33,16 +33,16 @@ void mafPipeVisual::initializeConnections() {
     //mafIdProvider::instance()->createNewId("maf.local.resources.interaction.vmePick");
 
     // Register API signals.
-    mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
+    mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)");
 
     // Register private callbacks.
-    mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafContainerInterface *, QEvent *)");
+    mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)");
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.interaction.vmePicked", this, "vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase *)");
 }
 
-void mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafContainerInterface *actor, QEvent * e) {
+void mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafProxyInterface *actor, QEvent * e) {
     Q_UNUSED(e);
     if (m_Output && m_Output->isEqual(actor)) {
         mafVME *vme = this->inputList()->at(0);

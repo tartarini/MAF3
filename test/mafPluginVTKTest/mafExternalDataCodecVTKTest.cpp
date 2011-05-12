@@ -11,7 +11,7 @@
 
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 
 #include <mafExternalDataCodecVTK.h>
 #include <mafVME.h>
@@ -81,7 +81,7 @@ private:
     QDataStream m_OutputStream; ///< Test var.
 
     vtkCubeSource *m_DataSource; ///< Source data for the test suite.
-    mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
+    mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
 };
 
 void mafExternalDataCodecVTKTest::mafCodecVTKAllocationTest() {
@@ -105,7 +105,7 @@ void mafExternalDataCodecVTKTest::mafCodecVTKEncodeDecodeBinaryTest() {
     //Decode data encoded
     m_CodecOut->setStringSize(m_CodecIn->stringSize());
     m_CodecOut->decode(outputString);
-    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, m_CodecOut->externalData());
+    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, m_CodecOut->externalData());
 
     sphereMapper->SetInputConnection(*dataSet);
 
@@ -140,7 +140,7 @@ void mafExternalDataCodecVTKTest::mafCodecVTKEncodeDecodeTest() {
     //Decode data encoded
     m_CodecOut->setStringSize(m_CodecIn->stringSize());
     m_CodecOut->decode(outputString, false);
-    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, m_CodecOut->externalData());
+    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, m_CodecOut->externalData());
 
     sphereMapper->SetInputConnection(*dataSet);
 

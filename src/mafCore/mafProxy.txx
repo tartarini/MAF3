@@ -1,5 +1,5 @@
 /*
- *  mafContainer.txx
+ *  mafProxy.txx
  *  mafCore
  *
  *  Created by Paolo Quadrani on 27/03/09.
@@ -10,49 +10,49 @@
  */
 
 template<typename T>
-mafContainer<T>::operator T *() const {
+mafProxy<T>::operator T *() const {
     return (T *)m_ExternalData;
 }
 
 template<typename T>
-void mafContainer<T>::operator=(T*val) {
+void mafProxy<T>::operator=(T*val) {
     m_ExternalData = val; updateExternalDataType();
 }
 
 template<typename T>
-T *mafContainer<T>::operator->() {
+T *mafProxy<T>::operator->() {
     return m_ExternalData;
 }
 
 template<typename T>
-void mafContainer<T>::setDestructionFunction(mafExternalDataDestructorPointer destruc_function) {
+void mafProxy<T>::setDestructionFunction(mafExternalDataDestructorPointer destruc_function) {
     m_ExternalDestructor = destruc_function;
 }
 
 template<typename T>
-mafContainer<T>::mafContainer() : mafContainerInterface(), m_ExternalData(NULL), m_ExternalDestructor(NULL) {
+mafProxy<T>::mafProxy() : mafProxyInterface(), m_ExternalData(NULL), m_ExternalDestructor(NULL) {
 }
 
 template<typename T>
-mafContainer<T>::~mafContainer() {
+mafProxy<T>::~mafProxy() {
     if(m_ExternalDestructor != NULL) {
         (m_ExternalData->*m_ExternalDestructor)();
     }
 }
 
 template<typename T>
-T *mafContainer<T>::externalData() {
+T *mafProxy<T>::externalData() {
     return m_ExternalData;
 }
 
 template<typename T>
-bool mafContainer<T>::isEqual(mafContainerInterface *container) {
-	mafContainer<T> *data = static_cast<mafContainer<T> *>(container);
+bool mafProxy<T>::isEqual(mafProxyInterface *container) {
+	mafProxy<T> *data = static_cast<mafProxy<T> *>(container);
 	return m_ExternalData == data->externalData();
 }
 
 template<typename T>
-inline void mafContainer<T>::updateExternalDataType() {
+inline void mafProxy<T>::updateExternalDataType() {
     QString data_type(typeid( T ).name());
     
     // Needed because typeid return the length of the string containing the type

@@ -11,7 +11,7 @@
 
 #include <mafCoreSingletons.h>
 #include <mafTestSuite.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <mafMementoVME.h>
 #include <mafExternalDataCodecVTK.h>
 #include <mafEventBusManager.h>
@@ -76,7 +76,7 @@ void testExtRawCustomManager::createdMemento(mafCore::mafMemento *memento) {
     //Now load dataValue
     mafDataSet *data = returnVME->dataSetCollection()->itemAt(0);
 
-    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
+    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
     vtkPolyDataMapper *sphereMapper = vtkPolyDataMapper::New();
     sphereMapper->SetInputConnection(*dataSet);
 
@@ -190,8 +190,8 @@ private:
     QDataStream m_OutputStream; ///< Test var.
     testExtRawCustomManager *m_CustomManager; ///< Manager test var
     mafVME *m_Vme; ///< Test var.
-    mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
-    mafContainer<vtkAlgorithmOutput> m_DataSourceContainerMoved; ///< Container of the Data Source
+    mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
+    mafProxy<vtkAlgorithmOutput> m_DataSourceContainerMoved; ///< Container of the Data Source
     vtkTransformPolyDataFilter *m_PDataFilter; ///< Filter used to transform the bounding box.
     mafResources::mafDataSet *m_DataSetCube;
     mafResources::mafDataSet *m_DataSetCubeMoved;

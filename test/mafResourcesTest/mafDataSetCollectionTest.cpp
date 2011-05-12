@@ -11,7 +11,7 @@
 
 #include <mafTestSuite.h>
 #include <mafResourcesRegistration.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -19,7 +19,7 @@ using namespace mafResources;
 //--------------------------------------------------------------------------------------------------------
 /**
  Class name: testCustomExternalData
- This class implements the external data type to give as value for mafVME after has beed wrapped with mafContainer.
+ This class implements the external data type to give as value for mafVME after has beed wrapped with mafProxy.
  */
 class testCustomExternalData {
 public:
@@ -35,7 +35,7 @@ private:
 
 /**
  Class name: testCustomAnotherExternalData
- This class implements the external data type to give as value for mafVME after has beed wrapped with mafContainer.
+ This class implements the external data type to give as value for mafVME after has beed wrapped with mafProxy.
  */
 class testCustomAnotherExternalData {
 public:
@@ -159,7 +159,7 @@ void mafDataSetCollectionTest::collectionInsertItemTest() {
 
 void mafDataSetCollectionTest::collectionDataSetTest() {
     // Create the container for the external data type.
-    mafContainer<testCustomExternalData> container;
+    mafProxy<testCustomExternalData> container;
     container = new testCustomExternalData();
 
     // Create the dataset that will contain the external data value.
@@ -176,7 +176,7 @@ void mafDataSetCollectionTest::collectionDataSetTest() {
     QVERIFY(result);
 
     // Create the container for another external data type (different from before).
-    mafContainer<testCustomAnotherExternalData> another_container;
+    mafProxy<testCustomAnotherExternalData> another_container;
     another_container = new testCustomAnotherExternalData();
 
     mafDataSet *another_data = mafNEW(mafResources::mafDataSet);

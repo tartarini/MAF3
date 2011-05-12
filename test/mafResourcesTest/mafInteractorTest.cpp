@@ -13,7 +13,7 @@
 #include <mafCoreSingletons.h>
 #include <mafResourcesRegistration.h>
 #include <mafInteractor.h>
-#include <mafContainerInterface.h>
+#include <mafProxyInterface.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -54,23 +54,23 @@ private:
 
 void mafInteractorTest::mafInteractorAllocationTest() {
     QVERIFY(m_Interactor);
-    mafContainerInterfacePointer di = m_Interactor->defaultInteractionStyle();
+    mafProxyInterfacePointer di = m_Interactor->defaultInteractionStyle();
     QVERIFY(di == NULL);
-    mafContainerInterfacePointer ei = m_Interactor->editingInteractionStyle();
+    mafProxyInterfacePointer ei = m_Interactor->editingInteractionStyle();
     QVERIFY(ei == NULL);
 }
 
 void mafInteractorTest::mafInteractorStyleConstructorAllocationTest() {
     // Create interactor styles to assign to the interactor.
-    mafContainerInterface dis;
-    mafContainerInterface eis;
+    mafProxyInterface dis;
+    mafProxyInterface eis;
     // Construct a new mafInteractor.
     mafInteractor *inter = new mafInteractor(&dis, &eis, mafCodeLocation);
 
     // Verify that the interactor styles are present.
-    mafContainerInterfacePointer di = inter->defaultInteractionStyle();
+    mafProxyInterfacePointer di = inter->defaultInteractionStyle();
     QVERIFY(di != NULL);
-    mafContainerInterfacePointer ei = inter->editingInteractionStyle();
+    mafProxyInterfacePointer ei = inter->editingInteractionStyle();
     QVERIFY(ei != NULL);
 
     mafDEL(inter);
@@ -78,13 +78,13 @@ void mafInteractorTest::mafInteractorStyleConstructorAllocationTest() {
 
 void mafInteractorTest::styleAssignmentTest() {
     // Create interactor styles to assign to the interactor.
-    mafContainerInterface dis;
+    mafProxyInterface dis;
 
     // Assign the style to the interactor...
     m_Interactor->setDefaultInteractionStyle(&dis);
 
     // Verify that the interactor styles are present.
-    mafContainerInterfacePointer di = m_Interactor->defaultInteractionStyle();
+    mafProxyInterfacePointer di = m_Interactor->defaultInteractionStyle();
     QVERIFY(di != NULL);
 }
 

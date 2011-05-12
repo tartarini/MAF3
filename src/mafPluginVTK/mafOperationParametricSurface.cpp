@@ -10,7 +10,7 @@
  */
 
 #include "mafOperationParametricSurface.h"
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <vtkAlgorithmOutput.h>
 
 using namespace mafPluginVTK;

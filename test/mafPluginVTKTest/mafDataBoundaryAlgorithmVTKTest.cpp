@@ -12,7 +12,7 @@
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafDataBoundaryAlgorithmVTK.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <vtkPolyData.h>
 #include <vtkActor.h>
 #include <vtkPoints.h>
@@ -85,14 +85,14 @@ private slots:
 private:
     vtkCubeSource *m_DataSource;
     mafDataSet *m_DataSetCube; ///< DataSet var.
-    mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
+    mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
 };
 
 void mafDataBoundaryAlgorithmVTKTest::calculateBoundaryTest() {
     mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
     boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
     m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
-    mafContainer<vtkAlgorithmOutput> *boundingBox = mafContainerPointerTypeCast(vtkAlgorithmOutput, m_DataSetCube->dataBoundary());
+    mafProxy<vtkAlgorithmOutput> *boundingBox = mafProxyPointerTypeCast(vtkAlgorithmOutput, m_DataSetCube->dataBoundary());
 
 
     vtkPolyDataMapper *box = vtkPolyDataMapper::New();

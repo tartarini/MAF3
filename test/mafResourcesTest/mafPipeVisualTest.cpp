@@ -13,7 +13,7 @@
 #include <mafCoreSingletons.h>
 #include <mafPipeVisual.h>
 #include <mafVME.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -49,7 +49,7 @@ public slots:
 
 private:
     QString m_PipeLine; ///< Test var.
-    mafCore::mafContainer<QString> m_Container; ///< Test var.
+    mafCore::mafProxy<QString> m_Container; ///< Test var.
 
 };
 
@@ -134,14 +134,14 @@ void mafPipeVisualTest::mafPipeVisualVmePickTest() {
     QEvent *e;
 
     mafVME *vme = mafNEW(mafResources::mafVME);
-    mafCore::mafContainerInterface *stringContainer = m_VisualPipe->output();
+    mafCore::mafProxyInterface *stringContainer = m_VisualPipe->output();
 
     m_VisualPipe->setInput(vme);
 
     mafEventBus::mafEventArgumentsList argList;
     argList.append(mafEventArgument(double *, (double *)posPicked));
     argList.append(mafEventArgument(unsigned long, modifiers));
-    argList.append(mafEventArgument(mafCore::mafContainerInterface *, stringContainer));
+    argList.append(mafEventArgument(mafCore::mafProxyInterface *, stringContainer));
     argList.append(mafEventArgument(QEvent *, e));
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePick", mafEventBus::mafEventTypeLocal, &argList);
     QVERIFY(m_VisualPipe->m_RecivedPickEvent == true);

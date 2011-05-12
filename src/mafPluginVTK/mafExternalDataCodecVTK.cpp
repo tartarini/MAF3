@@ -35,7 +35,7 @@ char *mafExternalDataCodecVTK::encode(bool binary) {
         writer->SetFileTypeToBinary();
     }
 
-    mafContainer<vtkAlgorithmOutput> *dataSet = mafContainerPointerTypeCast(vtkAlgorithmOutput, this->m_ExternalData);
+    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, this->m_ExternalData);
     writer->SetInputConnection(*dataSet);
     writer->Write();
     writer->Update();
@@ -71,7 +71,7 @@ void mafExternalDataCodecVTK::decode(const char *input_string, bool binary) {
     }
 
     m_Reader->Update();
-    m_Data = new mafContainer<vtkAlgorithmOutput>();
+    m_Data = new mafProxy<vtkAlgorithmOutput>();
     *m_Data = m_Reader->GetOutputPort(0);
     this->m_ExternalData = m_Data;
 }

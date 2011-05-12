@@ -59,7 +59,7 @@ void mafSerializationManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.serialization.plugSerializer", this, "plugSerializerInModule(const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.save", this, "save(mafCore::mafMemento *, const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.load", this, "load(const QString &, const QString &)");
-    mafRegisterLocalSignal("maf.local.serialization.export", this, "exportData(mafCore::mafContainerInterface *, const QString &, const QString &)");
+    mafRegisterLocalSignal("maf.local.serialization.export", this, "exportData(mafCore::mafProxyInterface *, const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.import", this, "importData(const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.saveExternalData", this, "saveExtData(char *, const QString &, int)");
     mafRegisterLocalSignal("maf.local.serialization.loadExternalData", this, "loadExtData(const QString &)");
@@ -70,7 +70,7 @@ void mafSerializationManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.serialization.plugSerializer", this, "plugSerializer(const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.save", this, "saveMemento(mafCore::mafMemento *, const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.load", this, "loadMemento(const QString &, const QString &)");
-    mafRegisterLocalCallback("maf.local.serialization.export", this, "exportExternalData(mafCore::mafContainerInterface *, const QString &, const QString &)");
+    mafRegisterLocalCallback("maf.local.serialization.export", this, "exportExternalData(mafCore::mafProxyInterface *, const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.import", this, "importExternalData(const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.saveExternalData", this, "saveExternalData(char *, const QString &, int)");
     mafRegisterLocalCallback("maf.local.serialization.loadExternalData", this, "loadExternalData(const QString &)");
@@ -178,7 +178,7 @@ void mafSerializationManager::loadMemento(const QString &url, const QString &enc
     mafEventBusManager::instance()->notifyEvent(m_MementoLoadedId, mafEventTypeLocal, &list);
 }
 
-void mafSerializationManager::exportExternalData(mafCore::mafContainerInterface *externalData, const QString &url, const QString &encode_type) {
+void mafSerializationManager::exportExternalData(mafCore::mafProxyInterface *externalData, const QString &url, const QString &encode_type) {
     REQUIRE(externalData != NULL);
 
     // Create an instance of the codec type corresponding to the object's memento
@@ -272,7 +272,7 @@ void mafSerializationManager::saveExternalData(char *externalDataString, const Q
     mafDEL(ser);
 }
 
-mafCore::mafContainerInterface * mafSerializationManager::importExternalData(const QString &url, const QString &encode_type) {
+mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const QString &url, const QString &encode_type) {
     if(!m_CodecHash.contains(encode_type)) {
         qCritical("%s", mafTr("No codec associated with the '%1' encoding type.").arg(encode_type).toAscii().data());
         return NULL;

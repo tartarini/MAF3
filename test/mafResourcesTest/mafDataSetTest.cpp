@@ -12,7 +12,7 @@
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafDataSet.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <mafEventBusManager.h>
 #include <mafDataBoundaryAlgorithm.h>
 
@@ -59,16 +59,16 @@ public:
     ~testDataBoundaryCustom();
 
     /// Boundary algorithm.
-    /*virtual*/ mafContainerInterface *calculateBoundary(mafContainerInterface *data, mafPoseMatrix *m);
+    /*virtual*/ mafProxyInterface *calculateBoundary(mafProxyInterface *data, mafPoseMatrix *m);
 
     /// Boundary algorithm.
-    /*virtual*/ mafCore::mafContainerInterface *calculateBoundary(double bounds[6], mafPoseMatrix *matrix = NULL);
+    /*virtual*/ mafCore::mafProxyInterface *calculateBoundary(double bounds[6], mafPoseMatrix *matrix = NULL);
 
     /// Return bounds of the bounding box.
     /*virtual*/ void bounds(double bounds[6]);
 
 private:
-    mafContainer<testExternalBoundary> m_Boundary; ///< boundary data.
+    mafProxy<testExternalBoundary> m_Boundary; ///< boundary data.
 };
 
 testDataBoundaryCustom::testDataBoundaryCustom(const QString code_location) : mafDataBoundaryAlgorithm(code_location) {
@@ -79,9 +79,9 @@ testDataBoundaryCustom::testDataBoundaryCustom(const QString code_location) : ma
 testDataBoundaryCustom::~testDataBoundaryCustom() {
 }
 
-mafContainerInterface *testDataBoundaryCustom::calculateBoundary(mafContainerInterface *data, mafPoseMatrix *m) {
+mafProxyInterface *testDataBoundaryCustom::calculateBoundary(mafProxyInterface *data, mafPoseMatrix *m) {
     Q_UNUSED(m);
-    mafContainer<testExternalDataType> *container = mafContainerPointerTypeCast(testExternalDataType, data);
+    mafProxy<testExternalDataType> *container = mafProxyPointerTypeCast(testExternalDataType, data);
     testExternalDataType *value = container->externalData();
     if(value != NULL) {
         int v = value->value();
@@ -95,7 +95,7 @@ void testDataBoundaryCustom::bounds(double bounds[6]) {
     Q_UNUSED(bounds);
 }
 
-mafCore::mafContainerInterface *testDataBoundaryCustom::calculateBoundary(double bounds[6], mafPoseMatrix *matrix) {
+mafCore::mafProxyInterface *testDataBoundaryCustom::calculateBoundary(double bounds[6], mafPoseMatrix *matrix) {
     Q_UNUSED(bounds);
     Q_UNUSED(matrix);
     return NULL;
@@ -193,7 +193,7 @@ void mafDataSetTest::mafDataSetAllocationTest() {
 
 void mafDataSetTest::mafDataSetValueTest() {
     // Create the container with the external data type.
-    mafContainer<testExternalDataType> container;
+    mafProxy<testExternalDataType> container;
     container = new testExternalDataType(3);
 
     // ... and assign it to the mafDataSet; should start the connected event.
@@ -215,7 +215,7 @@ void mafDataSetTest::mafDataSetBoundaryTest() {
     m_DataSet->setBoundaryAlgorithm(boundaryAlgorithm);
 
     // Create the custom data and asign it to the mafDataSet.
-    mafContainer<testExternalDataType> container;
+    mafProxy<testExternalDataType> container;
     container = new testExternalDataType(3);
     m_DataSet->setDataValue(&container);
 
@@ -223,8 +223,8 @@ void mafDataSetTest::mafDataSetBoundaryTest() {
     m_DataSet->setDataValue(&container);
 
     // Retrieve the boundary (should be 0 - 3).
-    mafContainerInterface *boundary_container = m_DataSet->dataBoundary();
-    mafContainer<testExternalBoundary> *boundary = mafContainerPointerTypeCast(testExternalBoundary, boundary_container);
+    mafProxyInterface *boundary_container = m_DataSet->dataBoundary();
+    mafProxy<testExternalBoundary> *boundary = mafProxyPointerTypeCast(testExternalBoundary, boundary_container);
     int r0 = (*boundary)->m_Range[0];
     int r1 = (*boundary)->m_Range[1];
     QVERIFY(r0 == 0);

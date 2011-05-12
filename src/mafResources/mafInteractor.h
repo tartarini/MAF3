@@ -14,9 +14,9 @@
 
 // Includes list
 #include "mafResourcesDefinitions.h"
-#include <mafContainerInterface.h>
-#include <mafContainer.h>
-#include <mafContainerInterface.h>
+#include <mafProxyInterface.h>
+#include <mafProxy.h>
+#include <mafProxyInterface.h>
 
 namespace mafResources {
 
@@ -39,38 +39,38 @@ public:
     mafInteractor(const QString code_location = "");
 
     /// Object constructor
-    mafInteractor(mafCore::mafContainerInterfacePointer default_is, mafCore::mafContainerInterfacePointer edit_is = NULL, const QString code_location = "");
+    mafInteractor(mafCore::mafProxyInterfacePointer default_is, mafCore::mafProxyInterfacePointer edit_is = NULL, const QString code_location = "");
 
     /// Allow to assign the default interaction style.
-    void setDefaultInteractionStyle(mafCore::mafContainerInterfacePointer is);
+    void setDefaultInteractionStyle(mafCore::mafProxyInterfacePointer is);
 
     /// Return the default interaction style.
-    mafCore::mafContainerInterfacePointer defaultInteractionStyle();
+    mafCore::mafProxyInterfacePointer defaultInteractionStyle();
 
     /// Allow to assign the editing interaction style.
-    void setEditingInteractionStyle(mafCore::mafContainerInterfacePointer is);
+    void setEditingInteractionStyle(mafCore::mafProxyInterfacePointer is);
 
     /// Return the editing interaction style.
-    mafCore::mafContainerInterfacePointer editingInteractionStyle();
+    mafCore::mafProxyInterfacePointer editingInteractionStyle();
 
 protected:
     /// Object destructor.
     /* virtual */ ~mafInteractor();
 
 private:
-    mafCore::mafContainerInterfacePointer m_DefaultInteractorStyle; ///< Default interaction style that will be associated with the mafVME.
-    mafCore::mafContainerInterfacePointer m_EditingInteractorStyle; ///< Interaction style associated to the mafVME and used during the editing operations of the data inside the mafVME itself.
+    mafCore::mafProxyInterfacePointer m_DefaultInteractorStyle; ///< Default interaction style that will be associated with the mafVME.
+    mafCore::mafProxyInterfacePointer m_EditingInteractorStyle; ///< Interaction style associated to the mafVME and used during the editing operations of the data inside the mafVME itself.
 };
 
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline mafCore::mafContainerInterfacePointer mafInteractor::defaultInteractionStyle() {
+inline mafCore::mafProxyInterfacePointer mafInteractor::defaultInteractionStyle() {
     return m_DefaultInteractorStyle;
 }
 
-inline mafCore::mafContainerInterfacePointer mafInteractor::editingInteractionStyle() {
+inline mafCore::mafProxyInterfacePointer mafInteractor::editingInteractionStyle() {
     return m_EditingInteractorStyle;
 }
 

@@ -14,7 +14,7 @@
 
 // Includes list
 #include "mafPipe.h"
-#include <mafContainerInterface.h>
+#include <mafProxyInterface.h>
 
 namespace mafResources {
 
@@ -35,18 +35,18 @@ public:
     mafPipeVisual(const QString code_location = "");
 
     /// Get output of the pipe.
-    mafCore::mafContainerInterface *output();
+    mafCore::mafProxyInterface *output();
 
     /// Return the visibility status
     bool visibility() const;
     
-    /// Pass to the visual pipe an object (or a group of objects) via mafContainerInterface
+    /// Pass to the visual pipe an object (or a group of objects) via mafProxyInterface
     /** graphicObject parameter  represents the graphic components for that specific pipeline, for example, VTK use vtkRenderer */
     virtual void setGraphicObject(QObject *graphicObject);
 
 signals:
     /// Signal emitted when the pick hits the owned object.
-    void vmePickSignal(double *pickPos, unsigned long modifiers,  mafCore::mafContainerInterface *actor, QEvent *);
+    void vmePickSignal(double *pickPos, unsigned long modifiers,  mafCore::mafProxyInterface *actor, QEvent *);
 
     ///
     void vmePickedSignal(double *pickPos, unsigned long modifiers , mafCore::mafObjectBase *vme);
@@ -57,7 +57,7 @@ public slots:
 
 private slots:
     /// Forward the vmePick event if the pick hits the current visualized VME.
-    void vmePick(double *pickPos, unsigned long, mafCore::mafContainerInterface *actor, QEvent *);
+    void vmePick(double *pickPos, unsigned long, mafCore::mafProxyInterface *actor, QEvent *);
 
 private:
     /// Register signals and slots connections with the event bus.
@@ -69,14 +69,14 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisual();
 
-    mafCore::mafContainerInterface *m_Output; ///< Output for visual pipe.
+    mafCore::mafProxyInterface *m_Output; ///< Output for visual pipe.
 };
 
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline mafCore::mafContainerInterface *mafPipeVisual::output() {
+inline mafCore::mafProxyInterface *mafPipeVisual::output() {
     return m_Output;
 }
 

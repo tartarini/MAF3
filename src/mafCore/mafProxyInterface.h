@@ -1,5 +1,5 @@
 /*
- *  mafContainerInterface.h
+ *  mafProxyInterface.h
  *  mafCore
  *
  *  Created by Paolo Quadrani on 30/12/09.
@@ -20,18 +20,18 @@ namespace mafCore {
 // Class forwarding list
 
 /**
-Class name: mafContainerInterface
+Class name: mafProxyInterface
 This class defines the interface class for MAF3 data values container.
 */
-class MAFCORESHARED_EXPORT mafContainerInterface {
+class MAFCORESHARED_EXPORT mafProxyInterface {
 public:
     /// Object constructor.
-    mafContainerInterface();
+    mafProxyInterface();
     /// Object Constructor
-    mafContainerInterface(const mafContainerInterface &dw);
+    mafProxyInterface(const mafProxyInterface &dw);
 
     /// Object destructor.
-    /*virtual*/ ~mafContainerInterface() {}
+    /*virtual*/ ~mafProxyInterface() {}
 
     /// Return the data type for the external data wrapped.
     QString externalDataType();
@@ -46,36 +46,36 @@ public:
     void setExternalCodecType(const QString codec_type);
 
     /// Check if the object is equal to that passed as argument.
-    virtual bool isEqual(mafContainerInterface *container);
+    virtual bool isEqual(mafProxyInterface *container);
 
 protected:
     QString m_ExternalDataType; ///< Store the data type for the external wrapped data.
     QString m_ExternalCodecType; ///< Store the codec type for the external wrapped data.
 };
 
-inline void mafContainerInterface::setExternalDataType(const QString data_type) {
+inline void mafProxyInterface::setExternalDataType(const QString data_type) {
     m_ExternalDataType = data_type;
 }
 
-inline void mafContainerInterface::setExternalCodecType(const QString codec_type) {
+inline void mafProxyInterface::setExternalCodecType(const QString codec_type) {
     m_ExternalCodecType = codec_type;
 }
 
-inline QString mafContainerInterface::externalDataType() {
+inline QString mafProxyInterface::externalDataType() {
     return m_ExternalDataType;
 }
 
-inline QString mafContainerInterface::externalCodecType() {
+inline QString mafProxyInterface::externalCodecType() {
     return m_ExternalCodecType;
 }
 
-/// Define the pointer to the mafContainerInterface needed to be registered with Q_DECLARE_METATYPE macro.
-typedef mafContainerInterface * mafContainerInterfacePointer;
+/// Define the pointer to the mafProxyInterface needed to be registered with Q_DECLARE_METATYPE macro.
+typedef mafProxyInterface * mafProxyInterfacePointer;
 
 } // namespace mafCore
 
 // Type registered below can be substituted (or integrated) with this one:
-Q_DECLARE_METATYPE(mafCore::mafContainerInterfacePointer);
-Q_DECLARE_METATYPE(mafCore::mafContainerInterface);  // Handle with care!! A copy is done. Better use declaration above.
+Q_DECLARE_METATYPE(mafCore::mafProxyInterfacePointer);
+Q_DECLARE_METATYPE(mafCore::mafProxyInterface);  // Handle with care!! A copy is done. Better use declaration above.
 
 #endif // MAFCONTAINERINTERFACE_H

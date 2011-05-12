@@ -17,7 +17,7 @@
 #include "mafDataSetCollection.h"
 #include "mafMementoVME.h"
 
-#include <mafContainerInterface.h>
+#include <mafProxyInterface.h>
 
 namespace mafResources {
 

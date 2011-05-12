@@ -88,10 +88,10 @@ void mafMementoDataSet::encodeItem(mafMementoPropertyItem *item, QString path) {
     QString fileName(item->m_Value.toString());
     QString url;
     QTextStream(&url) << path << "/" << fileName;
-    mafContainerInterface *container = m_DataSet->dataValue();
+    mafProxyInterface *container = m_DataSet->dataValue();
 
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafContainerInterface *, container));
+    argList.append(mafEventArgument(mafCore::mafProxyInterface *, container));
     argList.append(mafEventArgument(QString, url));
     argList.append(mafEventArgument(QString, m_EncodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.export", mafEventTypeLocal, &argList);

@@ -15,7 +15,7 @@
 #include <mafPipeVisualVTKSurface.h>
 #include <mafResourcesRegistration.h>
 #include <mafPipeVisual.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <mafPluginManager.h>
 #include <mafPlugin.h>
 #include <vtkAppendPolyData.h>
@@ -58,7 +58,7 @@ using namespace mafPluginVTK;
 //! </title>
 //! <description>
 //mafPipeVisualVTKSurface is a visual pipe used to render VTK polydata.
-//It takes a mafDataSet as input and returns a mafContainer<vtkActor>.
+//It takes a mafDataSet as input and returns a mafProxy<vtkActor>.
 //! </description>
 
 class mafPipeVisualVTKSurfaceTest : public QObject {
@@ -122,7 +122,7 @@ private slots:
 private:
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a surface.
     mafResources::mafDataSet *m_DataSet;
-    mafContainer<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
+    mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
     vtkAppendPolyData *m_AppendData; /// Bunch of surfaces.
 };
 
@@ -136,8 +136,8 @@ void mafPipeVisualVTKSurfaceTest::updatePipeTest() {
     pipe->updatePipe();
 
     // Get the vtkActor from the visual pipe
-    // And assign to a mafContainer
-    mafContainer<vtkActor> *actor = mafContainerPointerTypeCast(vtkActor, pipe->output());
+    // And assign to a mafProxy
+    mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, pipe->output());
     QVERIFY(actor != NULL);
 
     vtkRenderWindow *renWin = vtkRenderWindow::New();
@@ -203,7 +203,7 @@ void mafPipeVisualVTKSurfaceTest::updatePipeTestFromPlugIn() {
     //! </snippet>
 
     //! <snippet>
-    mafContainer<vtkActor> *actor = mafContainerPointerTypeCast(vtkActor, visualPipe->output());
+    mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, visualPipe->output());
     //! </snippet>
     vtkRenderWindow *renWin = vtkRenderWindow::New();
     vtkRenderer *renderer = vtkRenderer::New();

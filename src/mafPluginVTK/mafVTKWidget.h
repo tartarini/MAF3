@@ -14,7 +14,6 @@
 
 // Includes list
 #include "mafPluginVTKDefinitions.h"
-#include <vtkActor.h>
 #include <QVTKWidget.h>
 
 
@@ -46,7 +45,7 @@ public:
 
 signals:
     /// picked button pressed.
-    void vmePickSignal(double *pos, unsigned long modifiers, mafCore::mafContainerInterface *interface, QEvent * e);
+    void vmePickSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *interface, QEvent * e);
 
 protected:
     /// Object destructor.
@@ -59,7 +58,6 @@ private:
     /// Check if VME has been picked
     void vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e);
 
-    vtkActor *m_Actor; ///<  Actor picked.
     unsigned long m_Modifiers;  ///< Optional modifiers for the button.
 };
 

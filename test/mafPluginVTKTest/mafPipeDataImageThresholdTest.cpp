@@ -14,7 +14,7 @@
 #include <mafEventBusManager.h>
 #include <mafPipeDataImageThreshold.h>
 #include <mafResourcesRegistration.h>
-#include <mafContainer.h>
+#include <mafProxy.h>
 #include <mafVME.h>
 
 #include <vtkImageData.h>
@@ -87,7 +87,7 @@ private slots:
 
 private:
     mafVME *m_VME; ///< Contain the only item vtkImageData representing the test image.
-    mafContainer<vtkImageData> m_ImageData; ///< Container of the vtkImageData
+    mafProxy<vtkImageData> m_ImageData; ///< Container of the vtkImageData
     vtkSmartPointer<vtkImageCanvasSource2D> m_ImageCanvas; ///< Image source.
 };
 
@@ -102,7 +102,7 @@ void mafPipeDataImageThresholdTest::updatePipeTest() {
 
     mafDataSetCollection *collection = output->dataSetCollection();
     mafDataSet *dataSet = collection->itemAtCurrentTime();
-    mafContainer<vtkImageData> *image = mafContainerPointerTypeCast(vtkImageData, dataSet->dataValue());
+    mafProxy<vtkImageData> *image = mafProxyPointerTypeCast(vtkImageData, dataSet->dataValue());
     QString dt(image->externalDataType());
     QString res("vtkImageData");
 

@@ -11,7 +11,7 @@
 
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
-#include <mafContainerInterface.h>
+#include <mafProxyInterface.h>
 #include <mafEventBusManager.h>
 #include <mafUILoader.h>
 #include <QDebug>
@@ -39,7 +39,7 @@ public:
 
 public slots:
    ///return a value when the gui is loaded
-   void uiLoaded(mafCore::mafContainerInterface *widget);
+   void uiLoaded(mafCore::mafProxyInterface *widget);
 
 private:
      bool m_IsUILoaded;///< variable which represents if the ui is loaded
@@ -50,13 +50,13 @@ testmafUILoaderCustom::testmafUILoaderCustom() : mafUILoader(), m_IsUILoaded(fal
 
 void testmafUILoaderCustom::uiLoad(const QString& fileName) {
     REQUIRE(!fileName.isEmpty());
-    mafContainerInterface *gui = NULL;
+    mafProxyInterface *gui = NULL;
     mafEventArgumentsList list;
-    list.append(mafEventArgument(mafCore::mafContainerInterface *, gui));
+    list.append(mafEventArgument(mafCore::mafProxyInterface *, gui));
     mafEventBusManager::instance()->notifyEvent("maf.local.gui.uiloaded", mafEventTypeLocal, &list);
 }
 
-void testmafUILoaderCustom::uiLoaded(mafCore::mafContainerInterface  *widget) {
+void testmafUILoaderCustom::uiLoaded(mafCore::mafProxyInterface  *widget) {
     Q_UNUSED(widget);
     qDebug() << "ui loaded";
     m_IsUILoaded = true;
@@ -73,7 +73,7 @@ private slots:
     /// Initialize test variables
     void initTestCase() {
         m_UILoader = new testmafUILoaderCustom();
-        mafRegisterLocalCallback("maf.local.gui.uiloaded", m_UILoader, "uiLoaded(mafCore::mafContainerInterface *)");
+        mafRegisterLocalCallback("maf.local.gui.uiloaded", m_UILoader, "uiLoaded(mafCore::mafProxyInterface *)");
     }
 
     /// Cleanup test variables memory allocation.
