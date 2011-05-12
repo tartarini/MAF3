@@ -20,14 +20,18 @@ using namespace mafEventBus;
 #define PLUGIN_EXTENSION_FILTER "*.mafplugin"
 
 #ifdef WIN32
-    #define RESOURCES_LIBRARY_NAME "mafResources.dll"
+    #define SHARED_OBJECT_PREFIX ""
+    #define SHARED_OBJECT_SUFFIX ".dll"
 #else
+    #define SHARED_OBJECT_PREFIX "lib"
     #ifdef __APPLE__
-        #define RESOURCES_LIBRARY_NAME "mafResources.dylib"
+        #define SHARED_OBJECT_SUFFIX ".dylib"
     #else
-        #define RESOURCES_LIBRARY_NAME "mafResources.so"
+        #define SHARED_OBJECT_SUFFIX ".so"
     #endif
 #endif
+
+
 
 
 using namespace mafCore;
@@ -39,10 +43,11 @@ mafLogic::mafLogic(const QString code_location) : mafLogicLight(code_location), 
 mafLogic::~mafLogic() {
     // Unload the mafResourcesLibrary.
     bool result(false);
-    result = mafShutdownModule(m_LibraryHandlersHash.value(RESOURCES_LIBRARY_NAME));
-    if(result) {
-        m_LibraryHandlersHash.remove(RESOURCES_LIBRARY_NAME);
+    QHash<QString, QLibrary *>::const_iterator it = m_LibraryHandlersHash.constBegin();
+    for (; it != m_LibraryHandlersHash.constEnd(); ++it) {
+        result = mafShutdownModule(it.value());
     }
+    m_LibraryHandlersHash.clear();
 }
 
 bool mafLogic::initialize() {
@@ -74,17 +79,33 @@ bool mafLogic::initialize() {
     m_CustomPluggedObjectsHash.clear();
 
     // Load the module related to the resources and managers and initialize it.
+    QStringList sharedObjects;
+    QString so;
+    so.append(SHARED_OBJECT_PREFIX);
+    so.append("mafResources");
+    so.append(SHARED_OBJECT_SUFFIX);
+    sharedObjects << so;
+    so.clear();
+    so.append(SHARED_OBJECT_PREFIX);
+    so.append("mafSerialization");
+    so.append(SHARED_OBJECT_SUFFIX);
+    sharedObjects << so;
+    
     QLibrary *handler(NULL);
-    handler = mafInitializeModule(RESOURCES_LIBRARY_NAME);
-    if(handler) {
-        m_LibraryHandlersHash.insert(RESOURCES_LIBRARY_NAME, handler);
+    bool result(true);
+    foreach(so, sharedObjects) {
+        handler = mafInitializeModule(so);
+        if(handler) {
+            m_LibraryHandlersHash.insert(so, handler);
+        }
+        result = result && (handler != NULL);
     }
-
+    
     requestNewHierarchy();
 
     // Perform design by contract check.
-    ENSURE(handler);
-    return handler != NULL;
+    ENSURE(result);
+    return result;
 }
 
 mafCore::mafHierarchy *mafLogic::requestNewHierarchy() {
