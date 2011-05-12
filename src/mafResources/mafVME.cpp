@@ -87,12 +87,14 @@ void mafVME::setTimestamp(double t) {
 }
 
 void mafVME::setInteractor(mafInteractor *i) {
-    QWriteLocker locker(m_Lock);
     if ( i == m_Interactor ) {
         return;
     }
-    mafDEL(m_Interactor);
+    emit interactorDetach();
+    m_Lock->lockForWrite();
     m_Interactor = i;
+    m_Lock->unlock();
+    emit interactorAttached();
 }
 
 void mafVME::setDataPipe(const QString &pipe_type) {

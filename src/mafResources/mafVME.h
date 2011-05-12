@@ -97,7 +97,7 @@ public:
     /// Allow to lock/unlock the writability of the VME.
     void setCanWrite(bool lock);
 
-    /// Return the writability state for the VME.
+    /// Return the possibility to modify the VME.
     bool canWrite() const;
 
 signals:
@@ -106,6 +106,12 @@ signals:
 
     /// Notify the lock state for the current VME when the lock state change.
     void vmeLocked(int);
+
+    /// Notify the interactor is about to be detached.
+    void interactorDetach();
+
+    /// Notify an interactor has been attached.
+    void interactorAttached();
 
 public slots:
     /// Set the current timestamp for the VME.
