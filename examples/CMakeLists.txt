@@ -23,6 +23,5 @@ ADD_SUBDIRECTORY(SimpleApp)
 
 if(BUILD_WRAP)
   ADD_SUBDIRECTORY(mafInterpreter)
-  ADD_SUBDIRECTORY(HyperModelMonitor)
 endif(BUILD_WRAP)
 
