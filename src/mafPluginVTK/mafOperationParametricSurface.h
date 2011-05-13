@@ -71,7 +71,7 @@ public slots:
     void on_spherePhiRes_valueChanged(double d);
 
     /// Set sphere theta resolution.
-    void on_sphereTheRes_valueChanged(double d);
+    void on_sphereThetaRes_valueChanged(double d);
 
     /// Set cube X length.
     void on_cubeXLength_valueChanged(double d);
@@ -107,7 +107,7 @@ public slots:
     void on_ellipsoidPhiRes_valueChanged(double d);
 
     /// Set ellipsoid theta resolution.
-    void on_ellipsoidTheRes_valueChanged(double d);
+    void on_ellipsoidThetaRes_valueChanged(double d);
 
     /// Set ellipsoid X length.
     void on_ellipsoidXLength_valueChanged(double d);

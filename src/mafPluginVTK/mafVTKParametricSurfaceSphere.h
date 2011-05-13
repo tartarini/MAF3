@@ -30,7 +30,7 @@ class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceSphere : public mafPlugin
     Q_OBJECT
     Q_PROPERTY(double sphereRadius READ sphereRadius WRITE setSphereRadius)
     Q_PROPERTY(double spherePhiRes READ spherePhiResolution WRITE setSpherePhiResolution)
-    Q_PROPERTY(double sphereTheRes READ sphereThetaResolution WRITE setSphereThetaResolution)
+    Q_PROPERTY(double sphereThetaRes READ sphereThetaResolution WRITE setSphereThetaResolution)
     /// typedef macro.
     mafSuperclassMacro(mafPluginVTK::mafVTKParametricSurface);
 
@@ -55,7 +55,7 @@ private slots:
     void setSpherePhiResolution(double spherePhiRes);
 
     /// Set the Theta resolution for the parametric sphere.
-    void setSphereThetaResolution(double sphereTheRes);
+    void setSphereThetaResolution(double sphereThetaRes);
 
     /// Get the radius for the parametric sphere.
     double sphereRadius();
@@ -72,7 +72,7 @@ private:
 
     double m_SphereRadius; ///< Radius of the sphere;
     double m_SpherePhiRes; ///< Sphere Phi resolution;
-    double m_SphereTheRes; ///< Sphere Phi resolution;
+    double m_SphereThetaRes; ///< Sphere Phi resolution;
 };
 
 /////////////////////////////////////////////////////////////
@@ -87,8 +87,8 @@ inline void mafVTKParametricSurfaceSphere::setSpherePhiResolution(double sphereP
     m_SpherePhiRes = spherePhiRes;
 }
 
-inline void mafVTKParametricSurfaceSphere::setSphereThetaResolution(double sphereTheRes){
-    m_SphereTheRes = sphereTheRes;
+inline void mafVTKParametricSurfaceSphere::setSphereThetaResolution(double sphereThetaRes){
+    m_SphereThetaRes = sphereThetaRes;
 }
 
 inline double mafVTKParametricSurfaceSphere::sphereRadius(){
@@ -100,7 +100,7 @@ inline double mafVTKParametricSurfaceSphere::spherePhiResolution(){
 }
 
 inline double mafVTKParametricSurfaceSphere::sphereThetaResolution(){
-    return m_SphereTheRes;
+    return m_SphereThetaRes;
 }
 
 }

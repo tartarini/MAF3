@@ -24,7 +24,7 @@ using namespace mafPluginVTK;
 mafVTKParametricSurfaceSphere::mafVTKParametricSurfaceSphere(const QString code_location) : mafPluginVTK::mafVTKParametricSurface(code_location), m_SphereSource(NULL) {
     m_SphereRadius = 1.0;
     m_SpherePhiRes = 20;
-    m_SphereTheRes = 20;
+    m_SphereThetaRes = 20;
 
     m_SphereSource = vtkSphereSource::New();
     m_Output = m_SphereSource->GetOutputPort();
@@ -39,7 +39,7 @@ void mafVTKParametricSurfaceSphere::updateSurface(){
     //Set parameters to surface.
     m_SphereSource->SetCenter(m_Center);
     m_SphereSource->SetPhiResolution(m_SpherePhiRes);
-    m_SphereSource->SetThetaResolution(m_SphereTheRes);
+    m_SphereSource->SetThetaResolution(m_SphereThetaRes);
     m_SphereSource->SetRadius(m_SphereRadius);
     m_SphereSource->Update();
 }

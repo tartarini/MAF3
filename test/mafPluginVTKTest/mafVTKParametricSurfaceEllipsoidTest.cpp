@@ -121,7 +121,7 @@ void mafVTKParametricSurfaceEllipsoidTest::SetGetTest() {
 
     //Change parameters of the ellipsoid.
     m_ParametricEllipsoid->setCenter(newCenter);
-    m_ParametricEllipsoid->setProperty("ellipsoidTheRes", 10);
+    m_ParametricEllipsoid->setProperty("ellipsoidThetaRes", 10);
     m_ParametricEllipsoid->setProperty("ellipsoidPhiRes", 10);
     m_ParametricEllipsoid->setProperty("ellipsoidXLength", 5);
     m_ParametricEllipsoid->setProperty("ellipsoidYLength", 10);
@@ -130,7 +130,7 @@ void mafVTKParametricSurfaceEllipsoidTest::SetGetTest() {
 
     //Check if parameters had changed.
     QCOMPARE(m_ParametricEllipsoid->property("ellipsoidPhiRes").toDouble(), 10.0);
-    QCOMPARE(m_ParametricEllipsoid->property("ellipsoidTheRes").toDouble(), 10.0);
+    QCOMPARE(m_ParametricEllipsoid->property("ellipsoidThetaRes").toDouble(), 10.0);
     QCOMPARE(m_ParametricEllipsoid->property("ellipsoidXLength").toDouble(), 5.0);
     QCOMPARE(m_ParametricEllipsoid->property("ellipsoidYLength").toDouble(), 10.0);
     QCOMPARE(m_ParametricEllipsoid->property("ellipsoidZLength").toDouble(), 15.0);

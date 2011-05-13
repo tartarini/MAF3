@@ -165,8 +165,8 @@ void mafOperationParametricSurface::on_spherePhiRes_valueChanged(double d) {
     this->updateParametricSurface();
 }
 
-void mafOperationParametricSurface::on_sphereTheRes_valueChanged(double d) {
-    m_ParametricSphere->setProperty("sphereTheRes", d);
+void mafOperationParametricSurface::on_sphereThetaRes_valueChanged(double d) {
+    m_ParametricSphere->setProperty("sphereThetaRes", d);
     m_ParametricSphere->updateSurface();
     this->updateParametricSurface();
 }
@@ -237,8 +237,8 @@ void mafOperationParametricSurface::on_ellipsoidPhiRes_valueChanged(double d) {
     this->updateParametricSurface();
 }
 
-void mafOperationParametricSurface::on_ellipsoidTheRes_valueChanged(double d) {
-    m_ParametricEllipsoid->setProperty("ellipsoidTheRes", d);
+void mafOperationParametricSurface::on_ellipsoidThetaRes_valueChanged(double d) {
+    m_ParametricEllipsoid->setProperty("ellipsoidThetaRes", d);
     m_ParametricEllipsoid->updateSurface();
     this->updateParametricSurface();
 }
