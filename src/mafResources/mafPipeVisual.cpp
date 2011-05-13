@@ -24,15 +24,9 @@ mafPipeVisual::mafPipeVisual(const QString code_location) : mafPipe(code_locatio
 }
 
 mafPipeVisual::~mafPipeVisual() {
-    mafEventBusManager::instance()->removeSignal(this, "maf.local.resources.interaction.vmePick");
 }
 
 void mafPipeVisual::initializeConnections() {
-    // Register API signals.
-    mafRegisterLocalSignal("maf.local.resources.interaction.vmePick", this, "vmePickSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)");
-
-    // Register private callbacks.
-    mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)");
 }
 
 void mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafProxyInterface *actor, QEvent * e) {
@@ -81,5 +75,6 @@ void mafPipeVisual::setVisibility(bool visible) {
 }
 
 void mafPipeVisual::setGraphicObject(QObject *graphicObject) {
-    Q_UNUSED(graphicObject)
+    m_GraphicObject = graphicObject;
+    connect(m_GraphicObject, SIGNAL(vmePickSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)),  this, SLOT(vmePick(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)) );
 }
