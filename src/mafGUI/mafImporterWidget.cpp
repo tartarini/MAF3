@@ -43,7 +43,7 @@ void mafImporterWidget::setOperationGUI(QWidget *gui) {
 void mafImporterWidget::on_browseFileButton_clicked() {
     QString w = m_Operation->property("wildcard").toString();
     if(w.isEmpty()) {
-        w = mafTr("All Files (*);");
+        w = mafTr("All Files (*)");
     }
         
     //open dialog for selecting the name of the session
@@ -52,10 +52,12 @@ void mafImporterWidget::on_browseFileButton_clicked() {
 //        options |= QFileDialog::DontUseNativeDialog;
     QString selectedFilter;
     QStringList files = QFileDialog::getOpenFileNames(
-                                                      NULL, mafTr("Import Data"),
-                                                      "",
+                                                      NULL, 
+                                                      mafTr("Import Data"),
+                                                      ".",
                                                       w,
                                                       &selectedFilter,
                                                       options);
     m_Operation->setProperty("filename", files[0]);
+    ui->filePathLineEdit->setText(files[0]);
 }
