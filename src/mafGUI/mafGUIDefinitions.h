@@ -39,8 +39,6 @@ struct mafHighlightingRule {
 
 typedef enum {
     mafGUILoadedTypeOperation,
-    mafGUILoadedTypeImporter,
-    mafGUILoadedTypeExporter,
     mafGUILoadedTypeView,
     mafGUILoadedTypeVisualPipe,
     mafGUILoadedTypeVme
