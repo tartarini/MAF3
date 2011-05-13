@@ -56,10 +56,6 @@ public:
 
     /// Return the flag to activate immediate rendering mode.
     int immediateRendering();
-    
-    /// Pass vtkRenderer to the visual pipe
-    /*virtual*/ void setGraphicObject(QObject *graphicObject);
-
 
 public slots:
     /// Allow to execute and update the pipeline when something change.

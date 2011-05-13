@@ -50,6 +50,10 @@ bool mafPipeVisualVTKSurface::acceptObject(mafCore::mafObjectBase *obj) {
 }
 
 void mafPipeVisualVTKSurface::createPipe() {
+    mafVTKWidget* widget = qobject_cast<mafVTKWidget*>(graphicObject());
+    vtkRendererCollection *rc = widget->GetRenderWindow()->GetRenderers();
+    m_Renderer = rc->GetFirstRenderer();
+    
     m_Mapper = vtkPolyDataMapper::New();
     m_Actor = vtkActor::New();
     m_Actor.setDestructionFunction(&vtkActor::Delete);
@@ -76,7 +80,7 @@ void mafPipeVisualVTKSurface::setVisibility(bool visible) {
     Superclass::setVisibility(visible);
     m_Actor->SetVisibility(visible);
     
-    if (m_Renderer == NULL) {
+    if (graphicObject() == NULL) {
         return;
     }
     if(visible) {
@@ -100,13 +104,3 @@ void mafPipeVisualVTKSurface::setImmediateRendering (bool immediateRendering) {
     }
 }
 
-void mafPipeVisualVTKSurface::setGraphicObject(QObject *graphicObject) {
-    if(graphicObject == NULL){
-        m_Renderer = NULL;
-        return;
-    }
-    
-    mafVTKWidget* widget = qobject_cast<mafVTKWidget*>(graphicObject);
-    vtkRendererCollection *rc = widget->GetRenderWindow()->GetRenderers();
-    m_Renderer = rc->GetFirstRenderer();
-}
