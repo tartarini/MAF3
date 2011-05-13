@@ -249,10 +249,10 @@ void mafSerializationExtDataTest::mafSerializationVTKSaveTest() {
   argList.append(mafEventArgument(QString, codec));
   mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
 
-  mafMemento *m = m_Vme->mafResource::createMemento();
-  mafMementoVME *mementoVME = new mafMementoVME(m_Vme, mafCodeLocation);
+  //mafMemento *m = m_Vme->mafResource::createMemento();
+  mafMementoVME *mementoVME = (mafMementoVME *)m_Vme->createMemento();
   QVERIFY(mementoVME != NULL);
-  m->setParent(mementoVME);
+  //m->setParent(mementoVME);
 
   encodeType = "XML";
   argList.clear();
