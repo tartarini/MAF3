@@ -19,7 +19,8 @@
 #include "mafTreeItemDelegate.h"
 #include "mafTreeItemSceneNodeDelegate.h"
 
-#include <mafOperationWidget.h>
+#include <mafImporterWidget.h>
+#include "mafOperationWidget.h"
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -556,11 +557,21 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
     m_OperationWidget->setOperation(operation);
     operation->setObjectName(m_OperationWidget->operationName());
 
+    
     if(guiFilename.isEmpty()) {
         return;
     }
-    m_GUILoadedType = mafGUILoadedTypeOperation;
+    
+    QString type = operation->metaObject()->className();
 
+    if(type.contains("mafImporter")) {
+        m_GUILoadedType = mafGUILoadedTypeImporter;
+    } else if(type.contains("mafExporter")) {
+        m_GUILoadedType = mafGUILoadedTypeExporter;
+    } else {
+        m_GUILoadedType = mafGUILoadedTypeOperation;
+    }
+    
     // Ask the UI Loader to load the operation's GUI.
     m_UILoader->uiLoad(guiFilename);
 }
@@ -624,6 +635,12 @@ void mafGUIManager::uiLoaded(mafCore::mafProxyInterface *guiWidget) {
         case mafGUILoadedTypeOperation:
             m_OperationWidget->setOperationGUI(widget);
         break;
+        case mafGUILoadedTypeImporter:
+            m_OperationWidget->setOperationGUI(widget);
+            break;
+        case mafGUILoadedTypeExporter:
+            m_OperationWidget->setOperationGUI(widget);
+            break;
         case mafGUILoadedTypeView:
         break;
         case mafGUILoadedTypeVisualPipe:
@@ -738,4 +755,40 @@ void mafGUIManager::updateRecentFileActions() {
 
 QString mafGUIManager::strippedName(const QString &fullFileName) {
     return QFileInfo(fullFileName).fileName();
+}
+
+void mafGUIManager::save() {
+    //open dialog for selecting the name of the session
+    QFileDialog::Options options;
+//    if (!native->isChecked())
+//        options |= QFileDialog::DontUseNativeDialog;
+    QString selectedFilter;
+    QString fileName = QFileDialog::getSaveFileName(NULL,
+                                                    mafTr("Save Session"),
+                                                    mafTr(""),
+                                                    mafTr("All Files (*);;Text Files (*.xmsf)"),
+                                                    &selectedFilter,
+                                                    options);
+//    if (!fileName.isEmpty())
+//        saveFileNameLabel->setText(fileName);
+    qDebug() << fileName;
+}
+
+void mafGUIManager::open() {
+    //open dialog for selecting the name of the session
+    QFileDialog::Options options;
+//    if (!native->isChecked())
+//        options |= QFileDialog::DontUseNativeDialog;
+    QString selectedFilter;
+    QStringList files = QFileDialog::getOpenFileNames(
+                                                      NULL, tr("QFileDialog::getOpenFileNames()"),
+                                                      "",
+                                                      mafTr("All Files (*);;Text Files (*.xmsf)"),
+                                                      &selectedFilter,
+                                                      options);
+//    if (files.count()) {
+//        openFilesPath = files[0];
+//        openFileNamesLabel->setText(QString("[%1]").arg(files.join(", ")));
+//    }
+    qDebug() << files[0];
 }

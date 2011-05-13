@@ -19,6 +19,7 @@
 #include <mafLogic.h>
 
 // Class forwarding list
+class mafImporterWidget;
 class mafOperationWidget;
 
 namespace mafGUI {
@@ -49,6 +50,7 @@ class mafGUIApplicationSettingsPage;
  - maf.local.gui.action.paste
  - maf.local.gui.action.about
 
+ @@@@@ TODO
  There is also a signal related to the notification of path selection through a dialog.
  - maf.local.gui.pathSelected
  */
@@ -136,6 +138,7 @@ private:
     mafGUIApplicationSettingsDialog *m_SettingsDialog; ///< Settings dialog
     mafLoggerWidget *m_Logger; ///< Logger
 
+    mafImporterWidget *m_ImporterWidget; ///< 
     mafOperationWidget *m_OperationWidget; ///< Widget on whith will be visible the operation's GUI.
 
     QMainWindow     *m_MainWindow;  ///< Main window associated to the application.
@@ -202,6 +205,12 @@ private slots:
 
     /// Slot called when the UI is loaded from the mafUILoaderQt.
     void uiLoaded(mafCore::mafProxyInterface *guiWidget);
+    
+    /// save the current working session
+    void save();
+    
+    /// open a working session
+    void open();
 
 };
 

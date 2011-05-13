@@ -2,14 +2,14 @@
   <Menu title="File" parent="">
 	<Action title="New" icon=":/images/new.png" tip="Create a new file." checkable="0" checked="0" slot="newWorkingSession()" topic=""></Action>
 	<Separator></Separator>
-	<Action title="Open" icon=":/images/open.png" tip="Open an existing file." checkable="0" checked="0" slot="" topic=""></Action>
+	<Action title="Open" icon=":/images/open.png" tip="Open an existing file." checkable="0" checked="0" slot="open()" topic=""></Action>
 	<Action title="Collaborate" icon=":/images/collaborate.png" tip="Stay connected with yours gtalk contacts." checkable="1" checked="0" slot="" topic=""></Action>
 	<Separator></Separator>
 	<Menu title="Import" parent="File"></Menu>
 	<Menu title="Export" parent="File"></Menu>
 	<Separator></Separator>
-	<Action title="Save" icon=":/images/save.png" tip="Save your data." checkable="0" checked="0" slot="" topic=""></Action>
-	<Action title="Save As" icon=":/images/save.png" tip="Save your data with new name." checkable="0" checked="0" slot="" topic=""></Action>
+	<Action title="Save" icon=":/images/save.png" tip="Save your data." checkable="0" checked="0" slot="save()" topic=""></Action>
+	<Action title="Save As" icon=":/images/save.png" tip="Save your data with new name." checkable="0" checked="0" slot="save()" topic=""></Action>
 	<Separator></Separator>
 	<Menu title="Open Recent" parent="File"></Menu>
 	<Separator></Separator>

@@ -15,6 +15,7 @@
 // Includes list
 #include "mafCoreDefinitions.h"
 #include "mafMemento.h"
+#include "mafHierarchy.h"
 
 namespace mafCore {
 
@@ -43,6 +44,10 @@ protected:
 
 private:
     friend class mafHierarchy;
+    
+    mafHierarchyPointer m_Hierarchy;
+    /// recursive function for hierarchy traversal.
+    void traverseTree();
 };
 
 } //mafResources
