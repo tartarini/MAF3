@@ -19,7 +19,6 @@
 #include "mafTreeItemDelegate.h"
 #include "mafTreeItemSceneNodeDelegate.h"
 
-#include <mafImporterWidget.h>
 #include "mafOperationWidget.h"
 
 using namespace mafCore;
@@ -48,7 +47,7 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     mafRegisterLocalCallback("maf.local.resources.view.noneViews", this, "viewDestroyed()");
 
     m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
-    connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*)), this, SLOT(uiLoaded(mafCore::mafProxyInterface*)));
+    connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*)), this, SLOT(showGui(mafCore::mafProxyInterface*)));
 }
 
 mafGUIManager::~mafGUIManager() {
@@ -557,19 +556,11 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
     m_OperationWidget->setOperation(operation);
     operation->setObjectName(m_OperationWidget->operationName());
 
+    m_GUILoadedType = mafGUILoadedTypeOperation;
     
     if(guiFilename.isEmpty()) {
+        showGui(NULL);
         return;
-    }
-    
-    QString type = operation->metaObject()->className();
-
-    if(type.contains("mafImporter")) {
-        m_GUILoadedType = mafGUILoadedTypeImporter;
-    } else if(type.contains("mafExporter")) {
-        m_GUILoadedType = mafGUILoadedTypeExporter;
-    } else {
-        m_GUILoadedType = mafGUILoadedTypeOperation;
     }
     
     // Ask the UI Loader to load the operation's GUI.
@@ -626,21 +617,19 @@ mafTextEditWidget *mafGUIManager::createLogWidget(QWidget *parent) {
 }
 
 
-void mafGUIManager::uiLoaded(mafCore::mafProxyInterface *guiWidget) {
+void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
     // Get the widget from the container
     mafProxy<QWidget> *w = mafProxyPointerTypeCast(QWidget, guiWidget);
-    QWidget *widget = *w;
+    QWidget *widget = NULL;
+    
+    if(w != NULL) {
+        widget = *w;
+    }
 
     switch(m_GUILoadedType) {
         case mafGUILoadedTypeOperation:
             m_OperationWidget->setOperationGUI(widget);
         break;
-        case mafGUILoadedTypeImporter:
-            m_OperationWidget->setOperationGUI(widget);
-            break;
-        case mafGUILoadedTypeExporter:
-            m_OperationWidget->setOperationGUI(widget);
-            break;
         case mafGUILoadedTypeView:
         break;
         case mafGUILoadedTypeVisualPipe:

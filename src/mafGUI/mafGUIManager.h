@@ -19,7 +19,6 @@
 #include <mafLogic.h>
 
 // Class forwarding list
-class mafImporterWidget;
 class mafOperationWidget;
 
 namespace mafGUI {
@@ -138,7 +137,6 @@ private:
     mafGUIApplicationSettingsDialog *m_SettingsDialog; ///< Settings dialog
     mafLoggerWidget *m_Logger; ///< Logger
 
-    mafImporterWidget *m_ImporterWidget; ///< 
     mafOperationWidget *m_OperationWidget; ///< Widget on whith will be visible the operation's GUI.
 
     QMainWindow     *m_MainWindow;  ///< Main window associated to the application.
@@ -203,8 +201,8 @@ private slots:
     /// Slot needed to intercept the started operation and ask it for the GUI filename.
     void operationDidStart(mafCore::mafObjectBase *operation);
 
-    /// Slot called when the UI is loaded from the mafUILoaderQt.
-    void uiLoaded(mafCore::mafProxyInterface *guiWidget);
+    /// Slot called when the UI is loaded from the mafUILoaderQt, and the gui is shown.
+    void showGui(mafCore::mafProxyInterface *guiWidget);
     
     /// save the current working session
     void save();
