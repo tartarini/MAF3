@@ -18,6 +18,7 @@ using namespace mafResources;
 
 mafImporterVTK::mafImporterVTK(const QString code_location) : mafImporter(code_location) {
     m_Reader = vtkDataSetReader::New();
+    setProperty("wildcard", mafTr("VTK Files (*.vtk)"));
 }
 
 mafImporterVTK::~mafImporterVTK() {
