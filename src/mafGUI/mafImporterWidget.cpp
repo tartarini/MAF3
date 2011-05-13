@@ -15,21 +15,47 @@ mafImporterWidget::~mafImporterWidget()
     delete ui;
 }
 
+void mafImporterWidget::setOperation(mafCore::mafObjectBase *op) {
+    m_Operation = op;
+}
+
+
+
+void mafImporterWidget::setOperationGUI(QWidget *gui) {
+    if(gui != NULL) {
+        // Then connect automatically the signals of the GUI widgets to the Operation's slots.
+        m_Operation->connectObjectSlotsByName((QObject *)gui);
+        // and initialize the widgets value with those contained into the operation's properties.
+        m_Operation->initializeUI((QObject *)gui);
+        // do the same thing for all the the operations'children
+        QObjectList children = m_Operation->children();
+        foreach(QObject *child, children) {
+            mafCore::mafObjectBase *obj = qobject_cast<mafCore::mafObjectBase *>(child);
+            if(obj) {
+                obj->connectObjectSlotsByName((QObject *)gui);
+                obj->initializeUI((QObject *)gui);
+            }
+        }
+    }
+}
+
+
 void mafImporterWidget::on_browseFileButton_clicked() {
-     //open dialog for selecting the name of the session
+    QString w = m_Operation->property("wildcard").toString();
+    if(w.isEmpty()) {
+        w = mafTr("All Files (*);");
+    }
+        
+    //open dialog for selecting the name of the session
     QFileDialog::Options options;
 //    if (!native->isChecked())
 //        options |= QFileDialog::DontUseNativeDialog;
     QString selectedFilter;
     QStringList files = QFileDialog::getOpenFileNames(
-                                                      NULL, tr("QFileDialog::getOpenFileNames()"),
+                                                      NULL, mafTr("Import Data"),
                                                       "",
-                                                      mafTr("All Files (*);;Text Files (*.xmsf)"),
+                                                      w,
                                                       &selectedFilter,
                                                       options);
-//    if (files.count()) {
-//        openFilesPath = files[0];
-//        openFileNamesLabel->setText(QString("[%1]").arg(files.join(", ")));
-//    }
-    qDebug() << files[0];
+    m_Operation->setProperty("filename", files[0]);
 }
