@@ -90,19 +90,7 @@ void mafOperationParametricSurface::initializeParametricSurfaces(){
 }
 
 bool mafOperationParametricSurface::acceptObject(mafCore::mafObjectBase *obj) {
-    if(obj == NULL) {
-        return false;
-    }
-    bool result = false;
-    QString ct(obj->metaObject()->className());
-    result = ct == "mafResources::mafVME";
-
-    if(ct == "mafResources::mafSceneNode"){
-        mafSceneNode *node = qobject_cast<mafSceneNode *>(obj);
-        QString type = node->vme()->metaObject()->className();
-        result = type =="mafResources::mafVME";
-    }
-    return result;
+    return obj != NULL;
 }
 
 int mafOperationParametricSurface::parametricSurfaceType() {
