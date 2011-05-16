@@ -186,7 +186,7 @@ private slots:
     void viewDestroyed();
 
     /// Allow to send a vme selection request when an item has been clicked into the mafTreWidget.
-    void selectVME(QModelIndex);
+    void selectVME(QModelIndex index);
 
     /// Allows to ask to open the selected recent file.
     void openRecentFile();
@@ -198,6 +198,11 @@ private slots:
     /** This method will update all the operation's menu items according to the new selected VME.*/
     void updateMenuForSelectedVme(mafCore::mafObjectBase *vme);
 
+    /// Called when a VME has been selected.
+    /** This method will update all tree widget for the selected VME */
+    void updateTreeForSelectedVme(mafCore::mafObjectBase *vme);
+
+    
     /// Slot needed to intercept the started operation and ask it for the GUI filename.
     void operationDidStart(mafCore::mafObjectBase *operation);
 
@@ -209,6 +214,10 @@ private slots:
     
     /// open a working session
     void open();
+
+private:
+    /// return the data object inside an item in order to retrieve the data object and not the visual one (for example scenenode).
+    QObject *dataObject(QModelIndex index);
 
 };
 

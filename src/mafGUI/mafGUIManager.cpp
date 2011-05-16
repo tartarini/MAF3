@@ -21,6 +21,8 @@
 
 #include "mafOperationWidget.h"
 
+#include <mafObjectBase.h>
+
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafGUI;
@@ -39,6 +41,8 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
 
     mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)")
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateMenuForSelectedVme(mafCore::mafObjectBase *)")
+    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateTreeForSelectedVme(mafCore::mafObjectBase *)")
+
     // OperationManager's callback
     mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
     
@@ -384,6 +388,18 @@ void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
     }
 }
 
+void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
+    if(m_TreeWidget) {
+        QModelIndex index = m_Model->indexFromData(vme);
+        
+        QItemSelectionModel *sel = m_TreeWidget->selectionModel();
+        if(sel) {
+            sel->clearSelection();
+            sel->setCurrentIndex(index, QItemSelectionModel::Select);
+        }
+    }
+}
+
 void mafGUIManager::registerDefaultEvents() {
     mafIdProvider *provider = mafIdProvider::instance();
     provider->createNewId("maf.local.gui.action.new");
@@ -697,17 +713,11 @@ void mafGUIManager::viewDestroyed() { //ALL THE VIEWS ARE DESTROYED
 }
 
 void mafGUIManager::selectVME(QModelIndex index) {
-    QTreeView *tree = (QTreeView *)QObject::sender();
-    //m_Model = (mafTreeModel *)tree->model();
-    mafTreeItem *item = (mafTreeItem *)m_Model->itemFromIndex(index);
-    QObject *obj = item->data();
-    QVariant sel(true);
-    obj->setProperty("selected", sel);
+    QObject *obj = dataObject(index);
 
-    // Notify the item selection.
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase*, qobject_cast<mafCore::mafObjectBase *>(obj)));
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+    mafEventBus::mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, qobject_cast<mafCore::mafObjectBase *>(obj)));
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventBus::mafEventTypeLocal, &argList);
 }
 
 void mafGUIManager::chooseFileDialog(const QString title, const QString start_dir, const QString wildcard) {
@@ -780,4 +790,20 @@ void mafGUIManager::open() {
 //        openFileNamesLabel->setText(QString("[%1]").arg(files.join(", ")));
 //    }
     qDebug() << files[0];
+}
+
+QObject *mafGUIManager::dataObject(QModelIndex index) {
+    QTreeView *tree = (QTreeView *)QObject::sender();
+    mafTreeItem *item = (mafTreeItem *)m_Model->itemFromIndex(index);
+    QObject *obj = item->data();
+    
+    QString objName = "mafResources::mafVME";
+    if (objName.compare(obj->metaObject()->className())  != 0) {
+        QObject * vme;
+        QGenericReturnArgument ret_val = mafEventReturnArgument(QObject *, vme);
+        QMetaObject::invokeMethod(obj, "dataObject", Qt::AutoConnection, ret_val);
+        obj = vme;
+    }
+    
+    return obj;
 }
