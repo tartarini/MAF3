@@ -32,8 +32,6 @@ namespace mafSerialization {
  - maf.local.serialization.save
  - maf.local.serialization.export
  - maf.local.serialization.import
- - maf.local.serialization.saveExternalData
- - maf.local.serialization.loadExternalData
  - maf.local.serialization.extDataImported
  - maf.local.serialization.mementoLoaded
  related to 'load' and 'save' slots and 'mementoLoaded' signal.
@@ -55,22 +53,13 @@ signals:
     void save(mafCore::mafMemento *memento, const QString &url, const QString &encode_type = "RAW");
 
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
-    void load(const QString &url, const QString &encode_type);
+    mafCore::mafMemento *load(const QString &url, const QString &encode_type);
 
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
     void exportData(mafCore::mafProxyInterface *externalData, const QString &url, const QString &encode_type = "RAW");
 
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
     mafCore::mafProxyInterface * importData(const QString &url, const QString &encode_type);
-
-    /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
-    void saveExtData(char *externalDataString, const QString &url, int stringSize);
-
-    /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
-    QByteArray loadExtData(const QString &url);
-
-    /// Alert all the observers that a new memento has been loaded from the media.
-    void mementoLoaded(mafCore::mafMemento *m);
 
     /// Alert all the observers that a new external data has been loaded from the media.
     void extDataImported(mafCore::mafProxyInterface *data);
@@ -93,19 +82,13 @@ private slots:
     that allows to read data from the physical media. Then the manager create the codec necessary to decode the content read
     and reconstruct the memento hierarchy. When the memento has been created, an event is launched to alert the menegers
     that the new memento is live and has to be reconstructed the correct resource associated to it.*/
-    void loadMemento(const QString &url, const QString &encode_type);
+    mafCore::mafMemento *loadMemento(const QString &url, const QString &encode_type);
 
     /// Manage the export for the given object.
     void exportExternalData(mafCore::mafProxyInterface *externalData, const QString &url, const QString &encode_type);
 
     /// Manage the import of an external data from the given URL and decode it according to the given encoding type.
     mafCore::mafProxyInterface * importExternalData(const QString &url, const QString &encode_type);
-
-    /// Manage the load of an external data from the given URL and decode it according to the given encoding type.
-    QByteArray loadExternalData(const QString &fileName);
-
-    /// Manage the save for the given object.
-    void saveExternalData(char *externalDataString, const QString &url, int stringSize);
 
     /// Return the list of encoding type (RAW, VTK, STL...) associated to the given memento.
     mafEncodingList encodingTypeList(const mafCore::mafMemento *memento = NULL);
@@ -131,9 +114,6 @@ private:
     mafEncodingHash m_EncodingHash; ///< Hash table that store the binding between objetc types and related encoding types.
     mafCodecHash m_CodecHash; ///< Hash table that store the binding between encoding types (eg. "VTK") and related codec types (eg. mafCodecVTK).
     mafSerializerHash m_SerializerHash; ///< Hash table that store the binding between URL schema and serializer type.
-
-    QString m_MementoLoadedId; ///< ID related to the signal 'maf.local.serialization.mementoLoaded' invoked when new memento has been created during load operation.
-
     QString m_ExtDataImportedId; ///< ID related to the signal 'maf.local.serialization.extDataImported' invoked when new external data has been created during load operation.
 };
 
