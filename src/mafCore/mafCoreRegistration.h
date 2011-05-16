@@ -23,6 +23,7 @@
 #include "mafMonitorRAM.h"
 #include "mafMonitorHardDisk.h"
 #include "mafHierarchy.h"
+#include "mafMementoHierarchy.h"
 
 #define mafRegisterObjectAndAcceptBind(maf_object_type) \
     mafRegisterObject(maf_object_type);\
@@ -55,6 +56,7 @@ class MAFCORESHARED_EXPORT mafCoreRegistration {
         mafRegisterObject(mafCore::mafMonitorRAM);
         mafRegisterObject(mafCore::mafMonitorHardDisk);
         mafRegisterObject(mafCore::mafHierarchy);
+        mafRegisterObject(mafCore::mafMementoHierarchy);
     }
 
     /// Register all the concrete objects that can be instantiated by the mafObjectFactory.
@@ -70,6 +72,7 @@ class MAFCORESHARED_EXPORT mafCoreRegistration {
         mafUnregisterObject(mafCore::mafMonitorRAM);
         mafUnregisterObject(mafCore::mafMonitorHardDisk);
         mafUnregisterObject(mafCore::mafHierarchy);
+        mafUnregisterObject(mafCore::mafMementoHierarchy);
     }
 
     /// Register bind function for the acceptObject static method.
