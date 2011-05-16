@@ -52,7 +52,7 @@ typedef QMap<double, mafDataSet *> mafDataSetMap;
 typedef QList<mafVME *> mafVMEList;
 
 /** Structure representing the information about a plug-in library.*/
-struct MAFRESOURCESSHARED_EXPORT mafPluginInfo {
+struct mafPluginInfo {
     float m_Version;                ///< Plug-in Version
     QString m_PluginName;    ///< Plug-in name
     QString m_Author;           ///< Plug-in author
