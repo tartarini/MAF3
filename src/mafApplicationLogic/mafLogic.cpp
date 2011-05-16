@@ -122,8 +122,6 @@ mafCore::mafHierarchy *mafLogic::requestNewHierarchy() {
     ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
     
-    root->setSelected(true);
-    
     return m_Hierarchy;
 }
 
