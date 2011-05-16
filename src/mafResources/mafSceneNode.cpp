@@ -138,3 +138,9 @@ QString mafSceneNode::dataHash() const {
     return m_VME->objectHash();
 }
 
+QObject *mafSceneNode::dataObject() {
+    QObject *obj = m_VME;
+    return obj;
+}
+
+

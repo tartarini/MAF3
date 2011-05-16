@@ -49,7 +49,7 @@ public:
 
     /// Return the inner visual pipe.
     mafPipeVisual *visualPipe() const;
-
+    
     /// Return the inner vme.
     mafVME *vme() const;
 
@@ -72,6 +72,8 @@ public:
     unsigned int visibilityPolicy() const;
 
 public slots:
+    QObject *dataObject();
+    
     /// Set the visibility of its rendering scene.
     virtual void setVisibility(bool visible);
 
