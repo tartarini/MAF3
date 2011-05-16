@@ -11,6 +11,7 @@
 
 #include "mafPipeVisual.h"
 #include "mafVME.h"
+#include "mafInteractionManager.h"
 #include <mafProxyInterface.h>
 #include <mafEventBusManager.h>
 
@@ -44,31 +45,11 @@ void mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::m
 }
 
 void mafPipeVisual::setInput(mafVME *vme) { 
-    if (m_InputList->count() != 0) {
-        if(!m_InputList->at(0)->isEqual(vme)) {
-            disconnect(this, SIGNAL(vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase* )), (QObject*)m_InputList->at(0)->interactor(), SLOT(vmePicked(double *, unsigned long, mafCore::mafObjectBase *)));
-            disconnect(m_InputList->at(0), SIGNAL(interactorDetach()), this, SLOT(interactorDetach()));
-            disconnect(m_InputList->at(0), SIGNAL(interactorAttached()), this, SLOT(interactorAttached()));
-        } else {
-            return;
-        }
-    }
-    connect(this, SIGNAL(vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase* )), (QObject*)vme->interactor(), SLOT(vmePicked(double *, unsigned long, mafCore::mafObjectBase *)));
-    connect(vme, SIGNAL(interactorDetach()), this, SLOT(interactorDetach()));
-    connect(vme, SIGNAL(interactorAttached()), this, SLOT(interactorAttached()));
+    //connect between visual pipe and interaction manager (vme Picked signal)
+    connect(this, SIGNAL(vmePickedSignal(double *, unsigned long, mafVME* )), mafInteractionManager::instance(), SLOT(vmePicked(double *, unsigned long, mafVME *)));
+
     Superclass::setInput(vme);
 }
-
-void mafPipeVisual::interactorDetach() {
-    mafVME *vme = (mafVME *)QObject::sender();
-    disconnect(this, SIGNAL(vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase* )), (QObject*)vme->interactor(), SLOT(vmePicked(double *, unsigned long, mafCore::mafObjectBase *)));
-}
-
-void mafPipeVisual::interactorAttached() {
-    mafVME *vme = (mafVME *)QObject::sender();
-    connect(this, SIGNAL(vmePickedSignal(double *, unsigned long, mafCore::mafObjectBase* )), (QObject*)vme->interactor(), SLOT(vmePicked(double *, unsigned long, mafCore::mafObjectBase *)));
-}
-
 
 void mafPipeVisual::setVisibility(bool visible) {
     m_Visibility = visible;
@@ -76,5 +57,6 @@ void mafPipeVisual::setVisibility(bool visible) {
 
 void mafPipeVisual::setGraphicObject(QObject *graphicObject) {
     m_GraphicObject = graphicObject;
+    //connect between render object coming from external library amd visual pipe (vme Pick signal)
     connect(m_GraphicObject, SIGNAL(vmePickSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)),  this, SLOT(vmePick(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)) );
 }

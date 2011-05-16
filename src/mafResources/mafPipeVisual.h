@@ -55,22 +55,16 @@ public:
 signals:
 
     /// signal emitted when the pick already happened. The information will be forwarded to the Interaction Manager.
-    void vmePickedSignal(double *pickPos, unsigned long modifiers , mafCore::mafObjectBase *vme);
+    void vmePickedSignal(double *pickPos, unsigned long modifiers , mafVME *vme);
 
 public slots:
     /// Set the visibility of its rendering scene.
     virtual void setVisibility(bool visible);
 
 private slots:
-    /// Disconnect old interactor.
-    void interactorDetach();
-    
-    /// Connect new interactor.
-    void interactorAttached();
-    
+
     /// Forward the vmePick event if the pick hits the current visualized VME.
     void vmePick(double *pickPos, unsigned long, mafCore::mafProxyInterface *actor, QEvent *e);
-    
 
 private:
     /// Register signals and slots connections with the event bus.
