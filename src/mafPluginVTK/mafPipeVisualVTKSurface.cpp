@@ -27,7 +27,7 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace std;
 
-mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : mafPipeVisual(code_location), m_Mapper(NULL), m_ScalarVisibility(0), m_ImmediateRendering(0), m_Renderer(NULL) {
+mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : mafPipeVisual(code_location), m_Mapper(NULL), m_ScalarVisibility(false), m_ImmediateRendering(false), m_Renderer(NULL) {
 }
 
 mafPipeVisualVTKSurface::~mafPipeVisualVTKSurface() {
@@ -93,14 +93,9 @@ void mafPipeVisualVTKSurface::setVisibility(bool visible) {
 
 
 void mafPipeVisualVTKSurface::setScalarVisibility(bool scalarVisibility) {
-    if(m_ScalarVisibility != scalarVisibility) {
-        m_ScalarVisibility = scalarVisibility;
-    }
+    m_ScalarVisibility = scalarVisibility;
 }
 
 void mafPipeVisualVTKSurface::setImmediateRendering (bool immediateRendering) {
-    if(m_ImmediateRendering != immediateRendering) {
-        m_ImmediateRendering = immediateRendering;
-    }
+    m_ImmediateRendering = immediateRendering;
 }
-
