@@ -46,6 +46,7 @@ private:
     friend class mafHierarchy;
     
     mafHierarchyPointer m_Hierarchy;
+    mafMemento *m_ParentMemento; ///< Memento used as parent memento.
     /// recursive function for hierarchy traversal.
     void traverseTree();
 };
