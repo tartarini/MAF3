@@ -44,61 +44,11 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace mafEventBus;
 
-/**
-Class name: testExtRawASCIICustomManager
-This class defines the custom manager class used to test the mafSerialization manager interface API.
-*/
-class testExtRawASCIICustomManager : public mafObjectBase {
-    Q_OBJECT
-    /// typedef macro.
-    mafSuperclassMacro(mafCore::mafObjectBase);
-
-public:
-    /// Object constructor
-    testExtRawASCIICustomManager(const QString code_location = "");
-
-public slots:
-    /// observer needed to receive the 'extDataLoaded' signal
-    void createdMemento(mafCore::mafMemento *memento);
-};
-
-testExtRawASCIICustomManager::testExtRawASCIICustomManager(QString code_location) : mafObjectBase(code_location) {
-    mafRegisterLocalCallback("maf.local.serialization.mementoLoaded", this, "createdMemento(mafCore::mafMemento *)");
-}
-
-void testExtRawASCIICustomManager::createdMemento(mafCore::mafMemento *memento) {
-    qDebug("%s", mafTr("memento loaded!!").toAscii().data());
-    QVERIFY(memento != NULL);
-
-    mafVME *returnVME = mafNEW(mafResources::mafVME);
-    returnVME->setMemento(memento, false);
-
-    //Now load dataValue
-    mafDataSet *data = returnVME->dataSetCollection()->itemAt(0);
-
-    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
-    vtkPolyDataMapper *sphereMapper = vtkPolyDataMapper::New();
-    sphereMapper->SetInputConnection(*dataSet);
-
-    double boundsIn[6] = {-2.5,2.5,-1.5,1.5,-4,4};
-    double boundsOut[6];
-    sphereMapper->GetBounds(boundsOut);
-    QCOMPARE(boundsIn[0], boundsOut[0]);
-    QCOMPARE(boundsIn[1], boundsOut[1]);
-    QCOMPARE(boundsIn[2], boundsOut[2]);
-    QCOMPARE(boundsIn[3], boundsOut[3]);
-    QCOMPARE(boundsIn[4], boundsOut[4]);
-    QCOMPARE(boundsIn[5], boundsOut[5]);
-
-    sphereMapper->Delete();
-    mafDEL(returnVME);
-}
 
 /**
  Class name: mafSerializationRawASCIIExtDataTest
  This class implements the test suite to test serialization mechanism with VTK lib.
  */
-
 
 class mafSerializationRawASCIIExtDataTest : public QObject {
     Q_OBJECT
@@ -114,7 +64,6 @@ private slots:
         QVERIFY(res);
 
         mafEventBusManager::instance();
-        m_CustomManager = mafNEW(testExtRawASCIICustomManager);
 
         //Create two codec
         m_Codec = mafNEW(mafPluginVTK::mafExternalDataCodecVTK);
@@ -161,14 +110,11 @@ private slots:
         mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
         boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
         m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
-//        mafProxyInterface *boundary0 = m_Vme->dataSetCollection()->itemAt(0)->dataBoundary();
-
         m_Vme->dataSetCollection()->insertItem(m_DataSetCubeMoved, 1);
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        mafDEL(m_CustomManager);
         mafDEL(m_Codec);
         mafDEL(m_DataSetCube);
         mafDEL(m_DataSetCubeMoved);
@@ -191,7 +137,6 @@ private:
     vtkCubeSource *m_DataSource;
     vtkCubeSource *m_DataSourceMoved;
     QDataStream m_OutputStream; ///< Test var.
-    testExtRawASCIICustomManager *m_CustomManager; ///< Manager test var
     mafVME *m_Vme; ///< Test var.
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainerMoved; ///< Container of the Data Source
@@ -238,7 +183,6 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
     argList.append(mafEventArgument(QString, encodeType));
     argList.append(mafEventArgument(QString, codec));
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
-
     
     obj_type = "vtkAlgorithmOutput";
     encodeType = "VTK";
@@ -266,13 +210,38 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
     QFileInfo fInfo3(test_file);
     QVERIFY(fInfo3.size() > 0);
 
-
+    mafCore::mafMemento *memento;
     encodeType = "RAW_ASCII";
     argList.clear();
     argList.append(mafEventArgument(QString, test_file));
     argList.append(mafEventArgument(QString, encodeType));
-    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal, &argList);
+    QGenericReturnArgument retVal = mafEventReturnArgument(mafCore::mafMemento*, memento);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal, &argList, &retVal);
 
+    QVERIFY(memento != NULL);
+
+    mafVME *returnVME = mafNEW(mafResources::mafVME);
+    returnVME->setMemento(memento, false);
+
+    //Now load dataValue
+    mafDataSet *data = returnVME->dataSetCollection()->itemAt(0);
+
+    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
+    vtkPolyDataMapper *sphereMapper = vtkPolyDataMapper::New();
+    sphereMapper->SetInputConnection(*dataSet);
+
+    double boundsIn[6] = {-2.5,2.5,-1.5,1.5,-4,4};
+    double boundsOut[6];
+    sphereMapper->GetBounds(boundsOut);
+    QCOMPARE(boundsIn[0], boundsOut[0]);
+    QCOMPARE(boundsIn[1], boundsOut[1]);
+    QCOMPARE(boundsIn[2], boundsOut[2]);
+    QCOMPARE(boundsIn[3], boundsOut[3]);
+    QCOMPARE(boundsIn[4], boundsOut[4]);
+    QCOMPARE(boundsIn[5], boundsOut[5]);
+
+    sphereMapper->Delete();
+    mafDEL(returnVME);
     mafDEL(mementoVME);
 
     i = 0;
