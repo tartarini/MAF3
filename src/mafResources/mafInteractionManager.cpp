@@ -71,7 +71,6 @@ void mafInteractionManager::vmeSelected(mafVME *vme) {
 }
 
 void mafInteractionManager::leftButtonPress(unsigned long modifier) {
-    qDebug() << "left mouse button pressed!!";
 }
 
 void mafInteractionManager::leftButtonRelease(unsigned long modifier) {
