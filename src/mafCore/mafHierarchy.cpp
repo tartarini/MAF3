@@ -11,6 +11,8 @@
 
 #include "mafHierarchy.h"
 #include "mafObjectFactory.h"
+#include "mafMemento.h"
+#include "mafMementoHierarchy.h"
 
 using namespace mafCore;
 
@@ -178,3 +180,58 @@ void mafHierarchy::printInformation(QString &string) {
         }
     }
 }
+
+mafMemento *mafHierarchy::createMemento() const {
+    mafMementoHierarchy *mementoHierarchy = new mafMementoHierarchy(this, mafCodeLocation);
+    return mementoHierarchy;
+}
+
+void mafHierarchy::setMemento(mafMemento *memento, bool deep_memento) {
+    Q_UNUSED(deep_memento);
+    this->clear();
+    this->moveTreeIteratorToRootNode();
+
+    // Design by contract condition.
+    REQUIRE(memento != NULL);
+    REQUIRE(memento->objectClassType() == this->metaObject()->className());
+
+    int n = 0;
+    int childrenNum = memento->children().size();
+    for (n; n < childrenNum; n++) {
+        mafMemento *m = (mafMemento *)memento->children().at(n);
+        if (m->serializationPattern() == mafSerializationPatternInheritance) {
+            //set the memento of the superclass
+            Superclass::setMemento(m, deep_memento);
+        } else {
+            //set the memento of the children memento
+            QString objClassType = m->objectClassType();
+            mafCore::mafObjectBase *objBase = mafNEWFromString(objClassType);
+            mafCore::mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
+            obj->setMemento(m, deep_memento);
+            if (objClassType == "mafResources::mafVME" || objClassType == "mafResources::mafSceneNode") {
+                // create root node.
+                addHierarchyNode(obj);
+                traverseTree(m, deep_memento);
+            }
+        }
+    }
+}
+
+void mafHierarchy::traverseTree(mafMemento *memento, bool deep_memento) {
+    int i = 0, size = memento->children().size();
+    for(;i < size; ++i) {
+        mafMemento *mementoChild = (mafMemento *)memento->children().at(i);
+         if (mementoChild->serializationPattern() == mafSerializationPatternComposition) {
+            QString objClassType = mementoChild->objectClassType();
+            mafCore::mafObjectBase *objBase = mafNEWFromString(objClassType);
+            mafCore::mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
+            if (objClassType == "mafResources::mafVME" || objClassType == "mafResources::mafSceneNode") {
+                obj->setMemento(mementoChild, deep_memento);
+                addHierarchyNode(obj, currentData());
+                traverseTree(mementoChild, deep_memento);
+                this->moveTreeIteratorToParent();
+            }
+        }
+    }
+}
+
