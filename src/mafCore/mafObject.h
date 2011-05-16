@@ -28,7 +28,6 @@ class mafMemento;
 class MAFCORESHARED_EXPORT mafObject : public mafObjectBase {
     Q_OBJECT
     Q_PROPERTY(bool modified READ modified WRITE setModified)
-    Q_PROPERTY(bool selected READ selected WRITE setSelected)
     Q_PROPERTY(QString iconFile READ iconFile WRITE setIconFile)
     Q_PROPERTY(int lockStatus READ lockStatus)
     Q_PROPERTY(int progressStatus READ progressStatus WRITE setProgressStatus)
@@ -57,12 +56,6 @@ public:
 
     /// Return the modified state of the mafObject.
     bool modified() const;
-
-    /// Allow to mark the object as selected.
-    virtual void setSelected(bool sel);
-
-    /// Return the selection state for the owned VME.
-    bool selected() const;
 
     /// Allow to set the filename representing the icon file associated with the object.
     void setIconFile(QString icon_file);
@@ -106,7 +99,7 @@ public:
     /// Set value of progress status.
     void setProgressStatus(int status);
 
-    /// Return status of progress to be used in a porgress bar.
+    /// Return status of progress to be used in a progress bar.
     int progressStatus() const;
 
 public slots:
@@ -134,10 +127,6 @@ private:
 
 inline bool mafObject::modified() const {
     return m_Modified;
-}
-
-inline bool mafObject::selected() const {
-    return m_Selected;
 }
 
 inline QString mafObject::iconFile() const {

@@ -50,7 +50,7 @@ public:
     /// Return the inner visual pipe.
     mafPipeVisual *visualPipe() const;
     
-    /// Return the inner vme.
+    /// Return the inner VME.
     mafVME *vme() const;
 
     /// Set name of VME contained by scene node.
@@ -59,12 +59,9 @@ public:
     /// Return name of contained VME.
     QString VMEName();
     
-    /// Return hash of the current Data (vme).
+    /// Return hash of the current Data (VME).
     QString dataHash() const;
 
-    /// Allow to send the selection event for the owned VME.
-    /*virtual*/ void setSelected(bool sel);
-    
     /// Set visibility policy of the scene node
     void setVisibilityPolicy(unsigned int visibilityPolicy);
     
@@ -81,7 +78,7 @@ public slots:
     virtual void setVisualizationStatus(bool visualizationStatus);
 
 signals:
-    /// Alert the view that the node can be deleted because its inner vme has been destroyed.
+    /// Alert the view that the node can be deleted because its inner VME has been destroyed.
     void destroyNode();
 
 protected:

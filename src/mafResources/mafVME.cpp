@@ -136,20 +136,6 @@ void mafVME::detatchFromTree() {
     emit(detatched());
 }
 
-void mafVME::setSelected(bool sel) {
-    if(m_Selected != sel) {
-        m_Lock->lockForWrite();
-        m_Selected = sel;
-        m_Lock->unlock();
-        if(m_Selected) {
-            // notify the VME selection.
-            mafEventArgumentsList argList;
-            argList.append(mafEventArgument(mafCore::mafObjectBase *, this));
-            mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
-        }
-    }
-}
-
 mafDataSetCollection *mafVME::dataSetCollection() {
     if(m_DataSetCollection == NULL) {
         QWriteLocker locker(m_Lock);
