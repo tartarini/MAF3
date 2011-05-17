@@ -21,6 +21,7 @@ using namespace mafResources;
 using namespace mafEventBus;
 
 mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL), m_CanRead(true), m_CanWrite(true) {
+    m_UIFilename = "vmeGeneric.ui";
     m_Lock = new QReadWriteLock(QReadWriteLock::Recursive);
     mafId time_set_id = mafIdProvider::instance()->idValue("TIME_SET");
     if(time_set_id != -1) {
