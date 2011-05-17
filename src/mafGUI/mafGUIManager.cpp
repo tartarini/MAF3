@@ -398,6 +398,18 @@ void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
             sel->clearSelection();
             sel->setCurrentIndex(index, QItemSelectionModel::Select);
         }
+        
+        // Show the GUI for the selected VME.
+        m_GUILoadedType = mafGUILoadedTypeVme;
+        
+        QString guiFilename = vme->uiFilename();
+        if(guiFilename.isEmpty()) {
+            showGui(NULL);
+            return;
+        }
+        
+        // Ask the UI Loader to load the operation's GUI.
+        m_UILoader->uiLoad(guiFilename);
     }
 }
 
@@ -646,19 +658,20 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
     switch(m_GUILoadedType) {
         case mafGUILoadedTypeOperation:
             m_OperationWidget->setOperationGUI(widget);
+            emit guiLoaded(m_GUILoadedType, m_OperationWidget);
         break;
         case mafGUILoadedTypeView:
         break;
         case mafGUILoadedTypeVisualPipe:
         break;
         case mafGUILoadedTypeVme:
+            emit guiLoaded(m_GUILoadedType, widget);
         break;
         default:
             qWarning() << mafTr("type %1 not recognized...").arg(m_GUILoadedType);
             return;
         break;
     }
-    emit guiLoaded(m_GUILoadedType, m_OperationWidget);
 }
 
 void mafGUIManager::createView() {

@@ -184,17 +184,22 @@ void mafMainWindow::closeEvent(QCloseEvent *event) {
 }
 
 void mafMainWindow::loadedGUIAvailable(int type, QWidget *w) {
-    switch(type) {
-    case mafGUILoadedTypeOperation:
-        ui->tabWidget->setCurrentIndex(2);
-        ui->layoutOperation->addWidget(w);
-        break;
-    case mafGUILoadedTypeView:
-        ui->tabWidget->setCurrentIndex(1);
-        ui->layoutView->addWidget(w);
-        break;
+    if (w) {
+        switch(type) {
+            case mafGUILoadedTypeOperation:
+                ui->tabWidget->setCurrentIndex(2);
+                ui->layoutOperation->addWidget(w);
+                break;
+            case mafGUILoadedTypeView:
+                ui->tabWidget->setCurrentIndex(1);
+                ui->layoutView->addWidget(w);
+                break;
+            case mafGUILoadedTypeVme:
+                ui->layoutPropertiesBox->addWidget(w);
+                break;
+        }
+        w->show();
     }
-    w->show();
 }
 
 void mafMainWindow::loadedGUIToRemove(int type) {
