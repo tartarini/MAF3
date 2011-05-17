@@ -82,6 +82,7 @@ void mafGUIManager::newWorkingSession() {
 
 void mafGUIManager::quitApplication() {
     // post the closeEvent
+    QApplication::postEvent(qApp, new QCloseEvent());
 }
 
 void mafGUIManager::createToolbar(QDomElement node) {
