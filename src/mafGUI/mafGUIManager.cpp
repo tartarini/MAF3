@@ -28,7 +28,7 @@ using namespace mafEventBus;
 using namespace mafGUI;
 
 mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location) : mafObjectBase(code_location)
-    , m_MaxRecentFiles(5), m_MainWindow(main_win)
+    , m_VMEWidget(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win)
     , m_Model(NULL), m_TreeWidget(NULL), m_Logic(NULL) {
 
     m_SettingsDialog = new mafGUIApplicationSettingsDialog();
@@ -665,7 +665,20 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
         case mafGUILoadedTypeVisualPipe:
         break;
         case mafGUILoadedTypeVme:
-            emit guiLoaded(m_GUILoadedType, widget);
+        {
+            if (m_VMEWidget) {
+                m_VMEWidget->close();
+                emit guiTypeToRemove(mafGUILoadedTypeVme);
+            }
+            m_VMEWidget = widget;
+
+            mafCore::mafObjectBase *sel_vme;
+            QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
+            mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
+
+            mafConnectObjectWithGUI(sel_vme, m_VMEWidget);
+            emit guiLoaded(m_GUILoadedType, m_VMEWidget);
+        }
         break;
         default:
             qWarning() << mafTr("type %1 not recognized...").arg(m_GUILoadedType);
