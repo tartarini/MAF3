@@ -49,21 +49,8 @@ void mafOperationWidget::setOperationGUI(QWidget *gui) {
         //TODO
     } else {
         m_OperationGUI = gui;
-        // Then connect automatically the signals of the GUI widgets to the Operation's slots.
-        m_Operation->connectObjectSlotsByName((QObject *)m_OperationGUI);
-        // and initialize the widgets value with those contained into the operation's properties.
-        m_Operation->initializeUI((QObject *)m_OperationGUI);
-        // do the same thing for all the the operations'children
-        QObjectList children = m_Operation->children();
-        foreach(QObject *child, children) {
-            mafCore::mafObjectBase *obj = qobject_cast<mafCore::mafObjectBase *>(child);
-            if(obj) {
-                obj->connectObjectSlotsByName((QObject *)m_OperationGUI);
-                obj->initializeUI((QObject *)m_OperationGUI);
-            }
-        }
+        mafGUI::mafConnectObjectWithGUI(m_Operation, m_OperationGUI);
     }
-    
     
     // Connect the Ok/Cancel buttons with the GUI close.
     connect(ui->buttonOkCancel, SIGNAL(accepted()), m_OperationGUI, SLOT(close()));
