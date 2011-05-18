@@ -210,7 +210,7 @@ void mafMainWindow::readSettings() {
     qDebug() << "Reading mafMainWindows settings...";
     QSettings settings;
     
-    // reastoring MainWindow
+    // restoring MainWindow
     QPoint pos = settings.value("MainWindow/Position", QPoint(200, 200)).toPoint();
     QSize size = settings.value("MainWindow/Size", QSize(600, 400)).toSize();
     resize(size);
@@ -304,6 +304,7 @@ void mafMainWindow::viewCreated(mafCore::mafObjectBase *view) {
     
     widget->setParent(sub_win);
     sub_win->setMinimumSize(200, 200);
+    sub_win->resize(QSize(400, 400));
     sub_win->show();
 }
 
