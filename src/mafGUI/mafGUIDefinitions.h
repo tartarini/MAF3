@@ -30,12 +30,23 @@
 #include <mafEventBusManager.h>
 
 namespace mafGUI {
-    
+
+/// This function allows to connect mafObjectBase properties and slots with widgets defined into the widget.
+/**
+ This function scan all the properties defined into the object 'obj' and search into the widget for a corresponding UI named 
+ element. If there are matches, the element will be initialized with the value contained into the object. Also the slots
+ defined into the object will be connected with the signal defined into the widget's hierarchy according to the naming
+ convention defined by Qt for automatic signal-slots connection, e.g.: on_WidgetName_SignalName(...)
+
+ @param obj MAF object that has to be connected with the widget.
+ @param gui Root widget defining the UI for the corresponding MAF object.
+*/
 static void mafConnectObjectWithGUI(mafCore::mafObjectBase *obj, QWidget *gui) {
+    // Connect automatically the signals of the GUI widgets to the Operation's slots.
     obj->connectObjectSlotsByName((QObject *)gui);
     // and initialize the widgets value with those contained into the operation's properties.
     obj->initializeUI((QObject *)gui);
-    // do the same thing for all the the operations'children
+    // do the same thing for all the the operation's children
     QObjectList children = obj->children();
     foreach(QObject *child, children) {
         mafCore::mafObjectBase *child_obj = qobject_cast<mafCore::mafObjectBase *>(child);
