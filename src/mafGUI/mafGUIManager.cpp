@@ -40,6 +40,8 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     mafCore::mafMessageHandler::instance()->setActiveLogger(m_Logger);
 
     mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)")
+    
+    // VME selection callbacks.
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateMenuForSelectedVme(mafCore::mafObjectBase *)")
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateTreeForSelectedVme(mafCore::mafObjectBase *)")
 
@@ -313,7 +315,7 @@ void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pl
 
     if(m_MenuItemList.size() == 0) {
         // Actions has not been created, so neither the menu.
-        // Ask to create it which will crete also the actions.
+        // Ask to create it which will create also the actions.
         createMenus();
     }
     QString base_class("");
@@ -362,7 +364,8 @@ void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pl
         ++iter;
     }
 
-    this->updateMenuForSelectedVme(sel_vme);
+    updateMenuForSelectedVme(sel_vme);
+    updateTreeForSelectedVme(sel_vme);
 }
 
 QObject *mafGUIManager::menuItemByName(QString name) {
