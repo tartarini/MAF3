@@ -48,10 +48,6 @@ class mafGUIApplicationSettingsPage;
  - maf.local.gui.action.copy
  - maf.local.gui.action.paste
  - maf.local.gui.action.about
-
- @@@@@ TODO
- There is also a signal related to the notification of path selection through a dialog.
- - maf.local.gui.pathSelected
  */
 class MAFGUISHARED_EXPORT mafGUIManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -81,7 +77,7 @@ public:
     /// Return the number of maximum recent files.
     int maxRecentFiles();
 
-    /// Allows to assign the maximum number of recent files. Canges of this number will be considered at the application's sturtup.
+    /// Allows to assign the maximum number of recent files. Changes of this number will be considered at the application's startup.
     void setMaxRecentFiles(int max_recent_files);
 
     /// Return the application's settings dialog.
@@ -148,9 +144,6 @@ private:
     mafApplicationLogic::mafLogic *m_Logic; ///< Logic of the application.
 
 signals:
-    /// Signal emitted on path selection using the dialog.
-    void pathSelected(const QString path);
-
     /// Signal emitted when the GUI panel has been loaded.
     void guiLoaded(int type, QWidget *w);
 
@@ -217,7 +210,7 @@ private slots:
     void open();
 
 private:
-    /// return the data object inside an item in order to retrieve the data object and not the visual one (for example scenenode).
+    /// return the data object inside an item in order to retrieve the data object and not the visual one (for example scene-node).
     QObject *dataObject(QModelIndex index);
 
 };

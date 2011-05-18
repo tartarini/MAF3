@@ -426,7 +426,6 @@ void mafGUIManager::registerDefaultEvents() {
     provider->createNewId("maf.local.gui.action.copy");
     provider->createNewId("maf.local.gui.action.paste");
     provider->createNewId("maf.local.gui.action.about");
-    provider->createNewId("maf.local.gui.pathSelected");
 
     // Register API signals.
     QObject *action;
@@ -446,7 +445,6 @@ void mafGUIManager::registerDefaultEvents() {
     mafRegisterLocalSignal("maf.local.gui.action.paste", action, "triggered()");
     action = menuItemByName("About");
     mafRegisterLocalSignal("maf.local.gui.action.about", action, "triggered()");
-    mafRegisterLocalSignal("maf.local.gui.pathSelected", this, "pathSelected(const QString)");
 }
 
 void mafGUIManager::createDefaultMenus() {
