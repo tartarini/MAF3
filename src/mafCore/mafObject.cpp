@@ -35,7 +35,7 @@ void mafObject::setIconFile(QString icon_file) {
 }
 
 mafMemento *mafObject::createMemento() const {
-    return new mafMementoObject(this, m_TagList, m_Dictionary, mafCodeLocation);
+    return new mafMementoObject(this, mafCodeLocation);
 }
 
 void mafObject::setMemento(mafMemento *memento, bool deep_memento) {
