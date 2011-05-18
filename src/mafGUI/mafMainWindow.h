@@ -13,27 +13,27 @@
 #define MAFMAINWINDOW_H
 
 #include <QtGui>
-#include <QVTKWidget.h>
 #include <QMainWindow>
 
-#include <mafGUIManager.h>
-#include <mafDragDropModel.h>
-#include <mafMdiSubWindow.h>
-#include <mafTreeWidget.h>
-#include <mafTextEditWidget.h>
+#include "mafGUIManager.h"
+#include "mafDragDropModel.h"
+#include "mafGUIRegistration.h"
+#include "mafMdiSubWindow.h"
+#include "mafTreeWidget.h"
+#include "mafTextEditWidget.h"
+
 #include <mafLogic.h>
 
 namespace Ui {
     class mafMainWindow;
 }
 
-class GoogleChat;
 
 /**
   Class Name: mafMainWindow
   This class represent the Main Window of the vertical application.
   */
-class mafMainWindow : public QMainWindow {
+class MAFGUISHARED_EXPORT mafMainWindow : public QMainWindow {
     Q_OBJECT
 public:
     /// Object constructor
@@ -69,7 +69,7 @@ public slots:
 
 protected slots:
     /// Observe the viewCreatedSignal emitted by the mafViewManager.
-    /* Attach the render context to the gui widget */
+    /* Attach the render context to the GUI widget */
     virtual void viewCreated(mafCore::mafObjectBase *view);
 
     /// Slot called when dynamic loaded GUI is available.
@@ -127,6 +127,10 @@ private:
 };
 
 inline mafGUI::mafGUIManager *mafMainWindow::guiManager() const {
+    if (m_GUIManager == NULL) {
+        mafGUIRegistration::registerGUIObjects();
+        m_GUIManager = new mafGUIManager(this, mafCodeLocation);
+    }
     return m_GUIManager;
 }
 

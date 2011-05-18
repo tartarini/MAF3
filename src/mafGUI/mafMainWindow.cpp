@@ -14,11 +14,8 @@
 
 #include <mafEventBusManager.h>
 
-#include "googlechat.h"
-
-#include <mafGUIRegistration.h>
-#include <mafGUIApplicationSettingsDialog.h>
-#include <QDebug>
+#include "mafGUIApplicationSettingsDialog.h"
+#include "mafGoogleChatWidget.h"
 
 using namespace mafCore;
 using namespace mafGUI;
@@ -27,7 +24,7 @@ mafMainWindow::mafMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     initializeMainWindow();
 }
 
-mafMainWindow::mafMainWindow(mafApplicationLogic::mafLogic *logic, QWidget *parent) :QMainWindow(parent), ui(new Ui::mafMainWindow), m_Logic(logic) {
+mafMainWindow::mafMainWindow(mafApplicationLogic::mafLogic *logic, QWidget *parent) : QMainWindow(parent), m_GUIManager(NULL), ui(new Ui::mafMainWindow), m_Logic(logic) {
     initializeMainWindow();
     m_Logic->loadPlugins();
 }
@@ -45,8 +42,6 @@ void mafMainWindow::setLogic(mafApplicationLogic::mafLogic *logic) {
 void mafMainWindow::initializeMainWindow() {
     ui->setupUi(this);
 
-    mafGUIRegistration::registerGUIObjects();
-    m_GUIManager = new mafGUIManager(this, mafCodeLocation);
     m_GUIManager->setLogic(m_Logic);
 
     m_GUIManager->createMenus();
