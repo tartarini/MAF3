@@ -115,7 +115,6 @@ void mafTreeModel::setHierarchy(mafHierarchy *hierarchy) {
         disconnect(m_Hierarchy, SIGNAL(itemAttached(QObject*,QObject*)), this, SLOT(itemAttached(QObject*,QObject*)));
         disconnect(m_Hierarchy, SIGNAL(itemDetached(QObject*)), this, SLOT(itemDetached(QObject*)));
         disconnect(m_Hierarchy, SIGNAL(itemReparent(QObject*,QObject*)), this, SLOT(itemReparent(QObject*,QObject*)));
-        
         disconnect(m_Hierarchy, SIGNAL(clearTree()), this, SLOT(clearModel()));
         disconnect(m_Hierarchy, SIGNAL(destroyed()), this, SLOT(hierarchyDestroyed()));
     }
@@ -141,10 +140,11 @@ void mafTreeModel::itemAttached(QObject *item, QObject *parent) {
     // @TODO here set the code because if a view is present, need to attach an item
     // with a scenenode (check with Roberto)
     
-    
-    QModelIndex index = this->indexFromData(parent);
-    this->insertNewItem(AsChild, item, index);
-    emit itemAdded(index);
+    if (parent != NULL) {
+        QModelIndex index = this->indexFromData(parent);
+        this->insertNewItem(AsChild, item, index);
+        emit itemAdded(index);
+    }
 }
 
 void mafTreeModel::itemDetached(QObject *item) {
@@ -271,11 +271,13 @@ QModelIndex mafTreeModel::currentIndex() {
 }
 
 QModelIndex mafTreeModel::indexFromData(QObject *data) {
-    mafTreeItem *ti = m_ItemsHash.value(dataHash(data),NULL);
-    if(ti == NULL) {
-        return QModelIndex();
-    }
+    if (data != NULL) {
+        mafTreeItem *ti = m_ItemsHash.value(dataHash(data),NULL);
+        if(ti == NULL) {
+            return QModelIndex();
+        }
     return ti->index();
+    }
 }
 
 
