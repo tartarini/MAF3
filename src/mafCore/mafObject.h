@@ -15,6 +15,8 @@
 // Includes list
 #include "mafObjectBase.h"
 
+Q_DECLARE_FLAGS(mafObjectLockStatus, mafCore::mafObjectLock)
+
 namespace mafCore {
 
 // Class forwarding list
