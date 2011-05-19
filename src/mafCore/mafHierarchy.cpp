@@ -13,8 +13,11 @@
 #include "mafObjectFactory.h"
 #include "mafMemento.h"
 #include "mafMementoHierarchy.h"
+#include <mafEventBusManager.h>
 
 using namespace mafCore;
+using namespace mafEventBus;
+
 
 mafHierarchy::mafHierarchy(const QString code_location) : mafObject(code_location), m_Tree(NULL) {
     //create Tree
@@ -188,7 +191,6 @@ mafMemento *mafHierarchy::createMemento() const {
 
 void mafHierarchy::setMemento(mafMemento *memento, bool deep_memento) {
     Q_UNUSED(deep_memento);
-    this->clear();
     this->moveTreeIteratorToRootNode();
 
     // Design by contract condition.
@@ -208,30 +210,8 @@ void mafHierarchy::setMemento(mafMemento *memento, bool deep_memento) {
             mafCore::mafObjectBase *objBase = mafNEWFromString(objClassType);
             mafCore::mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
             obj->setMemento(m, deep_memento);
-            if (objClassType == "mafResources::mafVME" || objClassType == "mafResources::mafSceneNode") {
-                // create root node.
-                addHierarchyNode(obj);
-                traverseTree(m, deep_memento);
-            }
         }
     }
 }
 
-void mafHierarchy::traverseTree(mafMemento *memento, bool deep_memento) {
-    int i = 0, size = memento->children().size();
-    for(;i < size; ++i) {
-        mafMemento *mementoChild = (mafMemento *)memento->children().at(i);
-         if (mementoChild->serializationPattern() == mafSerializationPatternComposition) {
-            QString objClassType = mementoChild->objectClassType();
-            mafCore::mafObjectBase *objBase = mafNEWFromString(objClassType);
-            mafCore::mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
-            if (objClassType == "mafResources::mafVME" || objClassType == "mafResources::mafSceneNode") {
-                obj->setMemento(mementoChild, deep_memento);
-                addHierarchyNode(obj, currentData());
-                traverseTree(mementoChild, deep_memento);
-                this->moveTreeIteratorToParent();
-            }
-        }
-    }
-}
 
