@@ -79,6 +79,7 @@ MACRO(mafMacroWrapBuild)
 
   
     if(SWIG_FOUND AND PYTHONLIBS_FOUND)
+      set(lib_pref "")
       if(WIN32)
         set(lib_ext ".dll")
         set(wrap_lib_ext ".pyd")

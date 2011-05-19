@@ -29,6 +29,14 @@ mafMainWindow::mafMainWindow(mafApplicationLogic::mafLogic *logic, QWidget *pare
     m_Logic->loadPlugins();
 }
 
+mafGUI::mafGUIManager *mafMainWindow::guiManager() {
+    if (m_GUIManager == NULL) {
+        mafGUIRegistration::registerGUIObjects();
+        m_GUIManager = new mafGUIManager(this, mafCodeLocation);
+    }
+    return m_GUIManager;
+}
+
 void mafMainWindow::setLogic(mafApplicationLogic::mafLogic *logic) {
     if(m_Logic) {
         mafDEL(m_Logic);
@@ -42,8 +50,7 @@ void mafMainWindow::setLogic(mafApplicationLogic::mafLogic *logic) {
 void mafMainWindow::initializeMainWindow() {
     ui->setupUi(this);
 
-    m_GUIManager->setLogic(m_Logic);
-
+    guiManager()->setLogic(m_Logic);
     m_GUIManager->createMenus();
 
     connect(m_GUIManager, SIGNAL(guiLoaded(int,QWidget*)), this, SLOT(loadedGUIAvailable(int,QWidget*)));

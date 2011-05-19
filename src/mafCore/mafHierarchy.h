@@ -98,6 +98,9 @@ signals:
     /// Signal emitted when an item is removed form the hierarchy.
     void itemDetached(QObject *item);
 
+    /// Signal emitted to replace root item.
+    void rootReplaced();
+
     /// Signal emitted when an item is reparent to another item.
     void itemReparent(QObject *item, QObject *parent);
 
@@ -109,9 +112,6 @@ protected:
     /* virtual */ ~mafHierarchy();
 
 private:
-    /// Recreate hierarchy traversing tree from memento.
-    void traverseTree(mafMemento *memento, bool deep_memento);
-
     mafTree<QObject *> *m_Tree; ///< tree variable which hosts mafSceneNode elements
     mafTree<QObject *>::iterator m_TreeIterator; ///< tree iterator variable which point the current node
 };

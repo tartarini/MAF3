@@ -167,7 +167,22 @@ mafMemento *mafVME::createMemento() const {
 void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
     REQUIRE(memento != NULL);
     REQUIRE(memento->objectClassType() == this->metaObject()->className());
-    QMap<double, mafMementoDataSet*> mementoMap;
+
+    // save selected node
+    mafCore::mafObjectBase *sel_vme;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
+
+    // add vme
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, this));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+
+    // Notify the item selection.
+    argList.clear();
+    argList.append(mafEventArgument(mafCore::mafObjectBase*, this));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+    
 
     int n = 0;
     int childrenNum = memento->children().size();
@@ -178,10 +193,14 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
         Superclass::setMemento(m, deep_memento);
       } else {
         //set the memento of the children memento
+        //but not of children VME (that is done by mafHierarchy.
+
         QString objClassType = m->objectClassType();
         mafObjectBase *objBase = mafNEWFromString(objClassType);
         mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
+
         obj->setMemento(m, deep_memento);
+
         if (objClassType == "mafResources::mafDataSetCollection") {
           mafDataSetCollection *dataSetCollection = qobject_cast<mafDataSetCollection*>(obj);
           m_DataSetCollection = dataSetCollection;
@@ -189,7 +208,10 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
       }
     }
 
-    
+    // Select parent node.
+    argList.clear();
+    argList.append(mafEventArgument(mafCore::mafObjectBase*, sel_vme));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 
     mafMementoPropertyList *list = memento->mementoPropertyList();
     mafMementoPropertyItem item;

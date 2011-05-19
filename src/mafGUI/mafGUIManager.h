@@ -150,6 +150,9 @@ signals:
     /// Signal emitted when a dynamic GUI element needs to be removed from the MainWindow
     void guiTypeToRemove(int type);
 
+    /// Signal emitted when a new hierarchy is requested on open a msf file.
+    void newWorkinSessioneSignal();
+
 public slots:
     /// Fill the operation and view menu with the plugged objects.
     void fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash);

@@ -102,7 +102,6 @@ typedef QList<mafObjectBase *> mafObjectsList;
 
 }  // mafCore
 
-Q_DECLARE_FLAGS(mafObjectLockStatus, mafCore::mafObjectLock)
 Q_DECLARE_METATYPE(mafCore::mafDictionaryPointer)
 
 #endif // MAFDEFINITIONS_H

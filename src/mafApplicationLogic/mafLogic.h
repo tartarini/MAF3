@@ -88,7 +88,7 @@ public slots:
     void storeHierarchy(QString fileName);
 
     /// Load hierarchy from a memento.
-    void restoreHierarchy(mafCore::mafMemento *mementoHierarchy);
+    void restoreHierarchy(QString fileName);
 
 signals:
     /// Signal emitted when a recent file is asked to be opened. The argument of the signal contains the filename.

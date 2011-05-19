@@ -45,7 +45,7 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, bool binary, const QS
       }
 
       mafMementoPropertyItem item;
-      item.m_Multiplicity = 1;
+      item.m_Multiplicity = matrixList.count();
       item.m_Name = "poseMatrix";
       item.m_Value = matrixList;
       list->append(item);

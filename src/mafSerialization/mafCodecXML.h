@@ -42,6 +42,9 @@ protected:
     /* virtual */ ~mafCodecXML();
 
 private:
+
+    //void buildMementoTree();
+
     /// marshalling of QVariant data type in order to write the correct type.
     void marshall(const QVariant &value );
 
