@@ -45,62 +45,6 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace mafEventBus;
 
-/**
-Class name: testExtCustomManager
-This class defines the custom manager class used to test the mafSerialization manager interface API.
-*/
-/*class testExtCustomManager : public mafObjectBase {
-    Q_OBJECT
-    /// typedef macro.
-    mafSuperclassMacro(mafCore::mafObjectBase);
-
-public:
-    /// Object constructor
-    testExtCustomManager(const QString code_location = "");
-
-public slots:
-    /// observer needed to receive the 'extDataLoaded' signal
-    void createdMemento(mafCore::mafMemento *memento);
-};
-
-testExtCustomManager::testExtCustomManager(QString code_location) : mafObjectBase(code_location) {
-    mafRegisterLocalCallback("maf.local.serialization.mementoLoaded", this, "createdMemento(mafCore::mafMemento *)")
-}
-
-void testExtCustomManager::createdMemento(mafCore::mafMemento *memento) {
-    qDebug("%s", mafTr("memento loaded!!").toAscii().data());
-    QVERIFY(memento != NULL);
-
-    //mafVME *returnVME = mafNEW(mafResources::mafVME);
-    mafHierarchy *returnHierarchy = mafNEW(mafCore::mafHierarchy);
-    returnHierarchy->setMemento(memento);
-
-    returnHierarchy->moveTreeIteratorToRootNode();
-    int num = returnHierarchy->currentNumberOfChildren();
-    returnHierarchy->moveTreeIteratorToNthChild();
-    mafVME *returnVME = (mafVME*)returnHierarchy->currentData();
-
-    //Now load dataValue
-    mafDataSet *data = returnVME->dataSetCollection()->itemAt(0);
-
-    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
-    vtkPolyDataMapper *sphereMapper = vtkPolyDataMapper::New();
-    sphereMapper->SetInputConnection(*dataSet);
-
-    double boundsIn[6] = {-2.5,2.5,-1.5,1.5,-4,4};
-    double boundsOut[6];
-    sphereMapper->GetBounds(boundsOut);
-    QCOMPARE(boundsIn[0], boundsOut[0]);
-    QCOMPARE(boundsIn[1], boundsOut[1]);
-    QCOMPARE(boundsIn[2], boundsOut[2]);
-    QCOMPARE(boundsIn[3], boundsOut[3]);
-    QCOMPARE(boundsIn[4], boundsOut[4]);
-    QCOMPARE(boundsIn[5], boundsOut[5]);
-
-    sphereMapper->Delete();
-    mafDEL(returnVME);
-}*/
-
 
 /**
  Class name: mafSerializationExtDataTest
@@ -121,7 +65,6 @@ private slots:
         QVERIFY(res);
 
         mafEventBusManager::instance();
-        //m_CustomManager = mafNEW(testExtCustomManager);
 
         //Create two codec
         m_Codec = mafNEW(mafPluginVTK::mafExternalDataCodecVTK);
@@ -177,7 +120,6 @@ private slots:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        //mafDEL(m_CustomManager);
         mafDEL(m_Codec);
         mafDEL(m_DataSetCube);
         mafDEL(m_DataSetCubeMoved);
@@ -201,7 +143,6 @@ private:
     vtkCubeSource *m_DataSource;
     vtkCubeSource *m_DataSourceMoved;
     QDataStream m_OutputStream; ///< Test var.
-    //testExtCustomManager *m_CustomManager; ///< Manager test var
     mafVME *m_Vme; ///< Test var.
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainerMoved; ///< Container of the Data Source
@@ -258,8 +199,6 @@ void mafSerializationExtDataTest::mafSerializationVTKSaveTest() {
   argList.append(mafEventArgument(QString, encodeType));
   argList.append(mafEventArgument(QString, codec));
   mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
-
-  //mafMementoVME *mementoVME = (mafMementoVME *)m_Vme->createMemento();
 
   m_VMEManager = mafVMEManager::instance();
 
