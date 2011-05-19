@@ -125,7 +125,7 @@ mafMemento *mafCodecXML::decode() {
     }
     m_LevelDecode = serializationPatternString.right(1).toUInt();
 
-     //Fill the list of levelDecode and memento.
+    //Fill the list of levelDecode and memento.
     m_MementoList.push_back(qMakePair(m_LevelDecode, memento));
 
      while (!m_XMLStreamReader.atEnd() && !m_XMLStreamReader.hasError()) {
@@ -157,7 +157,7 @@ mafMemento *mafCodecXML::decode() {
     return memento;
 }
 
-void mafCodecXML::buildMementoTree() {
+/*void mafCodecXML::buildMementoTree() {
     int listSize = m_MementoList.count();
     int i = 0;
     for(i; i < listSize-1; i++){
@@ -180,7 +180,7 @@ void mafCodecXML::buildMementoTree() {
             }
         }
     }
-}
+}*/
 
 void mafCodecXML::marshall(const QVariant &value ){
     switch( value.type() ){

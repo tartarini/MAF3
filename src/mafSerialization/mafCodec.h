@@ -47,6 +47,9 @@ public:
     void setDevice(QIODevice *d);
 
 protected:
+
+    void buildMementoTree();
+
     /// Object destructor.
     /* virtual */ ~mafCodec();
 

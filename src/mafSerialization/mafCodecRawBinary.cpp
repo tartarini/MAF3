@@ -104,8 +104,9 @@ mafMemento *mafCodecRawBinary::decode() {
     }
     m_LevelDecode = serializationPatternString.right(1).toUInt();
 
-    //Fill the map of memento and levelDecode.
-    m_MementoMap[m_LevelDecode] = memento;
+    //Fill the list of levelDecode and memento.
+    m_MementoList.push_back(qMakePair(m_LevelDecode, memento));
+
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     mafMementoPropertyItem item;
 
@@ -128,19 +129,14 @@ mafMemento *mafCodecRawBinary::decode() {
             propList->append(item);
         } else {
             int parentLevel = m_LevelDecode;
-            mafMemento *mChild = decode();
-            int parentRelation = m_LevelDecode - parentLevel;
-            if (parentRelation > 0) {
-              mChild->setParent(memento);
-            } else {
-              QMap<int, mafMemento*>::const_iterator i = m_MementoMap.find(m_LevelDecode-1);
-              mafMemento *mementoParent = (mafMemento*)i.value();
-              mChild->setParent(mementoParent);
-            }
             m_LevelDecode = parentLevel;
         }
     }
 
+    // If it is the last memento, build memento tree.
+    if(m_LevelDecode == 0) { 
+        buildMementoTree();
+    }
     return memento;
 }
 
