@@ -27,15 +27,7 @@ mafMementoHierarchy::mafMementoHierarchy(const mafObject *obj, const QString cod
     
     //traverse tree and memorize element hash and parent hash, then put them inside a list.
     m_Hierarchy->moveTreeIteratorToRootNode();
-    //serialize root node
-    QObject *data = m_Hierarchy->currentData();
-    mafObject* serializableObj = qobject_cast<mafObject*>(data);
-    mafMemento *memento = serializableObj->createMemento();
-    m_ParentMemento = memento;
-
-    memento->setSerializationPattern(mafSerializationPatternComposition);
-    memento->setParent(this);
-
+    m_ParentMemento = this;
     traverseTree();
 // By now, there are no property to store
 //     mafMementoPropertyList *list = mementoPropertyList();
@@ -66,5 +58,4 @@ void mafMementoHierarchy::traverseTree() {
         m_Hierarchy->moveTreeIteratorToParent();
         m_ParentMemento = (mafMemento*)m_ParentMemento->parent();
     }
-
 }
