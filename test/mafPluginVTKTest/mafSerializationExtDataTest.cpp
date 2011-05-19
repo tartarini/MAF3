@@ -209,9 +209,8 @@ void mafSerializationExtDataTest::mafSerializationVTKSaveTest() {
 
   //Select root
   mafObject *root;
-   ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
+  ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
   mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
-  root->setSelected(true);
 
   //Notify vme add
   argList.clear();

@@ -30,7 +30,7 @@ private slots:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
-        // Register all the creatable objects for the mafResources module.
+        // Register all the objects into the factory for the mafResources module.
         mafResourcesRegistration::registerResourcesObjects();
         m_EventBus = mafEventBusManager::instance();
         m_VMEManager = mafVMEManager::instance();
@@ -38,7 +38,6 @@ private slots:
         mafObject *root;
         QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
         mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
-        root->setSelected(true);
     }
 
     /// Cleanup test variables memory allocation.
@@ -48,7 +47,7 @@ private slots:
         //restore vme manager status
         m_EventBus->notifyEvent("maf.local.resources.hierarchy.request");
 
-        // Shutdown eventbus singleton and core singletons.
+        // Shutdown event bus singleton and core singletons.
         m_EventBus->shutdown();
         mafMessageHandler::instance()->shutdown();
     }
@@ -86,10 +85,6 @@ void mafVMEManagerTest::vmeManagingTest() {
     m_EventBus->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
 
     QVERIFY(sel_vme != NULL); // root is selected
-
-    vme2->setProperty("selected", true);
-    m_EventBus->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
-    QVERIFY(sel_vme == vme2);
 
     mafDEL(vme1);
     mafDEL(vme2);

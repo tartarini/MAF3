@@ -10,6 +10,7 @@
  */
 
 #include "mafInteractionManager.h"
+#include "mafVME.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -113,5 +114,19 @@ void mafInteractionManager::mouseWheelBackward(unsigned long modifier) {
 }
 
 void mafInteractionManager::pick() {
+}
+
+void mafInteractionManager::vmePicked(double *pos, unsigned long modifiers, mafVME *vme) {
+    mafInteractor *i = vme->interactor();
+    if(i) {
+        // execute the interactor
+        return;
+    }
+    
+    //default behaviour is vme selection
+    mafEventBus::mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, qobject_cast<mafCore::mafObjectBase *>(vme)));
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventBus::mafEventTypeLocal, &argList);
+
 }
 

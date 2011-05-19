@@ -136,9 +136,6 @@ private slots:
     */
     void executeWithParameters(QVariantList op_with_parameters);
 
-    /// Called when a vme has been selected.
-    void vmeSelect(mafCore::mafObjectBase *vme);
-
     /// Stop current operation
     void stopOperation();
 
@@ -192,7 +189,6 @@ private:
     mafOperation *m_LastUndoneOperation;       ///< Last undone operation 
 
     mafExecutionPool m_ExecutionPool; ///< Pool of running operations.
-    mafVME *m_SelectedVME;                      ///< Vme that is currently selected
     mafCore::mafId m_ExecWithParameters; ///< Id associated with the EXECUTE_WITH_PARAMETERS event.
 };
 

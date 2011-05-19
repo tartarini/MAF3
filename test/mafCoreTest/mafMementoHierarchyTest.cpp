@@ -11,44 +11,10 @@
 
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
-#include <mafProxy.h>
-#include <mafExternalDataCodec.h>
-#include <mafProxy.h>
-#include <mafProxyInterface.h>
+#include <mafHierarchy.h>
+#include <mafMementoHierarchy.h>
 
 using namespace mafCore;
-
-//! <title>
-//mafMementoHierarchy
-//! </title>
-//! <description>
-//mafMementoHierarchy aims to store the tree structure in which each item
-//represent a data with its own memento.
-//! </description>
-
-//------------------------------------------------------------------------------------------
-
-/**
- Class name: testExtDataType
- This class implements the external data type coming from an external library.
- */
-class testExtDataType {
-public:
-    /// Object constructor.
-    testExtDataType(QString v) : m_Value(v) {}
-
-    /// set the new value for the class.
-    void setValue(QString v) {m_Value = v;}
-    /// Return the inner value.
-    QString value() {return m_Value;}
-
-private:
-    QString m_Value; ///< Test variable for external data
-};
-
-
-
-//------------------------------------------------------------------------------------------
 
 /**
  Class name: mafMementoHierarchyTest
@@ -63,7 +29,7 @@ private slots:
         // Create before the instance of the Serialization manager, which will register signals.
 
         mafMessageHandler::instance()->installMessageHandler();
-    }
+}
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
@@ -72,17 +38,70 @@ private slots:
 
     /// mafMementoHierarchy allocation test case.
     void mafMementoHierarchyDefaultAllocationTest();
-    /// mafMementoHierarchy allocation test case.
-    void mafMementoHierarchyCustomAllocationTest();
 
+    /// mafMementoHierarchy traverse a more complex hierarchy
+    void mafMementoHierarchyTraverseTreeTest();
+
+    
 private:
 };
 
 void mafMementoHierarchyTest::mafMementoHierarchyDefaultAllocationTest() {
+    mafHierarchy *h = mafNEW(mafCore::mafHierarchy);
+    h->setObjectName("Test memento hierarchy");
+    mafObject *obj = mafNEW(mafCore::mafObject);
+    h->addHierarchyNode(obj);
+    //! <snippet>
+    mafMementoHierarchy *memento = new mafMementoHierarchy(h, mafCodeLocation);
+    //! </snippet>
+    QVERIFY(memento != NULL);
+    mafDEL(memento);
+    mafDEL(h);
+    mafDEL(obj);
 }
 
-void mafMementoHierarchyTest::mafMementoHierarchyCustomAllocationTest() {
+void mafMementoHierarchyTest::mafMementoHierarchyTraverseTreeTest() {
+    mafHierarchy *h = mafNEW(mafCore::mafHierarchy);
+    h->setObjectName("Test memento hierarchy");
+    mafObject *objA = mafNEW(mafCore::mafObject);
+    mafObject *objAA = mafNEW(mafCore::mafObject);
+    mafObject *objAB = mafNEW(mafCore::mafObject);
+    mafObject *objABA = mafNEW(mafCore::mafObject);
+    
+    h->addHierarchyNode(objA);
+    h->addHierarchyNode(objAA, objA);
+    h->addHierarchyNode(objAB, objA);
+    h->addHierarchyNode(objABA, objAB);
+    mafDEL(objA);
+    mafDEL(objAA);
+    mafDEL(objAB);
+    mafDEL(objABA);
+    
+    mafObject *objB = mafNEW(mafCore::mafObject);
+    mafObject *objBA = mafNEW(mafCore::mafObject);
+    mafObject *objBB = mafNEW(mafCore::mafObject);
+    mafObject *objBC = mafNEW(mafCore::mafObject);
+    mafObject *objBD = mafNEW(mafCore::mafObject);
+    
+    h->addHierarchyNode(objB);
+    h->addHierarchyNode(objBA);
+    h->addHierarchyNode(objBB);
+    h->addHierarchyNode(objBC);
+    h->addHierarchyNode(objBD);
+    mafDEL(objB);
+    mafDEL(objBA);
+    mafDEL(objBB);
+    mafDEL(objBC);
+    mafDEL(objBD);
+
+    //! <snippet>
+    mafMementoHierarchy *memento = new mafMementoHierarchy(h, mafCodeLocation);
+    //! </snippet>
+    QVERIFY(memento != NULL);
+    mafDEL(memento);
+    mafDEL(h);
 }
+
 
 MAF_REGISTER_TEST(mafMementoHierarchyTest);
 #include "mafMementoHierarchyTest.moc"

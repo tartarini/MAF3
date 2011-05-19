@@ -13,27 +13,27 @@
 #define MAFMAINWINDOW_H
 
 #include <QtGui>
-#include <QVTKWidget.h>
 #include <QMainWindow>
 
-#include <mafGUIManager.h>
-#include <mafDragDropModel.h>
-#include <mafMdiSubWindow.h>
-#include <mafTreeWidget.h>
-#include <mafTextEditWidget.h>
+#include "mafGUIManager.h"
+#include "mafDragDropModel.h"
+#include "mafGUIRegistration.h"
+#include "mafMdiSubWindow.h"
+#include "mafTreeWidget.h"
+#include "mafTextEditWidget.h"
+
 #include <mafLogic.h>
 
 namespace Ui {
     class mafMainWindow;
 }
 
-class GoogleChat;
 
 /**
   Class Name: mafMainWindow
   This class represent the Main Window of the vertical application.
   */
-class mafMainWindow : public QMainWindow {
+class MAFGUISHARED_EXPORT mafMainWindow : public QMainWindow {
     Q_OBJECT
 public:
     /// Object constructor
@@ -49,7 +49,7 @@ public:
     void setLogic(mafApplicationLogic::mafLogic *logic);
 
     /// Return the mafGUIManager
-    mafGUI::mafGUIManager *guiManager() const;
+    mafGUI::mafGUIManager *guiManager();
 
     /// Allows to add a settings page to the settings dialog.
     void plugApplicationSettingsPage(mafGUI::mafGUIApplicationSettingsPage *page);
@@ -69,7 +69,7 @@ public slots:
 
 protected slots:
     /// Observe the viewCreatedSignal emitted by the mafViewManager.
-    /* Attach the render context to the gui widget */
+    /* Attach the render context to the GUI widget */
     virtual void viewCreated(mafCore::mafObjectBase *view);
 
     /// Slot called when dynamic loaded GUI is available.
@@ -125,9 +125,5 @@ private:
     /// Check if the application needs to save data.
     int maybeSave();
 };
-
-inline mafGUI::mafGUIManager *mafMainWindow::guiManager() const {
-    return m_GUIManager;
-}
 
 #endif // MAFMAINWINDOW_H

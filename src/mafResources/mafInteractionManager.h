@@ -134,6 +134,9 @@ private slots:
 
     /// called when left mouse button is pressed.
     void pick();
+    
+    /// called when a vme has been picked
+    void vmePicked(double *pos, unsigned long modifiers, mafVME *vme);
 
 
 private:

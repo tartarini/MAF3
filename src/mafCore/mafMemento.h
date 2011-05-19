@@ -69,7 +69,7 @@ private:
     friend class mafObject;
     QString m_ObjectClassType; ///< Store the object's class type.
     mafMementoPropertyList m_MementoPropertyList; ///< Vector containing the object status.
-    mafSerializationPattern m_SerializationPattern; ///Defines is an INHERIT or a COMPOSED memento.
+    mafSerializationPattern m_SerializationPattern; ///< Defines if is an INHERIT or a COMPOSED memento.
 };
 
 

@@ -162,17 +162,14 @@ void mafView::plugVisualPipe(QString dataType, QString visualPipeType) {
 }
 
 mafSceneNode *mafView::sceneNodeFromVme(mafObjectBase *vme) {
-    bool found = false;
     QListIterator<mafSceneNode *> list(m_SceneNodeList);
     while (list.hasNext()) {
         mafSceneNode *sn = list.next();
         if (sn->vme()->isEqual(vme)) {
-            found = true;
             return sn;
         }
      }
-    if (!found)
-        return NULL;
+     return NULL;
 }
 
 void mafView::updateView() {

@@ -2,7 +2,7 @@
 #include <QtWebKit>
 #include <QSslSocket>
 
-#include "googlechat.h"
+#include "mafGoogleChatWidget.h"
 
 #define GOOGLECHAT_URL "http://talkgadget.google.com/talkgadget/m"
 

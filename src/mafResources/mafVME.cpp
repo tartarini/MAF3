@@ -21,6 +21,7 @@ using namespace mafResources;
 using namespace mafEventBus;
 
 mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL), m_CanRead(true), m_CanWrite(true) {
+    m_UIFilename = "vmeGeneric.ui";
     m_Lock = new QReadWriteLock(QReadWriteLock::Recursive);
     mafId time_set_id = mafIdProvider::instance()->idValue("TIME_SET");
     if(time_set_id != -1) {
@@ -134,20 +135,6 @@ void mafVME::execute() {
 
 void mafVME::detatchFromTree() {
     emit(detatched());
-}
-
-void mafVME::setSelected(bool sel) {
-    if(m_Selected != sel) {
-        m_Lock->lockForWrite();
-        m_Selected = sel;
-        m_Lock->unlock();
-        if(m_Selected) {
-            // notify the VME selection.
-            mafEventArgumentsList argList;
-            argList.append(mafEventArgument(mafCore::mafObjectBase *, this));
-            mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
-        }
-    }
 }
 
 mafDataSetCollection *mafVME::dataSetCollection() {

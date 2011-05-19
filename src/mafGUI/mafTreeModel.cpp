@@ -208,6 +208,9 @@ void mafTreeModel::itemReparent(QObject *obj, QObject *parent) {
 
 void mafTreeModel::selectItem(const QItemSelection &selected, const QItemSelection &deselected) {
     Q_UNUSED(deselected);
+    if(selected.indexes().count() == 0) {
+        return;
+    }
     m_CurrentItem = (mafTreeItem *)this->itemFromIndex(selected.indexes().at(0));
 }
 

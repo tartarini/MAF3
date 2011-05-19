@@ -30,16 +30,6 @@ mafSceneNode::~mafSceneNode() {
     mafDEL(this->m_VisualPipe);
 }
 
-void mafSceneNode::setSelected(bool sel) {
-    if(m_Selected != sel) {
-        m_Selected = sel;
-        if(m_Selected) {
-            // notify the VME selection.
-            m_VME->setSelected(true);
-        }
-    }
-}
-
 void mafSceneNode::visualPipeDestroyed() {
     this->m_VisualPipe = NULL;
 }
@@ -87,6 +77,7 @@ QString mafSceneNode::VMEName() {
   if(m_VME) {
     return m_VME->property("objectName").toString();
   }
+  return "";
 }
 
 void mafSceneNode::setVisibility(bool visible) {
@@ -137,4 +128,10 @@ void mafSceneNode::setVisibilityPolicy(unsigned int visibilityPolicy) {
 QString mafSceneNode::dataHash() const {
     return m_VME->objectHash();
 }
+
+QObject *mafSceneNode::dataObject() {
+    QObject *obj = m_VME;
+    return obj;
+}
+
 
