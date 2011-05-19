@@ -25,7 +25,7 @@ using namespace mafPluginVTK;
 
 mafVTKParametricSurfaceEllipsoid::mafVTKParametricSurfaceEllipsoid(const QString code_location) : mafPluginVTK::mafVTKParametricSurface(code_location), m_EllipsoidSource(NULL), m_Ptf(NULL) {
     m_EllipsoidPhiRes = 20.0;
-    m_EllipsoidTheRes = 20.0;
+    m_EllipsoidThetaRes = 20.0;
 
     m_EllipsoidXLength = 1.0;
     m_EllipsoidYLength = 2.0;
@@ -59,7 +59,7 @@ void mafVTKParametricSurfaceEllipsoid::updateSurface(){
     //Set parameters to surface.
     m_EllipsoidSource->SetRadius(m_EllipsoidYLength);
     m_EllipsoidSource->SetPhiResolution(m_EllipsoidPhiRes);
-    m_EllipsoidSource->SetThetaResolution(m_EllipsoidTheRes);
+    m_EllipsoidSource->SetThetaResolution(m_EllipsoidThetaRes);
     m_EllipsoidSource->SetCenter(m_Center);
 
     m_Transform->Identity();

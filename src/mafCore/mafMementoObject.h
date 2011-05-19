@@ -23,7 +23,7 @@ class mafObject;
 /**
  Class name: mafMementoObject
  This class defines the MAF3 base object for storing a mafObject state.
- This can be used to restore a previous stored object state (undo mechanism or serialization porpouses).
+ This can be used to restore a previous stored object state (undo mechanism or serialization purposes).
  */
 class MAFCORESHARED_EXPORT mafMementoObject : public mafMemento {
     Q_OBJECT
@@ -35,7 +35,7 @@ public:
     mafMementoObject(const QString code_location = "");
 
     /// ObjectMemento overloaded constructor.
-    mafMementoObject(const mafObject *obj, const QVariantList *tagList, mafDictionary *dic, const QString code_location = "");
+    mafMementoObject(const mafObject *obj, const QString code_location = "");
 
 protected:
     /// Object destructor.

@@ -27,6 +27,8 @@ namespace mafResources {
  */
 class MAFRESOURCESSHARED_EXPORT mafPipeVisual : public mafPipe {
     Q_OBJECT
+    Q_PROPERTY(QObject *graphicObject READ graphicObject WRITE setGraphicObject)
+    
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafPipe);
 
@@ -45,28 +47,24 @@ public:
     
     /// Pass to the visual pipe an object (or a group of objects) via mafProxyInterface
     /** graphicObject parameter  represents the graphic components for that specific pipeline, for example, VTK use vtkRenderer */
-    virtual void setGraphicObject(QObject *graphicObject);
+    void setGraphicObject(QObject *graphicObject);
 
+    /// return the graphic object used for paint the scene.
+    QObject *graphicObject() const;
+    
 signals:
-    /// Signal emitted when the pick hits the owned object.
-    void vmePickSignal(double *pickPos, unsigned long modifiers,  mafCore::mafProxyInterface *actor, QEvent *);
 
-    ///
-    void vmePickedSignal(double *pickPos, unsigned long modifiers , mafCore::mafObjectBase *vme);
+    /// signal emitted when the pick already happened. The information will be forwarded to the Interaction Manager.
+    void vmePickedSignal(double *pickPos, unsigned long modifiers , mafVME *vme);
 
 public slots:
     /// Set the visibility of its rendering scene.
     virtual void setVisibility(bool visible);
 
 private slots:
-    /// Forward the vmePick event if the pick hits the current visualized VME.
-    void vmePick(double *pickPos, unsigned long, mafCore::mafProxyInterface *actor, QEvent *);
 
-    /// Disconnect old interactor.
-    void interactorDetach();
-    
-    /// Connect new interactor.
-    void interactorAttached();
+    /// Forward the vmePick event if the pick hits the current visualized VME.
+    void vmePick(double *pickPos, unsigned long, mafCore::mafProxyInterface *actor, QEvent *e);
 
 private:
     /// Register signals and slots connections with the event bus.
@@ -79,6 +77,7 @@ protected:
     /* virtual */ ~mafPipeVisual();
 
     mafCore::mafProxyInterface *m_Output; ///< Output for visual pipe.
+    QObject *m_GraphicObject; ///< represents the graphic object for render the scene.
 };
 
 /////////////////////////////////////////////////////////////
@@ -92,6 +91,11 @@ inline mafCore::mafProxyInterface *mafPipeVisual::output() {
 inline bool mafPipeVisual::visibility() const {
     return m_Visibility;
 }
+    
+inline QObject *mafPipeVisual::graphicObject() const {
+    return m_GraphicObject;
+}
+
 
 } //namespace mafResources
 

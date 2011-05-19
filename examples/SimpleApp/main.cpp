@@ -1,9 +1,9 @@
 #include <QtGui/QApplication>
 
-#include "mafMainWindow.h"
 #include "mafOperationSimpleApp.h"
 #include "mafApplicationSettingsPageConfigurations.h"
 
+#include <mafMainWindow.h>
 #include <mafLogic.h>
 
 int main(int argc, char *argv[]) {
@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
 
     // Create the application's logic instance
     mafApplicationLogic::mafLogic *logic = new mafApplicationLogic::mafLogic();
-    // and initialize it. This initialization will load dinamically the mafResources Library.
+    // and initialize it. This initialization will load dynamically the mafResources Library.
     bool ok = logic->initialize();
     if(!ok) {
         exit(1);
@@ -34,7 +34,8 @@ int main(int argc, char *argv[]) {
     // Create the instance of the main window and pass to it the application's logic.
     // In this way the mafMainWondow class will also load the plug-ins present
     // in the default 'plugins' directory.
-    mafMainWindow w(logic);
+    mafMainWindow w;
+    w.guiManager()->setLogic(logic);
 
     // plug custom application's setting page
     mafApplicationSettingsPageConfigurations *page = new mafApplicationSettingsPageConfigurations();

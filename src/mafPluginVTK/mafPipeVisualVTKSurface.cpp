@@ -27,7 +27,7 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace std;
 
-mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : mafPipeVisual(code_location), m_Mapper(NULL), m_ScalarVisibility(0), m_ImmediateRendering(0), m_Renderer(NULL) {
+mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : mafPipeVisual(code_location), m_Mapper(NULL), m_ScalarVisibility(false), m_ImmediateRendering(false), m_Renderer(NULL) {
 }
 
 mafPipeVisualVTKSurface::~mafPipeVisualVTKSurface() {
@@ -50,6 +50,10 @@ bool mafPipeVisualVTKSurface::acceptObject(mafCore::mafObjectBase *obj) {
 }
 
 void mafPipeVisualVTKSurface::createPipe() {
+    mafVTKWidget* widget = qobject_cast<mafVTKWidget*>(graphicObject());
+    vtkRendererCollection *rc = widget->GetRenderWindow()->GetRenderers();
+    m_Renderer = rc->GetFirstRenderer();
+    
     m_Mapper = vtkPolyDataMapper::New();
     m_Actor = vtkActor::New();
     m_Actor.setDestructionFunction(&vtkActor::Delete);
@@ -76,7 +80,7 @@ void mafPipeVisualVTKSurface::setVisibility(bool visible) {
     Superclass::setVisibility(visible);
     m_Actor->SetVisibility(visible);
     
-    if (m_Renderer == NULL) {
+    if (graphicObject() == NULL) {
         return;
     }
     if(visible) {
@@ -89,24 +93,9 @@ void mafPipeVisualVTKSurface::setVisibility(bool visible) {
 
 
 void mafPipeVisualVTKSurface::setScalarVisibility(bool scalarVisibility) {
-    if(m_ScalarVisibility != scalarVisibility) {
-        m_ScalarVisibility = scalarVisibility;
-    }
+    m_ScalarVisibility = scalarVisibility;
 }
 
 void mafPipeVisualVTKSurface::setImmediateRendering (bool immediateRendering) {
-    if(m_ImmediateRendering != immediateRendering) {
-        m_ImmediateRendering = immediateRendering;
-    }
-}
-
-void mafPipeVisualVTKSurface::setGraphicObject(QObject *graphicObject) {
-    if(graphicObject == NULL){
-        m_Renderer = NULL;
-        return;
-    }
-    
-    mafVTKWidget* widget = qobject_cast<mafVTKWidget*>(graphicObject);
-    vtkRendererCollection *rc = widget->GetRenderWindow()->GetRenderers();
-    m_Renderer = rc->GetFirstRenderer();
+    m_ImmediateRendering = immediateRendering;
 }

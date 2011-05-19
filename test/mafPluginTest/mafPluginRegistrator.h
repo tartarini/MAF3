@@ -24,7 +24,7 @@ namespace mafPluginTest {
  */
 class MAFPLUGINTESTSHARED_EXPORT mafPluginRegistrator {
 public:
-    /// Object costructor
+    /// Object constructor
     mafPluginRegistrator();
 
     /// Object destructor

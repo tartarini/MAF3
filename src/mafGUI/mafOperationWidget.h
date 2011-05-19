@@ -16,6 +16,9 @@
 #include "mafGUIDefinitions.h"
 #include <QWidget>
 
+// forward declarations
+class mafImporterWidget;
+
 namespace Ui {
     class mafOperationWidget;
 }
@@ -74,6 +77,7 @@ private:
     Ui::mafOperationWidget *ui; ///< Pointer to the associated UI file
     mafCore::mafObjectBase *m_Operation;   ///< Pointer to the current running operation.
     QWidget *m_OperationGUI; ///< GUI associated to m_Operation.
+    mafImporterWidget *m_ImporterWidget;
 };
 
 #endif // MAFOPERATIONWIDGET_H

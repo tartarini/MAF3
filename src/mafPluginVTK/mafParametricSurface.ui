@@ -54,7 +54,7 @@
           <x>0</x>
           <y>0</y>
           <width>248</width>
-          <height>184</height>
+          <height>219</height>
          </rect>
         </property>
         <attribute name="label">
@@ -111,8 +111,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>248</width>
-          <height>184</height>
+          <width>98</width>
+          <height>28</height>
          </rect>
         </property>
         <attribute name="label">
@@ -169,8 +169,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>248</width>
-          <height>184</height>
+          <width>98</width>
+          <height>28</height>
          </rect>
         </property>
         <attribute name="label">
@@ -246,8 +246,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>248</width>
-          <height>184</height>
+          <width>98</width>
+          <height>28</height>
          </rect>
         </property>
         <attribute name="label">
@@ -305,7 +305,7 @@
           <x>0</x>
           <y>0</y>
           <width>248</width>
-          <height>184</height>
+          <height>219</height>
          </rect>
         </property>
         <attribute name="label">
@@ -325,64 +325,54 @@
            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
           </property>
           <item row="0" column="0">
-           <widget class="QLabel" name="label_16">
-            <property name="text">
-             <string>Radius</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="ellipsoidRadius"/>
-          </item>
-          <item row="1" column="0">
            <widget class="QLabel" name="label_17">
             <property name="text">
              <string>Phi resolution</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="0" column="1">
            <widget class="QDoubleSpinBox" name="ellipsoidPhiRes"/>
           </item>
-          <item row="2" column="0">
+          <item row="1" column="0">
            <widget class="QLabel" name="label_18">
             <property name="text">
              <string>Theta resolution</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item row="1" column="1">
+           <widget class="QDoubleSpinBox" name="ellipsoidThetaRes"/>
+          </item>
+          <item row="2" column="0">
            <widget class="QLabel" name="label_13">
             <property name="text">
              <string>X Length</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
+          <item row="2" column="1">
            <widget class="QDoubleSpinBox" name="ellipsoidXLength"/>
           </item>
-          <item row="4" column="0">
+          <item row="3" column="0">
            <widget class="QLabel" name="label_14">
             <property name="text">
              <string>Y Length</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
+          <item row="3" column="1">
            <widget class="QDoubleSpinBox" name="ellipsoidYLength"/>
           </item>
-          <item row="5" column="0">
+          <item row="4" column="0">
            <widget class="QLabel" name="label_15">
             <property name="text">
              <string>Z Length</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
+          <item row="4" column="1">
            <widget class="QDoubleSpinBox" name="ellipsoidZLength"/>
-          </item>
-          <item row="2" column="1">
-           <widget class="QDoubleSpinBox" name="ellipsoidThetaRes"/>
           </item>
          </layout>
         </widget>

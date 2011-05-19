@@ -18,7 +18,7 @@ using namespace mafCore;
 mafMementoObject::mafMementoObject(const QString code_location) : mafMemento(code_location) {
 }
 
-mafMementoObject::mafMementoObject(const mafObject *obj, const QVariantList *tagList, mafDictionary *dic, const QString code_location) : mafMemento(obj, code_location) {
+mafMementoObject::mafMementoObject(const mafObject *obj, const QString code_location) : mafMemento(obj, code_location) {
     mafMementoPropertyList *list = mementoPropertyList();
     int i = 0;
     const QMetaObject *meta = obj->metaObject();
@@ -36,15 +36,15 @@ mafMementoObject::mafMementoObject(const mafObject *obj, const QVariantList *tag
     }
 
     mafMementoPropertyItem itemTagList;
-    itemTagList.m_Multiplicity = tagList->count();
+    itemTagList.m_Multiplicity = obj->tagList()->count();
     itemTagList.m_Name = "TagList";
-    itemTagList.m_Value = *tagList;
+    itemTagList.m_Value = *obj->tagList();
     list->append(itemTagList);
 
     mafMementoPropertyItem itemDic;
-    itemDic.m_Multiplicity = dic->count();
+    itemDic.m_Multiplicity = obj->dictionary()->count();
     itemDic.m_Name = "dictionary";
-    itemDic.m_Value = *(dic);
+    itemDic.m_Value = *(obj->dictionary());
     list->append(itemDic);
 }
 

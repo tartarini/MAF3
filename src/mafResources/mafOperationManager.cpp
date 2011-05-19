@@ -37,12 +37,6 @@ void mafOperationManager::shutdown() {
 
 mafOperationManager::mafOperationManager(const QString code_location) : mafObjectBase(code_location), m_CurrentOperation(NULL), m_LastUndoneOperation(NULL) {
     initializeConnections();
-
-    //request of the selected vme
-    mafCore::mafObjectBase *sel_vme;
-    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
-    vmeSelect(sel_vme);
 }
 
 mafOperationManager::~mafOperationManager() {
@@ -58,8 +52,6 @@ mafOperationManager::~mafOperationManager() {
     mafUnregisterLocalCallback("maf.local.resources.operation.currentRunning", this, "currentOperation()")
     mafUnregisterLocalCallback("maf.local.resources.operation.executionPool", this, "executionPool()")
     
-    mafUnregisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)")
-
     // Unregister signals...
     mafUnregisterLocalSignal("maf.local.resources.operation.start", this, "startOperationSignal(const QString)")
     mafUnregisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)")
@@ -130,16 +122,8 @@ void mafOperationManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.resources.operation.sizeUndoStack", this, "undoStackSize()")
     mafRegisterLocalCallback("maf.local.resources.operation.currentRunning", this, "currentOperation()")
     mafRegisterLocalCallback("maf.local.resources.operation.executionPool", this, "executionPool()")
-
-    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)")
 }
 
-void mafOperationManager::vmeSelect(mafCore::mafObjectBase *obj) {
-    mafVME *vme = qobject_cast<mafResources::mafVME*>(obj);
-    if(vme && vme != m_SelectedVME) {
-        m_SelectedVME = vme;
-    }
-}
 
 void mafOperationManager::executeWithParameters(QVariantList op_with_parameters) {
     REQUIRE(op_with_parameters.count() == 2);
@@ -161,6 +145,12 @@ void mafOperationManager::setOperationParameters(QVariantList parameters) {
 void mafOperationManager::startOperation(const QString operation) {
     REQUIRE(!operation.isEmpty());
 
+    //request of the selected vme
+    mafObjectBase *selectedObj = NULL;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, selectedObj);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
+    mafResource *resource = qobject_cast<mafResource *>(selectedObj);
+    
     // Create the instance of the new operation to execute.
     m_CurrentOperation = (mafOperation *)mafNEWFromString(operation);
 
@@ -171,7 +161,7 @@ void mafOperationManager::startOperation(const QString operation) {
 
     m_CurrentOperation->initialize();
     // Assign as input the current selected VME.
-    m_CurrentOperation->setInput(m_SelectedVME);
+    m_CurrentOperation->setInput(resource);
 
     // Notify the observers that the new operation has started.
     mafEventArgumentsList argList;

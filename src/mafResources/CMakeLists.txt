@@ -38,6 +38,12 @@ ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 
 ## #################################################################
+## copy ui files
+## #################################################################
+
+mafCopyFilesFromExtension("ui" "mafResources")
+
+## #################################################################
 ## Wrapping Build rules
 ## #################################################################
 

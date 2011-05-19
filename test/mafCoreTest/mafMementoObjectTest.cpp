@@ -50,7 +50,7 @@ void mafMementoObjectTest::mafMementoConstructorTest() {
     mafObject *obj = mafNEW(mafCore::mafObject);
     obj->setObjectName("Test memento");
     //! <snippet>
-    mafMementoObject *memento = new mafMementoObject(obj, obj->tagList(), obj->dictionary(), mafCodeLocation);
+    mafMementoObject *memento = new mafMementoObject(obj, mafCodeLocation);
     //! </snippet>
     QVERIFY(memento != NULL);
     mafDEL(memento);

@@ -20,7 +20,7 @@ using namespace mafEventBus;
 using namespace mafCore;
 
 mafImporter::mafImporter(const QString code_location) : mafOperation(code_location), m_Filename("") {
-    m_UIFilename = "mafImporter.ui";
+    m_UIFilename = "";
 }
 
 mafImporter::~mafImporter() {

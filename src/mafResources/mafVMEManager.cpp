@@ -108,9 +108,6 @@ void mafVMEManager::vmeSelect(mafObjectBase *vme) {
         return;
     }
     // VME has been selected.
-    if(m_SelectedVME) {
-        m_SelectedVME->setSelected(false);
-    }
     m_SelectedVME = vme_to_select;
 }
 
@@ -175,19 +172,17 @@ mafCore::mafHierarchyPointer mafVMEManager::requestVMEHierarchy() {
     }
 
     if (m_Root == NULL) {
-         //Create a new root.
-         m_Root = mafNEW(mafResources::mafVME);
-         m_Root->setObjectName("root");
-         m_Root->setProperty("iconFile", ":/images/root.png");
+        //Create a new root.
+        m_Root = mafNEW(mafResources::mafVME);
+        m_Root->setObjectName("root");
+        m_Root->setProperty("iconFile", ":/images/root.png");
 
-         //m_VMEHierarchy->addHierarchyNode(m_Root);
-         mafEventArgumentsList argList;
-         argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Root));
-         mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+        //m_VMEHierarchy->addHierarchyNode(m_Root);
+        mafEventArgumentsList argList;
+        argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Root));
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 
-
-         // Select the root node.
-         //m_Root->setSelected(true);
+        this->vmeSelect(m_Root);
      }
 
      return m_VMEHierarchy;

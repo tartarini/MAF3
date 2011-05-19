@@ -13,6 +13,7 @@
 
 #include <mafCoreSingletons.h>
 #include <mafEventBusManager.h>
+#include <mafMementoHierarchy.h>
 
 
 using namespace mafEventBus;
@@ -121,8 +122,6 @@ mafCore::mafHierarchy *mafLogic::requestNewHierarchy() {
     ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
     
-    root->setSelected(true);
-    
     return m_Hierarchy;
 }
 
@@ -172,4 +171,35 @@ void mafLogic::restoreSettings() {
     qDebug() << "Reading mafLogic settings...";
     QSettings s;
     m_WorkingDirectory = s.value("workingDir").toString();
+}
+
+
+void mafLogic::storeHierarchy(QString fileName) {
+    // Get hierarchy
+    mafCore::mafHierarchyPointer hierarchy;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+    
+    mafMementoHierarchy * mementoHiearachy = (mafMementoHierarchy*)hierarchy->createMemento();
+    REQUIRE(mementoHiearachy != NULL);
+
+    // Serialize memento
+    mafEventArgumentsList argList;
+    QString encodeType = "XML";
+    argList.append(mafEventArgument(mafCore::mafMemento *, mementoHiearachy));
+    argList.append(mafEventArgument(QString, fileName));
+    argList.append(mafEventArgument(QString, encodeType));
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal, &argList);
+}
+
+void mafLogic::restoreHierarchy(mafCore::mafMemento *mementoHierarchy) {
+    //clean the scenegraphs of all the views
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.clearViews");
+
+    // Initialize data hierarchy
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, m_Hierarchy);
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.new", mafEventTypeLocal, NULL, &ret_val);
+
+    // Set memento loaded to hierarchy
+    m_Hierarchy->setMemento(mementoHierarchy);
 }

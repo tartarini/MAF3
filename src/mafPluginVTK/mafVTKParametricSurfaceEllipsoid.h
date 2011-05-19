@@ -31,7 +31,7 @@ This class represent a VTK ellipsoid surface with modificable parametrs.
 class MAFPLUGINVTKSHARED_EXPORT mafVTKParametricSurfaceEllipsoid : public mafPluginVTK::mafVTKParametricSurface {
     Q_OBJECT
     Q_PROPERTY(double ellipsoidPhiRes READ ellipsoidPhiRes WRITE setEllipsoidPhiRes)
-    Q_PROPERTY(double ellipsoidTheRes READ ellipsoidTheRes WRITE setEllipsoidTheRes)
+    Q_PROPERTY(double ellipsoidThetaRes READ ellipsoidThetaRes WRITE setEllipsoidThetaRes)
     Q_PROPERTY(double ellipsoidXLength READ ellipsoidXLength WRITE setEllipsoidXLength)
     Q_PROPERTY(double ellipsoidYLength READ ellipsoidYLength WRITE setEllipsoidYLength)
     Q_PROPERTY(double ellipsoidZLength READ ellipsoidZLength WRITE setEllipsoidZLength)
@@ -57,7 +57,7 @@ private slots:
     void setEllipsoidPhiRes(double ellipsoidPhiRes);
 
     /// Set the resolution of the parametric ellipsoid.
-    void setEllipsoidTheRes(double ellipsoidTheRes);
+    void setEllipsoidThetaRes(double ellipsoidThetaRes);
 
     /// Set the X length of the parametric ellipsoid.
     void setEllipsoidXLength(double ellipsoidXLength);
@@ -72,7 +72,7 @@ private slots:
     double ellipsoidPhiRes();
 
     /// get the resolution of the parametric ellipsoid.
-    double ellipsoidTheRes();
+    double ellipsoidThetaRes();
 
     /// Get the X length of the parametric ellipsoid.
     double ellipsoidXLength();
@@ -90,7 +90,7 @@ private:
     vtkTransform *m_Transform; ///< Filter to transform sphere source.
 
     double m_EllipsoidPhiRes; ///< Ellipsoid resolution.
-    double m_EllipsoidTheRes; ///< Ellipsoid resolution.
+    double m_EllipsoidThetaRes; ///< Ellipsoid resolution.
     double m_EllipsoidXLength; ///< X length of the ellipsoid.
     double m_EllipsoidYLength; ///< Y length of the ellipsoid.
     double m_EllipsoidZLength; ///< Z length of the ellipsoid.
@@ -105,8 +105,8 @@ inline void mafVTKParametricSurfaceEllipsoid::setEllipsoidPhiRes(double ellipsoi
     m_EllipsoidPhiRes = ellipsoidPhiRes;
 }
 
-inline void mafVTKParametricSurfaceEllipsoid::setEllipsoidTheRes(double ellipsoidThiRes){
-    m_EllipsoidTheRes = ellipsoidThiRes;
+inline void mafVTKParametricSurfaceEllipsoid::setEllipsoidThetaRes(double ellipsoidThiRes){
+    m_EllipsoidThetaRes = ellipsoidThiRes;
 }
 
 inline void mafVTKParametricSurfaceEllipsoid::setEllipsoidXLength(double ellipsoidXLength){
@@ -125,8 +125,8 @@ inline double mafVTKParametricSurfaceEllipsoid::ellipsoidPhiRes(){
     return m_EllipsoidPhiRes;
 }
 
-inline double mafVTKParametricSurfaceEllipsoid::ellipsoidTheRes(){
-    return m_EllipsoidTheRes;
+inline double mafVTKParametricSurfaceEllipsoid::ellipsoidThetaRes(){
+    return m_EllipsoidThetaRes;
 }
 
 inline double mafVTKParametricSurfaceEllipsoid::ellipsoidXLength(){

@@ -30,8 +30,8 @@ namespace mafPluginVTK {
 
 class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSurface : public mafResources::mafPipeVisual {
     Q_OBJECT
-    Q_PROPERTY(int scalarVisibility READ scalarVisibility WRITE setScalarVisibility)
-    Q_PROPERTY(int immediateRendering READ immediateRendering WRITE setImmediateRendering)
+    Q_PROPERTY(bool scalarVisibility READ scalarVisibility WRITE setScalarVisibility)
+    Q_PROPERTY(bool immediateRendering READ immediateRendering WRITE setImmediateRendering)
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafPipeVisual);
 
@@ -46,7 +46,7 @@ public:
     /*virtual*/ void createPipe();
 
     /// Return the flag to activate scalar visibility.
-    int scalarVisibility();
+    bool scalarVisibility();
 
     /// Set the flag to activate scalar visibility.
     void setEdgeVisibility(bool edgeVisibility);
@@ -55,11 +55,7 @@ public:
     int edgeVisibility();
 
     /// Return the flag to activate immediate rendering mode.
-    int immediateRendering();
-    
-    /// Pass vtkRenderer to the visual pipe
-    /*virtual*/ void setGraphicObject(QObject *graphicObject);
-
+    bool immediateRendering();
 
 public slots:
     /// Allow to execute and update the pipeline when something change.
@@ -83,19 +79,19 @@ private:
     vtkPolyDataMapper  *m_Mapper; ///< Class that maps polygonal data.
     vtkRenderer * m_Renderer; ///< Current VTK Renderer. 
     mafCore::mafProxy<vtkActor> m_Actor; ///< Output container.
-    int m_ScalarVisibility; ///< Flag to activate scalar visibility.
-    int m_ImmediateRendering; ///< Flag to activate immediate rendering mode.
+    bool m_ScalarVisibility; ///< Flag to activate scalar visibility.
+    bool m_ImmediateRendering; ///< Flag to activate immediate rendering mode.
 };
 
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline int mafPipeVisualVTKSurface::scalarVisibility() {
+inline bool mafPipeVisualVTKSurface::scalarVisibility() {
     return m_ScalarVisibility;
 }
 
-inline int mafPipeVisualVTKSurface::immediateRendering() {
+inline bool mafPipeVisualVTKSurface::immediateRendering() {
     return m_ImmediateRendering;
 }
 

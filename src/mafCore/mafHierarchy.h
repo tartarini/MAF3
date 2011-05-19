@@ -80,6 +80,17 @@ public:
     /// Return current iterator.
     mafTree<QObject *>::iterator iterator();
 
+    /// Return the instance of the resource's status. The caller has to delete the allocated memory he asked.
+    /*virtual*/ mafCore::mafMemento *createMemento() const;
+
+    /// Allows setting a previous saved object's state.
+    /**
+     This is used to implement a sort of undo mechanism for the object's state, but can be used also by the
+    serialization mechanism to serialize data into the selected storage type.
+    The 'deep_memento' flag is used to avoid the copy of the object unique hash in normal operation like
+    undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
+    /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
+
 signals:
     /// Signal emitted when a new item is attached to the hierarchy.
     void itemAttached(QObject *item, QObject *parent);
@@ -98,6 +109,9 @@ protected:
     /* virtual */ ~mafHierarchy();
 
 private:
+    /// Recreate hierarchy traversing tree from memento.
+    void traverseTree(mafMemento *memento, bool deep_memento);
+
     mafTree<QObject *> *m_Tree; ///< tree variable which hosts mafSceneNode elements
     mafTree<QObject *>::iterator m_TreeIterator; ///< tree iterator variable which point the current node
 };

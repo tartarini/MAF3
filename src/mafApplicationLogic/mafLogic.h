@@ -84,6 +84,12 @@ public slots:
     /// Create a new VME Hierarchy.
     mafCore::mafHierarchy *requestNewHierarchy();
 
+    /// Save hierarchy in a memento
+    void storeHierarchy(QString fileName);
+
+    /// Load hierarchy from a memento.
+    void restoreHierarchy(mafCore::mafMemento *mementoHierarchy);
+
 signals:
     /// Signal emitted when a recent file is asked to be opened. The argument of the signal contains the filename.
     void openFile(const QString filename);

@@ -55,7 +55,7 @@ void mafVTKWidget::mousePressEvent(QMouseEvent* e) {
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
     // Check if a VME has been picked
-    this->vmePickCheck(iren, e);
+    //this->vmePickCheck(iren, e);
 
     // invoke appropriate vtk event
     switch(e->button()) {
@@ -231,11 +231,6 @@ void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e) {
     }
 
     if (actor != NULL) {
-        mafEventArgumentsList argList;
-        argList.append(mafEventArgument(double *, (double *)posPicked));
-        argList.append(mafEventArgument(unsigned long, m_Modifiers));
-        argList.append(mafEventArgument(mafCore::mafProxyInterface *, &actorPicked));
-        argList.append(mafEventArgument(QEvent *, e));
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.vmePick", mafEventTypeLocal, &argList);
+        emit vmePickSignal(posPicked, m_Modifiers, &actorPicked, e);
     }
 }

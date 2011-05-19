@@ -10,32 +10,61 @@
  */
 
 #include "mafMementoHierarchy.h"
-#include "mafHierarchy.h"
 
 using namespace mafCore;
 
 mafMementoHierarchy::mafMementoHierarchy(const QString code_location)  : mafMemento(code_location) {
 }
 
-mafMementoHierarchy::mafMementoHierarchy(const mafObject *obj, const QString code_location) : mafMemento(obj, code_location) {
+mafMementoHierarchy::mafMementoHierarchy(const mafObject *obj, const QString code_location) : mafMemento(obj, code_location), m_ParentMemento(NULL) {
     REQUIRE(obj != NULL);
+    m_Hierarchy = qobject_cast<mafCore::mafHierarchyPointer>((mafObject *)obj);
     
-    QStringList hashLists;
+    //QStringList hashLists;
     QObject *o = NULL;
     
     const mafHierarchy *tree = qobject_cast<const mafHierarchy*>(obj);
     
     //traverse tree and memorize element hash and parent hash, then put them inside a list.
-    
-    
-    
-    mafMementoPropertyList *list = mementoPropertyList();
-    mafMementoPropertyItem item;
-    item.m_Multiplicity = hashLists.count();
-    item.m_Name = "Hierarchy";
-    item.m_Value = QVariant(hashLists);
-    list->append(item);
+    m_Hierarchy->moveTreeIteratorToRootNode();
+    //serialize root node
+    QObject *data = m_Hierarchy->currentData();
+    mafObject* serializableObj = qobject_cast<mafObject*>(data);
+    mafMemento *memento = serializableObj->createMemento();
+    m_ParentMemento = memento;
+
+    memento->setSerializationPattern(mafSerializationPatternComposition);
+    memento->setParent(this);
+
+    traverseTree();
+// By now, there are no property to store
+//     mafMementoPropertyList *list = mementoPropertyList();
+//     mafMementoPropertyItem item;
+//     item.m_Multiplicity = hashLists.count();
+//     item.m_Name = "Hierarchy";
+//     item.m_Value = QVariant(hashLists);
+//     list->append(item);
 }
 
 mafMementoHierarchy::~mafMementoHierarchy() {
+}
+
+void mafMementoHierarchy::traverseTree() {
+    int i = 0, size = m_Hierarchy->currentNumberOfChildren();
+    for(;i < size; ++i) {
+        m_Hierarchy->moveTreeIteratorToNthChild(i);
+        QObject *obj = m_Hierarchy->currentData();
+        
+        mafObject* serializableObj = qobject_cast<mafObject*>(obj);
+        mafMemento *memento = serializableObj->createMemento();
+        
+        memento->setSerializationPattern(mafSerializationPatternComposition);
+        memento->setParent(m_ParentMemento);
+        
+        m_ParentMemento = memento;
+        traverseTree();
+        m_Hierarchy->moveTreeIteratorToParent();
+        m_ParentMemento = (mafMemento*)m_ParentMemento->parent();
+    }
+
 }

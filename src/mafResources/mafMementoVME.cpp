@@ -30,7 +30,7 @@ mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const QString co
     
     if (vme->dataSetCollection()) {
       mafDataSetCollection *collection = vme->dataSetCollection();
-      mafMementoDataSetCollection *mementoDataSetCollection = (mafMementoDataSetCollection *)collection->createMemento();
+      mafMemento *mementoDataSetCollection = collection->createMemento();
       //Set serializationPattern of the memento created as "Composition" because is not an ancestor of this memento
       mementoDataSetCollection->setSerializationPattern(mafSerializationPatternComposition);
       mementoDataSetCollection->setParent(this);

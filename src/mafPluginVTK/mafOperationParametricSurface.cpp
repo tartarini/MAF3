@@ -92,19 +92,7 @@ void mafOperationParametricSurface::initializeParametricSurfaces(){
 }
 
 bool mafOperationParametricSurface::acceptObject(mafCore::mafObjectBase *obj) {
-    if(obj == NULL) {
-        return false;
-    }
-    bool result = false;
-    QString ct(obj->metaObject()->className());
-    result = ct == "mafResources::mafVME";
-
-    if(ct == "mafResources::mafSceneNode"){
-        mafSceneNode *node = qobject_cast<mafSceneNode *>(obj);
-        QString type = node->vme()->metaObject()->className();
-        result = type =="mafResources::mafVME";
-    }
-    return result;
+    return obj != NULL;
 }
 
 int mafOperationParametricSurface::parametricSurfaceType() {
@@ -167,8 +155,8 @@ void mafOperationParametricSurface::on_spherePhiRes_valueChanged(double d) {
     this->updateParametricSurface();
 }
 
-void mafOperationParametricSurface::on_sphereTheRes_valueChanged(double d) {
-    m_ParametricSphere->setProperty("sphereTheRes", d);
+void mafOperationParametricSurface::on_sphereThetaRes_valueChanged(double d) {
+    m_ParametricSphere->setProperty("sphereThetaRes", d);
     m_ParametricSphere->updateSurface();
     this->updateParametricSurface();
 }
@@ -239,8 +227,8 @@ void mafOperationParametricSurface::on_ellipsoidPhiRes_valueChanged(double d) {
     this->updateParametricSurface();
 }
 
-void mafOperationParametricSurface::on_ellipsoidTheRes_valueChanged(double d) {
-    m_ParametricEllipsoid->setProperty("ellipsoidTheRes", d);
+void mafOperationParametricSurface::on_ellipsoidThetaRes_valueChanged(double d) {
+    m_ParametricEllipsoid->setProperty("ellipsoidThetaRes", d);
     m_ParametricEllipsoid->updateSurface();
     this->updateParametricSurface();
 }

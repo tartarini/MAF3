@@ -48,9 +48,6 @@ class mafGUIApplicationSettingsPage;
  - maf.local.gui.action.copy
  - maf.local.gui.action.paste
  - maf.local.gui.action.about
-
- There is also a signal related to the notification of path selection through a dialog.
- - maf.local.gui.pathSelected
  */
 class MAFGUISHARED_EXPORT mafGUIManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -80,7 +77,7 @@ public:
     /// Return the number of maximum recent files.
     int maxRecentFiles();
 
-    /// Allows to assign the maximum number of recent files. Canges of this number will be considered at the application's sturtup.
+    /// Allows to assign the maximum number of recent files. Changes of this number will be considered at the application's startup.
     void setMaxRecentFiles(int max_recent_files);
 
     /// Return the application's settings dialog.
@@ -136,7 +133,8 @@ private:
     mafGUIApplicationSettingsDialog *m_SettingsDialog; ///< Settings dialog
     mafLoggerWidget *m_Logger; ///< Logger
 
-    mafOperationWidget *m_OperationWidget; ///< Widget on whith will be visible the operation's GUI.
+    mafOperationWidget  *m_OperationWidget; ///< Widget on whith will be visible the operation's GUI.
+    QWidget             *m_VMEWidget; ///< Widget representing the VME UI.
 
     QMainWindow     *m_MainWindow;  ///< Main window associated to the application.
     mafUILoaderQt   *m_UILoader;    ///< Class in charge to load the GUI.
@@ -146,9 +144,6 @@ private:
     mafApplicationLogic::mafLogic *m_Logic; ///< Logic of the application.
 
 signals:
-    /// Signal emitted on path selection using the dialog.
-    void pathSelected(const QString path);
-
     /// Signal emitted when the GUI panel has been loaded.
     void guiLoaded(int type, QWidget *w);
 
@@ -185,7 +180,7 @@ private slots:
     void viewDestroyed();
 
     /// Allow to send a vme selection request when an item has been clicked into the mafTreWidget.
-    void selectVME(QModelIndex);
+    void selectVME(QModelIndex index);
 
     /// Allows to ask to open the selected recent file.
     void openRecentFile();
@@ -197,11 +192,26 @@ private slots:
     /** This method will update all the operation's menu items according to the new selected VME.*/
     void updateMenuForSelectedVme(mafCore::mafObjectBase *vme);
 
+    /// Called when a VME has been selected.
+    /** This method will update all tree widget for the selected VME */
+    void updateTreeForSelectedVme(mafCore::mafObjectBase *vme);
+
+    
     /// Slot needed to intercept the started operation and ask it for the GUI filename.
     void operationDidStart(mafCore::mafObjectBase *operation);
 
-    /// Slot called when the UI is loaded from the mafUILoaderQt.
-    void uiLoaded(mafCore::mafProxyInterface *guiWidget);
+    /// Slot called when the UI is loaded from the mafUILoaderQt, and the gui is shown.
+    void showGui(mafCore::mafProxyInterface *guiWidget);
+    
+    /// save the current working session
+    void save();
+    
+    /// open a working session
+    void open();
+
+private:
+    /// return the data object inside an item in order to retrieve the data object and not the visual one (for example scene-node).
+    QObject *dataObject(QModelIndex index);
 
 };
 
