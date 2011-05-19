@@ -95,8 +95,12 @@ void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
 
 void mafView::vmeSelect(mafObjectBase *node) {
     mafSceneNode *node_to_select = qobject_cast<mafResources::mafSceneNode *>(node);
+    if(node_to_select == NULL) {
+        mafVME *vme_to_select = qobject_cast<mafResources::mafVME *>(node);
+        node_to_select = sceneNodeFromVme(vme_to_select);
+    }
     if(NULL == node_to_select) {
-        qWarning("%s", mafTr("Trying to select an object that not represent a mafSceneNode.").toAscii().data());
+        qWarning("%s", mafTr("Trying to select an object that is not present in tree.").toAscii().data());
         return;
     }
     m_SelectedNode = node_to_select;//sceneNodeFromVme(vme);

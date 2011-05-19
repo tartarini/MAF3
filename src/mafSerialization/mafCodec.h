@@ -47,7 +47,7 @@ public:
     void setDevice(QIODevice *d);
 
 protected:
-
+    /// Recreate hierarchy of memento.
     void buildMementoTree();
 
     /// Object destructor.

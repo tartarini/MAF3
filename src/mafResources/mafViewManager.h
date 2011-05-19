@@ -61,13 +61,13 @@ signals:
     /// Signal which allow to remove the view from the manager.
     void destroyViewSignal(mafCore::mafObjectBase *view);
 
-    /// Allow to cdreate a new mafView given the type name as string. Return the created view on success.
+    /// Allow to create a new mafView given the type name as string. Return the created view on success.
     void createViewSignal(QString view_type);
 
     /// Notify the view creation to all observers.
     void viewCreatedSignal(mafCore::mafObjectBase *view);
 
-    /// Notify the clear of all the scenegraphs.
+    /// Notify the clear of all the scene-graphs.
     void clearViewsSignal();
     
     /// Notify the destruction on all views
@@ -78,7 +78,7 @@ public slots:
     /** This method allows to save the status of opened views when logic
     emits the signal maf.local.logic.settings.view.store.
     The manager save the number and types of opened views, their position and size.
-    Then each view save its settings depending on the view itselfs.*/
+    Then each view save its settings depending on the view itself.*/
     mafCore::mafMemento *createMemento() const;
 
     /// Allows to rebuild a previous saved object's state.
@@ -86,7 +86,7 @@ public slots:
     This is used to implement a sort of undo mechanism for the object's state, but can be used also by the
     serialization mechanism to serialize data into the selected storage type.
     The 'deep_memento' flag is used to avoid the copy of the object unique hash in normal operation like
-    undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
+    undo or copy/paste operations. The complete object save is instead needed for serialization purposes.*/
     void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
 private slots:
@@ -102,13 +102,13 @@ private slots:
     /// Remove the view from the manager.
     void destroyView(mafCore::mafObjectBase *view);
 
-    /// Allow to cdreate a new mafView given the type name as string. Return the pointer to the created view on success.
+    /// Allow to create a new mafView given the type name as string. Return the pointer to the created view on success.
     void createView(QString view_type);
 
     /// Method called when a view has been destroyed (by someone else).
     void viewDestroyed();
     
-    /// Clear the scenegraphs of each view. 
+    /// Clear the scene-graphs of each view. 
     void clearViews();
 
 protected:
@@ -131,10 +131,10 @@ private:
     /// Delete all created views
     void destroyAllViews();
 
-    /// Fill sceneGraph woth sceneNodes.
+    /// Fill sceneGraph with sceneNodes.
     void fillSceneGraph(mafView *v, mafCore::mafHierarchy *hierarchy);
     
-    /// Clear the scenegraph for view in the argument.
+    /// Clear the scene-graph for view in the argument.
     void clearView(mafCore::mafObjectBase *view);
 
 
