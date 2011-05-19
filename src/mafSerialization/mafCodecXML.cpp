@@ -12,6 +12,7 @@
 #include "mafCodecXML.h"
 #include <mafEventBusManager.h>
 #include "QDir"
+#include "QPair"
 
 using namespace mafCore;
 using namespace mafSerialization;
@@ -124,8 +125,8 @@ mafMemento *mafCodecXML::decode() {
     }
     m_LevelDecode = serializationPatternString.right(1).toUInt();
 
-     //Fill the map of memento and levelDecode.
-     m_MementoMap[m_LevelDecode] = memento;
+     //Fill the list of levelDecode and memento.
+    m_MementoList.push_back(qMakePair(m_LevelDecode, memento));
 
      while (!m_XMLStreamReader.atEnd() && !m_XMLStreamReader.hasError()) {
       if (!m_XMLStreamReader.readNextStartElement()) {
@@ -146,18 +147,39 @@ mafMemento *mafCodecXML::decode() {
       if (name == "memento") {
         int parentLevel = m_LevelDecode;
         mafMemento *mChild = decode();
-        int parentRelation = m_LevelDecode - parentLevel;
-        if (parentRelation > 0) {
-          mChild->setParent(memento);
-        } else {
-          QMap<int, mafMemento*>::const_iterator i = m_MementoMap.find(m_LevelDecode-1);
-          mafMemento *mementoParent = (mafMemento*)i.value();
-          mChild->setParent(mementoParent);
-        }
         m_LevelDecode = parentLevel;
       }
     }
+     // If it is the last memento, build memento tree.
+    if(m_LevelDecode == 0) { 
+        buildMementoTree();
+    }
     return memento;
+}
+
+void mafCodecXML::buildMementoTree() {
+    int listSize = m_MementoList.count();
+    int i = 0;
+    for(i; i < listSize-1; i++){
+        int parentLevel = m_MementoList.at(i).first;
+        mafMemento *mementoParent = m_MementoList.at(i).second;
+        int childLevel = m_MementoList.at(i+1).first;
+        mafMemento *mementoChild = m_MementoList.at(i+1).second;
+        int parentRelation = childLevel - parentLevel;
+        if (parentRelation > 0) {
+            mementoChild->setParent(mementoParent);
+        } else {
+            //cycle searching for last memento with level parent of chilMemento
+            for (int n = i; n >= 0; n--){
+                int level = m_MementoList.at(n).first;
+                if (level == (childLevel-1)) {
+                    mafMemento *mementoParent = m_MementoList.at(n).second;
+                    mementoChild->setParent(mementoParent);
+                    break;
+                }
+            }
+        }
+    }
 }
 
 void mafCodecXML::marshall(const QVariant &value ){
@@ -289,7 +311,9 @@ QVariant mafCodecXML::demarshall( QXmlStreamReader *xmlStream ) {
         if(attributes.hasAttribute("multiplicity")) {
             multiplicity = attributes.value("multiplicity").toString().toUInt();
         } 
-        if (multiplicity < 1) {
+        if (multiplicity == 0) {
+            return QVariant();
+        } else if (multiplicity < 0){
             qCritical() << QString("bad param value");
             return QVariant();
         } else if (multiplicity > 1){
