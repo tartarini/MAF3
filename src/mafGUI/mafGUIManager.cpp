@@ -37,6 +37,9 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
 
     mafCore::mafMessageHandler::instance()->setActiveLogger(m_Logger);
 
+    mafRegisterLocalSignal("maf.local.gui.new", this, "newWorkinSessioneSignal()");
+    mafRegisterLocalCallback("maf.local.gui.new", this, "newWorkingSession()");
+
     mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)")
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateMenuForSelectedVme(mafCore::mafObjectBase *)")
     // OperationManager's callback
@@ -45,6 +48,7 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     // ViewManager's callback.
     mafRegisterLocalCallback("maf.local.resources.view.select", this, "viewSelected(mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.view.noneViews", this, "viewDestroyed()");
+
 
     m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
     connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*)), this, SLOT(showGui(mafCore::mafProxyInterface*)));
@@ -752,15 +756,32 @@ void mafGUIManager::save() {
 //    if (!native->isChecked())
 //        options |= QFileDialog::DontUseNativeDialog;
     QString selectedFilter;
-    QString fileName = QFileDialog::getSaveFileName(NULL,
+    QString completeFileName = QFileDialog::getSaveFileName(NULL,
                                                     mafTr("Save Session"),
                                                     mafTr(""),
-                                                    mafTr("All Files (*);;Text Files (*.xmsf)"),
+                                                    mafTr("MAF Storage Format file (*.msf)"),
+                                                    /*mafTr("All Files (*);;Text Files (*.xmsf)"),*/
                                                     &selectedFilter,
                                                     options);
 //    if (!fileName.isEmpty())
 //        saveFileNameLabel->setText(fileName);
-    qDebug() << fileName;
+    int index = completeFileName.lastIndexOf("/");
+    QString fileNameWithExt = completeFileName.mid(index+1);
+    QString path = completeFileName.left(index);
+    path.append("/");
+
+    QString fileName = fileNameWithExt.split(".").at(0);
+    path = path.append(fileName);
+    QDir saveDir(path);
+    saveDir.mkpath(path);
+
+    completeFileName = saveDir.path();
+    completeFileName.append("/");
+    completeFileName.append(fileNameWithExt);
+
+    //Store memento hierarchy
+    m_Logic->storeHierarchy(completeFileName);
+    qDebug() << completeFileName;
 }
 
 void mafGUIManager::open() {
@@ -772,7 +793,8 @@ void mafGUIManager::open() {
     QStringList files = QFileDialog::getOpenFileNames(
                                                       NULL, tr("QFileDialog::getOpenFileNames()"),
                                                       "",
-                                                      mafTr("All Files (*);;Text Files (*.xmsf)"),
+                                                      mafTr("MAF Storage Format file (*.msf)"),
+                                                      /*mafTr("All Files (*);;Text Files (*.xmsf)"),*/
                                                       &selectedFilter,
                                                       options);
 //    if (files.count()) {
@@ -780,4 +802,7 @@ void mafGUIManager::open() {
 //        openFileNamesLabel->setText(QString("[%1]").arg(files.join(", ")));
 //    }
     qDebug() << files[0];
+
+    //Load memento hierarchy
+    m_Logic->restoreHierarchy(files[0]);
 }
