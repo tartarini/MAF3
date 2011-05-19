@@ -49,7 +49,7 @@ public:
     void setLogic(mafApplicationLogic::mafLogic *logic);
 
     /// Return the mafGUIManager
-    mafGUI::mafGUIManager *guiManager() const;
+    mafGUI::mafGUIManager *guiManager();
 
     /// Allows to add a settings page to the settings dialog.
     void plugApplicationSettingsPage(mafGUI::mafGUIApplicationSettingsPage *page);
@@ -125,13 +125,5 @@ private:
     /// Check if the application needs to save data.
     int maybeSave();
 };
-
-inline mafGUI::mafGUIManager *mafMainWindow::guiManager() const {
-    if (m_GUIManager == NULL) {
-        mafGUIRegistration::registerGUIObjects();
-        m_GUIManager = new mafGUIManager(this, mafCodeLocation);
-    }
-    return m_GUIManager;
-}
 
 #endif // MAFMAINWINDOW_H
