@@ -14,6 +14,9 @@
 
 // Includes list
 #include "mafSerialization_global.h"
+#include <QPair>
+
+
 
 namespace mafSerialization {
 
@@ -52,6 +55,7 @@ protected:
     unsigned int m_LevelEncode; ///< Encoding level for compounded memento classes.
     unsigned int m_LevelDecode; ///< Decoding level for compounded memento classes.
     QMap<int, mafCore::mafMemento*> m_MementoMap; ///< Map of mafMemento and its hierarchy level.
+    QList<QPair<unsigned int, mafCore::mafMemento*> > m_MementoList;
 };
 
 /////////////////////////////////////////////////////////////
