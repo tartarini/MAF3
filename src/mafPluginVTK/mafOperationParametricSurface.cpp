@@ -51,6 +51,7 @@ mafOperationParametricSurface::~mafOperationParametricSurface() {
 void mafOperationParametricSurface::visualizeParametricSurface() {
   mafVTKParametricSurface *currentSurface = m_ParametricSurfaceList.at(m_ParametricSurfaceType);
   m_ParametricContainer = currentSurface->output();
+  m_ParametricContainer.setExternalCodecType("VTK");
 
   //Insert data into VME
   m_VME = mafNEW(mafResources::mafVME);
