@@ -1,4 +1,9 @@
 class Executer:
+    """Executer executes and handlse the result of a rule on a file.
+
+    It returns 1 if the rules finds an error, 0 otherwise.
+    Append the report to the output file. 
+    """
     def __init__(self):
         self.dom = None
         self.FileInput = None
