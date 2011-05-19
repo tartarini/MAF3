@@ -34,8 +34,7 @@ int main(int argc, char *argv[]) {
     // Create the instance of the main window and pass to it the application's logic.
     // In this way the mafMainWondow class will also load the plug-ins present
     // in the default 'plugins' directory.
-    mafMainWindow w;
-    w.guiManager()->setLogic(logic);
+    mafMainWindow w(logic);
 
     // plug custom application's setting page
     mafApplicationSettingsPageConfigurations *page = new mafApplicationSettingsPageConfigurations();

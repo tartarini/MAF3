@@ -50,8 +50,7 @@ void mafMainWindow::setLogic(mafApplicationLogic::mafLogic *logic) {
 void mafMainWindow::initializeMainWindow() {
     ui->setupUi(this);
 
-    m_GUIManager->setLogic(m_Logic);
-
+    guiManager()->setLogic(m_Logic);
     m_GUIManager->createMenus();
 
     connect(m_GUIManager, SIGNAL(guiLoaded(int,QWidget*)), this, SLOT(loadedGUIAvailable(int,QWidget*)));
