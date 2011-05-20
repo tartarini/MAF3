@@ -5,6 +5,8 @@ class Executer:
     Append the report to the output file. 
     """
     def __init__(self):
+        """initialize the object.   
+        """
         self.dom = None
         self.FileInput = None
         self.DirectoryInput = None

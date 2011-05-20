@@ -15,11 +15,23 @@ class PythonClassMethodsDocumentationRule(AbstractRule):
           attrs = member.attributes
           if(attrs["kind"].value  == self.ParameterList[0]):
             functionName = member.getElementsByTagName('name')[0].firstChild.nodeValue
-            briefDescription = member.getElementsByTagName('briefdescription')[0]
-            para = briefDescription.getElementsByTagName('para')
+            detailedDescription = member.getElementsByTagName('detaileddescription')[0]
+            para = detailedDescription.getElementsByTagName('para')
             if(para == []):
               #self.MarkedList.append((str(className))+"-> "+functionName+ "<-")
               self.MarkedList.append("<item>\n"\
+                                        + "  <class>" +  str(className.split("::")[-1]) + "</class>\n"\
+                                        + "  <function>" + functionName + "</function>\n"\
+                                        + "</item>")
+              continue
+              
+            verbatim = detailedDescription.getElementsByTagName('para')[0].getElementsByTagName('verbatim')
+            description = ""
+            if(verbatim):
+                description=  verbatim[0].firstChild.nodeValue
+          
+            if(description == ""):
+                self.MarkedList.append("<item>\n"\
                                         + "  <class>" +  str(className.split("::")[-1]) + "</class>\n"\
                                         + "  <function>" + functionName + "</function>\n"\
                                         + "</item>")
