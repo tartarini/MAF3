@@ -21,7 +21,7 @@ mafTreeItem::mafTreeItem(QObject *obj) : QStandardItem(obj->objectName()) {
     setStatus(mafItemStatusNotCheckable, false);
 }
 
-void mafTreeItem::setData(QObject *data) {
+void mafTreeItem::setObject(QObject *data) {
     m_Data = data;
 }
 
