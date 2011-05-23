@@ -801,8 +801,9 @@ void mafGUIManager::save() {
                                                     /*mafTr("All Files (*);;Text Files (*.xmsf)"),*/
                                                     &selectedFilter,
                                                     options);
-//    if (!fileName.isEmpty())
-//        saveFileNameLabel->setText(fileName);
+    if (completeFileName.isEmpty()) {
+        return;
+    }
     int index = completeFileName.lastIndexOf("/");
     QString fileNameWithExt = completeFileName.mid(index+1);
     QString path = completeFileName.left(index);
@@ -835,10 +836,10 @@ void mafGUIManager::open() {
                                                       /*mafTr("All Files (*);;Text Files (*.xmsf)"),*/
                                                       &selectedFilter,
                                                       options);
-//    if (files.count()) {
-//        openFilesPath = files[0];
-//        openFileNamesLabel->setText(QString("[%1]").arg(files.join(", ")));
-//    }
+
+    if (files.count() == 0) {
+        return;
+    }
     qDebug() << files[0];
 
     //Load memento hierarchy
