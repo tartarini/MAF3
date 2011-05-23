@@ -295,13 +295,8 @@ void mafViewManager::clearView(mafCore::mafObjectBase *view) {
 
 void mafViewManager::clearViews() {
     mafResourceList viewList = m_CreatedViewList;
-    //mafCore::mafHierarchyPointer hierarchy;
-    //QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
-    //mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
-    
     foreach(mafResource *v, viewList) {
         clearView(v);
-        //fillSceneGraph((mafView *)v, hierarchy);
     }
 }
 
