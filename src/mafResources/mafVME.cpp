@@ -191,27 +191,20 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
       if (m->serializationPattern() == mafSerializationPatternInheritance) {
         //set the memento of the superclass
         Superclass::setMemento(m, deep_memento);
+        int i = 0;
       } else {
         //set the memento of the children memento
-        //but not of children VME (that is done by mafHierarchy.
-
         QString objClassType = m->objectClassType();
         mafObjectBase *objBase = mafNEWFromString(objClassType);
         mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
 
         obj->setMemento(m, deep_memento);
-
         if (objClassType == "mafResources::mafDataSetCollection") {
           mafDataSetCollection *dataSetCollection = qobject_cast<mafDataSetCollection*>(obj);
           m_DataSetCollection = dataSetCollection;
         }
       }
     }
-
-    // Select parent node.
-    argList.clear();
-    argList.append(mafEventArgument(mafCore::mafObjectBase*, sel_vme));
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 
     mafMementoPropertyList *list = memento->mementoPropertyList();
     mafMementoPropertyItem item;
@@ -227,6 +220,11 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
     }
     setModified();
     execute();
+
+    // Select parent node.
+    argList.clear();
+    argList.append(mafEventArgument(mafCore::mafObjectBase*, sel_vme));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 }
 
 void mafVME::updateBounds() {
