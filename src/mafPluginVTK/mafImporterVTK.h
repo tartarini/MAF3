@@ -25,7 +25,7 @@ namespace mafPluginVTK {
 
 /**
  Class Name: mafImporterVTK
- This class allows to import VTK data into a mafVME through the serialization module.
+ This class allows to import VTK data into a mafVME.
  */
 class MAFPLUGINVTKSHARED_EXPORT mafImporterVTK : public mafResources::mafImporter {
     Q_OBJECT
