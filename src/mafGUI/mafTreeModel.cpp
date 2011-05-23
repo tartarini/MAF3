@@ -77,7 +77,7 @@ void mafTreeModel::replaceDataModel(bool init) {
         data = m_Hierarchy->currentData();
         char *v = data->objectName().toAscii().data();
         ti = m_ItemsHash.value(dataHash(data));
-        ti->setData(data);
+        ti->setObject(data);
         ti->setStatus(mafItemStatusNotCheckable, false);
     }
     
@@ -87,7 +87,7 @@ void mafTreeModel::replaceDataModel(bool init) {
         data = m_Hierarchy->currentData();
         char *v = data->objectName().toAscii().data();
         ti = m_ItemsHash.value(dataHash(data));
-        ti->setData(data);
+        ti->setObject(data);
         
         QVariant vs = data->property("visualizationStatus");
         if(!vs.isValid()) {

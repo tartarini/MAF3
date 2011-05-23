@@ -32,7 +32,7 @@ public:
     QObject *data() const { return m_Data; }
 
     /// set the data inside the item.
-    void setData(QObject *data);
+    void setObject(QObject *data);
     
     /// set the status of the item, i.e. if is checkable or not.
     void setStatus(unsigned int status = mafItemStatusNotCheckable, bool active = false );
