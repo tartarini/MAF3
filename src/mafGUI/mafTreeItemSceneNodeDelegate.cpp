@@ -67,8 +67,13 @@ void mafTreeItemSceneNodeDelegate::paint(QPainter *painter, const QStyleOptionVi
     initStyleOption(&options, index);
     QPixmap iconPixmap;
 
-    //Get lock status
     QObject *objItem = objFromIndex(index);
+    QString value = objItem->property("VMEName").toString();
+    ((QStandardItemModel *)index.model())->setData(index, value, Qt::DisplayRole);
+
+    int c = index.row();
+
+    //Get lock status
     uint lockStatus = objItem->property("lockStatus").toUInt();
     if (lockStatus & mafCore::mafObjectLockNone) {
        item->setIcon(QIcon(objItem->property("iconFile").toString()));
@@ -117,7 +122,6 @@ void mafTreeItemSceneNodeDelegate::paint(QPainter *painter, const QStyleOptionVi
 bool mafTreeItemSceneNodeDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) {
     bool result = QStyledItemDelegate::editorEvent(event, model, option, index);
     QObject *sceneNode = objFromIndex(index);
-    char *vmeName = sceneNode->property("VMEName").toString().toAscii().data();
     //If item is a SceneNode, set visibility property to item checked
     QString objName = "mafResources::mafSceneNode";
     m_isSceneNode = true;

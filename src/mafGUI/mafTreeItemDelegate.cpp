@@ -67,10 +67,13 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
     QStyleOptionViewItemV4 options = option;
     initStyleOption(&options, index);
     QPixmap iconPixmap;
+    
+    QObject *objItem = objFromIndex(index);
+    //TODO: Check if necessary when setData will be modified
+    QString value = objItem->property("objectName").toString();
+    ((QStandardItemModel *)index.model())->setData(index, value, Qt::DisplayRole);
 
     //Get lock status
-    QObject *objItem = objFromIndex(index);
-
     uint lockStatus = objItem->property("lockStatus").toUInt();
     if (lockStatus & mafCore::mafObjectLockNone) {
        item->setIcon(QIcon(objItem->property("iconFile").toString()));
@@ -116,30 +119,6 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
     QStyledItemDelegate::paint(painter, options, index);
 }
 
-bool mafTreeItemDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) {
-    bool result = QStyledItemDelegate::editorEvent(event, model, option, index);
-    QObject *sceneNode = objFromIndex(index);
-    //If item is a SceneNode, set visibility property to item checked
-    QString objName = "mafResources::mafSceneNode";
-    if (objName.compare(sceneNode->metaObject()->className())  == 0) {
-        m_isSceneNode = true;
-        QVariant value = index.data(Qt::CheckStateRole);
-        if (!value.isValid())
-            return result;
-        bool state = (static_cast<Qt::CheckState>(value.toInt())) ? true : false;
-        bool visibility = sceneNode->property("visibility").toBool();
-        if (visibility != state) {
-            sceneNode->setProperty("visibility", state);
-            mafEventArgumentsList argList;
-            argList.append(mafEventArgument(mafCore::mafObjectBase*, (mafObjectBase*)sceneNode));
-            argList.append(mafEventArgument(bool, state));
-            mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);
-        }
-    } else {
-        m_isSceneNode = false;
-    }
-    return result;
-}
 
 QObject *mafTreeItemDelegate::objFromIndex(const QModelIndex &index) const {
     mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
