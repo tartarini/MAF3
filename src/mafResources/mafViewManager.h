@@ -32,6 +32,8 @@ This class provides the manager class for MAF3 views. The topics are:
 - maf.local.resources.view.sceneNodeReparent allows to reparent scene nodes.
 - maf.local.resources.view.sceneNodeShow allow to show/hide a given mafSceneNode in the selected View.
 - maf.local.resources.view.noneViews emitted when all views are destroyed.
+- maf.local.resources.view.clearViews
+- maf.local.resources.view.fillViews
 */
 class MAFRESOURCESSHARED_EXPORT mafViewManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -70,6 +72,9 @@ signals:
     /// Notify the clear of all the scene-graphs.
     void clearViewsSignal();
     
+    /// Notify the fill of all the scenegraphs.
+    void fillViewsSignal();
+
     /// Notify the destruction on all views
     void noneViewsSignal();
 
@@ -111,6 +116,8 @@ private slots:
     /// Clear the scene-graphs of each view. 
     void clearViews();
 
+    /// fill the scenegraphs of each view. 
+    void fillViews();
 protected:
     /// Object destructor
     /*virtual*/ ~mafViewManager();
@@ -136,7 +143,6 @@ private:
     
     /// Clear the scene-graph for view in the argument.
     void clearView(mafCore::mafObjectBase *view);
-
 
     mafResourceList m_CreatedViewList; ///< List of created views.
     mafView *m_SelectedView; ///< Keep trak of the current selected view.

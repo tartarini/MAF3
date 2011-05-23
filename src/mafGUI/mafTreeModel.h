@@ -36,8 +36,6 @@ public slots:
     /// select the object from the data, return true if selected, false otherwise.
     void selectItem(const QItemSelection &selected, const QItemSelection &deselected);
     
-    /*virtual*/ bool submit();
-    
     /// Slot called when a new item has been attached to the tree hierarchy.
     void itemAttached(QObject *item, QObject *parent);
     

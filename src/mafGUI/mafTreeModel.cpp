@@ -44,8 +44,6 @@ QString mafTreeModel::dataHash(QObject *obj) {
         //is a vme!
         return obj->property("objectHash").toString();
     }
-    
-
 }
 
 void mafTreeModel::buildModel(bool init) {
@@ -102,14 +100,6 @@ void mafTreeModel::replaceDataModel(bool init) {
     }
 }
 
-bool mafTreeModel::submit() {
-    if (m_CurrentItem->parent() == NULL) {
-        return false;
-    }
-    m_CurrentItem->data()->setObjectName(m_CurrentItem->text());
-    return true;
-}
-
 void mafTreeModel::setHierarchy(mafHierarchy *hierarchy) {
     if(m_Hierarchy) {
         disconnect(m_Hierarchy, SIGNAL(itemAttached(QObject*,QObject*)), this, SLOT(itemAttached(QObject*,QObject*)));
@@ -145,6 +135,10 @@ void mafTreeModel::itemAttached(QObject *item, QObject *parent) {
         this->insertNewItem(AsChild, item, index);
         emit itemAdded(index);
     }
+    ((mafTreeItem*)this->item(0,0))->data()->setProperty("objectName", "pippi");
+    QModelIndex index = this->indexFromData(parent);
+    //QStandardItem *itema = itemFromIndex(index);
+    emit dataChanged(index, index);
 }
 
 void mafTreeModel::itemDetached(QObject *item) {
