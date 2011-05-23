@@ -26,12 +26,10 @@ mafMementoDataSet::mafMementoDataSet(const QString code_location) : mafMemento(c
 mafMementoDataSet::mafMementoDataSet(const mafObject *obj, bool binary, const QString code_location)  : mafMemento(obj, code_location) {
   m_DataSizeExported = 0;
   m_DataSizeImported = 0;
- // m_TimeStamp = 0;
   
   m_DataSet = const_cast<mafResources::mafDataSet*>(qobject_cast<const mafResources::mafDataSet*>(obj));
   mafMementoPropertyList *list = mementoPropertyList();
   mafPoseMatrix *matrix = m_DataSet->poseMatrix();
-  
 
   if(matrix) {
       QVariantList matrixList; //should I use double instead of QVariant?
@@ -43,7 +41,6 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, bool binary, const QS
               matrixList.append(matrix->get(r, c));
           }
       }
-
       mafMementoPropertyItem item;
       item.m_Multiplicity = matrixList.count();
       item.m_Name = "poseMatrix";
@@ -60,13 +57,6 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, bool binary, const QS
       item.m_Value = encodeType;
       list->append(item);
 
-      //Store timeStamp
-      /*item.m_Multiplicity = 1;
-      item.m_Name = "timeStamp";
-      int timeStamp = obj->property("timeStamp").toDouble();
-      item.m_Value = QVariant(timeStamp);
-      list->append(item);*/
-                    
       //Store fileName
       item.m_Multiplicity = 1;
       item.m_Name = "fileName";
@@ -112,9 +102,7 @@ void mafMementoDataSet::decodeItem(mafMementoPropertyItem *item, QString path) {
       //write external file url
       item->m_Value = u.toString();
     } 
-  } /*else if (item->m_Name == "timeStamp" ) {
-    this->setTimeStamp(item->m_Value.toDouble());
-  } */
+  } 
 }
  
 
