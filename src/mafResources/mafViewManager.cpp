@@ -274,6 +274,7 @@ void mafViewManager::removeView(mafView *view) {
     if(m_CreatedViewList.removeOne(view)) {
         if(idx > 0) {
             mafObjectBase *obj = m_CreatedViewList.at(idx - 1);
+            // TODO: Check what this obj is used for.
         } else {
             m_SelectedView = NULL;
             // View list empty

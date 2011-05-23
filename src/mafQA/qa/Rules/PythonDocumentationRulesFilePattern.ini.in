@@ -1,0 +1,3 @@
+parameter="\Aclass.*\.xml"
+sourceDir="@MAF_BINARY_DIR@/doc/PythonDocOutput/xml"
+groupDesc="Check that python documentation respect the naming convention"
