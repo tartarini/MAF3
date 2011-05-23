@@ -44,6 +44,7 @@ mafViewManager::~mafViewManager() {
     mafUnregisterLocalCallback("maf.local.logic.status.viewmanager.store", this, "createMemento()")
     mafUnregisterLocalCallback("maf.local.logic.status.viewmanager.restore", this, "setMemento(mafCore::mafMemento *, bool)")
     mafUnregisterLocalCallback("maf.local.resources.view.clearViews", this, "clearViews()")
+    mafUnregisterLocalCallback("maf.local.resources.view.fillViews", this, "fillViews()")
 
     
     // Unregister signals...
@@ -56,6 +57,7 @@ mafViewManager::~mafViewManager() {
     mafUnregisterLocalSignal("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShowSignal(mafCore::mafObjectBase *, bool)")
     mafUnregisterLocalSignal("maf.local.resources.view.noneViews", this, "noneViewsSignal()")
     mafUnregisterLocalSignal("maf.local.resources.view.clearViews", this, "clearViewsSignal()")
+    mafUnregisterLocalSignal("maf.local.resources.view.fillViews", this, "fillViewsSignal()")
 
     
     // Remove IDs...
@@ -69,6 +71,7 @@ mafViewManager::~mafViewManager() {
     provider->removeId("maf.local.resources.view.sceneNodeShow");
     provider->removeId("maf.local.resources.view.noneViews");
     provider->removeId("maf.local.resources.view.clearViews");
+    provider->removeId("maf.local.resources.view.fillViews");
 
 }
 
@@ -102,6 +105,7 @@ void mafViewManager::initializeConnections() {
     provider->createNewId("maf.local.resources.view.sceneNodeShow");
     provider->createNewId("maf.local.resources.view.noneViews");
     provider->createNewId("maf.local.resources.view.clearViews");
+    provider->createNewId("maf.local.resources.view.fillViews");
     
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(QString)")
@@ -113,6 +117,7 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShowSignal(mafCore::mafObjectBase *, bool)")
     mafRegisterLocalSignal("maf.local.resources.view.noneViews", this, "noneViewsSignal()")
     mafRegisterLocalSignal("maf.local.resources.view.clearViews", this, "clearViewsSignal()")
+    mafRegisterLocalSignal("maf.local.resources.view.fillViews", this, "fillViewsSignal()")
 
     // Register private callbacks to the instance of the manager..
     mafRegisterLocalCallback("maf.local.resources.view.create", this, "createView(QString)")
@@ -121,6 +126,7 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.resources.view.selected", this, "selectedView()")
     mafRegisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShow(mafCore::mafObjectBase *, bool)")
     mafRegisterLocalCallback("maf.local.resources.view.clearViews", this, "clearViews()")
+    mafRegisterLocalCallback("maf.local.resources.view.fillViews", this, "fillViews()")
     
     // Register callback to allows settings serialization.
     mafRegisterLocalCallback("maf.local.logic.status.viewmanager.store", this, "createMemento()")
@@ -289,12 +295,22 @@ void mafViewManager::clearView(mafCore::mafObjectBase *view) {
 
 void mafViewManager::clearViews() {
     mafResourceList viewList = m_CreatedViewList;
-    mafCore::mafHierarchyPointer hierarchy;
-    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+    //mafCore::mafHierarchyPointer hierarchy;
+    //QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+    //mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
     
     foreach(mafResource *v, viewList) {
         clearView(v);
+        //fillSceneGraph((mafView *)v, hierarchy);
+    }
+}
+
+void mafViewManager::fillViews() {
+    mafResourceList viewList = m_CreatedViewList;
+    mafCore::mafHierarchyPointer hierarchy;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+    foreach(mafResource *v, viewList) {
         fillSceneGraph((mafView *)v, hierarchy);
     }
 }
