@@ -241,15 +241,14 @@ void mafSerializationExtDataTest::mafSerializationVTKSaveTest() {
 
 
   QVERIFY(memento != NULL);
+  ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+  mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.new", mafEventTypeLocal, NULL, &ret_val);
+  hierarchy->setMemento(memento);
 
-  //mafVME *returnVME = mafNEW(mafResources::mafVME);
-  mafHierarchy *returnHierarchy = mafNEW(mafCore::mafHierarchy);
-  returnHierarchy->setMemento(memento);
-
-  returnHierarchy->moveTreeIteratorToRootNode();
-  int num = returnHierarchy->currentNumberOfChildren();
-  returnHierarchy->moveTreeIteratorToNthChild();
-  mafVME *returnVME = (mafVME*)returnHierarchy->currentData();
+  hierarchy->moveTreeIteratorToRootNode();
+  int num = hierarchy->currentNumberOfChildren();
+  hierarchy->moveTreeIteratorToNthChild();
+  mafVME *returnVME = (mafVME*)hierarchy->currentData();
 
   //Now load dataValue
   mafDataSet *data = returnVME->dataSetCollection()->itemAt(0);
