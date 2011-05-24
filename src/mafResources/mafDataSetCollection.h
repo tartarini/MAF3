@@ -114,6 +114,9 @@ public:
     The 'deep_memento' flag is used to avoid the copy of the object unique hash in normal operation like
     undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
+    
+    /// Overload of [] operator to extract the item at given index.
+    mafDataSet * operator [](unsigned int index);
 
 private slots:
     /// Method callen when an item has been destroyed

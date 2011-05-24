@@ -38,6 +38,14 @@ mafDataSetCollection::~mafDataSetCollection() {
     
 }
 
+mafDataSet * mafDataSetCollection::operator [](unsigned int index) {
+    if (index < m_CollectionMap->size()) {
+        mafDataSetMap::iterator iter = m_CollectionMap->begin();
+        iter += index;
+        return iter.value();
+    }
+}
+
 void mafDataSetCollection::setTimestamp(double t) {
     if(t != m_CurrentTimestamp) {
         m_CurrentTimestamp = t;
