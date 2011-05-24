@@ -144,6 +144,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     mafPipeVisualVTKSurface *pipe;
     pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSurface);
     pipe->setInput(vme);
+    pipe->setGraphicObject(m_VTKWidget);
     pipe->createPipe();
     pipe->updatePipe();
 
@@ -267,6 +268,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     QTest::qSleep(1000);
 
     mafDEL(picker);
+    pipe->setGraphicObject(NULL);
     mafDEL(pipe);
     mafDEL(vme);
 
