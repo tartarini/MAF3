@@ -129,6 +129,7 @@ mafMemento *mafCodecRawBinary::decode() {
             propList->append(item);
         } else {
             int parentLevel = m_LevelDecode;
+            mafMemento *mChild = decode();
             m_LevelDecode = parentLevel;
         }
     }
