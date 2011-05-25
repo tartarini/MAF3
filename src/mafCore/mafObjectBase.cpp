@@ -173,7 +173,7 @@ void mafObjectBase::ref() {
 
 void mafObjectBase::deleteObject() {
     --m_ReferenceCount;
-    char *name = this->objectName().toAscii().data();
+    //char *name = this->objectName().toAscii().data();
     if(m_ReferenceCount == 0) {
         delete this;
     }
