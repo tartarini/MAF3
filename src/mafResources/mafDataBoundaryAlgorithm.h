@@ -38,11 +38,13 @@ public:
     virtual mafCore::mafProxyInterface *calculateBoundary(double bounds[6], mafPoseMatrix *matrix = NULL) = 0;
 
     /// Return bounds value of the bounding box.
-    virtual void bounds(double bounds[6]) = 0;
+    virtual void bounds(double bounds[6]);
 
 protected:
     /// Object destructor.
     /* virtual */ ~mafDataBoundaryAlgorithm();
+
+     double m_Bounds[6]; ///< Bounds of the bounding box.
 };
 
 } // namespace mafResources
