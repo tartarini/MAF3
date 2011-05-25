@@ -161,9 +161,6 @@ inline QVariantList mafDataSet::bounds()  {
     return m_Bounds;
 }
 
-
-Q_DECLARE_METATYPE(QVariantList);
-
 } //mafResources
 
 #endif // MAFDATASET_H
