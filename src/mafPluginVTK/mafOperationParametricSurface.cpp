@@ -57,6 +57,7 @@ void mafOperationParametricSurface::visualizeParametricSurface() {
   m_VME = mafNEW(mafResources::mafVME);
   m_VME->setObjectName(mafTr("Parametric Surface"));
   m_DataSet = mafNEW(mafResources::mafDataSet);
+  m_DataSet->setBoundaryAlgorithmName("mafPluginVTK::mafDataBoundaryAlgorithmVTK");
   m_DataSet->setDataValue(&m_ParametricContainer);
   m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
   m_VME->setProperty("visibility", true);
