@@ -15,15 +15,10 @@
 // Includes list
 #include "mafSerialization_global.h"
 #include <mafProxyInterface.h>
-
-
-
-// Class forwarding list
-class mafProxyInterface;
-
+#include <mafExternalDataCodec.h>
 
 namespace mafSerialization {
-
+    
 /**
  Class name: mafSerializationManager
  This singletone provides the facade class for the object serialization mechanism.
@@ -111,10 +106,11 @@ private:
     /// Initialize the signals / slots connection and generate the IDs needed for the communication with the Serialization Module.
     void initializeConnections();
 
-    mafEncodingHash m_EncodingHash; ///< Hash table that store the binding between objetc types and related encoding types.
+    mafEncodingHash m_EncodingHash; ///< Hash table that store the binding between object types and related encoding types.
     mafCodecHash m_CodecHash; ///< Hash table that store the binding between encoding types (eg. "VTK") and related codec types (eg. mafCodecVTK).
     mafSerializerHash m_SerializerHash; ///< Hash table that store the binding between URL schema and serializer type.
     QString m_ExtDataImportedId; ///< ID related to the signal 'maf.local.serialization.extDataImported' invoked when new external data has been created during load operation.
+    mafCore::mafExternalDataCodec *m_CurrentExternalDataCodec; ///< contains the instance of the last created external data codec.
 };
 
 /////////////////////////////////////////////////////////////

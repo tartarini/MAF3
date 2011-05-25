@@ -13,7 +13,6 @@
 #include "mafSerializationRegistration.h"
 #include "mafSerializer.h"
 #include "mafCodec.h"
-#include <mafExternalDataCodec.h>
 #include <mafEventBusManager.h>
 
 using namespace mafCore;
@@ -25,7 +24,7 @@ mafSerializationManager* mafSerializationManager::instance() {
     return &instanceSerializationManager;
 }
 
-mafSerializationManager::mafSerializationManager(const QString code_location) : mafObjectBase(code_location) {
+mafSerializationManager::mafSerializationManager(const QString code_location) : mafObjectBase(code_location), m_CurrentExternalDataCodec(NULL) {
     mafSerializationRegistration::registerSerializationObjects();
 
     initializeConnections();
@@ -37,6 +36,7 @@ mafSerializationManager::mafSerializationManager(const QString code_location) : 
 }
 
 mafSerializationManager::~mafSerializationManager() {
+    
 }
 
 void mafSerializationManager::initializeConnections() {
@@ -262,12 +262,13 @@ mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const Q
     mafDEL(ser);
 
     QString codecType = m_CodecHash[encode_type];
-    mafExternalDataCodec *codec = (mafExternalDataCodec *)mafNEWFromString(codecType);
+    mafDEL(m_CurrentExternalDataCodec);
+    m_CurrentExternalDataCodec = (mafExternalDataCodec *)mafNEWFromString(codecType);
     
-    codec->setStringSize(size);
-    codec->decode(inputString);
+    m_CurrentExternalDataCodec->setStringSize(size);
+    m_CurrentExternalDataCodec->decode(inputString);
 
-    return codec->externalData();
+    return m_CurrentExternalDataCodec->externalData();
 }
 
 void mafSerializationManager::plugCodec(const QString &object_type,const QString &encoding_type, const QString &codecType) {
@@ -281,4 +282,5 @@ mafEncodingList mafSerializationManager::encodingTypeList(const mafMemento *meme
 }
 
 void mafSerializationManager::shutdown() {
+    mafDEL(m_CurrentExternalDataCodec);
 }
