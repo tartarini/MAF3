@@ -105,7 +105,6 @@ void testVMEConcurrentAccess::startElaboration() {
         for (int i = n; i < n+6; ++i) {
             b.append(32.5 * i);
         }
-        m_VME->setBounds(b);
         b.clear();
         ++n;
     }
@@ -272,8 +271,6 @@ void mafVMETest::mafVMEConcurrentAccessTest() {
     
     thread.start();
     qDebug() << mafTr("Thread started...");
-    
-    m_VME->setBounds(mainBounds);
     
     mafMemento *memento = m_VME->createMemento();
     
