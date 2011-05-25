@@ -76,8 +76,6 @@ private slots:
         mafObject *root;
         ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
-        
-
 
         //Create two codec
         m_Codec = mafNEW(mafPluginVTK::mafExternalDataCodecVTK);
