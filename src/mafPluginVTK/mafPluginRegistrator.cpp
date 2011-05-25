@@ -27,6 +27,7 @@
 #include "mafVTKParametricSurfaceCone.h"
 #include "mafVTKParametricSurfaceCylinder.h"
 #include "mafVTKParametricSurfaceEllipsoid.h"
+#include "mafDataBoundaryAlgorithmVTK.h"
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -47,6 +48,7 @@ mafPluginRegistrator::mafPluginRegistrator() {
     mafRegisterObject(mafPluginVTK::mafVTKParametricSurfaceCone);
     mafRegisterObject(mafPluginVTK::mafVTKParametricSurfaceCylinder);
     mafRegisterObject(mafPluginVTK::mafVTKParametricSurfaceEllipsoid);
+    mafRegisterObject(mafPluginVTK::mafDataBoundaryAlgorithmVTK);
 }
 
 mafPluginRegistrator::~mafPluginRegistrator() {
@@ -64,6 +66,8 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     mafUnregisterObject(mafPluginVTK::mafVTKParametricSurfaceCone);
     mafUnregisterObject(mafPluginVTK::mafVTKParametricSurfaceCylinder);
     mafUnregisterObject(mafPluginVTK::mafVTKParametricSurfaceEllipsoid);
+    mafUnregisterObject(mafPluginVTK::mafDataBoundaryAlgorithmVTK);
+    
 }
 
 void mafPluginRegistrator::registerObjects() {
@@ -76,6 +80,7 @@ void mafPluginRegistrator::registerObjects() {
     mafPluggedObjectInformation opParametricSurface("Create Parametric Surface", "mafPluginVTK::mafOperationParametricSurface");
     mafPluggedObjectInformation importerVTK("Import VTK data", "mafPluginVTK::mafImporterVTK");
     mafPluggedObjectInformation externalDataCodecVTK("VTK codec", "mafPluginVTK::mafExternalDataCodecVTK");
+    mafPluggedObjectInformation dataBoundaryAlgorithmVTK("VTK BoundaryAlgorithm", "mafPluginVTK::mafDataBoundaryAlgorithmVTK");
 
     pluginHash.insertMulti("mafResources::mafPipeData", dataPipeImageThreshold);
     pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeVTKSurface);
@@ -84,6 +89,7 @@ void mafPluginRegistrator::registerObjects() {
     pluginHash.insertMulti("mafResources::mafOperation", opParametricSurface);
     pluginHash.insertMulti("mafResources::mafImporter", importerVTK);
     pluginHash.insertMulti("mafCore::mafExternalDataCodec", externalDataCodecVTK);
+    pluginHash.insertMulti("mafResources::mafDataBoundaryAlgorithm", dataBoundaryAlgorithmVTK);
 
     mafEventBus::mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, pluginHash));
