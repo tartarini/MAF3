@@ -42,9 +42,6 @@ public:
     /// Algorithm used to extract the boundary from the given bounds and pose matrix.
     /* virtual */ mafCore::mafProxyInterface *calculateBoundary(double bounds[6], mafResources::mafPoseMatrix *matrix = NULL);
 
-    /// Return bounds value of the bounding box.
-    /* virtual */ void bounds(double bounds[6]);
-
 protected:
     /// Object destructor.
     /* virtual */ ~mafDataBoundaryAlgorithmVTK();
@@ -53,7 +50,6 @@ private:
     mafCore::mafProxy<vtkAlgorithmOutput> m_OutputBoundary; ///< vtkAlgorithmOutput as output of the algorithm.
     vtkCubeSource *m_Box; ///< Source used as bounding box.
     vtkTransformPolyDataFilter *m_PDataFilter; ///< Filter used to transform the bounding box.
-    double m_Bounds[6]; ///< Bounds of the binding box.
 };
 
 

@@ -86,10 +86,3 @@ mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(doubl
     }
     return &m_OutputBoundary;
 }
-void mafDataBoundaryAlgorithmVTK::bounds(double bounds[6]) {
-    int i = 0;
-    for(i; i < 6; ++i){
-        bounds[i] = m_Bounds[i];
-    }
-}
-
