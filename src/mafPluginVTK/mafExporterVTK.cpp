@@ -45,9 +45,14 @@ void mafExporterVTK::execute() {
     mafProxyInterface *dv = data->dataValue();
     mafProxy<vtkAlgorithmOutput> *value = mafProxyPointerTypeCast(vtkAlgorithmOutput, dv);
     m_Writer->SetInputConnection(0, *value);
-    m_Writer->SetFileName(filename().toAscii().constData());
-    m_Writer->Update();
-        
+    const char *f = filename().toAscii().constData();
+    m_Writer->SetFileName(m_Filename.toAscii().constData());
+    
+    int result = m_Writer->Write();
+    if(result == 0) {
+        qCritical(mafTr("Unable to export the data in VTK format.").toAscii().constData());
+    }
+    
     emit executionEnded();
 }
 
@@ -59,12 +64,16 @@ bool mafExporterVTK::acceptObject(mafCore::mafObjectBase *obj) {
     }
     mafDataSetCollection *dc = vme->dataSetCollection();
     mafDataSet *ds = (*dc)[0];
+    if(ds == NULL) {
+        return false;
+    }
     mafCore::mafProxyInterface *dv = ds->dataValue();
     QString dt("");
     if (dv) {
         dt = dv->externalDataType();
     }
-    return dt.contains("vtk");
+    char *v = dt.toAscii().data();
+    return dt.contains(QRegExp("^vtk.*"));
 }
 
 void mafExporterVTK::setParameters(QVariantList parameters) {
@@ -84,13 +93,5 @@ void mafExporterVTK::unDo() {
 }
 
 void mafExporterVTK::reDo() {
-}
-
-void mafExporterVTK::setFilename(const QString f) {
-}
-
-/// Return the filename of the VTK data to import.
-QString mafExporterVTK::filename() const {
-    return QString();
 }
 

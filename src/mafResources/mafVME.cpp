@@ -217,9 +217,12 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
 }
 
 
-
-bool mafVME::dataLoaded() {
-    return this->dataSetCollection()->itemAtCurrentTime()->dataLoaded();
+bool mafVME::dataLoaded() const {
+    bool result(false);
+    if(m_DataSetCollection){
+        result = m_DataSetCollection->itemAtCurrentTime()->dataLoaded();
+    }
+    return result;
 }
 
 QString mafVME::boundXmin() {

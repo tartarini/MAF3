@@ -11,6 +11,7 @@
 
 #include "mafInteractionManager.h"
 #include "mafVME.h"
+#include "mafInteractor.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -72,54 +73,70 @@ void mafInteractionManager::vmeSelected(mafVME *vme) {
 }
 
 void mafInteractionManager::leftButtonPress(unsigned long modifier) {
+    qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::leftButtonRelease(unsigned long modifier) {
+    qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::middleButtonPress(unsigned long modifier) {
+    qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::middleButtonRelease(unsigned long modifier) {
+    qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::rightButtonPress(unsigned long modifier) {
+    qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::rightButtonRelease(unsigned long modifier) {
+    qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::enter() {
+    qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::leave() {
+    qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::keyPress() {
+    qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::keyRelease() {
+    qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::keyChar() {
+    qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::mouseMove(unsigned long modifier) {
+    qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::mouseWheelForward(unsigned long modifier) {
+    qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::mouseWheelBackward(unsigned long modifier) {
+    qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::pick() {
+    qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::vmePicked(double *pos, unsigned long modifiers, mafVME *vme) {
     mafInteractor *i = vme->interactor();
     if(i) {
         // execute the interactor
+        i->vmePicked(pos, modifiers, vme);
         return;
     }
     

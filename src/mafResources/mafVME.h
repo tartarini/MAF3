@@ -100,7 +100,7 @@ public:
     bool canWrite() const;
 
     /// Return true if data has been loaded.
-    bool dataLoaded();
+    bool dataLoaded() const;
 
     /// Return bound of the external data of the VME.
     QString boundXmin();

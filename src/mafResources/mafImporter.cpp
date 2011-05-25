@@ -45,10 +45,10 @@ void mafImporter::cleanup() {
 }
 
 void mafImporter::checkImportFile() {
-    if (m_Filename.isEmpty()) {
+    if (filename().isEmpty()) {
         qWarning() << mafTr("Filename of data to import is needed.");
         m_Status = mafOperationStatusAborted;
-    } else if (!QFile::exists(m_Filename)) {
+    } else if (!QFile::exists(filename())) {
         qCritical() << m_Filename << mafTr(" doesn't exists!!.");
         m_Status = mafOperationStatusAborted;
     }

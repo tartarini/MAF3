@@ -26,6 +26,9 @@ mafImporterVTK::~mafImporterVTK() {
 }
 
 void mafImporterVTK::execute() {
+    QMutex mutex(QMutex::Recursive);
+    QMutexLocker locker(&mutex);
+
     m_Status = mafOperationStatusExecuting;
     
     if (!filename().isEmpty()) {

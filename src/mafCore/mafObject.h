@@ -112,7 +112,7 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafObject();
     bool m_Selected; ///< Flag used to store the selection flag of the owned VME.
-    QString m_IconFIle; ///< Filename associated to the icon file to use with the object.
+    QString m_IconFile; ///< Filename associated to the icon file to use with the object.
     mafObjectLockStatus m_LockStatus; ///< Contains the status of object lock.
     int m_ProgressStatus; ///< Contains the progress status.
 
@@ -132,7 +132,7 @@ inline bool mafObject::modified() const {
 }
 
 inline QString mafObject::iconFile() const {
-    return m_IconFIle;
+    return m_IconFile;
 }
 
 inline const QVariantList *mafObject::tagList() const {

@@ -19,6 +19,8 @@
 
 #include "mafOperationParametricSurface.h"
 #include "mafImporterVTK.h"
+#include "mafExporterVTK.h"
+
 
 #include "mafExternalDataCodecVTK.h"
 
@@ -41,6 +43,7 @@ mafPluginRegistrator::mafPluginRegistrator() {
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualSelection);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafOperationParametricSurface);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafImporterVTK);
+    mafRegisterObjectAndAcceptBind(mafPluginVTK::mafExporterVTK);
     mafRegisterObject(mafPluginVTK::mafViewVTK);
     mafRegisterObject(mafPluginVTK::mafExternalDataCodecVTK);
     mafRegisterObject(mafPluginVTK::mafVTKParametricSurfaceSphere);
@@ -59,6 +62,7 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualSelection);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafOperationParametricSurface);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafImporterVTK);
+    mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafExporterVTK);
     mafUnregisterObject(mafPluginVTK::mafViewVTK);
     mafUnregisterObject(mafPluginVTK::mafExternalDataCodecVTK);
     mafUnregisterObject(mafPluginVTK::mafVTKParametricSurfaceSphere);
@@ -79,6 +83,7 @@ void mafPluginRegistrator::registerObjects() {
     mafPluggedObjectInformation viewVTK("VTK view", "mafPluginVTK::mafViewVTK");
     mafPluggedObjectInformation opParametricSurface("Create Parametric Surface", "mafPluginVTK::mafOperationParametricSurface");
     mafPluggedObjectInformation importerVTK("Import VTK data", "mafPluginVTK::mafImporterVTK");
+    mafPluggedObjectInformation exporterVTK("Export VTK data", "mafPluginVTK::mafExporterVTK");
     mafPluggedObjectInformation externalDataCodecVTK("VTK codec", "mafPluginVTK::mafExternalDataCodecVTK");
     mafPluggedObjectInformation dataBoundaryAlgorithmVTK("VTK BoundaryAlgorithm", "mafPluginVTK::mafDataBoundaryAlgorithmVTK");
 
@@ -88,6 +93,7 @@ void mafPluginRegistrator::registerObjects() {
     pluginHash.insertMulti("mafResources::mafView", viewVTK);
     pluginHash.insertMulti("mafResources::mafOperation", opParametricSurface);
     pluginHash.insertMulti("mafResources::mafImporter", importerVTK);
+    pluginHash.insertMulti("mafResources::mafExporter", exporterVTK);
     pluginHash.insertMulti("mafCore::mafExternalDataCodec", externalDataCodecVTK);
     pluginHash.insertMulti("mafResources::mafDataBoundaryAlgorithm", dataBoundaryAlgorithmVTK);
 
