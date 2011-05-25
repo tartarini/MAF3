@@ -17,7 +17,10 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
 
-mafDataSet::mafDataSet(const QString code_location) : mafObject(code_location), m_DataValue(NULL), m_DataBoundary(NULL), m_Matrix(NULL), m_DataBoundaryAlgorithm(NULL), m_TimeStamp(0) {
+mafDataSet::mafDataSet(const QString code_location) : mafObject(code_location), m_DataValue(NULL), m_DataBoundary(NULL), m_Matrix(NULL), m_DataBoundaryAlgorithm(NULL), m_DataBoundaryAlgorithmName(), m_ExternalDataType(), m_DataLoaded(false) {
+    for(int i = 0; i < 6; i++) {
+        m_Bounds.append(0);
+    }
 }
 
 mafDataSet::~mafDataSet() {
@@ -31,6 +34,15 @@ void mafDataSet::setBoundaryAlgorithm(mafDataBoundaryAlgorithm *algorithm) {
     if(m_DataBoundaryAlgorithm != algorithm) {
         mafDEL(m_DataBoundaryAlgorithm);
         m_DataBoundaryAlgorithm = algorithm;
+        m_DataBoundaryAlgorithmName = algorithm->metaObject()->className();
+    }
+}
+
+void mafDataSet::setBoundaryAlgorithmName(QString dataBoundaryAlgorithmName){
+    if(m_DataBoundaryAlgorithmName != dataBoundaryAlgorithmName) {
+        m_DataBoundaryAlgorithmName = dataBoundaryAlgorithmName;
+        mafDEL(m_DataBoundaryAlgorithm);
+        m_DataBoundaryAlgorithm = (mafDataBoundaryAlgorithm *)mafNEWFromString(dataBoundaryAlgorithmName);
     }
 }
 
@@ -49,8 +61,12 @@ void mafDataSet::setDataValue(mafProxyInterface *data_value) {
         emit(dataValueDisconnected());
     }
     m_DataValue = data_value;
+    QString dataType = data_value->externalDataType();
+    m_ExternalDataType = dataType;
     if(m_DataValue != NULL) {
         emit(dataValueConnected());
+        m_DataLoaded = true;
+        updateBounds();
     }
 }
 
@@ -72,7 +88,11 @@ void mafDataSet::setPoseMatrix(const mafPoseMatrix *matrix) {
 }
 
 mafMemento *mafDataSet::createMemento() const {
-    return new mafMementoDataSet(this, mafCodeLocation);
+    mafMemento *m = Superclass::createMemento();
+    mafMementoDataSet *mementoDataSet = new mafMementoDataSet(this, mafCodeLocation);
+    m->setParent(mementoDataSet);
+
+    return mementoDataSet;
 }
 
 void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
@@ -139,10 +159,30 @@ void mafDataSet::updateDataValue() {
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafProxyInterface *, container);
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.import", mafEventTypeLocal, &argList, &ret_val);
     if (container != NULL) {
-         m_DataValue = container;
+        setDataValue(container);
     } else {
         QString err_msg(mafTr("Unable to load data form file '%1'").arg(m_DataFileInfo.fileName));
         qCritical() << err_msg;
     }
   }
+}
+
+void mafDataSet::setBounds(QVariantList bounds) {
+    m_Bounds.clear();
+    m_Bounds.append(bounds);
+    setModified();
+}
+
+void mafDataSet::updateBounds() {
+    mafDataBoundaryAlgorithm *boundary = NULL;
+    boundary = this->boundaryAlgorithm();
+    boundary->calculateBoundary(m_DataValue);
+    if(boundary != NULL){
+        double b[6];
+        boundary->bounds(b);
+        int i = 0;
+        for(; i < 6; ++i) {
+            m_Bounds[i] = b[i];
+        }
+    }
 }
