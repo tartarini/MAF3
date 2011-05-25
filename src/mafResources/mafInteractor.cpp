@@ -23,6 +23,12 @@ mafInteractor::mafInteractor(mafProxyInterfacePointer default_is, mafProxyInterf
 mafInteractor::~mafInteractor() {
 }
 
+void mafInteractor::vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj) {
+    Q_UNUSED(pickPos);
+    Q_UNUSED(modifiers);
+    Q_UNUSED(obj);
+}
+
 void mafInteractor::setDefaultInteractionStyle(mafProxyInterfacePointer is) {
     if(is == m_DefaultInteractorStyle) {
         return;
