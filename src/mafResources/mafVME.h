@@ -93,7 +93,7 @@ public:
     bool canWrite() const;
 
     /// Return true if data has been loaded.
-    bool dataLoaded();
+    bool dataLoaded() const;
 
 signals:
     /// Alert observers that the VME has been detatched from the hierarchy tree.
