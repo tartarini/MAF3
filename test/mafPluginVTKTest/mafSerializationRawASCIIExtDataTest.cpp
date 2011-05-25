@@ -15,6 +15,7 @@
 #include <mafMementoVME.h>
 #include <mafExternalDataCodecVTK.h>
 #include <mafEventBusManager.h>
+#include <mafVMEManager.h>
 #include <mafDataBoundaryAlgorithmVTK.h>
 
 
@@ -64,6 +65,19 @@ private slots:
         QVERIFY(res);
 
         mafEventBusManager::instance();
+        m_VMEManager = mafVMEManager::instance();
+        
+        //Get hierarchy
+        mafCore::mafHierarchyPointer hierarchy;
+        QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+        
+        //Select root
+        mafObject *root;
+        ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
+        
+
 
         //Create two codec
         m_Codec = mafNEW(mafPluginVTK::mafExternalDataCodecVTK);
@@ -122,6 +136,7 @@ private slots:
         m_PDataFilter->Delete();
         m_DataSource->Delete();
         m_DataSourceMoved->Delete();
+        m_VMEManager->shutdown();
         mafEventBusManager::instance()->shutdown();
         mafMessageHandler::instance()->shutdown();
     }
@@ -143,6 +158,7 @@ private:
     vtkTransformPolyDataFilter *m_PDataFilter; ///< Filter used to transform the bounding box.
     mafResources::mafDataSet *m_DataSetCube;
     mafResources::mafDataSet *m_DataSetCubeMoved;
+    mafVMEManager *m_VMEManager;
 };
 
 void mafSerializationRawASCIIExtDataTest::mafSerializationVTKAllocationTest() {

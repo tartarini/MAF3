@@ -16,6 +16,9 @@
 #include <mafOperationParametricSurface.h>
 #include <mafPluginManager.h>
 #include <mafVMEManager.h>
+
+#include <mafVTKWidget.h>
+
 #include <vtkRenderWindowInteractor.h>
 #include <vtkAlgorithmOutput.h>
 #include <mafProxy.h>
@@ -54,6 +57,7 @@ private slots:
 
         // Create the parametric operation.
         m_OpParametric = mafNEW(mafPluginVTK::mafOperationParametricSurface);
+        m_RenderWidget = new mafVTKWidget();
     }
 
     /// Cleanup test variables memory allocation.
@@ -61,6 +65,7 @@ private slots:
         mafDEL(m_OpParametric);
         m_VMEManager->shutdown();
         mafMessageHandler::instance()->shutdown();
+        delete m_RenderWidget;
     }
 
     /// Test the operation's execution.
@@ -74,6 +79,8 @@ private:
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a surface.
     mafVME *m_VmeAdded; ///< test object.
     mafResources::mafVMEManager *m_VMEManager; ///< instance of mafVMEManager.
+    
+    QObject *m_RenderWidget; /// renderer widget
 };
 
 void mafOperationParametricSurfaceTest::testExecute() {
@@ -87,11 +94,15 @@ void mafOperationParametricSurfaceTest::testExecute() {
 }
 
 void mafOperationParametricSurfaceTest::SetGetTest() {
+    vtkRenderer *renderer = vtkRenderer::New();
+    vtkRenderWindow *renWin = ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow();
+    
     mafPipeVisualVTKSurface *pipe;
     pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSurface);
     pipe->setInput(m_VME);
     pipe->setProperty("scalarVisibility", 0);
     pipe->setProperty("immediateRendering", 1);
+    pipe->setGraphicObject(m_RenderWidget);
     pipe->createPipe();
     pipe->updatePipe();
 
@@ -100,14 +111,10 @@ void mafOperationParametricSurfaceTest::SetGetTest() {
     mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, pipe->output());
     QVERIFY(actor != NULL);
 
-    vtkRenderWindow *renWin = vtkRenderWindow::New();
-    vtkRenderer *renderer = vtkRenderer::New();
-    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
-
+    renWin->AddRenderer(renderer);
+    
     // Connect the actor (contained into the container) with the renderer.
     renderer->AddActor(*actor);
-    renWin->AddRenderer(renderer);
-    iren->SetRenderWindow(renWin);
 
     renderer->SetBackground(0.1, 0.1, 0.1);
     renWin->SetSize(640, 480);
@@ -117,9 +124,8 @@ void mafOperationParametricSurfaceTest::SetGetTest() {
     //iren->Start();
     QTest::qSleep(2000);
 
-    renWin->Delete();
     renderer->Delete();
-    iren->Delete();
+    pipe->setGraphicObject(NULL);
     mafDEL(pipe);
 }
 
