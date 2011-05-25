@@ -218,7 +218,32 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
 
 
 
-inline bool mafVME::dataLoaded() {
+bool mafVME::dataLoaded() {
     return this->dataSetCollection()->itemAtCurrentTime()->dataLoaded();
 }
+
+QString mafVME::boundXmin() {
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[0].toDouble());
+}
+
+QString mafVME::boundXmax() {
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[1].toDouble());
+}
+
+QString mafVME::boundYmin() {
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[2].toDouble());
+}
+
+QString mafVME::boundYmax() {
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[3].toDouble());
+}
+
+QString mafVME::boundZmin() {
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[4].toDouble());
+}
+
+QString mafVME::boundZmax() {
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[5].toDouble());
+}
+
 

@@ -37,6 +37,13 @@ class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_PROPERTY(bool canRead READ canRead WRITE setCanRead)
     Q_PROPERTY(bool canWrite READ canWrite WRITE setCanWrite)
     Q_PROPERTY(bool dataLoaded READ dataLoaded)
+    Q_PROPERTY(QString boundXmin READ boundXmin)
+    Q_PROPERTY(QString boundYmin READ boundYmin)
+    Q_PROPERTY(QString boundZmin READ boundZmin)
+    Q_PROPERTY(QString boundXmax READ boundXmax)
+    Q_PROPERTY(QString boundYmax READ boundYmax)
+    Q_PROPERTY(QString boundZmax READ boundZmax)
+
 
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
@@ -95,6 +102,23 @@ public:
     /// Return true if data has been loaded.
     bool dataLoaded();
 
+    /// Return bound of the external data of the VME.
+    QString boundXmin();
+
+    /// Return bound of the external data of the VME.
+    QString boundYmin();
+
+    /// Return bound of the external data of the VME.
+    QString boundZmin();
+
+    /// Return bound of the external data of the VME.
+    QString boundXmax();
+
+    /// Return bound of the external data of the VME.
+    QString boundYmax();
+
+    /// Return bound of the external data of the VME.
+    QString boundZmax();
 signals:
     /// Alert observers that the VME has been detatched from the hierarchy tree.
     void detatched();
@@ -130,6 +154,7 @@ private:
     QHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
     bool m_CanRead;  ///< Flag used to indicate if the VME is readable.
     bool m_CanWrite; ///< Flag indicating if the vme is writable.
+    QString ciccio;
 };
 
 /////////////////////////////////////////////////////////////
@@ -145,7 +170,6 @@ inline mafInteractor *mafVME::interactor() {
     QReadLocker locker(m_Lock);
     return m_Interactor;
 }
-
 
 inline bool mafVME::canRead() const {
     QReadLocker locker(m_Lock);
