@@ -59,10 +59,10 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
+
         // Create before the instance of the Serialization manager, which will register signals.
-        bool res(false);
-        res = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
-        QVERIFY(res);
+        m_SerializationHandle = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
+        QVERIFY(m_SerializationHandle != NULL);
 
         mafEventBusManager::instance();
         m_VMEManager = mafVMEManager::instance();
@@ -95,6 +95,9 @@ private slots:
         //Insert data into VME
         m_Vme = mafNEW(mafResources::mafVME);
         m_DataSetCube = mafNEW(mafResources::mafDataSet);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+        boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+        m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
         m_DataSetCube->setDataValue(&m_DataSourceContainer);
 
         // Second test VME
@@ -118,12 +121,13 @@ private slots:
         m_DataSourceContainerMoved.setExternalDataType("vtkAlgorithmOutput");
         m_DataSourceContainerMoved = m_PDataFilter->GetOutputPort(0);
         m_DataSetCubeMoved = mafNEW(mafResources::mafDataSet);
+        
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm1;
+        boundaryAlgorithm1 = mafNEW(mafDataBoundaryAlgorithmVTK);
+        m_DataSetCubeMoved->setBoundaryAlgorithm(boundaryAlgorithm1);
         m_DataSetCubeMoved->setDataValue(&m_DataSourceContainerMoved);
 
         m_Vme->dataSetCollection()->insertItem(m_DataSetCube, 0);
-        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
-        boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
-        m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
         m_Vme->dataSetCollection()->insertItem(m_DataSetCubeMoved, 1);
     }
 
@@ -137,6 +141,7 @@ private slots:
         m_DataSource->Delete();
         m_DataSourceMoved->Delete();
         m_VMEManager->shutdown();
+        mafShutdownModule(m_SerializationHandle);
         mafEventBusManager::instance()->shutdown();
         mafMessageHandler::instance()->shutdown();
     }
@@ -159,6 +164,8 @@ private:
     mafResources::mafDataSet *m_DataSetCube;
     mafResources::mafDataSet *m_DataSetCubeMoved;
     mafVMEManager *m_VMEManager;
+    QLibrary *m_SerializationHandle;
+
 };
 
 void mafSerializationRawASCIIExtDataTest::mafSerializationVTKAllocationTest() {
@@ -209,7 +216,7 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
     argList.append(mafEventArgument(QString, encodeType));
     argList.append(mafEventArgument(QString, codec));
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
-
+    
     //Save VME with ASCII dataSet
     mafMementoVME *mementoVME = (mafMementoVME *)m_Vme->createMemento();
     QVERIFY(mementoVME != NULL);
@@ -259,7 +266,7 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
     sphereMapper->Delete();
     mafDEL(returnVME);
     mafDEL(mementoVME);
-
+    mafDEL(memento);
     i = 0;
     //remove files crested by test
     for (; i < list.size(); ++i) {
