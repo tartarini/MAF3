@@ -54,8 +54,13 @@ signals:
 
     /// Remove last picking position stored
     void unDoPickSignal();
+    
+    /// Remove last picking position stored
+    void OKSignal();
 
 public slots:
+    /// Called when a VME has been picked.
+    /*virtual*/ void vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj);
 
     /// Set type of parametric surface used as marker.
     void setSurface(QString parametricSurfaceType);
@@ -65,9 +70,6 @@ protected:
     /* virtual */~mafVTKInteractorPicker();
 
 private slots:
-    /// Called when a VME has been picked.
-    void vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj);
-
     /// Called when a new pick is required.
     void nextPick();
 
@@ -88,8 +90,7 @@ private:
     /// Set scalar value to input vtkPolyData.
     void setScalarValue(vtkPolyData *data, double scalarValue);
 
-    double *m_Center;
-
+    double *m_Center; ///< point in which the pick happens.
     vtkPolyDataMapper *m_Mapper; ///< Class that maps polygonal data.
     vtkAppendPolyData *m_AppendData; /// Bunch of surfaces.
     QList<double*> m_PointList;
