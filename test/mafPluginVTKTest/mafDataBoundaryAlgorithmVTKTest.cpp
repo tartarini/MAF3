@@ -66,6 +66,9 @@ private slots:
         newMatrix->set_identity();
 
         m_DataSetCube = mafNEW(mafResources::mafDataSet);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+        boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+        m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
         m_DataSetCube->setDataValue(&m_DataSourceContainer);
         m_DataSetCube->setPoseMatrix(newMatrix);
 
@@ -89,9 +92,6 @@ private:
 };
 
 void mafDataBoundaryAlgorithmVTKTest::calculateBoundaryTest() {
-    mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
-    boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
-    m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
     mafProxy<vtkAlgorithmOutput> *boundingBox = mafProxyPointerTypeCast(vtkAlgorithmOutput, m_DataSetCube->dataBoundary());
 
 

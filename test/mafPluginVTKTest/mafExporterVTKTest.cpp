@@ -12,6 +12,7 @@
 #include <mafTestSuite.h>
 #include <mafExporterVTK.h>
 #include <mafVMEManager.h>
+#include "mafDataBoundaryAlgorithmVTK.h"
 #include <mafOperationManager.h>
 #include <mafProxy.h>
 
@@ -102,6 +103,9 @@ void mafExporterVTKTest::initializeTestData() {
     mafDataSet *data = mafNEW(mafResources::mafDataSet);
     mafProxy<vtkAlgorithmOutput> *vtkDataProxy = new mafProxy<vtkAlgorithmOutput>();
     *vtkDataProxy = surfSphere->GetOutputPort();
+    mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+    boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+    data->setBoundaryAlgorithm(boundaryAlgorithm);
     data->setDataValue(vtkDataProxy);
         
     m_VME->dataSetCollection()->insertItem(data);

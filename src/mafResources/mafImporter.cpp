@@ -61,6 +61,7 @@ void mafImporter::importedData(mafCore::mafProxyInterface *data) {
     this->m_Output = mafNEW(mafResources::mafVME);
     this->m_Output->setObjectName(info.baseName());
     mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
+    // TODO !! PROBLEM BECAUSE NEED TO DEFINE BOUNDARY ALGORITHM
     dataSet->setDataValue(data);
     ((mafVME *)this->m_Output)->dataSetCollection()->insertItem(dataSet, 0);
     mafDEL(dataSet);
