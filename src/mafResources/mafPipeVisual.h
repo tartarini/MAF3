@@ -41,9 +41,6 @@ public:
 
     /// Return the visibility status
     bool visibility() const;
-
-    /// Set the input VME to be used as input data for the pipeline./*
-    void setInput(mafVME *vme);
     
     /// Pass to the visual pipe an object (or a group of objects) via mafProxyInterface
     /** graphicObject parameter  represents the graphic components for that specific pipeline, for example, VTK use vtkRenderer */
