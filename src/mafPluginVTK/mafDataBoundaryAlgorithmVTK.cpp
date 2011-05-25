@@ -12,8 +12,6 @@
 #include "mafDataBoundaryAlgorithmVTK.h"
 #include <mafProxyInterface.h>
 #include <vtkSmartPointer.h>
-#include <vtkDataSetReader.h>
-#include <vtkDataSetWriter.h>
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>
 #include <vtkTransform.h>
