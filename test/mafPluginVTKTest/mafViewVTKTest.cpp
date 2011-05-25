@@ -17,6 +17,7 @@
 #include <mafView.h>
 #include <mafViewVTK.h>
 #include <mafPipeVisualVTKSurface.h>
+#include <mafDataBoundaryAlgorithmVTK.h>
 #include <mafSceneNode.h>
 #include <mafVME.h>
 #include <mafProxy.h>
@@ -78,6 +79,9 @@ private slots:
         m_VmeCube = mafNEW(mafResources::mafVME);
         m_VmeCube->setObjectName("VME Cube");
         m_DataSetCube = mafNEW(mafResources::mafDataSet);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+        boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+        m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
         m_DataSetCube->setDataValue(&m_DataSourceContainer);
         m_VmeCube->dataSetCollection()->insertItem(m_DataSetCube, 0);
         m_DataSetCube->release();
@@ -103,6 +107,9 @@ private slots:
         m_DataSourceContainerMoved.setExternalDataType("vtkAlgorithmOutput");
         m_DataSourceContainerMoved = m_PDataFilter->GetOutputPort(0);
         m_DataSetCubeMoved = mafNEW(mafResources::mafDataSet);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm1;
+        boundaryAlgorithm1 = mafNEW(mafDataBoundaryAlgorithmVTK);
+        m_DataSetCubeMoved->setBoundaryAlgorithm(boundaryAlgorithm1);
         m_DataSetCubeMoved->setDataValue(&m_DataSourceContainerMoved);
 
         m_VmeCubeMoved = mafNEW(mafResources::mafVME);

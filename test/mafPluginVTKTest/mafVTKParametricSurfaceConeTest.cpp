@@ -15,6 +15,7 @@
 #include <mafPipeVisualVTKSurface.h>
 #include <mafVTKParametricSurfaceCone.h>
 #include <mafVTKWidget.h>
+#include <mafDataBoundaryAlgorithmVTK.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkAlgorithmOutput.h>
 #include <mafProxy.h>
@@ -62,6 +63,9 @@ private slots:
         //Insert data into VME
         m_VME = mafNEW(mafResources::mafVME);
         m_DataSet = mafNEW(mafResources::mafDataSet);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+        boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+        m_DataSet->setBoundaryAlgorithm(boundaryAlgorithm);
         m_DataSet->setDataValue(&m_DataSourceContainer);
         m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
         //! </snippet>

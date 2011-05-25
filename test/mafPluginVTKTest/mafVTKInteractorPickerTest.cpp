@@ -14,6 +14,7 @@
 #include <mafResourcesRegistration.h>
 #include <mafVTKWidget.h>
 #include <mafPipeVisualVTKSurface.h>
+#include <mafDataBoundaryAlgorithmVTK.h>
 #include <mafVTKInteractorPicker.h>
 #include <mafVTKParametricSurfaceSphere.h>
 
@@ -135,6 +136,9 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //Insert data into VME
     mafVME *vme = mafNEW(mafResources::mafVME);
     mafDataSet *dataSetSphere = mafNEW(mafResources::mafDataSet);
+    mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+    boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+    dataSetSphere->setBoundaryAlgorithm(boundaryAlgorithm);
     dataSetSphere->setDataValue(&dataSourceContainer);
     vme->dataSetCollection()->insertItem(dataSetSphere, 0);
     vme->setInteractor(m_Picker);

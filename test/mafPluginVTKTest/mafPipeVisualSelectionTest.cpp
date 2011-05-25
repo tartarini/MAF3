@@ -12,6 +12,7 @@
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafPipeVisualSelection.h>
+#include <mafDataBoundaryAlgorithmVTK.h>
 #include <mafVME.h>
 #include <mafDataSet.h>
 #include <mafProxy.h>
@@ -59,9 +60,15 @@ private slots:
 
         // put the container inside the mafDataSet
         mafDataSet *dataLow = mafNEW(mafResources::mafDataSet);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+        boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+        dataLow->setBoundaryAlgorithm(boundaryAlgorithm);
         dataLow->setDataValue(&m_DataSourceLowContainer);
 
         mafDataSet *dataHigh = mafNEW(mafResources::mafDataSet);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm1;
+        boundaryAlgorithm1 = mafNEW(mafDataBoundaryAlgorithmVTK);
+        dataHigh->setBoundaryAlgorithm(boundaryAlgorithm1);
         dataHigh->setDataValue(&m_DataSourceHighContainer);
 
         m_VME = mafNEW(mafResources::mafVME);
