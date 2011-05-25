@@ -260,6 +260,7 @@ void mafSerializationRawBinaryExtDataTest::mafSerializationVTKSaveTest() {
     sphereMapper->Delete();
     mafDEL(returnVME);
     mafDEL(mementoVME);
+    mafDEL(memento);
 
     i = 0;
     //remove files crested by test
