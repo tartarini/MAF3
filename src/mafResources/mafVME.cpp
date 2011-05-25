@@ -216,8 +216,6 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 }
 
-
-
 bool mafVME::dataLoaded() const {
     bool result(false);
     if(m_DataSetCollection){
