@@ -77,10 +77,14 @@ public slots:
 };
     
 inline void mafImporter::setFilename(const QString f) {
+    QMutex mutex(QMutex::Recursive);
+    QMutexLocker locker(&mutex);
     m_Filename = f;
 }
     
 inline QString mafImporter::filename() const {
+    QMutex mutex(QMutex::Recursive);
+    QMutexLocker locker(&mutex);
     return m_Filename;
 }
 
