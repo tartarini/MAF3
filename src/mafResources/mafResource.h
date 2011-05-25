@@ -26,7 +26,6 @@ This class provides basic API to set input and get output from a mafResource.
 */
 class MAFRESOURCESSHARED_EXPORT mafResource : public mafCore::mafObject {
     Q_OBJECT
-    Q_PROPERTY(bool dataLoaded READ dataLoaded WRITE setDataLoaded)
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObject);
 
@@ -86,8 +85,7 @@ public:
     undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
-    /// Return true if data has been loaded.
-    bool dataLoaded();
+    
 
     /// Initialize the resource.
     virtual bool initialize();
@@ -103,9 +101,6 @@ signals:
     void terminateExecution();
 
 public slots:
-    /// Set value of m_DataLoaded.
-    void setDataLoaded(bool dataLoaded);
-
     /// Slot called when an input is destroyed outside. It has to be removed automatically from the input list.
     void inputDestroyed();
 
@@ -124,7 +119,7 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafResource();
 
-    bool m_DataLoaded; ///< Indicates if data has been loaded.
+    //bool m_DataLoaded; ///< Indicates if data has been loaded.
     mafResource *m_Output; ///< Output of the resource.
 
 private:
@@ -144,9 +139,7 @@ inline mafResource *mafResource::output() {
     return m_Output;
 }
 
-inline bool mafResource::dataLoaded() {
-    return m_DataLoaded;
-}
+
 
 } //mafResources
 

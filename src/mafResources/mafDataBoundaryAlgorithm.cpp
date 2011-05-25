@@ -20,3 +20,10 @@ mafDataBoundaryAlgorithm::mafDataBoundaryAlgorithm(const QString code_location) 
 
 mafDataBoundaryAlgorithm::~mafDataBoundaryAlgorithm() {
 }
+
+void mafDataBoundaryAlgorithm::bounds(double bounds[6]) {
+    int i = 0;
+    for(i; i < 6; ++i){
+        bounds[i] = m_Bounds[i];
+    }
+}

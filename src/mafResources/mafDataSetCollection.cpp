@@ -276,7 +276,8 @@ bool mafDataSetCollection::setDataSet(mafDataSet *data, double t) {
 }
 
 void mafDataSetCollection::updateData() {
-  emit(modifiedObject());
+    itemAtCurrentTime()->updateBounds();
+    emit(modifiedObject());
 }
 
 bool mafDataSetCollection::acceptData(mafDataSet *data) {

@@ -36,6 +36,7 @@ class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_OBJECT
     Q_PROPERTY(bool canRead READ canRead WRITE setCanRead)
     Q_PROPERTY(bool canWrite READ canWrite WRITE setCanWrite)
+    Q_PROPERTY(bool dataLoaded READ dataLoaded)
 
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
@@ -43,12 +44,6 @@ class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
 public:
     /// Object constructor.
     mafVME(const QString code_location = "");
-
-    /// Set the bounds of the bounding box of the VME.
-    void setBounds(QVariantList bounds);
-
-    /// Return the bounds of the bounding box of the VME.
-    QVariantList bounds();
 
     /// Return the collection of mafDataSet.
     mafDataSetCollection *dataSetCollection();
@@ -97,6 +92,9 @@ public:
     /// Return the possibility to modify the VME.
     bool canWrite() const;
 
+    /// Return true if data has been loaded.
+    bool dataLoaded();
+
 signals:
     /// Alert observers that the VME has been detatched from the hierarchy tree.
     void detatched();
@@ -114,9 +112,6 @@ public slots:
     /// Set the current timestamp for the VME.
     void setTimestamp(double t);
 
-    /// Update bounds of the bounding box.
-    /*virtual*/ void updateBounds();
-
     /// Execute the resource algorithm.
     /*virtual*/ void execute();
 
@@ -133,7 +128,6 @@ private:
     mafDataSetCollection *m_DataSetCollection; ///< Collection of timestamped data posed on homogeneous matrices.
     mafPipeData *m_DataPipe; ///< Data pipe associated with the VME and used to elaborate new data.
     QHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
-    QVariantList m_Bounds; ///< List of bounds value of the binding box.
     bool m_CanRead;  ///< Flag used to indicate if the VME is readable.
     bool m_CanWrite; ///< Flag indicating if the vme is writable.
 };
@@ -152,10 +146,6 @@ inline mafInteractor *mafVME::interactor() {
     return m_Interactor;
 }
 
-inline QVariantList mafVME::bounds()  {
-    QReadLocker locker(m_Lock);
-    return m_Bounds;
-}
 
 inline bool mafVME::canRead() const {
     QReadLocker locker(m_Lock);
@@ -166,7 +156,6 @@ inline bool mafVME::canWrite() const {
     QReadLocker locker(m_Lock);
     return m_CanWrite;
 }
-
 
 } // mafResources
 

@@ -15,7 +15,7 @@ using namespace mafCore;
 using namespace mafResources;
 
 
-mafResource::mafResource(const QString code_location) : mafObject(code_location), m_DataLoaded(false), m_Output(NULL), m_InputList(NULL) {
+mafResource::mafResource(const QString code_location) : mafObject(code_location), m_Output(NULL), m_InputList(NULL) {
     m_InputList = new mafResourceList;
 }
 
@@ -160,10 +160,6 @@ void mafResource::setMemento(mafMemento *memento, bool deep_memento) {
             addInput(res);
         }
     }
-}
-
-void mafResource::setDataLoaded(bool dataLoaded) {
-    m_DataLoaded = dataLoaded;
 }
 
 bool mafResource::initialize() {

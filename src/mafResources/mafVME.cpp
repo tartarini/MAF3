@@ -46,13 +46,6 @@ mafVME::~mafVME() {
     delete m_Lock;
 }
 
-void mafVME::setBounds(QVariantList bounds) {
-    QWriteLocker locker(m_Lock);
-    m_Bounds.clear();
-    m_Bounds.append(bounds);
-    setModified();
-}
-
 void mafVME::setCanRead(bool lock) {
     if ( lock == m_CanRead ) {
         return;
@@ -141,9 +134,7 @@ mafDataSetCollection *mafVME::dataSetCollection() {
     if(m_DataSetCollection == NULL) {
         QWriteLocker locker(m_Lock);
         m_DataSetCollection = new mafDataSetCollection(mafCodeLocation);
-
         //connect the data collection modified to the updateBounds slot
-        connect(m_DataSetCollection, SIGNAL(modifiedObject()), this, SLOT(updateBounds()));
     }
     return m_DataSetCollection;
 }
@@ -214,8 +205,6 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
         item = list->at(i);
         if(item.m_Name == "mafPipeData") {
             this->setDataPipe(item.m_Value.toString());
-        } else if(item.m_Name == "vmeBounds") {
-            this->setBounds(item.m_Value.toList());
         }
     }
     setModified();
@@ -227,17 +216,9 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 }
 
-void mafVME::updateBounds() {
-    if (this->dataSetCollection()->itemAtCurrentTime() != NULL){
-        mafDataBoundaryAlgorithm *boundary = NULL;
-        boundary = this->dataSetCollection()->itemAtCurrentTime()->boundaryAlgorithm();
-        if(boundary != NULL){
-            double b[6];
-            boundary->bounds(b);
-            int i = 0;
-            for(; i < 6; ++i) {
-                m_Bounds.append(b[i]);
-            }
-        }
-    }
+
+
+inline bool mafVME::dataLoaded() {
+    return this->dataSetCollection()->itemAtCurrentTime()->dataLoaded();
 }
+
