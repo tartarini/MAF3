@@ -24,6 +24,7 @@ class mafVME;
 /**
 Class name: mafViewManager
 This class provides the manager class for MAF3 views. The topics are:
+- maf.local.resources.view.customizeVisualization allows to plug visual pipes associated with VME for a given view type.
 - maf.local.resources.view.create allows to create a new View.
 - maf.local.resources.view.created notify all the observers that a new View has been created.
 - maf.local.resources.view.destroy allows to destroy a given View.
@@ -78,6 +79,9 @@ signals:
     /// Notify the destruction on all views
     void noneViewsSignal();
 
+    /// Signal associated to the 
+    void customPipeVisualForVMEInViewSignal(QString view_type, QString data_type, QString pipe_type);
+
 public slots:
     /// Create a memento class used to save the status of opened views. The caller has to delete the allocated memory he asked.
     /** This method allows to save the status of opened views when logic
@@ -118,6 +122,10 @@ private slots:
 
     /// fill the scenegraphs of each view. 
     void fillViews();
+
+    /// Allows to register the information of bindings between data type and visual pipe for the given view type.
+    void customPipeVisualForVMEInView(QString view_type, QString data_type, QString pipe_type);
+
 protected:
     /// Object destructor
     /*virtual*/ ~mafViewManager();
@@ -146,6 +154,7 @@ private:
 
     mafResourceList m_CreatedViewList; ///< List of created views.
     mafView *m_SelectedView; ///< Keep trak of the current selected view.
+    QHash<QString, QHash<QString, QString>* > m_VisualizationBindHash; ///< Hash containing the view type as key and the hash of binds between data type and visual pipe to use for rendering.
 };
 
 } // namespace mafResources
