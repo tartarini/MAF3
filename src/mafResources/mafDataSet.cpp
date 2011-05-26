@@ -184,5 +184,10 @@ void mafDataSet::updateBounds() {
         for(; i < 6; ++i) {
             m_Bounds[i] = b[i];
         }
+    } else {
+        int i = 0;
+        for(; i < 6; ++i) {
+            m_Bounds[i] = (i%2 == 0) ? 1 : -1;
+        }
     }
 }

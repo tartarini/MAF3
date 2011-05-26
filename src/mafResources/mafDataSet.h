@@ -80,6 +80,9 @@ public:
 
     /// Return the bounds of the bounding box of the VME.
     QVariantList bounds();
+    
+    /// check if boundary is valid.
+    bool isValidBounds();
 
     /// Update bounds of the bounding box.
     /*virtual*/ void updateBounds();
@@ -159,6 +162,12 @@ inline bool mafDataSet::dataLoaded() const {
 
 inline QVariantList mafDataSet::bounds()  {
     return m_Bounds;
+}
+
+inline bool mafDataSet::isValidBounds() {
+    return ((m_Bounds.at(0).toDouble() <= m_Bounds.at(1).toDouble()) && 
+            (m_Bounds.at(2).toDouble() <= m_Bounds.at(3).toDouble()) && 
+            (m_Bounds.at(4).toDouble() <= m_Bounds.at(5).toDouble()));
 }
 
 } //mafResources

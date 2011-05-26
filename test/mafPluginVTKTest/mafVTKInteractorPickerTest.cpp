@@ -141,6 +141,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     dataSetSphere->setBoundaryAlgorithm(boundaryAlgorithm);
     dataSetSphere->setDataValue(&dataSourceContainer);
     vme->dataSetCollection()->insertItem(dataSetSphere, 0);
+    mafDEL(dataSetSphere);
     vme->setInteractor(m_Picker);
 
     //Must create a visual pipe that send "maf.local.resources.interaction.vmePicked"
