@@ -49,7 +49,7 @@ public:
     void selectSceneNode(mafSceneNode *node, bool select);
 
     /// Called to show/hide scene node.
-    virtual void showSceneNode(mafSceneNode *node, bool show = true, const QString visualPipeType = "");
+    virtual void showSceneNode(mafSceneNode *node, bool show = true);
 
     /// Select this view.
     void select(bool select);
@@ -58,7 +58,7 @@ public:
     bool isSelected();
 
     /// Set default visual pipe for a type of data.
-    void plugVisualPipe(QString dataType, const QString visualPipeType);
+    void plugVisualPipeBindingHash(QHash<QString , QString> *hash);
 
     /// Set rendering window used by the view.
     void setRenderingWidget(QVariant renWidget);
@@ -97,12 +97,9 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafView();
 
-
-
     QObject *m_RenderWidget; ///< Rendering widget for the view.
-    QString m_DefaultVisualPipe; ///< Name of the default visual pipe.
     mafCore::mafHierarchyPointer m_Scenegraph; ///< Scenegraph
-    QHash<QString, QString> m_VisualPipeHash; ///< Bind between dataType and Visual pipe.
+    QHash<QString, QString> *m_VisualPipeHash; ///< Bind between dataType and Visual pipe.
     bool m_Selected; ///< Flag for active view.
     mafSceneNode *m_SelectedNode; ///< Keep track of the selected SceneNode.
     QList<mafSceneNode *> m_SceneNodeList; ///< variable useful for rapid iteration between mafTreeItem
