@@ -132,8 +132,8 @@ void mafVME::detatchFromTree() {
 
 mafDataSetCollection *mafVME::dataSetCollection() {
     if(m_DataSetCollection == NULL) {
-        QWriteLocker locker(m_Lock);
         m_DataSetCollection = new mafDataSetCollection(mafCodeLocation);
+        m_DataSetCollection->setParent(this);
         //connect the data collection modified to the updateBounds slot
     }
     return m_DataSetCollection;
@@ -144,7 +144,7 @@ mafDataSet *mafVME::outputData() {
     if(m_DataPipe != NULL) {
         return m_DataPipe->output()->dataSetCollection()->itemAtCurrentTime();
     }
-    return m_DataSetCollection->itemAtCurrentTime();
+    return dataSetCollection()->itemAtCurrentTime();
 }
 
 mafMemento *mafVME::createMemento() const {
