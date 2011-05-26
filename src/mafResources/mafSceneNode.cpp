@@ -40,12 +40,14 @@ void mafSceneNode::setVisualPipe(QString visualPipeType) {
     }
     
     if(visualPipeType.isEmpty()) {
-        qCritical(mafTr("Pipe name is empty string, impossible to instantiate Visual pipe!").toAscii().constData());
+        qCritical(mafTr("Pipe type not valid, impossible create Visual pipe!").toAscii().constData());
         return;
     }
     
+    // Update the visual pipe type with the new value
     m_VisualPipeType = visualPipeType;
-    createVisualPipe();
+    // and destroy the previous instance.
+    mafDEL(this->m_VisualPipe);
 }
 
 bool mafSceneNode::createVisualPipe() {
@@ -60,9 +62,7 @@ bool mafSceneNode::createVisualPipe() {
   connect(m_VisualPipe, SIGNAL(destroyed()), this, SLOT(visualPipeDestroyed()));
   m_VisualPipe->setInput(m_VME);
 
-  //if (m_VisualPipe->output() == NULL) {
   m_VisualPipe->createPipe();
-  //}
   m_VisualPipe->updatePipe();
   return true;
 }
