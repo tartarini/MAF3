@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
     // Plug the object's information into the framework
     logic->plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
     logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View 3D");
+    logic->customizeVisualization("mafPluginVTK::mafViewVTK", "vtkAlgorithmOutput", "maPluginVTK::mafPipeVisualSurfaceVTK");
 
     // Create the instance of the main window and pass to it the application's logic.
     // In this way the mafMainWondow class will also load the plug-ins present
