@@ -75,7 +75,7 @@ public:
      This is used to implement a sort of undo mechanism for the object's state, but can be used also by the
     serialization mechanism to serialize data into the selected storage type.
     The 'deep_memento' flag is used to avoid the copy of the object unique hash in normal operation like
-    undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
+    undo or copy/paste operations. The complete object save is instead needed for serialization purposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
     /// Assign to the VME the interactor that will be used when user interact with the VME.
@@ -93,7 +93,7 @@ public:
     /// Return the readability state for the VME.
     bool canRead() const;
 
-    /// Allow to lock/unlock the writability of the VME.
+    /// Allow to lock/unlock the ability to make changes to the VME.
     void setCanWrite(bool lock);
 
     /// Return the possibility to modify the VME.
@@ -102,23 +102,24 @@ public:
     /// Return true if data has been loaded.
     bool dataLoaded() const;
 
-    /// Return bound of the external data of the VME.
+    /// Return 3D bound of the current dataset containing the external data of the VME.
     QString boundXmin();
 
-    /// Return bound of the external data of the VME.
+    /// Return 3D bound of the current dataset containing the external data of the VME.
     QString boundYmin();
 
-    /// Return bound of the external data of the VME.
+    /// Return 3D bound of the current dataset containing the external data of the VME.
     QString boundZmin();
 
-    /// Return bound of the external data of the VME.
+    /// Return 3D bound of the current dataset containing the external data of the VME.
     QString boundXmax();
 
-    /// Return bound of the external data of the VME.
+    /// Return 3D bound of the current dataset containing the external data of the VME.
     QString boundYmax();
 
-    /// Return bound of the external data of the VME.
+    /// Return 3D bound of the current dataset containing the external data of the VME.
     QString boundZmax();
+
 signals:
     /// Alert observers that the VME has been detatched from the hierarchy tree.
     void detatched();
@@ -147,13 +148,13 @@ protected:
     void mementoDataSetMap(mafCore::mafMemento *memento, QMap<double, mafMementoDataSet*> &mementoMap);
 
 private:
-    mutable QReadWriteLock *m_Lock; ///< Lock variable for thread safe access to VME.
-    mafInteractor *m_Interactor; ///< Custom interactor associated with the VME.
+    mutable QReadWriteLock *m_Lock;     ///< Lock variable for thread safe access to VME.
+    mafInteractor *m_Interactor;        ///< Custom interactor associated with the VME.
     mafDataSetCollection *m_DataSetCollection; ///< Collection of timestamped data posed on homogeneous matrices.
-    mafPipeData *m_DataPipe; ///< Data pipe associated with the VME and used to elaborate new data.
+    mafPipeData *m_DataPipe;            ///< Data pipe associated with the VME and used to elaborate new data.
     QHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
-    bool m_CanRead;  ///< Flag used to indicate if the VME is readable.
-    bool m_CanWrite; ///< Flag indicating if the vme is writable.
+    bool m_CanRead;                     ///< Flag used to indicate if the VME is readable.
+    bool m_CanWrite;                    ///< Flag indicating if the vme is writable.
     QString ciccio;
 };
 
