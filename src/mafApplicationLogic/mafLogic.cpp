@@ -128,6 +128,14 @@ mafCore::mafHierarchy *mafLogic::requestNewHierarchy() {
     return m_Hierarchy;
 }
 
+void mafLogic::customizeVisualization(const QString view_type, const QString data_type, const QString pipe_visual_type) {
+    mafEventBus::mafEventArgumentsList argList;
+    argList.append(mafEventArgument(QString, view_type));
+    argList.append(mafEventArgument(QString, data_type));
+    argList.append(mafEventArgument(QString, pipe_visual_type));
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.customizeVisualization", mafEventTypeLocal, &argList);
+}
+
 void mafLogic::plugObject(const QString base_class, const QString class_type, const QString object_label) {
     // Add information to the
     mafPluggedObjectInformation objectInformation(object_label, class_type);
