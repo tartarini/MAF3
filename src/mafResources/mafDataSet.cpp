@@ -176,8 +176,8 @@ void mafDataSet::setBounds(QVariantList bounds) {
 void mafDataSet::updateBounds() {
     mafDataBoundaryAlgorithm *boundary = NULL;
     boundary = this->boundaryAlgorithm();
-    boundary->calculateBoundary(m_DataValue);
     if(boundary != NULL){
+        boundary->calculateBoundary(m_DataValue);
         double b[6];
         boundary->bounds(b);
         int i = 0;
