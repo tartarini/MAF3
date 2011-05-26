@@ -67,7 +67,7 @@ void mafView::sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectB
 void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
     mafVME *vme_to_add = qobject_cast<mafResources::mafVME *>(vme);
     if(vme_to_add != NULL) {
-        mafSceneNode *node = new mafSceneNode(vme_to_add, m_RenderWidget, "mafResources::mafPipeVisualBox", mafCodeLocation);
+        mafSceneNode *node = new mafSceneNode(vme_to_add, m_RenderWidget, "", mafCodeLocation);
         node->setObjectName(vme_to_add->objectName());
         connect(node, SIGNAL(destroyNode()), this, SLOT(sceneNodeDestroy()));
 
@@ -146,8 +146,13 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
     }
 
     if (vp == "") {
-       qDebug("%s", mafTr("Visual pipe not found for '%1' of data!").arg(vp).toAscii().data());
-       return;
+        //if originally in visual pipe hash, is not present that binding data-pipe visual,
+        // request to the PluginManager possible visual pipe accepting vme opject.
+        mafPluggedObjectInformationList *vpsHash = mafPluginManager::instance()->queryPluggedObjects("mafResources::mafPipeVisual");
+        
+        
+        qWarning("%s", mafTr("Visual pipe not found for '%1' of data!").arg(vp).toAscii().data());
+        return;
     }
 
     node->setVisualPipe(vp);
