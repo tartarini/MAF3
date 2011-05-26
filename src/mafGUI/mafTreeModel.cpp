@@ -135,6 +135,8 @@ void mafTreeModel::itemAttached(QObject *item, QObject *parent) {
         this->insertNewItem(AsChild, item, index);
         emit itemAdded(index);
     }
+    ((mafTreeItem*)this->item(0,0))->data()->setProperty("objectName", "pippi");
+    QModelIndex index = this->indexFromData(parent);
     emit dataChanged(index, index);
 }
 
