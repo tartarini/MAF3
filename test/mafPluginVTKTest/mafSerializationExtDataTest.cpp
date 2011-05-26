@@ -1,5 +1,5 @@
 /*
- *  mafSerializationExtDataTest.cpp
+ *  mafSerializationXMLExtDataTest.cpp
  *  mafPluginVTKTest
  *
  *  Created by Roberto Mucci on 26/03/10.
@@ -9,15 +9,14 @@
  *
  */
 
-#include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
+#include <mafTestSuite.h>
 #include <mafProxy.h>
 #include <mafMementoVME.h>
-#include <mafMementoHierarchy.h>
 #include <mafExternalDataCodecVTK.h>
 #include <mafEventBusManager.h>
-#include <mafDataBoundaryAlgorithmVTK.h>
 #include <mafVMEManager.h>
+#include <mafDataBoundaryAlgorithmVTK.h>
 
 
 #include <vtkDataSet.h>
@@ -40,6 +39,7 @@
 #endif
 #endif
 
+
 using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
@@ -47,64 +47,74 @@ using namespace mafEventBus;
 
 
 /**
- Class name: mafSerializationExtDataTest
+ Class name: mafSerializationXMLExtDataTest
  This class implements the test suite to test serialization mechanism with VTK lib.
  */
 
-class mafSerializationExtDataTest : public QObject {
+class mafSerializationXMLExtDataTest : public QObject {
     Q_OBJECT
-
-private slots:
+    
+    private slots:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
+        
         // Create before the instance of the Serialization manager, which will register signals.
         m_SerializationHandle = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
         QVERIFY(m_SerializationHandle != NULL);
-
+        
         mafEventBusManager::instance();
         m_VMEManager = mafVMEManager::instance();
-
+        
+        //Get hierarchy
+        mafCore::mafHierarchyPointer hierarchy;
+        QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+        
+        //Select root
+        mafObject *root;
+        ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
+        
         //Create two codec
         m_Codec = mafNEW(mafPluginVTK::mafExternalDataCodecVTK);
-
+        
         // Create a polydata.
         m_DataSource = vtkCubeSource::New();
         m_DataSource->SetXLength(5);
         m_DataSource->SetYLength(3);
         m_DataSource->SetZLength(8);
-
+        
         m_DataSourceContainer.setExternalCodecType("VTK");
         m_DataSourceContainer.setExternalDataType("vtkAlgorithmOutput");
         m_DataSourceContainer = m_DataSource->GetOutputPort(0);
-
+        
         //Insert data into VME
         m_Vme = mafNEW(mafResources::mafVME);
         m_DataSetCube = mafNEW(mafResources::mafDataSet);
-        
         mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
         boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
         m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
         m_DataSetCube->setDataValue(&m_DataSourceContainer);
-
+        
         // Second test VME
         m_DataSourceMoved = vtkCubeSource::New();
         m_DataSourceMoved->SetXLength(5);
         m_DataSourceMoved->SetYLength(3);
         m_DataSourceMoved->SetZLength(8);
-
+        
         vtkTransform *t = vtkTransform::New();
         t->RotateZ(50);
         t->RotateX(50);
         t->Update();
-
+        
         m_PDataFilter = vtkTransformPolyDataFilter::New();
         m_PDataFilter->SetTransform(t);
         m_PDataFilter->SetInputConnection(m_DataSourceMoved->GetOutputPort(0));
         m_PDataFilter->Update();
         t->Delete();
-
+        
         m_DataSourceContainerMoved.setExternalCodecType("VTK");
         m_DataSourceContainerMoved.setExternalDataType("vtkAlgorithmOutput");
         m_DataSourceContainerMoved = m_PDataFilter->GetOutputPort(0);
@@ -113,14 +123,12 @@ private slots:
         mafDataBoundaryAlgorithmVTK *boundaryAlgorithm1;
         boundaryAlgorithm1 = mafNEW(mafDataBoundaryAlgorithmVTK);
         m_DataSetCubeMoved->setBoundaryAlgorithm(boundaryAlgorithm1);
-        
         m_DataSetCubeMoved->setDataValue(&m_DataSourceContainerMoved);
-
         
         m_Vme->dataSetCollection()->insertItem(m_DataSetCube, 0);
         m_Vme->dataSetCollection()->insertItem(m_DataSetCubeMoved, 1);
     }
-
+    
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_Codec);
@@ -135,14 +143,14 @@ private slots:
         mafEventBusManager::instance()->shutdown();
         mafMessageHandler::instance()->shutdown();
     }
-
-    /// mafSerializationExtDataTest allocation test case.
+    
+    /// mafSerializationXMLExtDataTest allocation test case.
     void mafSerializationVTKAllocationTest();
-
-    /// mafSerializationExtDataTest econde test case.
+    
+    /// mafSerializationXMLExtDataTest econde test case.
     void mafSerializationVTKSaveTest();
-
-private:  
+    
+private:
     mafExternalDataCodecVTK *m_Codec; ///< Test var.
     vtkCubeSource *m_DataSource;
     vtkCubeSource *m_DataSourceMoved;
@@ -153,25 +161,26 @@ private:
     vtkTransformPolyDataFilter *m_PDataFilter; ///< Filter used to transform the bounding box.
     mafResources::mafDataSet *m_DataSetCube;
     mafResources::mafDataSet *m_DataSetCubeMoved;
-    mafVMEManager *m_VMEManager; ///< Manager needed for the hierarchy.
+    mafVMEManager *m_VMEManager;
     QLibrary *m_SerializationHandle;
+    
 };
 
-void mafSerializationExtDataTest::mafSerializationVTKAllocationTest() {
+void mafSerializationXMLExtDataTest::mafSerializationVTKAllocationTest() {
     QVERIFY(m_Codec != NULL);
 }
 
 
-void mafSerializationExtDataTest::mafSerializationVTKSaveTest() {
+void mafSerializationXMLExtDataTest::mafSerializationVTKSaveTest() {
     QString test_dir;
     test_dir = QDir::tempPath();
     test_dir.append("/maf3Logs");
-
+    
     QDir log_dir(test_dir);
     log_dir.setFilter(QDir::Files);
     QStringList list = log_dir.entryList();
     int i = 0;
-
+    
     //remove files crested by test
     for (; i < list.size(); ++i) {
         QString fileName = test_dir;
@@ -179,62 +188,49 @@ void mafSerializationExtDataTest::mafSerializationVTKSaveTest() {
         fileName.append(list.at(i));
         QFile::remove(fileName);
     }
-
+    
     // Create the temporary file into the temp directory of the current user.
     QString test_file = test_dir;
     test_file.append("/testExtFile.xml");
-
+    qDebug() << test_file;
+    
     QString plug_codec_id = "maf.local.serialization.plugCodec";
-    QString obj_type("mafCore::mafHierarchy");
+    QString obj_type("mafResources::mafVME");
     QString encodeType = "XML";
     QString codec = "mafSerialization::mafCodecXML";
-
+    
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString, obj_type));
     argList.append(mafEventArgument(QString, encodeType));
     argList.append(mafEventArgument(QString, codec));
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
-
+    
     obj_type = "vtkAlgorithmOutput";
     encodeType = "VTK";
     codec = "mafPluginVTK::mafExternalDataCodecVTK";
-
+    
     argList.clear();
     argList.append(mafEventArgument(QString, obj_type));
     argList.append(mafEventArgument(QString, encodeType));
     argList.append(mafEventArgument(QString, codec));
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
-
-    //Get hierarchy
-    mafCore::mafHierarchyPointer hierarchy;
-    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
-
-    //Select root
-    mafObject *root;
-    ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
-
-    //Notify vme add
-    argList.clear();
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Vme));
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
-
-    mafMementoHierarchy * mementoHiearachy = (mafMementoHierarchy*)hierarchy->createMemento();
-
-    QVERIFY(mementoHiearachy != NULL);
-
+    
+    //Save VME with ASCII dataSet
+    mafMementoVME *mementoVME = (mafMementoVME *)m_Vme->createMemento();
+    QVERIFY(mementoVME != NULL);
+    
     argList.clear();
     encodeType = "XML";
-    argList.append(mafEventArgument(mafCore::mafMemento *, mementoHiearachy));
+    argList.clear();
+    argList.append(mafEventArgument(mafCore::mafMemento *, mementoVME));
     argList.append(mafEventArgument(QString, test_file));
     argList.append(mafEventArgument(QString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal, &argList);
-
+    
     QVERIFY(QFile::exists(test_file));
     QFileInfo fInfo3(test_file);
     QVERIFY(fInfo3.size() > 0);
-
+    
     mafCore::mafMemento *memento;
     encodeType = "XML";
     argList.clear();
@@ -242,29 +238,19 @@ void mafSerializationExtDataTest::mafSerializationVTKSaveTest() {
     argList.append(mafEventArgument(QString, encodeType));
     QGenericReturnArgument retVal = mafEventReturnArgument(mafCore::mafMemento*, memento);
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal, &argList, &retVal);
-
-
+    
     QVERIFY(memento != NULL);
-    ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.new", mafEventTypeLocal, NULL, &ret_val);
-    hierarchy->setMemento(memento);
-
-    hierarchy->moveTreeIteratorToRootNode();
-    int num = hierarchy->currentNumberOfChildren();
-    hierarchy->moveTreeIteratorToNthChild();
-    mafVME *returnVME = (mafVME*)hierarchy->currentData();
-
+    
+    mafVME *returnVME = mafNEW(mafResources::mafVME);
+    returnVME->setMemento(memento, false);
+    
     //Now load dataValue
     mafDataSet *data = returnVME->dataSetCollection()->itemAt(0);
-
-    mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
-    boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
-    m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
-
+    
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
     vtkPolyDataMapper *sphereMapper = vtkPolyDataMapper::New();
     sphereMapper->SetInputConnection(*dataSet);
-
+    
     double boundsIn[6] = {-2.5,2.5,-1.5,1.5,-4,4};
     double boundsOut[6];
     sphereMapper->GetBounds(boundsOut);
@@ -274,12 +260,11 @@ void mafSerializationExtDataTest::mafSerializationVTKSaveTest() {
     QCOMPARE(boundsIn[3], boundsOut[3]);
     QCOMPARE(boundsIn[4], boundsOut[4]);
     QCOMPARE(boundsIn[5], boundsOut[5]);
-
+    
     sphereMapper->Delete();
     mafDEL(returnVME);
-    mafDEL(mementoHiearachy);
+    mafDEL(mementoVME);
     mafDEL(memento);
-
     i = 0;
     //remove files crested by test
     for (; i < list.size(); ++i) {
@@ -288,7 +273,8 @@ void mafSerializationExtDataTest::mafSerializationVTKSaveTest() {
         fileName.append(list.at(i));
         QFile::remove(fileName);
     }
+    
 }
 
-MAF_REGISTER_TEST(mafSerializationExtDataTest);
+MAF_REGISTER_TEST(mafSerializationXMLExtDataTest);
 #include "mafSerializationExtDataTest.moc"
