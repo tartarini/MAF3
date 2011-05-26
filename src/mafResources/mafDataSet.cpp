@@ -61,12 +61,14 @@ void mafDataSet::setDataValue(mafProxyInterface *data_value) {
         emit(dataValueDisconnected());
     }
     m_DataValue = data_value;
-    QString dataType = data_value->externalDataType();
-    m_ExternalDataType = dataType;
-    if(m_DataValue != NULL) {
-        emit(dataValueConnected());
-        m_DataLoaded = true;
-        updateBounds();
+    if (m_DataValue) {
+        QString dataType = data_value->externalDataType();
+        m_ExternalDataType = dataType;
+        if(m_DataValue != NULL) {
+            emit(dataValueConnected());
+            m_DataLoaded = true;
+            updateBounds();
+        }
     }
 }
 
