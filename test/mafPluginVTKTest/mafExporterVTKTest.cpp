@@ -109,6 +109,7 @@ void mafExporterVTKTest::initializeTestData() {
     data->setDataValue(vtkDataProxy);
         
     m_VME->dataSetCollection()->insertItem(data);
+    mafDEL(data);
     
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
