@@ -206,8 +206,11 @@ private slots:
     /// Slot called when the UI is loaded from the mafUILoaderQt, and the gui is shown.
     void showGui(mafCore::mafProxyInterface *guiWidget);
     
-    /// save the current working session
+    /// save the current working session.
     void save();
+
+    /// save as the current working session.
+    void saveas();
     
     /// open a working session
     void open();
@@ -215,6 +218,7 @@ private slots:
 private:
     /// return the data object inside an item in order to retrieve the data object and not the visual one (for example scene-node).
     QObject *dataObject(QModelIndex index);
+    QString m_CompleteFileName; ///< Name of the msf file.
 
 };
 

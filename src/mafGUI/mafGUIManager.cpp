@@ -29,7 +29,7 @@ using namespace mafGUI;
 
 mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location) : mafObjectBase(code_location)
     , m_VMEWidget(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win)
-    , m_Model(NULL), m_TreeWidget(NULL), m_Logic(NULL) {
+    , m_Model(NULL), m_TreeWidget(NULL), m_Logic(NULL), m_CompleteFileName() {
 
     m_SettingsDialog = new mafGUIApplicationSettingsDialog();
     m_OperationWidget = new mafOperationWidget();
@@ -84,6 +84,7 @@ void mafGUIManager::newWorkingSession() {
         
     QModelIndex index = m_Model->index(0, 0);
     m_TreeWidget->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
+    m_CompleteFileName = "";
 }
 
 void mafGUIManager::quitApplication() {
@@ -789,38 +790,64 @@ QString mafGUIManager::strippedName(const QString &fullFileName) {
 }
 
 void mafGUIManager::save() {
-    //open dialog for selecting the name of the session
-    QFileDialog::Options options;
-//    if (!native->isChecked())
-//        options |= QFileDialog::DontUseNativeDialog;
-    QString selectedFilter;
-    QString completeFileName = QFileDialog::getSaveFileName(NULL,
-                                                    mafTr("Save Session"),
-                                                    mafTr(""),
-                                                    mafTr("MAF Storage Format file (*.msf)"),
-                                                    /*mafTr("All Files (*);;Text Files (*.xmsf)"),*/
-                                                    &selectedFilter,
-                                                    options);
-    if (completeFileName.isEmpty()) {
-        return;
+    if(m_CompleteFileName.isEmpty()) {
+        //open dialog for selecting the name of the session
+        QFileDialog::Options options;
+        // if (!native->isChecked())
+        // options |= QFileDialog::DontUseNativeDialog;
+        QString selectedFilter;
+        m_CompleteFileName = QFileDialog::getSaveFileName(NULL,
+                                                        mafTr("Save Session"),
+                                                        mafTr(""),
+                                                        mafTr("MAF Storage Format file (*.msf)"),
+                                                        /*mafTr("All Files (*);;Text Files (*.xmsf)"),*/
+                                                        &selectedFilter,
+                                                        options);
+        if (m_CompleteFileName.isEmpty()) {
+            return;
+        }
+        int index = m_CompleteFileName.lastIndexOf("/");
+        QString fileNameWithExt = m_CompleteFileName.mid(index+1);
+        QString path = m_CompleteFileName.left(index);
+        path.append("/");
+
+        QString fileName = fileNameWithExt.split(".").at(0);
+        path = path.append(fileName);
+        QDir saveDir(path);
+        saveDir.mkpath(path);
+
+        m_CompleteFileName = saveDir.path();
+        m_CompleteFileName.append("/");
+        m_CompleteFileName.append(fileNameWithExt);
+
+        //Store memento hierarchy
+        m_Logic->storeHierarchy(m_CompleteFileName);
+        qDebug() << m_CompleteFileName;
+    } else {
+        int index = m_CompleteFileName.lastIndexOf("/");
+        QString path = m_CompleteFileName.left(index);
+
+        QDir log_dir(path);
+        log_dir.setFilter(QDir::Files);
+        QStringList list = log_dir.entryList();
+        int i = 0;
+
+        //remove all files
+        for (; i < list.size(); ++i) {
+            QString fileName = path;
+            fileName.append("/");
+            fileName.append(list.at(i));
+            QFile::remove(fileName);
+        }
+
+        m_Logic->storeHierarchy(m_CompleteFileName);
+        qDebug() << m_CompleteFileName;
     }
-    int index = completeFileName.lastIndexOf("/");
-    QString fileNameWithExt = completeFileName.mid(index+1);
-    QString path = completeFileName.left(index);
-    path.append("/");
+}
 
-    QString fileName = fileNameWithExt.split(".").at(0);
-    path = path.append(fileName);
-    QDir saveDir(path);
-    saveDir.mkpath(path);
-
-    completeFileName = saveDir.path();
-    completeFileName.append("/");
-    completeFileName.append(fileNameWithExt);
-
-    //Store memento hierarchy
-    m_Logic->storeHierarchy(completeFileName);
-    qDebug() << completeFileName;
+void mafGUIManager::saveas() {
+    m_CompleteFileName = "";
+    save();
 }
 
 void mafGUIManager::open() {
@@ -841,9 +868,9 @@ void mafGUIManager::open() {
         return;
     }
     qDebug() << files[0];
-
     //Load memento hierarchy
     m_Logic->restoreHierarchy(files[0]);
+    m_CompleteFileName = files[0];
 }
 
 QObject *mafGUIManager::dataObject(QModelIndex index) {
