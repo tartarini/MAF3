@@ -147,15 +147,12 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
 
     if (vp == "") {
         //if originally in visual pipe hash, is not present that binding data-pipe visual,
-        // request to the PluginManager possible visual pipe accepting vme opject.
+        // request to the PluginManager possible visual pipe accepting vme object.
         mafPluggedObjectInformationList *vpsHash = mafPluginManager::instance()->queryPluggedObjects("mafResources::mafPipeVisual");
-        
         
         qWarning("%s", mafTr("Visual pipe not found for '%1' of data!").arg(vp).toAscii().data());
         return;
     }
-
-    node->setVisualPipe(vp);
 
     if(m_Scenegraph != NULL) {
         if (show) {
