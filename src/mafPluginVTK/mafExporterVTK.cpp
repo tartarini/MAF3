@@ -67,12 +67,8 @@ bool mafExporterVTK::acceptObject(mafCore::mafObjectBase *obj) {
     if(ds == NULL) {
         return false;
     }
-    mafCore::mafProxyInterface *dv = ds->dataValue();
     QString dt("");
-    if (dv) {
-        dt = dv->externalDataType();
-    }
-    char *v = dt.toAscii().data();
+    dt = ds->externalDataType();
     return dt.contains(QRegExp("^vtk.*"));
 }
 
@@ -85,7 +81,7 @@ void mafExporterVTK::terminated() {
 }
 
 void mafExporterVTK::cleanup() {
-    // Cleanup memory and deregister callback.
+    // Cleanup memory and unregister callback.
     mafDEL(m_Output);
 }
 
