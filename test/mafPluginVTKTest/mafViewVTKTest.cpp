@@ -62,6 +62,8 @@ private slots:
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
         mafVMEManager::instance();
 
+        m_BindingHash.insert("vtkAlgorithmOutput","mafPluginVTK::mafPipeVisualVTKSurface");
+
         /// Create the view...
         m_View = mafNEW(mafPluginVTK::mafViewVTK);
 
@@ -152,6 +154,7 @@ private:
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainerMoved; ///< Container of the Data S
     mafResources::mafDataSet *m_DataSetCube;
     mafResources::mafDataSet *m_DataSetCubeMoved;
+    QHash<QString, QString> m_BindingHash;
 };
 
 void mafViewVTKTest::mafViewVTKAllocationTest() {
@@ -182,7 +185,7 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VmeCube));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 
-    m_View->plugVisualPipe("vtkAlgorithmOutput","mafPluginVTK::mafPipeVisualVTKSurface");
+    m_View->plugVisualPipeBindingHash(&m_BindingHash);
     //! </snippet>
 
     // Visualize first cube
@@ -194,7 +197,7 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     mafDEL(v);
 
     QTest::qSleep(2000);
-    // Visualize also second cube (I could cutomize visualPipe)
+    // Visualize also second cube (I could customize visualPipe)
     argList.clear();
     argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VmeCubeMoved));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
@@ -203,7 +206,7 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     mafObjectRegistry::instance()->findObjectsThreaded(v);
     mafSceneNode *cubeMovedNode = v->sceneNode();
     mafDEL(v);
-    m_View->showSceneNode(cubeMovedNode, true,  "mafPluginVTK::mafPipeVisualVTKSurface");
+    m_View->showSceneNode(cubeMovedNode, true);
     QTest::qSleep(2000);
 
     // Show off first cube
