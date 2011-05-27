@@ -395,6 +395,22 @@ void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
         op = action->data().toString();
         action->setEnabled(accepted_list.contains(op));
     }
+    
+    QMenu *impMenu = (QMenu *)this->menuItemByName("Import");
+    QList<QAction *> impActions= impMenu->actions();
+    QString imp;
+    foreach(QAction *action, impActions) {
+        imp = action->data().toString();
+        action->setEnabled(accepted_list.contains(imp));
+    }
+    
+    QMenu *expMenu = (QMenu *)this->menuItemByName("Export");
+    QList<QAction *> expActions= expMenu->actions();
+    QString exp;
+    foreach(QAction *action, expActions) {
+        exp = action->data().toString();
+        action->setEnabled(accepted_list.contains(exp));
+    }
 }
 
 void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
