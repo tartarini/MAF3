@@ -155,7 +155,6 @@ private:
     QHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
     bool m_CanRead;                     ///< Flag used to indicate if the VME is readable.
     bool m_CanWrite;                    ///< Flag indicating if the vme is writable.
-    QString ciccio;
 };
 
 /////////////////////////////////////////////////////////////
