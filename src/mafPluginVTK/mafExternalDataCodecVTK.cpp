@@ -77,6 +77,7 @@ void mafExternalDataCodecVTK::decode(const char *input_string, bool binary) {
 
     m_Reader->Update();
     m_Data = new mafProxy<vtkAlgorithmOutput>();
+    m_Data->setClassTypeNameFunction(vtkClassTypeNameExtract);
     *m_Data = m_Reader->GetOutputPort(0);
     this->m_ExternalData = m_Data;
 }
