@@ -29,9 +29,9 @@ mafSerializationManager::mafSerializationManager(const QString code_location) : 
 
     initializeConnections();
 
-    plugCodec("*","RAW","mafSerialization::mafCodecRawBinary");
-    plugCodec("*","VOLUME_LOD","mafSerialization::mafCodecRawVolume");
-    plugCodec("*","VOLUME_BRICKED_LOD","mafSerialization::mafCodecBrickedVolume");
+    plugCodec("RAW","mafSerialization::mafCodecRawBinary");
+    plugCodec("VOLUME_LOD","mafSerialization::mafCodecRawVolume");
+    plugCodec("VOLUME_BRICKED_LOD","mafSerialization::mafCodecBrickedVolume");
     plugSerializer("file", "mafSerialization::mafSerializerFileSystem");
 }
 
@@ -50,7 +50,7 @@ void mafSerializationManager::initializeConnections() {
     provider->createNewId("maf.local.serialization.import");
 
     // Register API signals.
-    mafRegisterLocalSignal("maf.local.serialization.plugCodec", this, "plugCodecInModule(const QString &, const QString &, const QString &)");
+    mafRegisterLocalSignal("maf.local.serialization.plugCodec", this, "plugCodecInModule(const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.plugSerializer", this, "plugSerializerInModule(const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.save", this, "save(mafCore::mafMemento *, const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.load", this, "load(const QString &, const QString &)");
@@ -58,7 +58,7 @@ void mafSerializationManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.serialization.import", this, "importData(const QString &, const QString &)");
 
     // Register private callbacks.
-    mafRegisterLocalCallback("maf.local.serialization.plugCodec", this, "plugCodec(const QString &, const QString &, const QString &)");
+    mafRegisterLocalCallback("maf.local.serialization.plugCodec", this, "plugCodec(const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.plugSerializer", this, "plugSerializer(const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.save", this, "saveMemento(mafCore::mafMemento *, const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.load", this, "loadMemento(const QString &, const QString &)");
@@ -69,28 +69,14 @@ void mafSerializationManager::initializeConnections() {
 void mafSerializationManager::saveMemento(mafMemento *memento, const QString &url, const QString &encode_type) {
     REQUIRE(memento != NULL);
 
-    // Create an instance of the codec type corresponding to the object's memento
-    mafEncodingList encoding_list = encodingTypeList(memento);
-    bool encoding_not_found = true;
-    QString encodingTypeItem = "";
-    QString codecType = "";
-    if(!encode_type.isEmpty()) {
-        foreach(encodingTypeItem, encoding_list) {
-            if(encodingTypeItem == encode_type) {
-                encoding_not_found = false;
-                codecType = m_CodecHash[encodingTypeItem];
-                break;
-            }
-        }
+    QString codecType;
+    if(m_CodecHash.contains(encode_type)) {
+        codecType = m_CodecHash.value(encode_type);
+    } else {
+        qWarning("%s", mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toAscii().data());
+        codecType = m_CodecHash.value("RAW");
     }
-
-    if(encoding_not_found) {
-        if(encode_type != "RAW") {
-            qWarning("%s", mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toAscii().data());
-        }
-        codecType = m_CodecHash["RAW"];
-    }
-
+    
     // Pass the memento to the codec and ask him to encode the given data.
     mafCodec *codec = (mafCodec *)mafNEWFromString(codecType);
 
@@ -167,27 +153,14 @@ mafMemento *mafSerializationManager::loadMemento(const QString &url, const QStri
 void mafSerializationManager::exportExternalData(mafCore::mafProxyInterface *externalData, const QString &url, const QString &encode_type) {
     REQUIRE(externalData != NULL);
 
-    // Create an instance of the codec type corresponding to the object's memento
-    mafEncodingList encoding_list = m_EncodingHash.values(externalData->externalDataType());
-    bool encoding_not_found = true;
-    QString encodingTypeItem = "";
-    QString codecType = "";
-    if(!encode_type.isEmpty()) {
-        foreach(encodingTypeItem, encoding_list) {
-            if(encodingTypeItem == encode_type) {
-                encoding_not_found = false;
-                codecType = m_CodecHash[encodingTypeItem];
-                break;
-            }
-        }
+    QString codecType;
+    if(m_CodecHash.contains(encode_type)) {
+        codecType = m_CodecHash.value(encode_type);
+    } else {
+        qWarning("%s", mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toAscii().data());
+        codecType = m_CodecHash.value("RAW");
     }
 
-    if(encoding_not_found) {
-        if(encode_type != "RAW") {
-            qWarning("%s", mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toAscii().data());
-        }
-        codecType = m_CodecHash["RAW"];
-    }
 
     // Pass the memento to the codec and ask him to encode the given data.
     mafExternalDataCodec *codec = (mafExternalDataCodec *)mafNEWFromString(codecType);
@@ -271,14 +244,8 @@ mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const Q
     return m_CurrentExternalDataCodec->externalData();
 }
 
-void mafSerializationManager::plugCodec(const QString &object_type,const QString &encoding_type, const QString &codecType) {
-    m_EncodingHash.insertMulti(object_type, encoding_type);
+void mafSerializationManager::plugCodec(const QString &encoding_type, const QString &codecType) {
     m_CodecHash.insertMulti(encoding_type, codecType);
-}
-
-mafEncodingList mafSerializationManager::encodingTypeList(const mafMemento *memento) {
-    QString key = memento->objectClassType();
-    return m_EncodingHash.values(key);
 }
 
 void mafSerializationManager::shutdown() {
