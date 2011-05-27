@@ -58,20 +58,20 @@ bool mafProxy<T>::isEqual(mafProxyInterface *container) {
 
 template<typename T>
 inline void mafProxy<T>::updateExternalDataType() {
-    QString data_type(typeid( T ).name());
-    
-    // Needed because typeid return the length of the string containing the type
-    // before the string itself.
-#ifdef _MSC_VER
-    data_type = data_type.mid(6);
-#else
-    int dt_len = data_type.length();
-    data_type = (dt_len > 10) ? data_type.mid(2) : data_type.mid(1);
-#endif
     if(m_ClassTypeNameFunction == NULL) {
+        QString data_type(typeid( T ).name());
+    
+        // Needed because typeid return the length of the string containing the type
+        // before the string itself.
+#ifdef _MSC_VER
+        data_type = data_type.mid(6);
+#else
+        int dt_len = data_type.length();
+        data_type = (dt_len > 10) ? data_type.mid(2) : data_type.mid(1);
+#endif
         setExternalDataType(data_type);
     } else {
-        setExternalDataType(*m_ClassTypeNameFunction(m_ExternalData));
+        setExternalDataType(QString(*m_ClassTypeNameFunction(m_ExternalData)));
     }
 }
 
