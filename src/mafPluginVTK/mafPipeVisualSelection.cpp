@@ -32,7 +32,7 @@ bool mafPipeVisualSelection::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
         QString dataType = vme->dataSetCollection()->itemAtCurrentTime()->externalDataType();
-        if(dataType.startsWith("vtkAlgorithmOutput", Qt::CaseSensitive)) {
+        if(dataType.contains(QRegExp("^vtk.*"))) {
             return true;
         }
     }
