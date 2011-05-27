@@ -58,18 +58,25 @@ void mafExporterVTK::execute() {
 
 bool mafExporterVTK::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafResources::mafVME *>(obj);
+    bool result(false);
     if (vme == NULL) {
         qCritical(mafTr("Missing VME!!").toAscii().constData());
-        return false;
+        return result;
     }
     mafDataSetCollection *dc = vme->dataSetCollection();
+    int elements = dc->collectionMap()->count();
+    
+    if(elements == 0) {
+        return result;
+    }
+    
     mafDataSet *ds = (*dc)[0];
     if(ds == NULL) {
-        return false;
+        return result;
     }
-    QString dt("");
-    dt = ds->externalDataType();
-    return dt.contains(QRegExp("^vtk.*"));
+   
+    result = ds->externalDataType().contains(QRegExp("^vtk.*"));
+    return result;
 }
 
 void mafExporterVTK::setParameters(QVariantList parameters) {
