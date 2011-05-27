@@ -49,24 +49,27 @@ mafOperationParametricSurface::~mafOperationParametricSurface() {
 }
 
 void mafOperationParametricSurface::visualizeParametricSurface() {
-  mafVTKParametricSurface *currentSurface = m_ParametricSurfaceList.at(m_ParametricSurfaceType);
-  m_ParametricContainer = currentSurface->output();
-  m_ParametricContainer.setExternalCodecType("VTK");
+    mafVTKParametricSurface *currentSurface = m_ParametricSurfaceList.at(m_ParametricSurfaceType);
+    m_ParametricContainer.setExternalCodecType("VTK");
+    m_ParametricContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
+    m_ParametricContainer = currentSurface->output();
 
-  //Insert data into VME
-  m_VME = mafNEW(mafResources::mafVME);
-  m_VME->setObjectName(mafTr("Parametric Surface"));
-  m_DataSet = mafNEW(mafResources::mafDataSet);
-  m_DataSet->setBoundaryAlgorithmName("mafPluginVTK::mafDataBoundaryAlgorithmVTK");
-  m_DataSet->setDataValue(&m_ParametricContainer);
-  m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
-  m_VME->setProperty("visibility", true);
-  this->m_Output = m_VME;
+    char *v = m_ParametricContainer.externalDataType().toAscii().data();
+    
+    //Insert data into VME
+    m_VME = mafNEW(mafResources::mafVME);
+    m_VME->setObjectName(mafTr("Parametric Surface"));
+    m_DataSet = mafNEW(mafResources::mafDataSet);
+    m_DataSet->setBoundaryAlgorithmName("mafPluginVTK::mafDataBoundaryAlgorithmVTK");
+    m_DataSet->setDataValue(&m_ParametricContainer);
+    m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
+    m_VME->setProperty("visibility", true);
+    this->m_Output = m_VME;
 
-  //Notify vme add
-  mafEventArgumentsList argList;
-  argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
-  mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+    //Notify vme add
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
+mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 }
 
 void mafOperationParametricSurface::initializeParametricSurfaces(){
@@ -119,9 +122,9 @@ void mafOperationParametricSurface::unDo() {
 }
 
 void mafOperationParametricSurface::reDo() {
-  mafEventArgumentsList argList;
-  argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Output));
-  mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Output));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 }
 
 void mafOperationParametricSurface::setParameters(QVariantList parameters) {
@@ -133,9 +136,9 @@ void mafOperationParametricSurface::setParametricSurfaceType(int index){
 }
 
 void mafOperationParametricSurface::updateParametricSurface() {
-   mafVTKParametricSurface *currentSurface = m_ParametricSurfaceList.at(m_ParametricSurfaceType);
-   m_ParametricContainer = currentSurface->output();
-   m_VME->dataSetCollection()->updateData();
+    mafVTKParametricSurface *currentSurface = m_ParametricSurfaceList.at(m_ParametricSurfaceType);
+    m_ParametricContainer = currentSurface->output();
+    m_VME->dataSetCollection()->updateData();
 }
 
 void mafOperationParametricSurface::on_parametricSurfaceType_currentChanged(int index){
