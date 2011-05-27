@@ -15,24 +15,12 @@
 #include <mafCoreSingletons.h>
 
 #ifdef WIN32
-    #ifdef QT_DEBUG
-        #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
-    #else
-        #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
-    #endif
+    #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
 #else
     #ifdef __APPLE__
-        #ifdef QT_DEBUG
-            #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dylib"
-        #else
-            #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dylib"
-        #endif
+        #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dylib"
     #else
-        #ifdef QT_DEBUG
-            #define SERIALIZATION_LIBRARY_NAME "mafSerialization.so"
-        #else
-            #define SERIALIZATION_LIBRARY_NAME "mafSerialization.so"
-        #endif
+        #define SERIALIZATION_LIBRARY_NAME "mafSerialization.so"
     #endif
 #endif
 
@@ -147,7 +135,6 @@ void mafSerializationManagerTest::mafSerializationManagerSaveTest() {
     m_TestURL = pathURL;
     m_TestURL.append("/testSerializationManager1.maf3");
 
-    QString obj_type("mafCore::mafObject");
     QString vtk = "VTK";
     QString stl = "STL";
     QString vrml = "VRML";
@@ -156,19 +143,16 @@ void mafSerializationManagerTest::mafSerializationManagerSaveTest() {
     QString codecVRML = "myNamespace::mafCodecVRML";
 
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(QString, obj_type));
     argList.append(mafEventArgument(QString, vtk));
     argList.append(mafEventArgument(QString, codecVTK));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal, &argList);
 
     argList.clear();
-    argList.append(mafEventArgument(QString, obj_type));
     argList.append(mafEventArgument(QString, stl));
     argList.append(mafEventArgument(QString, codecSTL));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal,&argList);
 
     argList.clear();
-    argList.append(mafEventArgument(QString, obj_type));
     argList.append(mafEventArgument(QString, vrml));
     argList.append(mafEventArgument(QString, codecVRML));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal,&argList);
@@ -234,12 +218,16 @@ void mafSerializationManagerTest::mafSerializationManagerSaveTest() {
 }
 
 void mafSerializationManagerTest::mafSerializationManagerLoadTest() {
+    return;
     QString encodeType = "RAW";
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString, m_TestURL));
     argList.append(mafEventArgument(QString, encodeType));
-    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal,&argList);
+    mafMemento *memento;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafMemento *,memento);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal,&argList, &ret_val);
     //! [2..]
+    mafDEL(memento);
     QFile::remove(m_TestURL);
 }
 
