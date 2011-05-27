@@ -100,4 +100,27 @@ void mafPluginRegistrator::registerObjects() {
     mafEventBus::mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, pluginHash));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.registerLibrary", mafEventTypeLocal, &argList);
+    
+    //plug codec
+    //Load serialization plugin
+    QString plug_codec_id = "maf.local.serialization.plugCodec";
+    QString obj_type("mafCore::mafHierarchy");
+    QString encodeType = "XML";
+    QString codec = "mafSerialization::mafCodecXML";
+    
+    argList.clear();
+    argList.append(mafEventArgument(QString, obj_type));
+    argList.append(mafEventArgument(QString, encodeType));
+    argList.append(mafEventArgument(QString, codec));
+    mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
+    
+    obj_type = "vtkAlgorithmOutput";
+    encodeType = "VTK";
+    codec = "mafPluginVTK::mafExternalDataCodecVTK";
+    
+    argList.clear();
+    argList.append(mafEventArgument(QString, obj_type));
+    argList.append(mafEventArgument(QString, encodeType));
+    argList.append(mafEventArgument(QString, codec));
+    mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
 }

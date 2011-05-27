@@ -170,33 +170,6 @@ void mafLogic::loadPlugins(QString plugin_dir) {
     argList.clear();
     argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, m_CustomPluggedObjectsHash));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.registerLibrary", mafEventTypeLocal, &argList);
-
-    //TODO: check where to move this code
-    //////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////
-    //Load seriazlization plugin
-    QString plug_codec_id = "maf.local.serialization.plugCodec";
-    QString obj_type("mafCore::mafHierarchy");
-    QString encodeType = "XML";
-    QString codec = "mafSerialization::mafCodecXML";
-
-    argList.clear();
-    argList.append(mafEventArgument(QString, obj_type));
-    argList.append(mafEventArgument(QString, encodeType));
-    argList.append(mafEventArgument(QString, codec));
-    mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
-
-    obj_type = "vtkAlgorithmOutput";
-    encodeType = "VTK";
-    codec = "mafPluginVTK::mafExternalDataCodecVTK";
-
-    argList.clear();
-    argList.append(mafEventArgument(QString, obj_type));
-    argList.append(mafEventArgument(QString, encodeType));
-    argList.append(mafEventArgument(QString, codec));
-    mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
-    ///////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////
 }
 
 void mafLogic::storeSettings() {
