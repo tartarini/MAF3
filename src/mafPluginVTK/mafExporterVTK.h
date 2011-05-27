@@ -78,7 +78,6 @@ protected:
     
 private:
     QString m_Filename; ///< Filename of external data to import.
-    mafCore::mafProxy<vtkAlgorithmOutput> m_ImportedData; ///< Container of the Data Source
     vtkDataSetWriter *m_Writer; ///< Reader of the external data.
     bool m_ExportAllTimestamps; ///< Flag used to check if the exporter has to export the current timestamp or all the timestamps.
 };
