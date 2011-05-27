@@ -29,7 +29,7 @@ class mafProxy : public mafProxyInterface {
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafProxyInterface);
     typedef void (T::*mafExternalDataDestructorPointer)();
-    typedef const char *(*mafClassTypeNameFunctionPointer)(T*);    
+    typedef QString (*mafClassTypeNameFunctionPointer)(T*);    
 
 public:
     /// Object constructor.
