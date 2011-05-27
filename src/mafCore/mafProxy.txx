@@ -25,12 +25,17 @@ T *mafProxy<T>::operator->() {
 }
 
 template<typename T>
-void mafProxy<T>::setDestructionFunction(mafExternalDataDestructorPointer destruc_function) {
-    m_ExternalDestructor = destruc_function;
+void mafProxy<T>::setDestructionFunction(mafExternalDataDestructorPointer destructionFunction) {
+    m_ExternalDestructor = destructionFunction;
 }
 
 template<typename T>
-mafProxy<T>::mafProxy() : mafProxyInterface(), m_ExternalData(NULL), m_ExternalDestructor(NULL) {
+void mafProxy<T>::setClassTypeNameFunction(mafClassTypeNameFunctionPointer classTypeNameFunction) {
+    m_ClassTypeNameFunction = classTypeNameFunction;
+}
+
+template<typename T>
+mafProxy<T>::mafProxy() : mafProxyInterface(), m_ExternalData(NULL), m_ExternalDestructor(NULL), m_ClassTypeNameFunction(NULL) {
 }
 
 template<typename T>
@@ -62,7 +67,11 @@ inline void mafProxy<T>::updateExternalDataType() {
 #else
     int dt_len = data_type.length();
     data_type = (dt_len > 10) ? data_type.mid(2) : data_type.mid(1);
-#endif    
-    setExternalDataType(data_type);
+#endif
+    if(m_ClassTypeNameFunction == NULL) {
+        setExternalDataType(data_type);
+    } else {
+        setExternalDataType(*m_ClassTypeNameFunction(m_ExternalData));
+    }
 }
 
