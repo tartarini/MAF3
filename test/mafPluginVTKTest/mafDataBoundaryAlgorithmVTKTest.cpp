@@ -58,7 +58,7 @@ private slots:
         m_DataSource->SetZLength(8);
 
         m_DataSourceContainer.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
-        m_DataSourceContainer.setExternalDataType("vtkAlgorithmOutput");
+        m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainer = m_DataSource->GetOutputPort(0);
 
 

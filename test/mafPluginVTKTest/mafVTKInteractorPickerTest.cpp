@@ -130,6 +130,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //// m_DataSourceContainer is the container of type vtkAlgorithmOutput
     //// to "wrap" the 'vtkCubeSource' of type vtkPolyData just simply use the code below.
     mafProxy<vtkAlgorithmOutput> dataSourceContainer;
+    dataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
     dataSourceContainer = dataSource->GetOutputPort(0);
     //! </snippet>
 

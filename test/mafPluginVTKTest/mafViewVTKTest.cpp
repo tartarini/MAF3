@@ -62,7 +62,7 @@ private slots:
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
         mafVMEManager::instance();
 
-        m_BindingHash.insert("vtkAlgorithmOutput","mafPluginVTK::mafPipeVisualVTKSurface");
+        m_BindingHash.insert("vtkPolyData","mafPluginVTK::mafPipeVisualVTKSurface");
 
         /// Create the view...
         m_View = mafNEW(mafPluginVTK::mafViewVTK);
@@ -74,7 +74,7 @@ private slots:
         m_DataSource->SetZLength(8);
 
         m_DataSourceContainer.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
-        m_DataSourceContainer.setExternalDataType("vtkAlgorithmOutput");
+        m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainer = m_DataSource->GetOutputPort(0);
 
         //Insert data into VME
@@ -106,7 +106,7 @@ private slots:
         t->Delete();
 
         m_DataSourceContainerMoved.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
-        m_DataSourceContainerMoved.setExternalDataType("vtkAlgorithmOutput");
+        m_DataSourceContainerMoved.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainerMoved = m_PDataFilter->GetOutputPort(0);
         m_DataSetCubeMoved = mafNEW(mafResources::mafDataSet);
         mafDataBoundaryAlgorithmVTK *boundaryAlgorithm1;
@@ -142,6 +142,9 @@ private slots:
 
     /// mafViewVTK 2 VME visualization test case.
     void mafViewVTKCreateView2VMETest();
+    
+    /// mafViewVTK test visualization using pipevisual.
+    void mafViewPipeVisualTest();
 
 private:
     mafViewVTK *m_View; ///< Test var.
@@ -213,6 +216,11 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     m_View->showSceneNode(cubeNode, false);
     QTest::qSleep(2000);    
 }
+
+void mafViewVTKTest::mafViewPipeVisualTest(){
+    
+}
+
 
 MAF_REGISTER_TEST(mafViewVTKTest);
 #include "mafViewVTKTest.moc"

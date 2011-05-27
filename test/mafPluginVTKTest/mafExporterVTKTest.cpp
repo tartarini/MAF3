@@ -102,6 +102,7 @@ void mafExporterVTKTest::initializeTestData() {
     
     mafDataSet *data = mafNEW(mafResources::mafDataSet);
     mafProxy<vtkAlgorithmOutput> *vtkDataProxy = new mafProxy<vtkAlgorithmOutput>();
+    vtkDataProxy->setClassTypeNameFunction(vtkClassTypeNameExtract);
     *vtkDataProxy = surfSphere->GetOutputPort();
     mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
     boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);

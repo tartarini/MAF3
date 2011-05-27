@@ -111,6 +111,7 @@ private slots:
         m_DataSource->SetXLength(5);
         m_DataSource->SetYLength(3);
         m_DataSource->SetZLength(8);
+        m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainer = m_DataSource->GetOutputPort(0);
     }
 
@@ -157,12 +158,10 @@ void mafSerializationVTKTest::mafSerializationVTKSaveTest() {
     QFile::remove(test_file);
 
     QString plug_codec_id = "maf.local.serialization.plugCodec";
-    QString obj_type("vtkAlgorithmOutput");
     QString vtk = "VTK";
     QString codecVTK = "mafPluginVTK::mafExternalDataCodecVTK";
 
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(QString, obj_type));
     argList.append(mafEventArgument(QString, vtk));
     argList.append(mafEventArgument(QString, codecVTK));
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);

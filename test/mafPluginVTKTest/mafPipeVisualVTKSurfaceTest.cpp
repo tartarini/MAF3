@@ -100,6 +100,7 @@ private slots:
         //// Create a container with the outputPort of a vtkCubeSource
         //// m_DataSourceContainer is the container of type vtkAlgorithmOutput
         //// to "wrap" the 'vtkCubeSource' of type vtkPolyData just simply use the code below.
+        m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainer = m_AppendData->GetOutputPort(0);
 
         //Insert data into VME

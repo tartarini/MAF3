@@ -56,6 +56,7 @@ private slots:
         //! <snippet>
         //// m_DataSourceContainer is the container of type vtkAlgorithmOutput
         //// to "wrap" the vtkPolyData just simply use the code below.
+        m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainer = m_ParametricEllipsoid->output();
 
         //Insert data into VME

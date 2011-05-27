@@ -87,7 +87,7 @@ private slots:
         m_DataSource->SetZLength(8);
 
         m_DataSourceContainer.setExternalCodecType("VTK");
-        m_DataSourceContainer.setExternalDataType("vtkAlgorithmOutput");
+        m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainer = m_DataSource->GetOutputPort(0);
 
         //Insert data into VME
@@ -116,7 +116,7 @@ private slots:
         t->Delete();
 
         m_DataSourceContainerMoved.setExternalCodecType("VTK");
-        m_DataSourceContainerMoved.setExternalDataType("vtkAlgorithmOutput");
+        m_DataSourceContainerMoved.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainerMoved = m_PDataFilter->GetOutputPort(0);
         m_DataSetCubeMoved = mafNEW(mafResources::mafDataSet);
         
@@ -205,12 +205,10 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
     argList.append(mafEventArgument(QString, codec));
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
     
-    obj_type = "vtkAlgorithmOutput";
     encodeType = "VTK";
     codec = "mafPluginVTK::mafExternalDataCodecVTK";
 
     argList.clear();
-    argList.append(mafEventArgument(QString, obj_type));
     argList.append(mafEventArgument(QString, encodeType));
     argList.append(mafEventArgument(QString, codec));
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
