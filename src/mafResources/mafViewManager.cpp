@@ -162,11 +162,6 @@ void mafViewManager::selectView(mafCore::mafObjectBase *view) {
         }
         m_SelectedView = v;
         m_SelectedView->select(true); // ?!?
-
-        // Notify the view selection.
-        mafEventArgumentsList argList;
-        argList.append(mafEventArgument(mafCore::mafObjectBase*, m_SelectedView));
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, &argList);
     }
 }
 
@@ -293,7 +288,7 @@ void mafViewManager::removeView(mafView *view) {
     if(m_CreatedViewList.removeOne(view)) {
         if(idx > 0) {
             mafObjectBase *obj = m_CreatedViewList.at(idx - 1);
-            // TODO: Check what this obj is used for.
+            selectView(obj);
         } else {
             m_SelectedView = NULL;
             // View list empty
