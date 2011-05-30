@@ -190,7 +190,6 @@ mafMemento *mafHierarchy::createMemento() const {
 }
 
 void mafHierarchy::setMemento(mafMemento *memento, bool deep_memento) {
-    Q_UNUSED(deep_memento);
     this->moveTreeIteratorToRootNode();
 
     // Design by contract condition.
