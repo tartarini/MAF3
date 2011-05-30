@@ -27,6 +27,7 @@ mafMainWindow::mafMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 mafMainWindow::mafMainWindow(mafApplicationLogic::mafLogic *logic, QWidget *parent) : QMainWindow(parent), m_GUIManager(NULL), ui(new Ui::mafMainWindow), m_Logic(logic) {
     initializeMainWindow();
     m_Logic->loadPlugins();
+    
 }
 
 mafGUI::mafGUIManager *mafMainWindow::guiManager() {
@@ -49,12 +50,14 @@ void mafMainWindow::setLogic(mafApplicationLogic::mafLogic *logic) {
 
 void mafMainWindow::initializeMainWindow() {
     ui->setupUi(this);
+    updateApplicationName();
 
     guiManager()->setLogic(m_Logic);
     m_GUIManager->createMenus();
 
     connect(m_GUIManager, SIGNAL(guiLoaded(int,QWidget*)), this, SLOT(loadedGUIAvailable(int,QWidget*)));
     connect(m_GUIManager, SIGNAL(guiTypeToRemove(int)), this, SLOT(loadedGUIToRemove(int)));
+    connect(m_GUIManager, SIGNAL(updateApplicationName()), this, SLOT(updateApplicationName()));
 
     connectCallbacks();
 
@@ -72,6 +75,7 @@ void mafMainWindow::initializeMainWindow() {
     ui->tabTree->setLayout(ui->layoutTree);
     ui->hierarchyWidget->setLayout(ui->layoutHierarchy);
     ui->propertiesBoxContainer->setLayout(ui->layoutPropertiesBox);
+    
 
     //tree widget in sidebar
      m_Model = new mafDragDropModel();
@@ -340,3 +344,15 @@ void mafMainWindow::subWindowSelected(QMdiSubWindow *sub_win) {
         mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.select", mafEventBus::mafEventTypeLocal, &argList);
     }
 }
+
+void mafMainWindow::updateApplicationName(){
+    QString applicationName(QApplication::applicationName());
+    QString sessionFileName = guiManager()->fileName();
+    if(!sessionFileName.isEmpty()) {
+        applicationName.append(" - ");
+        applicationName.append(sessionFileName);
+    }
+
+    setWindowTitle(applicationName);
+}
+
