@@ -195,12 +195,10 @@ void mafSerializationXMLExtDataTest::mafSerializationVTKSaveTest() {
     qDebug() << test_file;
     
     QString plug_codec_id = "maf.local.serialization.plugCodec";
-    QString obj_type("mafResources::mafVME");
     QString encodeType = "XML";
     QString codec = "mafSerialization::mafCodecXML";
     
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(QString, obj_type));
     argList.append(mafEventArgument(QString, encodeType));
     argList.append(mafEventArgument(QString, codec));
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
