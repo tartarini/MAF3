@@ -44,9 +44,14 @@ void mafOperationWidget::setOperationGUI(QWidget *gui) {
         m_ImporterWidget = new mafImporterWidget();
         m_ImporterWidget->setOperation(m_Operation);
         m_ImporterWidget->setOperationGUI(gui);
+        m_ImporterWidget->setDialogType(mafGUI::mafDialogTypeOpen);
         m_OperationGUI = m_ImporterWidget;
     } else if(type.contains("mafExporter")) {
-        //TODO
+        m_ImporterWidget = new mafImporterWidget();
+        m_ImporterWidget->setOperation(m_Operation);
+        m_ImporterWidget->setOperationGUI(gui);
+        m_ImporterWidget->setDialogType(mafGUI::mafDialogTypeSave);
+        m_OperationGUI = m_ImporterWidget;
     } else {
         m_OperationGUI = gui;
         mafGUI::mafConnectObjectWithGUI(m_Operation, m_OperationGUI);

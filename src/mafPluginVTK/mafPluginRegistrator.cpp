@@ -13,7 +13,7 @@
 
 #include "mafPipeDataImageThreshold.h"
 #include "mafPipeVisualVTKSurface.h"
-#include "mafPipeVisualSelection.h"
+#include "mafPipeVisualVTKSelection.h"
 
 #include "mafViewVTK.h"
 
@@ -40,7 +40,7 @@ mafPluginRegistrator::mafPluginRegistrator() {
     // Register to the mafObjectFactory the plug-in object's types.
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeDataImageThreshold);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
-    mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualSelection);
+    mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSelection);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafOperationParametricSurface);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafImporterVTK);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafExporterVTK);
@@ -59,7 +59,7 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     //mafUnregisterObject(mafPluginVTK::mafPipeDataSurface);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeDataImageThreshold);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKSurface);
-    mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualSelection);
+    mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKSelection);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafOperationParametricSurface);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafImporterVTK);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafExporterVTK);
@@ -79,7 +79,7 @@ void mafPluginRegistrator::registerObjects() {
 
     mafPluggedObjectInformation dataPipeImageThreshold("Data pipe Image Threshold", "mafPluginVTK::mafPipeDataImageThreshold");
     mafPluggedObjectInformation visualPipeVTKSurface("Visual pipe VTK Surface", "mafPluginVTK::mafPipeVisualVTKSurface");
-    mafPluggedObjectInformation visualPipeSelection("Visual pipe used to represent selection of data", "mafPluginVTK::mafPipeVisualSelection");
+    mafPluggedObjectInformation visualPipeSelection("Visual pipe used to represent selection of data", "mafPluginVTK::mafPipeVisualVTKSelection");
     mafPluggedObjectInformation viewVTK("VTK view", "mafPluginVTK::mafViewVTK");
     mafPluggedObjectInformation opParametricSurface("Create Parametric Surface", "mafPluginVTK::mafOperationParametricSurface");
     mafPluggedObjectInformation importerVTK("Import VTK data", "mafPluginVTK::mafImporterVTK");

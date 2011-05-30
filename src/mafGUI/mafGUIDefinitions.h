@@ -82,6 +82,12 @@ typedef enum {
     mafTreeModelStatusUpdate,
     mafTreeModelStatusGenerate,
 } mafTreeModelStatus;
+        
+typedef enum {
+    mafDialogTypeOpen,
+    mafDialogTypeSave,
+    mafDialogTypeDir,
+} mafDialogType;
     
 } //end namespace
 

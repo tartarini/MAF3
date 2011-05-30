@@ -93,6 +93,8 @@ void mafSceneNodeTest::mafSceneNodeSetVisualPipeTest() {
     sceneNode->setVisibility(true);
 
     QVERIFY(sceneNode->visualPipe() != NULL);
+    mafDEL(sceneNode);
+    mafDEL(vme);
 }
 
 MAF_REGISTER_TEST(mafSceneNodeTest);

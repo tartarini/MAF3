@@ -142,9 +142,8 @@ void mafViewManagerTest::selectViewTest() {
     m_EventBus->notifyEvent("maf.local.resources.view.select", mafEventTypeLocal, &argList);
     
     mafObjectBase *selectedView;
-    argList.clear();
-    argList.append(mafEventArgument(mafCore::mafObjectBase*, selectedView));
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, &argList);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, selectedView);   
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
 
     QVERIFY(selectedView != NULL);
     QVERIFY(selectedView == obj);
@@ -179,10 +178,9 @@ void mafViewManagerTest::removeAndDestructionTest() {
     mafDEL(obj);
     
     mafObjectBase *selectedView;
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase*, selectedView));
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, &argList);
-
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, selectedView);   
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
+    
     QString hash2 = selectedView->objectHash();
     QVERIFY(hash1 != hash2);
 }
