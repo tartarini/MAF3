@@ -112,6 +112,9 @@ protected:
     /* virtual */ ~mafHierarchy();
 
 private:
+    /// Check if a node can be added as child of the given parent or no.
+    bool canAddNodeToParent(QObject *node, QObject *parent);
+
     mafTree<QObject *> *m_Tree; ///< tree variable which hosts mafSceneNode elements
     mafTree<QObject *>::iterator m_TreeIterator; ///< tree iterator variable which point the current node
 };

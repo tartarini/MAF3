@@ -87,24 +87,34 @@ void mafHierarchy::removeHierarchyNode(QObject *node) {
 void mafHierarchy::reparentHierarchyNode(QObject *node, QObject *parentNode) {
     //printInformation(val);
     
-    moveTreeIteratorToNode(node);
-    mafTree<QObject *>::iterator temp_iterator = m_Tree->parent(m_TreeIterator);
+    if (canAddNodeToParent(node, parentNode)) {
+        moveTreeIteratorToNode(node);
+        mafTree<QObject *>::iterator temp_iterator = m_Tree->parent(m_TreeIterator);
 
-    //Remove subtree from m_Tree.
-    mafTree<QObject *> cutTree;
-    cutTree = m_Tree->cut(m_TreeIterator);
-    m_Tree->erase(m_TreeIterator);
+        //Remove subtree from m_Tree.
+        mafTree<QObject *> cutTree;
+        cutTree = m_Tree->cut(m_TreeIterator);
+        m_Tree->erase(m_TreeIterator);
 
-    //Insert subTree in new position.
-    moveTreeIteratorToNode(parentNode);
-    m_Tree->insert(m_TreeIterator, node->children().size(), cutTree);
+        //Insert subTree in new position.
+        moveTreeIteratorToNode(parentNode);
+        m_Tree->insert(m_TreeIterator, 0, cutTree);
 
-    m_TreeIterator = temp_iterator;
-    emit itemReparent(node, parentNode);
+        m_TreeIterator = temp_iterator;
+    }
     
-    //printInformation(val);
+    // Needed to update the model connected to the hierarchy.
+    emit itemReparent(node, parentNode);
 }
 
+bool mafHierarchy::canAddNodeToParent(QObject *node, QObject *parent) {
+    bool result(false);
+    moveTreeIteratorToNode(node);
+    mafTree<QObject *>::iterator temp_iterator = m_Tree->parent(m_TreeIterator);
+    moveTreeIteratorToNode(parent);
+    result = temp_iterator != m_TreeIterator;
+    return result;
+}
 
 void mafHierarchy::moveTreeIteratorToParent() {
     m_TreeIterator = m_Tree->parent(m_TreeIterator);
