@@ -1,5 +1,5 @@
 /*
- *  mafPipeVisualSelection.h
+ *  mafPipeVisualVTKSelection.h
  *  mafPluginVTK
  *
  *  Created by Paolo Quadrani on 11/11/10.
@@ -23,19 +23,19 @@ class vtkOutlineCornerFilter;
 namespace mafPluginVTK {
 
 /**
- Class name: mafPipeVisualSelection
+ Class name: mafPipeVisualVTKSelection
  This class represents visual pipe used to render the boundary of the current selected data.
  This pipe will use the vtkCornerFilter to draw a corner box around the data to indicate that
  it is currently selected.
  */
-class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualSelection : public mafResources::mafPipeVisual {
+class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSelection : public mafResources::mafPipeVisual {
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafPipeVisual);
 
 public:
     /// Object constructor;
-    mafPipeVisualSelection(const QString code_location = "");
+    mafPipeVisualVTKSelection(const QString code_location = "");
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
@@ -49,7 +49,7 @@ public slots:
 
 protected:
     /// Object destructor.
-    /* virtual */ ~mafPipeVisualSelection();
+    /* virtual */ ~mafPipeVisualVTKSelection();
 
 private:
     mafCore::mafProxy<vtkActor> m_Actor; ///< Output container.
