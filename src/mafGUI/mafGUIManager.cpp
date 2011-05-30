@@ -85,6 +85,7 @@ void mafGUIManager::newWorkingSession() {
     QModelIndex index = m_Model->index(0, 0);
     m_TreeWidget->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
     m_CompleteFileName = "";
+    emit updateApplicationName();
 }
 
 void mafGUIManager::quitApplication() {
@@ -757,7 +758,6 @@ void mafGUIManager::viewDestroyed() { //ALL THE VIEWS ARE DESTROYED
         m_TreeWidget->setItemDelegate(itemDelegate);
         
         m_Model->setHierarchy(vmeHierarchy);
-        
     }
 }
 
@@ -843,7 +843,7 @@ void mafGUIManager::save() {
         int index = m_CompleteFileName.lastIndexOf("/");
         QString path = m_CompleteFileName.left(index);
 
-        QDir log_dir(path);
+       /* QDir log_dir(path);
         log_dir.setFilter(QDir::Files);
         QStringList list = log_dir.entryList();
         int i = 0;
@@ -854,11 +854,12 @@ void mafGUIManager::save() {
             fileName.append("/");
             fileName.append(list.at(i));
             QFile::remove(fileName);
-        }
+        }*/
 
         m_Logic->storeHierarchy(m_CompleteFileName);
         qDebug() << m_CompleteFileName;
     }
+    emit updateApplicationName();
 }
 
 void mafGUIManager::saveas() {
@@ -884,9 +885,11 @@ void mafGUIManager::open() {
         return;
     }
     qDebug() << files[0];
+    
     //Load memento hierarchy
     m_Logic->restoreHierarchy(files[0]);
     m_CompleteFileName = files[0];
+    emit updateApplicationName();
 }
 
 QObject *mafGUIManager::dataObject(QModelIndex index) {

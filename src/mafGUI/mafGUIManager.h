@@ -153,6 +153,9 @@ signals:
     /// Signal emitted when a new hierarchy is requested on open a msf file.
     void newWorkinSessioneSignal();
 
+    /// Signal used to ask for updating of application name.
+    void updateApplicationName();
+
 public slots:
     /// Fill the operation and view menu with the plugged objects.
     void fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash);
@@ -165,6 +168,9 @@ public slots:
 
     /// Slot called by the Quit Action.
     virtual void quitApplication();
+
+    /// Return name of working file.
+    QString fileName();
 
 private slots:
     /// Start the operation associated with the operation's action activated.
@@ -240,6 +246,10 @@ inline mafGUIApplicationSettingsDialog *mafGUIManager::settingsDialog() const {
 
 inline void mafGUIManager::setLogic(mafApplicationLogic::mafLogic *logic) {
     m_Logic = logic;
+}
+
+inline QString mafGUIManager::fileName() {
+    return m_CompleteFileName;
 }
 
 } // namespace mafGUI
