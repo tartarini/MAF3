@@ -233,6 +233,7 @@ void mafVMETest::mafVMEInteractorTest() {
 
     // Remove the interactor (and delete it)
     m_VME->setInteractor(NULL);
+    mafDEL(i);
 }
 
 void mafVMETest::mafVMEOutputDataTest() {
