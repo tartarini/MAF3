@@ -32,6 +32,7 @@ class mafDataBoundaryAlgorithm;
 class MAFRESOURCESSHARED_EXPORT mafDataSet : public mafCore::mafObject {
     Q_OBJECT
     Q_PROPERTY(QString externalDataType READ externalDataType WRITE setExternalDataType)
+    Q_PROPERTY(QString externalCodecType READ externalCodecType WRITE setExternalCodecType)
     Q_PROPERTY(QString boundaryAlgorithmName READ boundaryAlgorithmName WRITE setBoundaryAlgorithmName)
     Q_PROPERTY(QVariantList bounds READ bounds WRITE setBounds)
 
@@ -107,6 +108,12 @@ public:
     /// Set type of data contained in the mafDataSet.
     void setExternalDataType(QString externalDataType);
 
+    /// Return type of data contained in the mafDataSet.
+    QString externalCodecType() const; 
+
+    /// Set type of data contained in the mafDataSet.
+    void setExternalCodecType(QString externalCodecType);
+
     /// Return true if data has been loaded.
     bool dataLoaded() const;
 
@@ -121,13 +128,11 @@ private:
     mafDataBoundaryAlgorithm *m_DataBoundaryAlgorithm; ///< Represent the class that will calculate the boundary of the m_DataValue and generate as output a boundary to be visualized.
     QString m_DataBoundaryAlgorithmName; ///< Name of the mafDataBoundaryAlgorithm.
     QString m_ExternalDataType; ///< Type of data contained in the mafDataSet.
+    QString m_ExternalCodecType; ///< Type of codec used to encode/decode in the mafDataSet.
     bool m_DataLoaded; ///< Set true when data is loaded in memory.
     QVariantList m_Bounds; ///< List of bounds value of the binding box.
 
-    struct dataFileInfo {
-      QString fileName;            ///< Name of the file containing the datat.
-      QString encodeType;     ///< encode to be used to decode data.
-    } m_DataFileInfo; 
+    QString m_FileName; ///< Name of the file containing the datat.
 
 };
 
@@ -154,6 +159,14 @@ inline QString mafDataSet::externalDataType() const {
 
 inline void mafDataSet::setExternalDataType(QString externaldataType) {
   m_ExternalDataType = externaldataType;
+}
+
+inline QString mafDataSet::externalCodecType() const {
+    return m_ExternalCodecType;
+}
+
+inline void mafDataSet::setExternalCodecType(QString externalCodecType) {
+    m_ExternalCodecType = externalCodecType;
 }
 
 inline bool mafDataSet::dataLoaded() const {
