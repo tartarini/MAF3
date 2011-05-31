@@ -44,6 +44,7 @@ void mafImporterVTK::execute() {
     
     m_ImportedData = m_Reader->GetOutputPort();
     m_ImportedData.setExternalCodecType("VTK");
+    m_ImportedData.setClassTypeNameFunction(vtkClassTypeNameExtract);
     importedData(&m_ImportedData);
     
     emit executionEnded();
