@@ -222,4 +222,5 @@ void mafLogic::restoreHierarchy(QString fileName) {
 
     // Set memento loaded to hierarchy
     m_Hierarchy->setMemento(mementoHierarchy);
+    mafDEL(mementoHierarchy);
 }
