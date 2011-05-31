@@ -25,7 +25,7 @@ namespace mafPluginVTK {
 
 /**
  Class name: mafExternalDataCodecVTK
- Codec to Encode/Decode maf objects into a VTK memory dump.
+ Codec to Encode/Decode MAF objects into a VTK memory dump.
  */
 class MAFPLUGINVTKSHARED_EXPORT mafExternalDataCodecVTK : public mafCore::mafExternalDataCodec {
     Q_OBJECT
