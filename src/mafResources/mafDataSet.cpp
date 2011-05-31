@@ -98,8 +98,6 @@ mafMemento *mafDataSet::createMemento() const {
 }
 
 void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
-    Q_UNUSED(deep_memento);
-
     // Design by contract condition.
     REQUIRE(memento != NULL);
     REQUIRE(memento->objectClassType() == this->metaObject()->className());
@@ -107,17 +105,17 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
     int n = 0;
     int childrenNum = memento->children().size();
     for (n; n < childrenNum; n++) {
-      mafMemento *m = (mafMemento *)memento->children().at(n);
-      if (m->serializationPattern() == mafSerializationPatternInheritance) {
-        //set the memento of the superclass
-        Superclass::setMemento(m, deep_memento);
-      } else {
-        //set the memento of the children memento
-        QString objClassType = m->objectClassType();
-        mafCore::mafObjectBase *objBase = mafNEWFromString(objClassType);
-        mafCore::mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
-        obj->setMemento(m, deep_memento);
-      }
+        mafMemento *m = (mafMemento *)memento->children().at(n);
+        if (m->serializationPattern() == mafSerializationPatternInheritance) {
+            //set the memento of the superclass
+            Superclass::setMemento(m, deep_memento);
+        } else {
+            //set the memento of the children memento
+            QString objClassType = m->objectClassType();
+            mafCore::mafObjectBase *objBase = mafNEWFromString(objClassType);
+            mafCore::mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
+            obj->setMemento(m, deep_memento);
+        }
     }
 
     QString encodeType;
@@ -154,19 +152,19 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
 
 void mafDataSet::updateDataValue() {
   if (!m_DataFileInfo.fileName.isEmpty() && !m_DataFileInfo.encodeType.isEmpty()){
-    mafCore::mafProxyInterface *container;
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(QString, m_DataFileInfo.fileName));
-    argList.append(mafEventArgument(QString, m_DataFileInfo.encodeType));
-    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafProxyInterface *, container);
-    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.import", mafEventTypeLocal, &argList, &ret_val);
-    if (container != NULL) {
-        setDataValue(container);
-    } else {
-        QString err_msg(mafTr("Unable to load data form file '%1'").arg(m_DataFileInfo.fileName));
-        qCritical() << err_msg;
+        mafCore::mafProxyInterface *container;
+        mafEventArgumentsList argList;
+        argList.append(mafEventArgument(QString, m_DataFileInfo.fileName));
+        argList.append(mafEventArgument(QString, m_DataFileInfo.encodeType));
+        QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafProxyInterface *, container);
+        mafEventBusManager::instance()->notifyEvent("maf.local.serialization.import", mafEventTypeLocal, &argList, &ret_val);
+        if (container != NULL) {
+            setDataValue(container);
+        } else {
+            QString err_msg(mafTr("Unable to load data form file '%1'").arg(m_DataFileInfo.fileName));
+            qCritical() << err_msg;
+        }
     }
-  }
 }
 
 void mafDataSet::setBounds(QVariantList bounds) {
