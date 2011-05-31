@@ -24,9 +24,6 @@ mafExternalDataCodecVTK::mafExternalDataCodecVTK(const QString code_location) : 
 }
 
 mafExternalDataCodecVTK::~mafExternalDataCodecVTK() {
-    if(m_Reader) {
-        m_Reader->Delete();
-    }
 }
 
 char *mafExternalDataCodecVTK::encode(bool binary) {
@@ -44,7 +41,7 @@ char *mafExternalDataCodecVTK::encode(bool binary) {
     writer->Update();
     vtk_err = writer->GetErrorCode();
     if (vtk_err == VTK_ERROR) {
-      return "";
+        return "";
     }
     this->m_StringSize = writer->GetOutputStringLength();
     char *output_string = new char[this->m_StringSize+1];
@@ -72,7 +69,7 @@ void mafExternalDataCodecVTK::decode(const char *input_string, bool binary) {
     if (binary) {
         m_Reader->SetBinaryInputString(input_string, this->stringSize());
     } else {
-       m_Reader->SetInputString(input_string, this->stringSize());
+        m_Reader->SetInputString(input_string, this->stringSize());
     }
 
     m_Reader->Update();
