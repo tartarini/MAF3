@@ -225,6 +225,7 @@ private:
     /// return the data object inside an item in order to retrieve the data object and not the visual one (for example scene-node).
     QObject *dataObject(QModelIndex index);
     QString m_CompleteFileName; ///< Name of the msf file.
+    QString m_LastPath; ///< Path of last msf file.
 
 };
 

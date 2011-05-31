@@ -29,7 +29,7 @@ using namespace mafGUI;
 
 mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location) : mafObjectBase(code_location)
     , m_VMEWidget(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win)
-    , m_Model(NULL), m_TreeWidget(NULL), m_Logic(NULL), m_CompleteFileName() {
+    , m_Model(NULL), m_TreeWidget(NULL), m_Logic(NULL), m_CompleteFileName(), m_LastPath() {
 
     m_SettingsDialog = new mafGUIApplicationSettingsDialog();
     m_OperationWidget = new mafOperationWidget();
@@ -824,11 +824,11 @@ void mafGUIManager::save() {
         }
         int index = m_CompleteFileName.lastIndexOf("/");
         QString fileNameWithExt = m_CompleteFileName.mid(index+1);
-        QString path = m_CompleteFileName.left(index);
-        path.append("/");
+        m_LastPath = m_CompleteFileName.left(index);
+        m_LastPath.append("/");
 
         QString fileName = fileNameWithExt.split(".").at(0);
-        path = path.append(fileName);
+        QString path = m_LastPath.append(fileName);
         QDir saveDir(path);
         saveDir.mkpath(path);
 
@@ -841,7 +841,7 @@ void mafGUIManager::save() {
         qDebug() << m_CompleteFileName;
     } else {
         int index = m_CompleteFileName.lastIndexOf("/");
-        QString path = m_CompleteFileName.left(index);
+        m_LastPath = m_CompleteFileName.left(index);
 
        /* QDir log_dir(path);
         log_dir.setFilter(QDir::Files);
@@ -877,7 +877,7 @@ void mafGUIManager::open() {
     QString selectedFilter;
     QStringList files = QFileDialog::getOpenFileNames(
                                                       NULL, tr("QFileDialog::getOpenFileNames()"),
-                                                      "",
+                                                      m_LastPath,
                                                       mafTr("MAF Storage Format file (*.msf)"),
                                                       /*mafTr("All Files (*);;Text Files (*.xmsf)"),*/
                                                       &selectedFilter,
@@ -894,6 +894,9 @@ void mafGUIManager::open() {
     emit updateApplicationName();
     QSettings settings;
     settings.setValue("recentFileList", m_CompleteFileName);
+
+    int index = m_CompleteFileName.lastIndexOf("/");
+    m_LastPath = m_CompleteFileName.left(index);
 }
 
 QObject *mafGUIManager::dataObject(QModelIndex index) {
