@@ -34,7 +34,7 @@ enum {
 
 } //end namespace
 
-extern "C" MAFPLUGINVTKSHARED_EXPORT QString vtkClassTypeNameExtract(vtkAlgorithmOutput *algorithmOutput);
+MAFPLUGINVTKSHARED_EXPORT QString vtkClassTypeNameExtract(vtkAlgorithmOutput *algorithmOutput);
 
 
 
