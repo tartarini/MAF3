@@ -344,8 +344,6 @@ mafMemento *mafDataSetCollection::createMemento() const {
 }
 
 void mafDataSetCollection::setMemento(mafMemento *memento, bool deep_memento) {
-  Q_UNUSED(deep_memento);
-
   // Design by contract condition.
   REQUIRE(memento != NULL);
   REQUIRE(memento->objectClassType() == this->metaObject()->className());
