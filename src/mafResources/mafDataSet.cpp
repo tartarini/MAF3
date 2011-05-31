@@ -110,14 +110,14 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
     for (n; n < childrenNum; n++) {
         mafMemento *m = (mafMemento *)memento->children().at(n);
         if (m->serializationPattern() == mafSerializationPatternInheritance) {
-                //set the memento of the superclass
-                Superclass::setMemento(m, true);
+            //set the memento of the superclass
+            Superclass::setMemento(m, true);
           } else {
-                //set the memento of the children memento
-                QString objClassType = m->objectClassType();
-                mafCore::mafObjectBase *objBase = mafNEWFromString(objClassType);
-                mafCore::mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
-                obj->setMemento(m, deep_memento);
+            //set the memento of the children memento
+            QString objClassType = m->objectClassType();
+            mafCore::mafObjectBase *objBase = mafNEWFromString(objClassType);
+            mafCore::mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
+            obj->setMemento(m, deep_memento);
           }
     }
 
@@ -127,26 +127,27 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
     mafMementoPropertyList *list = memento->mementoPropertyList();
     mafMementoPropertyItem item;
     foreach(item, *list) {
-            if(item.m_Name == "poseMatrix") {
-                //Restore the pose matrix
-                    mafPoseMatrix *mat = new mafPoseMatrix();
-                    int counter = 0;
-                    int r = 0;
-                    for ( ; r < 4; ++r) {
-                        int c = 0;
-                        for ( ; c < 4 ; ++c) {
-                            double val = item.m_Value.toList()[counter].toDouble();
-                            mat->put(r,c,val);
-                            ++counter;
-                    }
+        if(item.m_Name == "poseMatrix") {
+            //Restore the pose matrix
+            mafPoseMatrix *mat = new mafPoseMatrix();
+            int counter = 0;
+            int r = 0;
+            for ( ; r < 4; ++r) {
+                int c = 0;
+                for ( ; c < 4 ; ++c) {
+                    double val = item.m_Value.toList()[counter].toDouble();
+                    mat->put(r,c,val);
+                    ++counter;
                 }
-                this->setPoseMatrix(mat);
-            } if (item.m_Name == "fileName") {
-                    //Save informations about external file, and load data later, when the data is needed.
-                    QString nameOfFile = item.m_Value.toString();
-                    m_FileName = nameOfFile;
             }
+            this->setPoseMatrix(mat);
+        } 
+        if (item.m_Name == "fileName") {
+            //Save informations about external file, and load data later, when the data is needed.
+            QString nameOfFile = item.m_Value.toString();
+            m_FileName = nameOfFile;
         }
+    }
 }
 
 void mafDataSet::updateDataValue() {
