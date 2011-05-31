@@ -43,6 +43,7 @@ void mafDataSet::setBoundaryAlgorithmName(QString dataBoundaryAlgorithmName){
         m_DataBoundaryAlgorithmName = dataBoundaryAlgorithmName;
         mafDEL(m_DataBoundaryAlgorithm);
         m_DataBoundaryAlgorithm = (mafDataBoundaryAlgorithm *)mafNEWFromString(dataBoundaryAlgorithmName);
+        updateBounds();
     }
 }
 
