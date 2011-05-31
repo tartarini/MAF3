@@ -11,11 +11,14 @@
 
 #include <mafTestSuite.h>
 #include <mafImporterVTK.h>
+#include <mafDataSet.h>
 #include <mafVMEManager.h>
 #include <mafOperationManager.h>
+#include <mafProxy.h>
 
 #include <vtkSmartPointer.h>
 #include <vtkSphereSource.h>
+#include <vtkAlgorithm.h>
 #include <vtkPolyDataWriter.h>
 
 using namespace mafCore;
@@ -43,6 +46,14 @@ testVMEAddObserver::testVMEAddObserver() {
 void testVMEAddObserver::vmeImported(mafCore::mafObjectBase *vme) {
     QVERIFY(vme);
     qDebug() << mafTr("Imported VME: ") << vme->objectName();
+    
+    mafVME *v = qobject_cast<mafVME *>(vme);
+    mafDataSet *dataset = v->dataSetCollection()->itemAtCurrentTime();
+    mafProxy<vtkAlgorithmOutput> *output = mafProxyPointerTypeCast(vtkAlgorithmOutput, dataset->dataValue());
+    vtkAlgorithm *producer = (*output)->GetProducer();
+    vtkDataObject *data = producer->GetOutputDataObject(0);
+    QVERIFY(data);
+
 }
 
 /**
