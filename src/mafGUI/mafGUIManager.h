@@ -216,7 +216,7 @@ private slots:
     void save();
 
     /// save as the current working session.
-    void saveas();
+    void saveAs();
     
     /// open a working session
     void open();
