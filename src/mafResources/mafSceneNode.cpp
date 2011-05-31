@@ -30,10 +30,6 @@ mafSceneNode::~mafSceneNode() {
     mafDEL(this->m_VisualPipe);
 }
 
-void mafSceneNode::visualPipeDestroyed() {
-    this->m_VisualPipe = NULL;
-}
-
 void mafSceneNode::setVisualPipe(QString visualPipeType) {
     if(m_VisualPipe != NULL && visualPipeType.compare(m_VisualPipeType) == 0) {
         return;
@@ -57,9 +53,9 @@ bool mafSceneNode::createVisualPipe() {
     qWarning() << mafTr("No visual pipe type '") << m_VisualPipeType << mafTr("'' registered!!");
     return false;
   }
+
   this->m_VisualPipe->setGraphicObject(m_GraphicObject);
 
-  connect(m_VisualPipe, SIGNAL(destroyed()), this, SLOT(visualPipeDestroyed()));
   m_VisualPipe->setInput(m_VME);
 
   m_VisualPipe->createPipe();
@@ -81,34 +77,36 @@ QString mafSceneNode::VMEName() {
 }
 
 void mafSceneNode::setVisibility(bool visible) {
-    if (m_VisualPipeType.isEmpty()) {
-      return;
-    }
-    
-    if(visible && m_VisualPipe == NULL) {
-      if (!createVisualPipe()) {
-        return;
-      }
-    }
-    
-    m_Visibility = visible;
-    m_VisualPipe->setVisibility(visible);
-    
-    if(!visible) {
-        // TODO NEED TO IMPLEMENT A STRATEGY
-        switch(m_VisibilityPolicy) {
-            case mafVisibilityPolicyKeepAlive:
-            {
-                //will forward to visual pipe
+    if (visible != m_Visibility) {
+        if (m_VisualPipeType.isEmpty()) {
+            return;
+        }
+
+        if(visible && m_VisualPipe == NULL) {
+            if (!createVisualPipe()) {
+                return;
             }
+        }
+
+        m_Visibility = visible;
+        m_VisualPipe->setVisibility(visible);
+
+        if(!visible) {
+            // TODO NEED TO IMPLEMENT A STRATEGY
+            switch(m_VisibilityPolicy) {
+            case mafVisibilityPolicyKeepAlive:
+                {
+                    //will forward to visual pipe
+                }
                 break;
             case mafVisibilityPolicyDestroyOnHide:
-            {
-                mafDEL(m_VisualPipe);    
-            }
-            break;
+                {
+                    mafDEL(m_VisualPipe);    
+                }
+                break;
             case mafVisibilityPolicySmartMemory:
                 break;
+            }
         }
     }
 }
