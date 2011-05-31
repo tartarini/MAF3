@@ -38,14 +38,16 @@ mafDataBoundaryAlgorithmVTK::~mafDataBoundaryAlgorithmVTK() {
 }
 
 mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(mafCore::mafProxyInterface *data, mafResources::mafPoseMatrix *matrix) {
-    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data);
-
-    vtkSmartPointer<vtkDataSetMapper> box = vtkSmartPointer<vtkDataSetMapper>::New();
-    box->SetInputConnection(*dataSet);
-    box->Update();
-    double b[6];
-    box->GetBounds(b);
-    return this->calculateBoundary(b, matrix);
+    if(data) {
+        mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data);
+        vtkSmartPointer<vtkDataSetMapper> box = vtkSmartPointer<vtkDataSetMapper>::New();
+        box->SetInputConnection(*dataSet);
+        box->Update();
+        double b[6];
+        box->GetBounds(b);
+        return this->calculateBoundary(b, matrix);
+    }
+    return NULL;
 }
 
 mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(double bounds[6], mafResources::mafPoseMatrix *matrix) {
