@@ -443,7 +443,7 @@ void mafGUIManager::registerDefaultEvents() {
     provider->createNewId("maf.local.gui.action.new");
     provider->createNewId("maf.local.gui.action.open");
     provider->createNewId("maf.local.gui.action.save");
-    provider->createNewId("maf.local.gui.action.saveas");
+    provider->createNewId("maf.local.gui.action.saveAs");
     provider->createNewId("maf.local.gui.action.cut");
     provider->createNewId("maf.local.gui.action.copy");
     provider->createNewId("maf.local.gui.action.paste");
@@ -458,7 +458,7 @@ void mafGUIManager::registerDefaultEvents() {
     action = menuItemByName("Save");
     mafRegisterLocalSignal("maf.local.gui.action.save", action, "triggered()");
     action = menuItemByName("SaveAs");
-    mafRegisterLocalSignal("maf.local.gui.action.saveas", action, "triggered()");
+    mafRegisterLocalSignal("maf.local.gui.action.saveAs", action, "triggered()");
     action = menuItemByName("Cut");
     mafRegisterLocalSignal("maf.local.gui.action.cut", action, "triggered()");
     action = menuItemByName("Copy");
@@ -572,7 +572,7 @@ void mafGUIManager::createMenus() {
     
     QDomNode m_CurrentNode = document.firstChild();
     parseMenuTree(m_CurrentNode);
-}
+ }
 
 void mafGUIManager::createDefaultToolbars() {
     QToolBar *fileToolBar = m_MainWindow->addToolBar(tr("File"));
@@ -860,9 +860,11 @@ void mafGUIManager::save() {
         qDebug() << m_CompleteFileName;
     }
     emit updateApplicationName();
+    QSettings settings;
+    settings.setValue("recentFileList", m_CompleteFileName);
 }
 
-void mafGUIManager::saveas() {
+void mafGUIManager::saveAs() {
     m_CompleteFileName = "";
     save();
 }
@@ -890,6 +892,8 @@ void mafGUIManager::open() {
     m_Logic->restoreHierarchy(files[0]);
     m_CompleteFileName = files[0];
     emit updateApplicationName();
+    QSettings settings;
+    settings.setValue("recentFileList", m_CompleteFileName);
 }
 
 QObject *mafGUIManager::dataObject(QModelIndex index) {
