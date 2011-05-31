@@ -85,13 +85,13 @@ void mafSceneNode::setVisibility(bool visible) {
       return;
     }
     
-    if(m_VisualPipe == NULL) {
+    if(visible && m_VisualPipe == NULL) {
       if (!createVisualPipe()) {
         return;
       }
     }
+    
     m_Visibility = visible;
-
     m_VisualPipe->setVisibility(visible);
     
     if(!visible) {
