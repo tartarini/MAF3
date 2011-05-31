@@ -165,7 +165,6 @@ void mafDataSet::updateDataValue() {
         QString err_msg(mafTr("Unable to load data form file '%1'").arg(m_FileName));
         qCritical() << err_msg;
     }
-  }
 }
 
 void mafDataSet::setBounds(QVariantList bounds) {

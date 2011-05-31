@@ -39,10 +39,10 @@ public:
     /// Algorithm used to extract the boundary from the given data value and pose matrix.
     /* virtual */ mafCore::mafProxyInterface *calculateBoundary(mafCore::mafProxyInterface *data, mafResources::mafPoseMatrix *matrix = NULL);
 
+protected:
     /// Algorithm used to extract the boundary from the given bounds and pose matrix.
     /* virtual */ mafCore::mafProxyInterface *calculateBoundary(double bounds[6], mafResources::mafPoseMatrix *matrix = NULL);
-
-protected:
+    
     /// Object destructor.
     /* virtual */ ~mafDataBoundaryAlgorithmVTK();
 
