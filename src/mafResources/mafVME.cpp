@@ -193,6 +193,8 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
         if (objClassType == "mafResources::mafDataSetCollection") {
           mafDataSetCollection *dataSetCollection = qobject_cast<mafDataSetCollection*>(obj);
           m_DataSetCollection = dataSetCollection;
+        } else {
+            mafDEL(objBase);
         }
       }
     }

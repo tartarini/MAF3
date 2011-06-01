@@ -118,6 +118,7 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
             mafCore::mafObjectBase *objBase = mafNEWFromString(objClassType);
             mafCore::mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
             obj->setMemento(m, deep_memento);
+            mafDEL(objBase);
           }
     }
 
