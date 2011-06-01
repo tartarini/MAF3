@@ -59,10 +59,8 @@ void mafPipeVisualVTKSurface::createPipe() {
 }
 
 void mafPipeVisualVTKSurface::updatePipe(double t) {
-    Q_UNUSED(t);
-
     mafVME *inputVME = this->inputList()->at(0);
-    mafDataSet *data = inputVME->dataSetCollection()->itemAtCurrentTime();
+    mafDataSet *data = inputVME->dataSetCollection()->itemAt(t);
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
     
     //const char *dataTypeName = info->Get(vtkDataObject::DATA_TYPE_NAME());
