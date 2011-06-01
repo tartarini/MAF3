@@ -76,6 +76,7 @@ bool mafLogic::initialize() {
     // Slot registration.
     mafRegisterLocalCallback("maf.local.logic.settings.store", this, "storeSettings()");
     mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "restoreSettings()");
+    mafRegisterLocalCallback("maf.local.logic.openFile", this, "restoreHierarchy(QString)");
 
     m_CustomPluggedObjectsHash.clear();
 
@@ -207,8 +208,6 @@ void mafLogic::restoreHierarchy(QString fileName) {
     // Crate a new session.
     /// view select
     mafEventBusManager::instance()->notifyEvent("maf.local.gui.new", mafEventTypeLocal, NULL);
-
-    //m_Model->setHierarchy(m_Hierarchy);
 
     //Load memento from file
     mafCore::mafMemento *mementoHierarchy;

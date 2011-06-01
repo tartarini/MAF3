@@ -572,6 +572,23 @@ void mafGUIManager::createMenus() {
     
     QDomNode m_CurrentNode = document.firstChild();
     parseMenuTree(m_CurrentNode);
+
+    //Fill recent file menu
+    m_RecentFileActs.clear();
+    for (int i = 0; i < m_MaxRecentFiles; ++i) {
+        QAction *recentFileAction = new QAction(this);
+        m_MenuItemList.append(recentFileAction);
+        recentFileAction->setVisible(false);
+        connect(recentFileAction, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+        m_RecentFileActs.append(recentFileAction);
+    }
+    updateRecentFileActions();
+    QMenu *menu = (QMenu *)this->menuItemByName("Open Recent");
+    if (menu) {
+        for (int i = 0; i < m_RecentFileActs.count(); ++i) {
+             menu->addAction(m_RecentFileActs.at(i));
+        }
+    }
  }
 
 void mafGUIManager::createDefaultToolbars() {
@@ -798,7 +815,7 @@ void mafGUIManager::updateRecentFileActions() {
     for (int j = numRecentFiles;  j < m_MaxRecentFiles; ++j)
         m_RecentFileActs.at(j)->setVisible(false);
 
-    m_RecentFilesSeparatorAct->setVisible(numRecentFiles > 0);
+    //m_RecentFilesSeparatorAct->setVisible(numRecentFiles > 0);
 }
 
 QString mafGUIManager::strippedName(const QString &fullFileName) {
@@ -861,7 +878,10 @@ void mafGUIManager::save() {
     }
     emit updateApplicationName();
     QSettings settings;
-    settings.setValue("recentFileList", m_CompleteFileName);
+    QStringList recentFiles = settings.value("recentFileList").toStringList();
+    recentFiles.insert(0, m_CompleteFileName);
+    settings.setValue("recentFileList", recentFiles);
+    updateRecentFileActions();
 }
 
 void mafGUIManager::saveAs() {
@@ -892,11 +912,15 @@ void mafGUIManager::open() {
     m_Logic->restoreHierarchy(files[0]);
     m_CompleteFileName = files[0];
     emit updateApplicationName();
-    QSettings settings;
-    settings.setValue("recentFileList", m_CompleteFileName);
 
     int index = m_CompleteFileName.lastIndexOf("/");
     m_LastPath = m_CompleteFileName.left(index);
+
+    QSettings settings;
+    QStringList recentFiles = settings.value("recentFileList").toStringList();
+    recentFiles.insert(0, m_CompleteFileName);
+    settings.setValue("recentFileList", recentFiles);
+    updateRecentFileActions();
 }
 
 QObject *mafGUIManager::dataObject(QModelIndex index) {
