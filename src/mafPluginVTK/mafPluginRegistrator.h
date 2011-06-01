@@ -14,6 +14,8 @@
 
 #include "mafPluginVTKDefinitions.h"
 
+#include <QDomDocument>
+
 namespace mafPluginVTK {
 
 /**
@@ -32,6 +34,13 @@ public:
 
     /// Register all the objects present into the library.
     void registerObjects();
+
+private:
+    /// Register the all the objects contained into the plug-in
+    void registerAllObjects();
+
+    /// Allow to parse the XML configuration file.
+    void parseConfigurationFile(QDomNode current);
 };
 
 /** Retrieve the engine version we're going to expect*/
@@ -40,9 +49,9 @@ extern "C" MAFPLUGINVTKSHARED_EXPORT mafResources::mafPluginInfo pluginInfo() {
     info.m_Version = 1.0;
     info.m_PluginName = "Plugin VTK";
     info.m_Author = "Paolo Quadrani";
-    info.m_Vendor = "B3C";
+    info.m_Vendor = "SCS";
     info.m_VendorHomepage = "http:///www.biomedtown.org/";
-    info.m_Description = "Plugin library which contain pipes, views, based on VTK Library";
+    info.m_Description = "Plugin library which contain pipes, views and operations based on VTK Library";
 
     return info;
 }

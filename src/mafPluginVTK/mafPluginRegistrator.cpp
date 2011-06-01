@@ -31,6 +31,7 @@
 #include "mafVTKParametricSurfaceEllipsoid.h"
 #include "mafDataBoundaryAlgorithmVTK.h"
 
+
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafPluginVTK;
@@ -74,7 +75,7 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     
 }
 
-void mafPluginRegistrator::registerObjects() {
+void mafPluginRegistrator::registerAllObjects() {
     mafPluggedObjectsHash pluginHash;
 
     mafPluggedObjectInformation dataPipeImageThreshold("Data pipe Image Threshold", "mafPluginVTK::mafPipeDataImageThreshold");
@@ -100,23 +101,83 @@ void mafPluginRegistrator::registerObjects() {
     mafEventBus::mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, pluginHash));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.registerLibrary", mafEventTypeLocal, &argList);
-    
+
     //plug codec
-    //Load serialization plugin
-    QString plug_codec_id = "maf.local.serialization.plugCodec";
+    //Load serialization plug-in
     QString encodeType = "XML";
     QString codec = "mafSerialization::mafCodecXML";
-    
+
     argList.clear();
     argList.append(mafEventArgument(QString, encodeType));
     argList.append(mafEventArgument(QString, codec));
-    mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
-    
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal, &argList);
+
     encodeType = "VTK";
     codec = "mafPluginVTK::mafExternalDataCodecVTK";
-    
+
     argList.clear();
     argList.append(mafEventArgument(QString, encodeType));
     argList.append(mafEventArgument(QString, codec));
-    mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal, &argList);
+}
+
+void mafPluginRegistrator::parseConfigurationFile(QDomNode current) {
+    mafEventBus::mafEventArgumentsList argList;
+    mafPluggedObjectsHash pluginHash;
+    char *name = current.nodeName().toAscii().data();
+    QDomNodeList dnl = current.childNodes();
+    for (int n=0; n < dnl.count(); ++n) {
+        QDomNode node = dnl.item(n);
+        if (node.nodeType() == QDomNode::ElementNode) {
+            QDomElement ce = node.toElement();
+            QDomNamedNodeMap attributes = ce.attributes();
+            QString elem_name = ce.tagName();
+            if (elem_name == "plug") {
+                QString label = attributes.namedItem("label").nodeValue();
+                QString classType = attributes.namedItem("classtype").nodeValue();
+                QString baseClass = attributes.namedItem("baseclass").nodeValue();
+                mafPluggedObjectInformation plugInfo(label, classType);
+                pluginHash.insertMulti(baseClass, plugInfo);
+            } else if (elem_name == "codec") {
+                argList.clear();
+                QString encodeType = attributes.namedItem("encodetype").nodeValue();
+                QString codec = attributes.namedItem("classtype").nodeValue();
+                argList.append(mafEventArgument(QString, encodeType));
+                argList.append(mafEventArgument(QString, codec));
+                mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal, &argList);
+            }
+        }
+    }
+
+    if (pluginHash.size() != 0) {
+        argList.clear();
+        argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, pluginHash));
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.registerLibrary", mafEventTypeLocal, &argList);
+    }
+}
+
+void mafPluginRegistrator::registerObjects() {
+    int errorLine, errorColumn;
+    QString errorMsg;
+    QFile modelFile("mafPluginVTK.xml");
+    if (!modelFile.exists()) {
+        qWarning() << "mafPluginVTK.xml " << mafTr("doesn't exists. The default plug will be called.");
+        registerAllObjects();
+        return;
+    }
+
+    QDomDocument document;
+    if (!document.setContent(&modelFile, &errorMsg, &errorLine, &errorColumn)) {
+        QString error(mafTr("Syntax error line %1, column %2:\n%3. Default plug will be performed."));
+        error = error
+            .arg(errorLine)
+            .arg(errorColumn)
+            .arg(errorMsg);
+        qCritical() << error;
+        registerAllObjects();
+        return;
+    }
+
+    QDomNode currentNode = document.firstChild();
+    parseConfigurationFile(currentNode);
 }
