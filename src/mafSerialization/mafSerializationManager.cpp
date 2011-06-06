@@ -29,6 +29,7 @@ mafSerializationManager::mafSerializationManager(const QString code_location) : 
 
     initializeConnections();
 
+    plugCodec("XML","mafSerialization::mafCodecXML");
     plugCodec("RAW","mafSerialization::mafCodecRawBinary");
     plugCodec("VOLUME_LOD","mafSerialization::mafCodecRawVolume");
     plugCodec("VOLUME_BRICKED_LOD","mafSerialization::mafCodecBrickedVolume");
