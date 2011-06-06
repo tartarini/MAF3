@@ -45,6 +45,8 @@ void mafPluginConfigurator::parseConfigurationFile(QDomNode current) {
                 argList.append(mafEventArgument(QString, schemaType));
                 argList.append(mafEventArgument(QString, serializer));
                 mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugSerializer", mafEventTypeLocal, &argList);
+            } else {
+                qWarning() << mafTr("Unrecognized element named: ") << elem_name;
             }
         }
     }
@@ -59,14 +61,14 @@ void mafPluginConfigurator::parseConfigurationFile(QDomNode current) {
 bool mafPluginConfigurator::parseConfigurationFile(QString configFile) {
     int errorLine, errorColumn;
     QString errorMsg;
-    QFile modelFile(configFile);
-    if (!modelFile.exists()) {
+    QFile cfgFile(configFile);
+    if (!cfgFile.exists()) {
         qWarning() << configFile << " " << mafTr("doesn't exists. The default plug will be called.");
         return false;
     }
 
     QDomDocument document;
-    if (!document.setContent(&modelFile, &errorMsg, &errorLine, &errorColumn)) {
+    if (!document.setContent(&cfgFile, &errorMsg, &errorLine, &errorColumn)) {
         QString error(mafTr("Syntax error line %1, column %2:\n%3. Default plug will be performed."));
         error = error
             .arg(errorLine)
