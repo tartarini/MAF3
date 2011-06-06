@@ -29,6 +29,7 @@ class mafProxy : public mafProxyInterface {
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafProxyInterface);
     typedef void (T::*mafExternalDataDestructorPointer)();
+    typedef QString (*mafClassTypeNameFunctionPointer)(T*);    
 
 public:
     /// Object constructor.
@@ -50,10 +51,14 @@ public:
     T *externalData();
 
     /// External data should assign the pointer to its custom method to destroy
-    void setDestructionFunction(mafExternalDataDestructorPointer destruc_function);
+    void setDestructionFunction(mafExternalDataDestructorPointer destructFunction);
 
     /// Check if the object is equal to that passed as argument.
     /*virtual*/ bool isEqual(mafProxyInterface *container);
+    
+    /// Optional function pointer used to extract class type from assigned data.
+    void setClassTypeNameFunction(mafClassTypeNameFunctionPointer classTypeNameFunction);
+
 
 private:
     /// Update the string containing the data type related to the external wrapped data.
@@ -61,6 +66,7 @@ private:
 
     T *m_ExternalData; ///< Pointer to the data value.
     mafExternalDataDestructorPointer m_ExternalDestructor; ///< Pointer to external destructor
+    mafClassTypeNameFunctionPointer  m_ClassTypeNameFunction; ///< Pointer to function for extract object type name.
 };
 
 #include "mafProxy.txx"

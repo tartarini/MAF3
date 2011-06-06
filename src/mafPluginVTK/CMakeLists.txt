@@ -45,10 +45,11 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 LINK_DIRECTORIES(${VTK_LIBRARY_DIRS})
 
 ## #################################################################
-## copy ui files
+## copy ui files and xml configuration file
 ## #################################################################
 
 mafCopyFilesFromExtension("ui" "mafPluginVTK")
+mafCopyFilesFromExtension("xml" "mafPluginVTK")
 
 ## #################################################################
 ## copy VTK libraries

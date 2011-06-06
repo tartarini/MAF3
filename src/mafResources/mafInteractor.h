@@ -34,6 +34,10 @@ class MAFRESOURCESSHARED_EXPORT mafInteractor : public mafCore::mafObjectBase {
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
 
+public slots:
+    /// Called when a VME has been picked.
+    virtual void vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj);
+
 public:
     /// Object constructor
     mafInteractor(const QString code_location = "");

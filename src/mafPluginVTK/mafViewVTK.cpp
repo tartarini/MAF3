@@ -58,8 +58,8 @@ void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
     Superclass::removeSceneNode(node);
 }
 
-void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show, const QString visualPipeType) {
-    Superclass::showSceneNode(node, show, visualPipeType);
+void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show) {
+    Superclass::showSceneNode(node, show);
 
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
 }

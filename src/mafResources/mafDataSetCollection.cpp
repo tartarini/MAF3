@@ -222,9 +222,6 @@ bool mafDataSetCollection::insertItem(mafDataSet *item, double t) {
 
     double ts = t<0 ? m_CurrentTimestamp : t;
 
-    //TODO: move time information from vme to dataSet
-    //item->setTimeStamp(ts);
-
     // If the timestamp is present, no new insert is needed, just
     // modify the old one.
     if(m_CollectionMap->contains(ts)) {
@@ -276,7 +273,8 @@ bool mafDataSetCollection::setDataSet(mafDataSet *data, double t) {
 }
 
 void mafDataSetCollection::updateData() {
-  emit(modifiedObject());
+    itemAtCurrentTime()->updateBounds();
+    emit(modifiedObject());
 }
 
 bool mafDataSetCollection::acceptData(mafDataSet *data) {
@@ -303,6 +301,7 @@ mafDataSet *mafDataSetCollection::itemAt(double t) {
     if(item == NULL && m_CollectionMap->size() == 0) {
         // The collection is empty; this is the first item and can be added a default one.
         item = mafNEW(mafResources::mafDataSet);
+        item->setParent(this);
         mafPoseMatrix *m;
         m = new mafPoseMatrix();
         m->set_identity();
@@ -322,7 +321,7 @@ mafDataSet *mafDataSetCollection::itemAtCurrentTime() {
 bool mafDataSetCollection::removeItem(mafDataSet *item, bool keep_alive) {
     REQUIRE(item != NULL);
 
-    // Method below can be slow for big map. QMap is optimized for finding value starting from key and not viceversa.
+    // Method below can be slow for big map. QMap is optimized for finding value starting from key and not vice versa.
     double timestamp = m_CollectionMap->key(item, -1.0);
     if(timestamp != -1) {
         int removed_items = m_CollectionMap->remove(timestamp);
@@ -345,8 +344,6 @@ mafMemento *mafDataSetCollection::createMemento() const {
 }
 
 void mafDataSetCollection::setMemento(mafMemento *memento, bool deep_memento) {
-  Q_UNUSED(deep_memento);
-
   // Design by contract condition.
   REQUIRE(memento != NULL);
   REQUIRE(memento->objectClassType() == this->metaObject()->className());

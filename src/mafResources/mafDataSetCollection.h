@@ -47,7 +47,7 @@ public:
     /// Assign the pose matrix to the current data.
     void setPose(const mafPoseMatrix matrix, double t = -1);
 
-    /// Return the currend data pose matrix.
+    /// Return the current data pose matrix.
     mafPoseMatrix *poseMatrix(double t = -1);
 
     /// Set the orientation for the data at the timestamp 't'
@@ -74,7 +74,7 @@ public:
     /// Remove the given item from the collection.
     /** This method remove the reference to the mafDataSet item from the mafDataSetMap and delete its allocated memory.
     If 'keep_alive' flag is true, the collection doesn't destroy the item; this can occour when the method is called from
-    the 'itemDestroyed' slot where the item has already been destroted from someone else outside the collection.*/
+    the 'itemDestroyed' slot where the item has already been destroyed from someone else outside the collection.*/
     bool removeItem(mafDataSet *item, bool keep_alive = false);
 
     /// Return the data item at the given time based on the current interpolation mechanism assigned.
@@ -95,7 +95,7 @@ public:
     /** If the timestamp 't' is given and the collection does not contain such timestamp, the
     mafDataSet will be assigned to that one returned by the interpolation mechanism. The memory allocated
     for the dataset is removed from the VME when is destructed. The user has to remove the dataset memory only
-    if the operation fails. Anyway, if you want to insert new data items at new timestamp please refear to the 'insertItem' method.*/
+    if the operation fails. Anyway, if you want to insert new data items at new timestamp please refer to the 'insertItem' method.*/
     bool setDataSet(mafDataSet *data, double t = -1);
 
     /// Rise modifiedObject() signal.
@@ -112,14 +112,14 @@ public:
      This is used to implement a sort of undo mechanism for the object's state, but can be used also by the
     serialization mechanism to serialize data into the selected storage type.
     The 'deep_memento' flag is used to avoid the copy of the object unique hash in normal operation like
-    undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
+    undo or copy/paste operations. The complete object save is instead needed for serialization purposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
     
     /// Overload of [] operator to extract the item at given index.
     mafDataSet * operator [](unsigned int index);
 
 private slots:
-    /// Method callen when an item has been destroyed
+    /// Method called when an item has been destroyed
     void itemDestroyed();
 
 protected:
@@ -139,9 +139,9 @@ protected:
 
 private:
     mafDataSetMap *m_CollectionMap; ///< Collection of data.
-    mafInterpolator *m_Interpolator; ///< Interpolator used to find items given the timestamp given the type of interponation mechanism used.
-    QString m_DataTypeAccepted; ///< Variable that store the type of incoming mafDataSet.
-    double m_CurrentTimestamp; ///< Variable that store the current timestamp.
+    mafInterpolator *m_Interpolator;///< Interpolator used to find items given the timestamp given the type of interponation mechanism used.
+    QString m_DataTypeAccepted;     ///< Variable that store the type of incoming mafDataSet.
+    double m_CurrentTimestamp;      ///< Variable that store the current timestamp.
 };
 
 /////////////////////////////////////////////////////////////

@@ -28,12 +28,9 @@ mafPipeDataImageThreshold::~mafPipeDataImageThreshold() {
 bool mafPipeDataImageThreshold::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
-        mafCore::mafProxyInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
-        if(data != NULL) {
-            QString dataType = data->externalDataType();
-            if(dataType == "vtkImageData") {
-                return true;
-            }
+        QString dataType = vme->dataSetCollection()->itemAtCurrentTime()->externalDataType();
+        if(dataType == "vtkImageData") {
+            return true;
         }
     }
     return false;

@@ -1,5 +1,5 @@
 /*
- *  mafImporterVTKTest.cpp
+ *  mafExporterVTKTest.cpp
  *  mafResourcesTest
  *
  *  Created by Paolo Quadrani on 22/09/09.
@@ -10,57 +10,27 @@
  */
 
 #include <mafTestSuite.h>
-#include <mafImporterVTK.h>
-#include <mafDataSet.h>
+#include <mafExporterVTK.h>
 #include <mafVMEManager.h>
+#include "mafDataBoundaryAlgorithmVTK.h"
 #include <mafOperationManager.h>
 #include <mafProxy.h>
 
 #include <vtkSmartPointer.h>
+#include <vtkDataSetReader.h>
 #include <vtkSphereSource.h>
-#include <vtkAlgorithm.h>
-#include <vtkPolyDataWriter.h>
+#include <vtkAlgorithmOutput.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-class testVMEAddObserver : public QObject {
-    Q_OBJECT
-    /// typedef macro.
-    mafSuperclassMacro(QObject);
-    
-public:
-    /// Object constructor.
-    testVMEAddObserver();
-    
-public slots:
-    void vmeImported(mafCore::mafObjectBase *vme);
-};
-
-testVMEAddObserver::testVMEAddObserver() {
-    mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeImported(mafCore::mafObjectBase *)")
-}
-
-void testVMEAddObserver::vmeImported(mafCore::mafObjectBase *vme) {
-    QVERIFY(vme);
-    qDebug() << mafTr("Imported VME: ") << vme->objectName();
-    
-    mafVME *v = qobject_cast<mafVME *>(vme);
-    mafDataSet *dataset = v->dataSetCollection()->itemAtCurrentTime();
-    mafProxy<vtkAlgorithmOutput> *output = mafProxyPointerTypeCast(vtkAlgorithmOutput, dataset->dataValue());
-    vtkAlgorithm *producer = (*output)->GetProducer();
-    vtkDataObject *data = producer->GetOutputDataObject(0);
-    QVERIFY(data);
-
-}
-
 /**
- Class name: mafImporterVTKTest
+ Class name: mafExporterVTKTest
  This class implements the test suite for mafImporterVTK.
  */
-class mafImporterVTKTest: public QObject {
+class mafExporterVTKTest: public QObject {
     Q_OBJECT
 
     /// Prepare the test data to be used into the test suite.
@@ -70,11 +40,9 @@ private slots:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
-        initializeTestData();
-        
         m_EventBus = mafEventBusManager::instance();
-        
         m_VMEManager = mafVMEManager::instance();
+        
         //Select root
         mafObject *root;
         QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
@@ -82,13 +50,13 @@ private slots:
 
         m_OperationManager = mafOperationManager::instance();
         
-        m_Observer = new testVMEAddObserver();
-    }
+        initializeTestData();
+}
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         QFile::remove(m_VTKFile);
-        delete m_Observer;
+        mafDEL(m_VME);
         
         m_OperationManager->shutdown();
         m_VMEManager->shutdown();
@@ -101,44 +69,59 @@ private slots:
     }
     
     /// Test the import of VTK file created.
-    void importVTKFile();
+    void exportVMEinVTKFile();
 
 private:
     QString m_VTKFile; ///< VTK filename to import.
-    testVMEAddObserver *m_Observer; ///< Observer class to intercept the imported vme.
     
     mafEventBusManager *m_EventBus;
     mafVMEManager *m_VMEManager;
     mafOperationManager *m_OperationManager;
+    mafVME *m_VME;
+    
+    vtkSmartPointer<vtkSphereSource> surfSphere;
 };
 
-void mafImporterVTKTest::initializeTestData() {
+void mafExporterVTKTest::initializeTestData() {
     m_VTKFile = QDir::tempPath();
     m_VTKFile.append("/maf3TestData");
     QDir log_dir(m_VTKFile);
     if(!log_dir.exists()) {
         log_dir.mkpath(m_VTKFile);
     }
-    m_VTKFile.append("/vtkImporterVTKData.vtk");
-    vtkSmartPointer<vtkSphereSource> surfSphere = vtkSphereSource::New();
+    m_VTKFile.append("/vtkExportedVTKData.vtk");
+    
+    surfSphere = vtkSphereSource::New();
     surfSphere->SetRadius(5);
     surfSphere->SetPhiResolution(10);
     surfSphere->SetThetaResolution(10);
     surfSphere->Update();
     
-    vtkSmartPointer<vtkPolyDataWriter> writer = vtkPolyDataWriter::New();
-    writer->SetInputConnection(surfSphere->GetOutputPort());
-    writer->SetFileName(m_VTKFile.toAscii().constData());
-    writer->SetFileTypeToBinary();
-    bool written = writer->Write() != 0;
-    if (!written) {
-        qCritical() << mafTr("Error writing test data file: ") << m_VTKFile;
-    }
+    m_VME = mafNEW(mafResources::mafVME);
+    m_VME->setObjectName("VME to export");
+    
+    mafDataSet *data = mafNEW(mafResources::mafDataSet);
+    mafProxy<vtkAlgorithmOutput> *vtkDataProxy = new mafProxy<vtkAlgorithmOutput>();
+    vtkDataProxy->setClassTypeNameFunction(vtkClassTypeNameExtract);
+    *vtkDataProxy = surfSphere->GetOutputPort();
+    mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+    boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+    data->setBoundaryAlgorithm(boundaryAlgorithm);
+    data->setDataValue(vtkDataProxy);
+        
+    m_VME->dataSetCollection()->insertItem(data);
+    mafDEL(data);
+    
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+
 }
 
-void mafImporterVTKTest::importVTKFile() {
+void mafExporterVTKTest::exportVMEinVTKFile() {
     QVariantList op;
-    op.append(QVariant("mafPluginVTK::mafImporterVTK"));
+    op.append(QVariant("mafPluginVTK::mafExporterVTK"));
     QVariantList params;
     params.append(QVariant(m_VTKFile));
     op.push_back(params); // Needs push_back to preserve the QVariantList structure as second element of the main variant list.
@@ -151,8 +134,19 @@ void mafImporterVTKTest::importVTKFile() {
     while(QTime::currentTime() < dieTime) {
         QCoreApplication::processEvents(QEventLoop::AllEvents, 3);
     }
+
+    vtkSmartPointer<vtkDataSetReader> reader = vtkSmartPointer<vtkDataSetReader>::New();
+    reader->SetFileName(m_VTKFile.toAscii().constData());
+    reader->Update();
+    
+    vtkDataSet *output = reader->GetOutput();
+    QVERIFY(output != NULL);
+    QVERIFY(output->IsA("vtkPolyData") == 1);
     
 }
 
-MAF_REGISTER_TEST(mafImporterVTKTest);
-#include "mafImporterVTKTest.moc"
+
+
+
+MAF_REGISTER_TEST(mafExporterVTKTest);
+#include "mafExporterVTKTest.moc"

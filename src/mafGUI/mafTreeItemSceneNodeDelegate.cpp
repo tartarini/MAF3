@@ -131,7 +131,7 @@ bool mafTreeItemSceneNodeDelegate::editorEvent(QEvent *event, QAbstractItemModel
     bool state = (static_cast<Qt::CheckState>(value.toInt())) ? true : false;
     bool visibility = sceneNode->property("visibility").toBool();
     if (visibility != state) {
-        sceneNode->setProperty("visibility", state);
+        //sceneNode->setProperty("visibility", state);
         mafEventArgumentsList argList;
         argList.append(mafEventArgument(mafCore::mafObjectBase*, (mafObjectBase*)sceneNode));
         argList.append(mafEventArgument(bool, state));

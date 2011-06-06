@@ -91,10 +91,6 @@ protected:
     /// Return the visibility status
     unsigned int visualizationStatus();
 
-private slots:
-    /// monitor the visual pipe deletion.
-    void visualPipeDestroyed();
-
 private:
     /// Create instance of visual pipe.
     bool createVisualPipe();

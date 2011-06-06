@@ -29,7 +29,7 @@ using namespace mafGUI;
 
 mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location) : mafObjectBase(code_location)
     , m_VMEWidget(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win)
-    , m_Model(NULL), m_TreeWidget(NULL), m_Logic(NULL) {
+    , m_Model(NULL), m_TreeWidget(NULL), m_Logic(NULL), m_CompleteFileName(), m_LastPath() {
 
     m_SettingsDialog = new mafGUIApplicationSettingsDialog();
     m_OperationWidget = new mafOperationWidget();
@@ -84,6 +84,8 @@ void mafGUIManager::newWorkingSession() {
         
     QModelIndex index = m_Model->index(0, 0);
     m_TreeWidget->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
+    m_CompleteFileName = "";
+    emit updateApplicationName();
 }
 
 void mafGUIManager::quitApplication() {
@@ -394,6 +396,22 @@ void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
         op = action->data().toString();
         action->setEnabled(accepted_list.contains(op));
     }
+    
+    QMenu *impMenu = (QMenu *)this->menuItemByName("Import");
+    QList<QAction *> impActions= impMenu->actions();
+    QString imp;
+    foreach(QAction *action, impActions) {
+        imp = action->data().toString();
+        action->setEnabled(accepted_list.contains(imp));
+    }
+    
+    QMenu *expMenu = (QMenu *)this->menuItemByName("Export");
+    QList<QAction *> expActions= expMenu->actions();
+    QString exp;
+    foreach(QAction *action, expActions) {
+        exp = action->data().toString();
+        action->setEnabled(accepted_list.contains(exp));
+    }
 }
 
 void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
@@ -425,7 +443,7 @@ void mafGUIManager::registerDefaultEvents() {
     provider->createNewId("maf.local.gui.action.new");
     provider->createNewId("maf.local.gui.action.open");
     provider->createNewId("maf.local.gui.action.save");
-    provider->createNewId("maf.local.gui.action.saveas");
+    provider->createNewId("maf.local.gui.action.saveAs");
     provider->createNewId("maf.local.gui.action.cut");
     provider->createNewId("maf.local.gui.action.copy");
     provider->createNewId("maf.local.gui.action.paste");
@@ -440,7 +458,7 @@ void mafGUIManager::registerDefaultEvents() {
     action = menuItemByName("Save");
     mafRegisterLocalSignal("maf.local.gui.action.save", action, "triggered()");
     action = menuItemByName("SaveAs");
-    mafRegisterLocalSignal("maf.local.gui.action.saveas", action, "triggered()");
+    mafRegisterLocalSignal("maf.local.gui.action.saveAs", action, "triggered()");
     action = menuItemByName("Cut");
     mafRegisterLocalSignal("maf.local.gui.action.cut", action, "triggered()");
     action = menuItemByName("Copy");
@@ -554,7 +572,24 @@ void mafGUIManager::createMenus() {
     
     QDomNode m_CurrentNode = document.firstChild();
     parseMenuTree(m_CurrentNode);
-}
+
+    //Fill recent file menu
+    m_RecentFileActs.clear();
+    for (int i = 0; i < m_MaxRecentFiles; ++i) {
+        QAction *recentFileAction = new QAction(this);
+        m_MenuItemList.append(recentFileAction);
+        recentFileAction->setVisible(false);
+        connect(recentFileAction, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+        m_RecentFileActs.append(recentFileAction);
+    }
+    updateRecentFileActions();
+    QMenu *menu = (QMenu *)this->menuItemByName("Open Recent");
+    if (menu) {
+        for (int i = 0; i < m_RecentFileActs.count(); ++i) {
+             menu->addAction(m_RecentFileActs.at(i));
+        }
+    }
+ }
 
 void mafGUIManager::createDefaultToolbars() {
     QToolBar *fileToolBar = m_MainWindow->addToolBar(tr("File"));
@@ -740,7 +775,6 @@ void mafGUIManager::viewDestroyed() { //ALL THE VIEWS ARE DESTROYED
         m_TreeWidget->setItemDelegate(itemDelegate);
         
         m_Model->setHierarchy(vmeHierarchy);
-        
     }
 }
 
@@ -781,7 +815,7 @@ void mafGUIManager::updateRecentFileActions() {
     for (int j = numRecentFiles;  j < m_MaxRecentFiles; ++j)
         m_RecentFileActs.at(j)->setVisible(false);
 
-    m_RecentFilesSeparatorAct->setVisible(numRecentFiles > 0);
+    //m_RecentFilesSeparatorAct->setVisible(numRecentFiles > 0);
 }
 
 QString mafGUIManager::strippedName(const QString &fullFileName) {
@@ -789,38 +823,70 @@ QString mafGUIManager::strippedName(const QString &fullFileName) {
 }
 
 void mafGUIManager::save() {
-    //open dialog for selecting the name of the session
-    QFileDialog::Options options;
-//    if (!native->isChecked())
-//        options |= QFileDialog::DontUseNativeDialog;
-    QString selectedFilter;
-    QString completeFileName = QFileDialog::getSaveFileName(NULL,
-                                                    mafTr("Save Session"),
-                                                    mafTr(""),
-                                                    mafTr("MAF Storage Format file (*.msf)"),
-                                                    /*mafTr("All Files (*);;Text Files (*.xmsf)"),*/
-                                                    &selectedFilter,
-                                                    options);
-    if (completeFileName.isEmpty()) {
-        return;
+    if(m_CompleteFileName.isEmpty()) {
+        //open dialog for selecting the name of the session
+        QFileDialog::Options options;
+        // if (!native->isChecked())
+        // options |= QFileDialog::DontUseNativeDialog;
+        QString selectedFilter;
+        m_CompleteFileName = QFileDialog::getSaveFileName(NULL,
+                                                        mafTr("Save Session"),
+                                                        mafTr(""),
+                                                        mafTr("MAF Storage Format file (*.msf)"),
+                                                        /*mafTr("All Files (*);;Text Files (*.xmsf)"),*/
+                                                        &selectedFilter,
+                                                        options);
+        if (m_CompleteFileName.isEmpty()) {
+            return;
+        }
+        int index = m_CompleteFileName.lastIndexOf("/");
+        QString fileNameWithExt = m_CompleteFileName.mid(index+1);
+        m_LastPath = m_CompleteFileName.left(index);
+        m_LastPath.append("/");
+
+        QString fileName = fileNameWithExt.split(".").at(0);
+        QString path = m_LastPath.append(fileName);
+        QDir saveDir(path);
+        saveDir.mkpath(path);
+
+        m_CompleteFileName = saveDir.path();
+        m_CompleteFileName.append("/");
+        m_CompleteFileName.append(fileNameWithExt);
+
+        //Store memento hierarchy
+        m_Logic->storeHierarchy(m_CompleteFileName);
+        qDebug() << m_CompleteFileName;
+    } else {
+        int index = m_CompleteFileName.lastIndexOf("/");
+        m_LastPath = m_CompleteFileName.left(index);
+
+       /* QDir log_dir(path);
+        log_dir.setFilter(QDir::Files);
+        QStringList list = log_dir.entryList();
+        int i = 0;
+
+        //remove all files
+        for (; i < list.size(); ++i) {
+            QString fileName = path;
+            fileName.append("/");
+            fileName.append(list.at(i));
+            QFile::remove(fileName);
+        }*/
+
+        m_Logic->storeHierarchy(m_CompleteFileName);
+        qDebug() << m_CompleteFileName;
     }
-    int index = completeFileName.lastIndexOf("/");
-    QString fileNameWithExt = completeFileName.mid(index+1);
-    QString path = completeFileName.left(index);
-    path.append("/");
+    emit updateApplicationName();
+    QSettings settings;
+    QStringList recentFiles = settings.value("recentFileList").toStringList();
+    recentFiles.insert(0, m_CompleteFileName);
+    settings.setValue("recentFileList", recentFiles);
+    updateRecentFileActions();
+}
 
-    QString fileName = fileNameWithExt.split(".").at(0);
-    path = path.append(fileName);
-    QDir saveDir(path);
-    saveDir.mkpath(path);
-
-    completeFileName = saveDir.path();
-    completeFileName.append("/");
-    completeFileName.append(fileNameWithExt);
-
-    //Store memento hierarchy
-    m_Logic->storeHierarchy(completeFileName);
-    qDebug() << completeFileName;
+void mafGUIManager::saveAs() {
+    m_CompleteFileName = "";
+    save();
 }
 
 void mafGUIManager::open() {
@@ -831,7 +897,7 @@ void mafGUIManager::open() {
     QString selectedFilter;
     QStringList files = QFileDialog::getOpenFileNames(
                                                       NULL, tr("QFileDialog::getOpenFileNames()"),
-                                                      "",
+                                                      m_LastPath,
                                                       mafTr("MAF Storage Format file (*.msf)"),
                                                       /*mafTr("All Files (*);;Text Files (*.xmsf)"),*/
                                                       &selectedFilter,
@@ -841,9 +907,20 @@ void mafGUIManager::open() {
         return;
     }
     qDebug() << files[0];
-
+    
     //Load memento hierarchy
     m_Logic->restoreHierarchy(files[0]);
+    m_CompleteFileName = files[0];
+    emit updateApplicationName();
+
+    int index = m_CompleteFileName.lastIndexOf("/");
+    m_LastPath = m_CompleteFileName.left(index);
+
+    QSettings settings;
+    QStringList recentFiles = settings.value("recentFileList").toStringList();
+    recentFiles.insert(0, m_CompleteFileName);
+    settings.setValue("recentFileList", recentFiles);
+    updateRecentFileActions();
 }
 
 QObject *mafGUIManager::dataObject(QModelIndex index) {

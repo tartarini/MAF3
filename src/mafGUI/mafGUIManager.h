@@ -153,6 +153,9 @@ signals:
     /// Signal emitted when a new hierarchy is requested on open a msf file.
     void newWorkinSessioneSignal();
 
+    /// Signal used to ask for updating of application name.
+    void updateApplicationName();
+
 public slots:
     /// Fill the operation and view menu with the plugged objects.
     void fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash);
@@ -165,6 +168,9 @@ public slots:
 
     /// Slot called by the Quit Action.
     virtual void quitApplication();
+
+    /// Return name of working file.
+    QString fileName();
 
 private slots:
     /// Start the operation associated with the operation's action activated.
@@ -206,8 +212,11 @@ private slots:
     /// Slot called when the UI is loaded from the mafUILoaderQt, and the gui is shown.
     void showGui(mafCore::mafProxyInterface *guiWidget);
     
-    /// save the current working session
+    /// save the current working session.
     void save();
+
+    /// save as the current working session.
+    void saveAs();
     
     /// open a working session
     void open();
@@ -215,6 +224,8 @@ private slots:
 private:
     /// return the data object inside an item in order to retrieve the data object and not the visual one (for example scene-node).
     QObject *dataObject(QModelIndex index);
+    QString m_CompleteFileName; ///< Name of the msf file.
+    QString m_LastPath; ///< Path of last msf file.
 
 };
 
@@ -236,6 +247,10 @@ inline mafGUIApplicationSettingsDialog *mafGUIManager::settingsDialog() const {
 
 inline void mafGUIManager::setLogic(mafApplicationLogic::mafLogic *logic) {
     m_Logic = logic;
+}
+
+inline QString mafGUIManager::fileName() {
+    return m_CompleteFileName;
 }
 
 } // namespace mafGUI

@@ -58,15 +58,6 @@ mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const QString co
             list->append(item);
         }
      }
-
-    QVariantList boundsList = vme->bounds();
-    if(!boundsList.empty()){
-        mafMementoPropertyItem item;
-        item.m_Multiplicity = boundsList.size();
-        item.m_Name = "vmeBounds";
-        item.m_Value = QVariant(boundsList);
-        list->append(item);
-    }
 }
 
 mafMementoVME::~mafMementoVME() {

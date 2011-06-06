@@ -17,6 +17,7 @@
 #include <mafView.h>
 #include <mafViewVTK.h>
 #include <mafPipeVisualVTKSurface.h>
+#include <mafDataBoundaryAlgorithmVTK.h>
 #include <mafSceneNode.h>
 #include <mafVME.h>
 #include <mafProxy.h>
@@ -61,6 +62,8 @@ private slots:
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
         mafVMEManager::instance();
 
+        m_BindingHash.insert("vtkPolyData","mafPluginVTK::mafPipeVisualVTKSurface");
+
         /// Create the view...
         m_View = mafNEW(mafPluginVTK::mafViewVTK);
 
@@ -71,13 +74,16 @@ private slots:
         m_DataSource->SetZLength(8);
 
         m_DataSourceContainer.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
-        m_DataSourceContainer.setExternalDataType("vtkAlgorithmOutput");
+        m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainer = m_DataSource->GetOutputPort(0);
 
         //Insert data into VME
         m_VmeCube = mafNEW(mafResources::mafVME);
         m_VmeCube->setObjectName("VME Cube");
         m_DataSetCube = mafNEW(mafResources::mafDataSet);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+        boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+        m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
         m_DataSetCube->setDataValue(&m_DataSourceContainer);
         m_VmeCube->dataSetCollection()->insertItem(m_DataSetCube, 0);
         m_DataSetCube->release();
@@ -100,9 +106,12 @@ private slots:
         t->Delete();
 
         m_DataSourceContainerMoved.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
-        m_DataSourceContainerMoved.setExternalDataType("vtkAlgorithmOutput");
+        m_DataSourceContainerMoved.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainerMoved = m_PDataFilter->GetOutputPort(0);
         m_DataSetCubeMoved = mafNEW(mafResources::mafDataSet);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm1;
+        boundaryAlgorithm1 = mafNEW(mafDataBoundaryAlgorithmVTK);
+        m_DataSetCubeMoved->setBoundaryAlgorithm(boundaryAlgorithm1);
         m_DataSetCubeMoved->setDataValue(&m_DataSourceContainerMoved);
 
         m_VmeCubeMoved = mafNEW(mafResources::mafVME);
@@ -133,6 +142,9 @@ private slots:
 
     /// mafViewVTK 2 VME visualization test case.
     void mafViewVTKCreateView2VMETest();
+    
+    /// mafViewVTK test visualization using pipevisual.
+    void mafViewPipeVisualTest();
 
 private:
     mafViewVTK *m_View; ///< Test var.
@@ -145,6 +157,7 @@ private:
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainerMoved; ///< Container of the Data S
     mafResources::mafDataSet *m_DataSetCube;
     mafResources::mafDataSet *m_DataSetCubeMoved;
+    QHash<QString, QString> m_BindingHash;
 };
 
 void mafViewVTKTest::mafViewVTKAllocationTest() {
@@ -175,7 +188,7 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VmeCube));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 
-    m_View->plugVisualPipe("vtkAlgorithmOutput","mafPluginVTK::mafPipeVisualVTKSurface");
+    m_View->plugVisualPipeBindingHash(&m_BindingHash);
     //! </snippet>
 
     // Visualize first cube
@@ -187,7 +200,7 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     mafDEL(v);
 
     QTest::qSleep(2000);
-    // Visualize also second cube (I could cutomize visualPipe)
+    // Visualize also second cube (I could customize visualPipe)
     argList.clear();
     argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VmeCubeMoved));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
@@ -196,13 +209,18 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     mafObjectRegistry::instance()->findObjectsThreaded(v);
     mafSceneNode *cubeMovedNode = v->sceneNode();
     mafDEL(v);
-    m_View->showSceneNode(cubeMovedNode, true,  "mafPluginVTK::mafPipeVisualVTKSurface");
+    m_View->showSceneNode(cubeMovedNode, true);
     QTest::qSleep(2000);
 
     // Show off first cube
     m_View->showSceneNode(cubeNode, false);
     QTest::qSleep(2000);    
 }
+
+void mafViewVTKTest::mafViewPipeVisualTest(){
+    
+}
+
 
 MAF_REGISTER_TEST(mafViewVTKTest);
 #include "mafViewVTKTest.moc"

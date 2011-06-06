@@ -24,8 +24,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-mafView::mafView(const QString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL), m_SelectedNode(NULL)  {
-    m_VisualPipeHash.clear();
+mafView::mafView(const QString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL), m_VisualPipeHash(NULL), m_SelectedNode(NULL)  {
     m_SceneNodeList.clear();
 
     // CallBack related to the Scene node reparent
@@ -68,7 +67,7 @@ void mafView::sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectB
 void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
     mafVME *vme_to_add = qobject_cast<mafResources::mafVME *>(vme);
     if(vme_to_add != NULL) {
-        mafSceneNode *node = new mafSceneNode(vme_to_add, m_RenderWidget, "mafResources::mafPipeVisualBox", mafCodeLocation);
+        mafSceneNode *node = new mafSceneNode(vme_to_add, m_RenderWidget, "", mafCodeLocation);
         node->setObjectName(vme_to_add->objectName());
         connect(node, SIGNAL(destroyNode()), this, SLOT(sceneNodeDestroy()));
 
@@ -128,28 +127,33 @@ void mafView::selectSceneNode(mafSceneNode *node, bool select) {
     Q_UNUSED(select);
 }
 
-void mafView::showSceneNode(mafSceneNode *node, bool show, const QString visualPipeType) {
+void mafView::showSceneNode(mafSceneNode *node, bool show) {
     REQUIRE(node != NULL);
 
     if(node->vme() == NULL) {
         return;
     }
 
-    QString vp(visualPipeType);
-    if (vp == "") {
-        // Find visual pipe for this kind of data
-        QString dataType;
-        mafDataSet *data = node->vme()->outputData();
-        if  (data != NULL) {
-            dataType = data->dataValue()->externalDataType();
-        }
-        //vp = m_VisualPipeHash.value(dataType);
-        vp = node->visualPipeType();
-        if (vp == "") {
-           qDebug("%s", mafTr("Visual pipe not found for '%1' of data!").arg(vp).toAscii().data());
-           return;
-        }
+    // Find visual pipe for this kind of data
+    QString vp;
+    QString dataType;
+    mafDataSet *data = node->vme()->outputData();
+    if  (data != NULL) {
+        dataType = data->externalDataType();
     }
+    if (m_VisualPipeHash && m_VisualPipeHash->contains(dataType)) {
+        vp = m_VisualPipeHash->value(dataType);
+    }
+
+    if (vp == "") {
+        //if originally in visual pipe hash, is not present that binding data-pipe visual,
+        // request to the PluginManager possible visual pipe accepting vme object.
+        mafPluggedObjectInformationList *vpsHash = mafPluginManager::instance()->queryPluggedObjects("mafResources::mafPipeVisual");
+        
+        qWarning("%s", mafTr("Visual pipe not found for '%1' of data!").arg(vp).toAscii().data());
+        return;
+    }
+
     if(m_Scenegraph != NULL) {
         if (show) {
             node->setVisualPipe(vp);
@@ -159,10 +163,8 @@ void mafView::showSceneNode(mafSceneNode *node, bool show, const QString visualP
 }
 
 
-void mafView::plugVisualPipe(QString dataType, QString visualPipeType) {
-    if (!dataType.isEmpty() && !visualPipeType.isEmpty()) {
-        m_VisualPipeHash.insert(dataType, visualPipeType);
-    }
+void mafView::plugVisualPipeBindingHash(QHash<QString , QString> *hash) {
+    m_VisualPipeHash = hash;
 }
 
 mafSceneNode *mafView::sceneNodeFromVme(mafObjectBase *vme) {

@@ -14,6 +14,7 @@
 #include <mafResourcesRegistration.h>
 #include <mafVTKWidget.h>
 #include <mafPipeVisualVTKSurface.h>
+#include <mafDataBoundaryAlgorithmVTK.h>
 #include <mafVTKInteractorPicker.h>
 #include <mafVTKParametricSurfaceSphere.h>
 
@@ -129,14 +130,19 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //// m_DataSourceContainer is the container of type vtkAlgorithmOutput
     //// to "wrap" the 'vtkCubeSource' of type vtkPolyData just simply use the code below.
     mafProxy<vtkAlgorithmOutput> dataSourceContainer;
+    dataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
     dataSourceContainer = dataSource->GetOutputPort(0);
     //! </snippet>
 
     //Insert data into VME
     mafVME *vme = mafNEW(mafResources::mafVME);
     mafDataSet *dataSetSphere = mafNEW(mafResources::mafDataSet);
+    mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+    boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+    dataSetSphere->setBoundaryAlgorithm(boundaryAlgorithm);
     dataSetSphere->setDataValue(&dataSourceContainer);
     vme->dataSetCollection()->insertItem(dataSetSphere, 0);
+    mafDEL(dataSetSphere);
     vme->setInteractor(m_Picker);
 
     //Must create a visual pipe that send "maf.local.resources.interaction.vmePicked"
@@ -144,6 +150,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     mafPipeVisualVTKSurface *pipe;
     pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSurface);
     pipe->setInput(vme);
+    pipe->setGraphicObject(m_VTKWidget);
     pipe->createPipe();
     pipe->updatePipe();
 
@@ -159,7 +166,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
 
     //picking the actor
     QTestEventList events;
-    events.addMousePress(Qt::LeftButton);
+    events.addMouseRelease(Qt::LeftButton);
     events.simulate(m_VTKWidget);
 
     vtkActor *actor = m_Picker->output();
@@ -178,7 +185,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //picking the actor in another point
     events.clear();
     QPoint point = QPoint(200, 200);
-    events.addMousePress(Qt::LeftButton, 0, point);
+    events.addMouseRelease(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
 
     m_VTKWidget->GetRenderWindow()->Render();
@@ -194,7 +201,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //picking the actor in another point after "Next Pick".
     events.clear();
     point = QPoint(200, 250);
-    events.addMousePress(Qt::LeftButton, 0, point);
+    events.addMouseRelease(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
 
     m_VTKWidget->GetRenderWindow()->Render();
@@ -203,7 +210,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //picking the actor in another point
     events.clear();
     point = QPoint(300, 200);
-    events.addMousePress(Qt::LeftButton, 0, point);
+    events.addMouseRelease(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
 
     m_VTKWidget->GetRenderWindow()->Render();
@@ -218,7 +225,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //picking the actor in another point
     events.clear();
     point = QPoint(350, 250);
-    events.addMousePress(Qt::LeftButton, 0, point);
+    events.addMouseRelease(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
 
     m_VTKWidget->GetRenderWindow()->Render();
@@ -227,7 +234,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //remove a pick marker picking the sphere with ctrl modifier
     events.clear();
     point = QPoint(320, 220);
-    events.addMousePress(Qt::LeftButton, Qt::ControlModifier, point);
+    events.addMouseRelease(Qt::LeftButton, Qt::ControlModifier, point);
     events.simulate(m_VTKWidget);
 
     m_VTKWidget->GetRenderWindow()->Render();
@@ -242,7 +249,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //picking the actor in another point
     events.clear();
     point = QPoint(380, 220);
-    events.addMousePress(Qt::LeftButton, 0, point);
+    events.addMouseRelease(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
 
     m_VTKWidget->GetRenderWindow()->Render();
@@ -251,7 +258,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //remove a pick marker picking the sphere with ctrl modifier
     events.clear();
     point = QPoint(375, 215);
-    events.addMousePress(Qt::LeftButton, Qt::ControlModifier, point);
+    events.addMouseRelease(Qt::LeftButton, Qt::ControlModifier, point);
     events.simulate(m_VTKWidget);
 
     m_VTKWidget->GetRenderWindow()->Render();
@@ -260,13 +267,14 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //picking the actor in another point
     events.clear();
     point = QPoint(400, 210);
-    events.addMousePress(Qt::LeftButton, 0, point);
+    events.addMouseRelease(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
 
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
 
     mafDEL(picker);
+    pipe->setGraphicObject(NULL);
     mafDEL(pipe);
     mafDEL(vme);
 

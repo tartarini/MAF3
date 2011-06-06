@@ -67,6 +67,9 @@ public slots:
     /// Called when the mouse start interacting with the view.
     void subWindowSelected(QMdiSubWindow *sub_win);
 
+    /// Set name of the application.
+    void updateApplicationName();
+
 protected slots:
     /// Observe the viewCreatedSignal emitted by the mafViewManager.
     /* Attach the render context to the GUI widget */

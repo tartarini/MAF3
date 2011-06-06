@@ -15,15 +15,10 @@
 // Includes list
 #include "mafSerialization_global.h"
 #include <mafProxyInterface.h>
-
-
-
-// Class forwarding list
-class mafProxyInterface;
-
+#include <mafExternalDataCodec.h>
 
 namespace mafSerialization {
-
+    
 /**
  Class name: mafSerializationManager
  This singletone provides the facade class for the object serialization mechanism.
@@ -65,7 +60,7 @@ signals:
     void extDataImported(mafCore::mafProxyInterface *data);
 
        /// Signal needed to register new type of custom codec.
-    void plugCodecInModule(const QString &object_type, const QString &encoding_type, const QString &codecType = "RAW");
+    void plugCodecInModule(const QString &encoding_type, const QString &codecType = "RAW");
 
     /// Signal needed to register custom type of serializer.
     void plugSerializerInModule(const QString &schema, const QString &serializer_type);
@@ -90,11 +85,8 @@ private slots:
     /// Manage the import of an external data from the given URL and decode it according to the given encoding type.
     mafCore::mafProxyInterface * importExternalData(const QString &url, const QString &encode_type);
 
-    /// Return the list of encoding type (RAW, VTK, STL...) associated to the given memento.
-    mafEncodingList encodingTypeList(const mafCore::mafMemento *memento = NULL);
-
-    /// Plug a new codec into the codec hash for the given object type (object_type eg. mafResources::mafVMESurface) (encoding_type eg. "VTK") (codec_type eg. mafCodecVTK).
-    void plugCodec(const QString &object_type, const QString &encoding_type, const QString &codecType = "RAW");
+    /// Plug a new codec into the codec hash for the given object type (encoding_type eg. "VTK") (codec_type eg. mafCodecVTK).
+    void plugCodec(const QString &encoding_type, const QString &codecType = "RAW");
 
     /// Plug a new serializer into the serializer hash for the given schema (schema eg. "file") (serializer_type eg. "mafSerialization::mafSerializerFileSystem").
     void plugSerializer(const QString &schema, const QString &serializer_type);
@@ -111,10 +103,10 @@ private:
     /// Initialize the signals / slots connection and generate the IDs needed for the communication with the Serialization Module.
     void initializeConnections();
 
-    mafEncodingHash m_EncodingHash; ///< Hash table that store the binding between objetc types and related encoding types.
     mafCodecHash m_CodecHash; ///< Hash table that store the binding between encoding types (eg. "VTK") and related codec types (eg. mafCodecVTK).
     mafSerializerHash m_SerializerHash; ///< Hash table that store the binding between URL schema and serializer type.
     QString m_ExtDataImportedId; ///< ID related to the signal 'maf.local.serialization.extDataImported' invoked when new external data has been created during load operation.
+    mafCore::mafExternalDataCodec *m_CurrentExternalDataCodec; ///< contains the instance of the last created external data codec.
 };
 
 /////////////////////////////////////////////////////////////

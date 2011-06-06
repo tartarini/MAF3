@@ -36,6 +36,14 @@ class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_OBJECT
     Q_PROPERTY(bool canRead READ canRead WRITE setCanRead)
     Q_PROPERTY(bool canWrite READ canWrite WRITE setCanWrite)
+    Q_PROPERTY(bool dataLoaded READ dataLoaded)
+    Q_PROPERTY(QString boundXmin READ boundXmin)
+    Q_PROPERTY(QString boundYmin READ boundYmin)
+    Q_PROPERTY(QString boundZmin READ boundZmin)
+    Q_PROPERTY(QString boundXmax READ boundXmax)
+    Q_PROPERTY(QString boundYmax READ boundYmax)
+    Q_PROPERTY(QString boundZmax READ boundZmax)
+
 
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
@@ -43,12 +51,6 @@ class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
 public:
     /// Object constructor.
     mafVME(const QString code_location = "");
-
-    /// Set the bounds of the bounding box of the VME.
-    void setBounds(QVariantList bounds);
-
-    /// Return the bounds of the bounding box of the VME.
-    QVariantList bounds();
 
     /// Return the collection of mafDataSet.
     mafDataSetCollection *dataSetCollection();
@@ -73,7 +75,7 @@ public:
      This is used to implement a sort of undo mechanism for the object's state, but can be used also by the
     serialization mechanism to serialize data into the selected storage type.
     The 'deep_memento' flag is used to avoid the copy of the object unique hash in normal operation like
-    undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
+    undo or copy/paste operations. The complete object save is instead needed for serialization purposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
     /// Assign to the VME the interactor that will be used when user interact with the VME.
@@ -91,11 +93,32 @@ public:
     /// Return the readability state for the VME.
     bool canRead() const;
 
-    /// Allow to lock/unlock the writability of the VME.
+    /// Allow to lock/unlock the ability to make changes to the VME.
     void setCanWrite(bool lock);
 
     /// Return the possibility to modify the VME.
     bool canWrite() const;
+
+    /// Return true if data has been loaded.
+    bool dataLoaded() const;
+
+    /// Return 3D bound of the current dataset containing the external data of the VME.
+    QString boundXmin();
+
+    /// Return 3D bound of the current dataset containing the external data of the VME.
+    QString boundYmin();
+
+    /// Return 3D bound of the current dataset containing the external data of the VME.
+    QString boundZmin();
+
+    /// Return 3D bound of the current dataset containing the external data of the VME.
+    QString boundXmax();
+
+    /// Return 3D bound of the current dataset containing the external data of the VME.
+    QString boundYmax();
+
+    /// Return 3D bound of the current dataset containing the external data of the VME.
+    QString boundZmax();
 
 signals:
     /// Alert observers that the VME has been detatched from the hierarchy tree.
@@ -114,9 +137,6 @@ public slots:
     /// Set the current timestamp for the VME.
     void setTimestamp(double t);
 
-    /// Update bounds of the bounding box.
-    /*virtual*/ void updateBounds();
-
     /// Execute the resource algorithm.
     /*virtual*/ void execute();
 
@@ -128,14 +148,13 @@ protected:
     void mementoDataSetMap(mafCore::mafMemento *memento, QMap<double, mafMementoDataSet*> &mementoMap);
 
 private:
-    mutable QReadWriteLock *m_Lock; ///< Lock variable for thread safe access to VME.
-    mafInteractor *m_Interactor; ///< Custom interactor associated with the VME.
+    mutable QReadWriteLock *m_Lock;     ///< Lock variable for thread safe access to VME.
+    mafInteractor *m_Interactor;        ///< Custom interactor associated with the VME.
     mafDataSetCollection *m_DataSetCollection; ///< Collection of timestamped data posed on homogeneous matrices.
-    mafPipeData *m_DataPipe; ///< Data pipe associated with the VME and used to elaborate new data.
+    mafPipeData *m_DataPipe;            ///< Data pipe associated with the VME and used to elaborate new data.
     QHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
-    QVariantList m_Bounds; ///< List of bounds value of the binding box.
-    bool m_CanRead;  ///< Flag used to indicate if the VME is readable.
-    bool m_CanWrite; ///< Flag indicating if the vme is writable.
+    bool m_CanRead;                     ///< Flag used to indicate if the VME is readable.
+    bool m_CanWrite;                    ///< Flag indicating if the vme is writable.
 };
 
 /////////////////////////////////////////////////////////////
@@ -152,11 +171,6 @@ inline mafInteractor *mafVME::interactor() {
     return m_Interactor;
 }
 
-inline QVariantList mafVME::bounds()  {
-    QReadLocker locker(m_Lock);
-    return m_Bounds;
-}
-
 inline bool mafVME::canRead() const {
     QReadLocker locker(m_Lock);
     return m_CanRead;
@@ -166,7 +180,6 @@ inline bool mafVME::canWrite() const {
     QReadLocker locker(m_Lock);
     return m_CanWrite;
 }
-
 
 } // mafResources
 

@@ -30,8 +30,7 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafPluginVTK;
 
-mafVTKInteractorPicker::mafVTKInteractorPicker(const QString code_location) : mafResources::mafInteractor(code_location), m_Mapper(NULL), m_AppendData(NULL), m_Output(NULL), m_ParametricSurface(NULL) {
-    m_Center = NULL;
+mafVTKInteractorPicker::mafVTKInteractorPicker(const QString code_location) : mafResources::mafInteractor(code_location), m_Center(NULL), m_Mapper(NULL), m_AppendData(NULL), m_Output(NULL), m_ParametricSurface(NULL) {
     m_PointList.clear();
     this->initializeConnections();
     m_ParametricSurfaceType = "mafPluginVTK::mafVTKParametricSurfaceSphere";
@@ -124,7 +123,6 @@ void mafVTKInteractorPicker::vmePicked(double *pickPos, unsigned long modifiers,
 void mafVTKInteractorPicker::nextPick() {
     //Set last marker as fixed.
     mafDEL(m_ParametricSurface);
-    m_ParametricSurface = NULL;
     m_PointList.append(m_Center);
     vtkPolyData *data = NULL;
     int n = m_AppendData->GetNumberOfInputConnections(0);

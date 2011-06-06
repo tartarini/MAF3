@@ -44,6 +44,7 @@ private slots:
         mafResourcesSingletons::mafSingletonsInitialize();
 
         mafResourcesRegistration::registerResourcesObjects();
+        m_BindingHash.insert("vtkPolyData","mafPipesLibrary::mafPipeVisualVTKSurface");
         m_View = mafNEW(mafResources::mafView);
         m_View->create();
     }
@@ -73,6 +74,7 @@ private slots:
 
 private:
     mafView *m_View; ///< Test var.
+    QHash<QString, QString> m_BindingHash; ///< Test var.
 };
 
 void mafViewTest::mafViewAllocationTest() {
@@ -97,11 +99,11 @@ void mafViewTest::mafViewShowSceneNodeTest() {
     mafSceneNode *node = new mafSceneNode(vme, NULL, mafCodeLocation);
 
     //try to show a node not added with a fake visual pipe.
-    m_View->showSceneNode(node, true,"mafPipesLibrary::mafPipeVisualVTKSurface");
+    m_View->showSceneNode(node, true);
 
     mafDEL(node);
 
-    // add vme and show (can not show, thos is a base class)
+    // add vme and show (can not show, this is a base class)
     //add VME
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
@@ -113,15 +115,14 @@ void mafViewTest::mafViewShowSceneNodeTest() {
     node = v->sceneNode();
     mafDEL(v);
 
-    m_View->showSceneNode(node, false,"mafPipesLibrary::mafPipeVisualVTKSurface");
+    m_View->showSceneNode(node, false);
 
     // Remove the VME and its related classes.
     mafDEL(vme);
 }
 
 void mafViewTest::mafViewPlugVisualPipeTest() {
-    // ?!?
-    m_View->plugVisualPipe("vtkPolyData","mafPipesLibrary::mafPipeVisualVTKSurface");
+    m_View->plugVisualPipeBindingHash(&m_BindingHash);
 }
 
 void mafViewTest::mafViewRenderingWidgetTest() {

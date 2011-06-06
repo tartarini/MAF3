@@ -13,6 +13,7 @@
 #include <mafCoreSingletons.h>
 #include <mafEventBusManager.h>
 #include <mafPipeDataImageThreshold.h>
+#include <mafDataBoundaryAlgorithmVTK.h>
 #include <mafResourcesRegistration.h>
 #include <mafProxy.h>
 #include <mafVME.h>
@@ -62,6 +63,9 @@ private slots:
         //! <snippet>
         m_VME = mafNEW(mafResources::mafVME);
         mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+        boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+        dataSet->setBoundaryAlgorithm(boundaryAlgorithm);
         dataSet->setDataValue(&m_ImageData);
         m_VME->dataSetCollection()->insertItem(dataSet);
         mafDEL(dataSet);

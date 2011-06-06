@@ -14,6 +14,8 @@
 #include <mafResourcesRegistration.h>
 #include <mafPipeVisualVTKSurface.h>
 #include <mafVTKParametricSurfaceCone.h>
+#include <mafVTKWidget.h>
+#include <mafDataBoundaryAlgorithmVTK.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkAlgorithmOutput.h>
 #include <mafProxy.h>
@@ -48,17 +50,23 @@ private slots:
         mafResourcesRegistration::registerResourcesObjects();
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
 
+        m_RenderWidget = new mafVTKWidget();
+        
         // Create the parametric sphere.
         m_ParametricCone = mafNEW(mafPluginVTK::mafVTKParametricSurfaceCone);
 
         //! <snippet>
         //// m_DataSourceContainer is the container of type vtkAlgorithmOutput
         //// to "wrap" the vtkPolyData just simply use the code below.
-        m_DataSourceContainer = m_ParametricCone->output();;
+        m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
+        m_DataSourceContainer = m_ParametricCone->output();
 
         //Insert data into VME
         m_VME = mafNEW(mafResources::mafVME);
         m_DataSet = mafNEW(mafResources::mafDataSet);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+        boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+        m_DataSet->setBoundaryAlgorithm(boundaryAlgorithm);
         m_DataSet->setDataValue(&m_DataSourceContainer);
         m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
         //! </snippet>
@@ -70,6 +78,7 @@ private slots:
         mafDEL(m_VME);
         mafDEL(m_ParametricCone);
         mafMessageHandler::instance()->shutdown();
+        delete m_RenderWidget;
     }
 
     /// Test Set/Get method of tparametric surface
@@ -81,14 +90,19 @@ private:
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a surface.
     mafResources::mafDataSet *m_DataSet;
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
+    QObject *m_RenderWidget; /// renderer widget
 };
 
 void mafVTKParametricSurfaceConeTest::SetGetTest() {
+    vtkRenderer *renderer = vtkRenderer::New();
+    vtkRenderWindow *renWin = ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow();
+    
     mafPipeVisualVTKSurface *pipe;
     pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSurface);
     pipe->setInput(m_VME);
     pipe->setProperty("scalarVisibility", 0);
     pipe->setProperty("immediateRendering", 1);
+    pipe->setGraphicObject(m_RenderWidget);
     pipe->createPipe();
     pipe->updatePipe();
 
@@ -97,14 +111,9 @@ void mafVTKParametricSurfaceConeTest::SetGetTest() {
     mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, pipe->output());
     QVERIFY(actor != NULL);
 
-    vtkRenderWindow *renWin = vtkRenderWindow::New();
-    vtkRenderer *renderer = vtkRenderer::New();
-    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
-
     // Connect the actor (contained into the container) with the renderer.
     renderer->AddActor(*actor);
     renWin->AddRenderer(renderer);
-    iren->SetRenderWindow(renWin);
 
     renderer->SetBackground(0.1, 0.1, 0.1);
     renWin->SetSize(640, 480);
@@ -138,9 +147,8 @@ void mafVTKParametricSurfaceConeTest::SetGetTest() {
     QCOMPARE(m_ParametricCone->center()[1], 5.0);
     QCOMPARE(m_ParametricCone->center()[2], 20.5);
 
-    renWin->Delete();
     renderer->Delete();
-    iren->Delete();
+    pipe->setGraphicObject(NULL);
     mafDEL(pipe);
 }
 

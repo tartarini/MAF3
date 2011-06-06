@@ -41,7 +41,7 @@ char *mafExternalDataCodecVTK::encode(bool binary) {
     writer->Update();
     vtk_err = writer->GetErrorCode();
     if (vtk_err == VTK_ERROR) {
-      return "";
+        return "";
     }
     this->m_StringSize = writer->GetOutputStringLength();
     char *output_string = new char[this->m_StringSize+1];
@@ -61,17 +61,20 @@ char *mafExternalDataCodecVTK::encode(bool binary) {
 void mafExternalDataCodecVTK::decode(const char *input_string, bool binary) {
     REQUIRE(input_string != NULL);
 
-    m_Reader = vtkDataSetReader::New();
+    if(m_Reader == NULL) {
+        m_Reader = vtkDataSetReader::New();
+    }
     m_Reader->ReadFromInputStringOn();
 
     if (binary) {
         m_Reader->SetBinaryInputString(input_string, this->stringSize());
     } else {
-       m_Reader->SetInputString(input_string, this->stringSize());
+        m_Reader->SetInputString(input_string, this->stringSize());
     }
 
     m_Reader->Update();
     m_Data = new mafProxy<vtkAlgorithmOutput>();
+    m_Data->setClassTypeNameFunction(vtkClassTypeNameExtract);
     *m_Data = m_Reader->GetOutputPort(0);
     this->m_ExternalData = m_Data;
 }

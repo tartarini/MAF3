@@ -38,12 +38,9 @@ mafPipeVisualVTKSurface::~mafPipeVisualVTKSurface() {
 bool mafPipeVisualVTKSurface::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
-        mafCore::mafProxyInterface *data = vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
-        if(data != NULL) {
-            QString dataType = data->externalDataType();
-            if(dataType == "vtkAlgorithmOutput") {
-                return true;
-            }
+        QString dataType = vme->dataSetCollection()->itemAtCurrentTime()->externalDataType();
+        if(dataType.startsWith("vtkPolyData", Qt::CaseSensitive)) {
+            return true;
         }
     }
     return false;
@@ -62,12 +59,11 @@ void mafPipeVisualVTKSurface::createPipe() {
 }
 
 void mafPipeVisualVTKSurface::updatePipe(double t) {
-    Q_UNUSED(t);
-
     mafVME *inputVME = this->inputList()->at(0);
-    mafDataSet *data = inputVME->dataSetCollection()->itemAtCurrentTime();
+    mafDataSet *data = inputVME->dataSetCollection()->itemAt(t);
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
-
+    
+    //const char *dataTypeName = info->Get(vtkDataObject::DATA_TYPE_NAME());
     //Get data contained in the mafProxy
     m_Mapper->SetInputConnection(*dataSet);
 

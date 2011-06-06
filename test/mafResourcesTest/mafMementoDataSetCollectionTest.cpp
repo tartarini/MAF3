@@ -81,6 +81,7 @@ void mafMementoDataSetCollectionTest::mafMementoDataSeCollectiontDefaultAllocati
     mafMemento *memento = collection->createMemento();
     QVERIFY(memento != NULL);
     mafDEL(vme);
+    mafDEL(memento);
 }
 
 void mafMementoDataSetCollectionTest::mafMementoDataSetCollectionAllocationTest() {
@@ -112,6 +113,9 @@ void mafMementoDataSetCollectionTest::mafMementoDataSetCollectionAllocationTest(
     mafDEL(secondData);
     mafDEL(firstData);
     mafDEL(vme);
+    mafDEL(newVme);
+    mafDEL(memento);
+    mafDEL(returnMemento);
 }
 
 MAF_REGISTER_TEST(mafMementoDataSetCollectionTest);

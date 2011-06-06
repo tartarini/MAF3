@@ -25,12 +25,18 @@ T *mafProxy<T>::operator->() {
 }
 
 template<typename T>
-void mafProxy<T>::setDestructionFunction(mafExternalDataDestructorPointer destruc_function) {
-    m_ExternalDestructor = destruc_function;
+void mafProxy<T>::setDestructionFunction(mafExternalDataDestructorPointer destructionFunction) {
+    m_ExternalDestructor = destructionFunction;
 }
 
 template<typename T>
-mafProxy<T>::mafProxy() : mafProxyInterface(), m_ExternalData(NULL), m_ExternalDestructor(NULL) {
+void mafProxy<T>::setClassTypeNameFunction(mafClassTypeNameFunctionPointer classTypeNameFunction) {
+    m_ClassTypeNameFunction = classTypeNameFunction;
+    updateExternalDataType();
+}
+
+template<typename T>
+mafProxy<T>::mafProxy() : mafProxyInterface(), m_ExternalData(NULL), m_ExternalDestructor(NULL), m_ClassTypeNameFunction(NULL) {
 }
 
 template<typename T>
@@ -53,16 +59,21 @@ bool mafProxy<T>::isEqual(mafProxyInterface *container) {
 
 template<typename T>
 inline void mafProxy<T>::updateExternalDataType() {
-    QString data_type(typeid( T ).name());
+    QString data_type;
+    if(m_ClassTypeNameFunction == NULL) {
+        data_type = typeid( T ).name();
     
-    // Needed because typeid return the length of the string containing the type
-    // before the string itself.
+        // Needed because typeid return the length of the string containing the type
+        // before the string itself.
 #ifdef _MSC_VER
-    data_type = data_type.mid(6);
+        data_type = data_type.mid(6);
 #else
-    int dt_len = data_type.length();
-    data_type = (dt_len > 10) ? data_type.mid(2) : data_type.mid(1);
-#endif    
+        int dt_len = data_type.length();
+        data_type = (dt_len > 10) ? data_type.mid(2) : data_type.mid(1);
+#endif
+    } else {
+        data_type = m_ClassTypeNameFunction(m_ExternalData);
+    }
     setExternalDataType(data_type);
 }
 

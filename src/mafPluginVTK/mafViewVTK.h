@@ -47,7 +47,7 @@ public:
     /*virtual*/ void removeSceneNode(mafResources::mafSceneNode *node);
 
     /// Show scene node passed as argument.
-    /*virtual*/ void showSceneNode(mafResources::mafSceneNode *node, bool show = true, const QString visualPipeType = "");
+    /*virtual*/ void showSceneNode(mafResources::mafSceneNode *node, bool show = true);
 
     /// Update view.
     /*virtual*/ void updateView();

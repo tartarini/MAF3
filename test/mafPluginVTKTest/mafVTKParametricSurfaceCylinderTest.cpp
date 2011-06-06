@@ -14,7 +14,7 @@
 #include <mafResourcesRegistration.h>
 #include <mafPipeVisualVTKSurface.h>
 #include <mafVTKParametricSurfaceCylinder.h>
-#include <vtkRenderWindowInteractor.h>
+#include <mafVTKWidget.h>
 #include <vtkAlgorithmOutput.h>
 #include <mafProxy.h>
 #include <vtkRenderWindow.h>
@@ -48,13 +48,16 @@ private slots:
         mafResourcesRegistration::registerResourcesObjects();
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
 
+        m_RenderWidget = new mafVTKWidget();
+
         // Create the parametric sphere.
         m_ParametricCylinder = mafNEW(mafPluginVTK::mafVTKParametricSurfaceCylinder);
 
         //! <snippet>
         //// m_DataSourceContainer is the container of type vtkAlgorithmOutput
         //// to "wrap" the vtkPolyData just simply use the code below.
-        m_DataSourceContainer = m_ParametricCylinder->output();;
+        m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
+        m_DataSourceContainer = m_ParametricCylinder->output();
 
         //Insert data into VME
         m_VME = mafNEW(mafResources::mafVME);
@@ -70,6 +73,7 @@ private slots:
         mafDEL(m_VME);
         mafDEL(m_ParametricCylinder);
         mafMessageHandler::instance()->shutdown();
+        delete m_RenderWidget;
     }
 
     /// Test Set/Get method of tparametric cylinder
@@ -81,14 +85,19 @@ private:
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a cylinder.
     mafResources::mafDataSet *m_DataSet;
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
+    QObject *m_RenderWidget; /// renderer widget
 };
 
 void mafVTKParametricSurfaceCylinderTest::SetGetTest() {
+    vtkRenderer *renderer = vtkRenderer::New();
+    vtkRenderWindow *renWin = ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow();
+
     mafPipeVisualVTKSurface *pipe;
     pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSurface);
     pipe->setInput(m_VME);
     pipe->setProperty("scalarVisibility", 0);
     pipe->setProperty("immediateRendering", 1);
+    pipe->setGraphicObject(m_RenderWidget);
     pipe->createPipe();
     pipe->updatePipe();
 
@@ -97,14 +106,9 @@ void mafVTKParametricSurfaceCylinderTest::SetGetTest() {
     mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, pipe->output());
     QVERIFY(actor != NULL);
 
-    vtkRenderWindow *renWin = vtkRenderWindow::New();
-    vtkRenderer *renderer = vtkRenderer::New();
-    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
-
     // Connect the actor (contained into the container) with the renderer.
     renderer->AddActor(*actor);
     renWin->AddRenderer(renderer);
-    iren->SetRenderWindow(renWin);
 
     renderer->SetBackground(0.1, 0.1, 0.1);
     renWin->SetSize(640, 480);
@@ -135,9 +139,8 @@ void mafVTKParametricSurfaceCylinderTest::SetGetTest() {
     QCOMPARE(m_ParametricCylinder->center()[1], 5.0);
     QCOMPARE(m_ParametricCylinder->center()[2], 20.5);
 
-    renWin->Delete();
     renderer->Delete();
-    iren->Delete();
+    pipe->setGraphicObject(NULL);
     mafDEL(pipe);
 }
 

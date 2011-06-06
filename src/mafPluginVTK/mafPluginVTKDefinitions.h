@@ -20,6 +20,9 @@
 #include <mafResourcesDefinitions.h>
 #include <mafProxy.h>
 
+//forward class
+class vtkAlgorithmOutput;
+
 namespace mafPluginVTK {
 
 ///< Enumeration that define the key modifiers values.
@@ -29,7 +32,10 @@ enum {
     MAF_ALT_KEY
 };
 
-}
+} //end namespace
+
+MAFPLUGINVTKSHARED_EXPORT QString vtkClassTypeNameExtract(vtkAlgorithmOutput *algorithmOutput);
+
 
 
 #endif // MAFPLUGINVTKDEFINITIONS_H

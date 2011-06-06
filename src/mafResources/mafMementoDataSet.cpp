@@ -47,16 +47,8 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, bool binary, const QS
       item.m_Value = matrixList;
       list->append(item);
   }
-  if(m_DataSet->dataValue()) {
       mafMementoPropertyItem item;
-      QString encodeType = m_DataSet->dataValue()->externalCodecType();
-
-      //Store encode type
-      item.m_Multiplicity = 1;
-      item.m_Name = "encodeType";
-      item.m_Value = encodeType;
-      list->append(item);
-
+     
       //Store fileName
       item.m_Multiplicity = 1;
       item.m_Name = "fileName";
@@ -64,28 +56,26 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, bool binary, const QS
       fileName.append(".vtk"); //TODO: set the correct extension!! 
       item.m_Value = fileName;
       list->append(item);
-   }
 }
 
 mafMementoDataSet::~mafMementoDataSet() {
 }
 
 void mafMementoDataSet::encodeItem(mafMementoPropertyItem *item, QString path) {
-  if (item->m_Name == "encodeType" ) {
-    m_EncodeType = item->m_Value.toString();
-  } else if (item->m_Name == "fileName") {
-    //Generate file name and save external data
-    QString fileName(item->m_Value.toString());
-    QString url;
-    QTextStream(&url) << path << "/" << fileName;
-    mafProxyInterface *container = m_DataSet->dataValue();
+    if (item->m_Name == "fileName") {
+        //Generate file name and save external data
+        QString fileName(item->m_Value.toString());
+        QString url;
+        QTextStream(&url) << path << "/" << fileName;
+        mafProxyInterface *container = m_DataSet->dataValue();
+        QString encodeType = container->externalCodecType();
 
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafProxyInterface *, container));
-    argList.append(mafEventArgument(QString, url));
-    argList.append(mafEventArgument(QString, m_EncodeType));
-    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.export", mafEventTypeLocal, &argList);
-  }
+        mafEventArgumentsList argList;
+        argList.append(mafEventArgument(mafCore::mafProxyInterface *, container));
+        argList.append(mafEventArgument(QString, url));
+        argList.append(mafEventArgument(QString, encodeType));
+        mafEventBusManager::instance()->notifyEvent("maf.local.serialization.export", mafEventTypeLocal, &argList);
+    }
 }
 
 void mafMementoDataSet::decodeItem(mafMementoPropertyItem *item, QString path) {

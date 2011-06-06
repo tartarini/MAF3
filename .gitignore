@@ -48,3 +48,4 @@ Release
 
 #ignore pyc files
 *.pyc
+src/mafPluginVTK/mafOperationParametricSurface.cpp.orig

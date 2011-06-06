@@ -3,10 +3,9 @@
 
 #include <QFileDialog>
 
-mafImporterWidget::mafImporterWidget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::mafImporterWidget)
-{
+using namespace mafGUI;
+
+mafImporterWidget::mafImporterWidget(QWidget *parent) : QWidget(parent), ui(new Ui::mafImporterWidget), m_DialogType(mafDialogTypeOpen) {
     ui->setupUi(this);
 }
 
@@ -19,7 +18,9 @@ void mafImporterWidget::setOperation(mafCore::mafObjectBase *op) {
     m_Operation = op;
 }
 
-
+void mafImporterWidget::setDialogType(mafDialogType dialogType) {
+    m_DialogType = dialogType;
+}
 
 void mafImporterWidget::setOperationGUI(QWidget *gui) {
     if(gui != NULL) {
@@ -40,24 +41,42 @@ void mafImporterWidget::setOperationGUI(QWidget *gui) {
 }
 
 
-void mafImporterWidget::on_browseFileButton_clicked() {
+void mafImporterWidget::on_browseFileButton_clicked() { 
+    //open dialog for selecting the name of the session
+    QFileDialog::Options options;
+    //    if (!native->isChecked())
+    //        options |= QFileDialog::DontUseNativeDialog;
+    QString selectedFilter;
     QString w = m_Operation->property("wildcard").toString();
     if(w.isEmpty()) {
         w = mafTr("All Files (*)");
     }
-        
-    //open dialog for selecting the name of the session
-    QFileDialog::Options options;
-//    if (!native->isChecked())
-//        options |= QFileDialog::DontUseNativeDialog;
-    QString selectedFilter;
-    QStringList files = QFileDialog::getOpenFileNames(
-                                                      NULL, 
-                                                      mafTr("Import Data"),
-                                                      ".",
-                                                      w,
-                                                      &selectedFilter,
-                                                      options);
-    m_Operation->setProperty("filename", files[0]);
-    ui->filePathLineEdit->setText(files[0]);
+    QString file;
+    switch(m_DialogType) {
+        case mafDialogTypeOpen:
+        {
+            file = QFileDialog::getOpenFileName(
+                                                              NULL, 
+                                                              mafTr("Import Data"),
+                                                              ".",
+                                                              w,
+                                                              &selectedFilter,
+                                                              options);
+        }
+        break;
+        case mafDialogTypeSave:
+        {
+            file = QFileDialog::getSaveFileName(
+                                                              NULL, 
+                                                              mafTr("Export Data"),
+                                                              ".",
+                                                              w,
+                                                              &selectedFilter,
+                                                              options);
+        }
+            break;
+    }
+    
+    m_Operation->setProperty("filename", file);
+    ui->filePathLineEdit->setText(file);
 }

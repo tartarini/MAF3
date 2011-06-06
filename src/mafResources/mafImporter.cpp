@@ -45,10 +45,10 @@ void mafImporter::cleanup() {
 }
 
 void mafImporter::checkImportFile() {
-    if (m_Filename.isEmpty()) {
+    if (filename().isEmpty()) {
         qWarning() << mafTr("Filename of data to import is needed.");
         m_Status = mafOperationStatusAborted;
-    } else if (!QFile::exists(m_Filename)) {
+    } else if (!QFile::exists(filename())) {
         qCritical() << m_Filename << mafTr(" doesn't exists!!.");
         m_Status = mafOperationStatusAborted;
     }
@@ -61,6 +61,7 @@ void mafImporter::importedData(mafCore::mafProxyInterface *data) {
     this->m_Output = mafNEW(mafResources::mafVME);
     this->m_Output->setObjectName(info.baseName());
     mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
+    // TODO !! PROBLEM BECAUSE NEED TO DEFINE BOUNDARY ALGORITHM
     dataSet->setDataValue(data);
     ((mafVME *)this->m_Output)->dataSetCollection()->insertItem(dataSet, 0);
     mafDEL(dataSet);

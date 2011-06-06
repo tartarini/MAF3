@@ -15,6 +15,7 @@
 #include <mafMementoVME.h>
 #include <mafExternalDataCodecVTK.h>
 #include <mafEventBusManager.h>
+#include <mafVMEManager.h>
 #include <mafDataBoundaryAlgorithmVTK.h>
 
 
@@ -58,12 +59,23 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
+
         // Create before the instance of the Serialization manager, which will register signals.
-        bool res(false);
-        res = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
-        QVERIFY(res);
+        m_SerializationHandle = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
+        QVERIFY(m_SerializationHandle != NULL);
 
         mafEventBusManager::instance();
+        m_VMEManager = mafVMEManager::instance();
+        
+        //Get hierarchy
+        mafCore::mafHierarchyPointer hierarchy;
+        QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+        
+        //Select root
+        mafObject *root;
+        ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
 
         //Create two codec
         m_Codec = mafNEW(mafPluginVTK::mafExternalDataCodecVTK);
@@ -75,12 +87,15 @@ private slots:
         m_DataSource->SetZLength(8);
 
         m_DataSourceContainer.setExternalCodecType("VTK");
-        m_DataSourceContainer.setExternalDataType("vtkAlgorithmOutput");
+        m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainer = m_DataSource->GetOutputPort(0);
 
         //Insert data into VME
         m_Vme = mafNEW(mafResources::mafVME);
         m_DataSetCube = mafNEW(mafResources::mafDataSet);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+        boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+        m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
         m_DataSetCube->setDataValue(&m_DataSourceContainer);
 
         // Second test VME
@@ -101,15 +116,16 @@ private slots:
         t->Delete();
 
         m_DataSourceContainerMoved.setExternalCodecType("VTK");
-        m_DataSourceContainerMoved.setExternalDataType("vtkAlgorithmOutput");
+        m_DataSourceContainerMoved.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainerMoved = m_PDataFilter->GetOutputPort(0);
         m_DataSetCubeMoved = mafNEW(mafResources::mafDataSet);
+        
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm1;
+        boundaryAlgorithm1 = mafNEW(mafDataBoundaryAlgorithmVTK);
+        m_DataSetCubeMoved->setBoundaryAlgorithm(boundaryAlgorithm1);
         m_DataSetCubeMoved->setDataValue(&m_DataSourceContainerMoved);
 
         m_Vme->dataSetCollection()->insertItem(m_DataSetCube, 0);
-        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
-        boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
-        m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
         m_Vme->dataSetCollection()->insertItem(m_DataSetCubeMoved, 1);
     }
 
@@ -122,6 +138,8 @@ private slots:
         m_PDataFilter->Delete();
         m_DataSource->Delete();
         m_DataSourceMoved->Delete();
+        m_VMEManager->shutdown();
+        mafShutdownModule(m_SerializationHandle);
         mafEventBusManager::instance()->shutdown();
         mafMessageHandler::instance()->shutdown();
     }
@@ -143,6 +161,9 @@ private:
     vtkTransformPolyDataFilter *m_PDataFilter; ///< Filter used to transform the bounding box.
     mafResources::mafDataSet *m_DataSetCube;
     mafResources::mafDataSet *m_DataSetCubeMoved;
+    mafVMEManager *m_VMEManager;
+    QLibrary *m_SerializationHandle;
+
 };
 
 void mafSerializationRawASCIIExtDataTest::mafSerializationVTKAllocationTest() {
@@ -174,26 +195,22 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
     qDebug() << test_file;
 
     QString plug_codec_id = "maf.local.serialization.plugCodec";
-    QString obj_type("mafResources::mafVME");
     QString encodeType = "RAW_ASCII";
     QString codec = "mafSerialization::mafCodecRawASCII";
 
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(QString, obj_type));
     argList.append(mafEventArgument(QString, encodeType));
     argList.append(mafEventArgument(QString, codec));
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
     
-    obj_type = "vtkAlgorithmOutput";
     encodeType = "VTK";
     codec = "mafPluginVTK::mafExternalDataCodecVTK";
 
     argList.clear();
-    argList.append(mafEventArgument(QString, obj_type));
     argList.append(mafEventArgument(QString, encodeType));
     argList.append(mafEventArgument(QString, codec));
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
-
+    
     //Save VME with ASCII dataSet
     mafMementoVME *mementoVME = (mafMementoVME *)m_Vme->createMemento();
     QVERIFY(mementoVME != NULL);
@@ -243,7 +260,7 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
     sphereMapper->Delete();
     mafDEL(returnVME);
     mafDEL(mementoVME);
-
+    mafDEL(memento);
     i = 0;
     //remove files crested by test
     for (; i < list.size(); ++i) {

@@ -37,16 +37,12 @@ public slots:
     /// View Created slot
     void viewCreatedSlot(mafCore::mafObjectBase *view);
 
-    /// View Selected slot
-    void viewSelectedSlot(mafCore::mafObjectBase *view);
-
 private:
     mafObjectBase *m_View; ///< Reference to the view object.
 };
 
 testViewManagerObserver::testViewManagerObserver() : m_View(NULL) {
     mafRegisterLocalCallback("maf.local.resources.view.created", this, "viewCreatedSlot(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("maf.local.resources.view.select", this, "viewSelectedSlot(mafCore::mafObjectBase *)");
 }
 
 mafObjectBase *testViewManagerObserver::view() {
@@ -57,9 +53,6 @@ void testViewManagerObserver::viewCreatedSlot(mafCore::mafObjectBase *view) {
     m_View = view;
 }
 
-void testViewManagerObserver::viewSelectedSlot(mafCore::mafObjectBase *view) {
-    m_View = view;
-}
 
 /**
  Class name: mafViewManagerTest
@@ -147,9 +140,13 @@ void mafViewManagerTest::selectViewTest() {
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, obj));
     m_EventBus->notifyEvent("maf.local.resources.view.select", mafEventTypeLocal, &argList);
+    
+    mafObjectBase *selectedView;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, selectedView);   
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
 
-    QVERIFY(m_Observer->view() != NULL);
-    QVERIFY(m_Observer->view() == obj);
+    QVERIFY(selectedView != NULL);
+    QVERIFY(selectedView == obj);
 }
 
 void mafViewManagerTest::mementoViewTest() {
@@ -179,8 +176,12 @@ void mafViewManagerTest::removeAndDestructionTest() {
     mafObjectBase *obj = m_Observer->view();
     QString hash1 = obj->objectHash();
     mafDEL(obj);
-    obj = m_Observer->view();
-    QString hash2 = obj->objectHash();
+    
+    mafObjectBase *selectedView;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, selectedView);   
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
+    
+    QString hash2 = selectedView->objectHash();
     QVERIFY(hash1 != hash2);
 }
 

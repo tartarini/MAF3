@@ -30,22 +30,20 @@ mafSceneNode::~mafSceneNode() {
     mafDEL(this->m_VisualPipe);
 }
 
-void mafSceneNode::visualPipeDestroyed() {
-    this->m_VisualPipe = NULL;
-}
-
 void mafSceneNode::setVisualPipe(QString visualPipeType) {
     if(m_VisualPipe != NULL && visualPipeType.compare(m_VisualPipeType) == 0) {
         return;
     }
     
     if(visualPipeType.isEmpty()) {
-        qCritical(mafTr("Pipe name is empty string, impossible to instantiate Visual pipe!").toAscii().constData());
+        qCritical(mafTr("Pipe type not valid, impossible create Visual pipe!").toAscii().constData());
         return;
     }
     
+    // Update the visual pipe type with the new value
     m_VisualPipeType = visualPipeType;
-    createVisualPipe();
+    // and destroy the previous instance.
+    mafDEL(this->m_VisualPipe);
 }
 
 bool mafSceneNode::createVisualPipe() {
@@ -55,14 +53,12 @@ bool mafSceneNode::createVisualPipe() {
     qWarning() << mafTr("No visual pipe type '") << m_VisualPipeType << mafTr("'' registered!!");
     return false;
   }
+
   this->m_VisualPipe->setGraphicObject(m_GraphicObject);
 
-  connect(m_VisualPipe, SIGNAL(destroyed()), this, SLOT(visualPipeDestroyed()));
   m_VisualPipe->setInput(m_VME);
 
-  //if (m_VisualPipe->output() == NULL) {
   m_VisualPipe->createPipe();
-  //}
   m_VisualPipe->updatePipe();
   return true;
 }
@@ -81,34 +77,36 @@ QString mafSceneNode::VMEName() {
 }
 
 void mafSceneNode::setVisibility(bool visible) {
-    if (m_VisualPipeType.isEmpty()) {
-      return;
-    }
-    
-    if(m_VisualPipe == NULL) {
-      if (!createVisualPipe()) {
-        return;
-      }
-    }
-    m_Visibility = visible;
+    if (visible != m_Visibility) {
+        if (m_VisualPipeType.isEmpty()) {
+            return;
+        }
 
-    m_VisualPipe->setVisibility(visible);
-    
-    if(!visible) {
-        // TODO NEED TO IMPLEMENT A STRATEGY
-        switch(m_VisibilityPolicy) {
-            case mafVisibilityPolicyKeepAlive:
-            {
-                //will forward to visual pipe
+        if(visible && m_VisualPipe == NULL) {
+            if (!createVisualPipe()) {
+                return;
             }
+        }
+
+        m_Visibility = visible;
+        m_VisualPipe->setVisibility(visible);
+
+        if(!visible) {
+            // TODO NEED TO IMPLEMENT A STRATEGY
+            switch(m_VisibilityPolicy) {
+            case mafVisibilityPolicyKeepAlive:
+                {
+                    //will forward to visual pipe
+                }
                 break;
             case mafVisibilityPolicyDestroyOnHide:
-            {
-                mafDEL(m_VisualPipe);    
-            }
-            break;
+                {
+                    mafDEL(m_VisualPipe);    
+                }
+                break;
             case mafVisibilityPolicySmartMemory:
                 break;
+            }
         }
     }
 }

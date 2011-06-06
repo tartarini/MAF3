@@ -46,13 +46,6 @@ mafVME::~mafVME() {
     delete m_Lock;
 }
 
-void mafVME::setBounds(QVariantList bounds) {
-    QWriteLocker locker(m_Lock);
-    m_Bounds.clear();
-    m_Bounds.append(bounds);
-    setModified();
-}
-
 void mafVME::setCanRead(bool lock) {
     if ( lock == m_CanRead ) {
         return;
@@ -139,11 +132,9 @@ void mafVME::detatchFromTree() {
 
 mafDataSetCollection *mafVME::dataSetCollection() {
     if(m_DataSetCollection == NULL) {
-        QWriteLocker locker(m_Lock);
         m_DataSetCollection = new mafDataSetCollection(mafCodeLocation);
-
+        m_DataSetCollection->setParent(this);
         //connect the data collection modified to the updateBounds slot
-        connect(m_DataSetCollection, SIGNAL(modifiedObject()), this, SLOT(updateBounds()));
     }
     return m_DataSetCollection;
 }
@@ -153,7 +144,7 @@ mafDataSet *mafVME::outputData() {
     if(m_DataPipe != NULL) {
         return m_DataPipe->output()->dataSetCollection()->itemAtCurrentTime();
     }
-    return m_DataSetCollection->itemAtCurrentTime();
+    return dataSetCollection()->itemAtCurrentTime();
 }
 
 mafMemento *mafVME::createMemento() const {
@@ -202,6 +193,8 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
         if (objClassType == "mafResources::mafDataSetCollection") {
           mafDataSetCollection *dataSetCollection = qobject_cast<mafDataSetCollection*>(obj);
           m_DataSetCollection = dataSetCollection;
+        } else {
+            mafDEL(objBase);
         }
       }
     }
@@ -214,8 +207,6 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
         item = list->at(i);
         if(item.m_Name == "mafPipeData") {
             this->setDataPipe(item.m_Value.toString());
-        } else if(item.m_Name == "vmeBounds") {
-            this->setBounds(item.m_Value.toList());
         }
     }
     setModified();
@@ -227,17 +218,37 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 }
 
-void mafVME::updateBounds() {
-    if (this->dataSetCollection()->itemAtCurrentTime() != NULL){
-        mafDataBoundaryAlgorithm *boundary = NULL;
-        boundary = this->dataSetCollection()->itemAtCurrentTime()->boundaryAlgorithm();
-        if(boundary != NULL){
-            double b[6];
-            boundary->bounds(b);
-            int i = 0;
-            for(; i < 6; ++i) {
-                m_Bounds.append(b[i]);
-            }
-        }
+
+bool mafVME::dataLoaded() const {
+    bool result(false);
+    if(m_DataSetCollection){
+        result = m_DataSetCollection->itemAtCurrentTime()->dataLoaded();
     }
+    return result;
 }
+
+QString mafVME::boundXmin() {
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[0].toDouble());
+}
+
+QString mafVME::boundXmax() {
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[1].toDouble());
+}
+
+QString mafVME::boundYmin() {
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[2].toDouble());
+}
+
+QString mafVME::boundYmax() {
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[3].toDouble());
+}
+
+QString mafVME::boundZmin() {
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[4].toDouble());
+}
+
+QString mafVME::boundZmax() {
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[5].toDouble());
+}
+
+

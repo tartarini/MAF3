@@ -34,7 +34,20 @@ class MAFPLUGINVTKSHARED_EXPORT mafExporterVTK : public mafResources::mafOperati
 
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafOperation);
+
+public slots:
+    /// Allows to call the piece of algorithm that is needed to restore the previous state of the operation's execution.
+    /*virtual*/ void unDo();
     
+    /// Allows to call the piece of algorithm that is needed to apply the operation again.
+    /*virtual*/ void reDo();
+    
+    /// Set parameters of operation.
+    /*virtual*/ void setParameters(QVariantList parameters);
+    
+    /// Execute the resource algorithm.
+    /*virtual*/ void execute();
+
 public:
     /// Object constructor.
     mafExporterVTK(const QString code_location = "");
@@ -65,23 +78,6 @@ protected:
     
 private:
     QString m_Filename; ///< Filename of external data to import.
-    
-    public slots:
-    /// Allows to call the piece of algorithm that is needed to restore the previous state of the operation's execution.
-    /*virtual*/ void unDo();
-    
-    /// Allows to call the piece of algorithm that is needed to apply the operation again.
-    /*virtual*/ void reDo();
-    
-    /// Set parameters of operation.
-    /*virtual*/ void setParameters(QVariantList parameters);
-    
-public slots:
-    /// Execute the resource algorithm.
-    /*virtual*/ void execute();
-    
-private:
-    mafCore::mafProxy<vtkAlgorithmOutput> m_ImportedData; ///< Container of the Data Source
     vtkDataSetWriter *m_Writer; ///< Reader of the external data.
     bool m_ExportAllTimestamps; ///< Flag used to check if the exporter has to export the current timestamp or all the timestamps.
 };
@@ -92,6 +88,19 @@ inline bool mafExporterVTK::exportAllTimestamps() const {
 
 inline void mafExporterVTK::setExportAllTimestamps(bool exportAll) {
     m_ExportAllTimestamps = exportAll;
+}
+    
+    
+inline void mafExporterVTK::setFilename(const QString f) {
+    QMutex mutex(QMutex::Recursive);
+    QMutexLocker locker(&mutex);
+    m_Filename = f;
+}
+    
+inline QString mafExporterVTK::filename() const {
+    QMutex mutex(QMutex::Recursive);
+    QMutexLocker locker(&mutex);
+    return m_Filename;
 }
     
 } // namespace mafPluginVTK

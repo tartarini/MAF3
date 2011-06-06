@@ -55,6 +55,7 @@ private slots:
         m_DataSource->SetXLength(5);
         m_DataSource->SetYLength(3);
         m_DataSource->SetZLength(8);
+        m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainer = m_DataSource->GetOutputPort(0);
     }
 

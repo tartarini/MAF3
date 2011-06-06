@@ -9,7 +9,7 @@
 	<Menu title="Export" parent="File"></Menu>
 	<Separator></Separator>
 	<Action title="Save" icon=":/images/save.png" tip="Save your data." checkable="0" checked="0" slot="save()" topic=""></Action>
-	<Action title="Save As" icon=":/images/save.png" tip="Save your data with new name." checkable="0" checked="0" slot="save()" topic=""></Action>
+	<Action title="Save As" icon=":/images/save.png" tip="Save your data with new name." checkable="0" checked="0" slot="saveAs()" topic=""></Action>
 	<Separator></Separator>
 	<Menu title="Open Recent" parent="File"></Menu>
 	<Separator></Separator>

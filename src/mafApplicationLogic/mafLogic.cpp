@@ -76,6 +76,7 @@ bool mafLogic::initialize() {
     // Slot registration.
     mafRegisterLocalCallback("maf.local.logic.settings.store", this, "storeSettings()");
     mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "restoreSettings()");
+    mafRegisterLocalCallback("maf.local.logic.openFile", this, "restoreHierarchy(QString)");
 
     m_CustomPluggedObjectsHash.clear();
 
@@ -128,6 +129,14 @@ mafCore::mafHierarchy *mafLogic::requestNewHierarchy() {
     return m_Hierarchy;
 }
 
+void mafLogic::customizeVisualization(const QString view_type, const QString data_type, const QString pipe_visual_type) {
+    mafEventBus::mafEventArgumentsList argList;
+    argList.append(mafEventArgument(QString, view_type));
+    argList.append(mafEventArgument(QString, data_type));
+    argList.append(mafEventArgument(QString, pipe_visual_type));
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.customizeVisualization", mafEventTypeLocal, &argList);
+}
+
 void mafLogic::plugObject(const QString base_class, const QString class_type, const QString object_label) {
     // Add information to the
     mafPluggedObjectInformation objectInformation(object_label, class_type);
@@ -162,33 +171,6 @@ void mafLogic::loadPlugins(QString plugin_dir) {
     argList.clear();
     argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, m_CustomPluggedObjectsHash));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.registerLibrary", mafEventTypeLocal, &argList);
-
-    //TODO: check where to move this code
-    //////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////
-    //Load seriazlization plugin
-    QString plug_codec_id = "maf.local.serialization.plugCodec";
-    QString obj_type("mafCore::mafHierarchy");
-    QString encodeType = "XML";
-    QString codec = "mafSerialization::mafCodecXML";
-
-    argList.clear();
-    argList.append(mafEventArgument(QString, obj_type));
-    argList.append(mafEventArgument(QString, encodeType));
-    argList.append(mafEventArgument(QString, codec));
-    mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
-
-    obj_type = "vtkAlgorithmOutput";
-    encodeType = "VTK";
-    codec = "mafPluginVTK::mafExternalDataCodecVTK";
-
-    argList.clear();
-    argList.append(mafEventArgument(QString, obj_type));
-    argList.append(mafEventArgument(QString, encodeType));
-    argList.append(mafEventArgument(QString, codec));
-    mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
-    ///////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////
 }
 
 void mafLogic::storeSettings() {
@@ -227,8 +209,6 @@ void mafLogic::restoreHierarchy(QString fileName) {
     /// view select
     mafEventBusManager::instance()->notifyEvent("maf.local.gui.new", mafEventTypeLocal, NULL);
 
-    //m_Model->setHierarchy(m_Hierarchy);
-
     //Load memento from file
     mafCore::mafMemento *mementoHierarchy;
     mafEventArgumentsList argList;
@@ -241,4 +221,5 @@ void mafLogic::restoreHierarchy(QString fileName) {
 
     // Set memento loaded to hierarchy
     m_Hierarchy->setMemento(mementoHierarchy);
+    mafDEL(mementoHierarchy);
 }

@@ -17,7 +17,10 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
 
-mafDataSet::mafDataSet(const QString code_location) : mafObject(code_location), m_DataValue(NULL), m_DataBoundary(NULL), m_Matrix(NULL), m_DataBoundaryAlgorithm(NULL), m_TimeStamp(0) {
+mafDataSet::mafDataSet(const QString code_location) : mafObject(code_location), m_DataValue(NULL), m_DataBoundary(NULL), m_Matrix(NULL), m_DataBoundaryAlgorithm(NULL), m_DataBoundaryAlgorithmName(), m_ExternalDataType(), m_ExternalCodecType(), m_DataLoaded(false), m_FileName() {
+    for(int i = 0; i < 6; i++) {
+        m_Bounds.append(0);
+    }
 }
 
 mafDataSet::~mafDataSet() {
@@ -31,6 +34,16 @@ void mafDataSet::setBoundaryAlgorithm(mafDataBoundaryAlgorithm *algorithm) {
     if(m_DataBoundaryAlgorithm != algorithm) {
         mafDEL(m_DataBoundaryAlgorithm);
         m_DataBoundaryAlgorithm = algorithm;
+        m_DataBoundaryAlgorithmName = algorithm->metaObject()->className();
+    }
+}
+
+void mafDataSet::setBoundaryAlgorithmName(QString dataBoundaryAlgorithmName){
+    if(m_DataBoundaryAlgorithmName != dataBoundaryAlgorithmName) {
+        m_DataBoundaryAlgorithmName = dataBoundaryAlgorithmName;
+        mafDEL(m_DataBoundaryAlgorithm);
+        m_DataBoundaryAlgorithm = (mafDataBoundaryAlgorithm *)mafNEWFromString(dataBoundaryAlgorithmName);
+        updateBounds();
     }
 }
 
@@ -49,8 +62,16 @@ void mafDataSet::setDataValue(mafProxyInterface *data_value) {
         emit(dataValueDisconnected());
     }
     m_DataValue = data_value;
-    if(m_DataValue != NULL) {
-        emit(dataValueConnected());
+    if (m_DataValue) {
+        QString dataType = data_value->externalDataType();
+        m_ExternalDataType = dataType;
+        QString codecType = data_value->externalCodecType();
+        m_ExternalCodecType = codecType;
+        if(m_DataValue != NULL) {
+            emit(dataValueConnected());
+            m_DataLoaded = true;
+            updateBounds();
+        }
     }
 }
 
@@ -72,12 +93,14 @@ void mafDataSet::setPoseMatrix(const mafPoseMatrix *matrix) {
 }
 
 mafMemento *mafDataSet::createMemento() const {
-    return new mafMementoDataSet(this, mafCodeLocation);
+    mafMemento *m = Superclass::createMemento();
+    mafMementoDataSet *mementoDataSet = new mafMementoDataSet(this, mafCodeLocation);
+    m->setParent(mementoDataSet);
+
+    return mementoDataSet;
 }
 
 void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
-    Q_UNUSED(deep_memento);
-
     // Design by contract condition.
     REQUIRE(memento != NULL);
     REQUIRE(memento->objectClassType() == this->metaObject()->className());
@@ -85,17 +108,18 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
     int n = 0;
     int childrenNum = memento->children().size();
     for (n; n < childrenNum; n++) {
-      mafMemento *m = (mafMemento *)memento->children().at(n);
-      if (m->serializationPattern() == mafSerializationPatternInheritance) {
-        //set the memento of the superclass
-        Superclass::setMemento(m, deep_memento);
-      } else {
-        //set the memento of the children memento
-        QString objClassType = m->objectClassType();
-        mafCore::mafObjectBase *objBase = mafNEWFromString(objClassType);
-        mafCore::mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
-        obj->setMemento(m, deep_memento);
-      }
+        mafMemento *m = (mafMemento *)memento->children().at(n);
+        if (m->serializationPattern() == mafSerializationPatternInheritance) {
+            //set the memento of the superclass
+            Superclass::setMemento(m, true);
+          } else {
+            //set the memento of the children memento
+            QString objClassType = m->objectClassType();
+            mafCore::mafObjectBase *objBase = mafNEWFromString(objClassType);
+            mafCore::mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
+            obj->setMemento(m, deep_memento);
+            mafDEL(objBase);
+          }
     }
 
     QString encodeType;
@@ -118,31 +142,56 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
                 }
             }
             this->setPoseMatrix(mat);
-        } else if (item.m_Name == "encodeType") {
-            //Restore codec type
-            encodeType = item.m_Value.toString();
-        } else if (item.m_Name == "fileName") {
+        } 
+        if (item.m_Name == "fileName") {
             //Save informations about external file, and load data later, when the data is needed.
             QString nameOfFile = item.m_Value.toString();
-            m_DataFileInfo.fileName = nameOfFile;
-            m_DataFileInfo.encodeType = encodeType;
-         }
+            m_FileName = nameOfFile;
+        }
     }
 }
 
 void mafDataSet::updateDataValue() {
-  if (!m_DataFileInfo.fileName.isEmpty() && !m_DataFileInfo.encodeType.isEmpty()){
+  if (!m_FileName.isEmpty()){
+    QString encodeType = externalCodecType();
     mafCore::mafProxyInterface *container;
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(QString, m_DataFileInfo.fileName));
-    argList.append(mafEventArgument(QString, m_DataFileInfo.encodeType));
+    argList.append(mafEventArgument(QString, m_FileName));
+    argList.append(mafEventArgument(QString, encodeType));
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafProxyInterface *, container);
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.import", mafEventTypeLocal, &argList, &ret_val);
     if (container != NULL) {
-         m_DataValue = container;
+        setDataValue(container);
+        setExternalCodecType(encodeType);
+        m_DataValue->setExternalCodecType(encodeType);
     } else {
-        QString err_msg(mafTr("Unable to load data form file '%1'").arg(m_DataFileInfo.fileName));
+        QString err_msg(mafTr("Unable to load data form file '%1'").arg(m_FileName));
         qCritical() << err_msg;
     }
   }
+}
+
+void mafDataSet::setBounds(QVariantList bounds) {
+    m_Bounds.clear();
+    m_Bounds.append(bounds);
+    setModified();
+}
+
+void mafDataSet::updateBounds() {
+    mafDataBoundaryAlgorithm *boundary = NULL;
+    boundary = this->boundaryAlgorithm();
+    if(boundary != NULL){
+        boundary->calculateBoundary(m_DataValue);
+        double b[6];
+        boundary->bounds(b);
+        int i = 0;
+        for(; i < 6; ++i) {
+            m_Bounds[i] = b[i];
+        }
+    } else {
+        int i = 0;
+        for(; i < 6; ++i) {
+            m_Bounds[i] = (i%2 == 0) ? 1 : -1;
+        }
+    }
 }

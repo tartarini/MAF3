@@ -12,8 +12,6 @@
 #include "mafDataBoundaryAlgorithmVTK.h"
 #include <mafProxyInterface.h>
 #include <vtkSmartPointer.h>
-#include <vtkDataSetReader.h>
-#include <vtkDataSetWriter.h>
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>
 #include <vtkTransform.h>
@@ -40,14 +38,16 @@ mafDataBoundaryAlgorithmVTK::~mafDataBoundaryAlgorithmVTK() {
 }
 
 mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(mafCore::mafProxyInterface *data, mafResources::mafPoseMatrix *matrix) {
-    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data);
-
-    vtkSmartPointer<vtkDataSetMapper> box = vtkSmartPointer<vtkDataSetMapper>::New();
-    box->SetInputConnection(*dataSet);
-    box->Update();
-    double b[6];
-    box->GetBounds(b);
-    return this->calculateBoundary(b, matrix);
+    if(data) {
+        mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data);
+        vtkSmartPointer<vtkDataSetMapper> box = vtkSmartPointer<vtkDataSetMapper>::New();
+        box->SetInputConnection(*dataSet);
+        box->Update();
+        double b[6];
+        box->GetBounds(b);
+        return this->calculateBoundary(b, matrix);
+    }
+    return NULL;
 }
 
 mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(double bounds[6], mafResources::mafPoseMatrix *matrix) {
@@ -86,10 +86,3 @@ mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(doubl
     }
     return &m_OutputBoundary;
 }
-void mafDataBoundaryAlgorithmVTK::bounds(double bounds[6]) {
-    int i = 0;
-    for(i; i < 6; ++i){
-        bounds[i] = m_Bounds[i];
-    }
-}
-
