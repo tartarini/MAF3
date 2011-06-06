@@ -859,20 +859,6 @@ void mafGUIManager::save() {
     } else {
         int index = m_CompleteFileName.lastIndexOf("/");
         m_LastPath = m_CompleteFileName.left(index);
-
-       /* QDir log_dir(path);
-        log_dir.setFilter(QDir::Files);
-        QStringList list = log_dir.entryList();
-        int i = 0;
-
-        //remove all files
-        for (; i < list.size(); ++i) {
-            QString fileName = path;
-            fileName.append("/");
-            fileName.append(list.at(i));
-            QFile::remove(fileName);
-        }*/
-
         m_Logic->storeHierarchy(m_CompleteFileName);
         qDebug() << m_CompleteFileName;
     }
