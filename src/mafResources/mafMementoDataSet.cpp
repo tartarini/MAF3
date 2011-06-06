@@ -62,7 +62,7 @@ mafMementoDataSet::~mafMementoDataSet() {
 }
 
 void mafMementoDataSet::encodeItem(mafMementoPropertyItem *item, QString path) {
-    if (item->m_Name == "fileName") {
+    if (item->m_Name == "fileName" && m_DataSet->modified()) {
         //Generate file name and save external data
         QString fileName(item->m_Value.toString());
         QString url;
@@ -75,6 +75,7 @@ void mafMementoDataSet::encodeItem(mafMementoPropertyItem *item, QString path) {
         argList.append(mafEventArgument(QString, url));
         argList.append(mafEventArgument(QString, encodeType));
         mafEventBusManager::instance()->notifyEvent("maf.local.serialization.export", mafEventTypeLocal, &argList);
+        m_DataSet->setModified(false);
     }
 }
 
