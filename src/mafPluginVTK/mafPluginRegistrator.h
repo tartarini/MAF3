@@ -14,7 +14,6 @@
 
 #include "mafPluginVTKDefinitions.h"
 
-#include <QDomDocument>
 
 namespace mafPluginVTK {
 
@@ -38,9 +37,6 @@ public:
 private:
     /// Register the all the objects contained into the plug-in
     void registerAllObjects();
-
-    /// Allow to parse the XML configuration file.
-    void parseConfigurationFile(QDomNode current);
 };
 
 /** Retrieve the engine version we're going to expect*/
