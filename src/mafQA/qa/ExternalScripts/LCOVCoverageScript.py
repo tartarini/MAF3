@@ -1,12 +1,13 @@
 import sys
 import os
 
+currentPathScript = os.path.split(os.path.realpath(__file__))[0]
+
 try:
+    sys.path.append(os.path.realpath(os.path.join(currentPathScript,"..","..")))
     from qa import mafPath
 except ImportError:
     import mafPath
-
-currentPathScript = os.path.split(os.path.realpath(__file__))[0]
 
 modulesDir = os.path.abspath(mafPath.mafSourcesDir)
 currentModule = ""
