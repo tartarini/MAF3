@@ -53,7 +53,6 @@ void mafCodecXML::encode(mafMemento *memento) {
       m_XMLStreamWriter.setDevice(m_Device);
       m_XMLStreamWriter.setAutoFormatting(true);
       m_XMLStreamWriter.writeStartDocument();
-      m_XMLStreamWriter.writeStartElement("mementoRoot"); //start memento item
     }
 
     m_XMLStreamWriter.writeStartElement("memento"); //start memento item
@@ -70,10 +69,8 @@ void mafCodecXML::encode(mafMemento *memento) {
           // use mafMementoDataSet to encode dataSet items.
           memento->encodeItem(&item, path);
         } 
-        
         m_XMLStreamWriter.writeEndElement();
     }
-    m_XMLStreamWriter.writeEndElement(); //end memento item
 
     QObject *obj;
     ++m_LevelEncode;
@@ -81,6 +78,7 @@ void mafCodecXML::encode(mafMemento *memento) {
         this->encode((mafMemento *)obj);
     }
     --m_LevelEncode;
+    m_XMLStreamWriter.writeEndElement(); //end memento item
 
     if(m_MementoLevel == 0) {
         m_XMLStreamWriter.writeEndElement(); //memento root
@@ -95,7 +93,6 @@ mafMemento *mafCodecXML::decode() {
     if(m_LevelDecode == -1) {  
       m_XMLStreamReader.setDevice(m_Device);
       m_XMLStreamReader.readNextStartElement(); //start document item
-      m_XMLStreamReader.readNextStartElement(); //mementoRoot
     }
 
     //TODO: I presume m_Device is a file...
