@@ -28,6 +28,11 @@ using namespace mafPluginVTK;
 using namespace std;
 
 mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : mafPipeVisual(code_location), m_Mapper(NULL), m_ScalarVisibility(false), m_ImmediateRendering(false), m_Renderer(NULL) {
+    m_Mapper = vtkPolyDataMapper::New();
+    m_Actor = vtkActor::New();
+    m_Actor.setDestructionFunction(&vtkActor::Delete);
+    m_Actor->SetMapper(m_Mapper);
+    m_Output = &m_Actor;
 }
 
 mafPipeVisualVTKSurface::~mafPipeVisualVTKSurface() {
@@ -46,16 +51,10 @@ bool mafPipeVisualVTKSurface::acceptObject(mafCore::mafObjectBase *obj) {
     return false;
 }
 
-void mafPipeVisualVTKSurface::createPipe() {
+void mafPipeVisualVTKSurface::updatedGraphicObject() {
     mafVTKWidget* widget = qobject_cast<mafVTKWidget*>(graphicObject());
     vtkRendererCollection *rc = widget->GetRenderWindow()->GetRenderers();
     m_Renderer = rc->GetFirstRenderer();
-    
-    m_Mapper = vtkPolyDataMapper::New();
-    m_Actor = vtkActor::New();
-    m_Actor.setDestructionFunction(&vtkActor::Delete);
-    m_Actor->SetMapper(m_Mapper);
-    m_Output = &m_Actor;
 }
 
 void mafPipeVisualVTKSurface::updatePipe(double t) {
@@ -63,10 +62,8 @@ void mafPipeVisualVTKSurface::updatePipe(double t) {
     mafDataSet *data = inputVME->dataSetCollection()->itemAt(t);
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
     
-    //const char *dataTypeName = info->Get(vtkDataObject::DATA_TYPE_NAME());
     //Get data contained in the mafProxy
     m_Mapper->SetInputConnection(*dataSet);
-
     m_Mapper->SetScalarVisibility(m_ScalarVisibility);
     m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
 }

@@ -32,10 +32,7 @@ public:
     /// Object constructor.
     testVisualPipeCustomForSceneNode(const QString code_location = "");
 
-    /// Initialize and create the pipeline
-    /*virtual*/ void createPipe();
-
-    /// Return the string variable initializated and updated from the data pipe.
+    /// Return the string variable initialized and updated from the data pipe.
     QString pipeline() {return m_PipeLine;}
 
 public slots:
@@ -46,11 +43,7 @@ private:
     QString m_PipeLine; ///< Test Var.
 };
 
-testVisualPipeCustomForSceneNode::testVisualPipeCustomForSceneNode(const QString code_location) : mafPipeVisual(code_location), m_PipeLine("") {
-}
-
-void testVisualPipeCustomForSceneNode::createPipe() {
-    m_PipeLine = "Created";
+testVisualPipeCustomForSceneNode::testVisualPipeCustomForSceneNode(const QString code_location) : mafPipeVisual(code_location), m_PipeLine("Created") {
 }
 
 void testVisualPipeCustomForSceneNode::updatePipe(double t) {

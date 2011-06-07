@@ -19,7 +19,8 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafPipeDataImageThreshold::mafPipeDataImageThreshold(const QString code_location) : mafPipeData(code_location), m_LowerThreshold(0.0), m_UpperThreshold(1.0), m_ThresholdMode(BETWEEN) {
+mafPipeDataImageThreshold::mafPipeDataImageThreshold(const QString code_location) : mafPipeData(code_location), m_LowerThreshold(0.0), m_UpperThreshold(1.0), m_ThresholdMode(mafThresholdModeBetween) {
+    m_ThresholdFilter = vtkSmartPointer<vtkImageThreshold>::New();
 }
 
 mafPipeDataImageThreshold::~mafPipeDataImageThreshold() {
@@ -36,16 +37,10 @@ bool mafPipeDataImageThreshold::acceptObject(mafCore::mafObjectBase *obj) {
     return false;
 }
 
-void mafPipeDataImageThreshold::createPipe() {
-    m_ThresholdFilter = vtkSmartPointer<vtkImageThreshold>::New();
-    if(inputList()->size() == 0) {
-        qWarning(mafTr("Assign an input VME before asking the creation of the data pipe!!").toAscii());
+void mafPipeDataImageThreshold::updatePipe(double t) {
+    if (inputList()->size() == 0) {
         return;
     }
-    m_Output = this->inputList()->at(0);
-}
-
-void mafPipeDataImageThreshold::updatePipe(double t) {
     mafVME *inputVME = this->inputList()->at(0);
 
     mafDataSet *inputDataSet = inputVME->dataSetCollection()->itemAt(t);
@@ -54,14 +49,14 @@ void mafPipeDataImageThreshold::updatePipe(double t) {
     }
 
     //Get data contained in the mafProxy
-    mafProxy<vtkImageData> *image = mafProxyPointerTypeCast(vtkImageData, inputDataSet->dataValue());
+    mafProxy<vtkAlgorithmOutput> *image = mafProxyPointerTypeCast(vtkAlgorithmOutput, inputDataSet->dataValue());
 
-    m_ThresholdFilter->SetInputConnection((*image)->GetProducerPort());
+    m_ThresholdFilter->SetInputConnection((*image));
     switch(m_ThresholdMode) {
-        case LOWER:
+        case mafThresholdModeLower:
             m_ThresholdFilter->ThresholdByLower(m_LowerThreshold);
             break;
-        case UPPER:
+        case mafThresholdModeUpper:
             m_ThresholdFilter->ThresholdByUpper(m_UpperThreshold);
             break;
         default:
@@ -74,7 +69,9 @@ void mafPipeDataImageThreshold::updatePipe(double t) {
         m_OutputValue = m_ThresholdFilter->GetOutput();
     }
 
-    m_Output->dataSetCollection()->itemAtCurrentTime()->setDataValue(&m_OutputValue);
+    m_Output->dataSetCollection()->itemAt(t)->setDataValue(&m_OutputValue);
+
+    Superclass::updatePipe(t);
 }
 
 void mafPipeDataImageThreshold::setLowerThrehsold(double threshold) {

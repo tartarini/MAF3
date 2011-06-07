@@ -115,7 +115,7 @@ void mafVME::setDataPipe(mafPipeData *pipe) {
         m_DataPipe->retain();
         setModified();
         m_Lock->unlock();
-        execute();
+        //execute();
     }
 }
 

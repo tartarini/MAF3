@@ -50,7 +50,6 @@ public:
     QObject *graphicObject() const;
     
 signals:
-
     /// signal emitted when the pick already happened. The information will be forwarded to the Interaction Manager.
     void vmePickedSignal(double *pickPos, unsigned long modifiers , mafVME *vme);
 
@@ -59,7 +58,6 @@ public slots:
     virtual void setVisibility(bool visible);
 
 private slots:
-
     /// Forward the vmePick event if the pick hits the current visualized VME.
     void vmePick(double *pickPos, unsigned long, mafCore::mafProxyInterface *actor, QEvent *e);
 
@@ -72,6 +70,12 @@ private:
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisual();
+
+    /// Called when a new graphic object has been set.
+    /**
+    This method has to be re-defined to update stuff linked to the graphic object.
+    */
+    virtual void updatedGraphicObject();
 
     mafCore::mafProxyInterface *m_Output; ///< Output for visual pipe.
     QObject *m_GraphicObject; ///< represents the graphic object for render the scene.

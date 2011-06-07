@@ -32,9 +32,6 @@ public:
     /// Object constructor.
     testDataPipeCustom(const QString code_location = "");
 
-    /// Initialize and create the pipeline
-    /*virtual*/ void createPipe();
-
     /// Return the string variable initialized and updated from the data pipe.
     QString pipeline() {return m_PipeLine;}
 
@@ -46,17 +43,14 @@ private:
     QString m_PipeLine; ///< Test Var.
 };
 
-testDataPipeCustom::testDataPipeCustom(const QString code_location) : mafPipeData(code_location), m_PipeLine("") {
-}
-
-void testDataPipeCustom::createPipe() {
-    m_PipeLine = "Created";
+testDataPipeCustom::testDataPipeCustom(const QString code_location) : mafPipeData(code_location), m_PipeLine("Created") {
 }
 
 void testDataPipeCustom::updatePipe(double t) {
     m_PipeLine = "Updated";
     m_PipeLine.append(QString::number(t));
-    m_Output = inputList()->at(0);
+
+    Superclass::updatePipe(t);
 }
 
 //------------------------------------------------------------------------------------------
@@ -110,7 +104,6 @@ void mafPipeDataTest::mafPipeDataAllocationTest() {
 
 void mafPipeDataTest::mafPipeDataCreationAndUpdateTest() {
     QString res("Created");
-    m_DataPipe->createPipe();
 
     QString pipe = m_DataPipe->pipeline();
     QCOMPARE(pipe, res);
@@ -126,10 +119,12 @@ void mafPipeDataTest::decorateTest() {
     // Instantiate and create the decorator data pipe.
     testDataPipeCustom *dpDecorator = mafNEW(testDataPipeCustom);
     QString res("Updated1");
+    QString check;
     m_DataPipe->decorateWithDataPipe(dpDecorator);
     
     m_DataPipe->output(1);
-    QCOMPARE(dpDecorator->pipeline(), res);
+    check = dpDecorator->pipeline();
+    QCOMPARE(check, res);
     mafDEL(dpDecorator);
 }
 
@@ -144,8 +139,6 @@ void mafPipeDataTest::addRemoveInputTest() {
 
     mafVME *vme2 = mafNEW(mafResources::mafVME);
     vme2->dataSetCollection()->insertItem(data2);
-
-    m_DataPipe->createPipe();
 
     // Check if vme1 has been added.
     m_DataPipe->addInput(vme1);
@@ -171,9 +164,6 @@ void mafPipeDataTest::addRemoveInputTest() {
     mafDEL(data2);
     mafDEL(vme1);
     mafDEL(vme2);
-
-    num = m_DataPipe->inputList()->length();
-    QVERIFY(num == 1);
 }
 
 void mafPipeDataTest::outputTest() {
@@ -181,12 +171,10 @@ void mafPipeDataTest::outputTest() {
     mafVME *vme1 = mafNEW(mafResources::mafVME);
     testDataPipeCustom *dp = mafNEW(testDataPipeCustom);
     vme1->setDataPipe(dp);
-    dp->createPipe();
     dp->release();
     mafVME *out = dp->output();
     
-    QCOMPARE(out, vme1);
-    //mafDEL(dp); //NEXT STEP IS TO USE SMART POINTER
+    QVERIFY(out != NULL);
     mafDEL(vme1);
 }
 

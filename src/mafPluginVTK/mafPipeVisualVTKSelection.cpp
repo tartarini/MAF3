@@ -23,6 +23,18 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 
 mafPipeVisualVTKSelection::mafPipeVisualVTKSelection(const QString code_location) : mafPipeVisual(code_location) {
+    vtkSmartPointer<vtkCompositeDataPipeline> compositeDataPipeline;
+
+    m_OutlineCornerFilter = vtkOutlineCornerFilter::New();
+    m_OutlineCornerFilter->SetExecutive(compositeDataPipeline);
+
+    vtkPolyDataMapper *mapper = vtkPolyDataMapper::New();
+    mapper->SetInputConnection(0, m_OutlineCornerFilter->GetOutputPort(0));
+    m_Actor = vtkActor::New();
+    m_Actor.setDestructionFunction(&vtkActor::Delete);
+    m_Actor->SetMapper(mapper);
+    mapper->Delete();
+    m_Output = &m_Actor;
 }
 
 mafPipeVisualVTKSelection::~mafPipeVisualVTKSelection() {
@@ -37,26 +49,6 @@ bool mafPipeVisualVTKSelection::acceptObject(mafCore::mafObjectBase *obj) {
         }
     }
     return false;
-}
-
-void mafPipeVisualVTKSelection::createPipe() {
-    mafVME *inputVME = this->inputList()->at(0);
-    mafDataSet *data = inputVME->dataSetCollection()->itemAtCurrentTime();
-    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
-
-    vtkSmartPointer<vtkCompositeDataPipeline> compositeDataPipeline;
-
-    m_OutlineCornerFilter = vtkOutlineCornerFilter::New();
-    m_OutlineCornerFilter->SetExecutive(compositeDataPipeline);
-    m_OutlineCornerFilter->SetInputConnection(*dataSet);
-
-    vtkPolyDataMapper *mapper = vtkPolyDataMapper::New();
-    mapper->SetInputConnection(0, m_OutlineCornerFilter->GetOutputPort(0));
-    m_Actor = vtkActor::New();
-    m_Actor.setDestructionFunction(&vtkActor::Delete);
-    m_Actor->SetMapper(mapper);
-    mapper->Delete();
-    m_Output = &m_Actor;
 }
 
 void mafPipeVisualVTKSelection::updatePipe(double t) {

@@ -14,16 +14,13 @@
 using namespace mafPluginTest;
 
 mafPipeDataSurfacePluginTest::mafPipeDataSurfacePluginTest(const QString code_location) : mafPipeData(code_location) {
+    qDebug("%s", mafTr("plugin pipeline created!!").toAscii().data());
 }
 
 mafPipeDataSurfacePluginTest::~mafPipeDataSurfacePluginTest() {
 }
 
-void mafPipeDataSurfacePluginTest::createPipe() {
-    qDebug("%s", mafTr("plugin pipeline created!!").toAscii().data());
-}
-
 void mafPipeDataSurfacePluginTest::updatePipe(double t) {
     qDebug("%s", mafTr("plugin executed at time %1!!").arg(t).toAscii().data());
+    Superclass::updatePipe(t);
 }
-

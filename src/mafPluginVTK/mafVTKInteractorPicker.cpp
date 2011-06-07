@@ -34,6 +34,16 @@ mafVTKInteractorPicker::mafVTKInteractorPicker(const QString code_location) : ma
     m_PointList.clear();
     this->initializeConnections();
     m_ParametricSurfaceType = "mafPluginVTK::mafVTKParametricSurfaceSphere";
+
+    m_Mapper = vtkPolyDataMapper::New();
+
+    //vtkAppendPolyData is used to create a unique polydata for all markers.
+    m_AppendData = vtkAppendPolyData::New();
+    m_Mapper->SetScalarRange(FIXED_MARKER_COLOR-1, TMP_MARKER_COLOR);
+    m_Mapper->SetInputConnection(m_AppendData->GetOutputPort());
+
+    m_Output = vtkActor::New();
+    m_Output->SetMapper(m_Mapper);
 }
 
 mafVTKInteractorPicker::~mafVTKInteractorPicker(){
@@ -49,8 +59,6 @@ mafVTKInteractorPicker::~mafVTKInteractorPicker(){
 }
 
 void mafVTKInteractorPicker::initializeConnections() {
-    this->createPipe();
-
     // Register API signals.
     mafRegisterLocalSignal("maf.local.operation.VTK.nextPick", this, "nextPickSignal()");
     mafRegisterLocalSignal("maf.local.operation.VTK.OK", this, "OKSignal()");
@@ -58,18 +66,6 @@ void mafVTKInteractorPicker::initializeConnections() {
     // Register private callbacks.
     mafRegisterLocalCallback("maf.local.operation.VTK.nextPick", this, "nextPick()");
     mafRegisterLocalCallback("maf.local.operation.VTK.OK", this, "OK()");
-}
-
-void mafVTKInteractorPicker::createPipe() {
-    m_Mapper = vtkPolyDataMapper::New();
-
-    //vtkAppendPolyData is used to create a unique polydata for all markers.
-    m_AppendData = vtkAppendPolyData::New();
-    m_Mapper->SetScalarRange(FIXED_MARKER_COLOR-1, TMP_MARKER_COLOR);
-    m_Mapper->SetInputConnection(m_AppendData->GetOutputPort());
-
-    m_Output = vtkActor::New();
-    m_Output->SetMapper(m_Mapper);
 }
 
 void mafVTKInteractorPicker::vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj) {

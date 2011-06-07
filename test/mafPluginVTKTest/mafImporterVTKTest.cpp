@@ -69,20 +69,17 @@ class mafImporterVTKTest: public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        initializeTestData();
-        
+        mafMessageHandler::instance()->installMessageHandler();        
         m_EventBus = mafEventBusManager::instance();
         
         m_VMEManager = mafVMEManager::instance();
-        //Select root
-        mafObject *root;
-        QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
-        mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
+        m_EventBus->notifyEvent("maf.local.resources.hierarchy.request");
 
         m_OperationManager = mafOperationManager::instance();
         
         m_Observer = new testVMEAddObserver();
+        initializeTestData();
+
     }
 
     /// Cleanup test variables memory allocation.
@@ -120,7 +117,7 @@ void mafImporterVTKTest::initializeTestData() {
         log_dir.mkpath(m_VTKFile);
     }
     m_VTKFile.append("/vtkImporterVTKData.vtk");
-    vtkSmartPointer<vtkSphereSource> surfSphere = vtkSphereSource::New();
+    vtkSmartPointer<vtkSphereSource> surfSphere = vtkSmartPointer<vtkSphereSource>::New();
     surfSphere->SetRadius(5);
     surfSphere->SetPhiResolution(10);
     surfSphere->SetThetaResolution(10);

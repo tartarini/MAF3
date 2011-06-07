@@ -31,9 +31,6 @@ public:
      /// Object constructor.
     mafPipeDataSurfacePluginTest(const QString code_location = "");
 
-    /// Initialize ans create the pipeline
-    /*virtual*/ void createPipe();
-
 public slots:
     /// Allow to execute and update the pipeline when something change
     /*virtual*/ void updatePipe(double t = -1);
