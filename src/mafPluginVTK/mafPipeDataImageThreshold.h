@@ -45,9 +45,6 @@ public:
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
 
-    /// Initialize and create the pipeline
-    /*virtual*/ void createPipe();
-
     /// Allow to set the lower threshold value for thresholding the input image data.
     void setLowerThrehsold(double threshold);
 
@@ -61,11 +58,11 @@ public:
     double upperThrehsold();
 
     ///< Enumeration that define the thresholding mode.
-    enum {
-        LOWER = 0,
-        UPPER,
-        BETWEEN
-    };
+    typedef enum {
+        mafThresholdModeLower = 0,
+        mafThresholdModeUpper,
+        mafThresholdModeBetween
+    } mafThresholdMode;
 
     /// Allow to choose the thresholding type LOWER, UPPER or BETWEEN
     void setThresholdMode(unsigned int mode);

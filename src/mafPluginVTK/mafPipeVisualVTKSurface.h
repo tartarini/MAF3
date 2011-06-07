@@ -42,9 +42,6 @@ public:
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
 
-    /// Initialize and create the pipeline.
-    /*virtual*/ void createPipe();
-
     /// Return the flag to activate scalar visibility.
     bool scalarVisibility();
 
@@ -74,6 +71,9 @@ public slots:
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTKSurface();
+
+    /// Update the pipeline with the new graphic object.
+    /*virtual*/ void updatedGraphicObject();
 
 private:
     vtkPolyDataMapper  *m_Mapper; ///< Class that maps polygonal data.

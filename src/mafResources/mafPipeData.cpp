@@ -15,7 +15,7 @@
 
 using namespace mafResources;
 
-mafPipeData::mafPipeData(const QString code_location) : mafPipe(code_location), m_DecoratorPipe(NULL), m_Output(NULL), m_InPlace(true) {
+mafPipeData::mafPipeData(const QString code_location) : mafPipe(code_location), m_DecoratorPipe(NULL), m_Output(NULL), m_InPlace(false) {
 }
 
 mafPipeData::~mafPipeData() {
@@ -32,41 +32,44 @@ int mafPipeData::addInput(mafVME *vme) {
         return this->inputList()->indexOf(vme);
     }
 
-    // connect the input data destroyed to the inputDestroyed slot
-    connect(vme, SIGNAL(destroyed()), this, SLOT(inputDestroyed()));
-
     this->inputList()->append(vme);
+    vme->retain();
+
     setModified();
     return this->inputList()->count() - 1;
 }
 
-
-void mafPipeData::inputDestroyed() {
-    mafVME *vme = (mafVME *)QObject::sender();
-    removeInput(vme);
-    setModified();
-}
-
 void mafPipeData::updatePipe(double t) {
-    Q_UNUSED(t);
-    //here update local output
-    m_Output = inputList()->at(0);
+    if(m_DecoratorPipe) {
+        m_DecoratorPipe->updatePipe(t);
+    }
+    setModified(false);
 }
 
 mafVME *mafPipeData::output(double t) {
     REQUIRE(inputList()->count() > 0);
 
-    if(m_DecoratorPipe) {
-        updatePipe(t);
-        return m_DecoratorPipe->output(t); 
+    if(m_Output == NULL) {
+        if (m_InPlace) {
+            m_Output = inputList()->at(0);
+        } else {
+            m_Output = mafNEW(mafResources::mafVME);
+        }
+        m_Output->setTimestamp(t);
+        setModified();
     }
 
-    if(m_Output == NULL || modified()) {
+    mafVME *out_vme = m_Output;
+
+    if(modified()) {
         updatePipe(t);
         emit(modifiedObject());
-        setModified(false);
     }
 
-    ENSURE(m_Output != NULL);
-    return m_Output;
+    if(m_DecoratorPipe) {
+        out_vme = m_DecoratorPipe->output(t);
+    }
+
+    ENSURE(out_vme != NULL);
+    return out_vme;
 }

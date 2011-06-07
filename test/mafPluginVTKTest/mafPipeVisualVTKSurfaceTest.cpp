@@ -149,7 +149,6 @@ void mafPipeVisualVTKSurfaceTest::updatePipeTest() {
     pipe->setProperty("scalarVisibility", 0);
     pipe->setProperty("immediateRendering", 1);
     pipe->setGraphicObject(m_RenderWidget);
-    pipe->createPipe();
     pipe->updatePipe();
 
     // Get the vtkActor from the visual pipe
@@ -216,8 +215,6 @@ void mafPipeVisualVTKSurfaceTest::updatePipeTestFromPlugIn() {
     visualPipe->setProperty("scalarVisibility", 1);
     visualPipe->setInput(m_VME);
     visualPipe->setGraphicObject(m_RenderWidget);
-
-    visualPipe->createPipe();
     visualPipe->updatePipe();
     //! </snippet>
 

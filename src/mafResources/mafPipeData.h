@@ -54,10 +54,6 @@ protected slots:
     /** By default it simply initialize the output with the first element in the input list.*/
     /*virtual*/ void updatePipe(double t = -1);
 
-private slots:
-    /// Method called when an input mafVME has been destroyed (by someone else).
-    void inputDestroyed();
-
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeData();
@@ -73,10 +69,10 @@ protected:
 /////////////////////////////////////////////////////////////
 
 inline void mafPipeData::decorateWithDataPipe(mafPipeData *pipe) {
-    pipe->createPipe();
     pipe->setInput(this->output());
     m_DecoratorPipe = pipe;
     m_DecoratorPipe->retain();
+    setModified();
 }
 
 inline void mafPipeData::setWorksInPlace(bool inPlace) {

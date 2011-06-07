@@ -98,7 +98,6 @@ void mafVTKParametricSurfaceCylinderTest::SetGetTest() {
     pipe->setProperty("scalarVisibility", 0);
     pipe->setProperty("immediateRendering", 1);
     pipe->setGraphicObject(m_RenderWidget);
-    pipe->createPipe();
     pipe->updatePipe();
 
     // Get the vtkActor from the visual pipe

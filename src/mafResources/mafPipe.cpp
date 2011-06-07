@@ -29,23 +29,18 @@ mafPipe::~mafPipe() {
 
 void mafPipe::setInput(mafVME *vme) {
     REQUIRE(vme != NULL);
-    if(m_InputList->isEmpty()) {
-        m_InputList->append(vme);
-    } else {
-        m_InputList->replace(0, vme);
+    if(!m_InputList->isEmpty()) {
+        removeInput(0);
     }
-
-    // connect the input data destroyed to the inputDestroyed slot
-    connect(vme, SIGNAL(destroyed()), this, SLOT(inputDestroyed()));
+    m_InputList->append(vme);
+    vme->retain();
 
     mafDataSetCollection *datSetCollection = vme->dataSetCollection();
-    if (datSetCollection)
-    {
+    if (datSetCollection) {
       //connect the data collection modified to the updatePipe slot
       connect(datSetCollection, SIGNAL(modifiedObject()), this, SLOT(updatePipe()));
     }
-
-
+    setModified();
 }
 
 void mafPipe::removeInput(mafVME *vme) {
@@ -54,6 +49,7 @@ void mafPipe::removeInput(mafVME *vme) {
     int idx = m_InputList->indexOf(vme);
     if(idx != -1) {
         m_InputList->removeAt(idx);
+        vme->release();
     } else {
         qWarning("%s", mafTr("Object %1 not present in input list").arg(vme->objectName()).toAscii().data());
     }
@@ -64,16 +60,9 @@ void mafPipe::removeInput(const int idx) {
 
     if(idx < m_InputList->count()) {
         mafVME *vme = m_InputList->at(idx);
-        disconnect(vme, SIGNAL(destroyed()),this, SLOT(inputDestroyed()));
         m_InputList->removeAt(idx);
+        vme->release();
     } else {
         qWarning("%s", mafTr("Index %1 outside input list range.").arg(idx).toAscii().data());
     }
-}
-
-
-void mafPipe::inputDestroyed() {
-    mafVME *vme = (mafVME *)QObject::sender();
-    m_InputList->removeAt(m_InputList->indexOf(vme));
-    disconnect(vme, SIGNAL(destroyed()),this, SLOT(inputDestroyed()));
 }

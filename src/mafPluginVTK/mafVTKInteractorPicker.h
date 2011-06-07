@@ -38,7 +38,6 @@ class MAFPLUGINVTKSHARED_EXPORT mafVTKInteractorPicker : public mafResources::ma
     mafSuperclassMacro(mafResources::mafInteractor);
 
 public:
-
     /// Object constructor.
     mafVTKInteractorPicker(const QString code_location = "");
 
@@ -76,16 +75,12 @@ private slots:
     /// Called when the operation terminates correctly.
     void OK();
 
-
 private:
     /// Initialize connection between signals and slots.
     void initializeConnections();
 
-    /// Create choosen surface.
+    /// Create chosen surface.
     void internalUpdate();
-
-    /// Initialize and create the pipeline.
-    void createPipe();
 
     /// Set scalar value to input vtkPolyData.
     void setScalarValue(vtkPolyData *data, double scalarValue);
