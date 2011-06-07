@@ -117,7 +117,7 @@ void mafImporterVTKTest::initializeTestData() {
         log_dir.mkpath(m_VTKFile);
     }
     m_VTKFile.append("/vtkImporterVTKData.vtk");
-    vtkSmartPointer<vtkSphereSource> surfSphere = vtkSphereSource::New();
+    vtkSmartPointer<vtkSphereSource> surfSphere = vtkSmartPointer<vtkSphereSource>::New();
     surfSphere->SetRadius(5);
     surfSphere->SetPhiResolution(10);
     surfSphere->SetThetaResolution(10);
