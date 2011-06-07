@@ -20,7 +20,7 @@ using namespace mafEventBus;
 using namespace mafResources;
 
 
-mafPipeVisual::mafPipeVisual(const QString code_location) : mafPipe(code_location), m_Output(NULL) {
+mafPipeVisual::mafPipeVisual(const QString code_location) : mafPipe(code_location), m_Output(NULL), m_PipeVisualSelection(NULL) {
     initializeConnections();
 }
 
@@ -54,4 +54,12 @@ void mafPipeVisual::setGraphicObject(QObject *graphicObject) {
     m_GraphicObject = graphicObject;
     //connect between render object coming from external library amd visual pipe (vme Pick signal)
     connect(m_GraphicObject, SIGNAL(vmePickSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)),  this, SLOT(vmePick(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)) );
+}
+
+void mafPipeVisual::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {    
+    m_PipeVisualSelection = pipeVisualSelection;
+    
+    if(m_PipeVisualSelection != NULL) {
+        m_PipeVisualSelection->setInput(m_InputList->at(0));
+    }
 }

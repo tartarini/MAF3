@@ -49,6 +49,9 @@ public:
     /// return the graphic object used for paint the scene.
     QObject *graphicObject() const;
     
+    /// set the selection pipe for viualization.
+    void setPipeVisualSelection(mafPipeVisual *pipeVisualSelection);
+    
 signals:
 
     /// signal emitted when the pick already happened. The information will be forwarded to the Interaction Manager.
@@ -75,6 +78,8 @@ protected:
 
     mafCore::mafProxyInterface *m_Output; ///< Output for visual pipe.
     QObject *m_GraphicObject; ///< represents the graphic object for render the scene.
+    
+    mafPipeVisual *m_PipeVisualSelection; ///< delegate object for visualize selection of the selected vme
 };
 
 /////////////////////////////////////////////////////////////
