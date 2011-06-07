@@ -73,6 +73,7 @@ void mafDataSet::setDataValue(mafProxyInterface *data_value) {
             updateBounds();
         }
     }
+    setModified();
 }
 
 mafProxyInterface *mafDataSet::dataValue() {
@@ -90,6 +91,7 @@ void mafDataSet::setPoseMatrix(const mafPoseMatrix *matrix) {
         m_Matrix = new mafPoseMatrix();
     }
     *m_Matrix = *matrix;
+    setModified();
 }
 
 mafMemento *mafDataSet::createMemento() const {
@@ -149,6 +151,7 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
             m_FileName = nameOfFile;
         }
     }
+    setModified(false);
 }
 
 void mafDataSet::updateDataValue() {
@@ -164,6 +167,7 @@ void mafDataSet::updateDataValue() {
         setDataValue(container);
         setExternalCodecType(encodeType);
         m_DataValue->setExternalCodecType(encodeType);
+        setModified(false);
     } else {
         QString err_msg(mafTr("Unable to load data form file '%1'").arg(m_FileName));
         qCritical() << err_msg;
