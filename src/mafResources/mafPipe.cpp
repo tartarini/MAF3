@@ -22,7 +22,12 @@ mafPipe::mafPipe(const QString code_location) : mafObject(code_location), m_Inpu
 }
 
 mafPipe::~mafPipe() {
+    int i = 0, size = m_InputList->size();
+    for(;i<size;++i) {
+        m_InputList->at(i)->release();
+    }
     m_InputList->clear();
+    
     delete m_InputList;
     m_InputList = NULL;
 }
