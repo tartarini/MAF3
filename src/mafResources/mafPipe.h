@@ -45,9 +45,6 @@ public:
     /// Get the input of the pipe.
     mafVMEList *inputList();
 
-    /// Initialize and create the pipeline
-    virtual void createPipe() = 0;
-
 public slots:
     /// Allow to execute and update the pipeline when something change
     virtual void updatePipe(double t = -1) = 0;
@@ -57,11 +54,6 @@ protected:
     /* virtual */ ~mafPipe();
 
     mafVMEList *m_InputList; ///< VME input List
-
-private slots:
-    /// Method called when an input mafVME has been destroyed (by someone else).
-    void inputDestroyed();
-    
 };
 
 /////////////////////////////////////////////////////////////
