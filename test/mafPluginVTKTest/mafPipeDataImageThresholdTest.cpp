@@ -57,7 +57,8 @@ private slots:
         m_ImageCanvas->Update();
 
         // Create a container with a vtkImageData
-        m_ImageData = m_ImageCanvas->GetOutput();
+        m_ImageData = m_ImageCanvas->GetOutputPort();
+        m_ImageData.setClassTypeNameFunction(vtkClassTypeNameExtract);
 
         // and give it to the mafDataSet.
         //! <snippet>
@@ -91,23 +92,20 @@ private slots:
 
 private:
     mafVME *m_VME; ///< Contain the only item vtkImageData representing the test image.
-    mafProxy<vtkImageData> m_ImageData; ///< Container of the vtkImageData
+    mafProxy<vtkAlgorithmOutput> m_ImageData; ///< Container of the vtkImageData
     vtkSmartPointer<vtkImageCanvasSource2D> m_ImageCanvas; ///< Image source.
 };
 
 void mafPipeDataImageThresholdTest::updatePipeTest() {
     mafPipeDataImageThreshold *datapipe = mafNEW(mafPluginVTK::mafPipeDataImageThreshold);
     datapipe->setInput(m_VME);
-    datapipe->createPipe();
-    datapipe->updatePipe();
-
+    
     mafVME *output = datapipe->output();
     QVERIFY(output != NULL);
 
     mafDataSetCollection *collection = output->dataSetCollection();
     mafDataSet *dataSet = collection->itemAtCurrentTime();
-    mafProxy<vtkImageData> *image = mafProxyPointerTypeCast(vtkImageData, dataSet->dataValue());
-    QString dt(image->externalDataType());
+    QString dt(dataSet->dataValue()->externalDataType());
     QString res("vtkImageData");
 
     QCOMPARE(dt, res);

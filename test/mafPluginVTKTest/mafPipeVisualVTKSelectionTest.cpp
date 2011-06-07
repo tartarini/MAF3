@@ -143,7 +143,6 @@ void mafPipeVisualVTKSelectionTest::allocationTest() {
 }
 
 void mafPipeVisualVTKSelectionTest::createPipeTest() {
-    m_VisualPipeSelection->createPipe();
     mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, m_VisualPipeSelection->output());
     QVERIFY(actor != NULL);
 

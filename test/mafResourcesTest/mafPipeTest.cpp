@@ -32,10 +32,7 @@ public:
     /// Object constructor.
     testPipeCustom(const QString code_location = "");
 
-    /// Initialize and create the pipeline
-    /*virtual*/ void createPipe();
-
-    /// Return the string variable initializated and updated from the data pipe.
+    /// Return the string variable initialized and updated from the data pipe.
     QString pipeline() {return m_PipeLine;}
 
 public slots:
@@ -46,11 +43,7 @@ private:
     QString m_PipeLine; ///< Test Var.
 };
 
-testPipeCustom::testPipeCustom(const QString code_location) : mafPipe(code_location), m_PipeLine("") {
-}
-
-void testPipeCustom::createPipe() {
-    m_PipeLine = "Created";
+testPipeCustom::testPipeCustom(const QString code_location) : mafPipe(code_location), m_PipeLine("Created") {
 }
 
 void testPipeCustom::updatePipe(double t) {
@@ -97,8 +90,6 @@ void mafPipeTest::mafPipeAllocationTest() {
 
 void mafPipeTest::mafPipeCreationAndUpdateTest() {
     QString res("Created");
-    m_Pipe->createPipe();
-
     QCOMPARE(m_Pipe->pipeline(), res);
 
     res = "Updated1";
@@ -152,10 +143,6 @@ void mafPipeTest::inputManagementTest() {
     mafDEL(data2);
     mafDEL(vme1);
     mafDEL(vme2);
-
-    // now the input list should be empty.
-    num = m_Pipe->inputList()->length();
-    QVERIFY(num == 0);
 }
 
 MAF_REGISTER_TEST(mafPipeTest);

@@ -32,10 +32,7 @@ public:
     /// Object constructor.
     testVisualPipeCustomForVisualPipe(const QString code_location = "");
 
-    /// Initialize and create the pipeline
-    /*virtual*/ void createPipe();
-
-    /// Return the string variable initializated and updated from the data pipe.
+    /// Return the string variable initialized and updated from the data pipe.
     QString pipeline() {return m_PipeLine;}
 
 public slots:
@@ -48,11 +45,7 @@ private:
 
 };
 
-testVisualPipeCustomForVisualPipe::testVisualPipeCustomForVisualPipe(const QString code_location) : mafPipeVisual(code_location), m_PipeLine("") {
-}
-
-void testVisualPipeCustomForVisualPipe::createPipe() {
-    m_PipeLine = "Created";
+testVisualPipeCustomForVisualPipe::testVisualPipeCustomForVisualPipe(const QString code_location) : mafPipeVisual(code_location), m_PipeLine("Created") {
     m_Output = &m_Container;
 }
 
@@ -102,8 +95,6 @@ void mafPipeVisualTest::mafPipeVisualAllocationTest() {
 
 void mafPipeVisualTest::mafPipeVisualCreationAndUpdateTest() {
     QString res("Created");
-    m_VisualPipe->createPipe();
-
     QCOMPARE(m_VisualPipe->pipeline(), res);
 
     res = "Updated1";

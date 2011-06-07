@@ -151,7 +151,6 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSurface);
     pipe->setInput(vme);
     pipe->setGraphicObject(m_VTKWidget);
-    pipe->createPipe();
     pipe->updatePipe();
 
     mafProxy<vtkActor> *sphereActor = mafProxyPointerTypeCast(vtkActor, pipe->output());
