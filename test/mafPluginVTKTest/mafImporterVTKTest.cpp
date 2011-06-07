@@ -69,9 +69,7 @@ class mafImporterVTKTest: public QObject {
 private slots:
     /// Initialize test variables
     void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        initializeTestData();
-        
+        mafMessageHandler::instance()->installMessageHandler();        
         m_EventBus = mafEventBusManager::instance();
         
         m_VMEManager = mafVMEManager::instance();
@@ -80,6 +78,8 @@ private slots:
         m_OperationManager = mafOperationManager::instance();
         
         m_Observer = new testVMEAddObserver();
+        initializeTestData();
+
     }
 
     /// Cleanup test variables memory allocation.
