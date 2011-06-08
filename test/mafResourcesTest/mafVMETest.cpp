@@ -167,7 +167,7 @@ private slots:
     void mafVMEDataPipeTest();
 
     /// Memento test suite.
-    void mafVMEMementeTest();
+    void mafVMEMementoTest();
 
     /// Interactor assignment test suite.
     void mafVMEInteractorTest();
@@ -197,7 +197,7 @@ void mafVMETest::mafVMEDataPipeTest() {
     QVERIFY(dp != NULL);
 }
 
-void mafVMETest::mafVMEMementeTest() {
+void mafVMETest::mafVMEMementoTest() {
     // Get a snapshot of the VME (its name is the empty string
     mafMemento *m = m_VME->createMemento();
 
