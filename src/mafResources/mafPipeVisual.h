@@ -50,7 +50,7 @@ public:
     QObject *graphicObject() const;
     
     /// set the selection pipe for viualization.
-    void setPipeVisualSelection(mafPipeVisual *pipeVisualSelection);
+    virtual void setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) = 0;
     
 signals:
     /// signal emitted when the pick already happened. The information will be forwarded to the Interaction Manager.
