@@ -14,7 +14,7 @@
 
 // Includes list
 #include "mafPluginVTKDefinitions.h"
-#include <mafPipeVisual.h>
+#include "mafPipeVisualVTK.h"
 
 // Foundation Class forwarding list
 class vtkPolyDataMapper;
@@ -28,31 +28,20 @@ namespace mafPluginVTK {
  This class represents visual pipe used to render VTK polydata.
  */
 
-class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSurface : public mafResources::mafPipeVisual {
+class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSurface : public mafPipeVisualVTK {
     Q_OBJECT
-    Q_PROPERTY(bool scalarVisibility READ scalarVisibility WRITE setScalarVisibility)
-    Q_PROPERTY(bool immediateRendering READ immediateRendering WRITE setImmediateRendering)
     /// typedef macro.
-    mafSuperclassMacro(mafResources::mafPipeVisual);
+    mafSuperclassMacro(mafPluginVTK::mafPipeVisualVTK);
 
 public:
     /// Object constructor;
     mafPipeVisualVTKSurface(const QString code_location = "");
+    
+    /// set the selection pipe for viualization.
+    /*virtual*/ void setPipeVisualSelection(mafPipeVisual *pipeVisualSelection);
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
-
-    /// Return the flag to activate scalar visibility.
-    bool scalarVisibility();
-
-    /// Set the flag to activate scalar visibility.
-    void setEdgeVisibility(bool edgeVisibility);
-
-    /// Return the flag to activate edge visibility.
-    int edgeVisibility();
-
-    /// Return the flag to activate immediate rendering mode.
-    bool immediateRendering();
 
 public slots:
     /// Allow to execute and update the pipeline when something change.
@@ -61,19 +50,9 @@ public slots:
     /// Set the visibility of its rendering scene.
     /*virtual*/ void setVisibility(bool visible);
 
-
-    /// Set the flag to activate scalar visibility.
-    void setScalarVisibility(bool scalarVisibility);
-
-    /// Set the flag to activate immediate rendering mode.
-    void setImmediateRendering(bool immediateRendering);
-
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTKSurface();
-
-    /// Update the pipeline with the new graphic object.
-    /*virtual*/ void updatedGraphicObject();
 
 private:
     vtkPolyDataMapper  *m_Mapper; ///< Class that maps polygonal data.
@@ -82,18 +61,6 @@ private:
     bool m_ScalarVisibility; ///< Flag to activate scalar visibility.
     bool m_ImmediateRendering; ///< Flag to activate immediate rendering mode.
 };
-
-/////////////////////////////////////////////////////////////
-// Inline methods
-/////////////////////////////////////////////////////////////
-
-inline bool mafPipeVisualVTKSurface::scalarVisibility() {
-    return m_ScalarVisibility;
-}
-
-inline bool mafPipeVisualVTKSurface::immediateRendering() {
-    return m_ImmediateRendering;
-}
 
 } // namespace mafPluginVTK
 

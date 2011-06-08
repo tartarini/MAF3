@@ -14,7 +14,7 @@
 
 // Includes list
 #include "mafPluginVTKDefinitions.h"
-#include <mafPipeVisual.h>
+#include "mafPipeVisualVTK.h"
 
 // Foundation Class forwarding list
 class vtkActor;
@@ -28,26 +28,32 @@ namespace mafPluginVTK {
  This pipe will use the vtkCornerFilter to draw a corner box around the data to indicate that
  it is currently selected.
  */
-class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSelection : public mafResources::mafPipeVisual {
+class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSelection : public mafPipeVisualVTK {
     Q_OBJECT
     /// typedef macro.
-    mafSuperclassMacro(mafResources::mafPipeVisual);
+    mafSuperclassMacro(mafPluginVTK::mafPipeVisualVTK);
 
 public:
     /// Object constructor;
     mafPipeVisualVTKSelection(const QString code_location = "");
 
+    /// set the selection pipe for viualization.
+    /*virtual*/ void setPipeVisualSelection(mafPipeVisual *pipeVisualSelection);
+    
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
-
+    
 public slots:
     /// Allow to execute and update the pipeline when something change.
     /*virtual*/ void updatePipe(double t = -1);
-
+    
+    /// Set the visibility of its rendering scene.
+    /*virtual*/ void setVisibility(bool visible);
+    
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTKSelection();
-
+    
 private:
     mafCore::mafProxy<vtkActor> m_Actor; ///< Output container.
     vtkOutlineCornerFilter *m_OutlineCornerFilter; ///< Filter used to generate the outline corners for representing the selected object.
