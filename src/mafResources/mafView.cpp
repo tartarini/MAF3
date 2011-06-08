@@ -24,7 +24,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-mafView::mafView(const QString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL), m_VisualPipeHash(NULL), m_SelectedNode(NULL)  {
+mafView::mafView(const QString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL), m_VisualPipeHash(NULL), m_SelectedNode(NULL),m_PipeVisualSelection(NULL) {
     m_SceneNodeList.clear();
 
     // CallBack related to the Scene node reparent
@@ -102,7 +102,7 @@ void mafView::vmeSelect(mafObjectBase *node) {
         qWarning("%s", mafTr("Trying to select an object that is not present in tree.").toAscii().data());
         return;
     }
-    m_SelectedNode = node_to_select;//sceneNodeFromVme(vme);
+    selectSceneNode(node_to_select, true);
 }
 
 void mafView::sceneNodeDestroy() {
@@ -125,6 +125,12 @@ void mafView::removeSceneNode(mafSceneNode *node) {
 void mafView::selectSceneNode(mafSceneNode *node, bool select) {
     m_SelectedNode = node;
     Q_UNUSED(select);
+    
+    if(node && m_PipeVisualSelection) {
+        m_PipeVisualSelection->setInput(node->vme());
+        m_PipeVisualSelection->updatePipe();
+        m_PipeVisualSelection->setVisibility(node->property("visibility").toBool());
+    }
 }
 
 void mafView::showSceneNode(mafSceneNode *node, bool show) {

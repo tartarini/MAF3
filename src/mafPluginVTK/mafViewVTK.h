@@ -18,6 +18,7 @@
 #include <mafProxy.h>
 #include <mafProxyInterface.h>
 #include <mafSceneNode.h>
+#include <mafPipeVisual.h>
 
 // Class forwarding list
 class mafEventBridgeVTK;
