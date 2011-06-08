@@ -48,16 +48,22 @@ void mafObjectRegistry::dumpLiveObjects() {
     }
 
     // Dump on standard console the objects that still are present into the registry (memory leaks!!)
+    unsigned int totalReferenceCountLeakedObjects = 0;
+    unsigned int totalLeakedObjects = m_Registry.size();
     mafRegistryHashType::const_iterator iter = m_Registry.constBegin();
     while(iter != m_Registry.constEnd()) {
         QString name = iter.value().m_Object->metaObject()->className();
         QString obj_name = iter.value().m_Object->objectName();
         QString loc = iter.value().m_InstantiateLocationInfo;
         QTime t = iter.value().m_AllocationTime;
-        int refCount = iter.value().m_ReferenceCount;
+        unsigned int refCount = iter.value().m_ReferenceCount;
+        totalReferenceCountLeakedObjects += refCount;
         qDebug() << "class name: " << name << ", obj name: " << obj_name << ", refCount: " << refCount << ", allocated by: " << loc << ", at time: " << t.toString("hh:mm:ss");
         ++iter;
     }
+    
+    qDebug() << "Total Number of Leaked Objects: " << totalLeakedObjects;
+    qDebug() << "Total Number of Leaked Objects Reference counts: " << totalReferenceCountLeakedObjects;
 }
 
 void mafObjectRegistry::liveObjects(mafObjectsList *objects) {
