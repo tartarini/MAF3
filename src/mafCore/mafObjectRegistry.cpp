@@ -43,10 +43,6 @@ void mafObjectRegistry::removeObject(mafId obj_id) {
 }
 
 void mafObjectRegistry::dumpLiveObjects() {
-    if(m_Registry.empty()) {
-        return;
-    }
-
     // Dump on standard console the objects that still are present into the registry (memory leaks!!)
     unsigned int totalReferenceCountLeakedObjects = 0;
     unsigned int totalLeakedObjects = m_Registry.size();
@@ -58,7 +54,11 @@ void mafObjectRegistry::dumpLiveObjects() {
         QTime t = iter.value().m_AllocationTime;
         unsigned int refCount = iter.value().m_ReferenceCount;
         totalReferenceCountLeakedObjects += refCount;
-        qDebug() << "class name: " << name << ", obj name: " << obj_name << ", refCount: " << refCount << ", allocated by: " << loc << ", at time: " << t.toString("hh:mm:ss");
+        qDebug() << "class name: " << name 
+                  << ", obj name: " << obj_name
+                  << ", refCount: " << refCount 
+                  << ", allocated by: " << loc
+                  << ", at time: " << t.toString("hh:mm:ss");
         ++iter;
     }
     
