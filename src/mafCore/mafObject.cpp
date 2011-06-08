@@ -16,7 +16,7 @@
 
 using namespace mafCore;
 
-mafObject::mafObject(const QString code_location) : mafObjectBase(code_location), m_IconFile(""), m_LockStatus(mafObjectLockNone), m_ProgressStatus(0), m_Modified(false), m_TagList(NULL), m_Dictionary(NULL) {
+mafObject::mafObject(const QString code_location) : mafObjectBase(code_location), m_IconFile(""), m_LockStatus(mafObjectLockNone), m_ProgressStatus(0),  m_TagList(NULL), m_Dictionary(NULL) {
     m_TagList = new QVariantList();
     m_Dictionary = new mafDictionary;
 }
@@ -24,10 +24,6 @@ mafObject::mafObject(const QString code_location) : mafObjectBase(code_location)
 mafObject::~mafObject() {
     delete m_TagList;
     delete m_Dictionary;
-}
-
-void mafObject::setModified(bool m) {
-    m_Modified = m;
 }
 
 void mafObject::setIconFile(QString icon_file) {

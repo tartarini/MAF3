@@ -16,7 +16,7 @@
 
 using namespace mafCore;
 
-mafObjectBase::mafObjectBase(const QString code_location) : QObject(), m_UIFilename(""), m_ReferenceCount(1) {
+mafObjectBase::mafObjectBase(const QString code_location) : QObject(), m_UIFilename(""), m_Modified(false), m_ReferenceCount(1) {
     mafIdProvider *provider = mafIdProvider::instance();
     m_ObjectId = provider->createNewId();
 
@@ -45,6 +45,10 @@ void mafObjectBase::release() {
     emit decreaseReference();
 }
 
+void mafObjectBase::setModified(bool m) {
+    m_Modified = m;
+}
+
 bool mafObjectBase::isEqual(const mafObjectBase *obj) const {
     const QMetaObject* my_meta = metaObject();
 
@@ -64,6 +68,7 @@ bool mafObjectBase::isEqual(const mafObjectBase *obj) const {
         QVariant obj_value = obj->property(obj_name.toAscii());
         QString my_name = my_qmp.name();
         QVariant my_value = property(my_name.toAscii());
+        char *n = my_name.toAscii().data();
         if((my_name != obj_name) || (my_value != obj_value)) {
             return false;
         }
