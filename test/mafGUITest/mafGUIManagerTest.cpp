@@ -44,6 +44,7 @@ private slots:
         delete m_MainWin;
         mafEventBus::mafEventBusManager::instance()->shutdown();
         mafMessageHandler::instance()->shutdown();
+        mafObjectRegistry::instance()->dumpLiveObjects();
     }
 
     /// allocation test case.
