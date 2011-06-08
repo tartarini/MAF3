@@ -53,7 +53,8 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, bool binary, const QS
       item.m_Multiplicity = 1;
       item.m_Name = "fileName";
       QString fileName(obj->objectHash());
-      fileName.append(".vtk"); //TODO: set the correct extension!! 
+      fileName.append(".");
+      fileName.append(m_DataSet->externalCodecType().toLower());
       item.m_Value = fileName;
       list->append(item);
 }
