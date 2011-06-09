@@ -25,6 +25,8 @@ mafPipeVisual::mafPipeVisual(const QString code_location) : mafPipe(code_locatio
 }
 
 mafPipeVisual::~mafPipeVisual() {
+    m_GraphicObject = NULL;
+    setVisibility(false);
 }
 
 void mafPipeVisual::initializeConnections() {
