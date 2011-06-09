@@ -69,8 +69,12 @@ void mafPipeVisualVTKSelection::updatePipe(double t) {
     }
 
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
-    m_OutlineCornerFilter->SetInputConnection(dataSet ? (*dataSet) : (vtkAlgorithmOutput *) NULL);
-    m_OutlineCornerFilter->Update();
+    if (dataSet == NULL) {
+        m_OutlineCornerFilter->RemoveAllInputs();
+    } else {
+        m_OutlineCornerFilter->SetInputConnection((*dataSet));
+        m_OutlineCornerFilter->Update();
+    }
 }
 
 void mafPipeVisualVTKSelection::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
