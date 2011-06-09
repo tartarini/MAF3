@@ -7,8 +7,7 @@
 SET(foundation_libraries 
   qxmlrpc
   QtSOAP
-  vcl
-  vnl
+  opencv_core
 )
 
 SET(target_libraries

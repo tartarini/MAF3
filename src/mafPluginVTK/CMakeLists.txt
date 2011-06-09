@@ -15,7 +15,7 @@
 
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_VXL.cmake)
+include(${MAF_SOURCE_DIR}/CMakeExternals/Find_OpenCV.cmake)
 
 ## #################################################################
 ## Find the VTK package.
@@ -55,7 +55,6 @@ mafCopyFilesFromExtension("xml" "mafPluginVTK")
 ## copy VTK libraries
 ## #################################################################
 
-#message(FATAL_ERROR "${VTK_DIR}")
 mafCopySharedLibrariesInInstallDir("${VTK_DIR}/bin")
 
 ## #################################################################
