@@ -90,9 +90,6 @@ if(MAF_EVENT_BUS)
 endif(MAF_EVENT_BUS)
 
 if(MAF_RESOURCES)
-  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VXL)
-  include(CMakeExternals/External_VXL.cmake)
-  
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} OpenCV)
   include(CMakeExternals/External_OpenCV.cmake)
 endif(MAF_RESOURCES)
@@ -226,10 +223,8 @@ ExternalProject_Add(${proj}
     -Dqxmlrpc_DIR:PATH=${qxmlrpc_DIR} # Findqxmlrpc expects qxmlrpc_DIR variable to be defined
     # QtSOAP
     -DQtSOAP_DIR:PATH=${QtSOAP_DIR} # FindQtSOAP expects QtSOAP_DIR variable to be defined
-    # VXL
-    -DVXL_DIR:PATH=${VXL_DIR} # FindVXL expects VXL_DIR variable to be defined
     # OpenCV
-    -DOpenCV_DIR:PATH=${VXL_DIR} # FindOpenCV expects OpenCV_DIR variable to be defined
+    -DOpenCV_DIR:PATH=${OpenCV_DIR} # FindOpenCV expects OpenCV_DIR variable to be defined
     # CTK
     #-DCTK_DIR:PATH=${CTK_DIR}
     # CTKAppLauncher
