@@ -3,7 +3,7 @@
  *  mafPluginVTKTest
  *
  *  Created by Roberto Mucci on 26/03/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -73,25 +73,25 @@ public slots:
     void middleButtonRelease(unsigned long modifiers);
 
     /// observer needed to receive the 'maf.local.resources.interaction.vmePick' signal
-    void vmePick(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *interface, QEvent *e);
+    void vmePick(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *interf, QEvent *e);
 
 signals:
     /// left button pressed.
     void leftButtonPressSignal(unsigned long modifiers);
 
-    /// left button relesed.
+    /// left button released.
     void leftButtonReleaseSignal(unsigned long modifiers);
 
     /// right button press.
     void rightButtonPressSignal(unsigned long modifiers);
 
-    /// right button relesed.
+    /// right button released.
     void rightButtonReleaseSignal(unsigned long modifiers);
 
     /// middle button press.
     void middleButtonPressSignal(unsigned long modifiers);
 
-    /// middle button relesed.
+    /// middle button released.
     void middleButtonReleaseSignal(unsigned long modifiers);
 
 };
@@ -161,8 +161,8 @@ void testInteractionManagerCustom::middleButtonRelease(unsigned long modifiers) 
     qDebug() << "middleButtonRelease";
 }
 
-void testInteractionManagerCustom::vmePick(double *pos, unsigned long modifiers,  mafCore::mafProxyInterface *interface, QEvent * e) {
-    Q_UNUSED(interface);
+void testInteractionManagerCustom::vmePick(double *pos, unsigned long modifiers,  mafCore::mafProxyInterface *interf, QEvent * e) {
+    Q_UNUSED(interf);
 
      ++m_Counter;
      m_Pos[0] = pos[0];
