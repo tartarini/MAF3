@@ -55,6 +55,12 @@ public:
 
     /// Return the hash associated to the object.
     const QString objectHash() const;
+    
+    /// Set the modified state of the mafObject.
+    void setModified(bool m = true);
+    
+    /// Return the modified state of the mafObject.
+    bool modified() const;
 
     /// Return the filename associated to the object's UI.
     const QString uiFilename() const;
@@ -109,6 +115,7 @@ private:
     mafId m_ObjectId; ///< Unique ID which identifies the object.
     //QByteArray m_ObjectHash; ///< Hash value for the current object.
     QUuid m_ObjectHash; ///< Hash value for the current object.
+    bool m_Modified; ///< Contains the modified state of the VME.
 
     volatile int m_ReferenceCount; ///< Index containing the reference count.
 };
@@ -124,6 +131,10 @@ inline mafId mafObjectBase::objectId() const {
 
 inline const QString mafObjectBase::objectHash() const {
     return m_ObjectHash.toString();
+}
+    
+inline bool mafObjectBase::modified() const {
+    return m_Modified;
 }
 
 inline void mafObjectBase::setObjectHash(const QString obj_hash) {

@@ -15,7 +15,7 @@
 
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_VXL.cmake)
+include(${MAF_SOURCE_DIR}/CMakeExternals/Find_OpenCV.cmake)
 
 ## #################################################################
 ## Init Project
@@ -42,6 +42,12 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 ## #################################################################
 
 mafCopyFilesFromExtension("ui" "mafResources")
+
+## #################################################################
+## copy OpenCV libraries
+## #################################################################
+
+mafCopySharedLibrariesInInstallDir("${OpenCV_DIR}/lib")
 
 ## #################################################################
 ## Wrapping Build rules

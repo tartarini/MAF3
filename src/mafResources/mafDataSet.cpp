@@ -26,8 +26,9 @@ mafDataSet::mafDataSet(const QString code_location) : mafObject(code_location), 
 mafDataSet::~mafDataSet() {
     // External data must be destroyed by the creator if no pointer to destructor function has been given.
     mafDEL(m_DataBoundaryAlgorithm);
-    delete m_Matrix;
-    m_Matrix = NULL;
+    if(m_Matrix != NULL) {
+        cvReleaseMat(&m_Matrix);
+    }
 }
 
 void mafDataSet::setBoundaryAlgorithm(mafDataBoundaryAlgorithm *algorithm) {
@@ -88,9 +89,10 @@ void mafDataSet::setPoseMatrix(const mafPoseMatrix *matrix) {
         return;
     }
     if(m_Matrix == NULL) {
-        m_Matrix = new mafPoseMatrix();
+        m_Matrix = cvCreateMat(4,4,CV_64FC1);
     }
-    *m_Matrix = *matrix;
+
+    cvCopy(matrix, m_Matrix);
     setModified();
 }
 
@@ -132,14 +134,14 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
     foreach(item, *list) {
         if(item.m_Name == "poseMatrix") {
             //Restore the pose matrix
-            mafPoseMatrix *mat = new mafPoseMatrix();
+            mafPoseMatrix *mat = cvCreateMat(4,4,CV_64FC1);
             int counter = 0;
             int r = 0;
             for ( ; r < 4; ++r) {
                 int c = 0;
                 for ( ; c < 4 ; ++c) {
                     double val = item.m_Value.toList()[counter].toDouble();
-                    mat->put(r,c,val);
+                    cvmSet(mat,r,c,val);
                     ++counter;
                 }
             }

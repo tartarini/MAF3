@@ -7,7 +7,6 @@
 SET(foundation_libraries 
   ${QXMLRPC_LIBRARY} 
   ${QTSOAP_LIBRARY}
-  ${VXL_LIBRARY}
 )
 
 SET(target_libraries

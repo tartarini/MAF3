@@ -22,10 +22,6 @@ mafPipe::mafPipe(const QString code_location) : mafObject(code_location), m_Inpu
 }
 
 mafPipe::~mafPipe() {
-    int i = 0, size = m_InputList->size();
-    for(;i<size;++i) {
-        m_InputList->at(i)->release();
-    }
     m_InputList->clear();
     
     delete m_InputList;
@@ -38,7 +34,6 @@ void mafPipe::setInput(mafVME *vme) {
         removeInput(0);
     }
     m_InputList->append(vme);
-    vme->retain();
 
     mafDataSetCollection *datSetCollection = vme->dataSetCollection();
     if (datSetCollection) {
@@ -54,7 +49,6 @@ void mafPipe::removeInput(mafVME *vme) {
     int idx = m_InputList->indexOf(vme);
     if(idx != -1) {
         m_InputList->removeAt(idx);
-        vme->release();
     } else {
         qWarning("%s", mafTr("Object %1 not present in input list").arg(vme->objectName()).toAscii().data());
     }
@@ -66,7 +60,6 @@ void mafPipe::removeInput(const int idx) {
     if(idx < m_InputList->count()) {
         mafVME *vme = m_InputList->at(idx);
         m_InputList->removeAt(idx);
-        vme->release();
     } else {
         qWarning("%s", mafTr("Index %1 outside input list range.").arg(idx).toAscii().data());
     }

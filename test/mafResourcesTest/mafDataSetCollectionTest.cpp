@@ -130,31 +130,33 @@ void mafDataSetCollectionTest::collectionPoseMatrixTest() {
 
 void mafDataSetCollectionTest::collectionInsertItemTest() {
     // Create a test matrix to add to the collection.
-    mafPoseMatrix *new_matrix = new mafPoseMatrix();
-    new_matrix->set_identity();
-    new_matrix->put(0,3,5.0);
-    new_matrix->put(1,3,2.3);
-    new_matrix->put(2,3,4.1);
+    mafPoseMatrix *newMatrix = cvCreateMat(4,4,CV_64FC1);
+    cvSetIdentity(newMatrix);
+    
+    cvmSet(newMatrix, 0, 3, 5.0);
+    cvmSet(newMatrix, 1, 3, 1.3);
+    cvmSet(newMatrix, 2, 3, 4.1);
 
     mafDataSet *item = mafNEW(mafResources::mafDataSet);
-    item->setPoseMatrix(new_matrix);
+    item->setPoseMatrix(newMatrix);
 
     // Insert a new pose matrix at the given timestamp.
     //! <snippet>
     bool result_insert = m_Collection->insertItem(item, 1.5);
     //! </snippet>
-
+    cv::Mat mat;
+    
     QVERIFY(result_insert);
 
     //! <snippet>
     mafPoseMatrix *m = m_Collection->poseMatrix(1.5);
     //! </snippet>
-    QVERIFY(*m == *new_matrix);
+    
+    QVERIFY(cvmGet(m, 1,2) == cvmGet(newMatrix, 1,2));
     
     mafDEL(item);
 
-    delete new_matrix;
-    new_matrix = NULL;
+    cvReleaseMat(&newMatrix);
 }
 
 void mafDataSetCollectionTest::collectionDataSetTest() {
@@ -201,14 +203,15 @@ void mafDataSetCollectionTest::collectionDataSetTest() {
 
 void mafDataSetCollectionTest::collectionRemoveItemTest() {
     // Create a test matrix to add to the collection.
-    mafPoseMatrix *new_matrix = new mafPoseMatrix();
-    new_matrix->set_identity();
-    new_matrix->put(0,3,5.0);
-    new_matrix->put(1,3,2.3);
-    new_matrix->put(2,3,4.1);
+    mafPoseMatrix *newMatrix = cvCreateMat(4,4,CV_64FC1);
+    cvSetIdentity(newMatrix);
+    
+    cvmSet(newMatrix, 0, 3, 5.0);
+    cvmSet(newMatrix, 1, 3, 1.3);
+    cvmSet(newMatrix, 2, 3, 4.1);
 
     mafDataSet *item = mafNEW(mafResources::mafDataSet);
-    item->setPoseMatrix(new_matrix);
+    item->setPoseMatrix(newMatrix);
 
     // Add a new item at a new timestamp.
     bool result_insert = m_Collection->insertItem(item, 3.5);

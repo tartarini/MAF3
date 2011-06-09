@@ -28,9 +28,8 @@
 #include <mafProxyInterface.h>
 
 
-// vnl includes
-#include <vnl/vnl_double_4x4.h>
-#include <vnl/vnl_vector_fixed.h>
+// OpenCV includes
+#include <cv.h>
 
 namespace mafResources {
 
@@ -40,7 +39,7 @@ class mafResource;
 class mafVME;
 
 /// Type definition for MAF3 pose matrix.
-typedef vnl_double_4x4 mafPoseMatrix;
+typedef CvMat mafPoseMatrix;
 
 /// Type definition for a list of mafResource.
 typedef QList<mafResource *> mafResourceList;

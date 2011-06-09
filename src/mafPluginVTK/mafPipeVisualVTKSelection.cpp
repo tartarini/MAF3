@@ -10,6 +10,7 @@
  */
 
 #include "mafPipeVisualVTKSelection.h"
+#include "mafVTKWidget.h"
 
 #include <vtkSmartPointer.h>
 #include <vtkAlgorithmOutput.h>
@@ -17,12 +18,15 @@
 #include <vtkCompositeDataPipeline.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
+#include <vtkRendererCollection.h>
+#include <vtkRenderWindow.h>
+#include <vtkRenderer.h>
 
 using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafPipeVisualVTKSelection::mafPipeVisualVTKSelection(const QString code_location) : mafPipeVisual(code_location) {
+mafPipeVisualVTKSelection::mafPipeVisualVTKSelection(const QString code_location) : mafPipeVisualVTK(code_location) {
     vtkSmartPointer<vtkCompositeDataPipeline> compositeDataPipeline;
 
     m_OutlineCornerFilter = vtkOutlineCornerFilter::New();
@@ -51,7 +55,13 @@ bool mafPipeVisualVTKSelection::acceptObject(mafCore::mafObjectBase *obj) {
     return false;
 }
 
+void mafPipeVisualVTKSelection::setVisibility(bool visible) {
+    Superclass::setVisibility(visible);
+    updateVisibility(m_Actor);
+}
+
 void mafPipeVisualVTKSelection::updatePipe(double t) {
+    setModified(false);
     mafVMEList *inputList = this->inputList();
     mafDataSet *data = inputList->at(0)->dataSetCollection()->itemAt(t);
     if(data == NULL) {
@@ -59,6 +69,14 @@ void mafPipeVisualVTKSelection::updatePipe(double t) {
     }
 
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
-    m_OutlineCornerFilter->SetInputConnection(*dataSet);
-    m_OutlineCornerFilter->Update();
+    if (dataSet == NULL) {
+        m_OutlineCornerFilter->RemoveAllInputs();
+    } else {
+        m_OutlineCornerFilter->SetInputConnection((*dataSet));
+        m_OutlineCornerFilter->Update();
+    }
+}
+
+void mafPipeVisualVTKSelection::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
+
 }

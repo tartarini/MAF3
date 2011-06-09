@@ -33,7 +33,6 @@ int mafPipeData::addInput(mafVME *vme) {
     }
 
     this->inputList()->append(vme);
-    vme->retain();
 
     setModified();
     return this->inputList()->count() - 1;

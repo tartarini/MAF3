@@ -40,6 +40,7 @@ static void mafMessageHandlerOutput(QtMsgType type, const char *msg) {
 
 mafMessageHandler::mafMessageHandler() : m_ActiveLogger(NULL) {
     m_Lock = new QReadWriteLock(QReadWriteLock::Recursive);
+
 }
 
 mafMessageHandler::~mafMessageHandler() {
@@ -53,13 +54,8 @@ mafMessageHandler* mafMessageHandler::instance() {
 
 void mafMessageHandler::shutdown() {
     if(!m_OldMsgHandlerStack.isEmpty()) {
+        qInstallMsgHandler(m_OldMsgHandlerStack.top());
         m_OldMsgHandlerStack.pop();
-        if(m_OldMsgHandlerStack.isEmpty()) {
-            mafDEL(m_DefaultLogger);
-            qInstallMsgHandler(0);
-        } else {
-            qInstallMsgHandler(m_OldMsgHandlerStack.top());
-        }
     } else {
         mafDEL(m_DefaultLogger);
         qInstallMsgHandler(0);
@@ -67,7 +63,10 @@ void mafMessageHandler::shutdown() {
 }
 
 void mafMessageHandler::installMessageHandler() {
-    m_OldMsgHandlerStack.push(qInstallMsgHandler(mafMessageHandlerOutput));
+    QtMsgHandler messageHandler = qInstallMsgHandler(mafMessageHandlerOutput);
+    if(messageHandler) {
+        m_OldMsgHandlerStack.push(messageHandler);
+    }
 }
 
 mafLogger *mafMessageHandler::activeLogger() {

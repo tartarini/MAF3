@@ -11,11 +11,14 @@
 
 
 #include "mafViewVTK.h"
+#include "mafPipeVisualVTKSelection.h"
 #include "mafVTKWidget.h"
 #include <mafPipeVisual.h>
 #include <mafVME.h>
 #include <mafHierarchy.h>
 #include <mafSceneNode.h>
+#include "mafPipeVisualVTKSelection.h"
+
 #include <mafVisitorFindSceneNodeByVMEHash.h>
 
 #include <vtkRenderWindow.h>
@@ -25,15 +28,16 @@
 using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
+using namespace mafEventBus;
 
 mafViewVTK::mafViewVTK(const QString code_location) : mafView(code_location), m_Renderer(NULL) {
 }
 
 mafViewVTK::~mafViewVTK() {
+    mafDEL(m_PipeVisualSelection);
     if(m_Renderer) {
         m_Renderer->Delete();
     }
-    //mafDEL(m_Widget);
 }
 
 void mafViewVTK::create() {
@@ -46,6 +50,10 @@ void mafViewVTK::create() {
     m_Renderer = vtkRenderer::New();
     // and assign it to the widget.
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->AddRenderer(m_Renderer);
+    
+    //create the instance for selection pipe.
+    m_PipeVisualSelection = mafNEW(mafPluginVTK::mafPipeVisualVTKSelection);
+    m_PipeVisualSelection->setGraphicObject(m_RenderWidget);
 }
 
 void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {

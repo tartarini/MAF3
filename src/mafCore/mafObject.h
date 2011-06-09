@@ -29,7 +29,6 @@ class mafMemento;
  */
 class MAFCORESHARED_EXPORT mafObject : public mafObjectBase {
     Q_OBJECT
-    Q_PROPERTY(bool modified READ modified WRITE setModified)
     Q_PROPERTY(QString iconFile READ iconFile WRITE setIconFile)
     Q_PROPERTY(int lockStatus READ lockStatus)
     Q_PROPERTY(int progressStatus READ progressStatus WRITE setProgressStatus)
@@ -53,13 +52,7 @@ public:
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
 
-    /// Set the modified state of the mafObject.
-    void setModified(bool m = true);
-
-    /// Return the modified state of the mafObject.
-    bool modified() const;
-
-    /// Allow to set the filename representing the icon file associated with the object.
+        /// Allow to set the filename representing the icon file associated with the object.
     void setIconFile(QString icon_file);
 
     /// Return the filename associated with the object.
@@ -118,7 +111,6 @@ protected:
 
 
 private:
-    bool m_Modified; ///< Contains the modified state of the VME.
     QVariantList *m_TagList; ///< Tag list that categorize the object.
     mafDictionary* m_Dictionary; ///< Dictionary associated to the object.
 };
@@ -126,10 +118,6 @@ private:
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
-
-inline bool mafObject::modified() const {
-    return m_Modified;
-}
 
 inline QString mafObject::iconFile() const {
     return m_IconFile;

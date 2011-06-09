@@ -74,7 +74,7 @@ public:
     
     /// clear and delete the scenegraphs.
     void clearScene();
-    
+        
 public slots:
     /// Wrap the new VME into a mafSceneNode.
     void vmeAdd(mafCore::mafObjectBase *vme);
@@ -103,6 +103,8 @@ protected:
     bool m_Selected; ///< Flag for active view.
     mafSceneNode *m_SelectedNode; ///< Keep track of the selected SceneNode.
     QList<mafSceneNode *> m_SceneNodeList; ///< variable useful for rapid iteration between mafTreeItem
+    
+    mafResources::mafPipeVisual *m_PipeVisualSelection; ///< variable with the pipe for vme selection
 };
 
 /////////////////////////////////////////////////////////////
