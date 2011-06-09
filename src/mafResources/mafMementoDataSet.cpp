@@ -38,7 +38,8 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, bool binary, const QS
       for ( ; r < 4; ++r) {
           int c = 0;
           for ( ; c < 4 ; ++c ) {
-              matrixList.append(matrix->get(r, c));
+              matrixList.append(cvmGet(matrix,r,c));
+
           }
       }
       mafMementoPropertyItem item;

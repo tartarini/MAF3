@@ -61,13 +61,13 @@ mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(doubl
         vtkMatrix4x4 *mat = vtkMatrix4x4::New();
         mat->Identity();
         for(int i=0;i<3;++i)
-            mat->SetElement(i,0,matrix->get(i,0));
+            mat->SetElement(i,0,cvmGet(matrix,i,0));
         for(int i=0;i<3;++i)
-            mat->SetElement(i,1,matrix->get(i,1));
+            mat->SetElement(i,1,cvmGet(matrix,i,1));
         for(int i=0;i<3;++i)
-            mat->SetElement(i,2,matrix->get(i,2));
+            mat->SetElement(i,2,cvmGet(matrix,i,2));
         for(int i=0;i<3;++i)
-            mat->SetElement(i,3,matrix->get(i,3));
+            mat->SetElement(i,3,cvmGet(matrix,i,3));
 
         t->SetMatrix(mat);
         t->Update();

@@ -91,9 +91,9 @@ void mafMementoDataSetCollectionTest::mafMementoDataSetCollectionAllocationTest(
     //Create dataset for the collection
     mafDataSet *firstData = mafNEW(mafResources::mafDataSet);
     mafDataSet *secondData = mafNEW(mafResources::mafDataSet);
-    mafPoseMatrix *matrix = new mafPoseMatrix();
-    matrix->set_identity();
-    matrix->put(0,0,3);
+    mafPoseMatrix *matrix = cvCreateMat(4,4,CV_64FC1);
+    cvSetIdentity(matrix);
+    cvmSet(matrix, 0,0,3);
     firstData->setPoseMatrix(matrix);
 
     //Fill the mafDataSetCollection
@@ -109,7 +109,7 @@ void mafMementoDataSetCollectionTest::mafMementoDataSetCollectionAllocationTest(
     mafMemento *returnMemento = newCollection->createMemento();
     QVERIFY(memento->isEqual(returnMemento));
 
-    delete matrix;
+    cvReleaseMat(&matrix);
     mafDEL(secondData);
     mafDEL(firstData);
     mafDEL(vme);

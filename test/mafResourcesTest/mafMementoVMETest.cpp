@@ -197,9 +197,10 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
     mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
     dataSet->setDataValue(&container);
 
-    mafPoseMatrix *matrix = new mafPoseMatrix();
-    matrix->set_identity();
-    matrix->put(0,0,3);
+    mafPoseMatrix *matrix = cvCreateMat(4,4,CV_64FC1);
+    cvSetIdentity(matrix);
+    cvmSet(matrix, 0,0,3);
+
     dataSet->setPoseMatrix(matrix);
 
     //Create second dataSet
@@ -210,9 +211,10 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
     mafDataSet *dataSet2 = mafNEW(mafResources::mafDataSet);
     dataSet2->setDataValue(&container2);
 
-    mafPoseMatrix *matrix2 = new mafPoseMatrix();
-    matrix2->set_identity();
-    matrix2->put(1,0,5);
+    mafPoseMatrix *matrix2 = cvCreateMat(4,4,CV_64FC1);
+    cvSetIdentity(matrix2);
+    cvmSet(matrix2, 1,0,5);
+
     dataSet2->setPoseMatrix(matrix2);
     
     mafDataSetCollection *collection = m_VME->dataSetCollection();
