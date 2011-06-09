@@ -34,12 +34,10 @@ mafViewVTK::mafViewVTK(const QString code_location) : mafView(code_location), m_
 }
 
 mafViewVTK::~mafViewVTK() {
+    mafDEL(m_PipeVisualSelection);
     if(m_Renderer) {
         m_Renderer->Delete();
     }
-    
-    mafDEL(m_PipeVisualSelection);
-    //mafDEL(m_Widget);
 }
 
 void mafViewVTK::create() {

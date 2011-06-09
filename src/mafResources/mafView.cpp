@@ -38,13 +38,7 @@ mafView::mafView(const QString code_location) : mafResource(code_location), m_Re
 }
 
 
-mafView::~mafView() {
-    foreach(mafSceneNode *sn, m_SceneNodeList) {
-        if(sn->visualPipe()) {
-            sn->visualPipe()->setGraphicObject(NULL);
-        }
-    }
-    
+mafView::~mafView() {   
     clearScene();
 }
 

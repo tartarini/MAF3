@@ -42,6 +42,8 @@ mafPipeVisualVTKSelection::mafPipeVisualVTKSelection(const QString code_location
 }
 
 mafPipeVisualVTKSelection::~mafPipeVisualVTKSelection() {
+    m_GraphicObject = NULL;
+    setVisibility(false);
 }
 
 bool mafPipeVisualVTKSelection::acceptObject(mafCore::mafObjectBase *obj) {

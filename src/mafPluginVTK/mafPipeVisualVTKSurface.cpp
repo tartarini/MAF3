@@ -36,6 +36,7 @@ mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : 
 }
 
 mafPipeVisualVTKSurface::~mafPipeVisualVTKSurface() {
+    m_GraphicObject = NULL;
     setVisibility(false);
     m_Mapper->Delete();
 }
