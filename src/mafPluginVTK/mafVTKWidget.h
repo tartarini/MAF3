@@ -45,7 +45,7 @@ public:
 
 signals:
     /// picked button pressed.
-    void vmePickSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *interface, QEvent * e);
+    void vmePickSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *interf, QEvent * e);
 
 protected:
     /// Object destructor.
