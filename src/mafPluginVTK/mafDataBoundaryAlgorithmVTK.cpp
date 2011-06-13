@@ -37,7 +37,7 @@ mafDataBoundaryAlgorithmVTK::~mafDataBoundaryAlgorithmVTK() {
     }
 }
 
-mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(mafCore::mafProxyInterface *data, mafResources::mafPoseMatrix *matrix) {
+mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(mafCore::mafProxyInterface *data, mafResources::mafMatrix *matrix) {
     if(data) {
         mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data);
         vtkSmartPointer<vtkDataSetMapper> box = vtkSmartPointer<vtkDataSetMapper>::New();
@@ -50,24 +50,24 @@ mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(mafCo
     return NULL;
 }
 
-mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(double bounds[6], mafResources::mafPoseMatrix *matrix) {
+mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(double bounds[6], mafResources::mafMatrix *matrix) {
     m_Box = vtkCubeSource::New();
     m_Box->SetBounds(bounds);
     m_Box->Update();
 
     if(matrix != NULL){
-        //Transform box with the mafPoseMatrix
+        //Transform box with the mafMatrix
         vtkTransform *t = vtkTransform::New();
         vtkMatrix4x4 *mat = vtkMatrix4x4::New();
         mat->Identity();
         for(int i=0;i<3;++i)
-            mat->SetElement(i,0,cvmGet(matrix,i,0));
+            mat->SetElement(i,0,matrix->element(i,0));
         for(int i=0;i<3;++i)
-            mat->SetElement(i,1,cvmGet(matrix,i,1));
+            mat->SetElement(i,1,matrix->element(i,1));
         for(int i=0;i<3;++i)
-            mat->SetElement(i,2,cvmGet(matrix,i,2));
+            mat->SetElement(i,2,matrix->element(i,2));
         for(int i=0;i<3;++i)
-            mat->SetElement(i,3,cvmGet(matrix,i,3));
+            mat->SetElement(i,3,matrix->element(i,3));
 
         t->SetMatrix(mat);
         t->Update();
