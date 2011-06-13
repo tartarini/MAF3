@@ -29,7 +29,7 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, bool binary, const QS
   
   m_DataSet = const_cast<mafResources::mafDataSet*>(qobject_cast<const mafResources::mafDataSet*>(obj));
   mafMementoPropertyList *list = mementoPropertyList();
-  mafPoseMatrix *matrix = m_DataSet->poseMatrix();
+  mafMatrix *matrix = m_DataSet->poseMatrix();
 
   if(matrix) {
       QVariantList matrixList; //should I use double instead of QVariant?
@@ -38,7 +38,7 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, bool binary, const QS
       for ( ; r < 4; ++r) {
           int c = 0;
           for ( ; c < 4 ; ++c ) {
-              matrixList.append(cvmGet(matrix,r,c));
+              matrixList.append(matrix->element(r,c));
 
           }
       }

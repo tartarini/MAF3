@@ -160,9 +160,9 @@ void mafMementoDataSetTest::mafMementoDataSetCustomAllocationTest() {
     container.setExternalCodecType("CUSTOM");
     m_DataSet->setDataValue(&container);
 
-    mafPoseMatrix *matrix = cvCreateMat(4,4,CV_64FC1);
-    cvSetIdentity(matrix);
-    cvmSet(matrix, 0,0,3);
+    mafMatrix *matrix = new mafMatrix();
+    matrix->setIdentity();
+    matrix->setElement(0,0,3);
 
     m_DataSet->setPoseMatrix(matrix);
 
@@ -191,7 +191,7 @@ void mafMementoDataSetTest::mafMementoDataSetCustomAllocationTest() {
     mafMemento *returnMemento = returnDataSet->createMemento();
     QVERIFY(memento->isEqual(returnDataSet));
 
-    cvReleaseMat(&matrix);
+    delete matrix;
     mafDEL(returnDataSet);
     mafDEL(returnMemento);
     mafDEL(memento);

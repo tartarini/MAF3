@@ -27,9 +27,7 @@
 #include <mafHierarchy.h>
 #include <mafProxyInterface.h>
 
-
-// OpenCV includes
-#include <cv.h>
+#include "mafMatrix.h"
 
 namespace mafResources {
 
@@ -37,9 +35,6 @@ class mafDataSet;
 class mafDataSetCollection;
 class mafResource;
 class mafVME;
-
-/// Type definition for MAF3 pose matrix.
-typedef CvMat mafPoseMatrix;
 
 /// Type definition for a list of mafResource.
 typedef QList<mafResource *> mafResourceList;
