@@ -47,7 +47,7 @@ mafCopyFilesFromExtension("ui" "mafResources")
 ## copy OpenCV libraries
 ## #################################################################
 
-mafCopySharedLibrariesInInstallDir("${OpenCV_DIR}/lib")
+mafCopySharedLibrariesInInstallDir("${OpenCV_DIR}/bin")
 
 ## #################################################################
 ## Wrapping Build rules
