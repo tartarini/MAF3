@@ -74,6 +74,10 @@ public:
     
     /// clear and delete the scenegraphs.
     void clearScene();
+
+    ///Get the selected scene node.
+    mafSceneNode *selectedSceneNode();
+
         
 public slots:
     /// Wrap the new VME into a mafSceneNode.
@@ -133,6 +137,10 @@ inline QVariant mafView::hierarchy() const {
     QVariant v;
     v.setValue<mafCore::mafHierarchyPointer>(m_Scenegraph);
     return v;
+}
+
+inline mafSceneNode * mafView::selectedSceneNode(){
+    return m_SelectedNode;
 }
 
 } //namespace mafResources
