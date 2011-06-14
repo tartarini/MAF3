@@ -18,6 +18,7 @@
 #include "mafGUIApplicationSettingsDialog.h"
 #include "mafTreeItemDelegate.h"
 #include "mafTreeItemSceneNodeDelegate.h"
+#include <mafView.h>
 
 #include "mafOperationWidget.h"
 
@@ -28,7 +29,7 @@ using namespace mafEventBus;
 using namespace mafGUI;
 
 mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location) : mafObjectBase(code_location)
-    , m_VMEWidget(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win)
+    , m_VMEWidget(NULL), m_ViewWidget(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win)
     , m_Model(NULL), m_TreeWidget(NULL), m_Logic(NULL), m_CompleteFileName(), m_LastPath() {
 
     m_SettingsDialog = new mafGUIApplicationSettingsDialog();
@@ -701,6 +702,22 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
             emit guiLoaded(m_GUILoadedType, m_OperationWidget);
         break;
         case mafGUILoadedTypeView:
+            {
+                if (m_ViewWidget) {
+                    m_ViewWidget->close();
+                    emit guiTypeToRemove(mafGUILoadedTypeView);
+                }
+                m_ViewWidget = widget;
+
+                /// get view selected
+                mafCore::mafObjectBase *sel_view;
+                QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_view);
+                mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
+                mafView *view = qobject_cast<mafView*>(sel_view);
+
+                mafConnectObjectWithGUI(view->selectedSceneNode()->visualPipe(), m_ViewWidget);
+                emit guiLoaded(m_GUILoadedType, m_ViewWidget);
+            }
         break;
         case mafGUILoadedTypeVisualPipe:
         break;
@@ -754,6 +771,7 @@ void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
     // Get the selected view's UI file
     QString guiFilename = view->uiFilename();
     if(guiFilename.isEmpty()) {
+        showGui(NULL);
         return;
     }
     // Set the current panel to the parent panel of view properties.
