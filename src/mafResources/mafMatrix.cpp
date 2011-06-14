@@ -38,10 +38,17 @@ void mafMatrix::setIdentity() {
     cvSetIdentity(m_Matrix);
 }
 
-mafMatrix mafMatrix::operator *(const mafMatrix &mat) const {
+mafMatrix &mafMatrix::operator *(const mafMatrix &mat) {
     mafMatrix m(m_Matrix->rows, mat.m_Matrix->cols);
     cvMatMul(m_Matrix, mat.m_Matrix, m.m_Matrix);
-    return m;
+    
+    if(m_Matrix->cols != m.m_Matrix->cols) {
+        cvReleaseMat(&m_Matrix);
+        m_Matrix = cvCreateMat(m.m_Matrix->rows, m.m_Matrix->cols, CV_64FC1);
+    }
+    
+    cvCopy(m.m_Matrix, m_Matrix);
+    return *this;
 }
 
 void mafMatrix::setElement(int row, int col, double value) {
