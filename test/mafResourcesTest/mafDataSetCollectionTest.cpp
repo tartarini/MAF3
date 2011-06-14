@@ -130,12 +130,12 @@ void mafDataSetCollectionTest::collectionPoseMatrixTest() {
 
 void mafDataSetCollectionTest::collectionInsertItemTest() {
     // Create a test matrix to add to the collection.
-    mafPoseMatrix *newMatrix = cvCreateMat(4,4,CV_64FC1);
-    cvSetIdentity(newMatrix);
+    mafMatrix *newMatrix = new mafMatrix();
+    newMatrix->setIdentity();
     
-    cvmSet(newMatrix, 0, 3, 5.0);
-    cvmSet(newMatrix, 1, 3, 1.3);
-    cvmSet(newMatrix, 2, 3, 4.1);
+    newMatrix->setElement(0, 3, 5.0);
+    newMatrix->setElement(1, 3, 1.3);
+    newMatrix->setElement(2, 3, 4.1);
 
     mafDataSet *item = mafNEW(mafResources::mafDataSet);
     item->setPoseMatrix(newMatrix);
@@ -149,14 +149,14 @@ void mafDataSetCollectionTest::collectionInsertItemTest() {
     QVERIFY(result_insert);
 
     //! <snippet>
-    mafPoseMatrix *m = m_Collection->poseMatrix(1.5);
+    mafMatrix *m = m_Collection->poseMatrix(1.5);
     //! </snippet>
     
-    QVERIFY(cvmGet(m, 1,2) == cvmGet(newMatrix, 1,2));
+    QVERIFY(m->element(1,2) == newMatrix->element(1,2));
     
     mafDEL(item);
 
-    cvReleaseMat(&newMatrix);
+    delete newMatrix;
 }
 
 void mafDataSetCollectionTest::collectionDataSetTest() {
@@ -203,12 +203,12 @@ void mafDataSetCollectionTest::collectionDataSetTest() {
 
 void mafDataSetCollectionTest::collectionRemoveItemTest() {
     // Create a test matrix to add to the collection.
-    mafPoseMatrix *newMatrix = cvCreateMat(4,4,CV_64FC1);
-    cvSetIdentity(newMatrix);
+    mafMatrix *newMatrix = new mafMatrix();
+    newMatrix->setIdentity();
     
-    cvmSet(newMatrix, 0, 3, 5.0);
-    cvmSet(newMatrix, 1, 3, 1.3);
-    cvmSet(newMatrix, 2, 3, 4.1);
+    newMatrix->setElement(0, 3, 5.0);
+    newMatrix->setElement(1, 3, 1.3);
+    newMatrix->setElement(2, 3, 4.1);
 
     mafDataSet *item = mafNEW(mafResources::mafDataSet);
     item->setPoseMatrix(newMatrix);
@@ -233,6 +233,8 @@ void mafDataSetCollectionTest::collectionRemoveItemTest() {
     const mafDataSetMap *data_map = m_Collection->collectionMap();
     mafDataSet *data = data_map->value(3.5, NULL);
     QVERIFY(data != NULL);
+    
+    delete newMatrix;
 }
 
 MAF_REGISTER_TEST(mafDataSetCollectionTest);

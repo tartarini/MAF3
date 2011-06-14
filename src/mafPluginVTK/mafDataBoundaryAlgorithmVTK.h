@@ -37,11 +37,11 @@ public:
     mafDataBoundaryAlgorithmVTK(const QString code_location = "");
 
     /// Algorithm used to extract the boundary from the given data value and pose matrix.
-    /* virtual */ mafCore::mafProxyInterface *calculateBoundary(mafCore::mafProxyInterface *data, mafResources::mafPoseMatrix *matrix = NULL);
+    /* virtual */ mafCore::mafProxyInterface *calculateBoundary(mafCore::mafProxyInterface *data, mafResources::mafMatrix *matrix = NULL);
 
 protected:
     /// Algorithm used to extract the boundary from the given bounds and pose matrix.
-    /* virtual */ mafCore::mafProxyInterface *calculateBoundary(double bounds[6], mafResources::mafPoseMatrix *matrix = NULL);
+    /* virtual */ mafCore::mafProxyInterface *calculateBoundary(double bounds[6], mafResources::mafMatrix *matrix = NULL);
     
     /// Object destructor.
     /* virtual */ ~mafDataBoundaryAlgorithmVTK();

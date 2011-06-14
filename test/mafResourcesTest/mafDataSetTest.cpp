@@ -59,10 +59,10 @@ public:
     ~testDataBoundaryCustom();
 
     /// Boundary algorithm.
-    /*virtual*/ mafProxyInterface *calculateBoundary(mafProxyInterface *data, mafPoseMatrix *m);
+    /*virtual*/ mafProxyInterface *calculateBoundary(mafProxyInterface *data, mafMatrix *m);
 
     /// Boundary algorithm.
-    /*virtual*/ mafCore::mafProxyInterface *calculateBoundary(double bounds[6], mafPoseMatrix *matrix = NULL);
+    /*virtual*/ mafCore::mafProxyInterface *calculateBoundary(double bounds[6], mafMatrix *matrix = NULL);
 
     /// Return bounds of the bounding box.
     /*virtual*/ void bounds(double bounds[6]);
@@ -79,7 +79,7 @@ testDataBoundaryCustom::testDataBoundaryCustom(const QString code_location) : ma
 testDataBoundaryCustom::~testDataBoundaryCustom() {
 }
 
-mafProxyInterface *testDataBoundaryCustom::calculateBoundary(mafProxyInterface *data, mafPoseMatrix *m) {
+mafProxyInterface *testDataBoundaryCustom::calculateBoundary(mafProxyInterface *data, mafMatrix *m) {
     Q_UNUSED(m);
     mafProxy<testExternalDataType> *container = mafProxyPointerTypeCast(testExternalDataType, data);
     testExternalDataType *value = container->externalData();
@@ -95,7 +95,7 @@ void testDataBoundaryCustom::bounds(double bounds[6]) {
     Q_UNUSED(bounds);
 }
 
-mafCore::mafProxyInterface *testDataBoundaryCustom::calculateBoundary(double bounds[6], mafPoseMatrix *matrix) {
+mafCore::mafProxyInterface *testDataBoundaryCustom::calculateBoundary(double bounds[6], mafMatrix *matrix) {
     Q_UNUSED(bounds);
     Q_UNUSED(matrix);
     return NULL;

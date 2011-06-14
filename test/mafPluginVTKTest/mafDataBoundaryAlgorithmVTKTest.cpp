@@ -61,8 +61,8 @@ private slots:
         m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainer = m_DataSource->GetOutputPort(0);
 
-        mafPoseMatrix *newMatrix = cvCreateMat(4,4,CV_64FC1);
-        cvSetIdentity(newMatrix);
+        mafMatrix *newMatrix = new mafMatrix();
+        newMatrix->setIdentity();
 
         m_DataSetCube = mafNEW(mafResources::mafDataSet);
         mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;

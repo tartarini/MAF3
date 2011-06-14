@@ -71,7 +71,7 @@ void mafDataSetCollection::setInterpolator(const QString &interpolator_type) {
 
 void mafDataSetCollection::setPose(double rx, double ry, double rz, double x, double y, double z, double t) {
     // Find the matrix at the given timestamp
-    mafPoseMatrix *m = poseMatrix(t);
+    mafMatrix *m = poseMatrix(t);
     if(m == NULL) {
         return;
     }
@@ -83,7 +83,7 @@ void mafDataSetCollection::setPose(double rx, double ry, double rz, double x, do
 
 void mafDataSetCollection::setOrientation(double rx, double ry, double rz, double t) {
     // Find the matrix at the given timestamp
-    mafPoseMatrix *m = poseMatrix(t);
+    mafMatrix *m = poseMatrix(t);
     if(m == NULL) {
         return;
     }
@@ -93,7 +93,7 @@ void mafDataSetCollection::setOrientation(double rx, double ry, double rz, doubl
 
 void mafDataSetCollection::orientations(double ori[3], double t) {
     // Find the matrix at the given timestamp
-    mafPoseMatrix *m = poseMatrix(t);
+    mafMatrix *m = poseMatrix(t);
     if(m == NULL) {
         return;
     }
@@ -103,13 +103,13 @@ void mafDataSetCollection::orientations(double ori[3], double t) {
     double sx, sy;
 
     // Extract the rotation sub-matrix and calculate the angles considering the Yaw-Pitch-Roll convention.
-    nx = cvmGet(m,0,0);
-    ny = cvmGet(m,1,0);
-    nz = cvmGet(m,2,0);
-    ax = cvmGet(m,0,2);
-    ay = cvmGet(m,1,2);
-    sx = cvmGet(m,0,1);
-    sy = cvmGet(m,1,1);
+    nx = m->element(0,0);
+    ny = m->element(1,0);
+    nz = m->element(2,0);
+    ax = m->element(0,2);
+    ay = m->element(1,2);
+    sx = m->element(0,1);
+    sy = m->element(1,1);
 
     ori[Z_AXIS] = atan2(ny, nx);
     ori[Y_AXIS] = atan2(-nz, cos(ori[Z_AXIS])*nx + sin(ori[Z_AXIS])*ny);
@@ -126,7 +126,7 @@ void mafDataSetCollection::setPosition(double pos[3], double t) {
 
 void mafDataSetCollection::setPosition(double x, double y, double z, double t) {
     // Find the matrix at the given timestamp
-    mafPoseMatrix *m = poseMatrix(t);
+    mafMatrix *m = poseMatrix(t);
     if(m == NULL) {
         return;
     }
@@ -136,29 +136,29 @@ void mafDataSetCollection::setPosition(double x, double y, double z, double t) {
 
 void mafDataSetCollection::position(double pos[3], double t) {
     // Find the matrix at the given timestamp
-    mafPoseMatrix *m = poseMatrix(t);
+    mafMatrix *m = poseMatrix(t);
     if(m == NULL) {
         return;
     }
 
     // Extract the position vector from the matrix and write it into the array.
     for(int i = 0; i < 3; ++i) {
-        pos[i] = cvmGet(m,i,3);
+        pos[i] = m->element(i, 3);
     }
 }
 
-void mafDataSetCollection::setPose(const mafPoseMatrix matrix, double t) {
+void mafDataSetCollection::setPose(const mafMatrix matrix, double t) {
     // Find the matrix at the given timestamp
-    mafPoseMatrix *m = poseMatrix(t);
+    mafMatrix *m = poseMatrix(t);
     if(m == NULL) {
         return;
     }
     *m = matrix;
 }
 
-mafPoseMatrix *mafDataSetCollection::poseMatrix(double t) {
+mafMatrix *mafDataSetCollection::poseMatrix(double t) {
     // Find the matrix at the given timestamp
-    mafPoseMatrix *m = NULL;
+    mafMatrix *m = NULL;
     mafDataSet *item = itemAt(t);
     if(item != NULL) {
         m = item->poseMatrix();
@@ -168,60 +168,50 @@ mafPoseMatrix *mafDataSetCollection::poseMatrix(double t) {
     return m;
 }
 
-void mafDataSetCollection::writePosition(double x, double y, double z, mafPoseMatrix *m) {
+void mafDataSetCollection::writePosition(double x, double y, double z, mafMatrix *m) {
     // Write the position vector into the given matrix.
-    cvmSet(m,0,3,x);
-    cvmSet(m,1,3,y);
-    cvmSet(m,2,3,z);
+    m->setElement(0,3,x);
+    m->setElement(1,3,y);
+    m->setElement(2,3,z);
 }
 
-void mafDataSetCollection::writeOrientation(double rx, double ry, double rz, mafPoseMatrix *m) {
+void mafDataSetCollection::writeOrientation(double rx, double ry, double rz, mafMatrix *m) {
     // calculate the rotation sub-matrix considering the Yaw-Pitch-Roll convention.    
-    mafPoseMatrix *Rz = cvCreateMat(4,4,CV_64FC1);
-    cvSetIdentity(Rz);
-    mafPoseMatrix *Ry = cvCreateMat(4,4,CV_64FC1);
-    cvSetIdentity(Ry);
-    mafPoseMatrix *Rx = cvCreateMat(4,4,CV_64FC1);
-    cvSetIdentity(Rx);
+    mafMatrix Rz;
+    Rz.setIdentity();
+    mafMatrix Ry;
+    Ry.setIdentity();
+    mafMatrix Rx;
+    Rx.setIdentity();
 
     double rx_rad, ry_rad, rz_rad;
     rx_rad = degreesToRadiant(rx);
     ry_rad = degreesToRadiant(ry);
     rz_rad = degreesToRadiant(rz);
 
-    cvmSet(Rz,0,0,cos(rz_rad));
-    cvmSet(Rz,1,1,cos(rz_rad));
-    cvmSet(Rz,0,1,-sin(rz_rad));
-    cvmSet(Rz,1,0,sin(rz_rad));
+    Rz.setElement(0,0,cos(rz_rad));
+    Rz.setElement(1,1,cos(rz_rad));
+    Rz.setElement(0,1,-sin(rz_rad));
+    Rz.setElement(1,0,sin(rz_rad));
 
-    cvmSet(Ry,0,0,cos(ry_rad));
-    cvmSet(Ry,2,2,cos(ry_rad));
-    cvmSet(Ry,0,2,sin(ry_rad));
-    cvmSet(Ry,2,0,-sin(ry_rad));
+    Ry.setElement(0,0,cos(ry_rad));
+    Ry.setElement(2,2,cos(ry_rad));
+    Ry.setElement(0,2,sin(ry_rad));
+    Ry.setElement(2,0,-sin(ry_rad));
 
-    cvmSet(Rx,1,1,cos(rx_rad));
-    cvmSet(Rx,2,2,cos(rx_rad));
-    cvmSet(Rx,1,2,-sin(rx_rad));
-    cvmSet(Rx,2,1,sin(rx_rad));
+    Rx.setElement(1,1,cos(rx_rad));
+    Rx.setElement(2,2,cos(rx_rad));
+    Rx.setElement(1,2,-sin(rx_rad));
+    Rx.setElement(2,1,sin(rx_rad));
 
     // Store the old position for the matrix m
     double pos[3];
     for(int i = 0; i < 3; ++i) {
-        pos[i] = cvmGet(m,i,3);
+        pos[i] = m->element(i, 3);
     }
 
     // Copy into 'm' the result of the matrix multiplication.
-    mafPoseMatrix *T = cvCreateMat(4,4,CV_64FC1);
-    cvMatMul(Rz, Ry, T);
-    cvMatMul(T, Rx, m);
-    // Re-Apply the position
-    writePosition(pos[0], pos[1], pos[2], m);
-    cvReleaseMat(&Rx);
-    cvReleaseMat(&Ry);
-    cvReleaseMat(&Rz);
-    cvReleaseMat(&T);
-
-
+    *m = Rz * Ry * Rx;
 }
 
 bool mafDataSetCollection::insertItem(mafDataSet *item, double t) {
@@ -309,13 +299,13 @@ mafDataSet *mafDataSetCollection::itemAt(double t) {
         // The collection is empty; this is the first item and can be added a default one.
         item = mafNEW(mafResources::mafDataSet);
         item->setParent(this);
-        mafPoseMatrix *m;
-        m = cvCreateMat(4,4,CV_64FC1);
-        cvSetIdentity(m);
+        mafMatrix *m = new mafMatrix();
+        m->setIdentity();
         item->setPoseMatrix(m);
         insertItem(item, ts);
         item->release();
-        cvReleaseMat(&m);
+        delete m;
+        m = NULL;
     }
     return item;
 }
