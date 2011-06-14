@@ -58,7 +58,8 @@ void mafPipeVisualVTKSurface::updatePipe(double t) {
     //Get data contained in the mafProxy
     m_Mapper->SetInputConnection(*dataSet);
     m_Mapper->SetScalarVisibility(m_ScalarVisibility);
-    m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
+    //Keep ImmediateModeRendering off: it slows rendering
+    //m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
     setModified(false);
 }
 
