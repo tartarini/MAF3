@@ -34,6 +34,31 @@ mafMatrix *mafMatrix::clone() const{
     return m;
 }
 
+bool mafMatrix::isEqual(const mafMatrix &mat) {
+    CvMat *check = mat.m_Matrix;
+    if(m_Matrix->rows != check->rows || m_Matrix->cols != check->cols) {
+        return false;
+    }
+    
+    int r = m_Matrix->rows;
+    int c = m_Matrix->cols;
+    int i=0;
+    int j=0;
+    double valueOrig;
+    double valueCheck;
+    for (; i<r ; ++i){
+        for(; j<c ; ++j) {
+            valueOrig = cvmGet(m_Matrix, i, j);
+            valueCheck = cvmGet(check   , i, j);
+            if (valueOrig != valueCheck) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+
 void mafMatrix::setIdentity() {
     cvSetIdentity(m_Matrix);
 }
@@ -44,7 +69,7 @@ mafMatrix &mafMatrix::operator *(const mafMatrix &mat) {
     
     if(m_Matrix->cols != m.m_Matrix->cols) {
         cvReleaseMat(&m_Matrix);
-        m_Matrix = cvCreateMat(m.m_Matrix->rows, m.m_Matrix->cols, CV_64FC1);
+        m_Matrix = cvCreateMat(m.m_Matrix->rows, mat.m_Matrix->cols, CV_64FC1);
     }
     
     cvCopy(m.m_Matrix, m_Matrix);
