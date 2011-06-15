@@ -76,6 +76,7 @@ mafViewManager::~mafViewManager() {
     provider->removeId("maf.local.resources.view.clearViews");
     provider->removeId("maf.local.resources.view.fillViews");
     provider->removeId("maf.local.resources.view.customizeVisualization");
+    provider->removeId("maf.local.resources.pipeVisual.selected");
 }
 
 mafMemento *mafViewManager::createMemento() const {
@@ -110,6 +111,7 @@ void mafViewManager::initializeConnections() {
     provider->createNewId("maf.local.resources.view.clearViews");
     provider->createNewId("maf.local.resources.view.fillViews");
     provider->createNewId("maf.local.resources.view.customizeVisualization");
+    provider->createNewId("maf.local.resources.pipeVisual.selected");
     
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(QString)")
@@ -123,6 +125,7 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.view.clearViews", this, "clearViewsSignal()")
     mafRegisterLocalSignal("maf.local.resources.view.fillViews", this, "fillViewsSignal()")
     mafRegisterLocalSignal("maf.local.resources.view.customizeVisualization", this, "customPipeVisualForVMEInViewSignal(QString, QString, QString)")
+    mafRegisterLocalSignal("maf.local.resources.pipeVisual.selected", this, "selectedPipeVisualSignal()")
 
     // Register private callbacks to the instance of the manager..
     mafRegisterLocalCallback("maf.local.resources.view.create", this, "createView(QString)")
@@ -133,6 +136,7 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.resources.view.clearViews", this, "clearViews()")
     mafRegisterLocalCallback("maf.local.resources.view.fillViews", this, "fillViews()")
     mafRegisterLocalCallback("maf.local.resources.view.customizeVisualization", this, "customPipeVisualForVMEInView(QString, QString, QString)")
+    mafRegisterLocalCallback("maf.local.resources.pipeVisual.selected", this, "selectedPipeVisual()")
     
     // Register callback to allows settings serialization.
     mafRegisterLocalCallback("maf.local.logic.status.viewmanager.store", this, "createMemento()")
@@ -162,6 +166,7 @@ void mafViewManager::selectView(mafCore::mafObjectBase *view) {
         }
         m_SelectedView = v;
         m_SelectedView->select(true); // ?!?
+        
     }
 }
 
@@ -172,6 +177,7 @@ void mafViewManager::sceneNodeShow(mafCore::mafObjectBase *node, bool show) {
     if(node_to_show != NULL) {
         if(m_SelectedView) {
             m_SelectedView->showSceneNode(node_to_show, show);
+            m_SelectedPipeVisual = m_SelectedView->selectedSceneNode()->visualPipe();
         } else {
             qCritical(mafTr("There is no view selected.").toAscii().constData());
         }
@@ -323,4 +329,8 @@ void mafViewManager::fillViews() {
     foreach(mafResource *v, viewList) {
         fillSceneGraph((mafView *)v, hierarchy);
     }
+}
+
+mafCore::mafObjectBase *mafViewManager::selectedPipeVisual() {
+    return (mafCore::mafObjectBase *)m_SelectedPipeVisual;
 }
