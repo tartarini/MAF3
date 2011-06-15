@@ -36,6 +36,7 @@ This class provides the manager class for MAF3 views. The topics are:
 - maf.local.resources.view.noneViews emitted when all views are destroyed.
 - maf.local.resources.view.clearViews
 - maf.local.resources.view.fillViews
+- maf.local.resources.pipeVisual.selected
 */
 class MAFRESOURCESSHARED_EXPORT mafViewManager : public mafCore::mafObjectBase {
     Q_OBJECT
