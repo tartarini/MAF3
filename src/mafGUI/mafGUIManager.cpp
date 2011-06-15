@@ -826,9 +826,23 @@ void mafGUIManager::openRecentFile() {
     QAction *action = qobject_cast<QAction *>(sender());
     if (action) {
         QString file_to_open(action->data().toString());
-        mafEventArgumentsList argList;
-        argList.append(mafEventArgument(QString, file_to_open));
-        mafEventBusManager::instance()->notifyEvent("maf.local.logic.openFile", mafEventTypeLocal, &argList);
+        if (!file_to_open.isEmpty() && QFile(file_to_open).exists()){
+            mafEventArgumentsList argList;
+            argList.append(mafEventArgument(QString, file_to_open));
+            mafEventBusManager::instance()->notifyEvent("maf.local.logic.openFile", mafEventTypeLocal, &argList);
+
+            m_CompleteFileName = file_to_open;
+            emit updateApplicationName();
+            updateRecentFileMenu(m_CompleteFileName);
+        } else {
+            qCritical() << mafTr("Cannot find file <%1>. File doesn't exist.").arg(file_to_open);
+            //remove file from list of recent file.
+            QSettings settings;
+            QStringList recentFiles = settings.value("recentFileList").toStringList();
+            recentFiles.removeOne(file_to_open);
+            settings.setValue("recentFileList", recentFiles);
+            updateRecentFileActions();
+        }
     }
 }
 
@@ -839,8 +853,9 @@ void mafGUIManager::updateRecentFileActions() {
     int numRecentFiles = qMin(files.size(), (int)m_MaxRecentFiles);
 
     for (int i = 0; i < numRecentFiles; ++i) {
-        QString text = tr("&%1 %2").arg(i + 1).arg(strippedName(files[i]));
-        m_RecentFileActs.at(i)->setText(text);
+        //Decomment if don't want the full path in open recent menu
+        //QString text = tr("&%1 %2").arg(i + 1).arg(strippedName(files[i]));
+        m_RecentFileActs.at(i)->setText(files[i]/*text*/);
         m_RecentFileActs.at(i)->setData(files[i]);
         m_RecentFileActs.at(i)->setVisible(true);
     }
@@ -895,11 +910,7 @@ void mafGUIManager::save() {
         qDebug() << m_CompleteFileName;
     }
     emit updateApplicationName();
-    QSettings settings;
-    QStringList recentFiles = settings.value("recentFileList").toStringList();
-    recentFiles.insert(0, m_CompleteFileName);
-    settings.setValue("recentFileList", recentFiles);
-    updateRecentFileActions();
+    updateRecentFileMenu(m_CompleteFileName);
 }
 
 void mafGUIManager::saveAs() {
@@ -934,9 +945,14 @@ void mafGUIManager::open() {
     int index = m_CompleteFileName.lastIndexOf("/");
     m_LastPath = m_CompleteFileName.left(index);
 
+    updateRecentFileMenu(m_CompleteFileName);
+}
+
+void mafGUIManager::updateRecentFileMenu(QString fileName) {
     QSettings settings;
     QStringList recentFiles = settings.value("recentFileList").toStringList();
     recentFiles.insert(0, m_CompleteFileName);
+    recentFiles.removeDuplicates();
     settings.setValue("recentFileList", recentFiles);
     updateRecentFileActions();
 }
