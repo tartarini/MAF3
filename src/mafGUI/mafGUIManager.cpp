@@ -18,7 +18,6 @@
 #include "mafGUIApplicationSettingsDialog.h"
 #include "mafTreeItemDelegate.h"
 #include "mafTreeItemSceneNodeDelegate.h"
-#include <mafView.h>
 
 #include "mafOperationWidget.h"
 
@@ -437,6 +436,21 @@ void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
         // Ask the UI Loader to load the operation's GUI.
         m_UILoader->uiLoad(guiFilename);
     }
+    mafCore::mafObjectBase *sel_view;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_view);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
+    if(sel_view){
+        QString guiFilename = sel_view->uiFilename();
+        if(guiFilename.isEmpty()) {
+            showGui(NULL);
+            return;
+        }
+        m_GUILoadedType = mafGUILoadedTypeView;
+
+
+        // Ask the UI Loader to load the view's GUI.
+        m_UILoader->uiLoad(guiFilename);
+    }
 }
 
 void mafGUIManager::registerDefaultEvents() {
@@ -710,12 +724,12 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
                 m_ViewWidget = widget;
 
                 /// get view selected
-                mafCore::mafObjectBase *sel_view;
-                QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_view);
-                mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
-                mafView *view = qobject_cast<mafView*>(sel_view);
+                mafCore::mafObjectBase *sel_pipeVisual;
+                QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_pipeVisual);
+                mafEventBusManager::instance()->notifyEvent("maf.local.resources.pipeVisual.selected", mafEventTypeLocal, NULL, &ret_val);
 
-                mafConnectObjectWithGUI(view->selectedSceneNode()->visualPipe(), m_ViewWidget);
+
+                mafConnectObjectWithGUI(sel_pipeVisual, m_ViewWidget);
                 emit guiLoaded(m_GUILoadedType, m_ViewWidget);
             }
         break;
