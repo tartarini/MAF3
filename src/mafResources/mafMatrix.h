@@ -30,20 +30,20 @@ public:
     /// Object constructor.
     mafMatrix(int rows = 4, int cols = 4);
     
-    // clone matrix to a new instance
+    // clone matrix to a new instance.
     mafMatrix *clone() const;
         
-    /// set the current matrix as identity matrix
+    /// set the current matrix as identity matrix.
     void setIdentity();
     
-    /// multiplication matrix operator 
+    /// multiplication matrix operator.
     mafMatrix &operator *(const mafMatrix &mat);
     
     /// assignment matrix operator 
     mafMatrix &operator =(const mafMatrix &mat);
 
         
-    /// set the value for element at given row and column
+    /// set the value for element at given row and column.
     void setElement(int row, int col, double value);
     
     /// return the element at the given row and column.
@@ -52,9 +52,12 @@ public:
     /// Object destructor.
     /* virtual */ ~mafMatrix();
     
+    /// check if the matrix parameter is equal.
+    bool isEqual(const mafMatrix &mat);
+    
 protected:
 
-    CvMat *m_Matrix;///< represents the basic matrix
+    CvMat *m_Matrix;///< represents the basic matrix.
 
 private:
     
