@@ -200,6 +200,10 @@ void mafMainWindow::loadedGUIAvailable(int type, QWidget *w) {
                 ui->tabWidget->setCurrentIndex(1);
                 ui->layoutView->addWidget(w);
                 break;
+            case mafGUILoadedTypeVisualPipe:
+                ui->tabWidget->setCurrentIndex(1);
+                ui->layoutView->addWidget(w);
+                break;
             case mafGUILoadedTypeVme:
                 ui->layoutPropertiesBox->addWidget(w);
                 break;
