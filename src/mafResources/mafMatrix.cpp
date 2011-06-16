@@ -10,14 +10,22 @@
  */
 
 #include "mafMatrix.h"
+#include <QDebug>
 
 using namespace cv;
 using namespace mafResources;
+
+mafMatrix::mafMatrix() {
+    m_Matrix = cvCreateMat(4, 4, CV_64FC1);
+}
 
 mafMatrix::mafMatrix(int rows, int cols) {
     m_Matrix = cvCreateMat(rows, cols, CV_64FC1);
 }
 
+mafMatrix::mafMatrix(const mafMatrix &m) {
+    *this = m;
+}
 
 mafMatrix::~mafMatrix() {
     cvReleaseMat(&m_Matrix);
@@ -47,7 +55,7 @@ bool mafMatrix::isEqual(const mafMatrix &mat) {
     double valueOrig;
     double valueCheck;
     for (; i<r ; ++i){
-        for(; j<c ; ++j) {
+        for(j = 0; j<c ; ++j) {
             valueOrig = cvmGet(m_Matrix, i, j);
             valueCheck = cvmGet(check   , i, j);
             if (valueOrig != valueCheck) {
@@ -57,6 +65,26 @@ bool mafMatrix::isEqual(const mafMatrix &mat) {
     }
     return true;
 }
+
+void mafMatrix::description() const {
+    int r = m_Matrix->rows;
+    int c = m_Matrix->cols;
+    qDebug() << "Number of Rows: " << r; 
+    qDebug() << "Number of Cols: " << c;
+    int i=0;
+    int j=0;
+    double value;
+    for (; i<r ; ++i){
+        QString rowValues;
+        for(j = 0; j<c ; ++j) {
+            value = cvmGet(m_Matrix, i, j);
+            rowValues.append(QString::number(value)).append(" ");
+        }
+        qDebug() << rowValues;
+    }
+
+}
+
 
 
 void mafMatrix::setIdentity() {
