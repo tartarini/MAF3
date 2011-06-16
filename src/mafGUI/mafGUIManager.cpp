@@ -28,7 +28,7 @@ using namespace mafEventBus;
 using namespace mafGUI;
 
 mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location) : mafObjectBase(code_location)
-    , m_VMEWidget(NULL), m_ViewWidget(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win)
+    , m_VMEWidget(NULL), m_ViewWidget(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win), m_UILoader(NULL)
     , m_Model(NULL), m_TreeWidget(NULL), m_Logic(NULL), m_CompleteFileName(), m_LastPath() {
 
     m_SettingsDialog = new mafGUIApplicationSettingsDialog();
@@ -436,7 +436,8 @@ void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
         // Ask the UI Loader to load the operation's GUI.
         m_UILoader->uiLoad(guiFilename);
     }
-    mafCore::mafObjectBase *sel_view;
+    
+    mafCore::mafObjectBase *sel_view = NULL;
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_view);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
     if(sel_view){
