@@ -206,3 +206,11 @@ void mafObjectBase::deleteObject() {
         delete this;
     }
 }
+
+void mafObjectBase::description() const {
+    qDebug() << "Object Id: " << objectId();
+    qDebug() << "Object Hash: " << objectHash();
+    qDebug() << "Is modified: " << modified();
+    qDebug() << "UI File name: " << uiFilename();
+    qDebug() << "Reference Count: " << referenceCount();
+}

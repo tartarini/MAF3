@@ -81,7 +81,10 @@ public:
     void release();
     
     /// return the reference count.
-    int referenceCount();
+    int referenceCount() const;
+    
+    /// dump the description of the object (information, attributes, variables...)
+    virtual void description() const;
 
 private slots:
     /// increment of 1 unit the reference count.
@@ -149,7 +152,7 @@ inline bool mafObjectBase::operator ==(const mafObjectBase& obj) const {
     return this->isEqual(&obj);
 }
 
-inline int mafObjectBase::referenceCount() {
+inline int mafObjectBase::referenceCount() const{
     return m_ReferenceCount;
 }
 
