@@ -21,6 +21,7 @@ mafSceneNode::mafSceneNode(const QString code_location) : mafObject(code_locatio
 }
 
 mafSceneNode::mafSceneNode(mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location): mafObject(code_location), m_VME(vme), m_VisualPipe(NULL),m_VisualPipeType(visualPipeType), m_Visibility(false), m_VisualizationStatus(mafVisualizationStatusVisible), m_VisibilityPolicy(mafVisibilityPolicyDestroyOnHide), m_GraphicObject(graphicObject) {
+    REQUIRE(vme);
     connect(vme, SIGNAL(detatched()), this, SIGNAL(destroyNode()));
     m_VME = vme;
     this->setProperty("iconFile",m_VME->property("iconFile"));
