@@ -135,7 +135,8 @@ private:
 
     mafOperationWidget  *m_OperationWidget; ///< Widget on whith will be visible the operation's GUI.
     QWidget             *m_VMEWidget; ///< Widget representing the VME UI.
-    QWidget             *m_ViewWidget; ///< Widget representing the VME UI.
+    QWidget             *m_ViewWidget; ///< Widget representing the View UI.
+    QWidget             *m_VisualPipeWidget; ///< Widget representing the View UI.
 
     QMainWindow     *m_MainWindow;  ///< Main window associated to the application.
     mafUILoaderQt   *m_UILoader;    ///< Class in charge to load the GUI.

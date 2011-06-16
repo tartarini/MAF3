@@ -28,7 +28,7 @@ using namespace mafEventBus;
 using namespace mafGUI;
 
 mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location) : mafObjectBase(code_location)
-    , m_VMEWidget(NULL), m_ViewWidget(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win)
+    , m_VMEWidget(NULL), m_ViewWidget(NULL), m_VisualPipeWidget(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win)
     , m_Model(NULL), m_TreeWidget(NULL), m_Logic(NULL), m_CompleteFileName(), m_LastPath() {
 
     m_SettingsDialog = new mafGUIApplicationSettingsDialog();
@@ -436,18 +436,16 @@ void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
         // Ask the UI Loader to load the operation's GUI.
         m_UILoader->uiLoad(guiFilename);
     }
-    mafCore::mafObjectBase *sel_view;
-    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_view);
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
-    if(sel_view){
-        QString guiFilename = sel_view->uiFilename();
+    mafCore::mafObjectBase *sel_pipeVisual = NULL;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_pipeVisual);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.pipeVisual.selected", mafEventTypeLocal, NULL, &ret_val);
+    if (sel_pipeVisual) {
+        QString guiFilename = sel_pipeVisual->uiFilename();
         if(guiFilename.isEmpty()) {
             showGui(NULL);
             return;
         }
-        m_GUILoadedType = mafGUILoadedTypeView;
-
-
+        m_GUILoadedType = mafGUILoadedTypeVisualPipe;
         // Ask the UI Loader to load the view's GUI.
         m_UILoader->uiLoad(guiFilename);
     }
@@ -696,10 +694,8 @@ mafTextEditWidget *mafGUIManager::createLogWidget(QWidget *parent) {
             w->setParent(parent);
         }
     }
-
     return w;
 }
-
 
 void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
     // Get the widget from the container
@@ -716,24 +712,24 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
             emit guiLoaded(m_GUILoadedType, m_OperationWidget);
         break;
         case mafGUILoadedTypeView:
-            {
-                if (m_ViewWidget) {
-                    m_ViewWidget->close();
-                    emit guiTypeToRemove(mafGUILoadedTypeView);
-                }
-                m_ViewWidget = widget;
-
-                /// get view selected
-                mafCore::mafObjectBase *sel_pipeVisual;
-                QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_pipeVisual);
-                mafEventBusManager::instance()->notifyEvent("maf.local.resources.pipeVisual.selected", mafEventTypeLocal, NULL, &ret_val);
-
-
-                mafConnectObjectWithGUI(sel_pipeVisual, m_ViewWidget);
-                emit guiLoaded(m_GUILoadedType, m_ViewWidget);
-            }
         break;
         case mafGUILoadedTypeVisualPipe:
+            {
+                if (m_VisualPipeWidget) {
+                    m_VisualPipeWidget->close();
+                    emit guiTypeToRemove(mafGUILoadedTypeVisualPipe);
+                }
+                m_VisualPipeWidget = widget;
+
+                /// get view selected
+                mafCore::mafObjectBase *sel_pipeVisual = NULL;
+                QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_pipeVisual);
+                mafEventBusManager::instance()->notifyEvent("maf.local.resources.pipeVisual.selected", mafEventTypeLocal, NULL, &ret_val);
+                if (sel_pipeVisual) {
+                    mafConnectObjectWithGUI(sel_pipeVisual, m_VisualPipeWidget);
+                    emit guiLoaded(m_GUILoadedType, m_VisualPipeWidget);
+                }
+            }
         break;
         case mafGUILoadedTypeVme:
         {
@@ -743,12 +739,14 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
             }
             m_VMEWidget = widget;
 
-            mafCore::mafObjectBase *sel_vme;
+            mafCore::mafObjectBase *sel_vme = NULL;
             QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
             mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
 
-            mafConnectObjectWithGUI(sel_vme, m_VMEWidget);
-            emit guiLoaded(m_GUILoadedType, m_VMEWidget);
+            if (sel_vme) {
+                mafConnectObjectWithGUI(sel_vme, m_VMEWidget);
+                emit guiLoaded(m_GUILoadedType, m_VMEWidget);
+            }
         }
         break;
         default:
@@ -853,7 +851,7 @@ void mafGUIManager::updateRecentFileActions() {
     int numRecentFiles = qMin(files.size(), (int)m_MaxRecentFiles);
 
     for (int i = 0; i < numRecentFiles; ++i) {
-        //Decomment if don't want the full path in open recent menu
+        //Remove comment if don't want the full path in open recent menu
         //QString text = tr("&%1 %2").arg(i + 1).arg(strippedName(files[i]));
         m_RecentFileActs.at(i)->setText(files[i]/*text*/);
         m_RecentFileActs.at(i)->setData(files[i]);
