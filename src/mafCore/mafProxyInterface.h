@@ -27,7 +27,7 @@ class MAFCORESHARED_EXPORT mafProxyInterface {
 public:
     /// Object constructor.
     mafProxyInterface();
-    /// Object Constructor
+    /// Copy Constructor
     mafProxyInterface(const mafProxyInterface &dw);
 
     /// Object destructor.
