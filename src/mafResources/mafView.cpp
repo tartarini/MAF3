@@ -125,9 +125,6 @@ void mafView::selectSceneNode(mafSceneNode *node, bool select) {
         m_PipeVisualSelection->updatePipe();
         m_PipeVisualSelection->setVisibility(node->property("visibility").toBool());
     }
-    if(node && node->visualPipe()){
-        m_UIFilename = node->visualPipe()->uiFilename();
-    }
 }
 
 void mafView::showSceneNode(mafSceneNode *node, bool show) {
