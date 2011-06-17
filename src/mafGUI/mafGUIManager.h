@@ -138,6 +138,9 @@ private:
     QWidget             *m_ViewWidget; ///< Widget representing the View UI.
     QWidget             *m_VisualPipeWidget; ///< Widget representing the View UI.
 
+    mafObjectBase *m_CurrentPipeVisual; ///< Current used pipe visual.
+    mafObjectBase *m_CurrentView; ///< Current view.
+
     QMainWindow     *m_MainWindow;  ///< Main window associated to the application.
     mafUILoaderQt   *m_UILoader;    ///< Class in charge to load the GUI.
     mafGUILoadedType m_GUILoadedType; ///< Type of GUI loaded.
@@ -207,6 +210,9 @@ private slots:
     /** This method will update all tree widget for the selected VME */
     void updateTreeForSelectedVme(mafCore::mafObjectBase *vme);
 
+    /// Called when a scene node has been selected.
+    /** This method will update gui for the selected scene node */
+    void updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeVisual);
     
     /// Slot needed to intercept the started operation and ask it for the GUI filename.
     void operationDidStart(mafCore::mafObjectBase *operation);
