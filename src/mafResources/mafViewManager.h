@@ -36,7 +36,6 @@ This class provides the manager class for MAF3 views. The topics are:
 - maf.local.resources.view.noneViews emitted when all views are destroyed.
 - maf.local.resources.view.clearViews
 - maf.local.resources.view.fillViews
-- maf.local.resources.pipeVisual.selected
 */
 class MAFRESOURCESSHARED_EXPORT mafViewManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -84,9 +83,6 @@ signals:
     /// Signal associated to the 
     void customPipeVisualForVMEInViewSignal(QString view_type, QString data_type, QString pipe_type);
 
-    /// Signal to return the slected visual pipe.
-    mafCore::mafObjectBase *selectedPipeVisualSignal();
-
 public slots:
     /// Create a memento class used to save the status of opened views. The caller has to delete the allocated memory he asked.
     /** This method allows to save the status of opened views when logic
@@ -131,9 +127,6 @@ private slots:
     /// Allows to register the information of bindings between data type and visual pipe for the given view type.
     void customPipeVisualForVMEInView(QString view_type, QString data_type, QString pipe_type);
 
-    /// Return the slected visual pipe.
-    mafCore::mafObjectBase *selectedPipeVisual();
-
 protected:
     /// Object destructor
     /*virtual*/ ~mafViewManager();
@@ -163,7 +156,6 @@ private:
     mafResourceList m_CreatedViewList; ///< List of created views.
     mafView *m_SelectedView; ///< Keep trak of the current selected view.
     QHash<QString, QHash<QString, QString>* > m_VisualizationBindHash; ///< Hash containing the view type as key and the hash of binds between data type and visual pipe to use for rendering.
-    mafPipeVisual *m_SelectedPipeVisual; ///< Current visual pipe.
 };
 
 } // namespace mafResources
