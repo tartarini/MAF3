@@ -78,6 +78,10 @@ public:
     ///Get the selected scene node.
     mafSceneNode *selectedSceneNode();
 
+signals:
+
+    /// Notify selection of a sceneNode. 
+    void pipeVisualSelectedSignal(mafCore::mafObjectBase *pipeVisual);
         
 public slots:
     /// Wrap the new VME into a mafSceneNode.
@@ -114,10 +118,6 @@ protected:
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
-
-inline void mafView::select(bool select) {
-    m_Selected = select;
-}
 
 inline bool mafView::isSelected() {
     return m_Selected;
