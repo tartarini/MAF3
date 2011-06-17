@@ -110,6 +110,10 @@ mafMemento *mafCodecXML::decode() {
     objType = m_XMLStreamReader.attributes().value("objectClassType").toString();
 
     mafMemento* memento = (mafMemento *)mafNEWFromString(mementoType);
+    if(memento == NULL) {
+        qCritical("%s", mafTr("Problem on loading memento: %1").arg(mementoType).toAscii().data());
+        return NULL;
+    }
     memento->setObjectClassType(objType);
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     mafMementoPropertyItem item;

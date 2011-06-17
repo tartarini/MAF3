@@ -143,6 +143,13 @@ mafMemento *mafSerializationManager::loadMemento(const QString &url, const QStri
 
     mafMemento *m = codec->decode();
 
+    if(m == NULL) {
+        qCritical("%s", mafTr("Impossible load memento.").toAscii().data());
+        mafDEL(codec);
+        mafDEL(ser);
+        return NULL;
+    }
+    
     // Finally close the connection.
     ser->closeDevice();
 

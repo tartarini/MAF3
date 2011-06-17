@@ -15,7 +15,6 @@
 #include <mafEventBusManager.h>
 #include <mafMementoHierarchy.h>
 
-
 using namespace mafEventBus;
 
 #define PLUGIN_EXTENSION_FILTER "*.mafplugin"
@@ -210,14 +209,17 @@ void mafLogic::restoreHierarchy(QString fileName) {
     mafEventBusManager::instance()->notifyEvent("maf.local.gui.new", mafEventTypeLocal, NULL);
 
     //Load memento from file
-    mafCore::mafMemento *mementoHierarchy;
+    mafCore::mafMemento *mementoHierarchy = NULL;
     mafEventArgumentsList argList;
     QString encodeType = "XML";
     argList.append(mafEventArgument(QString, fileName));
     argList.append(mafEventArgument(QString, encodeType));
     QGenericReturnArgument retVal = mafEventReturnArgument(mafCore::mafMemento*, mementoHierarchy);
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal, &argList, &retVal);
-    REQUIRE(mementoHierarchy != NULL);
+    if(mementoHierarchy == NULL) {
+        qCritical("%s", mafTr("Impossible to load MSF").toAscii().data());
+        return;
+    }
 
     // Set memento loaded to hierarchy
     m_Hierarchy->setMemento(mementoHierarchy);
