@@ -168,6 +168,7 @@ void mafVMEManagerTest::absolutePoseMatrixTest() {
     
     mafDEL(vme1);
     mafDEL(vme2);
+    mafDEL(vme3);
 }
 
 MAF_REGISTER_TEST(mafVMEManagerTest);
