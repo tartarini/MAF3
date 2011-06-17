@@ -12,6 +12,8 @@
 #ifndef MAFMATRIX_H
 #define MAFMATRIX_H
 
+#include <QMetaType>
+
 // OpenCV includes
 #include <cv.h>
 
@@ -28,8 +30,17 @@ class MAFRESOURCESSHARED_EXPORT mafMatrix {
     
 public:
     /// Object constructor.
-    mafMatrix(int rows = 4, int cols = 4);
+    mafMatrix();
     
+    /// Object constructor for generic row,column numbers matrix.
+    mafMatrix(int rows, int cols);
+    
+    /// Object destructor.
+    /* virtual */ ~mafMatrix();
+    
+    /// Copy Constructor
+    mafMatrix(const mafMatrix &m);
+
     // clone matrix to a new instance.
     mafMatrix *clone() const;
         
@@ -42,29 +53,30 @@ public:
     /// assignment matrix operator 
     mafMatrix &operator =(const mafMatrix &mat);
 
-        
     /// set the value for element at given row and column.
     void setElement(int row, int col, double value);
     
     /// return the element at the given row and column.
     double element(int row, int col);
-        
-    /// Object destructor.
-    /* virtual */ ~mafMatrix();
     
     /// check if the matrix parameter is equal.
     bool isEqual(const mafMatrix &mat);
     
-protected:
-
-    CvMat *m_Matrix;///< represents the basic matrix.
-
-private:
+    /// dump the description of the object (information, attributes, variables...)
+    virtual void description() const;
     
+private:
+
+    CvMat *m_Matrix;///< represents the basic matrix.    
 
 };
+    
+/// Define the pointer to the mafMatrix needed to be registered with Q_DECLARE_METATYPE macro.
+typedef mafMatrix * mafMatrixPointer;
 
-} // namespace mafPluginVTK
+} // namespace mafResources
 
+Q_DECLARE_METATYPE(mafResources::mafMatrixPointer);
+Q_DECLARE_METATYPE(mafResources::mafMatrix);
 
 #endif // MAFMATRIX_H

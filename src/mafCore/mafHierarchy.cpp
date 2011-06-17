@@ -120,6 +120,11 @@ void mafHierarchy::moveTreeIteratorToParent() {
     m_TreeIterator = m_Tree->parent(m_TreeIterator);
 }
 
+bool mafHierarchy::hasParent() {
+    return m_Tree->root().node() != m_TreeIterator.node();
+}
+
+
 void mafHierarchy::moveTreeIteratorToNthChild(unsigned int childIndex) {
     REQUIRE(m_Tree->children(m_TreeIterator) > childIndex);
 

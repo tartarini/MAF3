@@ -90,7 +90,10 @@ def execute():
             if(os.path.exists(logResult)):
                 os.remove(logResult)
             #create file, and append results in it
-            os.system(absPath + " &> " + logResult);
+            if(str(os.sys.platform).lower() == 'win32'):
+                os.system(absPath + " > " + logResult + " 2>&1 ")
+            else:
+                os.system(absPath + " &> " + logResult)
             name_key = "test-suite"
             if name_key in param:
                 validate(logResult)
