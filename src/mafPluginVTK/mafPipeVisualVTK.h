@@ -18,7 +18,7 @@
 
 // Foundation Class forwarding list
 class vtkRenderer;
-class vtkProp;
+class vtkProp3D;
 
 namespace mafPluginVTK {
 
@@ -66,10 +66,10 @@ protected:
     /*virtual*/ void updatedGraphicObject();
     
     /// update visibility for actor or volume passed as parameter
-    void updateVisibility(vtkProp *prop);
+    void updateVisibility(vtkProp3D *prop);
 
 private:
-    vtkRenderer * m_Renderer; ///< Current VTK Renderer. 
+    vtkRenderer * m_Renderer; ///< Current VTK Renderer.
     bool m_ScalarVisibility; ///< Flag to activate scalar visibility.
     bool m_ImmediateRendering; ///< Flag to activate immediate rendering mode.
 };

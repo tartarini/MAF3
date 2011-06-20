@@ -3,7 +3,7 @@
  *  mafPluginVTK
  *
  *  Created by Daniele Giunchi - Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -15,12 +15,12 @@
 #include <vtkRendererCollection.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
-#include <vtkProp.h>
+#include <vtkProp3D.h>
 
 using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
-using namespace std;
+
 
 mafPipeVisualVTK::mafPipeVisualVTK(const QString code_location) : mafPipeVisual(code_location), m_ScalarVisibility(false), m_ImmediateRendering(false), m_Renderer(NULL) {
 }
@@ -43,7 +43,7 @@ void mafPipeVisualVTK::setImmediateRendering (bool immediateRendering) {
     m_ImmediateRendering = immediateRendering;
 }
 
-void mafPipeVisualVTK::updateVisibility(vtkProp *prop) {
+void mafPipeVisualVTK::updateVisibility(vtkProp3D *prop) {
     prop->SetVisibility(visibility());
     
     if (graphicObject() == NULL) {
