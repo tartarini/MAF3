@@ -1,4 +1,10 @@
 import os
+try:
+    from qa import mafPath
+except ImportError:
+    import mafPath
+
+currentPathScript = os.path.split(os.path.realpath(__file__))[0]
 
 #read all files and directories , for every rule directory, generate a python file
 allRules = []
@@ -89,8 +95,9 @@ def GeneratePythonQAScripts():
         f.write("    " + "    xmlFile = self.CheckClassFile(dirPath, file, rule)" + "\n")
         f.write("    " + "    if(xmlFile != None):" + "\n")
         f.write("    " + "      self.Classes.append(xmlFile)" + "\n")
-	  
-      iniR = open("./Rules/" + ruleGroup + "FilePattern.ini", 'r')
+      
+      ruleIni = os.path.join(mafPath.mafQADir, "Rules", ruleGroup + "FilePattern.ini")
+      iniR = open(ruleIni , 'r')
       lines = iniR.readlines()
       iniR.close()
       

@@ -1,4 +1,4 @@
-# Doxyfile 1.5.9
+# Doxyfile 1.6.1
 
 # This file describes the settings to be used by the documentation system
 # doxygen (www.doxygen.org) for a project
@@ -25,7 +25,7 @@ DOXYFILE_ENCODING      = UTF-8
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded 
 # by quotes) that should identify the project.
 
-PROJECT_NAME           = @PROJECT_NAME@
+PROJECT_NAME           = MAF3
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. 
 # This could be handy for archiving the generated documentation or 
@@ -38,7 +38,7 @@ PROJECT_NUMBER         = "v 3.0"
 # If a relative path is entered, it will be relative to the location 
 # where doxygen was started. If left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = @CMAKE_BINARY_DIR@/doc/DocOutput
+OUTPUT_DIRECTORY       = @CMAKE_BINARY_DIR@/qa/doc_output/DocWithTestsOutput
 
 # If the CREATE_SUBDIRS tag is set to YES, then doxygen will create 
 # 4096 sub-directories (in 2 levels) under the output directory of each output 
@@ -416,6 +416,16 @@ SORT_MEMBER_DOCS       = YES
 
 SORT_BRIEF_DOCS        = NO
 
+# If the SORT_MEMBERS_CTORS_1ST tag is set to YES then doxygen
+# will sort the (brief and detailed) documentation of class members so that
+# constructors and destructors are listed first. If set to NO (the default)
+# the constructors will appear in the respective orders defined by
+# SORT_MEMBER_DOCS and SORT_BRIEF_DOCS.
+# This tag will be ignored for brief docs if SORT_BRIEF_DOCS is set to NO
+# and ignored for detailed docs if SORT_MEMBER_DOCS is set to NO.
+
+#SORT_MEMBERS_CTORS_1ST = NO
+
 # If the SORT_GROUP_NAMES tag is set to YES then doxygen will sort the 
 # hierarchy of group names into alphabetical order. If set to NO (the default) 
 # the group names will appear in their defined order.
@@ -470,6 +480,12 @@ ENABLED_SECTIONS       =
 # command in the documentation regardless of this setting.
 
 MAX_INITIALIZER_LINES  = 30
+
+# Set the SHOW_USED_FILES tag to NO to disable the list of files generated 
+# at the bottom of the documentation of classes and structs. If set to YES the 
+# list will mention the files that were used to generate the documentation.
+
+#SHOW_USED_FILES        = YES
 
 # If the sources in your project are distributed over multiple directories 
 # then setting the SHOW_DIRECTORIES tag to YES will show the directory hierarchy 
@@ -570,14 +586,23 @@ WARN_LOGFILE           =
 
 INPUT                  = . \
                          @CMAKE_SOURCE_DIR@/src/mafCore \
+                         @CMAKE_SOURCE_DIR@/test/mafCoreTest\ \
                          @CMAKE_SOURCE_DIR@/src/mafQA \
+                         @CMAKE_SOURCE_DIR@/test/mafQATest \
                          @CMAKE_SOURCE_DIR@/src/mafEventBus \
+                         @CMAKE_SOURCE_DIR@/test/mafEventBusTest \
                          @CMAKE_SOURCE_DIR@/src/mafTimeSpace \
+                         @CMAKE_SOURCE_DIR@/test/mafTimeSpaceTest \
                          @CMAKE_SOURCE_DIR@/src/mafSerialization \
+                         @CMAKE_SOURCE_DIR@/test/mafSerializationTest \
                          @CMAKE_SOURCE_DIR@/src/mafResources \
+                         @CMAKE_SOURCE_DIR@/test/mafResourcesTest \
                          @CMAKE_SOURCE_DIR@/src/mafPluginVTK \
+                         @CMAKE_SOURCE_DIR@/test/mafPluginVTKTest \
                          @CMAKE_SOURCE_DIR@/src/mafApplicationLogic \
-                         @CMAKE_SOURCE_DIR@/src/mafGUI
+                         @CMAKE_SOURCE_DIR@/test/mafApplicationLogicTest \
+                         @CMAKE_SOURCE_DIR@/src/mafGUI \
+                         @CMAKE_SOURCE_DIR@/test/mafGUITest
 
 # This tag can be used to specify the character encoding of the source files 
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is 
@@ -594,7 +619,8 @@ INPUT_ENCODING         = UTF-8
 # *.c *.cc *.cxx *.cpp *.c++ *.java *.ii *.ixx *.ipp *.i++ *.inl *.h *.hh *.hxx 
 # *.hpp *.h++ *.idl *.odl *.cs *.php *.php3 *.inc *.m *.mm *.py *.f90
 
-FILE_PATTERNS          = *.h
+FILE_PATTERNS          = *.h \
+                         *.cpp
 
 # The RECURSIVE tag can be used to turn specify whether or not subdirectories 
 # should be searched for input files as well. Possible values are YES and NO. 
@@ -628,7 +654,7 @@ EXCLUDE_PATTERNS       =
 # wildcard * is used, a substring. Examples: ANamespace, AClass, 
 # AClass::ANamespace, ANamespace::*Test
 
-EXCLUDE_SYMBOLS        = 
+EXCLUDE_SYMBOLS        = test*
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or 
 # directories that contain example code fragments that are included (see 
@@ -766,7 +792,7 @@ IGNORE_PREFIX          = maf
 # If the GENERATE_HTML tag is set to YES (the default) Doxygen will 
 # generate HTML output.
 
-GENERATE_HTML          = YES
+GENERATE_HTML          = NO
 
 # The HTML_OUTPUT tag is used to specify where the HTML docs will be put. 
 # If a relative path is entered the value of OUTPUT_DIRECTORY will be 
@@ -790,7 +816,7 @@ HTML_HEADER            =
 # each generated HTML page. If it is left blank doxygen will generate a 
 # standard footer.
 
-HTML_FOOTER            = mafDoxygenFooter.html
+HTML_FOOTER            = 
 
 # The HTML_STYLESHEET tag can be used to specify a user-defined cascading 
 # style sheet that is used by each HTML page. It can be used to 
@@ -947,20 +973,18 @@ ENUM_VALUES_PER_LINE   = 4
 
 # The GENERATE_TREEVIEW tag is used to specify whether a tree-like index 
 # structure should be generated to display hierarchical information. 
-# If the tag value is set to FRAME, a side panel will be generated 
+# If the tag value is set to YES, a side panel will be generated 
 # containing a tree-like index structure (just like the one that 
 # is generated for HTML Help). For this to work a browser that supports 
-# JavaScript, DHTML, CSS and frames is required (for instance Mozilla 1.0+, 
-# Netscape 6.0+, Internet explorer 5.0+, or Konqueror). Windows users are 
-# probably better off using the HTML help feature. Other possible values 
-# for this tag are: HIERARCHIES, which will generate the Groups, Directories, 
-# and Class Hierarchy pages using a tree view instead of an ordered list; 
-# ALL, which combines the behavior of FRAME and HIERARCHIES; and NONE, which 
-# disables this behavior completely. For backwards compatibility with previous 
-# releases of Doxygen, the values YES and NO are equivalent to FRAME and NONE 
-# respectively.
+# JavaScript, DHTML, CSS and frames is required (i.e. any modern browser). 
+# Windows users are probably better off using the HTML help feature.
 
 GENERATE_TREEVIEW      = NONE
+
+# By enabling USE_INLINE_TREES, doxygen will generate the Groups, Directories, 
+# and Class Hierarchy pages using a tree view instead of an ordered list.
+
+#USE_INLINE_TREES       = NO
 
 # If the treeview is enabled (see GENERATE_TREEVIEW) then this tag can be 
 # used to set the initial width (in pixels) of the frame in which the tree 
@@ -975,6 +999,15 @@ TREEVIEW_WIDTH         = 250
 # to force them to be regenerated.
 
 FORMULA_FONTSIZE       = 10
+
+# When the SEARCHENGINE tag is enable doxygen will generate a search box
+# for the HTML output. The underlying search engine uses javascript 
+# and DHTML and should work on any modern browser. Note that when using
+# HTML help (GENERATE_HTMLHELP) or Qt help (GENERATE_QHP) 
+# there is already a search function so this one should typically 
+# be disabled.
+
+#SEARCHENGINE           = YES
 
 #---------------------------------------------------------------------------
 # configuration options related to the LaTeX output
@@ -1137,7 +1170,7 @@ MAN_LINKS              = NO
 # generate an XML file that captures the structure of 
 # the code including all documentation.
 
-GENERATE_XML           = NO
+GENERATE_XML           = YES
 
 # The XML_OUTPUT tag is used to specify where the XML pages will be put. 
 # If a relative path is entered the value of OUTPUT_DIRECTORY will be 
@@ -1210,7 +1243,7 @@ PERLMOD_PRETTY         = YES
 PERLMOD_MAKEVAR_PREFIX = 
 
 #---------------------------------------------------------------------------
-# Configuration options related to the preprocessor   
+# Configuration options related to the preprocessor
 #---------------------------------------------------------------------------
 
 # If the ENABLE_PREPROCESSING tag is set to YES (the default) Doxygen will 
@@ -1276,7 +1309,7 @@ EXPAND_AS_DEFINED      =
 SKIP_FUNCTION_MACROS   = YES
 
 #---------------------------------------------------------------------------
-# Configuration::additions related to external references   
+# Configuration::additions related to external references
 #---------------------------------------------------------------------------
 
 # The TAGFILES option can be used to specify one or more tagfiles. 
@@ -1319,7 +1352,7 @@ EXTERNAL_GROUPS        = YES
 PERL_PATH              = /usr/bin/perl
 
 #---------------------------------------------------------------------------
-# Configuration options related to the dot tool   
+# Configuration options related to the dot tool
 #---------------------------------------------------------------------------
 
 # If the CLASS_DIAGRAMS tag is set to YES (the default) Doxygen will 
@@ -1329,7 +1362,7 @@ PERL_PATH              = /usr/bin/perl
 # fallback. It is recommended to install and use dot, since it yields more 
 # powerful graphs.
 
-CLASS_DIAGRAMS         = YES
+CLASS_DIAGRAMS         = NO
 
 # You can define message sequence charts within doxygen comments using the \msc 
 # command. Doxygen will then run the mscgen tool (see 
@@ -1404,7 +1437,7 @@ UML_LOOK               = NO
 # If set to YES, the inheritance and collaboration graphs will show the 
 # relations between templates and their instances.
 
-TEMPLATE_RELATIONS     = YES
+TEMPLATE_RELATIONS     = NO
 
 # If the ENABLE_PREPROCESSING, SEARCH_INCLUDES, INCLUDE_GRAPH, and HAVE_DOT 
 # tags are set to YES then doxygen will generate a graph for each documented 
@@ -1511,12 +1544,3 @@ GENERATE_LEGEND        = YES
 # the various graphs.
 
 DOT_CLEANUP            = YES
-
-#---------------------------------------------------------------------------
-# Options related to the search engine
-#---------------------------------------------------------------------------
-
-# The SEARCHENGINE tag specifies whether or not a search engine should be 
-# used. If set to NO the values of all tags below this one will be ignored.
-
-SEARCHENGINE           = YES
