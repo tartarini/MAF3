@@ -49,7 +49,7 @@ public slots:
     /// Return the type of parametric surface used as marker.
     int parametricSurfaceType();
 
-    /// Set parameters of operation.
+    /// Set operation parameters.
     virtual void setParameters(QVariantList parameters);
 
     /// Execute the operation.

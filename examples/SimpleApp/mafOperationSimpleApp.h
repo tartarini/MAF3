@@ -31,6 +31,10 @@ public slots:
     void on_textTest_textEdited(QString text);
 
     void on_checkScalar_clicked(bool state);
+    
+    /// Set operation parameters.
+    /*virtual*/ void setParameters(QVariantList parameters);
+
 
 public:
     /// Object constructor.

@@ -44,6 +44,9 @@ public slots:
 
     /// Allows to call the piece of algorithm that is needed to apply the operation again.
     /*virtual*/ void reDo();
+    
+    /// Set operation parameters.
+    /*virtual*/ void setParameters(QVariantList parameters);
 
 public:
     /// Object constructor.

@@ -49,3 +49,8 @@ void mafOperationSimpleApp::on_checkScalar_clicked(bool state) {
 void mafOperationSimpleApp::terminated() {
     qDebug() << mafTr("Terminated with status: ") << m_Status;
 }
+
+void mafOperationSimpleApp::setParameters(QVariantList parameters) {
+    REQUIRE(parameters.count() == 1);
+    m_CheckScalar = parameters.at(0).toBool();
+}

@@ -152,3 +152,14 @@ void mafOperationTransform::reDo() {
 void mafOperationTransform::terminated() {
     qDebug() << mafTr("Terminated with status: ") << m_Status;
 }
+
+void mafOperationTransform::setParameters(QVariantList parameters) {
+    REQUIRE(parameters.count() % 3 == 0);
+    if(parameters.count() == 3) {
+        //set the orientation
+        m_DataSetCollection->setOrientation(parameters.at(0).toDouble(), parameters.at(1).toDouble(), parameters.at(2).toDouble());
+    } else {
+        //set the Pose (orientation + position)
+        m_DataSetCollection->setPose(parameters.at(0).toDouble(), parameters.at(1).toDouble(), parameters.at(2).toDouble(),parameters.at(3).toDouble(), parameters.at(4).toDouble(), parameters.at(5).toDouble());
+    }
+}

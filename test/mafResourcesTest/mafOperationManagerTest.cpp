@@ -48,12 +48,17 @@ protected:
 public slots:
     /// execution method
     /*virtual*/ void execute();
+    
+    /// Set operation parameters.
+    /*virtual*/ void setParameters(QVariantList parameters);
+
 };
 
 testEndlessOperation::testEndlessOperation(const QString code_location) : mafOperation(code_location) {
     m_CanUnDo = false;
     setObjectName("testEndlessOperation");
 }
+
 
 void testEndlessOperation::execute() {
     while ( m_Status != mafOperationStatusAborted ) {
@@ -69,6 +74,10 @@ void testEndlessOperation::execute() {
 
 void testEndlessOperation::terminated() {
     
+}
+
+void testEndlessOperation::setParameters(QVariantList parameters) {
+    Q_UNUSED(parameters);
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------
@@ -95,6 +104,10 @@ protected:
 public slots:
     /// execution method
     /*virtual*/ void execute();
+    
+    /// Set operation parameters.
+    /*virtual*/ void setParameters(QVariantList parameters);
+
 
 private:
     int m_Val;
@@ -127,6 +140,10 @@ void testNotUndoOperation::terminated() {
     
 }
 
+void testNotUndoOperation::setParameters(QVariantList parameters) {
+    Q_UNUSED(parameters);
+}
+
 //------------------------------------------------------------------------------------------------------------------------------------------------
 
 /**
@@ -146,6 +163,10 @@ public slots:
 
     /// Allows to call the piece of algorithm that is needed to apply the operation again.
     /*virtual*/ void reDo();
+    
+    /// Set operation parameters.
+    /*virtual*/ void setParameters(QVariantList parameters);
+
 
 public:
     /// Object constructor.
@@ -213,6 +234,10 @@ void testUndoOperation::reDo() {
 
 void testUndoOperation::terminated() {
     
+}
+
+void testUndoOperation::setParameters(QVariantList parameters) {
+    Q_UNUSED(parameters);
 }
 
 //==========================================================================================

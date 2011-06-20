@@ -128,7 +128,7 @@ void mafOperationParametricSurface::reDo() {
 }
 
 void mafOperationParametricSurface::setParameters(QVariantList parameters) {
-    Q_UNUSED(parameters);
+     //@@TODO NEED TO IMPLEMENT
 }
 
 void mafOperationParametricSurface::setParametricSurfaceType(int index){
@@ -253,5 +253,3 @@ void mafOperationParametricSurface::on_ellipsoidZLength_valueChanged(double d) {
     m_ParametricEllipsoid->updateSurface();
     this->updateParametricSurface();
 }
-
-
