@@ -28,7 +28,7 @@ using namespace mafEventBus;
 using namespace mafGUI;
 
 mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location) : mafObjectBase(code_location)
-    , m_VMEWidget(NULL), m_ViewWidget(NULL), m_VisualPipeWidget(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win)
+    , m_VMEWidget(NULL), m_ViewWidget(NULL), m_VisualPipeWidget(NULL), m_CurrentPipeVisual(NULL), m_CurrentView(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win)
     , m_Model(NULL), m_TreeWidget(NULL), m_Logic(NULL), m_CompleteFileName(), m_LastPath() {
 
     m_SettingsDialog = new mafGUIApplicationSettingsDialog();
@@ -47,14 +47,13 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     // VME selection callbacks.
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateMenuForSelectedVme(mafCore::mafObjectBase *)")
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateTreeForSelectedVme(mafCore::mafObjectBase *)")
-
+    
     // OperationManager's callback
     mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
     
     // ViewManager's callback.
     mafRegisterLocalCallback("maf.local.resources.view.select", this, "viewSelected(mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.view.noneViews", this, "viewDestroyed()");
-
 
     m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
     connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*)), this, SLOT(showGui(mafCore::mafProxyInterface*)));
@@ -436,20 +435,25 @@ void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
         // Ask the UI Loader to load the operation's GUI.
         m_UILoader->uiLoad(guiFilename);
     }
-    mafCore::mafObjectBase *sel_pipeVisual = NULL;
-    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_pipeVisual);
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.pipeVisual.selected", mafEventTypeLocal, NULL, &ret_val);
-    if (sel_pipeVisual) {
-        QString guiFilename = sel_pipeVisual->uiFilename();
-        if(guiFilename.isEmpty()) {
-            showGui(NULL);
-            return;
-        }
+}
+
+void mafGUIManager::updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeVisual) {
+    mafObjectBase *view = (mafObjectBase *)QObject::sender();
+    if (view != m_CurrentView) {
         m_GUILoadedType = mafGUILoadedTypeVisualPipe;
-        // Ask the UI Loader to load the view's GUI.
-        m_UILoader->uiLoad(guiFilename);
+        if (pipeVisual) {
+            m_CurrentPipeVisual = pipeVisual;
+            QString guiFilename = pipeVisual->uiFilename();
+            if(!guiFilename.isEmpty()) {
+                // Ask the UI Loader to load the view's GUI.
+                m_UILoader->uiLoad(guiFilename);
+                return;
+            }
+        } 
+        showGui(NULL);
     }
 }
+
 
 void mafGUIManager::registerDefaultEvents() {
     mafIdProvider *provider = mafIdProvider::instance();
@@ -720,13 +724,8 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
                     emit guiTypeToRemove(mafGUILoadedTypeVisualPipe);
                 }
                 m_VisualPipeWidget = widget;
-
-                /// get view selected
-                mafCore::mafObjectBase *sel_pipeVisual = NULL;
-                QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_pipeVisual);
-                mafEventBusManager::instance()->notifyEvent("maf.local.resources.pipeVisual.selected", mafEventTypeLocal, NULL, &ret_val);
-                if (sel_pipeVisual) {
-                    mafConnectObjectWithGUI(sel_pipeVisual, m_VisualPipeWidget);
+                if (m_CurrentPipeVisual && m_VisualPipeWidget) {
+                    mafConnectObjectWithGUI(m_CurrentPipeVisual, m_VisualPipeWidget);
                     emit guiLoaded(m_GUILoadedType, m_VisualPipeWidget);
                 }
             }
@@ -762,10 +761,24 @@ void mafGUIManager::createView() {
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString, view));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList);
+
+    mafCore::mafObjectBase *sel_view = NULL;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_view);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
+    if (sel_view) {
+        connect(sel_view, SIGNAL(pipeVisualSelectedSignal(mafCore::mafObjectBase *)), this, SLOT(updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *)));
+    }
 }
+
 
 void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
     REQUIRE(view != NULL);
+    if (m_CurrentView != view) {
+  //      disconnect(m_CurrentView, SIGNAL(pipeVisualSelectedSignal(mafCore::mafObjectBase *)), this, SLOT(updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *)));
+        m_CurrentView = view;
+//        connect(m_CurrentView, SIGNAL(pipeVisualSelectedSignal(mafCore::mafObjectBase *)), this, SLOT(updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *)));
+    }
+    
     // Set current hierarchy
     mafHierarchyPointer sceneGraph;
     sceneGraph = view->property("hierarchy").value<mafCore::mafHierarchyPointer>();
@@ -780,19 +793,22 @@ void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
         // TODO: select previous index
         //m_TreeWidget->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
     }
+    // Set the current panel to the parent panel of view properties.
+    m_GUILoadedType = mafGUILoadedTypeView;
+
     // Get the selected view's UI file
     QString guiFilename = view->uiFilename();
     if(guiFilename.isEmpty()) {
         showGui(NULL);
         return;
     }
-    // Set the current panel to the parent panel of view properties.
-    m_GUILoadedType = mafGUILoadedTypeView;
+    
     // Ask the UI Loader to load the view's GUI.
     m_UILoader->uiLoad(guiFilename);
 }
 
 void mafGUIManager::viewDestroyed() { //ALL THE VIEWS ARE DESTROYED
+    m_CurrentView = NULL;
     // Get hierarchy from mafVMEManager
     mafCore::mafHierarchyPointer vmeHierarchy;
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, vmeHierarchy);

@@ -30,7 +30,6 @@ mafView::mafView(const QString code_location) : mafResource(code_location), m_Re
     // CallBack related to the Scene node reparent
     mafRegisterLocalCallback("maf.local.resources.view.sceneNodeReparent", this, "sceneNodeReparent(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
 
-
     // Callbacks related to the VME creation
     mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)")
     // Callback related to the VME selection
@@ -41,6 +40,7 @@ mafView::mafView(const QString code_location) : mafResource(code_location), m_Re
 mafView::~mafView() {   
     clearScene();
 }
+
 
 void mafView::clearScene() {
     mafDEL(m_Scenegraph);
@@ -124,6 +124,7 @@ void mafView::selectSceneNode(mafSceneNode *node, bool select) {
         m_PipeVisualSelection->setInput(node->vme());
         m_PipeVisualSelection->updatePipe();
         m_PipeVisualSelection->setVisibility(node->property("visibility").toBool());
+        emit pipeVisualSelectedSignal(node->visualPipe());
     }
 }
 
@@ -176,6 +177,13 @@ mafSceneNode *mafView::sceneNodeFromVme(mafObjectBase *vme) {
         }
      }
      return NULL;
+}
+
+void mafView::select(bool select) {
+    m_Selected = select;
+    if (select) {
+        selectSceneNode(m_SelectedNode, select);
+    }
 }
 
 void mafView::updateView() {
