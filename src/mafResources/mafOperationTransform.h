@@ -23,7 +23,7 @@ class mafDataSetCollection;
   Class Name: mafOperationTransform
   This operation allow to transform the pose matrix of the input selected VME.
   */
-class mafOperationTransform : public mafOperation {
+class MAFRESOURCESSHARED_EXPORT mafOperationTransform : public mafOperation {
     Q_OBJECT
     Q_PROPERTY(QString xPos READ xPos WRITE setXPos)
     Q_PROPERTY(QString yPos READ yPos WRITE setYPos)
