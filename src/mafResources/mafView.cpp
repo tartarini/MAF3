@@ -119,7 +119,7 @@ void mafView::removeSceneNode(mafSceneNode *node) {
 void mafView::selectSceneNode(mafSceneNode *node, bool select) {
     m_SelectedNode = node;
     Q_UNUSED(select);
-    
+
     if(node && m_PipeVisualSelection) {
         m_PipeVisualSelection->setInput(node->vme());
         m_PipeVisualSelection->updatePipe();

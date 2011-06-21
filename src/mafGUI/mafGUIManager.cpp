@@ -438,20 +438,17 @@ void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
 }
 
 void mafGUIManager::updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeVisual) {
-    mafObjectBase *view = (mafObjectBase *)QObject::sender();
-    if (view != m_CurrentView) {
-        m_GUILoadedType = mafGUILoadedTypeVisualPipe;
-        if (pipeVisual) {
-            m_CurrentPipeVisual = pipeVisual;
-            QString guiFilename = pipeVisual->uiFilename();
-            if(!guiFilename.isEmpty()) {
-                // Ask the UI Loader to load the view's GUI.
-                m_UILoader->uiLoad(guiFilename);
-                return;
-            }
-        } 
-        showGui(NULL);
-    }
+    m_GUILoadedType = mafGUILoadedTypeVisualPipe;
+    if (pipeVisual && m_CurrentPipeVisual != pipeVisual) {
+        m_CurrentPipeVisual = pipeVisual;
+        QString guiFilename = pipeVisual->uiFilename();
+        if(!guiFilename.isEmpty()) {
+            // Ask the UI Loader to load the view's GUI.
+            m_UILoader->uiLoad(guiFilename);
+            return;
+        }
+    } 
+    showGui(NULL);
 }
 
 
@@ -809,6 +806,7 @@ void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
 
 void mafGUIManager::viewDestroyed() { //ALL THE VIEWS ARE DESTROYED
     m_CurrentView = NULL;
+    m_CurrentPipeVisual = NULL;
     // Get hierarchy from mafVMEManager
     mafCore::mafHierarchyPointer vmeHierarchy;
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, vmeHierarchy);
