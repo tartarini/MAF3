@@ -25,8 +25,6 @@ mafPipeVisual::mafPipeVisual(const QString code_location) : mafPipe(code_locatio
 }
 
 mafPipeVisual::~mafPipeVisual() {
-    m_GraphicObject = NULL;
-    setVisibility(false);
 }
 
 void mafPipeVisual::initializeConnections() {
@@ -50,6 +48,10 @@ void mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::m
 
 void mafPipeVisual::setVisibility(bool visible) {
     m_Visibility = visible;
+    updateVisibility();
+}
+
+void mafPipeVisual::updateVisibility() {
 }
 
 void mafPipeVisual::setGraphicObject(QObject *graphicObject) {
