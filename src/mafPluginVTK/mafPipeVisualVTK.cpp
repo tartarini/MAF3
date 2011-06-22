@@ -31,11 +31,17 @@ mafPipeVisualVTK::~mafPipeVisualVTK() {
 }
 
 void mafPipeVisualVTK::updatedGraphicObject() {
-    mafVTKWidget* widget = qobject_cast<mafVTKWidget*>(graphicObject());
+    mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(graphicObject());
     vtkRendererCollection *rc = widget->GetRenderWindow()->GetRenderers();
     m_Renderer = rc->GetFirstRenderer();
 }
 
+void mafPipeVisualVTK::render() {
+    mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(graphicObject());
+    if (widget != NULL) {
+        widget->GetRenderWindow()->Render();
+    }
+}
 
 void mafPipeVisualVTK::setScalarVisibility(bool scalarVisibility) {
     m_ScalarVisibility = scalarVisibility;
@@ -56,8 +62,6 @@ void mafPipeVisualVTK::updateVisibility() {
     } else {
         m_Renderer->RemoveViewProp(m_Actor);
     }
-    m_Renderer->GetRenderWindow()->Render();
+    render();
     m_Renderer->ResetCamera();
-
 }
-

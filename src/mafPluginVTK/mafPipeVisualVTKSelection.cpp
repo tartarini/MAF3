@@ -55,10 +55,6 @@ bool mafPipeVisualVTKSelection::acceptObject(mafCore::mafObjectBase *obj) {
     return false;
 }
 
-void mafPipeVisualVTKSelection::setVisibility(bool visible) {
-    Superclass::setVisibility(visible);
-}
-
 void mafPipeVisualVTKSelection::updatePipe(double t) {
     setModified(false);
     mafDataSet *data = dataSetForInput(0, t);

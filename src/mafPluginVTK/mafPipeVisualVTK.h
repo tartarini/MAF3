@@ -73,6 +73,9 @@ public slots:
     
     /// Set the flag to activate immediate rendering mode.
     void setImmediateRendering(bool immediateRendering);
+
+    /// Allows to ask the rendering engine to render the graphic scene.
+    /*virtual*/ void render();
 };
 
 /////////////////////////////////////////////////////////////

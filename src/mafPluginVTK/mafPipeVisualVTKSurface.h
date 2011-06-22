@@ -43,19 +43,19 @@ public:
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
 
-public slots:
-    /// Allow to execute and update the pipeline when something change.
-    /*virtual*/ void updatePipe(double t = -1);
-
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTKSurface();
-
+    
 private:
     vtkPolyDataMapper  *m_Mapper; ///< Class that maps polygonal data.
     vtkRenderer * m_Renderer; ///< Current VTK Renderer. 
     bool m_ScalarVisibility; ///< Flag to activate scalar visibility.
     bool m_ImmediateRendering; ///< Flag to activate immediate rendering mode.
+
+public slots:
+    /// Allow to execute and update the pipeline when something change.
+    /*virtual*/ void updatePipe(double t = -1);
 };
 
 } // namespace mafPluginVTK
