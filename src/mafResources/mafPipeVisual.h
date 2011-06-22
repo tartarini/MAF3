@@ -57,10 +57,11 @@ protected:
     /* virtual */ ~mafPipeVisual();
 
     /// Called when a new graphic object has been set.
-    /**
-    This method has to be re-defined to update stuff linked to the graphic object.
-    */
+    /** This method has to be re-defined to update stuff linked to the graphic object.*/
     virtual void updatedGraphicObject();
+
+    /// update visibility for actor or volume passed as parameter
+    virtual void updateVisibility();
 
     mafCore::mafProxyInterface *m_Output; ///< Output for visual pipe.
     QObject *m_GraphicObject; ///< represents the graphic object for render the scene.

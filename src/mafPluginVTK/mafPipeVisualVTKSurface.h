@@ -46,9 +46,6 @@ public:
 public slots:
     /// Allow to execute and update the pipeline when something change.
     /*virtual*/ void updatePipe(double t = -1);
-    
-    /// Set the visibility of its rendering scene.
-    /*virtual*/ void setVisibility(bool visible);
 
 protected:
     /// Object destructor.
@@ -57,7 +54,6 @@ protected:
 private:
     vtkPolyDataMapper  *m_Mapper; ///< Class that maps polygonal data.
     vtkRenderer * m_Renderer; ///< Current VTK Renderer. 
-    mafCore::mafProxy<vtkActor> m_Actor; ///< Output container.
     bool m_ScalarVisibility; ///< Flag to activate scalar visibility.
     bool m_ImmediateRendering; ///< Flag to activate immediate rendering mode.
 };

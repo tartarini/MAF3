@@ -31,7 +31,7 @@ mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : 
     m_Mapper = vtkPolyDataMapper::New();
     m_Actor = vtkActor::New();
     m_Actor.setDestructionFunction(&vtkActor::Delete);
-    m_Actor->SetMapper(m_Mapper);
+    vtkActor::SafeDownCast(m_Actor)->SetMapper(m_Mapper);
     m_Output = &m_Actor;
 }
 
@@ -60,11 +60,6 @@ void mafPipeVisualVTKSurface::updatePipe(double t) {
     //Keep ImmediateModeRendering off: it slows rendering
     //m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
     setModified(false);
-}
-
-void mafPipeVisualVTKSurface::setVisibility(bool visible) {
-    Superclass::setVisibility(visible);
-    updateVisibility(m_Actor);
 }
 
 void mafPipeVisualVTKSurface::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
