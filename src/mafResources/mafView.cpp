@@ -160,6 +160,9 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
             node->setVisualPipe(vp);
         } 
         node->setVisibility(show);
+        if (show){
+            connect(node->visualPipe(), SIGNAL(modifiedObject()), this, SLOT(updateView()));
+        }         
     }
 }
 

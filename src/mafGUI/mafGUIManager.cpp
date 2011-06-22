@@ -439,15 +439,19 @@ void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
 
 void mafGUIManager::updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeVisual) {
     m_GUILoadedType = mafGUILoadedTypeVisualPipe;
-    if (pipeVisual && m_CurrentPipeVisual != pipeVisual) {
-        m_CurrentPipeVisual = pipeVisual;
-        QString guiFilename = pipeVisual->uiFilename();
-        if(!guiFilename.isEmpty()) {
-            // Ask the UI Loader to load the view's GUI.
-            m_UILoader->uiLoad(guiFilename);
-            return;
+    if (pipeVisual) {
+        if (m_CurrentPipeVisual != pipeVisual) {
+            m_CurrentPipeVisual = pipeVisual;
+            QString guiFilename = pipeVisual->uiFilename();
+            if(!guiFilename.isEmpty()) {
+                // Ask the UI Loader to load the view's GUI.
+                m_UILoader->uiLoad(guiFilename);
+                return;
+            } 
         }
+        return;
     } 
+    m_CurrentPipeVisual = NULL;
     showGui(NULL);
 }
 
@@ -682,7 +686,6 @@ mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *par
 }
 
 mafTextEditWidget *mafGUIManager::createLogWidget(QWidget *parent) {
-
     mafTextEditWidget *w = m_Logger->textWidgetLog();
     w->setParent(parent);
     w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

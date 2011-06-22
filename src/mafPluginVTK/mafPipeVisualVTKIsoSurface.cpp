@@ -81,9 +81,11 @@ void mafPipeVisualVTKIsoSurface::updatePipe(double t) {
     //Get data contained in the mafProxy
     m_Mapper->SetInputConnection(m_ContourFilter->GetOutputPort());
     m_Mapper->SetScalarVisibility(m_ScalarVisibility);
+    m_Mapper->Update();
     //Keep ImmediateModeRendering off: it slows rendering
     //m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
     setModified(false);
+    emit modifiedObject();
 }
 
 void mafPipeVisualVTKIsoSurface::setVisibility(bool visible) {
@@ -112,6 +114,7 @@ void mafPipeVisualVTKIsoSurface::on_contourValue_editingFinished() {
 
 void mafPipeVisualVTKIsoSurface::on_contourValueSlider_valueChanged(int value) {
     m_ContourValue = value;
+    updateUI();
 }
 
 void mafPipeVisualVTKIsoSurface::on_contourValueSlider_sliderReleased() {
