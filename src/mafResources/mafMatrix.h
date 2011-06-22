@@ -13,6 +13,7 @@
 #define MAFMATRIX_H
 
 #include <QMetaType>
+#include <mafCoreDefinitions.h>
 
 // OpenCV includes
 #include <cv.h>
