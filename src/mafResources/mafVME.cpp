@@ -32,6 +32,7 @@ mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Inte
 }
 
 mafVME::~mafVME() {
+    detatchFromTree();
     mafDEL(m_DataSetCollection);
     mafDEL(m_DataPipe);
 
