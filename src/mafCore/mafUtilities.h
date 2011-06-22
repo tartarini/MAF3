@@ -12,6 +12,10 @@
 #ifndef MAFUTILITIES_H
 #define MAFUTILITIES_H
 
+#include <limits>
+
+#define EPSILON_DOUBLE std::numeric_limits<double>::epsilon()
+
 extern bool mafEquals(double x, double y);
 extern bool mafFloatEquals(float x, float y);
 extern double mafRoundToPrecision(double val, unsigned prec);

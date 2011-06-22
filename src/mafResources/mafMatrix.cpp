@@ -14,6 +14,7 @@
 
 using namespace cv;
 using namespace mafResources;
+using namespace mafCore;
 
 mafMatrix::mafMatrix() {
     m_Matrix = cvCreateMat(4, 4, CV_64FC1);
@@ -36,7 +37,11 @@ mafMatrix & mafMatrix::operator =(const mafMatrix &mat) {
     return *this;
 }
 
-mafMatrix *mafMatrix::clone() const{
+double *mafMatrix::rawData() const {
+    return m_Matrix->data.db;
+}
+
+mafMatrix *mafMatrix::clone() const {
     mafMatrix *m= new mafMatrix(m_Matrix->rows, m_Matrix->cols);
     cvCopy(m_Matrix, m->m_Matrix);
     return m;
@@ -50,19 +55,17 @@ bool mafMatrix::isEqual(const mafMatrix &mat) {
     
     int r = m_Matrix->rows;
     int c = m_Matrix->cols;
+    int dim = r * c;
     int i=0;
-    int j=0;
-    double valueOrig;
-    double valueCheck;
-    for (; i<r ; ++i){
-        for(j = 0; j<c ; ++j) {
-            valueOrig = cvmGet(m_Matrix, i, j);
-            valueCheck = cvmGet(check   , i, j);
-            if (valueOrig != valueCheck) {
-                return false;
-            }
+
+    double *me = rawData();
+    double *other = mat.rawData();
+    for (; i < dim; ++i) {
+        if (!mafEquals(me[i], other[i])) {
+            return false;
         }
     }
+
     return true;
 }
 
@@ -84,8 +87,6 @@ void mafMatrix::description() const {
     }
 
 }
-
-
 
 void mafMatrix::setIdentity() {
     cvSetIdentity(m_Matrix);
