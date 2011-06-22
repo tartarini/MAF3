@@ -58,8 +58,7 @@ bool mafPipeVisualVTKIsoSurface::acceptObject(mafCore::mafObjectBase *obj) {
 }
 
 void mafPipeVisualVTKIsoSurface::updatePipe(double t) {
-    mafVME *inputVME = this->inputList()->at(0);
-    mafDataSet *data = inputVME->dataSetCollection()->itemAt(t);
+    mafDataSet *data = dataSetForInput(0, t);
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
 
     vtkAlgorithm *producer = (*dataSet)->GetProducer();

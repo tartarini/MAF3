@@ -62,8 +62,7 @@ void mafPipeVisualVTKSelection::setVisibility(bool visible) {
 
 void mafPipeVisualVTKSelection::updatePipe(double t) {
     setModified(false);
-    mafVMEList *inputList = this->inputList();
-    mafDataSet *data = inputList->at(0)->dataSetCollection()->itemAt(t);
+    mafDataSet *data = dataSetForInput(0, t);
     if(data == NULL) {
         return;
     }
