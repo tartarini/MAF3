@@ -101,12 +101,6 @@ void mafMatrixTest::mafMatrixIdentityTest() {
 void mafMatrixTest::mafMatrixMultiplicationAndAssignmentTest() {
     mafMatrix identity;
     identity.setIdentity();
-    /*
-    identity.setElement(0, 0, 1.0); identity.setElement(0, 1, 0.0); identity.setElement(0, 2, 0.0); identity.setElement(0, 3, 0.0);
-    identity.setElement(1, 0, 0.0); identity.setElement(1, 1, 1.0); identity.setElement(1, 2, 0.0); identity.setElement(1, 3, 0.0);
-    identity.setElement(2, 0, 0.0); identity.setElement(2, 1, 0.0); identity.setElement(2, 2, 1.0); identity.setElement(2, 3, 0.0);
-    identity.setElement(3, 0, 0.0); identity.setElement(3, 1, 0.0); identity.setElement(3, 2, 0.0); identity.setElement(3, 3, 1.0);
-    */
 
     mafMatrix first;
     first.setElement(0, 0, 2.0); first.setElement(0, 1, 2.0); first.setElement(0, 2, 0.0); first.setElement(0, 3, 2.0);
@@ -131,13 +125,13 @@ void mafMatrixTest::mafMatrixRawDataExtractionTest() {
     // | 3.0 2.0 2.0 2.0 |
     // | 0.0 2.0 2.0 5.0 |
     // | 1.0 0.0 2.0 2.0 |
-    mafMatrix first;
-    first.setElement(0, 0, 2.0); first.setElement(0, 1, 2.0); first.setElement(0, 2, 0.0); first.setElement(0, 3, 2.0);
-    first.setElement(1, 0, 3.0); first.setElement(1, 1, 2.0); first.setElement(1, 2, 2.0); first.setElement(1, 3, 2.0);
-    first.setElement(2, 0, 0.0); first.setElement(2, 1, 2.0); first.setElement(2, 2, 2.0); first.setElement(2, 3, 5.0);
-    first.setElement(3, 0, 1.0); first.setElement(3, 1, 0.0); first.setElement(3, 2, 2.0); first.setElement(3, 3, 2.0);
+    mafMatrix matrtix;
+    matrtix.setElement(0, 0, 2.0); matrtix.setElement(0, 1, 2.0); matrtix.setElement(0, 2, 0.0); matrtix.setElement(0, 3, 2.0);
+    matrtix.setElement(1, 0, 3.0); matrtix.setElement(1, 1, 2.0); matrtix.setElement(1, 2, 2.0); matrtix.setElement(1, 3, 2.0);
+    matrtix.setElement(2, 0, 0.0); matrtix.setElement(2, 1, 2.0); matrtix.setElement(2, 2, 2.0); matrtix.setElement(2, 3, 5.0);
+    matrtix.setElement(3, 0, 1.0); matrtix.setElement(3, 1, 0.0); matrtix.setElement(3, 2, 2.0); matrtix.setElement(3, 3, 2.0);
     
-    double *val = first.rawData();
+    double *val = matrtix.rawData();
     bool ok(false);
     ok = val[0] == 2.0;
     QVERIFY(ok);
