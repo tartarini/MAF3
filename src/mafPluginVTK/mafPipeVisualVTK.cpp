@@ -55,5 +55,7 @@ void mafPipeVisualVTK::updateVisibility(vtkProp3D *prop) {
         m_Renderer->RemoveViewProp(prop);
     }
     m_Renderer->GetRenderWindow()->Render();
+    m_Renderer->ResetCamera();
+
 }
 
