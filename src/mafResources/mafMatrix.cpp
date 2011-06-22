@@ -36,7 +36,11 @@ mafMatrix & mafMatrix::operator =(const mafMatrix &mat) {
     return *this;
 }
 
-mafMatrix *mafMatrix::clone() const{
+double *mafMatrix::rawData() const {
+    return m_Matrix->data.db;
+}
+
+mafMatrix *mafMatrix::clone() const {
     mafMatrix *m= new mafMatrix(m_Matrix->rows, m_Matrix->cols);
     cvCopy(m_Matrix, m->m_Matrix);
     return m;

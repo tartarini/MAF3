@@ -65,10 +65,11 @@ public:
     /// dump the description of the object (information, attributes, variables...)
     virtual void description() const;
     
+    /// Return the raw data (row-wise) of the matrix.
+    double *rawData() const;
+    
 private:
-
     CvMat *m_Matrix;///< represents the basic matrix.    
-
 };
     
 /// Define the pointer to the mafMatrix needed to be registered with Q_DECLARE_METATYPE macro.
