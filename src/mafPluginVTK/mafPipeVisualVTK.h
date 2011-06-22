@@ -50,14 +50,6 @@ public:
     /// Return the flag to activate immediate rendering mode.
     bool immediateRendering();
 
-public slots:
-
-    /// Set the flag to activate scalar visibility.
-    void setScalarVisibility(bool scalarVisibility);
-
-    /// Set the flag to activate immediate rendering mode.
-    void setImmediateRendering(bool immediateRendering);
-
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTK();
@@ -72,6 +64,13 @@ private:
     vtkRenderer * m_Renderer; ///< Current VTK Renderer.
     bool m_ScalarVisibility; ///< Flag to activate scalar visibility.
     bool m_ImmediateRendering; ///< Flag to activate immediate rendering mode.
+    
+public slots:
+    /// Set the flag to activate scalar visibility.
+    void setScalarVisibility(bool scalarVisibility);
+    
+    /// Set the flag to activate immediate rendering mode.
+    void setImmediateRendering(bool immediateRendering);
 };
 
 /////////////////////////////////////////////////////////////
