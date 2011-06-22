@@ -61,6 +61,9 @@ private slots:
     
     /// test matrix multiplication and assignment
     void mafMatrixMultiplicationAndAssignmentTest();
+    
+    /// test rawData matrix extraction
+    void mafMatrixRawDataExtractionTest();
 
 private:
     mafMatrix *m_Matrix; ///< Test var.
@@ -97,17 +100,20 @@ void mafMatrixTest::mafMatrixIdentityTest() {
 
 void mafMatrixTest::mafMatrixMultiplicationAndAssignmentTest() {
     mafMatrix identity;
+    identity.setIdentity();
+    /*
     identity.setElement(0, 0, 1.0); identity.setElement(0, 1, 0.0); identity.setElement(0, 2, 0.0); identity.setElement(0, 3, 0.0);
     identity.setElement(1, 0, 0.0); identity.setElement(1, 1, 1.0); identity.setElement(1, 2, 0.0); identity.setElement(1, 3, 0.0);
     identity.setElement(2, 0, 0.0); identity.setElement(2, 1, 0.0); identity.setElement(2, 2, 1.0); identity.setElement(2, 3, 0.0);
     identity.setElement(3, 0, 0.0); identity.setElement(3, 1, 0.0); identity.setElement(3, 2, 0.0); identity.setElement(3, 3, 1.0);
-    
+    */
+
     mafMatrix first;
     first.setElement(0, 0, 2.0); first.setElement(0, 1, 2.0); first.setElement(0, 2, 0.0); first.setElement(0, 3, 2.0);
     first.setElement(1, 0, 2.0); first.setElement(1, 1, 2.0); first.setElement(1, 2, 2.0); first.setElement(1, 3, 2.0);
     first.setElement(2, 0, 0.0); first.setElement(2, 1, 2.0); first.setElement(2, 2, 2.0); first.setElement(2, 3, 2.0);
     first.setElement(3, 0, 2.0); first.setElement(3, 1, 0.0); first.setElement(3, 2, 2.0); first.setElement(3, 3, 2.0);
-
+    
     mafMatrix second;
     second.setElement(0, 0, 0.0); second.setElement(0, 1, 0.5); second.setElement(0, 2, -0.5);second.setElement(0, 3, 0.0);
     second.setElement(1, 0, 0.0); second.setElement(1, 1, 0.5); second.setElement(1, 2, 0.0); second.setElement(1, 3, -0.5);
@@ -120,6 +126,30 @@ void mafMatrixTest::mafMatrixMultiplicationAndAssignmentTest() {
 
 }
 
+void mafMatrixTest::mafMatrixRawDataExtractionTest() {
+    // | 2.0 2.0 0.0 2.0 |
+    // | 3.0 2.0 2.0 2.0 |
+    // | 0.0 2.0 2.0 5.0 |
+    // | 1.0 0.0 2.0 2.0 |
+    mafMatrix first;
+    first.setElement(0, 0, 2.0); first.setElement(0, 1, 2.0); first.setElement(0, 2, 0.0); first.setElement(0, 3, 2.0);
+    first.setElement(1, 0, 3.0); first.setElement(1, 1, 2.0); first.setElement(1, 2, 2.0); first.setElement(1, 3, 2.0);
+    first.setElement(2, 0, 0.0); first.setElement(2, 1, 2.0); first.setElement(2, 2, 2.0); first.setElement(2, 3, 5.0);
+    first.setElement(3, 0, 1.0); first.setElement(3, 1, 0.0); first.setElement(3, 2, 2.0); first.setElement(3, 3, 2.0);
+    
+    double *val = first.rawData();
+    bool ok(false);
+    ok = val[0] == 2.0;
+    QVERIFY(ok);
+    ok = val[4] == 3.0;
+    QVERIFY(ok);
+    ok = val[11] == 5.0;
+    QVERIFY(ok);
+    ok = val[12] == 1.0;
+    QVERIFY(ok);
+    ok = val[14] == 2.0;
+    QVERIFY(ok);
+}
 
 MAF_REGISTER_TEST(mafMatrixTest);
 #include "mafMatrixTest.moc"
