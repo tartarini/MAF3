@@ -13,12 +13,14 @@
 #define MAFUTILITIES_H
 
 #include <limits>
+#include "mafCore_global.h"
+
 
 #define EPSILON_DOUBLE std::numeric_limits<double>::epsilon()
 
-extern bool mafEquals(double x, double y);
-extern bool mafFloatEquals(float x, float y);
-extern double mafRoundToPrecision(double val, unsigned prec);
-extern bool mafIsLittleEndian(void);
+extern MAFCORESHARED_EXPORT bool mafEquals(double x, double y);
+extern MAFCORESHARED_EXPORT bool mafFloatEquals(float x, float y);
+extern MAFCORESHARED_EXPORT double mafRoundToPrecision(double val, unsigned prec);
+extern MAFCORESHARED_EXPORT bool mafIsLittleEndian(void);
 
 #endif // MAFUTILITIES_H
