@@ -43,6 +43,23 @@ void mafPipe::setInput(mafVME *vme) {
     setModified();
 }
 
+mafVME *mafPipe::input(int idx) const {
+    if (idx < 0 || idx >= m_InputList->count()) {
+        return NULL;
+    }
+    
+    return m_InputList->at(idx);
+}
+
+mafDataSet *mafPipe::dataSetForInput(int input_idx, double t) {
+    mafVME *vme = input(input_idx);
+    if (vme == NULL) {
+        return NULL;
+    }
+    
+    return vme->dataSetCollection()->itemAt(t);
+}
+
 void mafPipe::removeInput(mafVME *vme) {
     REQUIRE(vme != NULL);
 
