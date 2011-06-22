@@ -39,6 +39,8 @@ mafView::mafView(const QString code_location) : mafResource(code_location), m_Re
 
 mafView::~mafView() {   
     clearScene();
+    // emit signal to detach visual pipe gui
+    emit pipeVisualSelectedSignal(NULL);
 }
 
 
@@ -124,6 +126,7 @@ void mafView::selectSceneNode(mafSceneNode *node, bool select) {
         m_PipeVisualSelection->setInput(node->vme());
         m_PipeVisualSelection->updatePipe();
         m_PipeVisualSelection->setVisibility(node->property("visibility").toBool());
+        // emit signal to attach visual pipe gui
         emit pipeVisualSelectedSignal(node->visualPipe());
     }
 }
