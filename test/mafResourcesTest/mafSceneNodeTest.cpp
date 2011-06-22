@@ -41,6 +41,9 @@ public:
 public slots:
     /// Allow to execute and update the pipeline when something change
     /*virtual*/ void updatePipe(double t = -1);
+    
+    /// Allows to ask the rendering engine to render the graphic scene.
+    /*virtual*/ void render();
 
 private:
     QString m_PipeLine; ///< Test Var.
@@ -51,6 +54,10 @@ testVisualPipeCustomForSceneNode::testVisualPipeCustomForSceneNode(const QString
 
 void testVisualPipeCustomForSceneNode::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
     Q_UNUSED(pipeVisualSelection);
+}
+
+void testVisualPipeCustomForSceneNode::render() {
+    
 }
 
 void testVisualPipeCustomForSceneNode::updatePipe(double t) {
