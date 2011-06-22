@@ -773,11 +773,7 @@ void mafGUIManager::createView() {
 
 void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
     REQUIRE(view != NULL);
-    if (m_CurrentView != view) {
-  //      disconnect(m_CurrentView, SIGNAL(pipeVisualSelectedSignal(mafCore::mafObjectBase *)), this, SLOT(updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *)));
-        m_CurrentView = view;
-//        connect(m_CurrentView, SIGNAL(pipeVisualSelectedSignal(mafCore::mafObjectBase *)), this, SLOT(updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *)));
-    }
+    m_CurrentView = view;
     
     // Set current hierarchy
     mafHierarchyPointer sceneGraph;
