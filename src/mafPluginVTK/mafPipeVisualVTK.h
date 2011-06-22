@@ -66,7 +66,9 @@ protected:
     /*virtual*/ void updatedGraphicObject();
     
     /// update visibility for actor or volume passed as parameter
-    void updateVisibility(vtkProp3D *prop);
+    void updateVisibility();
+
+    mafCore::mafProxy<vtkProp3D> m_Actor; ///< Output container.
 
 private:
     vtkRenderer * m_Renderer; ///< Current VTK Renderer.

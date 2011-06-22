@@ -37,7 +37,7 @@ mafPipeVisualVTKIsoSurface::mafPipeVisualVTKIsoSurface(const QString code_locati
     m_Mapper = vtkPolyDataMapper::New();
     m_Actor = vtkActor::New();
     m_Actor.setDestructionFunction(&vtkActor::Delete);
-    m_Actor->SetMapper(m_Mapper);
+    vtkActor::SafeDownCast(m_Actor)->SetMapper(m_Mapper);
     m_Output = &m_Actor;
 }
 
@@ -90,7 +90,6 @@ void mafPipeVisualVTKIsoSurface::updatePipe(double t) {
 
 void mafPipeVisualVTKIsoSurface::setVisibility(bool visible) {
     Superclass::setVisibility(visible);
-    updateVisibility(m_Actor);
 }
 
 void mafPipeVisualVTKIsoSurface::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
@@ -110,6 +109,7 @@ void mafPipeVisualVTKIsoSurface::on_contourValue_textEdited(QString stringValue)
 
 void mafPipeVisualVTKIsoSurface::on_contourValue_editingFinished() {
     updatePipe();
+    updateUI();
 }
 
 void mafPipeVisualVTKIsoSurface::on_contourValueSlider_valueChanged(int value) {

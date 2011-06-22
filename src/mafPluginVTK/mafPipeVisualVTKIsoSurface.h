@@ -92,7 +92,6 @@ private:
     vtkPolyDataMapper  *m_Mapper; ///< Class that maps polygonal data.
     vtkRenderer * m_Renderer; ///< Current VTK Renderer. 
     vtkContourFilter* m_ContourFilter; ///VTKContourFilter.
-    mafCore::mafProxy<vtkActor> m_Actor; ///< Output container.
     bool m_ScalarVisibility; ///< Flag to activate scalar visibility.
     bool m_ImmediateRendering; ///< Flag to activate immediate rendering mode.
     int m_ContourValue; ///< Value to be applied to the contour fileter.

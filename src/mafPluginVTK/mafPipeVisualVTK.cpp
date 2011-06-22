@@ -26,6 +26,8 @@ mafPipeVisualVTK::mafPipeVisualVTK(const QString code_location) : mafPipeVisual(
 }
 
 mafPipeVisualVTK::~mafPipeVisualVTK() {
+    m_GraphicObject = NULL;
+    setVisibility(false);
 }
 
 void mafPipeVisualVTK::updatedGraphicObject() {
@@ -43,16 +45,16 @@ void mafPipeVisualVTK::setImmediateRendering (bool immediateRendering) {
     m_ImmediateRendering = immediateRendering;
 }
 
-void mafPipeVisualVTK::updateVisibility(vtkProp3D *prop) {
-    prop->SetVisibility(visibility());
+void mafPipeVisualVTK::updateVisibility() {
+    m_Actor->SetVisibility(visibility());
     
     if (graphicObject() == NULL) {
         return;
     }
     if(visibility()) {
-        m_Renderer->AddViewProp(prop);
+        m_Renderer->AddViewProp(m_Actor);
     } else {
-        m_Renderer->RemoveViewProp(prop);
+        m_Renderer->RemoveViewProp(m_Actor);
     }
     m_Renderer->GetRenderWindow()->Render();
     m_Renderer->ResetCamera();

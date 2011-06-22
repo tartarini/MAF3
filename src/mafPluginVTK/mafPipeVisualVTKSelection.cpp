@@ -36,7 +36,7 @@ mafPipeVisualVTKSelection::mafPipeVisualVTKSelection(const QString code_location
     mapper->SetInputConnection(0, m_OutlineCornerFilter->GetOutputPort(0));
     m_Actor = vtkActor::New();
     m_Actor.setDestructionFunction(&vtkActor::Delete);
-    m_Actor->SetMapper(mapper);
+    vtkActor::SafeDownCast(m_Actor)->SetMapper(mapper);
     mapper->Delete();
     m_Output = &m_Actor;
 }
@@ -57,7 +57,6 @@ bool mafPipeVisualVTKSelection::acceptObject(mafCore::mafObjectBase *obj) {
 
 void mafPipeVisualVTKSelection::setVisibility(bool visible) {
     Superclass::setVisibility(visible);
-    updateVisibility(m_Actor);
 }
 
 void mafPipeVisualVTKSelection::updatePipe(double t) {
