@@ -25,6 +25,7 @@ mafMatrix::mafMatrix(int rows, int cols) {
 }
 
 mafMatrix::mafMatrix(const mafMatrix &m) {
+    m_Matrix = cvCreateMat(4, 4, CV_64FC1);
     *this = m;
 }
 
@@ -92,17 +93,11 @@ void mafMatrix::setIdentity() {
     cvSetIdentity(m_Matrix);
 }
 
-mafMatrix &mafMatrix::operator *(const mafMatrix &mat) {
-    mafMatrix m(m_Matrix->rows, mat.m_Matrix->cols);
-    cvMatMul(m_Matrix, mat.m_Matrix, m.m_Matrix);
+mafMatrix mafMatrix::operator *(const mafMatrix &mat) {
+    mafMatrix result(m_Matrix->rows, mat.m_Matrix->cols);
+    cvMatMul(m_Matrix, mat.m_Matrix, result.m_Matrix);
     
-    if(m_Matrix->cols != m.m_Matrix->cols) {
-        cvReleaseMat(&m_Matrix);
-        m_Matrix = cvCreateMat(m.m_Matrix->rows, mat.m_Matrix->cols, CV_64FC1);
-    }
-    
-    cvCopy(m.m_Matrix, m_Matrix);
-    return *this;
+    return result;
 }
 
 void mafMatrix::setElement(int row, int col, double value) {
