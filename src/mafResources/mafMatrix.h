@@ -49,7 +49,7 @@ public:
     void setIdentity();
     
     /// multiplication matrix operator.
-    mafMatrix &operator *(const mafMatrix &mat);
+    mafMatrix operator *(const mafMatrix &mat);
     
     /// assignment matrix operator 
     mafMatrix &operator =(const mafMatrix &mat);
