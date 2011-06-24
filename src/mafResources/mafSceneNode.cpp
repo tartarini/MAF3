@@ -32,7 +32,7 @@ mafSceneNode::~mafSceneNode() {
 }
 
 void mafSceneNode::setParentNode(const mafSceneNode *parent) {
-    m_ParentNode = parent;
+    m_ParentNode = const_cast<mafSceneNode *>(parent);
 }
 
 void mafSceneNode::setVisualPipe(QString visualPipeType) {
@@ -134,5 +134,3 @@ QObject *mafSceneNode::dataObject() {
     QObject *obj = m_VME;
     return obj;
 }
-
-
