@@ -53,16 +53,16 @@ mafPipeVisualVTKMIPVolume::mafPipeVisualVTKMIPVolume(const QString code_location
     
     m_Mapper = vtkVolumeRayCastMapper::New();
     vtkVolumeRayCastMIPFunction* rcFunction = vtkVolumeRayCastMIPFunction::New();
-    m_Actor = vtkVolume::New();
-    m_Actor.setDestructionFunction(&vtkActor::Delete);
+    m_Prop3D = vtkVolume::New();
+    m_Prop3D.setDestructionFunction(&vtkActor::Delete);
     m_Mapper->SetVolumeRayCastFunction(rcFunction);
-    vtkVolume::SafeDownCast(m_Actor)->SetMapper(m_Mapper);
+    vtkVolume::SafeDownCast(m_Prop3D)->SetMapper(m_Mapper);
     rcFunction->Delete(); 
     rcFunction = NULL;
-    vtkVolume::SafeDownCast(m_Actor)->SetProperty(volumeProperty);
+    vtkVolume::SafeDownCast(m_Prop3D)->SetProperty(volumeProperty);
     volumeProperty->Delete(); 
     volumeProperty = NULL;
-    m_Output = &m_Actor;
+    m_Output = &m_Prop3D;
 }
 
 mafPipeVisualVTKMIPVolume::~mafPipeVisualVTKMIPVolume() {

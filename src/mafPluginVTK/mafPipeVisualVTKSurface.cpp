@@ -29,10 +29,10 @@ using namespace std;
 
 mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : mafPipeVisualVTK(code_location), m_Mapper(NULL) {
     m_Mapper = vtkPolyDataMapper::New();
-    m_Actor = vtkActor::New();
-    m_Actor.setDestructionFunction(&vtkActor::Delete);
-    vtkActor::SafeDownCast(m_Actor)->SetMapper(m_Mapper);
-    m_Output = &m_Actor;
+    m_Prop3D = vtkActor::New();
+    m_Prop3D.setDestructionFunction(&vtkActor::Delete);
+    vtkActor::SafeDownCast(m_Prop3D)->SetMapper(m_Mapper);
+    m_Output = &m_Prop3D;
 }
 
 mafPipeVisualVTKSurface::~mafPipeVisualVTKSurface() {

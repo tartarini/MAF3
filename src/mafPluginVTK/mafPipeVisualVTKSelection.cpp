@@ -34,11 +34,11 @@ mafPipeVisualVTKSelection::mafPipeVisualVTKSelection(const QString code_location
 
     vtkPolyDataMapper *mapper = vtkPolyDataMapper::New();
     mapper->SetInputConnection(0, m_OutlineCornerFilter->GetOutputPort(0));
-    m_Actor = vtkActor::New();
-    m_Actor.setDestructionFunction(&vtkActor::Delete);
-    vtkActor::SafeDownCast(m_Actor)->SetMapper(mapper);
+    m_Prop3D = vtkActor::New();
+    m_Prop3D.setDestructionFunction(&vtkActor::Delete);
+    vtkActor::SafeDownCast(m_Prop3D)->SetMapper(mapper);
     mapper->Delete();
-    m_Output = &m_Actor;
+    m_Output = &m_Prop3D;
 }
 
 mafPipeVisualVTKSelection::~mafPipeVisualVTKSelection() {
