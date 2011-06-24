@@ -106,7 +106,7 @@ void mafPipeVisualVTKMIPVolume::updateFunctions(vtkDataSet *dataset) {
     m_PieceWiseTransferFunction->RemoveAllPoints();
     
     int tv = 128;
-    double rgba[4], sr[2],w,p;
+    double sr[2],w,p;
     dataset->GetScalarRange(sr);
     w = sr[1] - sr[0];
     for (int v=0;v<tv;v++) {
