@@ -60,10 +60,15 @@ void mafView::sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectB
   }
 }
 
+mafSceneNode *mafView::createSceneNode(mafVME *vme) {
+    return new mafSceneNode(vme, m_RenderWidget, "", mafCodeLocation);
+}
+
 void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
     mafVME *vme_to_add = qobject_cast<mafResources::mafVME *>(vme);
     if(vme_to_add != NULL) {
-        mafSceneNode *node = new mafSceneNode(vme_to_add, m_RenderWidget, "", mafCodeLocation);
+        
+        mafSceneNode *node = createSceneNode(vme_to_add);
         node->setObjectName(vme_to_add->objectName());
         connect(node, SIGNAL(destroyNode()), this, SLOT(sceneNodeDestroy()));
 
@@ -162,10 +167,7 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
         if (show) {
             node->setVisualPipe(vp);
         } 
-        node->setVisibility(show);
-//        if (show){
-//            connect(node->visualPipe(), SIGNAL(modifiedObject()), this, SLOT(updateView()));
-//        }         
+        node->setVisibility(show);      
     }
 }
 

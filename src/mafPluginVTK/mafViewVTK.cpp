@@ -13,14 +13,15 @@
 #include "mafViewVTK.h"
 #include "mafPipeVisualVTKSelection.h"
 #include "mafVTKWidget.h"
+#include "mafSceneNodeVTK.h"
+#include "mafPipeVisualVTKSelection.h"
+
 #include <mafPipeVisual.h>
 #include <mafVME.h>
 #include <mafHierarchy.h>
-#include <mafSceneNode.h>
-#include "mafPipeVisualVTKSelection.h"
-
 #include <mafVisitorFindSceneNodeByVMEHash.h>
 
+// vtk
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindowInteractor.h>
@@ -55,6 +56,12 @@ void mafViewVTK::create() {
     m_PipeVisualSelection = mafNEW(mafPluginVTK::mafPipeVisualVTKSelection);
     m_PipeVisualSelection->setGraphicObject(m_RenderWidget);
 }
+
+mafSceneNode *mafViewVTK::createSceneNode(mafVME *vme) {
+    mafSceneNode *sceneNode = new mafSceneNodeVTK(vme, m_RenderWidget, "", mafCodeLocation); 
+    return sceneNode;
+}
+
 
 void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
     if (node != NULL && node->visualPipe()) {
