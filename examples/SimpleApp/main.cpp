@@ -27,9 +27,13 @@ int main(int argc, char *argv[]) {
     // to the mafObjectFactory can be done using the following macro:
     // mafRegisterObject(myClassCustom);
     mafRegisterObjectAndAcceptBind(mafOperationSimpleApp);
+
     // Plug the object's information into the framework
     logic->plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
+    logic->plugObject("mafResources::mafOperation", "mafResources::mafOperationTransform", "Transform");
+
     logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View 3D");
+
     logic->customizeVisualization("mafPluginVTK::mafViewVTK", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("mafPluginVTK::mafViewVTK", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKMIPVolume");
 
