@@ -2,8 +2,8 @@
  *  mafSceneNode.cpp
  *  mafResources
  *
- *  Created by Daniele Giunchi on 24/03/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Created by Daniele Giunchi - Paolo Quadrani on 24/03/10.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -29,6 +29,10 @@ mafSceneNode::mafSceneNode(mafVME *vme, QObject *graphicObject, const QString vi
 
 mafSceneNode::~mafSceneNode() {
     mafDEL(this->m_VisualPipe);
+}
+
+void mafSceneNode::setParentNode(const mafSceneNode *parent) {
+    m_ParentNode = parent;
 }
 
 void mafSceneNode::setVisualPipe(QString visualPipeType) {
