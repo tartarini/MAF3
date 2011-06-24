@@ -15,6 +15,8 @@
 #include "mafPluginVTKDefinitions.h"
 #include <mafSceneNode.h>
 
+class vtkAssembly;
+
 namespace mafPluginVTK {
 
 /**
@@ -33,12 +35,24 @@ public:
     /// Object constructor.
     mafSceneNodeVTK(mafResources::mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location = "");
 
+    /// Set the parent of the current node.
+    /*virtual*/ void setParentNode(const mafResources::mafSceneNode *parent);
+
+    /// Return the node assembly.
+    vtkAssembly *nodeAssembly() const;
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafSceneNodeVTK();
 
 private:
+    vtkAssembly *m_Assembly; ///< Assembly containing the prop 3D to visualize.
+    vtkAssembly *m_AssemblyParent; ///< Parent assembly needed to build the visual hierarchy
 };
+
+inline vtkAssembly *mafSceneNodeVTK::nodeAssembly() const {
+    return m_Assembly;
+}
 
 } //namespace mafPluginVTK
 
