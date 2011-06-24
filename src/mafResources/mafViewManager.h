@@ -20,6 +20,7 @@ namespace mafResources {
 class mafView;
 class mafResource;
 class mafVME;
+class mafPipeVisual;
 
 /**
 Class name: mafViewManager

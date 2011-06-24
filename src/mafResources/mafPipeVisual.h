@@ -52,38 +52,42 @@ public:
     /// set the selection pipe for viualization.
     virtual void setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) = 0;
     
-signals:
-    /// signal emitted when the pick already happened. The information will be forwarded to the Interaction Manager.
-    void vmePickedSignal(double *pickPos, unsigned long modifiers , mafVME *vme);
-
-public slots:
-    /// Set the visibility of its rendering scene.
-    virtual void setVisibility(bool visible);
-
-private slots:
-    /// Forward the vmePick event if the pick hits the current visualized VME.
-    void vmePick(double *pickPos, unsigned long, mafCore::mafProxyInterface *actor, QEvent *e);
-
-private:
-    /// Register signals and slots connections with the event bus.
-    void initializeConnections();
-
-    bool m_Visibility; ///< Contains the visibility status of the owned object/s
-
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisual();
 
     /// Called when a new graphic object has been set.
-    /**
-    This method has to be re-defined to update stuff linked to the graphic object.
-    */
+    /** This method has to be re-defined to update stuff linked to the graphic object.*/
     virtual void updatedGraphicObject();
+
+    /// update visibility for actor or volume passed as parameter
+    virtual void updateVisibility();
 
     mafCore::mafProxyInterface *m_Output; ///< Output for visual pipe.
     QObject *m_GraphicObject; ///< represents the graphic object for render the scene.
     
     mafPipeVisual *m_PipeVisualSelection; ///< delegate object for visualize selection of the selected vme
+
+private:
+    /// Register signals and slots connections with the event bus.
+    void initializeConnections();
+    
+    bool m_Visibility; ///< Contains the visibility status of the owned object/s
+    
+signals:
+    /// signal emitted when the pick already happened. The information will be forwarded to the Interaction Manager.
+    void vmePickedSignal(double *pickPos, unsigned long modifiers , mafVME *vme);
+    
+public slots:
+    /// Set the visibility of its rendering scene.
+    virtual void setVisibility(bool visible);
+    
+    /// Allows to ask the rendering engine to render the graphic scene.
+    virtual void render() = 0;
+    
+private slots:
+    /// Forward the vmePick event if the pick hits the current visualized VME.
+    void vmePick(double *pickPos, unsigned long, mafCore::mafProxyInterface *actor, QEvent *e);
 };
 
 /////////////////////////////////////////////////////////////

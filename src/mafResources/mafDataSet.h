@@ -35,7 +35,8 @@ class MAFRESOURCESSHARED_EXPORT mafDataSet : public mafCore::mafObject {
     Q_PROPERTY(QString externalCodecType READ externalCodecType WRITE setExternalCodecType)
     Q_PROPERTY(QString boundaryAlgorithmName READ boundaryAlgorithmName WRITE setBoundaryAlgorithmName)
     Q_PROPERTY(QVariantList bounds READ bounds WRITE setBounds)
-
+    Q_PROPERTY(mafMatrix * poseMatrix READ poseMatrix WRITE setPoseMatrix)
+    
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObject);
 

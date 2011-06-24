@@ -91,7 +91,6 @@ void mafDataSet::setPoseMatrix(const mafMatrix *matrix) {
     }
     
     m_Matrix = matrix->clone();
-
     setModified();
 }
 

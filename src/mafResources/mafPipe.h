@@ -19,6 +19,7 @@ namespace mafResources {
 
 // Class forwarding list
 class mafVME;
+class mafDataSet;
 
 /**
  Class name: mafPipe
@@ -35,6 +36,12 @@ public:
 
     /// Set the input VME to be used as input data for the pipeline./*
     void setInput(mafVME *vme);
+    
+    /// Return the input at the given index. Return NULL if the index passed is out of inputList range.
+    mafVME *input(int idx = 0) const;
+    
+    /// Return the dataset for the given input index and at given timestamp.
+    mafDataSet *dataSetForInput(int input_idx = 0, double t = -1);
 
     /// Remove the the given input object from the list
     void removeInput(mafVME *vme);

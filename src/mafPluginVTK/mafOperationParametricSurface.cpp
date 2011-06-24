@@ -38,8 +38,7 @@ mafOperationParametricSurface::~mafOperationParametricSurface() {
     m_ParametricSurfaceList.clear();
     m_Output = NULL;
     m_ParametricContainer = NULL;
-    mafDEL(m_DataSet);
-    mafDEL(m_VME);
+    
 
     mafDEL(m_ParametricSphere);
     mafDEL(m_ParametricCube);
@@ -104,6 +103,8 @@ int mafOperationParametricSurface::parametricSurfaceType() {
 
 void mafOperationParametricSurface::execute() {
     m_Status = mafOperationStatusExecuting;
+    mafDEL(m_DataSet);
+    mafDEL(m_VME);
     emit executionEnded();
 }
 
@@ -128,7 +129,7 @@ void mafOperationParametricSurface::reDo() {
 }
 
 void mafOperationParametricSurface::setParameters(QVariantList parameters) {
-    Q_UNUSED(parameters);
+     //@@TODO NEED TO IMPLEMENT
 }
 
 void mafOperationParametricSurface::setParametricSurfaceType(int index){
@@ -253,5 +254,3 @@ void mafOperationParametricSurface::on_ellipsoidZLength_valueChanged(double d) {
     m_ParametricEllipsoid->updateSurface();
     this->updateParametricSurface();
 }
-
-

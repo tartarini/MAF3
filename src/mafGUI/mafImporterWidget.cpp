@@ -27,14 +27,14 @@ void mafImporterWidget::setOperationGUI(QWidget *gui) {
         // Then connect automatically the signals of the GUI widgets to the Operation's slots.
         m_Operation->connectObjectSlotsByName((QObject *)gui);
         // and initialize the widgets value with those contained into the operation's properties.
-        m_Operation->initializeUI((QObject *)gui);
+        m_Operation->updateUI((QObject *)gui);
         // do the same thing for all the the operations'children
         QObjectList children = m_Operation->children();
         foreach(QObject *child, children) {
             mafCore::mafObjectBase *obj = qobject_cast<mafCore::mafObjectBase *>(child);
             if(obj) {
                 obj->connectObjectSlotsByName((QObject *)gui);
-                obj->initializeUI((QObject *)gui);
+                obj->updateUI((QObject *)gui);
             }
         }
     }

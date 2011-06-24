@@ -28,7 +28,6 @@ mafDataSetCollection::~mafDataSetCollection() {
         mafDEL(iter.value());
         ++iter;
     }
-    emit(modifiedObject());
 
     m_CollectionMap->clear();
     delete m_CollectionMap;

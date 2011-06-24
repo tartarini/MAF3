@@ -45,14 +45,14 @@ static void mafConnectObjectWithGUI(mafCore::mafObjectBase *obj, QWidget *gui) {
     // Connect automatically the signals of the GUI widgets to the Operation's slots.
     obj->connectObjectSlotsByName((QObject *)gui);
     // and initialize the widgets value with those contained into the operation's properties.
-    obj->initializeUI((QObject *)gui);
+    obj->updateUI((QObject *)gui);
     // do the same thing for all the the operation's children
     QObjectList children = obj->children();
     foreach(QObject *child, children) {
         mafCore::mafObjectBase *child_obj = qobject_cast<mafCore::mafObjectBase *>(child);
         if(child_obj) {
             child_obj->connectObjectSlotsByName((QObject *)gui);
-            child_obj->initializeUI((QObject *)gui);
+            child_obj->updateUI((QObject *)gui);
         }
     }
 }

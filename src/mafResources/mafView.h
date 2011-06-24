@@ -2,8 +2,8 @@
  *  mafView.h
  *  mafResources
  *
- *  Created by Roberto Mucci on 20/03/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Created by Roberto Mucci - Paolo Quadrani - Daniele Giunchi on 20/03/10.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -74,6 +74,30 @@ public:
     
     /// clear and delete the scenegraphs.
     void clearScene();
+
+    ///Get the selected scene node.
+    mafSceneNode *selectedSceneNode();
+    
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafView();
+    
+    /// factory method for creating scenenode.
+    virtual mafSceneNode *createSceneNode(mafVME *vme);
+    
+    QObject *m_RenderWidget; ///< Rendering widget for the view.
+    mafCore::mafHierarchyPointer m_Scenegraph; ///< Scenegraph
+    QHash<QString, QString> *m_VisualPipeHash; ///< Bind between dataType and Visual pipe.
+    bool m_Selected; ///< Flag for active view.
+    mafSceneNode *m_SelectedNode; ///< Keep track of the selected SceneNode.
+    QList<mafSceneNode *> m_SceneNodeList; ///< variable useful for rapid iteration between mafTreeItem
+    
+    mafResources::mafPipeVisual *m_PipeVisualSelection; ///< variable with the pipe for vme selection
+
+signals:
+
+    /// Notify selection of a sceneNode. 
+    void pipeVisualSelectedSignal(mafCore::mafObjectBase *pipeVisual);
         
 public slots:
     /// Wrap the new VME into a mafSceneNode.
@@ -93,27 +117,11 @@ private slots:
     /// Allow to keep track of the selected SceneNode.
     void vmeSelect(mafCore::mafObjectBase *vme);
 
-protected:
-    /// Object destructor.
-    /* virtual */ ~mafView();
-
-    QObject *m_RenderWidget; ///< Rendering widget for the view.
-    mafCore::mafHierarchyPointer m_Scenegraph; ///< Scenegraph
-    QHash<QString, QString> *m_VisualPipeHash; ///< Bind between dataType and Visual pipe.
-    bool m_Selected; ///< Flag for active view.
-    mafSceneNode *m_SelectedNode; ///< Keep track of the selected SceneNode.
-    QList<mafSceneNode *> m_SceneNodeList; ///< variable useful for rapid iteration between mafTreeItem
-    
-    mafResources::mafPipeVisual *m_PipeVisualSelection; ///< variable with the pipe for vme selection
 };
 
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
-
-inline void mafView::select(bool select) {
-    m_Selected = select;
-}
 
 inline bool mafView::isSelected() {
     return m_Selected;
@@ -133,6 +141,10 @@ inline QVariant mafView::hierarchy() const {
     QVariant v;
     v.setValue<mafCore::mafHierarchyPointer>(m_Scenegraph);
     return v;
+}
+
+inline mafSceneNode * mafView::selectedSceneNode(){
+    return m_SelectedNode;
 }
 
 } //namespace mafResources

@@ -38,9 +38,10 @@ mafViewManager::~mafViewManager() {
     destroyAllViews();
     
     // Unregister callbacks...
-    mafUnregisterLocalCallback("maf.local.resources.view.create", this, "createView(QString)")
+    mafUnregisterLocalCallback("maf.local.resources.view.create", this, "createView(QString)")    
     mafUnregisterLocalCallback("maf.local.resources.view.destroy", this, "destroyView(mafCore::mafObjectBase *)")
     mafUnregisterLocalCallback("maf.local.resources.view.select", this, "selectView(mafCore::mafObjectBase *)")
+    //mafUnregisterLocalCallback("maf.local.resources.view.selected", this, "selectedView()")
     mafUnregisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShow(mafCore::mafObjectBase *, bool)")
     mafUnregisterLocalCallback("maf.local.logic.status.viewmanager.store", this, "createMemento()")
     mafUnregisterLocalCallback("maf.local.logic.status.viewmanager.restore", this, "setMemento(mafCore::mafMemento *, bool)")
@@ -162,6 +163,7 @@ void mafViewManager::selectView(mafCore::mafObjectBase *view) {
         }
         m_SelectedView = v;
         m_SelectedView->select(true); // ?!?
+        
     }
 }
 
@@ -172,6 +174,7 @@ void mafViewManager::sceneNodeShow(mafCore::mafObjectBase *node, bool show) {
     if(node_to_show != NULL) {
         if(m_SelectedView) {
             m_SelectedView->showSceneNode(node_to_show, show);
+            //m_SelectedPipeVisual = node_to_show->visualPipe();
         } else {
             qCritical(mafTr("There is no view selected.").toAscii().constData());
         }
@@ -193,6 +196,7 @@ void mafViewManager::createView(QString view_type) {
         mafDEL(obj);
     }
 }
+
 
 mafObjectBase *mafViewManager::selectedView() {
     return m_SelectedView;
@@ -286,8 +290,8 @@ void mafViewManager::removeView(mafView *view) {
     int idx = m_CreatedViewList.indexOf(view, 0);
     // Remove the view from the list.
     if(m_CreatedViewList.removeOne(view)) {
-        if(idx > 0) {
-            mafObjectBase *obj = m_CreatedViewList.at(idx - 1);
+        if(m_CreatedViewList.count() > 0) {
+            mafObjectBase *obj = m_CreatedViewList.first();
             selectView(obj);
         } else {
             m_SelectedView = NULL;
@@ -324,3 +328,4 @@ void mafViewManager::fillViews() {
         fillSceneGraph((mafView *)v, hierarchy);
     }
 }
+

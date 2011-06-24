@@ -135,6 +135,11 @@ private:
 
     mafOperationWidget  *m_OperationWidget; ///< Widget on whith will be visible the operation's GUI.
     QWidget             *m_VMEWidget; ///< Widget representing the VME UI.
+    QWidget             *m_ViewWidget; ///< Widget representing the View UI.
+    QWidget             *m_VisualPipeWidget; ///< Widget representing the View UI.
+
+    mafObjectBase *m_CurrentPipeVisual; ///< Current used pipe visual.
+    mafObjectBase *m_CurrentView; ///< Current view.
 
     QMainWindow     *m_MainWindow;  ///< Main window associated to the application.
     mafUILoaderQt   *m_UILoader;    ///< Class in charge to load the GUI.
@@ -205,6 +210,9 @@ private slots:
     /** This method will update all tree widget for the selected VME */
     void updateTreeForSelectedVme(mafCore::mafObjectBase *vme);
 
+    /// Called when a scene node has been selected.
+    /** This method will update gui for the selected scene node */
+    void updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeVisual);
     
     /// Slot needed to intercept the started operation and ask it for the GUI filename.
     void operationDidStart(mafCore::mafObjectBase *operation);
@@ -224,6 +232,10 @@ private slots:
 private:
     /// return the data object inside an item in order to retrieve the data object and not the visual one (for example scene-node).
     QObject *dataObject(QModelIndex index);
+
+    /// Update recent file menu
+    void updateRecentFileMenu(QString fileName);
+
     QString m_CompleteFileName; ///< Name of the msf file.
     QString m_LastPath; ///< Path of last msf file.
 

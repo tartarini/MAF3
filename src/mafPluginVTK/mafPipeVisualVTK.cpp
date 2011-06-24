@@ -3,7 +3,7 @@
  *  mafPluginVTK
  *
  *  Created by Daniele Giunchi - Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -15,25 +15,33 @@
 #include <vtkRendererCollection.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
-#include <vtkProp.h>
+#include <vtkProp3D.h>
 
 using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
-using namespace std;
+
 
 mafPipeVisualVTK::mafPipeVisualVTK(const QString code_location) : mafPipeVisual(code_location), m_ScalarVisibility(false), m_ImmediateRendering(false), m_Renderer(NULL) {
 }
 
 mafPipeVisualVTK::~mafPipeVisualVTK() {
+    m_GraphicObject = NULL;
+    setVisibility(false);
 }
 
 void mafPipeVisualVTK::updatedGraphicObject() {
-    mafVTKWidget* widget = qobject_cast<mafVTKWidget*>(graphicObject());
+    mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(graphicObject());
     vtkRendererCollection *rc = widget->GetRenderWindow()->GetRenderers();
     m_Renderer = rc->GetFirstRenderer();
 }
 
+void mafPipeVisualVTK::render() {
+    mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(graphicObject());
+    if (widget != NULL) {
+        widget->GetRenderWindow()->Render();
+    }
+}
 
 void mafPipeVisualVTK::setScalarVisibility(bool scalarVisibility) {
     m_ScalarVisibility = scalarVisibility;
@@ -43,17 +51,17 @@ void mafPipeVisualVTK::setImmediateRendering (bool immediateRendering) {
     m_ImmediateRendering = immediateRendering;
 }
 
-void mafPipeVisualVTK::updateVisibility(vtkProp *prop) {
-    prop->SetVisibility(visibility());
+void mafPipeVisualVTK::updateVisibility() {
+    m_Prop3D->SetVisibility(visibility());
     
     if (graphicObject() == NULL) {
         return;
     }
     if(visibility()) {
-        m_Renderer->AddViewProp(prop);
+        m_Renderer->AddViewProp(m_Prop3D);
     } else {
-        m_Renderer->RemoveViewProp(prop);
+        m_Renderer->RemoveViewProp(m_Prop3D);
     }
-    m_Renderer->GetRenderWindow()->Render();
+    render();
+    m_Renderer->ResetCamera();
 }
-

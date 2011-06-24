@@ -30,7 +30,6 @@ mafView::mafView(const QString code_location) : mafResource(code_location), m_Re
     // CallBack related to the Scene node reparent
     mafRegisterLocalCallback("maf.local.resources.view.sceneNodeReparent", this, "sceneNodeReparent(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
 
-
     // Callbacks related to the VME creation
     mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)")
     // Callback related to the VME selection
@@ -40,7 +39,10 @@ mafView::mafView(const QString code_location) : mafResource(code_location), m_Re
 
 mafView::~mafView() {   
     clearScene();
+    // emit signal to detach visual pipe gui
+    emit pipeVisualSelectedSignal(NULL);
 }
+
 
 void mafView::clearScene() {
     mafDEL(m_Scenegraph);
@@ -58,10 +60,15 @@ void mafView::sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectB
   }
 }
 
+mafSceneNode *mafView::createSceneNode(mafVME *vme) {
+    return new mafSceneNode(vme, m_RenderWidget, "", mafCodeLocation);
+}
+
 void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
     mafVME *vme_to_add = qobject_cast<mafResources::mafVME *>(vme);
     if(vme_to_add != NULL) {
-        mafSceneNode *node = new mafSceneNode(vme_to_add, m_RenderWidget, "", mafCodeLocation);
+        
+        mafSceneNode *node = createSceneNode(vme_to_add);
         node->setObjectName(vme_to_add->objectName());
         connect(node, SIGNAL(destroyNode()), this, SLOT(sceneNodeDestroy()));
 
@@ -119,11 +126,13 @@ void mafView::removeSceneNode(mafSceneNode *node) {
 void mafView::selectSceneNode(mafSceneNode *node, bool select) {
     m_SelectedNode = node;
     Q_UNUSED(select);
-    
+
     if(node && m_PipeVisualSelection) {
         m_PipeVisualSelection->setInput(node->vme());
         m_PipeVisualSelection->updatePipe();
         m_PipeVisualSelection->setVisibility(node->property("visibility").toBool());
+        // emit signal to attach visual pipe gui
+        emit pipeVisualSelectedSignal(node->visualPipe());
     }
 }
 
@@ -158,7 +167,7 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
         if (show) {
             node->setVisualPipe(vp);
         } 
-        node->setVisibility(show);
+        node->setVisibility(show);      
     }
 }
 
@@ -176,6 +185,13 @@ mafSceneNode *mafView::sceneNodeFromVme(mafObjectBase *vme) {
         }
      }
      return NULL;
+}
+
+void mafView::select(bool select) {
+    m_Selected = select;
+    if (select) {
+        selectSceneNode(m_SelectedNode, select);
+    }
 }
 
 void mafView::updateView() {

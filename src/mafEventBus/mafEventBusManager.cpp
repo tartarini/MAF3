@@ -138,22 +138,31 @@ void mafEventBusManager::removeSignal(const QObject *obj, QString topic, bool qt
 }
 
 bool mafEventBusManager::removeEventProperty(const mafEvent &props) const {
+    bool result(false);
+    QString topic = props[TOPIC].toString();
+    
     if(props.eventType() == mafEventTypeLocal) {
         // Local event dispatching.
         if(props[SIGTYPE].toInt() == mafSignatureTypeCallback) {
-            return m_LocalDispatcher->removeObserver(props);
+            result = m_LocalDispatcher->removeObserver(props);
         } else {
-            return m_LocalDispatcher->removeSignal(props);
+            result = m_LocalDispatcher->removeSignal(props);
+            if (result){
+                result = mafEventBus::mafTopicRegistry::instance()->unregisterTopic(topic);
+            }
         }
     } else {
         // Remote event dispatching.
         if(props[SIGTYPE].toInt() == mafSignatureTypeCallback) {
-            return m_RemoteDispatcher->removeObserver(props);
+            result = m_RemoteDispatcher->removeObserver(props);
         } else {
-            return m_RemoteDispatcher->removeSignal(props);
+            result = m_RemoteDispatcher->removeSignal(props);
+            if (result){
+                result = mafEventBus::mafTopicRegistry::instance()->unregisterTopic(topic);
+            }
         }
     }
-    return false;
+    return result;
 }
 
 void mafEventBusManager::notifyEvent(const QString topic, mafEventType ev_type, mafEventArgumentsList *argList, QGenericReturnArgument *returnArg) const {

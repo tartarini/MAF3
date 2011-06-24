@@ -15,13 +15,8 @@
 // Includes list
 #include "mafPluginVTKDefinitions.h"
 #include <mafView.h>
-#include <mafProxy.h>
-#include <mafProxyInterface.h>
-#include <mafSceneNode.h>
-#include <mafPipeVisual.h>
 
 // Class forwarding list
-class mafEventBridgeVTK;
 class vtkRenderer;
 
 namespace mafPluginVTK {
@@ -56,6 +51,10 @@ public:
 protected:
     /// Object destructor.
     /* virtual */ ~mafViewVTK();
+    
+    /// factory method for creating scenenode VTK.
+    /*virtual*/ mafResources::mafSceneNode *createSceneNode(mafResources::mafVME *vme);
+
 
 private:
     //mafCore::mafProxy<mafPluginVTK::mafVTKWidget> m_Widget; ///< VTK Widget on which will be rendered the scene.

@@ -16,7 +16,7 @@
 
 using namespace mafCore;
 
-mafObjectBase::mafObjectBase(const QString code_location) : QObject(), m_UIFilename(""), m_Modified(false), m_ReferenceCount(1) {
+mafObjectBase::mafObjectBase(const QString code_location) : QObject(), m_UIFilename(""), m_Modified(false), m_ReferenceCount(1), m_SelfUI(NULL) {
     mafIdProvider *provider = mafIdProvider::instance();
     m_ObjectId = provider->createNewId();
 
@@ -144,30 +144,55 @@ void mafObjectBase::connectObjectSlotsByName(QObject *signal_object) {
     }
 }
 
-
-void mafObjectBase::initializeUI(QObject *selfUI) {
-    QList<QObject *> widgetList = qFindChildren<QObject *>(selfUI, QString());
+void mafObjectBase::updateUI(QObject *selfUI) {
+    if (selfUI != NULL) {
+        m_SelfUI = selfUI;
+    }
+    
+    QList<QObject *> widgetList = qFindChildren<QObject *>(m_SelfUI, QString());
     int i = 0, size = widgetList.count();
     for(; i<size; ++i) {
+        bool propertyIsAWidget = true;
         QObject *widget = widgetList.at(i);
         QString widgetName = widget->objectName();
+
 
         QVariant value = this->property(widgetName.toAscii());
         if(!value.isValid()) {
             //qWarning(mafTr("Property with name %1 doesn't exist").arg(widgetName).toAscii());
-            continue;
+            //continue;
+            propertyIsAWidget = false;
         }
 
-        const QMetaObject *metaobject = widget->metaObject();
+         if (propertyIsAWidget) {
+            const QMetaObject *metaobject = widget->metaObject();
+            int count = metaobject->propertyCount();
+            for (int i=0; i<count; ++i) {
+                QMetaProperty metaproperty = metaobject->property(i);
+                if(!metaproperty.isUser()) {
+                    continue;
+                }
+                const char *name = metaproperty.name();
+                widget->setProperty(name,value);
+                break;
+            }
+        }
+
+        //Set property of the widgets
+        const QMetaObject *metaobject = this->metaObject();
         int count = metaobject->propertyCount();
         for (int i=0; i<count; ++i) {
             QMetaProperty metaproperty = metaobject->property(i);
-            if(!metaproperty.isUser()) {
-                continue;
-            }
             const char *name = metaproperty.name();
-            widget->setProperty(name,value);
-            break;
+            QString propertyName(name);
+            if (propertyName.contains("_")){
+                int index = propertyName.indexOf("_");
+                QString propWidgetName = propertyName.left(index);
+                QString propName = propertyName.mid(index+1);
+                if (propWidgetName.compare(widgetName) == 0){
+                    widget->setProperty(propName.toAscii(), this->property(propertyName.toAscii()));
+                }
+            }
         }
     }
 }
@@ -183,4 +208,12 @@ void mafObjectBase::deleteObject() {
         this->setParent(NULL);
         delete this;
     }
+}
+
+void mafObjectBase::description() const {
+    qDebug() << "Object Id: " << objectId();
+    qDebug() << "Object Hash: " << objectHash();
+    qDebug() << "Is modified: " << modified();
+    qDebug() << "UI File name: " << uiFilename();
+    qDebug() << "Reference Count: " << referenceCount();
 }

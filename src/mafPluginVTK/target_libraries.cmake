@@ -13,6 +13,7 @@ SET(foundation_libraries
 SET(VTK_LIBRARIES
   vtkHybrid 
   vtkRendering 
+  vtkVolumeRendering
   vtkGraphics 
   vtkImaging 
   vtkIO 

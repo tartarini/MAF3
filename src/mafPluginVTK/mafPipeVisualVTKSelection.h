@@ -47,15 +47,11 @@ public slots:
     /// Allow to execute and update the pipeline when something change.
     /*virtual*/ void updatePipe(double t = -1);
     
-    /// Set the visibility of its rendering scene.
-    /*virtual*/ void setVisibility(bool visible);
-    
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTKSelection();
     
 private:
-    mafCore::mafProxy<vtkActor> m_Actor; ///< Output container.
     vtkOutlineCornerFilter *m_OutlineCornerFilter; ///< Filter used to generate the outline corners for representing the selected object.
 };
 

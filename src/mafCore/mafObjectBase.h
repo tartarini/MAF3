@@ -71,8 +71,8 @@ public:
     /// Allows the generic connection, using the Qt notation on_ObjectName1_signal with on_ObjectName2_slot.
     void connectObjectSlotsByName(QObject *signal_object);
 
-    /// initialize ui widgets with properties, using USER flag in Q_PROPERTY.
-    void initializeUI(QObject *selfUI);
+    /// update ui widgets with properties, using USER flag in Q_PROPERTY.
+    void updateUI(QObject *selfUI = NULL);
     
     /// Allows to emit the incrementReference in a thread safe way.
     void retain();
@@ -81,7 +81,12 @@ public:
     void release();
     
     /// return the reference count.
-    int referenceCount();
+    int referenceCount() const;
+    
+    /// dump the description of the object (information, attributes, variables...)
+    virtual void description() const;
+
+
 
 private slots:
     /// increment of 1 unit the reference count.
@@ -90,12 +95,14 @@ private slots:
     /// delete the object.
     void deleteObject();
 
+    
+
 protected:
     /// set the hash code for the current object.
     /** This method is used from the undo mechanism like memento pattern
     and by the serialization mechanism to restore the previous saved object's hash.*/
     void setObjectHash(const QString obj_hash);
-    
+   
     QString m_UIFilename; ///< Filename that define the object's UI written into a XML file.
 
     /// Object destructor.
@@ -111,11 +118,15 @@ signals:
     /// Allows to decrement the reference count.
     void decreaseReference();
 
+    /// Signal emitted to update gui.
+    void updateGuiSignal();
+
 private:
     mafId m_ObjectId; ///< Unique ID which identifies the object.
     //QByteArray m_ObjectHash; ///< Hash value for the current object.
     QUuid m_ObjectHash; ///< Hash value for the current object.
     bool m_Modified; ///< Contains the modified state of the VME.
+    QObject *m_SelfUI; ///< Ui object;
 
     volatile int m_ReferenceCount; ///< Index containing the reference count.
 };
@@ -149,7 +160,7 @@ inline bool mafObjectBase::operator ==(const mafObjectBase& obj) const {
     return this->isEqual(&obj);
 }
 
-inline int mafObjectBase::referenceCount() {
+inline int mafObjectBase::referenceCount() const{
     return m_ReferenceCount;
 }
 

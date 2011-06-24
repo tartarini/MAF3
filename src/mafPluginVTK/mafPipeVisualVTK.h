@@ -18,7 +18,7 @@
 
 // Foundation Class forwarding list
 class vtkRenderer;
-class vtkProp;
+class vtkProp3D;
 
 namespace mafPluginVTK {
 
@@ -50,14 +50,6 @@ public:
     /// Return the flag to activate immediate rendering mode.
     bool immediateRendering();
 
-public slots:
-
-    /// Set the flag to activate scalar visibility.
-    void setScalarVisibility(bool scalarVisibility);
-
-    /// Set the flag to activate immediate rendering mode.
-    void setImmediateRendering(bool immediateRendering);
-
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTK();
@@ -66,12 +58,24 @@ protected:
     /*virtual*/ void updatedGraphicObject();
     
     /// update visibility for actor or volume passed as parameter
-    void updateVisibility(vtkProp *prop);
+    void updateVisibility();
+
+    mafCore::mafProxy<vtkProp3D> m_Prop3D; ///< Output container.
 
 private:
-    vtkRenderer * m_Renderer; ///< Current VTK Renderer. 
+    vtkRenderer * m_Renderer; ///< Current VTK Renderer.
     bool m_ScalarVisibility; ///< Flag to activate scalar visibility.
     bool m_ImmediateRendering; ///< Flag to activate immediate rendering mode.
+    
+public slots:
+    /// Set the flag to activate scalar visibility.
+    void setScalarVisibility(bool scalarVisibility);
+    
+    /// Set the flag to activate immediate rendering mode.
+    void setImmediateRendering(bool immediateRendering);
+
+    /// Allows to ask the rendering engine to render the graphic scene.
+    /*virtual*/ void render();
 };
 
 /////////////////////////////////////////////////////////////

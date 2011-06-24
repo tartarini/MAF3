@@ -10,15 +10,11 @@
  */
 
 #include "mafUtilities.h"
-#include <math.h>
+#include <cmath>
 
 /// Check if two double values are equals
 bool mafEquals(double x, double y) {
-   double diff=fabs(x - y);
-   double max_err=fabs(x / pow((double)10,(double)15));
-   if (diff > max_err)
-     return false;
-   return  ( diff <= max_err);
+   return std::fabs(x - y) < EPSILON_DOUBLE;
 }
 
 /// Check if two float values are equals.

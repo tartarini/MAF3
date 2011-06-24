@@ -41,8 +41,8 @@ signals:
 
 public slots:
     
-    /// Set parameters of operation.
-    virtual void setParameters(QVariantList parameters);
+    /// Set operation parameters.
+    virtual void setParameters(QVariantList parameters) = 0;
 
     /// Allows to call the piece of algorithm that is needed to restore the previous state of the operation's execution.
     virtual void unDo();

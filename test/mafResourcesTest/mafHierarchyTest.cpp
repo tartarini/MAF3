@@ -86,6 +86,10 @@ private slots:
 
     /// mafSceneGraph allocation test case.
     void mafSceneGraphAllocationTest();
+    
+    /// check if has parent retrieve true or false depending if the selected node is root.
+    void mafScenegraphRootTest();
+    
     /// benchmarking test, search in a vme added in the middle of tree generation
     void mafSceneGraphBenchmarkMiddleTest();
 
@@ -113,6 +117,43 @@ private:
 void mafHierarchyTest::mafSceneGraphAllocationTest() {
     QVERIFY(m_Hierarchy != NULL);
 }
+
+void mafHierarchyTest::mafScenegraphRootTest() {
+    QVERIFY(m_HierarchyToManage != NULL);
+    
+    mafVME* vmeRoot = mafNEW(mafResources::mafVME);
+    vmeRoot->setObjectName("root");
+    QString pipeName = "testVisualPipeCustom";
+    
+    mafSceneNode *sceneNodeRoot = new mafSceneNode(vmeRoot, NULL,"", mafCodeLocation);
+    sceneNodeRoot->setObjectName("sceneNodeRoot");
+    m_HierarchyToManage->addHierarchyNode(sceneNodeRoot);
+    
+    
+    mafVME* vmeChild0 = mafNEW(mafResources::mafVME);
+    vmeChild0->setObjectName("vmeChild0");
+    
+    mafSceneNode *sceneNodeChild0 = new mafSceneNode(vmeChild0, NULL, "", mafCodeLocation);
+    sceneNodeChild0->setObjectName("sceneNodeChild0");
+    m_HierarchyToManage->addHierarchyNode(sceneNodeChild0);
+
+    bool result = m_HierarchyToManage->hasParent();
+    QVERIFY(result);
+    
+    m_HierarchyToManage->moveTreeIteratorToParent();
+    result = m_HierarchyToManage->hasParent();
+    QVERIFY(result == false);
+    
+    // Remove the allocated objects
+    mafDEL(sceneNodeRoot);
+    mafDEL(sceneNodeChild0);
+    mafDEL(vmeChild0);
+    mafDEL(vmeRoot);
+    
+    // Clear the tree.
+    m_HierarchyToManage->clear();
+}
+
 
 void mafHierarchyTest::mafSceneGraphManageTest() {
     QVERIFY(m_HierarchyToManage != NULL);

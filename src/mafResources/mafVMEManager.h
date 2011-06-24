@@ -73,6 +73,9 @@ signals:
     /// Signal for returning the root
     mafCore::mafObject *rootSignal() const;
     
+    /// Signal for calculating absolute pose matrix of a VME
+    mafResources::mafMatrixPointer absolutePoseMatrixSignal(mafCore::mafObjectBase *vme);
+
 private slots:
     /// Return the current selected vme.
     mafCore::mafObjectBase *selectedVME() const;
@@ -100,6 +103,9 @@ private slots:
     
     /// Return a current root
     mafCore::mafObject *root() const;
+    
+    /// Return absolute pose matrix of a VME.
+    mafResources::mafMatrixPointer absolutePoseMatrix(mafCore::mafObjectBase *vme);
 
 protected:
     /// Object destructor

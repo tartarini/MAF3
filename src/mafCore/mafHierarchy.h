@@ -49,6 +49,9 @@ public:
 
     /// Move the tree iterator to the parent of the current position pointed
     void moveTreeIteratorToParent();
+    
+    /// if the node has't parent (is root) return false, otherwise true.
+    bool hasParent();
 
     /// Move the tree iterator to the given node
     void moveTreeIteratorToNode(QObject *node);

@@ -29,10 +29,10 @@ using namespace std;
 
 mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : mafPipeVisualVTK(code_location), m_Mapper(NULL) {
     m_Mapper = vtkPolyDataMapper::New();
-    m_Actor = vtkActor::New();
-    m_Actor.setDestructionFunction(&vtkActor::Delete);
-    m_Actor->SetMapper(m_Mapper);
-    m_Output = &m_Actor;
+    m_Prop3D = vtkActor::New();
+    m_Prop3D.setDestructionFunction(&vtkActor::Delete);
+    vtkActor::SafeDownCast(m_Prop3D)->SetMapper(m_Mapper);
+    m_Output = &m_Prop3D;
 }
 
 mafPipeVisualVTKSurface::~mafPipeVisualVTKSurface() {
@@ -51,20 +51,15 @@ bool mafPipeVisualVTKSurface::acceptObject(mafCore::mafObjectBase *obj) {
 }
 
 void mafPipeVisualVTKSurface::updatePipe(double t) {
-    mafVME *inputVME = this->inputList()->at(0);
-    mafDataSet *data = inputVME->dataSetCollection()->itemAt(t);
+    mafDataSet *data = dataSetForInput(0, t);
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
     
     //Get data contained in the mafProxy
     m_Mapper->SetInputConnection(*dataSet);
     m_Mapper->SetScalarVisibility(m_ScalarVisibility);
-    m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
+    //Keep ImmediateModeRendering off: it slows rendering
+    //m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
     setModified(false);
-}
-
-void mafPipeVisualVTKSurface::setVisibility(bool visible) {
-    Superclass::setVisibility(visible);
-    updateVisibility(m_Actor);
 }
 
 void mafPipeVisualVTKSurface::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
