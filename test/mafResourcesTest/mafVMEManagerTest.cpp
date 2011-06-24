@@ -27,6 +27,9 @@ using namespace mafResources;
 class mafVMEManagerTest : public QObject {
     Q_OBJECT
 
+/// create a huge vme tree for benchmark.
+void unbalancedTreeRandomCreation(unsigned int numberOfElements); 
+    
 private slots:
     /// Initialize test variables
     void initTestCase() {
@@ -46,13 +49,13 @@ private slots:
         m_VMEManager->shutdown();
 
         //restore vme manager status
-        m_EventBus->notifyEvent("maf.local.resources.hierarchy.request");
-
+        m_EventBus->notifyEvent("maf.local.resources.hierarchy.new", mafEventTypeLocal);
+        
         // Shutdown event bus singleton and core singletons.
         m_EventBus->shutdown();
         mafMessageHandler::instance()->shutdown();
     }
-
+    
     /// mafVMEManager allocation test case.
     void mafVMEManagerAllocationTest();
     /// VME managing test.
@@ -61,10 +64,14 @@ private slots:
     void createHierarchyTest();
     /// absolute pose matrix Test
     void absolutePoseMatrixTest();
+    /// benchmarking the absolute matrix
+    void benchmarkarkedAbsoluteMatrixTest();
 
 private:
     mafVMEManager *m_VMEManager;
     mafEventBusManager *m_EventBus;
+    mafHierarchy *m_Hierarchy; ///< Test var.
+    mafObjectBase *m_SelectedVME;
 };
 
 void mafVMEManagerTest::mafVMEManagerAllocationTest() {
@@ -169,6 +176,57 @@ void mafVMEManagerTest::absolutePoseMatrixTest() {
     mafDEL(vme1);
     mafDEL(vme2);
     mafDEL(vme3);
+    
+    //create new big tree for the next test
+    m_EventBus->notifyEvent("maf.local.resources.hierarchy.new", mafEventTypeLocal);
+    unbalancedTreeRandomCreation(200);
+}
+
+void mafVMEManagerTest::benchmarkarkedAbsoluteMatrixTest() {
+    QBENCHMARK {
+        mafMatrixPointer absMatrix = NULL;
+        mafEventArgumentsList argList;
+        argList.append(mafEventArgument(mafCore::mafObjectBase *, m_SelectedVME));
+        QGenericReturnArgument ret_val = mafEventReturnArgument(mafResources::mafMatrixPointer, absMatrix);
+        
+        m_EventBus->notifyEvent("maf.local.resources.vme.absolutePoseMatrix", mafEventTypeLocal, &argList, &ret_val);
+        delete absMatrix;
+    }
+}
+
+void mafVMEManagerTest::unbalancedTreeRandomCreation(unsigned int numberOfElements) {
+    REQUIRE(numberOfElements != 0);
+
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, m_Hierarchy);
+    m_EventBus->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL , &ret_val);
+    
+    unsigned int count = 0;
+    while(count != numberOfElements) {
+        mafVME *vme = mafNEW(mafResources::mafVME);
+        
+        mafDataSet *dataVME = mafNEW(mafResources::mafDataSet);
+        
+        mafMatrix first;
+        first.setElement(0, 0, 2.0); first.setElement(0, 1, 2.0); first.setElement(0, 2, 0.0); first.setElement(0, 3, 2.0);
+        first.setElement(1, 0, 2.0); first.setElement(1, 1, 2.0); first.setElement(1, 2, 2.0); first.setElement(1, 3, 2.0);
+        first.setElement(2, 0, 0.0); first.setElement(2, 1, 2.0); first.setElement(2, 2, 2.0); first.setElement(2, 3, 2.0);
+        first.setElement(3, 0, 2.0); first.setElement(3, 1, 0.0); first.setElement(3, 2, 2.0); first.setElement(3, 3, 2.0);
+        
+        //first.setIdentity();
+        
+        dataVME->setPoseMatrix(&first);
+        vme->dataSetCollection()->insertItem(dataVME);
+        dataVME->release();
+        
+        mafEventArgumentsList argList;
+        argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
+        m_EventBus->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+        vme->release();
+        m_EventBus->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal,  &argList); //select the last added
+        m_SelectedVME = vme;
+        
+        ++count;
+    }
 }
 
 MAF_REGISTER_TEST(mafVMEManagerTest);
