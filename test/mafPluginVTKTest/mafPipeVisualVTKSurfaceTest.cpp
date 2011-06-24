@@ -204,12 +204,10 @@ void mafPipeVisualVTKSurfaceTest::updatePipeTestFromPlugIn() {
     binding_class_list = mafCoreRegistration::acceptObject(m_VME);
     int num = binding_class_list.count();
     QVERIFY(num != 0);
-
-    for(int i = 0; i < binding_class_list.size(); ++i) {
-        QString visualPipeType = binding_class_list.at(i);
-        QVERIFY(visualPipeType.contains("mafPluginVTK::"));
-    }
-
+    
+    QString check("mafPluginVTK::mafPipeVisualVTKSurface");
+    QVERIFY(binding_class_list.contains(check));
+    
     //! <snippet>
     mafPipeVisual *visualPipe = (mafPipeVisual *)mafNEWFromString("mafPluginVTK::mafPipeVisualVTKSurface");
     visualPipe->setProperty("scalarVisibility", 1);
