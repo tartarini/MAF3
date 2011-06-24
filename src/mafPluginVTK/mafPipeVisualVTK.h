@@ -60,7 +60,7 @@ protected:
     /// update visibility for actor or volume passed as parameter
     void updateVisibility();
 
-    mafCore::mafProxy<vtkProp3D> m_Actor; ///< Output container.
+    mafCore::mafProxy<vtkProp3D> m_Prop3D; ///< Output container.
 
 private:
     vtkRenderer * m_Renderer; ///< Current VTK Renderer.

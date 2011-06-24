@@ -52,15 +52,15 @@ void mafPipeVisualVTK::setImmediateRendering (bool immediateRendering) {
 }
 
 void mafPipeVisualVTK::updateVisibility() {
-    m_Actor->SetVisibility(visibility());
+    m_Prop3D->SetVisibility(visibility());
     
     if (graphicObject() == NULL) {
         return;
     }
     if(visibility()) {
-        m_Renderer->AddViewProp(m_Actor);
+        m_Renderer->AddViewProp(m_Prop3D);
     } else {
-        m_Renderer->RemoveViewProp(m_Actor);
+        m_Renderer->RemoveViewProp(m_Prop3D);
     }
     render();
     m_Renderer->ResetCamera();
