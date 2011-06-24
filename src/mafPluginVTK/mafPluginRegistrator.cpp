@@ -18,6 +18,7 @@
 #include "mafPipeVisualVTKSelection.h"
 
 #include "mafViewVTK.h"
+#include "mafSceneNodeVTK.h"
 
 #include "mafOperationParametricSurface.h"
 #include "mafImporterVTK.h"
@@ -51,6 +52,7 @@ mafPluginRegistrator::mafPluginRegistrator() {
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafImporterVTK);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafExporterVTK);
     mafRegisterObject(mafPluginVTK::mafViewVTK);
+    mafRegisterObject(mafPluginVTK::mafSceneNodeVTK);
     mafRegisterObject(mafPluginVTK::mafExternalDataCodecVTK);
     mafRegisterObject(mafPluginVTK::mafVTKParametricSurfaceSphere);
     mafRegisterObject(mafPluginVTK::mafVTKParametricSurfaceCube);
@@ -72,6 +74,7 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafImporterVTK);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafExporterVTK);
     mafUnregisterObject(mafPluginVTK::mafViewVTK);
+    mafUnregisterObject(mafPluginVTK::mafSceneNodeVTK);
     mafUnregisterObject(mafPluginVTK::mafExternalDataCodecVTK);
     mafUnregisterObject(mafPluginVTK::mafVTKParametricSurfaceSphere);
     mafUnregisterObject(mafPluginVTK::mafVTKParametricSurfaceCube);
