@@ -18,7 +18,7 @@
 using namespace mafResources;
 
 mafOperationTransform::mafOperationTransform(const QString code_location) : mafOperation(code_location), m_DataSetCollection(NULL), m_OldMatrix(NULL) {
-//    m_UIFilename = "mafOperationTransform.ui";
+    m_UIFilename = "mafOperationTransform.ui";
     setObjectName("mafOperationTransform");
 }
 
@@ -34,7 +34,8 @@ bool mafOperationTransform::acceptObject(mafCore::mafObjectBase *obj) {
 bool mafOperationTransform::initialize() {
     mafVME *inVME = qobject_cast<mafVME*>(input());
     m_DataSetCollection = inVME->dataSetCollection();
-    m_OldMatrix = m_DataSetCollection->itemAtCurrentTime()->poseMatrix()->clone();
+    m_OldMatrix = m_DataSetCollection->poseMatrix()->clone();
+    m_OldMatrix->description();
 
     return Superclass::initialize();
 }
@@ -136,7 +137,9 @@ void mafOperationTransform::setZRot(const QString zrot) {
 }
 
 void mafOperationTransform::execute() {
-    m_Matrix = m_DataSetCollection->itemAtCurrentTime()->poseMatrix()->clone();
+    m_Status = mafOperationStatusExecuting;
+    m_Matrix = m_DataSetCollection->poseMatrix()->clone();
+    m_Matrix->description();
     qDebug() << mafTr("Executing transform operation...");
     emit executionEnded();
 }
@@ -150,6 +153,10 @@ void mafOperationTransform::reDo() {
 }
 
 void mafOperationTransform::terminated() {
+    if(m_Status == mafOperationStatusCanceled) {
+        unDo();
+    }
+    
     qDebug() << mafTr("Terminated with status: ") << m_Status;
 }
 
@@ -157,9 +164,39 @@ void mafOperationTransform::setParameters(QVariantList parameters) {
     REQUIRE(parameters.count() % 3 == 0);
     if(parameters.count() == 3) {
         //set the orientation
-        m_DataSetCollection->setOrientation(parameters.at(0).toDouble(), parameters.at(1).toDouble(), parameters.at(2).toDouble());
+        setXPos(parameters.at(0).toString());
+        setYPos(parameters.at(1).toString());
+        setZPos(parameters.at(2).toString());
     } else {
         //set the Pose (orientation + position)
-        m_DataSetCollection->setPose(parameters.at(0).toDouble(), parameters.at(1).toDouble(), parameters.at(2).toDouble(),parameters.at(3).toDouble(), parameters.at(4).toDouble(), parameters.at(5).toDouble());
+        setXPos(parameters.at(0).toString());
+        setYPos(parameters.at(1).toString());
+        setZPos(parameters.at(2).toString());
+        setXRot(parameters.at(3).toString());
+        setYRot(parameters.at(4).toString());
+        setZRot(parameters.at(5).toString());
     }
 }
+
+/// ui binding
+void mafOperationTransform::on_xPos_textEdited(const QString &text) {
+    setXPos(text);
+}
+void mafOperationTransform::on_yPos_textEdited(const QString &text) {
+    setYPos(text);
+}
+void mafOperationTransform::on_zPos_textEdited(const QString &text) {
+    setZPos(text);
+}
+
+void mafOperationTransform::on_xRot_textEdited(const QString &text) {
+    setXRot(text);
+}
+
+void mafOperationTransform::on_yRot_textEdited(const QString &text) {
+    setYRot(text);
+}
+void mafOperationTransform::on_zRot_textEdited(const QString &text) {
+    setZRot(text);
+}
+

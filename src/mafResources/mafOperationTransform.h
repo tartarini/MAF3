@@ -47,6 +47,21 @@ public slots:
     
     /// Set operation parameters.
     /*virtual*/ void setParameters(QVariantList parameters);
+    
+    /// ui binding callback.
+    void on_xPos_textEdited(const QString &text);
+    /// ui binding callback.
+    void on_yPos_textEdited(const QString &text);
+    /// ui binding callback.
+    void on_zPos_textEdited(const QString &text);
+
+    /// ui binding callback.
+    void on_xRot_textEdited(const QString &text);
+    /// ui binding callback.    
+    void on_yRot_textEdited(const QString &text);
+    /// ui binding callback.
+    void on_zRot_textEdited(const QString &text);
+
 
 public:
     /// Object constructor.
