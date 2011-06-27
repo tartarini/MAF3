@@ -211,6 +211,7 @@ void mafDataSetCollection::writeOrientation(double rx, double ry, double rz, maf
 
     // Copy into 'm' the result of the matrix multiplication.
     *m = Rz * Ry * Rx;
+    writePosition(pos[0],pos[1],pos[2], m);
 }
 
 bool mafDataSetCollection::insertItem(mafDataSet *item, double t) {
