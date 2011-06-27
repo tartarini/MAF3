@@ -32,6 +32,15 @@ mafDataSet::~mafDataSet() {
     }
 }
 
+
+mafMatrix *mafDataSet::poseMatrix() {
+    if(m_Matrix == NULL) {
+        m_Matrix = new mafMatrix();
+        m_Matrix->setIdentity();
+    }
+    return m_Matrix;
+}
+
 void mafDataSet::setBoundaryAlgorithm(mafDataBoundaryAlgorithm *algorithm) {
     if(m_DataBoundaryAlgorithm != algorithm) {
         mafDEL(m_DataBoundaryAlgorithm);

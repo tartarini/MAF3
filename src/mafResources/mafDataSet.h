@@ -63,7 +63,7 @@ public:
     void setPoseMatrix(const mafMatrix *matrix);
 
     /// Return the pose matrix of the current data.
-    mafMatrix *poseMatrix() const;
+    mafMatrix *poseMatrix();
 
     /// Set the boundary algorithm function to be used to calculate the data value boundary according also to its pose matrix.
     void setBoundaryAlgorithm(mafDataBoundaryAlgorithm *algorithm);
@@ -140,10 +140,6 @@ private:
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
-
-inline mafMatrix *mafDataSet::poseMatrix() const {
-    return m_Matrix;
-}
 
 inline mafDataBoundaryAlgorithm *mafDataSet::boundaryAlgorithm() const {
     return m_DataBoundaryAlgorithm;
