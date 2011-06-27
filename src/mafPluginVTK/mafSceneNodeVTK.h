@@ -27,7 +27,6 @@ class MAFPLUGINVTKSHARED_EXPORT mafSceneNodeVTK : public mafResources::mafSceneN
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafSceneNode);
-
 public:
     /// Object constructor. USE THE CONSTRUCTOR WITH VME AS PARAMETER.
     mafSceneNodeVTK(const QString code_location = "");
@@ -48,6 +47,14 @@ protected:
 private:
     vtkAssembly *m_Assembly; ///< Assembly containing the prop 3D to visualize.
     vtkAssembly *m_AssemblyParent; ///< Parent assembly needed to build the visual hierarchy
+
+public slots:
+    /// update the position of the vme.
+    void update();
+    
+    /// Set the visibility of its rendering scene.
+    /*virtual*/ void setVisibility(bool visible);
+
 };
 
 inline vtkAssembly *mafSceneNodeVTK::nodeAssembly() const {

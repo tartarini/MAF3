@@ -11,6 +11,7 @@
 
 #include "mafPipeVisualVTK.h"
 #include "mafVTKWidget.h"
+#include "mafSceneNodeVTK.h"
 
 #include <vtkRendererCollection.h>
 #include <vtkRenderWindow.h>
@@ -57,10 +58,16 @@ void mafPipeVisualVTK::updateVisibility() {
     if (graphicObject() == NULL) {
         return;
     }
+    
+    mafSceneNodeVTK *sn = (mafSceneNodeVTK *)sceneNode();
+    if(sn == NULL) {
+        return;
+    }
+    vtkProp *prop = (vtkProp *)sn->nodeAssembly();
     if(visibility()) {
-        m_Renderer->AddViewProp(m_Prop3D);
+        m_Renderer->AddViewProp(prop);
     } else {
-        m_Renderer->RemoveViewProp(m_Prop3D);
+        m_Renderer->RemoveViewProp(prop);
     }
     render();
     m_Renderer->ResetCamera();
