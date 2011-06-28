@@ -49,7 +49,7 @@ public:
 
     /// Return the flag to activate immediate rendering mode.
     bool immediateRendering();
-
+    
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTK();
@@ -89,7 +89,7 @@ inline bool mafPipeVisualVTK::scalarVisibility() {
 inline bool mafPipeVisualVTK::immediateRendering() {
     return m_ImmediateRendering;
 }
-
+    
 } // namespace mafPluginVTK
 
 #endif // MAFVISUALPIPEVTK_H

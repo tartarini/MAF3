@@ -2,8 +2,8 @@
  *  mafSceneNode.h
  *  mafResources
  *
- *  Created by Daniele Giunchi on 24/03/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Created by Daniele Giunchi - Paolo Quadrani on 24/03/10.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -41,6 +41,12 @@ public:
     /// Object constructor.
     mafSceneNode(mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location = "");
 
+    /// Set the parent of the current node.
+    virtual void setParentNode(const mafSceneNode *parent);
+
+    /// Return the parent node.
+    mafSceneNode *parentNode() const;
+
     /// Return the type name of the pipe.
     QString visualPipeType() const;
     
@@ -68,19 +74,6 @@ public:
     /// Return visibility policy of the scene node
     unsigned int visibilityPolicy() const;
 
-public slots:
-    QObject *dataObject();
-    
-    /// Set the visibility of its rendering scene.
-    virtual void setVisibility(bool visible);
-
-    /// Set the visualization status property.
-    virtual void setVisualizationStatus(bool visualizationStatus);
-
-signals:
-    /// Alert the view that the node can be deleted because its inner VME has been destroyed.
-    void destroyNode();
-
 protected:
     /// Object destructor.
     /* virtual */ ~mafSceneNode();
@@ -102,6 +95,20 @@ private:
     mafVisualizationStatus m_VisualizationStatus; ///< contains the visibility status for that scene node.
     mafVisibilityPolicy m_VisibilityPolicy; ///< Visibility policy determines in which way, on show/hide , the visual pipe will be treated.
     QObject *m_GraphicObject; ///< Render device.
+    mafSceneNode *m_ParentNode; ///< Parent node.
+
+signals:
+    /// Alert the view that the node can be deleted because its inner VME has been destroyed.
+    void destroyNode();
+
+public slots:
+    QObject *dataObject();
+    
+    /// Set the visibility of its rendering scene.
+    virtual void setVisibility(bool visible);
+
+    /// Set the visualization status property.
+    virtual void setVisualizationStatus(bool visualizationStatus);
 };
 
 /////////////////////////////////////////////////////////////
@@ -128,6 +135,9 @@ inline unsigned int mafSceneNode::visibilityPolicy() const {
     return m_VisibilityPolicy;
 }    
 
+inline mafSceneNode *mafSceneNode::parentNode() const {
+    return m_ParentNode;
+}
 
 } //namespace mafResources
 

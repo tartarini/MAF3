@@ -159,10 +159,11 @@ void mafOperationManager::startOperation(const QString operation) {
         return;
     }
 
-    m_CurrentOperation->initialize();
     // Assign as input the current selected VME.
     m_CurrentOperation->setInput(resource);
 
+    m_CurrentOperation->initialize();
+    
     // Notify the observers that the new operation has started.
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase*, m_CurrentOperation));

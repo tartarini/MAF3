@@ -144,8 +144,8 @@ void mafVMEManager::vmeRemove(mafObjectBase *vme) {
 
 void mafVMEManager::vmeReparent(mafObjectBase *vme, mafObjectBase *vmeParent) {
   if (m_VMEHierarchy != NULL) {
-    QString objName = "mafResources::mafSceneNode";
-    if (objName.compare(vme->metaObject()->className()) == 0) {
+    QString objName = vme->metaObject()->className();
+    if (objName.contains("mafSceneNode")) {
       mafSceneNode *obj = qobject_cast<mafSceneNode *>(vme);
       mafSceneNode *objParent = qobject_cast<mafSceneNode *>(vmeParent);
       m_VMEHierarchy->reparentHierarchyNode(obj->vme(), objParent->vme());

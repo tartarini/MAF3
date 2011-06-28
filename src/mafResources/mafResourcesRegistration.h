@@ -27,6 +27,7 @@
 #include "mafMementoVME.h"
 #include "mafInteractor.h"
 #include "mafVisitorFindSceneNodeByVMEHash.h"
+#include "mafOperationTransform.h"
 
 namespace mafResources {
 

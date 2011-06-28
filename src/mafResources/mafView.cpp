@@ -55,9 +55,9 @@ void mafView::create() {
 }
 
 void mafView::sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectBase *vmeParent) {
-  if(m_Scenegraph != NULL) {
-    m_Scenegraph->reparentHierarchyNode(vme, vmeParent);
-  }
+    if(m_Scenegraph != NULL) {
+        m_Scenegraph->reparentHierarchyNode(vme, vmeParent);
+    }
 }
 
 mafSceneNode *mafView::createSceneNode(mafVME *vme) {
@@ -82,6 +82,7 @@ void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
             m_Scenegraph = mafNEW(mafCore::mafHierarchy);
         }
         
+        node->setParentNode(m_SelectedNode);
         m_Scenegraph->addHierarchyNode(node, m_SelectedNode);
         m_SceneNodeList.push_back(node);
         

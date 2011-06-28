@@ -15,6 +15,8 @@
 #include "mafPluginVTKDefinitions.h"
 #include <mafSceneNode.h>
 
+class vtkAssembly;
+
 namespace mafPluginVTK {
 
 /**
@@ -25,7 +27,6 @@ class MAFPLUGINVTKSHARED_EXPORT mafSceneNodeVTK : public mafResources::mafSceneN
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafSceneNode);
-
 public:
     /// Object constructor. USE THE CONSTRUCTOR WITH VME AS PARAMETER.
     mafSceneNodeVTK(const QString code_location = "");
@@ -33,12 +34,32 @@ public:
     /// Object constructor.
     mafSceneNodeVTK(mafResources::mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location = "");
 
+    /// Set the parent of the current node.
+    /*virtual*/ void setParentNode(const mafResources::mafSceneNode *parent);
+
+    /// Return the node assembly.
+    vtkAssembly *nodeAssembly() const;
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafSceneNodeVTK();
 
 private:
+    vtkAssembly *m_Assembly; ///< Assembly containing the prop 3D to visualize.
+    vtkAssembly *m_AssemblyParent; ///< Parent assembly needed to build the visual hierarchy
+
+public slots:
+    /// update the position of the vme.
+    void update();
+    
+    /// Set the visibility of its rendering scene.
+    /*virtual*/ void setVisibility(bool visible);
+
 };
+
+inline vtkAssembly *mafSceneNodeVTK::nodeAssembly() const {
+    return m_Assembly;
+}
 
 } //namespace mafPluginVTK
 

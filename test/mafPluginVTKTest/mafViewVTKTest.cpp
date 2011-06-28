@@ -113,6 +113,11 @@ private slots:
         boundaryAlgorithm1 = mafNEW(mafDataBoundaryAlgorithmVTK);
         m_DataSetCubeMoved->setBoundaryAlgorithm(boundaryAlgorithm1);
         m_DataSetCubeMoved->setDataValue(&m_DataSourceContainerMoved);
+        
+        mafMatrix mat;
+        mat.setIdentity();
+        m_DataSetCube->setPoseMatrix(&mat);
+        m_DataSetCubeMoved->setPoseMatrix(&mat);
 
         m_VmeCubeMoved = mafNEW(mafResources::mafVME);
         m_VmeCubeMoved->setObjectName("Moved VME Cube");

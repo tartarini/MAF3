@@ -78,6 +78,7 @@ void mafDataSetCollection::setPose(double rx, double ry, double rz, double x, do
     writeOrientation(rx, ry, rz, m);
     // Write the position vector into the found matrix.
     writePosition(x, y, z, m);
+    emit(modifiedObject());
 }
 
 void mafDataSetCollection::setOrientation(double rx, double ry, double rz, double t) {
@@ -88,6 +89,7 @@ void mafDataSetCollection::setOrientation(double rx, double ry, double rz, doubl
     }
     // Write the orientation into the found matrix.
     writeOrientation(rx, ry, rz, m);
+    emit(modifiedObject());
 }
 
 void mafDataSetCollection::orientations(double ori[3], double t) {
@@ -131,6 +133,7 @@ void mafDataSetCollection::setPosition(double x, double y, double z, double t) {
     }
     // Write the position vector into the found matrix.
     writePosition(x, y, z, m);
+    emit(modifiedObject());
 }
 
 void mafDataSetCollection::position(double pos[3], double t) {
@@ -153,6 +156,7 @@ void mafDataSetCollection::setPose(const mafMatrix matrix, double t) {
         return;
     }
     *m = matrix;
+    emit(modifiedObject());
 }
 
 mafMatrix *mafDataSetCollection::poseMatrix(double t) {
@@ -211,6 +215,7 @@ void mafDataSetCollection::writeOrientation(double rx, double ry, double rz, maf
 
     // Copy into 'm' the result of the matrix multiplication.
     *m = Rz * Ry * Rx;
+    writePosition(pos[0],pos[1],pos[2], m);
 }
 
 bool mafDataSetCollection::insertItem(mafDataSet *item, double t) {

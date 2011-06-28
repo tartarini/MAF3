@@ -2,8 +2,8 @@
  *  mafSceneNode.cpp
  *  mafResources
  *
- *  Created by Daniele Giunchi on 24/03/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Created by Daniele Giunchi - Paolo Quadrani on 24/03/10.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -31,6 +31,10 @@ mafSceneNode::~mafSceneNode() {
     mafDEL(this->m_VisualPipe);
 }
 
+void mafSceneNode::setParentNode(const mafSceneNode *parent) {
+    m_ParentNode = const_cast<mafSceneNode *>(parent);
+}
+
 void mafSceneNode::setVisualPipe(QString visualPipeType) {
     if(m_VisualPipe != NULL && visualPipeType.compare(m_VisualPipeType) == 0) {
         return;
@@ -48,18 +52,19 @@ void mafSceneNode::setVisualPipe(QString visualPipeType) {
 }
 
 bool mafSceneNode::createVisualPipe() {
-  mafDEL(this->m_VisualPipe);
-  this->m_VisualPipe = (mafPipeVisual *)mafNEWFromString(m_VisualPipeType);
-  if(m_VisualPipe == NULL) {
-    qWarning() << mafTr("No visual pipe type '") << m_VisualPipeType << mafTr("'' registered!!");
-    return false;
-  }
+    mafDEL(this->m_VisualPipe);
+    this->m_VisualPipe = (mafPipeVisual *)mafNEWFromString(m_VisualPipeType);
+    if(m_VisualPipe == NULL) {
+        qWarning() << mafTr("No visual pipe type '") << m_VisualPipeType << mafTr("'' registered!!");
+        return false;
+    }
 
-  this->m_VisualPipe->setGraphicObject(m_GraphicObject);
-
-  m_VisualPipe->setInput(m_VME);
-  m_VisualPipe->updatePipe();
-  return true;
+    this->m_VisualPipe->setGraphicObject(m_GraphicObject);
+    this->m_VisualPipe->setNode(this);
+    
+    m_VisualPipe->setInput(m_VME);
+    m_VisualPipe->updatePipe();
+    return true;
 }
 
 void mafSceneNode::setVMEName(QString name) {
@@ -130,5 +135,3 @@ QObject *mafSceneNode::dataObject() {
     QObject *obj = m_VME;
     return obj;
 }
-
-

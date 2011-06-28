@@ -10,6 +10,7 @@
  */
 
 
+#include <mafCoreRegistration.h>
 #include "mafResourcesRegistration.h"
 
 using namespace mafCore;
@@ -31,6 +32,7 @@ void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObject(mafResources::mafSceneNode);
     mafRegisterObject(mafResources::mafInteractor);
     mafRegisterObject(mafResources::mafVisitorFindSceneNodeByVMEHash);
+    mafRegisterObjectAndAcceptBind(mafResources::mafOperationTransform);
 }
 
 void mafResourcesRegistration::unregisterResourcesObjects() {
@@ -49,4 +51,5 @@ void mafResourcesRegistration::unregisterResourcesObjects() {
     mafUnregisterObject(mafResources::mafSceneNode);
     mafUnregisterObject(mafResources::mafInteractor);
     mafUnregisterObject(mafResources::mafVisitorFindSceneNodeByVMEHash);
+    mafUnregisterObjectAndAcceptUnbind(mafResources::mafOperationTransform);
 }

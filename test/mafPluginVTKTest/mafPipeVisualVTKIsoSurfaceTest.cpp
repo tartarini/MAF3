@@ -1,9 +1,9 @@
 /*
- *  mafPipeVisualVTKSurfaceTest.cpp
+ *  mafPipeVisualVTKIsoSurfaceTest.cpp
  *  mafPluginVTK
  *
- *  Created by Roberto Mucci on 01/03/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Created by Roberto Mucci on 24/06/11.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -12,22 +12,20 @@
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafEventBusManager.h>
-#include <mafPipeVisualVTKSurface.h>
+#include <mafPipeVisualVTKIsoSurface.h>
 #include <mafDataBoundaryAlgorithmVTK.h>
 #include <mafResourcesRegistration.h>
 #include <mafPipeVisual.h>
 #include <mafProxy.h>
 #include <mafPluginManager.h>
 #include <mafPlugin.h>
-#include <vtkAppendPolyData.h>
-#include <vtkCubeSource.h>
+#include <vtkDataSetReader.h>
 #include <vtkSmartPointer.h>
 
 #include <mafVTKWidget.h>
 
-#include <vtkPolyData.h>
+#include <vtkImageData.h>
 #include <vtkActor.h>
-#include <vtkSphereSource.h>
 #include <vtkAlgorithmOutput.h>
 
 // render window stuff
@@ -52,19 +50,20 @@ using namespace mafPluginVTK;
 
 
 /**
- Class name: mafPipeVisualVTKSurfaceTest
- This class creates a vtkSphereSource and visualizes it trough the mafPipeVisualVTKSurface
+ Class name: mafPipeVisualVTKIsoSurfaceTest
+ This class import a vtk structuredpoints and render it throught a mafPipeVisualVTKIsoSurface.
  */
 
 //! <title>
-//mafPipeVisualVTKSurface
+//mafPipeVisualVTKIsoSurface
 //! </title>
 //! <description>
-//mafPipeVisualVTKSurface is a visual pipe used to render VTK polydata.
-//It takes a mafDataSet as input and returns a mafProxy<vtkActor>.
+//This visual pipe allow to extract a surface from a volume data given a 
+//threshold value. The value is extracted according to the scalar values present 
+//into the volume data. The isosurface is extracted in real time*/
 //! </description>
 
-class mafPipeVisualVTKSurfaceTest : public QObject {
+class mafPipeVisualVTKIsoSurfaceTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -72,36 +71,24 @@ private slots:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
-        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface)
+        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKIsoSurface)
 
         m_RenderWidget = new mafVTKWidget();
         
-        // Create a sphere.
-        vtkSmartPointer<vtkSphereSource> surfSphere = vtkSmartPointer<vtkSphereSource>::New();
-        surfSphere->SetRadius(5);
-        surfSphere->SetPhiResolution(10);
-        surfSphere->SetThetaResolution(10);
-        surfSphere->Update();
-
-        // Create a cube.
-        vtkSmartPointer<vtkCubeSource> surfCube = vtkSmartPointer<vtkCubeSource>::New();
-        surfCube->SetXLength(3);
-        surfCube->SetYLength(6);
-        surfCube->SetZLength(4);
-        surfCube->SetCenter(10,5,10);
-        surfCube->Update();
-
-        // Append the 2 surfaces in one polydata
-        m_AppendData = vtkAppendPolyData::New();
-        m_AppendData->AddInputConnection(surfSphere->GetOutputPort());
-        m_AppendData->AddInputConnection(surfCube->GetOutputPort());
-
+        //TODO: set path of test data
+        m_VTKFile = "D:\\TEMPO\\TestData\\Copy (2) of TESTDELETE\\TESTDELETE.75.vtk";
+        
+        // Import a vtk volume.
+        m_Reader = vtkDataSetReader::New();
+        m_Reader->SetFileName(m_VTKFile.toAscii().constData());
+        m_Reader->Update();
+        
         //! <snippet>
         //// Create a container with the outputPort of a vtkCubeSource
         //// m_DataSourceContainer is the container of type vtkAlgorithmOutput
         //// to "wrap" the 'vtkCubeSource' of type vtkPolyData just simply use the code below.
         m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
-        m_DataSourceContainer = m_AppendData->GetOutputPort(0);
+        m_DataSourceContainer = m_Reader->GetOutputPort(0);
 
         //Insert data into VME
         m_VME = mafNEW(mafResources::mafVME);
@@ -117,7 +104,8 @@ private slots:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_DataSet);
-        m_AppendData->Delete();
+        //here delete vtk stuff
+        m_Reader->Delete();
         mafDEL(m_VME);
         mafMessageHandler::instance()->shutdown();
         delete m_RenderWidget;
@@ -134,20 +122,19 @@ private:
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a surface.
     mafResources::mafDataSet *m_DataSet;
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
-    vtkAppendPolyData *m_AppendData; /// Bunch of surfaces.
-    
+    vtkDataSetReader *m_DataSetReader; /// reader used for import
+    vtkDataSetReader *m_Reader;
+    QString m_VTKFile; ///< file name of the vtk test
     QObject *m_RenderWidget; /// renderer widget
 };
 
-void mafPipeVisualVTKSurfaceTest::updatePipeTest() {
+void mafPipeVisualVTKIsoSurfaceTest::updatePipeTest() {
     vtkRenderer *renderer = vtkRenderer::New();
     vtkRenderWindow *renWin = ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow();
 
-    mafPipeVisualVTKSurface *pipe;
-    pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSurface);
+    mafPipeVisualVTKIsoSurface *pipe;
+    pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKIsoSurface);
     pipe->setInput(m_VME);
-    pipe->setProperty("scalarVisibility", 0);
-    pipe->setProperty("immediateRendering", 1);
     pipe->setGraphicObject(m_RenderWidget);
     pipe->updatePipe();
 
@@ -156,24 +143,20 @@ void mafPipeVisualVTKSurfaceTest::updatePipeTest() {
     mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, pipe->output());
     QVERIFY(actor != NULL);
 
+    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
     renWin->AddRenderer(renderer);
-
+    iren->SetRenderWindow(renWin);
     
     // Connect the actor (contained into the container) with the renderer.
     renderer->AddActor(*actor);
+    
 
     renderer->SetBackground(0.1, 0.1, 0.1);
     renWin->SetSize(640, 480);
     renWin->SetPosition(400,0);
 
     renWin->Render();
-    //iren->Start();
-    QTest::qSleep(2000);
-
-    //Change scalarVisibility flag
-    pipe->setProperty("scalarVisibility", 1);
-    pipe->updatePipe();
-    renWin->Render();
+    //ien->Start();
     QTest::qSleep(2000);
 
     renderer->Delete();
@@ -181,11 +164,7 @@ void mafPipeVisualVTKSurfaceTest::updatePipeTest() {
     mafDEL(pipe);
 }
 
-void mafPipeVisualVTKSurfaceTest::updatePipeTestFromPlugIn() {
-    vtkRenderer *renderer = vtkRenderer::New();
-    vtkRenderWindow *renWin = ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow();
-
-    
+void mafPipeVisualVTKIsoSurfaceTest::updatePipeTestFromPlugIn() {
     mafPluginManager *pluginManager = mafPluginManager::instance();
     QString pluginName = TEST_LIBRARY_NAME;
 
@@ -195,7 +174,7 @@ void mafPipeVisualVTKSurfaceTest::updatePipeTestFromPlugIn() {
     // Dump the plug-in information.
     mafPluginInfo info = pluginManager->pluginInformation(pluginName);
     qDebug() << "Plug-in Information:";
-    qDebug() << "Varsion: " << info.m_Version;
+    qDebug() << "Version: " << info.m_Version;
     qDebug() << "Author: " << info.m_Author;
     qDebug() << "Vendor: " << info.m_Vendor;
     qDebug() << "Description: " << info.m_Description;
@@ -204,13 +183,13 @@ void mafPipeVisualVTKSurfaceTest::updatePipeTestFromPlugIn() {
     binding_class_list = mafCoreRegistration::acceptObject(m_VME);
     int num = binding_class_list.count();
     QVERIFY(num != 0);
-    
-    QString check("mafPluginVTK::mafPipeVisualVTKSurface");
+
+    QString check("mafPluginVTK::mafPipeVisualVTKIsoSurface");
     QVERIFY(binding_class_list.contains(check));
-    
+
+
     //! <snippet>
-    mafPipeVisual *visualPipe = (mafPipeVisual *)mafNEWFromString("mafPluginVTK::mafPipeVisualVTKSurface");
-    visualPipe->setProperty("scalarVisibility", 1);
+    mafPipeVisual *visualPipe = (mafPipeVisual *)mafNEWFromString("mafPluginVTK::mafPipeVisualVTKIsoSurface");
     visualPipe->setInput(m_VME);
     visualPipe->setGraphicObject(m_RenderWidget);
     visualPipe->updatePipe();
@@ -219,28 +198,30 @@ void mafPipeVisualVTKSurfaceTest::updatePipeTestFromPlugIn() {
     //! <snippet>
     mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, visualPipe->output());
     //! </snippet>
+    
+    vtkRenderWindow *m_RenWin = vtkRenderWindow::New();
+    vtkRenderer *m_Renderer = vtkRenderer::New();
+    m_Renderer->AddActor(*actor);
+    vtkRenderWindowInteractor *m_Iren = vtkRenderWindowInteractor::New();
+    m_RenWin->AddRenderer(m_Renderer);
+    m_Iren->SetRenderWindow(m_RenWin);
+    
+    m_Renderer->SetBackground(1.0, 1.0, 1.0);
+    m_RenWin->SetSize(640, 480);
+    m_RenWin->SetPosition(200,0);
 
-    renderer->AddActor(*actor);
-    renWin->AddRenderer(renderer);
-
-    renderer->SetBackground(0.1, 0.1, 0.1);
-    renWin->SetSize(640, 480);
-    renWin->SetPosition(400,0);
-
-    renWin->Render();
-    //iren->Start();
+    m_RenWin->Render();
+    //m_Iren->Start();
     QTest::qSleep(2000);
 
     //Change scalarVisibility flag
-    visualPipe->setProperty("scalarVisibility", 0);
-    visualPipe->updatePipe();
-    renWin->Render();
-    QTest::qSleep(2000);
-    renderer->Delete();
+    m_Iren->Delete();
+    m_RenWin->Delete();
+    m_Renderer->Delete();
     mafDEL(visualPipe);
 
     pluginManager->shutdown();
 }
 
-MAF_REGISTER_TEST(mafPipeVisualVTKSurfaceTest);
-#include "mafPipeVisualVTKSurfaceTest.moc"
+//MAF_REGISTER_TEST(mafPipeVisualVTKIsoSurfaceTest);
+#include "mafPipeVisualVTKIsoSurfaceTest.moc"
