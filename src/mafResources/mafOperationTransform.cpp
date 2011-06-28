@@ -17,14 +17,18 @@
 
 using namespace mafResources;
 
-mafOperationTransform::mafOperationTransform(const QString code_location) : mafOperation(code_location), m_DataSetCollection(NULL), m_OldMatrix(NULL) {
+mafOperationTransform::mafOperationTransform(const QString code_location) : mafOperation(code_location), m_DataSetCollection(NULL), m_Matrix(NULL), m_OldMatrix(NULL) {
     m_UIFilename = "mafOperationTransform.ui";
     setObjectName("mafOperationTransform");
 }
 
 mafOperationTransform::~mafOperationTransform() {
-    delete m_Matrix;
-    delete m_OldMatrix;
+    if (m_Matrix){
+        delete m_Matrix;
+    }
+    if (m_OldMatrix){
+        delete m_OldMatrix;
+    }
 }
 
 bool mafOperationTransform::acceptObject(mafCore::mafObjectBase *obj) {
