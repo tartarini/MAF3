@@ -48,7 +48,7 @@
      <x>0</x>
      <y>0</y>
      <width>821</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>
@@ -109,7 +109,7 @@
       <item row="0" column="0">
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tabTree">
          <property name="sizePolicy">
@@ -134,36 +134,6 @@
            </rect>
           </property>
           <layout class="QGridLayout" name="layoutTree">
-           <item row="1" column="0">
-            <widget class="QGroupBox" name="propertiesBoxContainer">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="title">
-              <string>Properties</string>
-             </property>
-             <widget class="QWidget" name="gridLayoutWidget_8">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>9</y>
-                <width>191</width>
-                <height>191</height>
-               </rect>
-              </property>
-              <layout class="QGridLayout" name="layoutPropertiesBox"/>
-             </widget>
-            </widget>
-           </item>
            <item row="0" column="0">
             <widget class="QWidget" name="hierarchyWidget" native="true">
              <property name="sizePolicy">
@@ -182,6 +152,106 @@
                </rect>
               </property>
               <layout class="QGridLayout" name="layoutHierarchy"/>
+             </widget>
+             <widget class="QWidget" name="gridLayoutWidget_8">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>200</y>
+                <width>195</width>
+                <height>191</height>
+               </rect>
+              </property>
+              <layout class="QGridLayout" name="layoutPropertiesBox">
+               <item row="0" column="0">
+                <widget class="QTabWidget" name="tabProperty">
+                 <property name="tabShape">
+                  <enum>QTabWidget::Rounded</enum>
+                 </property>
+                 <property name="currentIndex">
+                  <number>0</number>
+                 </property>
+                 <property name="usesScrollButtons">
+                  <bool>true</bool>
+                 </property>
+                 <property name="documentMode">
+                  <bool>false</bool>
+                 </property>
+                 <property name="tabsClosable">
+                  <bool>false</bool>
+                 </property>
+                 <property name="movable">
+                  <bool>false</bool>
+                 </property>
+                 <widget class="QWidget" name="vmeTab">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <attribute name="title">
+                   <string>vme</string>
+                  </attribute>
+                  <widget class="QWidget" name="gridLayoutWidget_9">
+                   <property name="geometry">
+                    <rect>
+                     <x>9</x>
+                     <y>9</y>
+                     <width>181</width>
+                     <height>161</height>
+                    </rect>
+                   </property>
+                   <layout class="QGridLayout" name="vmeLayout"/>
+                  </widget>
+                 </widget>
+                 <widget class="QWidget" name="visualPipeTab">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <attribute name="title">
+                   <string>visual pipe</string>
+                  </attribute>
+                  <widget class="QWidget" name="gridLayoutWidget_10">
+                   <property name="geometry">
+                    <rect>
+                     <x>-1</x>
+                     <y>-1</y>
+                     <width>191</width>
+                     <height>161</height>
+                    </rect>
+                   </property>
+                   <layout class="QGridLayout" name="visualPipeLayout"/>
+                  </widget>
+                 </widget>
+                 <widget class="QWidget" name="dataPipeTab">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <attribute name="title">
+                   <string>data pipe</string>
+                  </attribute>
+                  <widget class="QWidget" name="gridLayoutWidget_11">
+                   <property name="geometry">
+                    <rect>
+                     <x>-1</x>
+                     <y>-1</y>
+                     <width>191</width>
+                     <height>161</height>
+                    </rect>
+                   </property>
+                   <layout class="QGridLayout" name="dataPipeLayout"/>
+                  </widget>
+                 </widget>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </widget>
            </item>
@@ -253,7 +323,7 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>78</width>
+     <width>79</width>
      <height>70</height>
     </size>
    </property>

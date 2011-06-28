@@ -74,8 +74,6 @@ void mafMainWindow::initializeMainWindow() {
     // Hierarchy tree's tab
     ui->tabTree->setLayout(ui->layoutTree);
     ui->hierarchyWidget->setLayout(ui->layoutHierarchy);
-    ui->propertiesBoxContainer->setLayout(ui->layoutPropertiesBox);
-    
 
     //tree widget in sidebar
      m_Model = new mafDragDropModel();
@@ -98,7 +96,7 @@ void mafMainWindow::initializeMainWindow() {
     QSplitter *splitter = new QSplitter(Qt::Vertical);
     splitter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     splitter->addWidget(ui->hierarchyWidget);
-    splitter->addWidget(ui->propertiesBoxContainer);
+    splitter->addWidget(ui->tabProperty);
     ui->layoutTree->addWidget(splitter);
     splitter->setStretchFactor(1, 1);
 
@@ -201,11 +199,11 @@ void mafMainWindow::loadedGUIAvailable(int type, QWidget *w) {
                 ui->layoutView->addWidget(w);
                 break;
             case mafGUILoadedTypeVisualPipe:
-                ui->tabWidget->setCurrentIndex(1);
-                ui->layoutView->addWidget(w);
+                //ui->tabWidget->setCurrentIndex(1);
+                ui->visualPipeLayout->addWidget(w);
                 break;
             case mafGUILoadedTypeVme:
-                ui->layoutPropertiesBox->addWidget(w);
+                ui->vmeLayout->addWidget(w);
                 break;
         }
         w->show();
