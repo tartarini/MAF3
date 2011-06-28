@@ -52,18 +52,19 @@ void mafSceneNode::setVisualPipe(QString visualPipeType) {
 }
 
 bool mafSceneNode::createVisualPipe() {
-  mafDEL(this->m_VisualPipe);
-  this->m_VisualPipe = (mafPipeVisual *)mafNEWFromString(m_VisualPipeType);
-  if(m_VisualPipe == NULL) {
-    qWarning() << mafTr("No visual pipe type '") << m_VisualPipeType << mafTr("'' registered!!");
-    return false;
-  }
+    mafDEL(this->m_VisualPipe);
+    this->m_VisualPipe = (mafPipeVisual *)mafNEWFromString(m_VisualPipeType);
+    if(m_VisualPipe == NULL) {
+        qWarning() << mafTr("No visual pipe type '") << m_VisualPipeType << mafTr("'' registered!!");
+        return false;
+    }
 
-  this->m_VisualPipe->setGraphicObject(m_GraphicObject);
-
-  m_VisualPipe->setInput(m_VME);
-  m_VisualPipe->updatePipe();
-  return true;
+    this->m_VisualPipe->setGraphicObject(m_GraphicObject);
+    this->m_VisualPipe->setNode(this);
+    
+    m_VisualPipe->setInput(m_VME);
+    m_VisualPipe->updatePipe();
+    return true;
 }
 
 void mafSceneNode::setVMEName(QString name) {
