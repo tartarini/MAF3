@@ -52,6 +52,9 @@ public:
     /// Object constructor.
     mafVME(const QString code_location = "");
 
+    /// Check if the object is equal to that passed as argument.
+    /* virtual */ bool isEqual(const mafObjectBase *obj) const;
+
     /// Return the collection of mafDataSet.
     mafDataSetCollection *dataSetCollection();
 

@@ -47,6 +47,17 @@ mafVME::~mafVME() {
     delete m_Lock;
 }
 
+bool mafVME::isEqual(const mafObjectBase *obj) const {
+    mafVME *vme = qobject_cast<mafVME *>((mafObjectBase *)obj);
+    if(vme == NULL) {
+        return false;
+    }
+    if(Superclass::isEqual(obj)) {
+        return (m_DataPipe == vme->dataPipe() && m_DataSetCollection == vme->dataSetCollection());
+    }
+    return false;
+}
+
 void mafVME::setCanRead(bool lock) {
     if ( lock == m_CanRead ) {
         return;
