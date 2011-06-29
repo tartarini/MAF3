@@ -27,9 +27,6 @@ using namespace mafEventBus;
 mafView::mafView(const QString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL), m_VisualPipeHash(NULL), m_SelectedNode(NULL),m_PipeVisualSelection(NULL) {
     m_SceneNodeList.clear();
 
-    // CallBack related to the Scene node reparent
-    mafRegisterLocalCallback("maf.local.resources.view.sceneNodeReparent", this, "sceneNodeReparent(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
-
     // Callbacks related to the VME creation
     mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)")
     // Callback related to the VME selection
@@ -54,11 +51,6 @@ void mafView::clearScene() {
 void mafView::create() {
 }
 
-void mafView::sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectBase *vmeParent) {
-    if(m_Scenegraph != NULL) {
-        m_Scenegraph->reparentHierarchyNode(vme, vmeParent);
-    }
-}
 
 mafSceneNode *mafView::createSceneNode(mafVME *vme) {
     return new mafSceneNode(vme, m_RenderWidget, "", mafCodeLocation);

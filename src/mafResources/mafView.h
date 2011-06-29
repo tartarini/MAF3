@@ -108,9 +108,6 @@ public slots:
 
 private slots:
 
-    /// Called by reparent of items in tree.
-    void sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectBase *vmeParent);
-
     /// Called when the scene node has been destroyed.
     void sceneNodeDestroy();
 
