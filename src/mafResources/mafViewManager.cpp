@@ -48,6 +48,7 @@ mafViewManager::~mafViewManager() {
     mafUnregisterLocalCallback("maf.local.resources.view.clearViews", this, "clearViews()")
     mafUnregisterLocalCallback("maf.local.resources.view.fillViews", this, "fillViews()")
     mafUnregisterLocalCallback("maf.local.resources.view.customizeVisualization", this, "customPipeVisualForVMEInView(QString, QString, QString)")
+    mafUnregisterLocalCallback("maf.local.resources.view.sceneNodeReparent", this, "sceneNodeReparent(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
 
     
     // Unregister signals...
@@ -138,6 +139,9 @@ void mafViewManager::initializeConnections() {
     // Register callback to allows settings serialization.
     mafRegisterLocalCallback("maf.local.logic.status.viewmanager.store", this, "createMemento()")
     mafRegisterLocalCallback("maf.local.logic.status.viewmanager.restore", this, "setMemento(mafCore::mafMemento *, bool)")
+
+    //CallBack related to the Scene node reparent
+    mafRegisterLocalCallback("maf.local.resources.view.sceneNodeReparent", this, "sceneNodeReparent(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
 }
 
 void mafViewManager::customPipeVisualForVMEInView(QString view_type, QString data_type, QString pipe_type) {
@@ -200,6 +204,24 @@ void mafViewManager::createView(QString view_type) {
 
 mafObjectBase *mafViewManager::selectedView() {
     return m_SelectedView;
+}
+
+void mafViewManager::sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectBase *vmeParent) {
+    int i = 0;
+    //Get VME inside sceneNode, in order to get the sceneNodes of each view
+    mafSceneNode* sceneNode = qobject_cast<mafSceneNode*>(vme);
+    mafSceneNode* sceneNodeParent = qobject_cast<mafSceneNode*>(vmeParent);
+
+    for (; i < m_CreatedViewList.count(); i++) {
+        mafView *view = (mafView *)m_CreatedViewList.at(i);
+        mafCore::mafHierarchy *sceneGraph = view->hierarchy().value<mafCore::mafHierarchyPointer>();
+        if (sceneGraph != NULL) {
+            //get sceneNodes corresponding to VMEs from each view
+            mafCore::mafObjectBase* sn = view->sceneNodeFromVme(sceneNode->vme());
+            mafCore::mafObjectBase* snParent = view->sceneNodeFromVme(sceneNodeParent->vme());
+            sceneGraph->reparentHierarchyNode(sn, snParent);
+        }
+    }
 }
 
 void mafViewManager::addViewToCreatedList(mafView *v) {
