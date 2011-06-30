@@ -32,10 +32,18 @@ int main(int argc, char *argv[]) {
     logic->plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
     logic->plugObject("mafResources::mafOperation", "mafResources::mafOperationTransform", "Transform");
 
-    logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View 3D");
+    //@TODO need to handle different views of the same type
+/*
+    logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View MIP");
 
     logic->customizeVisualization("mafPluginVTK::mafViewVTK", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("mafPluginVTK::mafViewVTK", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKMIPVolume");
+*/
+    logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View Iso");
+    
+    logic->customizeVisualization("mafPluginVTK::mafViewVTK", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
+    logic->customizeVisualization("mafPluginVTK::mafViewVTK", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKIsoSurface");
+
 
     // Create the instance of the main window and pass to it the application's logic.
     // In this way the mafMainWondow class will also load the plug-ins present
