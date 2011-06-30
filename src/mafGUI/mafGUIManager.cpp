@@ -521,6 +521,8 @@ void mafGUIManager::createDefaultMenus() {
     fileMenu->addAction((QAction*)menuItemByName("Exit"));
     
     m_MenuItemList.append(fileMenu);
+    m_MenuItemList.append(importMenu);
+    m_MenuItemList.append(exportMenu);
     
     menuBar->addSeparator();
     
