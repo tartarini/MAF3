@@ -17,9 +17,11 @@
 
 
 #define EPSILON_DOUBLE std::numeric_limits<double>::epsilon()
+#define EPSILON_FLOAT std::numeric_limits<float>::epsilon()
 
-extern MAFCORESHARED_EXPORT bool mafEquals(double x, double y);
-extern MAFCORESHARED_EXPORT bool mafFloatEquals(float x, float y);
+
+extern MAFCORESHARED_EXPORT bool mafEquals(double x, double y, double tolerance = EPSILON_DOUBLE);
+extern MAFCORESHARED_EXPORT bool mafFloatEquals(float x, float y, float tolerance = EPSILON_FLOAT);
 extern MAFCORESHARED_EXPORT double mafRoundToPrecision(double val, unsigned prec);
 extern MAFCORESHARED_EXPORT bool mafIsLittleEndian(void);
 

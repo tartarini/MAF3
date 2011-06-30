@@ -45,7 +45,7 @@ public slots:
     /// Allows to call the piece of algorithm that is needed to apply the operation again.
     /*virtual*/ void reDo();
     
-    /// Set operation parameters.
+    /// Set operation parameters with the first three related to orientation and optionally the second three related to position.
     /*virtual*/ void setParameters(QVariantList parameters);
     
     /// ui binding callback.

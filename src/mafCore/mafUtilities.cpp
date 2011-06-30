@@ -13,15 +13,13 @@
 #include <cmath>
 
 /// Check if two double values are equals
-bool mafEquals(double x, double y) {
-   return std::fabs(x - y) < EPSILON_DOUBLE;
+bool mafEquals(double x, double y, double tolerance) {
+   return std::fabs(x - y) < tolerance;
 }
 
 /// Check if two float values are equals.
-bool mafFloatEquals(float x, float y) {
-   float diff=fabs(x - y);
-   float max_err=fabs(x / pow((float)10,(float)7));
-   return  ( diff <= max_err);
+bool mafFloatEquals(float x, float y, float tolerance) {
+   return std::fabs(x - y) < tolerance;
 }
 
 /// Truncate a double value to a given precision.
