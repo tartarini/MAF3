@@ -110,18 +110,19 @@ void mafOperationTransformTest::testExecute() {
     m_VME->dataSetCollection()->position(pos);
     m_VME->dataSetCollection()->orientations(ori);
     
-    double diff = rx - ori[0];
+    double tolerance = 1.0e-14;
+    
     bool result = mafEquals(pos[0], x);
     QVERIFY(result);
     result = mafEquals(pos[1], y);
     QVERIFY(result);
     result = mafEquals(pos[2], z);
     QVERIFY(result);
-    result = mafEquals(ori[0], rx);
+    result = mafEquals(ori[0], rx, tolerance);
     QVERIFY(result);
-    result = mafEquals(ori[1], ry);
+    result = mafEquals(ori[1], ry, tolerance);
     QVERIFY(result);
-    result = mafEquals(ori[2], rz);
+    result = mafEquals(ori[2], rz, tolerance);
     QVERIFY(result);
 
 }
