@@ -117,7 +117,7 @@ void mafInteractionManager::keyChar() {
 }
 
 void mafInteractionManager::mouseMove(unsigned long modifier) {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+    //qDebug() << __FILE__ << ": "<< __FUNCTION__;
 }
 
 void mafInteractionManager::mouseWheelForward(unsigned long modifier) {
