@@ -49,7 +49,10 @@ public:
 
     /// Return the flag to activate immediate rendering mode.
     bool immediateRendering();
-    
+
+    /// set the selection pipe for visualization.
+    /*virtual*/ void setPipeVisualSelection(mafPipeVisual *pipeVisualSelection);
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTK();
@@ -63,7 +66,7 @@ protected:
     mafCore::mafProxy<vtkProp3D> m_Prop3D; ///< Output container.
 
 private:
-    vtkRenderer * m_Renderer; ///< Current VTK Renderer.
+    vtkRenderer *m_Renderer; ///< Current VTK Renderer.
     bool m_ScalarVisibility; ///< Flag to activate scalar visibility.
     bool m_ImmediateRendering; ///< Flag to activate immediate rendering mode.
     
@@ -89,7 +92,7 @@ inline bool mafPipeVisualVTK::scalarVisibility() {
 inline bool mafPipeVisualVTK::immediateRendering() {
     return m_ImmediateRendering;
 }
-    
+
 } // namespace mafPluginVTK
 
 #endif // MAFVISUALPIPEVTK_H

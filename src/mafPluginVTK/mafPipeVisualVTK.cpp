@@ -44,6 +44,9 @@ void mafPipeVisualVTK::render() {
     }
 }
 
+void mafPipeVisualVTK::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
+}
+
 void mafPipeVisualVTK::setScalarVisibility(bool scalarVisibility) {
     m_ScalarVisibility = scalarVisibility;
 }
