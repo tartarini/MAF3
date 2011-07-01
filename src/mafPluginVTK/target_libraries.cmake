@@ -29,5 +29,6 @@ SET(target_libraries
   mafCore
   mafEventBus
   mafResources
+  vtkMAF
   )
 
