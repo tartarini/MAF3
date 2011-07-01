@@ -61,6 +61,7 @@ option(MAF_TIME_SPACE "Build mafTimeSpace module. mafCore and mafEventBus will b
 option(MAF_SERIALIZATION "Build mafSerialization module. mafCore and mafEventBus will be built anyway."       ON)
 option(MAF_RESOURCES "Build mafResources module. mafCore and mafEventBus will be built anyway."               ON)
 option(MAF_PLUGINVTK "Build mafPluginVTK module. mafCore and mafEventBus will be built anyway."               ON)
+option(VTK_MAF "Build vtkMAF VTK extension library."                                                          ON)
 option(MAF_APPLICATION_LOGIC "Build mafApplicationLogic module.mafCore and mafEventBus will be built anyway." ON)
 option(MAF_QTGUI "Build mafGUI module. mafCore and mafEventBus will be built anyway."                         ON)
 
@@ -68,6 +69,7 @@ option(MAF_QTGUI "Build mafGUI module. mafCore and mafEventBus will be built any
 include(CMake/mafUtilities.cmake)
 if(MAF_PLUGINVTK)
   SET( MAF_RESOURCES ON ) 
+  SET( VTK_MAF ON ) 
   mafDependentOption(MAF_RESOURCES "Build mafResources module." ON MAF_PLUGINVTK ON)
 endif(MAF_PLUGINVTK)
 
@@ -84,6 +86,10 @@ if(BUILD_TEST_SUITE OR BUILD_EXAMPLES)
     
     set( MAF_PLUGINVTK ON ) 
     mafDependentOption(MAF_PLUGINVTK "Build Test module for mafPluginVTK." ON BUILD_EXAMPLES ON)
+   
+# Needs to add the test suite for vtkMAF
+#    set( VTK_MAF ON ) 
+#    mafDependentOption(VTK_MAF "Build Test module for vtkMAF." ON BUILD_EXAMPLES ON)
    
     set( MAF_RESOURCES ON ) 
     mafDependentOption(MAF_RESOURCES "Build mafResources module." ON BUILD_EXAMPLES ON)

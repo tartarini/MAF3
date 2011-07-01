@@ -22,6 +22,10 @@ if(${MAF_PLUGINVTK})
   ADD_SUBDIRECTORY(mafPluginVTK)
 endif(${MAF_PLUGINVTK})
 
+if(${VTK_MAF})
+  ADD_SUBDIRECTORY(vtkMAF)
+endif(${VTK_MAF})
+
 if(${MAF_APPLICATION_LOGIC})
   ADD_SUBDIRECTORY(mafApplicationLogic)
 endif(${MAF_APPLICATION_LOGIC})
