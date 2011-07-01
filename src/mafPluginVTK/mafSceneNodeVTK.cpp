@@ -59,7 +59,6 @@ void mafSceneNodeVTK::setVisibility(bool visible) {
     }
 }
 
-
 void mafSceneNodeVTK::update() {
     mafDataSetCollection *dc = vme()->dataSetCollection();
     mafMatrix *matrix = dc->poseMatrix();
@@ -71,5 +70,4 @@ void mafSceneNodeVTK::update() {
     m_Assembly->SetUserMatrix(vtkMatrix);
     m_Assembly->Modified();
     vtkMatrix->Delete();
-    
 }
