@@ -68,16 +68,16 @@ bool mafSceneNode::createVisualPipe() {
 }
 
 void mafSceneNode::setVMEName(QString name) {
-  if(m_VME) {
-    m_VME->setProperty("objectName", name);
-  }
+    if(m_VME) {
+        m_VME->setProperty("objectName", name);
+    }
 }
 
 QString mafSceneNode::VMEName() {
-  if(m_VME) {
-    return m_VME->property("objectName").toString();
-  }
-  return "";
+    if(m_VME) {
+        return m_VME->property("objectName").toString();
+    }
+    return "";
 }
 
 void mafSceneNode::setVisibility(bool visible) {
@@ -98,13 +98,11 @@ void mafSceneNode::setVisibility(bool visible) {
         if(!visible) {
             // TODO NEED TO IMPLEMENT A STRATEGY
             switch(m_VisibilityPolicy) {
-            case mafVisibilityPolicyKeepAlive:
-                {
+            case mafVisibilityPolicyKeepAlive: {
                     //will forward to visual pipe
                 }
                 break;
-            case mafVisibilityPolicyDestroyOnHide:
-                {
+            case mafVisibilityPolicyDestroyOnHide: {
                     mafDEL(m_VisualPipe);    
                 }
                 break;
