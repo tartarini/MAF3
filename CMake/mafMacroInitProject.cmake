@@ -35,6 +35,7 @@ MACRO(mafMacroInitProject test)
   filterForMoc(include_file_list "${input_include_file_list}")
   
   FILE(GLOB implementation_file_list "${PROJECT_SOURCE_DIR}/*.cpp")
+  FILE(GLOB implementation_file_list_vtkMAF "${PROJECT_SOURCE_DIR}/*.cxx")
   FILE(GLOB templete_file_list1 "${PROJECT_SOURCE_DIR}/*.txx")
   FILE(GLOB templete_file_list2 "${PROJECT_SOURCE_DIR}/*.tpp")
   FILE(GLOB resource_file_list "${PROJECT_SOURCE_DIR}/*.qrc")
@@ -42,6 +43,7 @@ MACRO(mafMacroInitProject test)
   # Set your list of sources here.
   SET(PROJECT_SRCS
 	${implementation_file_list}
+	${implementation_file_list_vtkMAF}
 	${input_include_file_list}
 	${templete_file_list1}
 	${templete_file_list2}
