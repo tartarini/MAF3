@@ -51,6 +51,7 @@ void mafViewVTK::create() {
     m_Renderer = vtkRenderer::New();
     // and assign it to the widget.
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->AddRenderer(m_Renderer);
+    ((mafVTKWidget*)m_RenderWidget)->showAxes(true);
     
     //create the instance for selection pipe.
     m_PipeVisualSelection = mafNEW(mafPluginVTK::mafPipeVisualVTKSelection);
