@@ -51,39 +51,28 @@ POSSIBILITY OF SUCH DAMAGES.
 #include "vtkMAF_global.h"
 
 #include <vtkCoordinate.h>
-#include <vtkProp3D.h>
-#include <vtkMatrix4x4.h>
-#include <vtkDataSet.h>
 
 class vtkViewport;
 class vtkRenderer;
 class vtkRenderWindow;
 class vtkCamera;
 
-//----------------------------------------------------------------------------
-class VTK_vtkMAF_EXPORT  vtkGlobalAxisCoordinate : public vtkCoordinate
-//----------------------------------------------------------------------------
-{
+class VTK_vtkMAF_EXPORT vtkGlobalAxisCoordinate : public vtkCoordinate {
 public:
-  //vtkTypeRevisionMacro(vtkGlobalAxisCoordinate,vtkCoordinate);
+             vtkGlobalAxisCoordinate();
+    virtual ~vtkGlobalAxisCoordinate();
 
-           vtkGlobalAxisCoordinate();
-  virtual ~vtkGlobalAxisCoordinate();
+    static vtkGlobalAxisCoordinate* New();
 
-  static vtkGlobalAxisCoordinate* New();
-
-  virtual double *GetComputedUserDefinedValue(vtkViewport *viewport);
+    virtual double *GetComputedUserDefinedValue(vtkViewport *viewport);
 
 protected:
+    vtkGlobalAxisCoordinate(const vtkGlobalAxisCoordinate&);  // Not implemented.
+    void operator=(const vtkGlobalAxisCoordinate&);     // Not implemented.
 
 private:
 	vtkRenderWindow *renderwindow;
 	vtkRenderer *renderer;
 	vtkCamera *camera;
-
-	vtkGlobalAxisCoordinate(const vtkGlobalAxisCoordinate&);  // Not implemented.
-  void operator=(const vtkGlobalAxisCoordinate&);     // Not implemented.
 };
 #endif
-
-
