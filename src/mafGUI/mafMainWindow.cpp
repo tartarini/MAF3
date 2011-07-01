@@ -74,6 +74,9 @@ void mafMainWindow::initializeMainWindow() {
     // Hierarchy tree's tab
     ui->tabTree->setLayout(ui->layoutTree);
     ui->hierarchyWidget->setLayout(ui->layoutHierarchy);
+    ui->vmeTab->setLayout(ui->vmeLayout);
+    ui->visualPipeTab->setLayout(ui->visualPipeLayout);
+    ui->dataPipeTab->setLayout(ui->dataPipeLayout);
 
     //tree widget in sidebar
      m_Model = new mafDragDropModel();
