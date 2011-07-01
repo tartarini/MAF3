@@ -70,7 +70,3 @@ void mafPipeVisualVTKSelection::updatePipe(double t) {
         m_OutlineCornerFilter->Update();
     }
 }
-
-void mafPipeVisualVTKSelection::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
-
-}

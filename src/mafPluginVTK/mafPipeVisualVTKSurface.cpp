@@ -61,6 +61,3 @@ void mafPipeVisualVTKSurface::updatePipe(double t) {
     //m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
     setModified(false);
 }
-
-void mafPipeVisualVTKSurface::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
-}

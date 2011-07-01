@@ -40,9 +40,6 @@ class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKMIPVolume : public mafPipeVisual
 public:
     /// Object constructor;
     mafPipeVisualVTKMIPVolume(const QString code_location = "");
-    
-    /// set the selection pipe for visualization.
-    /*virtual*/ void setPipeVisualSelection(mafPipeVisual *pipeVisualSelection);
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);

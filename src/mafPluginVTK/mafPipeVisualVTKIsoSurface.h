@@ -43,9 +43,6 @@ class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKIsoSurface : public mafPipeVisua
 public:
     /// Object constructor;
     mafPipeVisualVTKIsoSurface(const QString code_location = "");
-    
-    /// set the selection pipe for visualization.
-    /*virtual*/ void setPipeVisualSelection(mafPipeVisual *pipeVisualSelection);
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);

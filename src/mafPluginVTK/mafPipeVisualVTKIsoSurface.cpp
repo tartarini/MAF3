@@ -87,9 +87,6 @@ void mafPipeVisualVTKIsoSurface::updatePipe(double t) {
     render();
 }
 
-void mafPipeVisualVTKIsoSurface::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
-}
-
 QString mafPipeVisualVTKIsoSurface::contourValue() {
     return QString::number(m_ContourValue);
 }

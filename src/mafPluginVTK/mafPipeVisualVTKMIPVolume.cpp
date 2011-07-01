@@ -99,9 +99,6 @@ void mafPipeVisualVTKMIPVolume::updatePipe(double t) {
     render();
 }
 
-void mafPipeVisualVTKMIPVolume::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
-}
-
 void mafPipeVisualVTKMIPVolume::updateFunctions(vtkDataSet *dataset) {
     m_PieceWiseTransferFunction->RemoveAllPoints();
     
