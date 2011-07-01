@@ -449,7 +449,6 @@ void mafGUIManager::updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeV
                 return;
             } 
         }
-        return;
     } 
     m_CurrentPipeVisual = NULL;
     showGui(NULL);
