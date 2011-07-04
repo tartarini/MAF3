@@ -42,6 +42,7 @@ if(NOT DEFINED VTK_DIR OR NOT DEFINED VTK_SOURCE_DIR)
   #  list(APPEND VTK_QT_ARGS -DVTK_USE_TK:BOOL=OFF)
   #endif()
 
+  #MESSAGE("Adding project:${proj}")
   ExternalProject_Add(${proj}
     GIT_REPOSITORY "${git_protocol}://github.com/SCS-B3C/VTK.git"
     #GIT_TAG "origin"
