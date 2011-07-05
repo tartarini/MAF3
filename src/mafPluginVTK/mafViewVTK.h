@@ -47,6 +47,9 @@ public:
 
     /// Update view.
     /*virtual*/ void updateView();
+    
+    /// Select a scene node.
+    /*virtual*/ void selectSceneNode(mafResources::mafSceneNode *node, bool select);
 
 protected:
     /// Object destructor.
