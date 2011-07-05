@@ -48,6 +48,9 @@ public:
     void setPose(vtkMatrix4x4 *abs_pose_matrix = NULL);
 
 private:
+    /// Ask the Absolute pose matrix of the associated VME.
+    void askAbsolutePoseMatrix();
+
     mafResources::mafVME *m_Vme;
     vtkRenderer   *m_Renderer;
 	vtkCoordinate *m_Coord;

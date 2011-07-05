@@ -12,7 +12,9 @@
 
 #include "mafAxes.h"
 
-#include "mafVME.h"
+#include <mafVME.h>
+#include <mafEventBusManager.h>
+#include <mafMatrix.h>
 
 #include <vtkRenderer.h>
 #include <vtkLookupTable.h>
@@ -26,21 +28,18 @@
 #include <vtkGlobalAxisCoordinate.h>
 
 using namespace mafPluginVTK;
-
+using namespace mafEventBus;
 
 mafAxes::mafAxes(vtkRenderer *ren, mafResources::mafVME* vme) {
     m_Vme = vme;
     m_Renderer = ren;
     assert(m_Renderer);
 
-	vtkAxes *axes = vtkAxes::New();
-    axes->SetScaleFactor(1);
-
 	if(m_Vme) {
-//		m_Vme->GetOutput()->Update();  
-//        m_Coord = vtkLocalAxisCoordinate::New();
-//		((vtkLocalAxisCoordinate*) m_Coord)->SetMatrix(m_Vme->GetAbsMatrixPipe()->GetMatrix().GetVTKMatrix());
-//		((vtkLocalAxisCoordinate*) m_Coord)->SetDataSet(m_Vme->GetOutput()->GetVTKData());
+        m_Coord = vtkLocalAxisCoordinate::New();
+
+        askAbsolutePoseMatrix();
+        ((vtkLocalAxisCoordinate*) m_Coord)->SetScaleFactor(m_Vme->length()/8.0);
     } else {
 		m_Coord = vtkGlobalAxisCoordinate::New();
     }
@@ -52,11 +51,14 @@ mafAxes::mafAxes(vtkRenderer *ren, mafResources::mafVME* vme) {
     axesLUT->SetTableValue(2,0,0,1,1);
     axesLUT->Build();
 
+    vtkAxes *axes = vtkAxes::New();
+    axes->SetScaleFactor(1);
+
     vtkPolyDataMapper2D	*axesMapper = vtkPolyDataMapper2D::New();
     axesMapper->SetInput(axes->GetOutput());
     axesMapper->SetTransformCoordinate(m_Coord);
     axesMapper->SetLookupTable(axesLUT);
-    axesMapper->SetScalarRange(0,0.5);
+    axesMapper->SetScalarRange(0, 0.5);
     axesLUT->Delete();
     axes->Delete();
 
@@ -67,6 +69,23 @@ mafAxes::mafAxes(vtkRenderer *ren, mafResources::mafVME* vme) {
     m_AxesActor->PickableOff();
     m_Renderer->AddActor2D(m_AxesActor);
     axesMapper->Delete();
+}
+
+void mafAxes::askAbsolutePoseMatrix() {
+    mafEventArgumentsList argList;
+    mafResources::mafMatrixPointer absMatrix = NULL;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Vme));
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafResources::mafMatrixPointer, absMatrix);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.absolutePoseMatrix", mafEventTypeLocal, &argList, &ret_val);
+
+    vtkMatrix4x4 *m = vtkMatrix4x4::New();
+    if (absMatrix) {
+        m->DeepCopy(absMatrix->rawData());
+    }
+
+    ((vtkLocalAxisCoordinate*) m_Coord)->SetMatrix(m);
+    m_Coord->Modified();
+    m->Delete();
 }
 
 mafAxes::~mafAxes() {
