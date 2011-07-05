@@ -12,6 +12,7 @@
 #include "mafPipeVisualVTK.h"
 #include "mafVTKWidget.h"
 #include "mafSceneNodeVTK.h"
+#include "mafAxes.h"
 
 #include <vtkRendererCollection.h>
 #include <vtkRenderWindow.h>
@@ -23,10 +24,15 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 
 
-mafPipeVisualVTK::mafPipeVisualVTK(const QString code_location) : mafPipeVisual(code_location), m_ScalarVisibility(false), m_ImmediateRendering(false), m_Renderer(NULL) {
+mafPipeVisualVTK::mafPipeVisualVTK(const QString code_location) : mafPipeVisual(code_location), m_ScalarVisibility(false), m_ImmediateRendering(false), m_Renderer(NULL), m_Axes(NULL) {
 }
 
 mafPipeVisualVTK::~mafPipeVisualVTK() {
+    if (m_Axes) {
+        delete m_Axes;
+        m_Axes = NULL;
+    }
+    
     m_GraphicObject = NULL;
     setVisibility(false);
 }
@@ -68,9 +74,13 @@ void mafPipeVisualVTK::updateVisibility() {
     }
     vtkProp *prop = (vtkProp *)sn->nodeAssembly();
     if(visibility()) {
+        m_Axes = new mafAxes(m_Renderer, sn->vme());
         m_Renderer->AddViewProp(prop);
+        m_Axes->setVisibility(true);
     } else {
         m_Renderer->RemoveViewProp(prop);
+        delete m_Axes;
+        m_Axes = NULL;
     }
     render();
     m_Renderer->ResetCamera();
