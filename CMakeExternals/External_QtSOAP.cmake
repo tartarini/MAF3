@@ -17,6 +17,7 @@ SET(QtSOAP_DEPENDS)
   IF(RESULT)
       MESSAGE("QtSOAP can not be downloaded with git, try in local filesystem")
       IF(NOT DEFINED QtSOAP_DIR)
+      
       ExternalProject_Add(${proj}
       DOWNLOAD_DIR "${ep_build_dir}/${proj}"
       CMAKE_GENERATOR ${gen}
@@ -29,20 +30,19 @@ SET(QtSOAP_DEPENDS)
       DEPENDS
         ${proj_DEPENDENCIES}
       )
-    SET(QtSOAP_DIR "${ep_build_dir}/${proj}")
+      SET(QtSOAP_DIR "${ep_build_dir}/${proj}")
     
-    # Since QtSOAP is statically build, there is not need to add its corresponding 
-    # library output directory to CTK_EXTERNAL_LIBRARY_DIRS
+      # Since QtSOAP is statically build, there is not need to add its corresponding 
+      # library output directory to CTK_EXTERNAL_LIBRARY_DIRS
 
-  ELSE()
-    include(CMake/mafMacroEmptyExternalProject.cmake)
-    mafMacroEmptyExternalProject(${proj} "${proj_DEPENDENCIES}")
-  ENDIF()
+      ELSE()
+      include(CMake/mafMacroEmptyExternalProject.cmake)
+      mafMacroEmptyExternalProject(${proj} "${proj_DEPENDENCIES}")
+      ENDIF()
 
   ELSE(RESULT)
-      IF(NOT DEFINED QtSOAP_DIR)
-    
-      MESSAGE("QtSOAP will be download with git, if in future some network problem occurs, rerun Cmake for using local filesystem sources already downloaded")
+    MESSAGE("QtSOAP will be download with git, if in future some network problem occurs, rerun Cmake for using local filesystem sources already downloaded")
+    IF(NOT DEFINED QtSOAP_DIR)
     #MESSAGE("Adding project:${proj}")
     ExternalProject_Add(${proj}
       GIT_REPOSITORY "${git_protocol}://github.com/SCS-B3C/QtSOAP.git"
