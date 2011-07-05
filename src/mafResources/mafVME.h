@@ -123,6 +123,9 @@ public:
     /// Return 3D bound of the current dataset containing the external data of the VME.
     QString boundZmax();
 
+    /// Return the length of the 3D bounding box of the data at the current timestamp.
+    double length();
+
 signals:
     /// Alert observers that the VME has been detatched from the hierarchy tree.
     void detatched();

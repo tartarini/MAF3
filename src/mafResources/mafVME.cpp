@@ -190,25 +190,25 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
     int n = 0;
     int childrenNum = memento->children().size();
     for (n; n < childrenNum; n++) {
-      mafMemento *m = (mafMemento *)memento->children().at(n);
-      if (m->serializationPattern() == mafSerializationPatternInheritance) {
-        //set the memento of the superclass
-        Superclass::setMemento(m, deep_memento);
-        int i = 0;
-      } else {
-        //set the memento of the children memento
-        QString objClassType = m->objectClassType();
-        mafObjectBase *objBase = mafNEWFromString(objClassType);
-        mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
-
-        obj->setMemento(m, deep_memento);
-        if (objClassType == "mafResources::mafDataSetCollection") {
-          mafDataSetCollection *dataSetCollection = qobject_cast<mafDataSetCollection*>(obj);
-          m_DataSetCollection = dataSetCollection;
+        mafMemento *m = (mafMemento *)memento->children().at(n);
+        if (m->serializationPattern() == mafSerializationPatternInheritance) {
+            //set the memento of the superclass
+            Superclass::setMemento(m, deep_memento);
+            int i = 0;
         } else {
-            mafDEL(objBase);
+            //set the memento of the children memento
+            QString objClassType = m->objectClassType();
+            mafObjectBase *objBase = mafNEWFromString(objClassType);
+            mafObject *obj = qobject_cast<mafCore::mafObject *>(objBase);
+
+            obj->setMemento(m, deep_memento);
+            if (objClassType == "mafResources::mafDataSetCollection") {
+                mafDataSetCollection *dataSetCollection = qobject_cast<mafDataSetCollection*>(obj);
+                m_DataSetCollection = dataSetCollection;
+            } else {
+                mafDEL(objBase);
+            }
         }
-      }
     }
 
     mafMementoPropertyList *list = memento->mementoPropertyList();
@@ -229,7 +229,6 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
     argList.append(mafEventArgument(mafCore::mafObjectBase*, sel_vme));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 }
-
 
 bool mafVME::dataLoaded() const {
     bool result(false);
@@ -263,4 +262,19 @@ QString mafVME::boundZmax() {
     return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[5].toDouble());
 }
 
+double mafVME::length() {
+    mafDataSet *dataset = this->dataSetCollection()->itemAtCurrentTime();
+    QVariantList b;
+    if (dataset->isValidBounds()) {
+        b = dataset->bounds();
+        int i = 0;
+        double b_diff[3];
+        for (; i < 3; ++i) {
+            b_diff[i] = b[2*i + 1].toDouble() - b[2*i].toDouble();
+            b_diff[i] *= b_diff[i];
+        }
+        return sqrtl(b_diff[0] + b_diff[1] + b_diff[2]);
+    }
 
+    return -1;
+}
