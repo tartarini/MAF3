@@ -48,13 +48,11 @@ POSSIBILITY OF SUCH DAMAGES.
 #define __vtkLocalAxisCoordinate_h
 
 #include "vtkMAF_global.h"
-
 #include <vtkCoordinate.h>
-#include <vtkProp3D.h>
 #include <vtkMatrix4x4.h>
-#include <vtkDataSet.h>
 
 class vtkViewport;
+
 //----------------------------------------------------------------------------
 class VTK_vtkMAF_EXPORT vtkLocalAxisCoordinate : public vtkCoordinate
 //----------------------------------------------------------------------------
@@ -62,26 +60,25 @@ class VTK_vtkMAF_EXPORT vtkLocalAxisCoordinate : public vtkCoordinate
 public:
   //vtkTypeRevisionMacro(vtkLocalAxisCoordinate,vtkCoordinate);
 
-           vtkLocalAxisCoordinate();
-  virtual ~vtkLocalAxisCoordinate();
+             vtkLocalAxisCoordinate();
+    virtual ~vtkLocalAxisCoordinate();
 
-  static vtkLocalAxisCoordinate* New();
+    static vtkLocalAxisCoordinate* New();
 
-  vtkSetObjectMacro(DataSet,vtkDataSet);
-  vtkGetObjectMacro(DataSet,vtkDataSet);
+    vtkSetMacro(ScaleFactor,double);
+    vtkGetMacro(ScaleFactor,double);
 
-  vtkSetObjectMacro(Matrix,vtkMatrix4x4);
-  vtkGetObjectMacro(Matrix,vtkMatrix4x4);
+    vtkSetObjectMacro(Matrix,vtkMatrix4x4);
+    vtkGetObjectMacro(Matrix,vtkMatrix4x4);
 
-  virtual double *GetComputedUserDefinedValue(vtkViewport *viewport);
+    virtual double *GetComputedUserDefinedValue(vtkViewport *viewport);
 
 protected:
+    vtkLocalAxisCoordinate(const vtkLocalAxisCoordinate&);  // Not implemented.
+    void operator=(const vtkLocalAxisCoordinate&);     // Not implemented.
 
 private:
-  vtkDataSet *DataSet;
-  vtkMatrix4x4 *Matrix;
-	
-	vtkLocalAxisCoordinate(const vtkLocalAxisCoordinate&);  // Not implemented.
-  void operator=(const vtkLocalAxisCoordinate&);     // Not implemented.
+    double ScaleFactor;
+    vtkMatrix4x4 *Matrix;
 };
 #endif
