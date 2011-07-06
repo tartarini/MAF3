@@ -16,6 +16,7 @@
 #include <mafDataSetCollection.h>
 
 #include <vtkProp3D.h>
+#include <vtkProp3DCollection.h>
 #include <vtkAssembly.h>
 #include <vtkMatrix4x4.h>
 
@@ -41,25 +42,31 @@ mafSceneNodeVTK::~mafSceneNodeVTK() {
 }
 
 void mafSceneNodeVTK::setParentNode(const mafSceneNode *parent) {
+    PRINT_FUNCTION_NAME_INFORMATION
     Superclass::setParentNode(parent);
     const mafSceneNodeVTK *node = dynamic_cast<const mafSceneNodeVTK *>(parent);
     if (node) {
+        update();
         node->nodeAssembly()->AddPart(m_Assembly);
     }
 }
 
 void mafSceneNodeVTK::setVisibility(bool visible) {
+    PRINT_FUNCTION_NAME_INFORMATION
     mafSceneNode::setVisibility(visible);
     
     if(visible) {
-        mafProxy<vtkProp3D> *prop = mafProxyPointerTypeCast(vtkProp3D, visualPipe()->output());
-        m_Assembly->AddPart(*prop);
         update();
+        mafProxy<vtkProp3D> *prop = mafProxyPointerTypeCast(vtkProp3D, visualPipe()->output());
+        if(!m_Assembly->GetParts()->IsItemPresent(*prop)) {
+            m_Assembly->AddPart(*prop);
+        }
         visualPipe()->render();
     }
 }
 
 void mafSceneNodeVTK::update() {
+    PRINT_FUNCTION_NAME_INFORMATION
     mafDataSetCollection *dc = vme()->dataSetCollection();
     mafMatrix *matrix = dc->poseMatrix();
     vtkMatrix4x4 *vtkMatrix = vtkMatrix4x4::New();
