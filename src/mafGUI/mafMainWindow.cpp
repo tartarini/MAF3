@@ -113,10 +113,16 @@ void mafMainWindow::initializeMainWindow() {
     // LogBar Layout
     ui->logBarWidgetContents->setLayout(ui->gridLayoutLogBar);
 
+    //TODO: hide and show find widget?
+    //ui->findWidget->hide();
+    //ui->findWidget->show();
+    
     QObject *logBarAction = m_GUIManager->menuItemByName("LogBar");
     m_LogWidget = m_GUIManager->createLogWidget(ui->logBarWidgetContents);
     connect(ui->dockLogBarWidget, SIGNAL(visibilityChanged(bool)), logBarAction, SLOT(setChecked(bool)));
     connect(logBarAction, SIGNAL(triggered(bool)), ui->dockLogBarWidget, SLOT(setVisible(bool)));
+    connect(ui->clearButton, SIGNAL(pressed()), m_LogWidget, SLOT(clear()));
+    connect(ui->findEdit, SIGNAL(textEdited(QString)), m_LogWidget, SLOT(find(QString)));
 
     // **** Google chat ****
     QObject *collaborateAction = m_GUIManager->menuItemByName("Collaborate");
