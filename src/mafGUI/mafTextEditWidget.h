@@ -42,11 +42,15 @@ public:
     /// load Highlight Dictionary from CSV file
     void loadDictionaryFromCSV(const QString &csvFile);
 
+    /// append Text in the area.
+    void append(const QString text);
+
+public slots:
     /// clear text area.
     void clear();
 
-    /// append Text in the area.
-    void append(const QString text);
+    /// find text.
+    void find(QString textToFind);
     
 signals:
     /// Signal needed to update the text into the Text Widget.
