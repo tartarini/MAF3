@@ -4,7 +4,7 @@
 
 set(proj VTK)
 
-execute_process(COMMAND git remote show "${git_protocol}://github.com/SCS-B3C/VTK.git"
+execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/SCS-B3C/VTK.git"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   RESULT_VARIABLE RESULT)
                                     

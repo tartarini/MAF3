@@ -10,7 +10,7 @@ SET(qxmlrpc_DEPENDS)
   SET(proj_DEPENDENCIES)
   
   SET(qxmlrpc_DEPENDS ${proj})
-  execute_process(COMMAND git remote show "${git_protocol}://github.com/SCS-B3C/qxmlrpc.git"
+  execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/SCS-B3C/qxmlrpc.git"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   RESULT_VARIABLE RESULT)
                   

@@ -10,7 +10,7 @@ SET(OpenCV_DEPENDS)
   SET(proj_DEPENDENCIES)
   
   SET(OpenCV_DEPENDS ${proj})
-  execute_process(COMMAND git remote show "${git_protocol}://github.com/SCS-B3C/OpenCV.git"
+  execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/SCS-B3C/OpenCV.git"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   RESULT_VARIABLE RESULT)
                   

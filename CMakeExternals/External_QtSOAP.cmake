@@ -10,7 +10,7 @@ SET(QtSOAP_DEPENDS)
   SET(proj_DEPENDENCIES)
 
   SET(QtSOAP_DEPENDS ${proj})
-  execute_process(COMMAND git remote show "${git_protocol}://github.com/SCS-B3C/QtSOAP.git"
+  execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/SCS-B3C/QtSOAP.git"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   RESULT_VARIABLE RESULT)
                   
