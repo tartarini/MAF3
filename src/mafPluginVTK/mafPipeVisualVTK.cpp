@@ -62,6 +62,7 @@ void mafPipeVisualVTK::setImmediateRendering (bool immediateRendering) {
 }
 
 void mafPipeVisualVTK::updateVisibility() {
+    PRINT_FUNCTION_NAME_INFORMATION
     m_Prop3D->SetVisibility(visibility());
     
     if (graphicObject() == NULL) {

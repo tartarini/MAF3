@@ -10,6 +10,7 @@
  */
 
 #include "mafTextEditWidget.h"
+#include "mafTextHighlighter.h"
 #include <QHBoxLayout>
 
 using namespace mafGUI;
@@ -36,6 +37,7 @@ void mafTextEditWidget::initialize() {
     
     bool res = connect(this, SIGNAL(updateText(const QString)), m_TextEditor, SLOT(append(const QString)));
     
+    
     if(m_Highlighter) {
         m_Highlighter->setDocument(m_TextEditor->document());
     }
@@ -50,6 +52,26 @@ mafTextEditWidget::~mafTextEditWidget() {
 
 void mafTextEditWidget::clear() {
     m_TextEditor->clear();
+}
+
+void mafTextEditWidget::find(QString text){
+     mafTextHighlighter *textHighlighter = qobject_cast<mafTextHighlighter *>(m_Highlighter);
+
+    if (!text.isEmpty()) {
+        QTextCharFormat format;
+        format.setBackground(Qt::yellow);
+        format.setFontWeight(QFont::Bold);
+        QString pattern = "\\b" + text + "\\b";
+        QRegExp patternDebug(pattern, Qt::CaseInsensitive);
+
+        textHighlighter->insertFormat("Find", format);
+        textHighlighter->insertRule("Find", patternDebug, textHighlighter->format("Find"));
+        
+        textHighlighter->rehighlight();
+    } else {
+        textHighlighter->removeRule("Find");
+        textHighlighter->removeFormat("Find");
+    }
 }
 
 void mafTextEditWidget::append(const QString text) {
