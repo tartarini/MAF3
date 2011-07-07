@@ -399,6 +399,9 @@
          <item>
           <widget class="QLineEdit" name="findEdit">
            <property name="text">
+            <string notr="true"/>
+           </property>
+           <property name="placeholderText">
             <string>Find..</string>
            </property>
           </widget>
