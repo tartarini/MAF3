@@ -45,7 +45,7 @@ public:
     void setVisibility(bool show);
 
     /** force the position of the Axes, if omitted the ABS VME matrix is used instead. Work only if VME was specified */
-    void setPose(vtkMatrix4x4 *abs_pose_matrix = NULL);
+    void updatePose(vtkMatrix4x4 *abs_pose_matrix = NULL);
 
 private:
     /// Ask the Absolute pose matrix of the associated VME.
