@@ -34,9 +34,6 @@ public:
 
     /// Return the string variable initialized and updated from the data pipe.
     QString pipeline() {return m_PipeLine;}
-    
-    /// set the selection pipe for viualization.
-    virtual void setPipeVisualSelection(mafPipeVisual *pipeVisualSelection);
 
 public slots:
     /// Allow to execute and update the pipeline when something change
@@ -50,10 +47,6 @@ private:
 };
 
 testVisualPipeCustomForSceneNode::testVisualPipeCustomForSceneNode(const QString code_location) : mafPipeVisual(code_location), m_PipeLine("Created") {
-}
-
-void testVisualPipeCustomForSceneNode::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
-    Q_UNUSED(pipeVisualSelection);
 }
 
 void testVisualPipeCustomForSceneNode::render() {

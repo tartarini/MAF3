@@ -11,7 +11,6 @@
 
 #include "mafPipeVisualVTK.h"
 #include "mafVTKWidget.h"
-#include "mafSceneNodeVTK.h"
 #include "mafAxes.h"
 
 #include <vtkRendererCollection.h>
@@ -50,10 +49,6 @@ void mafPipeVisualVTK::render() {
     }
 }
 
-// deprecated @TODO
-void mafPipeVisualVTK::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
-}
-
 void mafPipeVisualVTK::setScalarVisibility(bool scalarVisibility) {
     m_ScalarVisibility = scalarVisibility;
 }
@@ -64,7 +59,7 @@ void mafPipeVisualVTK::setImmediateRendering (bool immediateRendering) {
 
 void mafPipeVisualVTK::updateVisibility() {
     PRINT_FUNCTION_NAME_INFORMATION
-    m_Prop3D->SetVisibility(visibility()); //pare non faccia nulla @TODO
+    m_Prop3D->SetVisibility(visibility());
     
     if (graphicObject() == NULL) {
         return;
