@@ -15,7 +15,6 @@ SET(QtSOAP_DEPENDS)
                   RESULT_VARIABLE RESULT)
                   
   IF(RESULT)
-      MESSAGE("QtSOAP can not be downloaded with git, try in local filesystem")
       IF(NOT DEFINED QtSOAP_DIR)
       
       ExternalProject_Add(${proj}
@@ -41,7 +40,6 @@ SET(QtSOAP_DEPENDS)
       ENDIF()
 
   ELSE(RESULT)
-    MESSAGE("QtSOAP will be download with git, if in future some network problem occurs, rerun Cmake for using local filesystem sources already downloaded")
     IF(NOT DEFINED QtSOAP_DIR)
     #MESSAGE("Adding project:${proj}")
     ExternalProject_Add(${proj}

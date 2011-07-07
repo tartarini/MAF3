@@ -9,7 +9,6 @@ execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.
                   RESULT_VARIABLE RESULT)
                                     
   IF(RESULT)
-  MESSAGE("VTK can not be downloaded with git, try in local filesystem")
 
 if(NOT DEFINED VTK_DIR OR NOT DEFINED VTK_SOURCE_DIR)
 #  message(STATUS "Adding project:${proj}")
@@ -93,7 +92,6 @@ else()
   mafMacroEmptyExternalProject(${proj} "${VTK_DEPENDENCIES}")
 endif()
 ELSE(RESULT)
-  MESSAGE("VTK will be download with git, if in future some network problem occurs, rerun Cmake for using local filesystem sources already downloaded")
   if(NOT DEFINED VTK_DIR OR NOT DEFINED VTK_SOURCE_DIR)
 #  message(STATUS "Adding project:${proj}")
 
