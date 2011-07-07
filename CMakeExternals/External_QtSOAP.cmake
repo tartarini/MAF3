@@ -10,12 +10,11 @@ SET(QtSOAP_DEPENDS)
   SET(proj_DEPENDENCIES)
 
   SET(QtSOAP_DEPENDS ${proj})
-  execute_process(COMMAND git remote show "${git_protocol}://github.com/SCS-B3C/QtSOAP.git"
+  execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/SCS-B3C/QtSOAP.git"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   RESULT_VARIABLE RESULT)
                   
   IF(RESULT)
-      MESSAGE("QtSOAP can not be downloaded with git, try in local filesystem")
       IF(NOT DEFINED QtSOAP_DIR)
       
       ExternalProject_Add(${proj}
@@ -41,7 +40,6 @@ SET(QtSOAP_DEPENDS)
       ENDIF()
 
   ELSE(RESULT)
-    MESSAGE("QtSOAP will be download with git, if in future some network problem occurs, rerun Cmake for using local filesystem sources already downloaded")
     IF(NOT DEFINED QtSOAP_DIR)
     #MESSAGE("Adding project:${proj}")
     ExternalProject_Add(${proj}

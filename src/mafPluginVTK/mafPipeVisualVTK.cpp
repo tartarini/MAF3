@@ -50,6 +50,7 @@ void mafPipeVisualVTK::render() {
     }
 }
 
+// deprecated @TODO
 void mafPipeVisualVTK::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
 }
 
@@ -63,7 +64,7 @@ void mafPipeVisualVTK::setImmediateRendering (bool immediateRendering) {
 
 void mafPipeVisualVTK::updateVisibility() {
     PRINT_FUNCTION_NAME_INFORMATION
-    m_Prop3D->SetVisibility(visibility());
+    m_Prop3D->SetVisibility(visibility()); //pare non faccia nulla @TODO
     
     if (graphicObject() == NULL) {
         return;
@@ -76,10 +77,10 @@ void mafPipeVisualVTK::updateVisibility() {
     vtkProp *prop = (vtkProp *)sn->nodeAssembly();
     if(visibility()) {
         m_Axes = new mafAxes(m_Renderer, sn->vme());
-        m_Renderer->AddViewProp(prop);
+        //m_Renderer->AddViewProp(prop);
         m_Axes->setVisibility(true);
     } else {
-        m_Renderer->RemoveViewProp(prop);
+        //m_Renderer->RemoveViewProp(prop);
         delete m_Axes;
         m_Axes = NULL;
     }

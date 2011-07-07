@@ -10,12 +10,11 @@ SET(OpenCV_DEPENDS)
   SET(proj_DEPENDENCIES)
   
   SET(OpenCV_DEPENDS ${proj})
-  execute_process(COMMAND git remote show "${git_protocol}://github.com/SCS-B3C/OpenCV.git"
+  execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/SCS-B3C/OpenCV.git"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   RESULT_VARIABLE RESULT)
                   
   IF(RESULT)
-  MESSAGE("OpenCV can not be downloaded with git, try in local filesystem")
   IF(NOT DEFINED OpenCV_DIR)
     #MESSAGE("Adding project:${proj}")
     
@@ -42,7 +41,6 @@ SET(OpenCV_DEPENDS)
   ENDIF()
 
   ELSE(RESULT)
-    MESSAGE("OpenCV will be download with git, if in future some network problem occurs, rerun Cmake for using local filesystem sources already downloaded")
   IF(NOT DEFINED OpenCV_DIR)
     #MESSAGE("Adding project:${proj}")
     

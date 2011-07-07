@@ -83,6 +83,8 @@ protected:
 
     /// Return the visibility status
     unsigned int visualizationStatus();
+    
+    QObject *m_GraphicObject; ///< Render device.
 
 private:
     /// Create instance of visual pipe.
@@ -94,7 +96,6 @@ private:
     bool m_Visibility; ///< Contains the visibility status of the owned object/s.
     mafVisualizationStatus m_VisualizationStatus; ///< contains the visibility status for that scene node.
     mafVisibilityPolicy m_VisibilityPolicy; ///< Visibility policy determines in which way, on show/hide , the visual pipe will be treated.
-    QObject *m_GraphicObject; ///< Render device.
     mafSceneNode *m_ParentNode; ///< Parent node.
 
 signals:
