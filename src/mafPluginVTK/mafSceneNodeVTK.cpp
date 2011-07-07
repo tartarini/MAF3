@@ -10,11 +10,15 @@
  */
 
 #include "mafSceneNodeVTK.h"
+#include "mafVTKWidget.h"
 #include <mafPipeVisual.h>
 
 #include <mafVME.h>
 #include <mafDataSetCollection.h>
 
+#include <vtkRenderer.h>
+#include <vtkRendererCollection.h>
+#include <vtkRenderWindow.h>
 #include <vtkProp3D.h>
 #include <vtkProp3DCollection.h>
 #include <vtkAssembly.h>
@@ -44,10 +48,15 @@ mafSceneNodeVTK::~mafSceneNodeVTK() {
 void mafSceneNodeVTK::setParentNode(const mafSceneNode *parent) {
     PRINT_FUNCTION_NAME_INFORMATION
     Superclass::setParentNode(parent);
-    const mafSceneNodeVTK *node = dynamic_cast<const mafSceneNodeVTK *>(parent);
-    if (node) {
+    const mafSceneNodeVTK *parentNodeVTK = dynamic_cast<const mafSceneNodeVTK *>(parent);
+    if (parentNodeVTK) {
         update();
-        node->nodeAssembly()->AddPart(m_Assembly);
+        parentNodeVTK->nodeAssembly()->AddPart(m_Assembly);
+    }
+    
+    if(parent == NULL) { //root case
+        mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(m_GraphicObject);
+        widget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->AddViewProp(m_Assembly);
     }
 }
 
