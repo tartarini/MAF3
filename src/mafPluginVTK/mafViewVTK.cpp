@@ -66,9 +66,9 @@ mafSceneNode *mafViewVTK::createSceneNode(mafVME *vme) {
 
 void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
     if (node != NULL && node->visualPipe()) {
-        mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, node->visualPipe()->output());
-        if ((*actor)->GetVisibility() != 0) {
-            m_Renderer->RemoveActor(*actor);
+        mafSceneNodeVTK *n = qobject_cast<mafSceneNodeVTK *>(node);
+        if(n) {
+            m_Renderer->RemoveViewProp(n->nodeAssembly());
         }
     }
     Superclass::removeSceneNode(node);
