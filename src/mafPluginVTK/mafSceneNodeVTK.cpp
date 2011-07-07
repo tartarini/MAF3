@@ -46,7 +46,6 @@ mafSceneNodeVTK::~mafSceneNodeVTK() {
 }
 
 void mafSceneNodeVTK::setParentNode(const mafSceneNode *parent) {
-    PRINT_FUNCTION_NAME_INFORMATION
     Superclass::setParentNode(parent);
     const mafSceneNodeVTK *parentNodeVTK = dynamic_cast<const mafSceneNodeVTK *>(parent);
     if (parentNodeVTK) {
@@ -61,7 +60,6 @@ void mafSceneNodeVTK::setParentNode(const mafSceneNode *parent) {
 }
 
 void mafSceneNodeVTK::setVisibility(bool visible) {
-    PRINT_FUNCTION_NAME_INFORMATION
     mafSceneNode::setVisibility(visible);
     
     if(visible) {
@@ -75,7 +73,6 @@ void mafSceneNodeVTK::setVisibility(bool visible) {
 }
 
 void mafSceneNodeVTK::update() {
-    PRINT_FUNCTION_NAME_INFORMATION
     mafDataSetCollection *dc = vme()->dataSetCollection();
     mafMatrix *matrix = dc->poseMatrix();
     vtkMatrix4x4 *vtkMatrix = vtkMatrix4x4::New();

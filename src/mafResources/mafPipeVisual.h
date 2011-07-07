@@ -52,13 +52,7 @@ public:
     
     /// set the selection pipe for visualization.
     virtual void setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) = 0;
-    
-    ///set the scene node that create current pipe visual
-    void setNode(mafSceneNode *node);
-    
-    /// return the current scene node
-    mafSceneNode *sceneNode() const;
-    
+        
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisual();
@@ -79,7 +73,6 @@ private:
     /// Register signals and slots connections with the event bus.
     void initializeConnections();
 
-    mafSceneNode *m_SceneNode; ///< current scenenode.
     bool m_Visibility; ///< Contains the visibility status of the owned object/s
     
 signals:
@@ -113,15 +106,6 @@ inline bool mafPipeVisual::visibility() const {
 inline QObject *mafPipeVisual::graphicObject() const {
     return m_GraphicObject;
 }
-    
-inline void mafPipeVisual::setNode(mafSceneNode *node) {
-    m_SceneNode = node;
-}
-
-inline mafSceneNode *mafPipeVisual::sceneNode() const {
-    return m_SceneNode;
-}
-
 
 } //namespace mafResources
 

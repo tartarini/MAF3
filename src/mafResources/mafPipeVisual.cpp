@@ -20,7 +20,7 @@ using namespace mafEventBus;
 using namespace mafResources;
 
 
-mafPipeVisual::mafPipeVisual(const QString code_location) : mafPipe(code_location), m_Output(NULL), m_GraphicObject(NULL), m_PipeVisualSelection(NULL), m_SceneNode(NULL), m_Visibility(false) {
+mafPipeVisual::mafPipeVisual(const QString code_location) : mafPipe(code_location), m_Output(NULL), m_GraphicObject(NULL), m_PipeVisualSelection(NULL), m_Visibility(false) {
     initializeConnections();
 }
 

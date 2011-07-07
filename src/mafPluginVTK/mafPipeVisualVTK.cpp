@@ -70,17 +70,10 @@ void mafPipeVisualVTK::updateVisibility() {
         return;
     }
     
-    mafSceneNodeVTK *sn = (mafSceneNodeVTK *)sceneNode();
-    if(sn == NULL) {
-        return;
-    }
-    vtkProp *prop = (vtkProp *)sn->nodeAssembly();
     if(visibility()) {
-        m_Axes = new mafAxes(m_Renderer, sn->vme());
-        //m_Renderer->AddViewProp(prop);
+        m_Axes = new mafAxes(m_Renderer, input());
         m_Axes->setVisibility(true);
     } else {
-        //m_Renderer->RemoveViewProp(prop);
         delete m_Axes;
         m_Axes = NULL;
     }
