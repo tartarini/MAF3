@@ -99,12 +99,6 @@ if(VTK_MAF)
   include(CMakeExternals/External_VTK.cmake)
 endif(VTK_MAF)
 
-if(MAF_PLUGINVTK)
-  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VTK)
-  include(CMakeExternals/External_VTK.cmake)
-endif(MAF_PLUGINVTK)
-
-
 #remove duplicates
 list(REMOVE_DUPLICATES MAF_DEPENDENCIES)
 
