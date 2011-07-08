@@ -15,11 +15,12 @@
 
 using namespace mafGUI;
 
-mafTextEditWidget::mafTextEditWidget(QWidget *parent): QWidget(parent), m_TextEditor(NULL), m_Highlighter(NULL) {
+mafTextEditWidget::mafTextEditWidget(QWidget *parent): QWidget(parent), m_TextEditor(NULL), m_Highlighter(NULL), m_MatchCase(false), m_MatchWhole(false) {
     initialize();
 }
 
-mafTextEditWidget::mafTextEditWidget(QSyntaxHighlighter *highlighter, QWidget *parent): QWidget(parent), m_TextEditor(NULL), m_Highlighter(highlighter) {
+mafTextEditWidget::mafTextEditWidget(QSyntaxHighlighter *highlighter, QWidget *parent): QWidget(parent), m_TextEditor(NULL), m_Highlighter(highlighter)
+, m_MatchCase(false), m_MatchWhole(false) {
    initialize();
 }
 
@@ -34,9 +35,7 @@ void mafTextEditWidget::initialize() {
 
     m_TextEditor = new QTextEdit(this);
     m_TextEditor->setFont(font);
-    
     bool res = connect(this, SIGNAL(updateText(const QString)), m_TextEditor, SLOT(append(const QString)));
-    
     
     if(m_Highlighter) {
         m_Highlighter->setDocument(m_TextEditor->document());
@@ -61,17 +60,19 @@ void mafTextEditWidget::find(QString text){
         QTextCharFormat format;
         format.setBackground(Qt::yellow);
         format.setFontWeight(QFont::Bold);
-        QString pattern = "\\b" + text + "\\b";
-        QRegExp patternDebug(pattern, Qt::CaseInsensitive);
+        QString pattern = text;
+        if (m_MatchWhole) {
+            pattern = "\\b" + text + "\\b";
+        }
+        QRegExp patternDebug(pattern, m_MatchCase ? Qt::CaseSensitive : Qt::CaseInsensitive);
 
         textHighlighter->insertFormat("Find", format);
         textHighlighter->insertRule("Find", patternDebug, textHighlighter->format("Find"));
-        
-        textHighlighter->rehighlight();
     } else {
         textHighlighter->removeRule("Find");
         textHighlighter->removeFormat("Find");
     }
+    textHighlighter->rehighlight();
 }
 
 void mafTextEditWidget::append(const QString text) {
@@ -91,4 +92,12 @@ void mafTextEditWidget::enableEditing(bool enable) {
 
 void mafTextEditWidget::loadDictionaryFromCSV(const QString &csvFile) {
     ///read from a csv file
+}
+
+void mafTextEditWidget::setMatchCase(bool matchCase) {
+    m_MatchCase = matchCase;
+}
+
+void mafTextEditWidget::setMatchWhole(bool matchWhole) {
+    m_MatchWhole = matchWhole;
 }
