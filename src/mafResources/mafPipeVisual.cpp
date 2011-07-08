@@ -33,7 +33,7 @@ void mafPipeVisual::initializeConnections() {
     connect(this, SIGNAL(modifiedObject()), this, SLOT(render()));
 }
 
-void mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafProxyInterface *actor, QEvent * e) {
+bool mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafProxyInterface *actor, QEvent * e) {
     Q_UNUSED(e);
     if (m_Output && m_Output->isEqual(actor)) {
         mafVME *vme = this->inputList()->at(0);
@@ -43,8 +43,11 @@ void mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::m
             argList.append(mafEventArgument(unsigned long, modifiers));
             argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
             emit vmePickedSignal(pickPos, modifiers, vme);
+            return true;
         }
     }
+    
+    return false;
 }
 
 void mafPipeVisual::setVisibility(bool visible) {
