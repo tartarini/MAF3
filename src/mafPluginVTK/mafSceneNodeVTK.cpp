@@ -36,6 +36,7 @@ mafSceneNodeVTK::mafSceneNodeVTK(const QString code_location) : mafSceneNode(cod
 
 mafSceneNodeVTK::mafSceneNodeVTK(mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location): mafSceneNode(vme, graphicObject, visualPipeType, code_location)  {
     m_Assembly = vtkAssembly::New();
+    m_Assembly->SetPickable(1);
     update();
     
     connect(vme->dataSetCollection(), SIGNAL(modifiedObject()), this, SLOT(update()), Qt::DirectConnection);
