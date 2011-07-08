@@ -71,6 +71,7 @@ if(MAF_PLUGINVTK)
   SET( MAF_RESOURCES ON ) 
   SET( VTK_MAF ON ) 
   mafDependentOption(MAF_RESOURCES "Build mafResources module." ON MAF_PLUGINVTK ON)
+  mafDependentOption(VTK_MAF "Build vtkMAF module." ON MAF_PLUGINVTK ON)
 endif(MAF_PLUGINVTK)
 
 ### tests and examples dependencies 
@@ -87,9 +88,8 @@ if(BUILD_TEST_SUITE OR BUILD_EXAMPLES)
     set( MAF_PLUGINVTK ON ) 
     mafDependentOption(MAF_PLUGINVTK "Build Test module for mafPluginVTK." ON BUILD_EXAMPLES ON)
    
-# Needs to add the test suite for vtkMAF
-#    set( VTK_MAF ON ) 
-#    mafDependentOption(VTK_MAF "Build Test module for vtkMAF." ON BUILD_EXAMPLES ON)
+    set( VTK_MAF ON ) 
+    mafDependentOption(VTK_MAF "Build Test module for vtkMAF." ON MAF_PLUGINVTK ON)
    
     set( MAF_RESOURCES ON ) 
     mafDependentOption(MAF_RESOURCES "Build mafResources module." ON BUILD_EXAMPLES ON)

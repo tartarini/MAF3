@@ -60,7 +60,6 @@ bool mafSceneNode::createVisualPipe() {
     }
 
     this->m_VisualPipe->setGraphicObject(m_GraphicObject);
-    this->m_VisualPipe->setNode(this);
     
     m_VisualPipe->setInput(m_VME);
     m_VisualPipe->updatePipe();

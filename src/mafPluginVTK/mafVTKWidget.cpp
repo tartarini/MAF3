@@ -18,6 +18,7 @@
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderWindow.h>
 #include <vtkRendererCollection.h>
+#include <vtkAssemblyPath.h>
 #include <vtkCellPicker.h>
 #include <vtkSmartPointer.h>
 #include <vtkProp.h>
@@ -233,15 +234,17 @@ void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e) {
     mafCore::mafProxy<vtkProp> actorPicked;
     vtkProp *actor = NULL;
      
-     iren->GetEventPosition(mousePosX, mousePosY);
-     vtkSmartPointer<vtkCellPicker> cellPicker = vtkSmartPointer<vtkCellPicker>::New();;
-     vtkRendererCollection *rc = iren->GetRenderWindow()->GetRenderers();
-     vtkRenderer *r = NULL;
-     rc->InitTraversal();
-     while(r = rc->GetNextItem()) {
-        if(cellPicker->Pick(mousePosX,mousePosY,0,r)) {
+    iren->GetEventPosition(mousePosX, mousePosY);
+    vtkSmartPointer<vtkCellPicker> cellPicker = vtkSmartPointer<vtkCellPicker>::New();
+    vtkRendererCollection *rc = iren->GetRenderWindow()->GetRenderers();
+    vtkRenderer *r = NULL;
+    rc->InitTraversal();
+    while(r = rc->GetNextItem()) {
+        int picked = cellPicker->Pick(mousePosX,mousePosY,0,r);
+        if(picked) {
             cellPicker->GetPickPosition(posPicked);
-            actor = cellPicker->GetActor();
+            vtkAssemblyPath *path = cellPicker->GetPath();
+            actor = path->GetLastNode()->GetViewProp();
             actorPicked = actor;
         }
     }

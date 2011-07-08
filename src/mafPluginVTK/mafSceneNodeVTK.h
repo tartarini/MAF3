@@ -46,7 +46,6 @@ protected:
 
 private:
     vtkAssembly *m_Assembly; ///< Assembly containing the prop 3D to visualize.
-    vtkAssembly *m_AssemblyParent; ///< Parent assembly needed to build the visual hierarchy
 
 public slots:
     /// update the position of the vme.
