@@ -57,11 +57,15 @@ void mafPipeVisualVTK::updateVisibility() {
     m_Prop3D->SetVisibility(visibility());
     
     if(visibility()) {
-        m_Axes = new mafAxes(m_Renderer, input());
+        if (m_Axes == NULL) {
+            m_Axes = new mafAxes(m_Renderer, input());
+        }
         m_Axes->setVisibility(true);
     } else {
-        delete m_Axes;
-        m_Axes = NULL;
+        if (m_Axes) {
+            delete m_Axes;
+            m_Axes = NULL;
+        }
     }
     render();
 }
