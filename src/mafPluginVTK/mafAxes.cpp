@@ -98,19 +98,18 @@ void mafAxes::setVisibility(bool show) {
     m_AxesActor->SetVisibility(show);
 }
 
-void mafAxes::setPose( vtkMatrix4x4 *abs_pose_matrix ) {
+void mafAxes::updatePose( vtkMatrix4x4 *abs_pose_matrix ) {
     // WARNING - I am assuming that if m_Vme != NULL --> m_Coord ISA vtkLocalAxisCoordinate
     if(!m_Vme) {
         return;
     }
     assert(m_Coord);
 
-    vtkLocalAxisCoordinate *coord = (vtkLocalAxisCoordinate*) m_Coord; 
     if( abs_pose_matrix ) {
+        vtkLocalAxisCoordinate *coord = (vtkLocalAxisCoordinate*) m_Coord; 
         coord->SetMatrix(abs_pose_matrix);
+        coord->Modified();
     } else {
-//        coord->SetMatrix(m_Vme->GetAbsMatrixPipe()->GetMatrix().GetVTKMatrix());
+        askAbsolutePoseMatrix();
     }
-    
-    coord->Modified();
 }

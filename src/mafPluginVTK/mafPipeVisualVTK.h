@@ -52,9 +52,6 @@ public:
     /// Return the flag to activate immediate rendering mode.
     bool immediateRendering();
 
-    /// set the selection pipe for visualization.
-    /*virtual*/ void setPipeVisualSelection(mafPipeVisual *pipeVisualSelection);
-
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTK();
@@ -74,6 +71,9 @@ private:
     bool m_ImmediateRendering; ///< Flag to activate immediate rendering mode.
     
 public slots:
+    /// Allow to execute and update the pipeline when something change.
+    /*virtual*/ void updatePipe(double t = -1);
+
     /// Set the flag to activate scalar visibility.
     void setScalarVisibility(bool scalarVisibility);
     

@@ -64,11 +64,11 @@ void mafSceneNodeVTK::setVisibility(bool visible) {
     mafSceneNode::setVisibility(visible);
     
     if(visible) {
-        update();
         mafProxy<vtkProp3D> *prop = mafProxyPointerTypeCast(vtkProp3D, visualPipe()->output());
         if(!m_Assembly->GetParts()->IsItemPresent(*prop)) {
             m_Assembly->AddPart(*prop);
         }
+        update();
         visualPipe()->render();
     }
 }

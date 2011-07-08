@@ -3,7 +3,7 @@
  *  mafResources
  *
  *  Created by Roberto Mucci on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -17,9 +17,6 @@
 #include <mafProxyInterface.h>
 
 namespace mafResources {
-
-// Class forwarding list
-class mafSceneNode;
 
 /**
  Class name: mafPipeVisual
@@ -49,9 +46,6 @@ public:
 
     /// return the graphic object used for paint the scene.
     QObject *graphicObject() const;
-    
-    /// set the selection pipe for visualization.
-    virtual void setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) = 0;
         
 protected:
     /// Object destructor.
