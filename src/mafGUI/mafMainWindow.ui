@@ -349,65 +349,18 @@
       <verstretch>0</verstretch>
      </sizepolicy>
     </property>
-    <widget class="QWidget" name="gridLayoutWidget_6">
+    <widget class="QWidget" name="verticalLayoutWidget">
      <property name="geometry">
       <rect>
-       <x>620</x>
+       <x>0</x>
        <y>0</y>
-       <width>199</width>
-       <height>41</height>
+       <width>821</width>
+       <height>71</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="gridLayoutLogBar">
-      <property name="spacing">
-       <number>0</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QWidget" name="findWidget" native="true">
-        <property name="maximumSize">
-         <size>
-          <width>200</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <property name="spacing">
-          <number>6</number>
-         </property>
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>1</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>1</number>
-         </property>
-         <item>
-          <widget class="QToolButton" name="clearButton">
-           <property name="text">
-            <string>Clear</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="findEdit">
-           <property name="text">
-            <string notr="true"/>
-           </property>
-           <property name="placeholderText">
-            <string>Find..</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
+     <layout class="QVBoxLayout" name="verticalLogLayout">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLogLayout"/>
       </item>
      </layout>
     </widget>

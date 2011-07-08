@@ -16,6 +16,7 @@
 
 #include "mafGUIApplicationSettingsDialog.h"
 #include "mafGoogleChatWidget.h"
+#include <QToolButton>
 
 using namespace mafCore;
 using namespace mafGUI;
@@ -109,20 +110,30 @@ void mafMainWindow::initializeMainWindow() {
     connect(sideBarAction, SIGNAL(triggered(bool)), ui->dockSideBar, SLOT(setVisible(bool)));
     connect(m_Tree->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
             m_Model, SLOT(selectItem(const QItemSelection &, const QItemSelection &)));
+
     // **** LogBar ****
     // LogBar Layout
-    ui->logBarWidgetContents->setLayout(ui->gridLayoutLogBar);
+    ui->logBarWidgetContents->setLayout(ui->verticalLogLayout);
 
-    //TODO: hide and show find widget?
-    //ui->findWidget->hide();
-    //ui->findWidget->show();
-    
     QObject *logBarAction = m_GUIManager->menuItemByName("LogBar");
     m_LogWidget = m_GUIManager->createLogWidget(ui->logBarWidgetContents);
     connect(ui->dockLogBarWidget, SIGNAL(visibilityChanged(bool)), logBarAction, SLOT(setChecked(bool)));
     connect(logBarAction, SIGNAL(triggered(bool)), ui->dockLogBarWidget, SLOT(setVisible(bool)));
-    connect(ui->clearButton, SIGNAL(pressed()), m_LogWidget, SLOT(clear()));
-    connect(ui->findEdit, SIGNAL(textEdited(QString)), m_LogWidget, SLOT(find(QString)));
+
+    //Plug find widget.
+    m_FindWidget = new mafFindWidget();
+    ui->horizontalLogLayout->addWidget(m_FindWidget);
+    bool caseChecked = m_FindWidget->m_ActionCase->isChecked();
+    bool wholeChecked = m_FindWidget->m_ActionWhole->isChecked();
+    connect(m_FindWidget->m_FindLineEdit, SIGNAL(textEdited(QString)), m_LogWidget, SLOT(find(QString)));
+    connect(m_FindWidget->m_ActionCase, SIGNAL(triggered(bool)), m_LogWidget, SLOT(setMatchCase(bool)));
+    connect(m_FindWidget->m_ActionWhole, SIGNAL(triggered(bool)), m_LogWidget, SLOT(setMatchWhole(bool)));
+
+    //Add clear button
+    QToolButton *clearButton = new QToolButton;
+    clearButton->setText("Clear");
+    ui->horizontalLogLayout->addWidget(clearButton);
+    connect(clearButton, SIGNAL(pressed()), m_LogWidget, SLOT(clear()));
 
     // **** Google chat ****
     QObject *collaborateAction = m_GUIManager->menuItemByName("Collaborate");
