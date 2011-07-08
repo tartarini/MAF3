@@ -88,7 +88,7 @@ public slots:
     
 private slots:
     /// Forward the vmePick event if the pick hits the current visualized VME.
-    void vmePick(double *pickPos, unsigned long, mafCore::mafProxyInterface *actor, QEvent *e);
+    bool vmePick(double *pickPos, unsigned long, mafCore::mafProxyInterface *actor, QEvent *e);
 };
 
 /////////////////////////////////////////////////////////////
