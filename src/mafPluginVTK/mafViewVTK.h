@@ -3,7 +3,7 @@
  *  mafResources
  *
  *  Created by Roberto Mucci on 20/03/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -47,6 +47,9 @@ public:
 
     /// Update view.
     /*virtual*/ void updateView();
+    
+    /// Select a scene node.
+    /*virtual*/ void selectSceneNode(mafResources::mafSceneNode *node, bool select);
 
 protected:
     /// Object destructor.

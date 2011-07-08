@@ -81,6 +81,8 @@ bool mafPipeVisualVTKMIPVolume::acceptObject(mafCore::mafObjectBase *obj) {
 }
 
 void mafPipeVisualVTKMIPVolume::updatePipe(double t) {
+    Superclass::updatePipe(t);
+
     mafDataSet *data = dataSetForInput(0, t);
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
 
@@ -97,9 +99,6 @@ void mafPipeVisualVTKMIPVolume::updatePipe(double t) {
     //m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
 
     render();
-}
-
-void mafPipeVisualVTKMIPVolume::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
 }
 
 void mafPipeVisualVTKMIPVolume::updateFunctions(vtkDataSet *dataset) {

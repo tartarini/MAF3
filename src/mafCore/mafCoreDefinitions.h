@@ -55,6 +55,7 @@ typedef enum {
 } mafLogMode;
 
 #define TEST_SUITE_LOG_PREFIX " -- TestSuite Message -- "
+#define PRINT_FUNCTION_NAME_INFORMATION qDebug() << __FILE__ << ": "<< __FUNCTION__;
 
 /// Enumeration that define the status of the object.
 enum mafObjectLock {

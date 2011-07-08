@@ -36,9 +36,7 @@ class mafOperationTransformTest : public QObject {
 
 private slots:
     /// Initialize test variables
-    void initTestCase() {
-        tolerance = 0.000000001;
-        
+    void initTestCase() {        
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
 
@@ -81,7 +79,6 @@ private:
     mafVME *m_VME; ///< represents the vme that will be moved
     mafVMEManager *m_VMEManager; ///< instance of mafVMEManager.
     mafDataSet *m_DataSet;
-    double tolerance;
 };
 
 void mafOperationTransformTest::testExecute() {
@@ -113,14 +110,21 @@ void mafOperationTransformTest::testExecute() {
     m_VME->dataSetCollection()->position(pos);
     m_VME->dataSetCollection()->orientations(ori);
     
+    double tolerance = 1.0e-14;
     
-    
-    QVERIFY((pos[0] - x) < tolerance && 
-            (pos[1] - y) < tolerance &&
-            (pos[2] - z) < tolerance &&
-            (ori[0] - rx) < tolerance &&
-            (ori[1] - ry) < tolerance &&
-            (ori[2] - rz) < tolerance);
+    bool result = mafEquals(pos[0], x);
+    QVERIFY(result);
+    result = mafEquals(pos[1], y);
+    QVERIFY(result);
+    result = mafEquals(pos[2], z);
+    QVERIFY(result);
+    result = mafEquals(ori[0], rx, tolerance);
+    QVERIFY(result);
+    result = mafEquals(ori[1], ry, tolerance);
+    QVERIFY(result);
+    result = mafEquals(ori[2], rz, tolerance);
+    QVERIFY(result);
+
 }
 
 void mafOperationTransformTest::SetGetTest() {
@@ -133,9 +137,9 @@ void mafOperationTransformTest::SetGetTest() {
     pos[1] = m_OpTransform->yPos().toDouble();
     pos[2] = m_OpTransform->zPos().toDouble();
     
-    QVERIFY((pos[0] - 4.6) < tolerance && 
-            (pos[1] - 3.9) < tolerance &&
-            (pos[2] - 0.8) < tolerance);
+    QVERIFY(mafEquals(pos[0], 4.6) && 
+            mafEquals(pos[1], 3.9) &&
+            mafEquals(pos[2], 0.8));
 
     double ori[3];    
     m_OpTransform->setXRot("25");
@@ -146,9 +150,9 @@ void mafOperationTransformTest::SetGetTest() {
     ori[1] = m_OpTransform->yRot().toDouble();
     ori[2] = m_OpTransform->zRot().toDouble();
     
-    QVERIFY((ori[0] - 25) < tolerance && 
-            (ori[1] - 55) < tolerance &&
-            (ori[2] - 42.10) < tolerance);
+    QVERIFY(mafEquals(ori[0], 25) && 
+            mafEquals(ori[1], 55) &&
+            mafEquals(ori[2], 42.10));
 
 }
 

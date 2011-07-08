@@ -127,6 +127,9 @@ private slots:
     /// Allows to register the information of bindings between data type and visual pipe for the given view type.
     void customPipeVisualForVMEInView(QString view_type, QString data_type, QString pipe_type);
 
+    /// Called by reparent of items in tree.
+    void sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectBase *vmeParent);
+
 protected:
     /// Object destructor
     /*virtual*/ ~mafViewManager();

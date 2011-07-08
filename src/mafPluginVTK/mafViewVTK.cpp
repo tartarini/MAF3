@@ -3,7 +3,7 @@
  *  mafResources
  *
  *  Created by Roberto Mucci on 30/03/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -11,7 +11,6 @@
 
 
 #include "mafViewVTK.h"
-#include "mafPipeVisualVTKSelection.h"
 #include "mafVTKWidget.h"
 #include "mafSceneNodeVTK.h"
 #include "mafPipeVisualVTKSelection.h"
@@ -25,6 +24,7 @@
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindowInteractor.h>
+#include <vtkAssembly.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -51,6 +51,7 @@ void mafViewVTK::create() {
     m_Renderer = vtkRenderer::New();
     // and assign it to the widget.
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->AddRenderer(m_Renderer);
+    ((mafVTKWidget*)m_RenderWidget)->showAxes(true);
     
     //create the instance for selection pipe.
     m_PipeVisualSelection = mafNEW(mafPluginVTK::mafPipeVisualVTKSelection);
@@ -65,9 +66,9 @@ mafSceneNode *mafViewVTK::createSceneNode(mafVME *vme) {
 
 void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
     if (node != NULL && node->visualPipe()) {
-        mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, node->visualPipe()->output());
-        if ((*actor)->GetVisibility() != 0) {
-            m_Renderer->RemoveActor(*actor);
+        mafSceneNodeVTK *n = qobject_cast<mafSceneNodeVTK *>(node);
+        if(n) {
+            m_Renderer->RemoveViewProp(n->nodeAssembly());
         }
     }
     Superclass::removeSceneNode(node);
@@ -83,4 +84,25 @@ void mafViewVTK::updateView() {
   if (((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()) {
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
   }
+}
+
+void mafViewVTK::selectSceneNode(mafResources::mafSceneNode *node, bool select) {
+    // remove from scene old selection
+    mafSceneNodeVTK *selected = qobject_cast<mafSceneNodeVTK *>(m_SelectedNode);
+    mafProxy<vtkProp3D> *prop = mafProxyPointerTypeCast(vtkProp3D, m_PipeVisualSelection->output());
+    if(selected) {
+        selected->nodeAssembly()->RemovePart(*prop);
+        m_PipeVisualSelection->render();
+    }
+    //select new scenenode
+    mafView::selectSceneNode(node,select);
+    
+    if(node && node->property("visibility").toBool()) {
+        mafSceneNodeVTK *sn = qobject_cast<mafSceneNodeVTK *>(node);
+        if(select) {
+            sn->nodeAssembly()->AddPart(*prop);
+        } 
+        sn->update();
+        m_PipeVisualSelection->render();
+    } 
 }

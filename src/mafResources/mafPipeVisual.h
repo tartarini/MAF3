@@ -3,7 +3,7 @@
  *  mafResources
  *
  *  Created by Roberto Mucci on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -17,9 +17,6 @@
 #include <mafProxyInterface.h>
 
 namespace mafResources {
-
-// Class forwarding list
-class mafSceneNode;
 
 /**
  Class name: mafPipeVisual
@@ -49,16 +46,7 @@ public:
 
     /// return the graphic object used for paint the scene.
     QObject *graphicObject() const;
-    
-    /// set the selection pipe for viualization.
-    virtual void setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) = 0;
-    
-    ///set the scenenode that create current pipe visual
-    void setNode(mafSceneNode *node);
-    
-    /// return the current scenenode
-    mafSceneNode *sceneNode() const;
-    
+        
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisual();
@@ -78,7 +66,7 @@ protected:
 private:
     /// Register signals and slots connections with the event bus.
     void initializeConnections();
-    mafSceneNode *m_SceneNode; ///< current scenenode.
+
     bool m_Visibility; ///< Contains the visibility status of the owned object/s
     
 signals:
@@ -94,7 +82,7 @@ public slots:
     
 private slots:
     /// Forward the vmePick event if the pick hits the current visualized VME.
-    void vmePick(double *pickPos, unsigned long, mafCore::mafProxyInterface *actor, QEvent *e);
+    bool vmePick(double *pickPos, unsigned long, mafCore::mafProxyInterface *actor, QEvent *e);
 };
 
 /////////////////////////////////////////////////////////////
@@ -112,15 +100,6 @@ inline bool mafPipeVisual::visibility() const {
 inline QObject *mafPipeVisual::graphicObject() const {
     return m_GraphicObject;
 }
-    
-inline void mafPipeVisual::setNode(mafSceneNode *node) {
-    m_SceneNode = node;        
-}
-
-inline mafSceneNode *mafPipeVisual::sceneNode() const {
-    return m_SceneNode;
-}
-
 
 } //namespace mafResources
 

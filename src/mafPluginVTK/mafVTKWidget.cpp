@@ -10,12 +10,15 @@
  */
 
 #include "mafVTKWidget.h"
+#include "mafAxes.h"
 
 #include <QInputEvent>
 #include <mafProxyInterface.h>
+
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderWindow.h>
 #include <vtkRendererCollection.h>
+#include <vtkAssemblyPath.h>
 #include <vtkCellPicker.h>
 #include <vtkSmartPointer.h>
 #include <vtkProp.h>
@@ -24,10 +27,24 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafPluginVTK;
 
-mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f) {
+mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f), m_Axes(NULL) {
 }
 
 mafVTKWidget::~mafVTKWidget() {
+    if (m_Axes != NULL) {
+        delete m_Axes;
+        m_Axes = NULL;
+    }
+}
+
+void mafVTKWidget::showAxes(bool show) {
+    vtkRenderer *ren = GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+    if(ren) {
+        m_Axes = new mafAxes(ren);
+    } else {
+        return;
+    }
+    m_Axes->setVisibility(show);
 }
 
 void mafVTKWidget::mousePressEvent(QMouseEvent* e) {
@@ -57,7 +74,7 @@ void mafVTKWidget::mousePressEvent(QMouseEvent* e) {
     // Check if a VME has been picked
     //this->vmePickCheck(iren, e);
 
-    // invoke appropriate vtk event
+    // invoke appropriate VTK event
     switch(e->button()) {
     case Qt::LeftButton:
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.leftButtonPress", mafEventTypeLocal, &argList);
@@ -217,15 +234,17 @@ void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e) {
     mafCore::mafProxy<vtkProp> actorPicked;
     vtkProp *actor = NULL;
      
-     iren->GetEventPosition(mousePosX, mousePosY);
-     vtkSmartPointer<vtkCellPicker> cellPicker = vtkSmartPointer<vtkCellPicker>::New();;
-     vtkRendererCollection *rc = iren->GetRenderWindow()->GetRenderers();
-     vtkRenderer *r = NULL;
-     rc->InitTraversal();
-     while(r = rc->GetNextItem()) {
-        if(cellPicker->Pick(mousePosX,mousePosY,0,r)) {
+    iren->GetEventPosition(mousePosX, mousePosY);
+    vtkSmartPointer<vtkCellPicker> cellPicker = vtkSmartPointer<vtkCellPicker>::New();
+    vtkRendererCollection *rc = iren->GetRenderWindow()->GetRenderers();
+    vtkRenderer *r = NULL;
+    rc->InitTraversal();
+    while(r = rc->GetNextItem()) {
+        int picked = cellPicker->Pick(mousePosX,mousePosY,0,r);
+        if(picked) {
             cellPicker->GetPickPosition(posPicked);
-            actor = cellPicker->GetActor();
+            vtkAssemblyPath *path = cellPicker->GetPath();
+            actor = path->GetLastNode()->GetViewProp();
             actorPicked = actor;
         }
     }

@@ -168,17 +168,17 @@ void mafOperationTransform::setParameters(QVariantList parameters) {
     REQUIRE(parameters.count() % 3 == 0);
     if(parameters.count() == 3) {
         //set the orientation
-        setXPos(parameters.at(0).toString());
-        setYPos(parameters.at(1).toString());
-        setZPos(parameters.at(2).toString());
+        setXRot(parameters.at(0).toString());
+        setYRot(parameters.at(1).toString());
+        setZRot(parameters.at(2).toString());
     } else {
         //set the Pose (orientation + position)
-        setXPos(parameters.at(0).toString());
-        setYPos(parameters.at(1).toString());
-        setZPos(parameters.at(2).toString());
-        setXRot(parameters.at(3).toString());
-        setYRot(parameters.at(4).toString());
-        setZRot(parameters.at(5).toString());
+        setXRot(parameters.at(0).toString());
+        setYRot(parameters.at(1).toString());
+        setZRot(parameters.at(2).toString());
+        setXPos(parameters.at(3).toString());
+        setYPos(parameters.at(4).toString());
+        setZPos(parameters.at(5).toString());
     }
 }
 

@@ -38,11 +38,15 @@ mafDataSetCollection::~mafDataSetCollection() {
 }
 
 mafDataSet * mafDataSetCollection::operator [](unsigned int index) {
+    mafDataSetMap::iterator iter;
     if (index < m_CollectionMap->size()) {
-        mafDataSetMap::iterator iter = m_CollectionMap->begin();
+        iter = m_CollectionMap->begin();
         iter += index;
-        return iter.value();
+    } else {
+        iter = m_CollectionMap->end();
+        --iter;
     }
+    return iter.value();
 }
 
 void mafDataSetCollection::setTimestamp(double t) {

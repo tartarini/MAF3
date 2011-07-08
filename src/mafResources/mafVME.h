@@ -52,6 +52,9 @@ public:
     /// Object constructor.
     mafVME(const QString code_location = "");
 
+    /// Check if the object is equal to that passed as argument.
+    /* virtual */ bool isEqual(const mafObjectBase *obj) const;
+
     /// Return the collection of mafDataSet.
     mafDataSetCollection *dataSetCollection();
 
@@ -119,6 +122,9 @@ public:
 
     /// Return 3D bound of the current dataset containing the external data of the VME.
     QString boundZmax();
+
+    /// Return the length of the 3D bounding box of the data at the current timestamp.
+    double length();
 
 signals:
     /// Alert observers that the VME has been detatched from the hierarchy tree.

@@ -79,6 +79,9 @@ void mafPluginManager::loadPlugin( const QString &pluginFilename ) {
       mafPlugin *plugin = new mafPlugin(pluginFilename, mafCodeLocation);
       if(plugin->loaded()) {
           m_PluginsHash.insert(pluginFilename, plugin).value()->registerPlugin();
+      } else {
+          qCritical() << "Problem on loading plugin: " << pluginFilename;
+          mafDEL(plugin);
       }
   }
 }

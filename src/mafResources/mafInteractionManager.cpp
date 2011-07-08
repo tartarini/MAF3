@@ -73,63 +73,63 @@ void mafInteractionManager::vmeSelected(mafVME *vme) {
 }
 
 void mafInteractionManager::leftButtonPress(unsigned long modifier) {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+    //PRINT_FUNCTION_NAME_INFORMATION
 }
 
 void mafInteractionManager::leftButtonRelease(unsigned long modifier) {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+    //PRINT_FUNCTION_NAME_INFORMATION
 }
 
 void mafInteractionManager::middleButtonPress(unsigned long modifier) {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+    //PRINT_FUNCTION_NAME_INFORMATION
 }
 
 void mafInteractionManager::middleButtonRelease(unsigned long modifier) {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+    //PRINT_FUNCTION_NAME_INFORMATION
 }
 
 void mafInteractionManager::rightButtonPress(unsigned long modifier) {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+    //PRINT_FUNCTION_NAME_INFORMATION
 }
 
 void mafInteractionManager::rightButtonRelease(unsigned long modifier) {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+    //PRINT_FUNCTION_NAME_INFORMATION
 }
 
 void mafInteractionManager::enter() {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+    //PRINT_FUNCTION_NAME_INFORMATION
 }
 
 void mafInteractionManager::leave() {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+    //PRINT_FUNCTION_NAME_INFORMATION
 }
 
 void mafInteractionManager::keyPress() {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+    //PRINT_FUNCTION_NAME_INFORMATION
 }
 
 void mafInteractionManager::keyRelease() {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+    //PRINT_FUNCTION_NAME_INFORMATION
 }
 
 void mafInteractionManager::keyChar() {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+    //PRINT_FUNCTION_NAME_INFORMATION
 }
 
 void mafInteractionManager::mouseMove(unsigned long modifier) {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+    //PRINT_FUNCTION_NAME_INFORMATION
 }
 
 void mafInteractionManager::mouseWheelForward(unsigned long modifier) {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+    //PRINT_FUNCTION_NAME_INFORMATION
 }
 
 void mafInteractionManager::mouseWheelBackward(unsigned long modifier) {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+   // PRINT_FUNCTION_NAME_INFORMATION
 }
 
 void mafInteractionManager::pick() {
-    qDebug() << __FILE__ << ": "<< __FUNCTION__;
+    //PRINT_FUNCTION_NAME_INFORMATION
 }
 
 void mafInteractionManager::vmePicked(double *pos, unsigned long modifiers, mafVME *vme) {
@@ -140,7 +140,7 @@ void mafInteractionManager::vmePicked(double *pos, unsigned long modifiers, mafV
         return;
     }
     
-    //default behaviour is vme selection
+    //default behavior is vme selection
     mafEventBus::mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, qobject_cast<mafCore::mafObjectBase *>(vme)));
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventBus::mafEventTypeLocal, &argList);

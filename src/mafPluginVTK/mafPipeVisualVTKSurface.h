@@ -37,9 +37,6 @@ public:
     /// Object constructor;
     mafPipeVisualVTKSurface(const QString code_location = "");
     
-    /// set the selection pipe for viualization.
-    /*virtual*/ void setPipeVisualSelection(mafPipeVisual *pipeVisualSelection);
-
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
 

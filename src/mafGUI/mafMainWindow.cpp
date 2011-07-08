@@ -74,8 +74,9 @@ void mafMainWindow::initializeMainWindow() {
     // Hierarchy tree's tab
     ui->tabTree->setLayout(ui->layoutTree);
     ui->hierarchyWidget->setLayout(ui->layoutHierarchy);
-    ui->propertiesBoxContainer->setLayout(ui->layoutPropertiesBox);
-    
+    ui->vmeTab->setLayout(ui->vmeLayout);
+    ui->visualPipeTab->setLayout(ui->visualPipeLayout);
+    ui->dataPipeTab->setLayout(ui->dataPipeLayout);
 
     //tree widget in sidebar
      m_Model = new mafDragDropModel();
@@ -98,7 +99,7 @@ void mafMainWindow::initializeMainWindow() {
     QSplitter *splitter = new QSplitter(Qt::Vertical);
     splitter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     splitter->addWidget(ui->hierarchyWidget);
-    splitter->addWidget(ui->propertiesBoxContainer);
+    splitter->addWidget(ui->tabProperty);
     ui->layoutTree->addWidget(splitter);
     splitter->setStretchFactor(1, 1);
 
@@ -112,10 +113,16 @@ void mafMainWindow::initializeMainWindow() {
     // LogBar Layout
     ui->logBarWidgetContents->setLayout(ui->gridLayoutLogBar);
 
+    //TODO: hide and show find widget?
+    //ui->findWidget->hide();
+    //ui->findWidget->show();
+    
     QObject *logBarAction = m_GUIManager->menuItemByName("LogBar");
     m_LogWidget = m_GUIManager->createLogWidget(ui->logBarWidgetContents);
     connect(ui->dockLogBarWidget, SIGNAL(visibilityChanged(bool)), logBarAction, SLOT(setChecked(bool)));
     connect(logBarAction, SIGNAL(triggered(bool)), ui->dockLogBarWidget, SLOT(setVisible(bool)));
+    connect(ui->clearButton, SIGNAL(pressed()), m_LogWidget, SLOT(clear()));
+    connect(ui->findEdit, SIGNAL(textEdited(QString)), m_LogWidget, SLOT(find(QString)));
 
     // **** Google chat ****
     QObject *collaborateAction = m_GUIManager->menuItemByName("Collaborate");
@@ -201,11 +208,11 @@ void mafMainWindow::loadedGUIAvailable(int type, QWidget *w) {
                 ui->layoutView->addWidget(w);
                 break;
             case mafGUILoadedTypeVisualPipe:
-                ui->tabWidget->setCurrentIndex(1);
-                ui->layoutView->addWidget(w);
+                //ui->tabWidget->setCurrentIndex(1);
+                ui->visualPipeLayout->addWidget(w);
                 break;
             case mafGUILoadedTypeVme:
-                ui->layoutPropertiesBox->addWidget(w);
+                ui->vmeLayout->addWidget(w);
                 break;
         }
         w->show();

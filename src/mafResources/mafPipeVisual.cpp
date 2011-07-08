@@ -3,7 +3,7 @@
  *  mafResources
  *
  *  Created by Roberto Mucci on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -20,7 +20,7 @@ using namespace mafEventBus;
 using namespace mafResources;
 
 
-mafPipeVisual::mafPipeVisual(const QString code_location) : mafPipe(code_location), m_Output(NULL), m_GraphicObject(NULL), m_PipeVisualSelection(NULL), m_SceneNode(NULL), m_Visibility(false) {
+mafPipeVisual::mafPipeVisual(const QString code_location) : mafPipe(code_location), m_Output(NULL), m_GraphicObject(NULL), m_PipeVisualSelection(NULL), m_Visibility(false) {
     initializeConnections();
 }
 
@@ -33,7 +33,7 @@ void mafPipeVisual::initializeConnections() {
     connect(this, SIGNAL(modifiedObject()), this, SLOT(render()));
 }
 
-void mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafProxyInterface *actor, QEvent * e) {
+bool mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::mafProxyInterface *actor, QEvent * e) {
     Q_UNUSED(e);
     if (m_Output && m_Output->isEqual(actor)) {
         mafVME *vme = this->inputList()->at(0);
@@ -43,8 +43,11 @@ void mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::m
             argList.append(mafEventArgument(unsigned long, modifiers));
             argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
             emit vmePickedSignal(pickPos, modifiers, vme);
+            return true;
         }
     }
+    
+    return false;
 }
 
 void mafPipeVisual::setVisibility(bool visible) {

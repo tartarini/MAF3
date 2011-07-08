@@ -5,9 +5,6 @@
 # 
 
 SET(foundation_libraries 
-  qxmlrpc 
-  QtSOAP
-  opencv_core
 )
 
 SET(VTK_LIBRARIES
@@ -23,12 +20,5 @@ SET(VTK_LIBRARIES
 )
 
 SET(target_libraries
-  ${MAF_BASE_LIBRARIES}
-  ${foundation_libraries}
   ${VTK_LIBRARIES}
-  mafCore
-  mafEventBus
-  mafResources
-  vtkMAF
   )
-

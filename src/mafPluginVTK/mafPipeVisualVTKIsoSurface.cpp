@@ -58,6 +58,8 @@ bool mafPipeVisualVTKIsoSurface::acceptObject(mafCore::mafObjectBase *obj) {
 }
 
 void mafPipeVisualVTKIsoSurface::updatePipe(double t) {
+    Superclass::updatePipe(t);
+
     mafDataSet *data = dataSetForInput(0, t);
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
 
@@ -83,11 +85,7 @@ void mafPipeVisualVTKIsoSurface::updatePipe(double t) {
     m_Mapper->Update();
     //Keep ImmediateModeRendering off: it slows rendering
     //m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
-
     render();
-}
-
-void mafPipeVisualVTKIsoSurface::setPipeVisualSelection(mafPipeVisual *pipeVisualSelection) {
 }
 
 QString mafPipeVisualVTKIsoSurface::contourValue() {
@@ -103,8 +101,8 @@ void mafPipeVisualVTKIsoSurface::on_contourValue_textEdited(QString stringValue)
 }
 
 void mafPipeVisualVTKIsoSurface::on_contourValue_editingFinished() {
-    updatePipe();
     updateUI();
+    updatePipe();
 }
 
 void mafPipeVisualVTKIsoSurface::on_contourValueSlider_valueChanged(int value) {

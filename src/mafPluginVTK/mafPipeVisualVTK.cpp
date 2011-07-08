@@ -11,7 +11,7 @@
 
 #include "mafPipeVisualVTK.h"
 #include "mafVTKWidget.h"
-#include "mafSceneNodeVTK.h"
+#include "mafAxes.h"
 
 #include <vtkRendererCollection.h>
 #include <vtkRenderWindow.h>
@@ -23,7 +23,7 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 
 
-mafPipeVisualVTK::mafPipeVisualVTK(const QString code_location) : mafPipeVisual(code_location), m_ScalarVisibility(false), m_ImmediateRendering(false), m_Renderer(NULL) {
+mafPipeVisualVTK::mafPipeVisualVTK(const QString code_location) : mafPipeVisual(code_location), m_ScalarVisibility(false), m_ImmediateRendering(false), m_Renderer(NULL), m_Axes(NULL) {
 }
 
 mafPipeVisualVTK::~mafPipeVisualVTK() {
@@ -53,22 +53,25 @@ void mafPipeVisualVTK::setImmediateRendering (bool immediateRendering) {
 }
 
 void mafPipeVisualVTK::updateVisibility() {
+    PRINT_FUNCTION_NAME_INFORMATION
     m_Prop3D->SetVisibility(visibility());
     
-    if (graphicObject() == NULL) {
-        return;
-    }
-    
-    mafSceneNodeVTK *sn = (mafSceneNodeVTK *)sceneNode();
-    if(sn == NULL) {
-        return;
-    }
-    vtkProp *prop = (vtkProp *)sn->nodeAssembly();
     if(visibility()) {
-        m_Renderer->AddViewProp(prop);
+        if (m_Axes == NULL) {
+            m_Axes = new mafAxes(m_Renderer, input());
+        }
+        m_Axes->setVisibility(true);
     } else {
-        m_Renderer->RemoveViewProp(prop);
+        if (m_Axes) {
+            delete m_Axes;
+            m_Axes = NULL;
+        }
     }
     render();
-    m_Renderer->ResetCamera();
+}
+
+void mafPipeVisualVTK::updatePipe(double t) {
+    if (m_Axes) {
+        m_Axes->updatePose();
+    }
 }

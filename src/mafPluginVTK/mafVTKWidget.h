@@ -19,6 +19,8 @@
 
 namespace mafPluginVTK {
 
+class mafAxes;
+
 /**
 Class name: mafVTKWidget
 This class overloads VKT mouse events and forward them to EventBus.
@@ -43,6 +45,9 @@ public:
     /// Overloaded mouse move handler
     /*virtual*/ void mouseMoveEvent(QMouseEvent* event);
 
+    /// Allows to show the axes representing the global reference system. This method has to be called after that the renderer has been added to the renderwindow.
+    void showAxes(bool show = true);
+
 signals:
     /// picked button pressed.
     void vmePickSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *interf, QEvent * e);
@@ -59,6 +64,8 @@ private:
     void vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e);
 
     unsigned long m_Modifiers;  ///< Optional modifiers for the button.
+
+    mafAxes *m_Axes; ///< Tool representing a global reference system.
 };
 
 } // namespace mafPluginVTK

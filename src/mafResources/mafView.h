@@ -46,7 +46,7 @@ public:
     virtual void removeSceneNode(mafSceneNode *node);
 
     /// Select a scene node.
-    void selectSceneNode(mafSceneNode *node, bool select);
+    virtual void selectSceneNode(mafSceneNode *node, bool select);
 
     /// Called to show/hide scene node.
     virtual void showSceneNode(mafSceneNode *node, bool show = true);
@@ -107,9 +107,6 @@ public slots:
     virtual void updateView();
 
 private slots:
-
-    /// Called by reparent of items in tree.
-    void sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectBase *vmeParent);
 
     /// Called when the scene node has been destroyed.
     void sceneNodeDestroy();
