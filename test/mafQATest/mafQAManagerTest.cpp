@@ -13,7 +13,7 @@
 #include <mafQAManager.h>
 
 #ifdef WIN32
-#define TEST_SCRIPT_NAME "dir"
+#define TEST_SCRIPT_NAME "python"
     #ifdef QT_DEBUG
         #define TEST_LIBRARY_NAME "mafPluginTest.dll"
     #else
@@ -162,18 +162,28 @@ void mafQAManagerTest::runPythonScriptTest() {
 }
 
 void mafQAManagerTest::runScriptTest() {
+    //create temporary script
+    QFile file("temporaryPythonScript.py");
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        return;
+    }
+    QTextStream out(&file);
+    out << "import os" << "\n";
+    out << "print \"Test Python Script\"" << "\n";
+
+    file.close();
+
     //TODO: these tests don't work
-    /*qDebug() << "Asynchronous:";
+    qDebug() << "Asynchronous:";
     QStringList argList;
+    argList.append("temporaryPythonScript.py");
     int res = m_QAManager->runScript(TEST_SCRIPT_NAME,argList, false);
-    QCOMPARE(res, 0);*/
+    QCOMPARE(res, 0);
 
     //launch sync
-    /*qDebug() << "Synchronous:";
-    QStringList argList;
-    int res;
+    qDebug() << "Synchronous:";
     res = m_QAManager->runScript(TEST_SCRIPT_NAME,argList, true);
-    QCOMPARE(res, 0);*/
+    QCOMPARE(res, 0);
 }
 
 void mafQAManagerTest::memoryMonitorTest() {
