@@ -79,6 +79,7 @@ void mafCodecRawBinaryTest::encodeTest() {
     m_ObjectTest->addTag("tag1");
     m_ObjectTest->addTag("tag2");
     m_ObjectTest->setTagList(m_List);
+    //! </snippet>
 
     m_ObjectTest->dictionary()->insert("nome", "geisi");
     m_ObjectTest->dictionary()->insert("cognome", "fico");
