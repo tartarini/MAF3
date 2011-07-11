@@ -77,7 +77,7 @@ void mafInteractionManager::vmePicked(double *pos, unsigned long modifiers, mafV
     mafInteractor *i = vme->interactor();
     if(i) {
         // execute the interactor
-        i->vmePicked(pos, modifiers, vme);
+        i->vmePicked(pos, modifiers, vme, e);
         return;
     } else {
         //default behaviour
