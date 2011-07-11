@@ -113,7 +113,7 @@ void mafVTKWidget::mouseReleaseEvent(QMouseEvent* e) {
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
     // Check if a VME has been picked
-    this->vmePickCheck(iren, e);
+    //this->vmePickCheck(iren, e);
 
     // invoke appropriate vtk event
     switch(e->button()) {
