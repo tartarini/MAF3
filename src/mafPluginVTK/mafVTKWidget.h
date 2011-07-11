@@ -63,6 +63,9 @@ private:
     /// Check if VME has been picked
     void vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e);
 
+    /// Check if VME has been picked
+    void vmeMoveCheck(vtkRenderWindowInteractor* iren, QEvent *e);
+    
     unsigned long m_Modifiers;  ///< Optional modifiers for the button.
 
     mafAxes *m_Axes; ///< Tool representing a global reference system.

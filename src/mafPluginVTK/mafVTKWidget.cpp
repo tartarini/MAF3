@@ -72,22 +72,19 @@ void mafVTKWidget::mousePressEvent(QMouseEvent* e) {
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
     // Check if a VME has been picked
-    //this->vmePickCheck(iren, e);
+    this->vmePickCheck(iren, e);
 
     // invoke appropriate VTK event
     switch(e->button()) {
     case Qt::LeftButton:
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.leftButtonPress", mafEventTypeLocal, &argList);
         iren->InvokeEvent(vtkCommand::LeftButtonPressEvent, e); //Move into InteractorManager?
         break;
 
     case Qt::MidButton:
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.middleButtonPress", mafEventTypeLocal, &argList);
         iren->InvokeEvent(vtkCommand::MiddleButtonPressEvent, e); //Move into InteractorManager?
         break;
 
     case Qt::RightButton:
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.rightButtonPress", mafEventTypeLocal, &argList);
         iren->InvokeEvent(vtkCommand::RightButtonPressEvent, e); //Move into InteractorManager?
         break;
 
@@ -121,17 +118,14 @@ void mafVTKWidget::mouseReleaseEvent(QMouseEvent* e) {
     // invoke appropriate vtk event
     switch(e->button()) {
     case Qt::LeftButton:
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.leftButtonRelease", mafEventTypeLocal, &argList);
         iren->InvokeEvent(vtkCommand::LeftButtonReleaseEvent, e); //Move into InteractorManager?
         break;
 
     case Qt::MidButton:
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.middleButtonRelease", mafEventTypeLocal, &argList);
         iren->InvokeEvent(vtkCommand::MiddleButtonReleaseEvent, e); //Move into InteractorManager?
         break;
 
     case Qt::RightButton:
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.rightButtonRelease", mafEventTypeLocal, &argList);
         iren->InvokeEvent(vtkCommand::RightButtonReleaseEvent, e); //Move into InteractorManager?
         break;
 
@@ -160,16 +154,13 @@ void mafVTKWidget::wheelEvent(QWheelEvent* e) {
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
-    // Check if a VME has been picked
-    //this->vmePickCheck(iren, e);
+    //wheel event signal need to be created
 
     // invoke vtk event
     // if delta is positive, it is a forward wheel event
     if(e->delta() > 0) {
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseWheelForward", mafEventTypeLocal, &argList);
         iren->InvokeEvent(vtkCommand::MouseWheelForwardEvent, e); //Move into InteractorManager?
     } else {
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseWheelBackward", mafEventTypeLocal, &argList);
         iren->InvokeEvent(vtkCommand::MouseWheelBackwardEvent, e); //Move into InteractorManager?
     }
 }
@@ -194,10 +185,9 @@ void mafVTKWidget::mouseMoveEvent(QMouseEvent* e) {
     argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
     // Check if a VME has been picked
-    //this->vmePickCheck(iren, e);
+    this->vmeMoveCheck(iren, e);
 
     // invoke vtk event
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.interaction.mouseMove", mafEventTypeLocal, &argList);
     iren->InvokeEvent(vtkCommand::MouseMoveEvent, e); //Move into InteractorManager?
 }
 
@@ -252,4 +242,8 @@ void mafVTKWidget::vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e) {
     if (actor != NULL) {
         emit vmePickSignal(posPicked, m_Modifiers, &actorPicked, e);
     }
+}
+
+void mafVTKWidget::vmeMoveCheck(vtkRenderWindowInteractor* iren, QEvent *e) {
+    
 }
