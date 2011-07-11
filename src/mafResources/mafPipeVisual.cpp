@@ -29,7 +29,7 @@ mafPipeVisual::~mafPipeVisual() {
 
 void mafPipeVisual::initializeConnections() {
     //connect between visual pipe and interaction manager (vme Picked signal)
-    connect(this, SIGNAL(vmePickedSignal(double *, unsigned long, mafVME* )), mafInteractionManager::instance(), SLOT(vmePicked(double *, unsigned long, mafVME *)));
+    connect(this, SIGNAL(vmePickedSignal(double *, unsigned long, mafVME *, QEvent *)), mafInteractionManager::instance(), SLOT(vmePicked(double *, unsigned long, mafVME *, QEvent *)));
     connect(this, SIGNAL(modifiedObject()), this, SLOT(render()));
 }
 
@@ -42,7 +42,7 @@ bool mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::m
             argList.append(mafEventArgument(double *, pickPos));
             argList.append(mafEventArgument(unsigned long, modifiers));
             argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
-            emit vmePickedSignal(pickPos, modifiers, vme);
+            emit vmePickedSignal(pickPos, modifiers, vme, e);
             return true;
         }
     }
