@@ -15,6 +15,7 @@
 #include "mafMementoDataSet.h"
 #include "mafInteractor.h"
 #include "mafDataBoundaryAlgorithm.h"
+#include "mafInteractorSelection.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -28,6 +29,9 @@ mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Inte
         mafRegisterLocalCallback("TIME_SET", this, "setTimestamp(double)")
     }
     m_MementoDataSetHash.clear();
+    
+    setInteractor(new mafInteractorSelection());
+    
     connect(this, SIGNAL(modifiedObject()), this, SLOT(execute()));
 }
 
@@ -44,6 +48,7 @@ mafVME::~mafVME() {
         ++iter;
     }
     m_MementoDataSetHash.clear();
+    m_Interactor->release();
     delete m_Lock;
 }
 
