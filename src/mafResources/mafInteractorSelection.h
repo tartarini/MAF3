@@ -33,7 +33,7 @@ class MAFRESOURCESSHARED_EXPORT mafInteractorSelection : public mafInteractor {
 
 public slots:
     /// Called when a VME has been picked.
-    /*virtual*/ void vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj);
+    /*virtual*/ void vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e);
 
 public:
     /// Object constructor

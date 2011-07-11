@@ -11,6 +11,8 @@
 
 #include "mafInteractorSelection.h"
 
+#include <QMouseEvent>
+
 using namespace mafCore;
 using namespace mafResources;
 
@@ -23,8 +25,11 @@ mafInteractorSelection::mafInteractorSelection(mafProxyInterfacePointer default_
 mafInteractorSelection::~mafInteractorSelection() {
 }
 
-void mafInteractorSelection::vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj) {
-    mafEventBus::mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, obj));
-    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventBus::mafEventTypeLocal, &argList);
+void mafInteractorSelection::vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
+    QMouseEvent *me = (QMouseEvent *)e;
+    if(me->button() == Qt::LeftButton && me->type() == QEvent::MouseButtonPress) {
+        mafEventBus::mafEventArgumentsList argList;
+        argList.append(mafEventArgument(mafCore::mafObjectBase *, obj));
+        mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventBus::mafEventTypeLocal, &argList);
+    }
 }
