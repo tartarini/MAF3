@@ -37,6 +37,15 @@ class MAFRESOURCESSHARED_EXPORT mafInteractor : public mafCore::mafObjectBase {
 public slots:
     /// Called when a VME has been picked.
     virtual void vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e);
+    
+    /// called when left mouse button is pressed.
+    void buttonPress(double *pos, unsigned long modifiers, QEvent *e);
+    
+    /// called when left mouse button is released.
+    void buttonRelease(double *pos, unsigned long modifiers, QEvent *e);
+    
+    /// called when mouse is moving.
+    void mouseMove(double *pos, unsigned long modifiers, QEvent *e);
 
 public:
     /// Object constructor

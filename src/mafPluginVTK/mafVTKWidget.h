@@ -50,21 +50,29 @@ public:
 
 signals:
     /// picked button pressed.
-    void vmePickSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *interf, QEvent * e);
+    void vmePickSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent * e);
+    
+    void mousePressSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
+    void mouseReleaseSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
+    void mouseMoveSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
 
 protected:
     /// Object destructor.
     /* virtual */ ~mafVTKWidget();
+    
+    // overloaded resize handler
+    /*virtual*/ void resizeEvent(QResizeEvent* event);
 
 private:
     /// Get key modifiers.
     void getModifiers(vtkRenderWindowInteractor* iren);
 
-    /// Check if VME has been picked
-    void vmePickCheck(vtkRenderWindowInteractor* iren, QEvent *e);
-
-    /// Check if VME has been picked
-    void vmeMoveCheck(vtkRenderWindowInteractor* iren, QEvent *e);
+    void mousePress(vtkRenderWindowInteractor* iren, QEvent *e);
+    void mouseRelease(vtkRenderWindowInteractor* iren, QEvent *e);
+    void mouseMove(vtkRenderWindowInteractor* iren, QEvent *e);
+    
+    /// initialize connections
+    void initializeConnections();
     
     unsigned long m_Modifiers;  ///< Optional modifiers for the button.
 

@@ -35,16 +35,16 @@ mafInteractionManager::~mafInteractionManager() {
 void mafInteractionManager::initialize() {
 }
 
-void mafInteractionManager::buttonPress(double *pos, unsigned long modifiers, QEvent *e) {
+void mafInteractionManager::mousePress(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e) {
+    emit vmePickSignal(pos, modifiers, proxy, e);
+}
+
+void mafInteractionManager::mouseRelease(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e) {
     //PRINT_FUNCTION_NAME_INFORMATION
 }
 
-void mafInteractionManager::buttonRelease(double *pos, unsigned long modifiers, QEvent *e) {
-    //PRINT_FUNCTION_NAME_INFORMATION
-}
 
-
-void mafInteractionManager::mouseMove(double *pos, unsigned long modifiers, QEvent *e) {
+void mafInteractionManager::mouseMove(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e) {
     //PRINT_FUNCTION_NAME_INFORMATION
 }
 

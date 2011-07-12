@@ -28,8 +28,10 @@ mafPipeVisual::~mafPipeVisual() {
 }
 
 void mafPipeVisual::initializeConnections() {
-    //connect between visual pipe and interaction manager (vme Picked signal)
+    //connections between visual pipe and interaction manager (vmePick and Picked signal)
+    connect(mafInteractionManager::instance(), SIGNAL(vmePickSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), this, SLOT(vmePick(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
     connect(this, SIGNAL(vmePickedSignal(double *, unsigned long, mafVME *, QEvent *)), mafInteractionManager::instance(), SLOT(vmePicked(double *, unsigned long, mafVME *, QEvent *)));
+    
     connect(this, SIGNAL(modifiedObject()), this, SLOT(render()));
 }
 
@@ -59,15 +61,15 @@ void mafPipeVisual::updateVisibility() {
 }
 
 void mafPipeVisual::setGraphicObject(QObject *graphicObject) {
-    if (m_GraphicObject != NULL) {
-        disconnect(m_GraphicObject, SIGNAL(vmePickSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)),  this, SLOT(vmePick(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
-    }
+    //if (m_GraphicObject != NULL) {
+        //disconnect(m_GraphicObject, SIGNAL(vmePickSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)),  this, SLOT(vmePick(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
+    //}
 
     m_GraphicObject = graphicObject;
 
     if (m_GraphicObject != NULL) {
         //connect between render object coming from external library and visual pipe (vme Pick signal)
-        connect(m_GraphicObject, SIGNAL(vmePickSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)),  this, SLOT(vmePick(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
+        //connect(m_GraphicObject, SIGNAL(vmePickSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)),  this, SLOT(vmePick(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
         setModified();
         updatedGraphicObject();
     }

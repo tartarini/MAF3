@@ -32,23 +32,20 @@ class MAFRESOURCESSHARED_EXPORT mafInteractionManager : public mafCore::mafObjec
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
 
-public:
-    /// Return an instance of the Manager
-    static mafInteractionManager *instance();
-
-    /// Destroy the singleton instance. To be called at the end of the application.
-    void shutdown();
-
+signals:
+    /// signals for discover if a vme is picked
+    void vmePickSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
+    
 private slots:
 
     /// called when left mouse button is pressed.
-    void buttonPress(double *pos, unsigned long modifiers, QEvent *e);
+    void mousePress(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
 
     /// called when left mouse button is released.
-    void buttonRelease(double *pos, unsigned long modifiers, QEvent *e);
+    void mouseRelease(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
     
     /// called when mouse is moving.
-    void mouseMove(double *pos, unsigned long modifiers, QEvent *e);
+    void mouseMove(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
 
     /// mouse enters in the render window.
     void enter(unsigned long modifiers, QEvent *e);
@@ -71,6 +68,12 @@ private slots:
     /// called when a vme has been picked
     void vmePicked(double *pos, unsigned long modifiers, mafVME *vme, QEvent *e);
 
+public:
+    /// Return an instance of the Manager
+    static mafInteractionManager *instance();
+    
+    /// Destroy the singleton instance. To be called at the end of the application.
+    void shutdown();
 
 private:
     /// Object constructor.
@@ -81,6 +84,8 @@ private:
 
     /// initialize the manager.
     void initialize();
+
+    
 };
 
 } // namespace mafResources

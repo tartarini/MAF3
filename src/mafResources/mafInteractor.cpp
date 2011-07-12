@@ -28,8 +28,20 @@ void mafInteractor::vmePicked(double *pickPos, unsigned long modifiers, mafCore:
     Q_UNUSED(modifiers);
     Q_UNUSED(obj);
     Q_UNUSED(e);
-
 }
+
+void mafInteractor::buttonPress(double *pos, unsigned long modifiers, QEvent *e) {
+    
+}
+
+void mafInteractor::buttonRelease(double *pos, unsigned long modifiers, QEvent *e) {
+    
+}
+
+void mafInteractor::mouseMove(double *pos, unsigned long modifiers, QEvent *e) {
+    
+}
+
 
 void mafInteractor::setDefaultInteractionStyle(mafProxyInterfacePointer is) {
     if(is == m_DefaultInteractorStyle) {
