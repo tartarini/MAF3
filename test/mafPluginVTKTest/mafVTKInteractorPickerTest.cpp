@@ -143,7 +143,7 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     dataSetSphere->setDataValue(&dataSourceContainer);
     vme->dataSetCollection()->insertItem(dataSetSphere, 0);
     mafDEL(dataSetSphere);
-    vme->setInteractor(m_Picker);
+    vme->pushInteractor(m_Picker);
 
     //Must create a visual pipe that send "maf.local.resources.interaction.vmePicked"
     //when its vme is picked
@@ -176,10 +176,10 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
 
     //set another interactor picker
     mafVTKInteractorPicker *picker = mafNEW(mafPluginVTK::mafVTKInteractorPicker);
-    vme->setInteractor(picker);
+    vme->pushInteractor(picker);
 
     //re attached old interactor picker
-    vme->setInteractor(m_Picker);
+    vme->pushInteractor(m_Picker);
 
     //picking the actor in another point
     events.clear();
