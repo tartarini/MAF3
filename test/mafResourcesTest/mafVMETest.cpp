@@ -217,17 +217,18 @@ void mafVMETest::mafVMEMementoTest() {
 
 void mafVMETest::mafVMEInteractorTest() {
     mafInteractor *inter = m_VME->interactor();
-    QVERIFY(inter == NULL);
-
-    mafInteractor *i = mafNEW(mafInteractor);
-    m_VME->setInteractor(i);
-
-    inter = m_VME->interactor();
     QVERIFY(inter != NULL);
+    QString interactorType("mafResources::mafInteractorSelection");
+    QString checkType(inter->metaObject()->className());
+    QCOMPARE(checkType, interactorType);
 
-    // Remove the interactor (and delete it)
-    m_VME->setInteractor(NULL);
-    mafDEL(i);
+    //mafInteractor *i = mafNEW(mafInteractor);
+    //m_VME->setInteractor(i);
+
+    //inter = m_VME->interactor();
+    //QVERIFY(inter != NULL);
+
+    //mafDEL(i);
 }
 
 void mafVMETest::mafVMEOutputDataTest() {
