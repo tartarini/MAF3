@@ -216,7 +216,7 @@ void mafVMETest::mafVMEMementoTest() {
 }
 
 void mafVMETest::mafVMEInteractorTest() {
-    mafInteractor *inter = m_VME->interactor();
+    mafInteractor *inter = m_VME->activeInteractor();
     QVERIFY(inter != NULL);
     QString interactorType("mafResources::mafInteractorSelection");
     QString checkType(inter->metaObject()->className());

@@ -81,11 +81,14 @@ public:
     undo or copy/paste operations. The complete object save is instead needed for serialization purposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
-    /// Assign to the VME the interactor that will be used when user interact with the VME.
-    void setInteractor(mafInteractor *i);
+    /// Assign to the VME the interactor that will be used when user interact with VME.
+    void pushInteractor(mafInteractor *i);
 
     /// Return the interactor associated with the VME.
-    mafInteractor *interactor();
+    mafInteractor *activeInteractor();
+
+    /// Return the top level interactor removing it from the stack.
+    mafInteractor *popInteractor();
 
     /// Allow to emit the detached signal, so to alert all the observers that the vme is not more inside the tree.
     void detatchFromTree();
@@ -155,7 +158,7 @@ protected:
 
 private:
     mutable QReadWriteLock *m_Lock;     ///< Lock variable for thread safe access to VME.
-    mafInteractor *m_Interactor;        ///< Custom interactor associated with the VME.
+    QStack<mafInteractor*> m_InteractorStack; ///< Stack of Interactor styles.
     mafDataSetCollection *m_DataSetCollection; ///< Collection of timestamped data posed on homogeneous matrices.
     mafPipeData *m_DataPipe;            ///< Data pipe associated with the VME and used to elaborate new data.
     QHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
@@ -172,9 +175,13 @@ inline mafPipeData *mafVME::dataPipe() {
     return m_DataPipe;
 }
 
-inline mafInteractor *mafVME::interactor() {
+inline mafInteractor *mafVME::popInteractor() {
+    return m_InteractorStack.pop();
+}
+
+inline mafInteractor *mafVME::activeInteractor() {
     QReadLocker locker(m_Lock);
-    return m_Interactor;
+    return m_InteractorStack.top();
 }
 
 inline bool mafVME::canRead() const {

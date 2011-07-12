@@ -74,7 +74,7 @@ void mafInteractionManager::mouseWheelBackward(unsigned long modifiers, QEvent *
 }
 
 void mafInteractionManager::vmePicked(double *pos, unsigned long modifiers, mafVME *vme, QEvent *e) {
-    mafInteractor *i = vme->interactor();
+    mafInteractor *i = vme->activeInteractor();
     if(i) {
         // execute the interactor
         i->vmePicked(pos, modifiers, vme, e);
