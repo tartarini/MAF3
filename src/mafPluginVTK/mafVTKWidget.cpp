@@ -58,9 +58,6 @@ void mafVTKWidget::showAxes(bool show) {
 }
 
 void mafVTKWidget::mousePressEvent(QMouseEvent* e) {
-    // Emit a mouse press event for anyone who might be interested
-    emit mouseEvent(e);
-
     vtkRenderWindowInteractor* iren = NULL;
     if(this->mRenWin) {
         iren = this->mRenWin->GetInteractor();
