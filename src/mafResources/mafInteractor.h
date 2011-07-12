@@ -16,7 +16,6 @@
 #include "mafResourcesDefinitions.h"
 #include <mafProxyInterface.h>
 #include <mafProxy.h>
-#include <mafProxyInterface.h>
 
 namespace mafResources {
 
@@ -35,17 +34,33 @@ class MAFRESOURCESSHARED_EXPORT mafInteractor : public mafCore::mafObjectBase {
     mafSuperclassMacro(mafCore::mafObjectBase);
 
 public slots:
-    /// Called when a VME has been picked.
-    virtual void vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e);
     
     /// called when left mouse button is pressed.
-    void buttonPress(double *pos, unsigned long modifiers, QEvent *e);
+    virtual void mousePress(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e);
     
     /// called when left mouse button is released.
-    void buttonRelease(double *pos, unsigned long modifiers, QEvent *e);
+    virtual void mouseRelease(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e);
     
     /// called when mouse is moving.
-    void mouseMove(double *pos, unsigned long modifiers, QEvent *e);
+    virtual void mouseMove(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e);
+    
+    /// mouse enters in the render window.
+    virtual void enter(unsigned long modifiers, QEvent *e);
+    
+    /// mouse exits from the render window.
+    virtual void leave(unsigned long modifiers, QEvent *e);
+    
+    /// press a key char.
+    virtual void keyPress(QEvent *e);
+    
+    /// release a key char.
+    virtual void keyRelease(QEvent *e);
+    
+    /// called when the wheel is moving forward.
+    virtual void mouseWheelForward(unsigned long modifiers, QEvent *e);
+    
+    /// called when the wheel is moving backward.
+    virtual void mouseWheelBackward(unsigned long modifiers, QEvent *e);
 
 public:
     /// Object constructor

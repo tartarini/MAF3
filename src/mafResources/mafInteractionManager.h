@@ -85,6 +85,7 @@ private:
     /// initialize the manager.
     void initialize();
 
+    mafVME *m_VME;
     
 };
 
