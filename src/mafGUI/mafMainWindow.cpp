@@ -334,10 +334,8 @@ void mafMainWindow::viewCreated(mafCore::mafObjectBase *view) {
 
     m_ViewSubWindowHash.insert(sub_win, view);
     
-    QGridLayout *layout = new QGridLayout();
-    widget->setLayout(layout);
-    widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    layout->setParent(sub_win);
+    widget->setParent(sub_win);
+    sub_win->setMinimumSize(200, 200);
     sub_win->resize(QSize(400, 400));
     sub_win->show();
 }
