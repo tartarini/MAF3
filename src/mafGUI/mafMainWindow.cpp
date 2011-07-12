@@ -147,6 +147,10 @@ void mafMainWindow::initializeMainWindow() {
 
     connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(subWindowSelected(QMdiSubWindow*)));
 
+    ui->mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    ui->mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
+    
     setUnifiedTitleAndToolBarOnMac(true);
 
     // Restore settings notification should be sent at the end of the initialization code, so to be sure that
@@ -330,8 +334,10 @@ void mafMainWindow::viewCreated(mafCore::mafObjectBase *view) {
 
     m_ViewSubWindowHash.insert(sub_win, view);
     
-    widget->setParent(sub_win);
-    sub_win->setMinimumSize(200, 200);
+    QGridLayout *layout = new QGridLayout();
+    widget->setLayout(layout);
+    widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    layout->setParent(sub_win);
     sub_win->resize(QSize(400, 400));
     sub_win->show();
 }
