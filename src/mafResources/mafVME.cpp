@@ -21,7 +21,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Interactor(NULL), m_DataSetCollection(NULL), m_DataPipe(NULL), m_CanRead(true), m_CanWrite(true) {
+mafVME::mafVME(const QString code_location) : mafResource(code_location), m_DataSetCollection(NULL), m_DataPipe(NULL), m_CanRead(true), m_CanWrite(true) {
     m_UIFilename = "vmeGeneric.ui";
     m_Lock = new QReadWriteLock(QReadWriteLock::Recursive);
     mafId time_set_id = mafIdProvider::instance()->idValue("TIME_SET");
@@ -30,7 +30,9 @@ mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Inte
     }
     m_MementoDataSetHash.clear();
     
-    setInteractor(new mafInteractorSelection());
+    mafInteractor *inter = new mafInteractorSelection();
+    pushInteractor(inter);
+    mafDEL(inter);
     
     connect(this, SIGNAL(modifiedObject()), this, SLOT(execute()));
 }
@@ -40,6 +42,11 @@ mafVME::~mafVME() {
     mafDEL(m_DataSetCollection);
     mafDEL(m_DataPipe);
 
+    while (!m_InteractorStack.isEmpty()) {
+        mafInteractor *inter = m_InteractorStack.pop();
+        inter->release();
+    }
+
     // delete all the created mementos for the dataset collection.
     QHash<mafMementoDataSet *, double>::iterator iter = m_MementoDataSetHash.begin();
     while(iter != m_MementoDataSetHash.end()) {
@@ -48,7 +55,6 @@ mafVME::~mafVME() {
         ++iter;
     }
     m_MementoDataSetHash.clear();
-    m_Interactor->release();
     delete m_Lock;
 }
 
@@ -97,13 +103,11 @@ void mafVME::setTimestamp(double t) {
     execute();
 }
 
-void mafVME::setInteractor(mafInteractor *i) {
-    if ( i == m_Interactor ) {
-        return;
-    }
+void mafVME::pushInteractor(mafInteractor *i) {
     emit interactorDetach();
     m_Lock->lockForWrite();
-    m_Interactor = i;
+    m_InteractorStack.push(i);
+    i->retain();
     m_Lock->unlock();
     emit interactorAttached();
 }
