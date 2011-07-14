@@ -14,6 +14,7 @@
 #include <QHBoxLayout>
 #include <QMenu>
 #include <QMenuBar>
+#include <QToolBar>
 
 using namespace mafGUI;
 
@@ -24,12 +25,11 @@ mafFindWidget::mafFindWidget(QWidget *parent) : QWidget(parent), m_FindLineEdit(
     m_ActionWhole = new QAction(mafTr("Mach whole word"), this);
     m_ActionWhole->setCheckable(true);
 
-    QMenuBar *menuBar = new QMenuBar;
-    QMenu *windowMenu = menuBar->addMenu(tr("Find options"));
-    windowMenu->setObjectName("Mode");
-    windowMenu->addAction(m_ActionCase);
-    windowMenu->addAction(m_ActionWhole);
-
+    QToolBar *toolBar = new QToolBar(mafTr("Find Options"));
+    toolBar->addAction(m_ActionCase);
+    toolBar->addAction(m_ActionWhole);
+    
+    
     m_FindLineEdit = new QLineEdit;
     m_FindLineEdit->setFocus();
     m_FindLineEdit->setPlaceholderText("Find..");
@@ -38,7 +38,7 @@ mafFindWidget::mafFindWidget(QWidget *parent) : QWidget(parent), m_FindLineEdit(
     QHBoxLayout *findLayout = new QHBoxLayout;
     findLayout->setMargin(0);
     findLayout->addStretch();
-    findLayout->addWidget(menuBar,0, Qt::AlignRight);
+    findLayout->addWidget(toolBar,0, Qt::AlignRight);
     findLayout->addWidget(m_FindLineEdit);
     setLayout(findLayout);
 }
