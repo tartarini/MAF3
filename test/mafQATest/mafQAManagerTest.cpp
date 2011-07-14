@@ -12,30 +12,8 @@
 #include <mafTestSuite.h>
 #include <mafQAManager.h>
 
-#ifdef WIN32
 #define TEST_SCRIPT_NAME "python"
-    #ifdef QT_DEBUG
-        #define TEST_LIBRARY_NAME "mafPluginTest.dll"
-    #else
-        #define TEST_LIBRARY_NAME "mafPluginTest.dll"
-    #endif
-#else
-    #define TEST_SCRIPT_NAME "whoami"
-    #ifdef __APPLE__
-        #ifdef QT_DEBUG
-            #define TEST_LIBRARY_NAME "mafPluginTest.dylib"
-        #else
-            #define TEST_LIBRARY_NAME "mafPluginTest.dylib"
-        #endif
-    #else
-        #ifdef QT_DEBUG
-            #define TEST_LIBRARY_NAME "mafPluginTest.so"
-        #else
-            #define TEST_LIBRARY_NAME "mafPluginTest.so"
-        #endif
-    #endif
-#endif
-
+#define TEST_LIBRARY_NAME "mafPluginTest.mafplugin"
 
 using namespace mafCore;
 using namespace mafQA;
