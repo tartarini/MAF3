@@ -201,6 +201,7 @@ void mafLogic::storeHierarchy(QString fileName) {
     argList.append(mafEventArgument(QString, fileName));
     argList.append(mafEventArgument(QString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal, &argList);
+    mafDEL(mementoHiearachy);
 }
 
 void mafLogic::restoreHierarchy(QString fileName) {
