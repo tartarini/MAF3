@@ -76,6 +76,9 @@ public:
     /// Return the status of the input preserve flag.
     bool isInputPreserve() const;
     
+    /// Return if the operation has been executed on a different thread
+    bool isMultiThreaded() const;
+    
 protected:
     /// Virtual method to implement the cleanup of the operation when it ends.
     virtual void terminated() = 0;
@@ -87,6 +90,7 @@ protected:
     bool m_CanUnDo; ///< Flag that store the unDo capability of the operation.
     bool m_CanAbort;         ///< Flag indicating that the operation can abort its execution or no (default true).
     bool m_InputPreserve;  ///< Flag represnting the behavior of the operationabout the input data. True value means that the input data is not modified (default true).
+    bool m_MultiThreaded; ///< variable to discriminate if the operation has been executed on a different thread.
 
 };
 
@@ -108,6 +112,11 @@ inline bool mafOperation::canAbort() const {
 inline bool mafOperation::isInputPreserve() const {
     return m_InputPreserve;
 }
+
+inline bool mafOperation::isMultiThreaded() const {
+    return m_MultiThreaded;
+}
+
 
 } // namespace mafResources
 
