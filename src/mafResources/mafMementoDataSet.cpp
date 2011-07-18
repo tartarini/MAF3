@@ -64,7 +64,12 @@ mafMementoDataSet::~mafMementoDataSet() {
 }
 
 void mafMementoDataSet::encodeItem(mafMementoPropertyItem *item, QString path) {
-    if (item->m_Name == "fileName" && m_DataSet->modified()) {
+    bool ignoreModified(false);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(bool, ignoreModified);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.ignoreModified", mafEventTypeLocal, NULL, &ret_val);
+
+    bool checkModified = ignoreModified || m_DataSet->modified();
+    if (item->m_Name == "fileName" && checkModified) {
         //Generate file name and save external data
         QString fileName(item->m_Value.toString());
         QString url;

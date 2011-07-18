@@ -25,23 +25,19 @@ namespace mafSerialization {
  It provides also the creation of 3 new IDs:
  - maf.local.serialization.load
  - maf.local.serialization.save
+ - maf.local.serialization.setIgnoreModified
+ - maf.local.serialization.ignoreModified
  - maf.local.serialization.export
  - maf.local.serialization.import
  - maf.local.serialization.extDataImported
  - maf.local.serialization.mementoLoaded
  related to 'load' and 'save' slots and 'mementoLoaded' signal.
+ setIgnoreModified is used in combination with save for ignoring all the "modified flags" of the mementoes.
  */
 class MAFSERIALIZATIONSHARED_EXPORT mafSerializationManager : mafCore::mafObjectBase {
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
-
-public:
-    /// Return an instance of the Manager
-    static mafSerializationManager *instance();
-
-    /// Destroy the singleton instance. To be called at the end of the application.
-    void shutdown();
 
 signals:
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
@@ -64,6 +60,12 @@ signals:
 
     /// Signal needed to register custom type of serializer.
     void plugSerializerInModule(const QString &schema, const QString &serializer_type);
+    
+    /// Signal needed to set all mementoes modified.
+    void setIgnoreModifiedSignal(bool value);
+    
+    /// signal for ignore modified.
+    bool ignoreModifiedSignal();
 
 private slots:
     /// Manage the save for the given object.
@@ -90,6 +92,19 @@ private slots:
 
     /// Plug a new serializer into the serializer hash for the given schema (schema eg. "file") (serializer_type eg. "mafSerialization::mafSerializerFileSystem").
     void plugSerializer(const QString &schema, const QString &serializer_type);
+    
+    /// set the global variable m_IgnoreModified active, in order to save independently from their Modified flag
+    void setIgnoreModified(bool value);
+    
+    /// return ignore modified value.
+    bool ignoreModified();
+
+public:
+    /// Return an instance of the Manager
+    static mafSerializationManager *instance();
+    
+    /// Destroy the singleton instance. To be called at the end of the application.
+    void shutdown();
 
 protected:
     /// Object destructor.
@@ -107,6 +122,8 @@ private:
     mafSerializerHash m_SerializerHash; ///< Hash table that store the binding between URL schema and serializer type.
     QString m_ExtDataImportedId; ///< ID related to the signal 'maf.local.serialization.extDataImported' invoked when new external data has been created during load operation.
     mafCore::mafExternalDataCodec *m_CurrentExternalDataCodec; ///< contains the instance of the last created external data codec.
+    bool m_IgnoreModified; ///< global variable which is used for determine if all the mementoes modified flag needa to be ignored.
+
 };
 
 /////////////////////////////////////////////////////////////
@@ -115,6 +132,10 @@ private:
 
 inline void mafSerializationManager::plugSerializer(const QString &schema, const QString &serializer_type) {
     m_SerializerHash.insert(schema, serializer_type);
+}
+
+inline bool mafSerializationManager::ignoreModified() {
+    return m_IgnoreModified;
 }
 
 } // mafSerialization
