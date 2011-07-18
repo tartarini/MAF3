@@ -52,8 +52,11 @@ signals:
     /// picked button pressed.
     void vmePickSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent * e);
     
+    /// signal for mouse press event
     void mousePressSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
+    /// signal for mouse release event
     void mouseReleaseSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
+    /// signal for mouse move event
     void mouseMoveSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
 
 protected:
@@ -67,9 +70,16 @@ private:
     /// Get key modifiers.
     void getModifiers(vtkRenderWindowInteractor* iren);
 
+    /// handle the event mouse press
     void mousePress(vtkRenderWindowInteractor* iren, QEvent *e);
+    /// handle the event mouse release
     void mouseRelease(vtkRenderWindowInteractor* iren, QEvent *e);
+    /// handle the event mouse move
     void mouseMove(vtkRenderWindowInteractor* iren, QEvent *e);
+    
+    /// check if a vtk actor is picked
+    void pickProp(vtkRenderWindowInteractor* iren, QEvent *e, mafCore::mafProxyInterface *proxy, double *posPicked);
+
     
     /// initialize connections
     void initializeConnections();
