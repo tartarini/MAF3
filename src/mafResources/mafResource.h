@@ -2,8 +2,8 @@
  *  mafResource.h
  *  mafResources
  *
- *  Created by Roberto Mucci - Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Created by Roberto Mucci - Paolo Quadrani - Daniele Giunchi on 30/12/09.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -19,6 +19,7 @@
 namespace mafResources {
 
 // Class forwarding list
+class mafInteractor;
 
 /**
 Class name: mafResource
@@ -85,10 +86,30 @@ public:
     undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
-    
-
     /// Initialize the resource.
     virtual bool initialize();
+    
+    /// Assign to the VME the interactor that will be used when user interact with VME.
+    void pushInteractor(mafInteractor *i);
+    
+    /// Return the interactor associated with the VME.
+    mafInteractor *activeInteractor();
+    
+    /// Return the top level interactor removing it from the stack.
+    mafInteractor *popInteractor();
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafResource();
+    
+    //bool m_DataLoaded; ///< Indicates if data has been loaded.
+    mafResource *m_Output; ///< Output of the resource.
+    
+    mutable QReadWriteLock *m_Lock; ///< Lock variable for thread safe access to VME.
+    
+private:
+    mafResourceList *m_InputList; ///< Resource input List
+    QStack<mafInteractor*> m_InteractorStack; ///< Stack of Interactor styles.
 
 signals:
     /// Start the execution of the resource.
@@ -99,6 +120,12 @@ signals:
 
     /// Terminate the execution.
     void terminateExecution();
+    
+    /// Notify the interactor is about to be detached.
+    void interactorDetach();
+    
+    /// Notify an interactor has been attached.
+    void interactorAttached();
 
 public slots:
     /// Slot called when an input is destroyed outside. It has to be removed automatically from the input list.
@@ -115,16 +142,6 @@ public slots:
     /// Terminate the execution.
     virtual void terminate();
 
-protected:
-    /// Object destructor.
-    /* virtual */ ~mafResource();
-
-    //bool m_DataLoaded; ///< Indicates if data has been loaded.
-    mafResource *m_Output; ///< Output of the resource.
-
-private:
-    mafResourceList *m_InputList; ///< Resource input List
-
 };
 
 /////////////////////////////////////////////////////////////
@@ -137,6 +154,15 @@ inline mafResourceList *mafResource::inputList() {
 
 inline mafResource *mafResource::output() {
     return m_Output;
+}
+
+inline mafInteractor *mafResource::popInteractor() {
+    return m_InteractorStack.pop();
+}
+
+inline mafInteractor *mafResource::activeInteractor() {
+    QReadLocker locker(m_Lock);
+    return m_InteractorStack.top();
 }
 
 

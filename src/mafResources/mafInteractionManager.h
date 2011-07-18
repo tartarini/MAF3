@@ -19,6 +19,7 @@ namespace mafResources {
 
 // Class forwarding list
 class mafVME;
+class mafInteractor;
 
 /**
 Class name: mafInteractionManager
@@ -67,6 +68,9 @@ private slots:
     
     /// called when a vme has been picked
     void vmePicked(double *pos, unsigned long modifiers, mafVME *vme, QEvent *e);
+    
+    /// called when a view is selected, used for initializing the default interactor.
+    void setActiveView(mafCore::mafObjectBase *obj);
 
 public:
     /// Return an instance of the Manager
@@ -85,7 +89,8 @@ private:
     /// initialize the manager.
     void initialize();
 
-    mafVME *m_VME;
+    mafVME *m_VME; ///< used for retrieve current interactor.
+    mafInteractor *m_DefaultInteractor; ///< represents the used interactor by default, without considering vme interaction.
     
 };
 

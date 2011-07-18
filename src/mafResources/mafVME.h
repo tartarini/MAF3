@@ -81,15 +81,6 @@ public:
     undo or copy/paste operations. The complete object save is instead needed for serialization purposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
-    /// Assign to the VME the interactor that will be used when user interact with VME.
-    void pushInteractor(mafInteractor *i);
-
-    /// Return the interactor associated with the VME.
-    mafInteractor *activeInteractor();
-
-    /// Return the top level interactor removing it from the stack.
-    mafInteractor *popInteractor();
-
     /// Allow to emit the detached signal, so to alert all the observers that the vme is not more inside the tree.
     void detatchFromTree();
 
@@ -136,12 +127,6 @@ signals:
     /// Notify the lock state for the current VME when the lock state change.
     void vmeLocked(int);
 
-    /// Notify the interactor is about to be detached.
-    void interactorDetach();
-
-    /// Notify an interactor has been attached.
-    void interactorAttached();
-
 public slots:
     /// Set the current timestamp for the VME.
     void setTimestamp(double t);
@@ -157,8 +142,6 @@ protected:
     void mementoDataSetMap(mafCore::mafMemento *memento, QMap<double, mafMementoDataSet*> &mementoMap);
 
 private:
-    mutable QReadWriteLock *m_Lock;     ///< Lock variable for thread safe access to VME.
-    QStack<mafInteractor*> m_InteractorStack; ///< Stack of Interactor styles.
     mafDataSetCollection *m_DataSetCollection; ///< Collection of timestamped data posed on homogeneous matrices.
     mafPipeData *m_DataPipe;            ///< Data pipe associated with the VME and used to elaborate new data.
     QHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
@@ -173,15 +156,6 @@ private:
 inline mafPipeData *mafVME::dataPipe() {
     QReadLocker locker(m_Lock);
     return m_DataPipe;
-}
-
-inline mafInteractor *mafVME::popInteractor() {
-    return m_InteractorStack.pop();
-}
-
-inline mafInteractor *mafVME::activeInteractor() {
-    QReadLocker locker(m_Lock);
-    return m_InteractorStack.top();
 }
 
 inline bool mafVME::canRead() const {
