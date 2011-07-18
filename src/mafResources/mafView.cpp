@@ -24,7 +24,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-mafView::mafView(const QString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL), m_VisualPipeHash(NULL), m_SelectedNode(NULL),m_PipeVisualSelection(NULL) {
+mafView::mafView(const QString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL), m_VisualPipeHash(NULL), m_SelectedNode(NULL),m_PipeVisualSelection(NULL), m_VisibleObjects(0) {
     m_SceneNodeList.clear();
 
     // Callbacks related to the VME creation
@@ -160,8 +160,11 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
 
     if(m_Scenegraph != NULL) {
         if (show) {
+            ++m_VisibleObjects;
             node->setVisualPipe(vp);
-        } 
+        } else {
+            --m_VisibleObjects;
+        }
         node->setVisibility(show);      
     }
 }

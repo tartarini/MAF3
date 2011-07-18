@@ -2,14 +2,15 @@
  *  mafResource.cpp
  *  mafResources
  *
- *  Created by Roberto Mucci - Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Created by Roberto Mucci - Paolo Quadrani - Daniele Giunchi on 30/12/09.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
 #include "mafResource.h"
+#include "mafInteractor.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -17,12 +18,20 @@ using namespace mafResources;
 
 mafResource::mafResource(const QString code_location) : mafObject(code_location), m_Output(NULL), m_InputList(NULL) {
     m_InputList = new mafResourceList;
+    m_Lock = new QReadWriteLock(QReadWriteLock::Recursive);
 }
 
 mafResource::~mafResource() {
     m_InputList->clear();
     delete m_InputList;
     m_InputList = NULL;
+    
+    while (!m_InteractorStack.isEmpty()) {
+        mafInteractor *inter = m_InteractorStack.pop();
+        inter->release();
+    }
+    
+    delete m_Lock;
 }
 
 bool mafResource::isObjectValid() const {
@@ -171,5 +180,14 @@ void mafResource::terminate() {
 
 void mafResource::execute() {
     emit executionEnded();
+}
+
+void mafResource::pushInteractor(mafInteractor *i) {
+    emit interactorDetach();
+    m_Lock->lockForWrite();
+    m_InteractorStack.push(i);
+    i->retain();
+    m_Lock->unlock();
+    emit interactorAttached();
 }
 

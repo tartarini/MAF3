@@ -93,6 +93,8 @@ protected:
     QList<mafSceneNode *> m_SceneNodeList; ///< variable useful for rapid iteration between mafTreeItem
     
     mafResources::mafPipeVisual *m_PipeVisualSelection; ///< variable with the pipe for vme selection
+    
+    unsigned int m_VisibleObjects;
 
 signals:
 

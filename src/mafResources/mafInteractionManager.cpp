@@ -11,6 +11,7 @@
 
 #include "mafInteractionManager.h"
 #include "mafVME.h"
+#include "mafView.h"
 #include "mafInteractor.h"
 
 using namespace mafCore;
@@ -25,7 +26,7 @@ mafInteractionManager* mafInteractionManager::instance() {
 void mafInteractionManager::shutdown() {
 }
 
-mafInteractionManager::mafInteractionManager(const QString code_location) : mafObjectBase(code_location), m_VME(NULL){
+mafInteractionManager::mafInteractionManager(const QString code_location) : mafObjectBase(code_location), m_VME(NULL), m_DefaultInteractor(NULL) {
     initialize();
 }
 
@@ -33,6 +34,7 @@ mafInteractionManager::~mafInteractionManager() {
 }
 
 void mafInteractionManager::initialize() {
+    mafRegisterLocalCallback("maf.local.resources.view.select", this, "setActiveView(mafCore::mafObjectBase *)")
 }
 
 void mafInteractionManager::mousePress(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e) {
@@ -98,4 +100,10 @@ void mafInteractionManager::mouseWheelBackward(unsigned long modifiers, QEvent *
 void mafInteractionManager::vmePicked(double *pos, unsigned long modifiers, mafVME *vme, QEvent *e) {
     m_VME = vme;
 }
+
+void mafInteractionManager::setActiveView(mafObjectBase *obj) {
+    mafView *v = qobject_cast<mafView *>(obj);
+    //m_DefaultInteractor = v->activeInteractor();
+}
+
 

@@ -23,7 +23,6 @@ using namespace mafEventBus;
 
 mafVME::mafVME(const QString code_location) : mafResource(code_location), m_DataSetCollection(NULL), m_DataPipe(NULL), m_CanRead(true), m_CanWrite(true) {
     m_UIFilename = "vmeGeneric.ui";
-    m_Lock = new QReadWriteLock(QReadWriteLock::Recursive);
     mafId time_set_id = mafIdProvider::instance()->idValue("TIME_SET");
     if(time_set_id != -1) {
         mafRegisterLocalCallback("TIME_SET", this, "setTimestamp(double)")
@@ -42,11 +41,6 @@ mafVME::~mafVME() {
     mafDEL(m_DataSetCollection);
     mafDEL(m_DataPipe);
 
-    while (!m_InteractorStack.isEmpty()) {
-        mafInteractor *inter = m_InteractorStack.pop();
-        inter->release();
-    }
-
     // delete all the created mementos for the dataset collection.
     QHash<mafMementoDataSet *, double>::iterator iter = m_MementoDataSetHash.begin();
     while(iter != m_MementoDataSetHash.end()) {
@@ -55,7 +49,6 @@ mafVME::~mafVME() {
         ++iter;
     }
     m_MementoDataSetHash.clear();
-    delete m_Lock;
 }
 
 bool mafVME::isEqual(const mafObjectBase *obj) const {
@@ -101,15 +94,6 @@ void mafVME::setTimestamp(double t) {
     setModified();
     m_Lock->unlock();
     execute();
-}
-
-void mafVME::pushInteractor(mafInteractor *i) {
-    emit interactorDetach();
-    m_Lock->lockForWrite();
-    m_InteractorStack.push(i);
-    i->retain();
-    m_Lock->unlock();
-    emit interactorAttached();
 }
 
 void mafVME::setDataPipe(const QString &pipe_type) {

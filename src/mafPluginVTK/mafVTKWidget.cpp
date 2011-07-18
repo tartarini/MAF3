@@ -189,13 +189,11 @@ void mafVTKWidget::getModifiers(vtkRenderWindowInteractor* iren) {
     }
 }
 
-
-void mafVTKWidget::mousePress(vtkRenderWindowInteractor* iren, QEvent *e) {
+void mafVTKWidget::pickProp(vtkRenderWindowInteractor* iren, QEvent *e, mafCore::mafProxyInterface *proxy, double *posPicked) {
     int mousePosX = 0;
     int mousePosY = 0;
-    double posPicked[3];
-    mafCore::mafProxy<vtkProp> actorPicked;
     vtkProp *actor = NULL;
+    mafCore::mafProxy<vtkProp> *actorPicked = mafProxyPointerTypeCast(vtkProp, proxy);
     
     iren->GetEventPosition(mousePosX, mousePosY);
     vtkSmartPointer<vtkCellPicker> cellPicker = vtkSmartPointer<vtkCellPicker>::New();
@@ -208,10 +206,17 @@ void mafVTKWidget::mousePress(vtkRenderWindowInteractor* iren, QEvent *e) {
             cellPicker->GetPickPosition(posPicked);
             vtkAssemblyPath *path = cellPicker->GetPath();
             actor = path->GetLastNode()->GetViewProp();
-            actorPicked = actor;
+            (*actorPicked) = actor;
         }
     }
+
+}
+
+void mafVTKWidget::mousePress(vtkRenderWindowInteractor* iren, QEvent *e) {
+    double posPicked[3];
+    mafCore::mafProxy<vtkProp> actorPicked;
     
+    pickProp(iren, e, &actorPicked, posPicked);
     emit mousePressSignal(posPicked, m_Modifiers, &actorPicked, e);
     
     // invoke appropriate VTK event
@@ -235,29 +240,10 @@ void mafVTKWidget::mousePress(vtkRenderWindowInteractor* iren, QEvent *e) {
     
 }
 void mafVTKWidget::mouseRelease(vtkRenderWindowInteractor* iren, QEvent *e) {
-    int mousePosX = 0;
-    int mousePosY = 0;
     double posPicked[3];
     mafCore::mafProxy<vtkProp> actorPicked;
-    vtkProp *actor = NULL;
     
-    iren->GetEventPosition(mousePosX, mousePosY);
-    vtkSmartPointer<vtkCellPicker> cellPicker = vtkSmartPointer<vtkCellPicker>::New();
-    vtkRendererCollection *rc = iren->GetRenderWindow()->GetRenderers();
-    vtkRenderer *r = NULL;
-    rc->InitTraversal();
-    while(r = rc->GetNextItem()) {
-        int picked = cellPicker->Pick(mousePosX,mousePosY,0,r);
-        if(picked) {
-            cellPicker->GetPickPosition(posPicked);
-            vtkAssemblyPath *path = cellPicker->GetPath();
-            actor = path->GetLastNode()->GetViewProp();
-            actorPicked = actor;
-        }
-    }
-    
-    
-    emit mouseReleaseSignal(posPicked, m_Modifiers, &actorPicked, e);
+    pickProp(iren, e, &actorPicked, posPicked);    emit mouseReleaseSignal(posPicked, m_Modifiers, &actorPicked, e);
     
     // invoke appropriate vtk event
     switch(((QMouseEvent *)e)->button()) {
@@ -279,29 +265,10 @@ void mafVTKWidget::mouseRelease(vtkRenderWindowInteractor* iren, QEvent *e) {
 
 }
 void mafVTKWidget::mouseMove(vtkRenderWindowInteractor* iren, QEvent *e) {
-    int mousePosX = 0;
-    int mousePosY = 0;
     double posPicked[3];
     mafCore::mafProxy<vtkProp> actorPicked;
-    vtkProp *actor = NULL;
     
-    iren->GetEventPosition(mousePosX, mousePosY);
-    vtkSmartPointer<vtkCellPicker> cellPicker = vtkSmartPointer<vtkCellPicker>::New();
-    vtkRendererCollection *rc = iren->GetRenderWindow()->GetRenderers();
-    vtkRenderer *r = NULL;
-    rc->InitTraversal();
-    while(r = rc->GetNextItem()) {
-        int picked = cellPicker->Pick(mousePosX,mousePosY,0,r);
-        if(picked) {
-            cellPicker->GetPickPosition(posPicked);
-            vtkAssemblyPath *path = cellPicker->GetPath();
-            actor = path->GetLastNode()->GetViewProp();
-            actorPicked = actor;
-        }
-    }
-    
-    
-    emit mouseMoveSignal(posPicked, m_Modifiers, &actorPicked, e);
+    pickProp(iren, e, &actorPicked, posPicked);    emit mouseMoveSignal(posPicked, m_Modifiers, &actorPicked, e);
     
     // invoke vtk event
     iren->InvokeEvent(vtkCommand::MouseMoveEvent, e); //Move into InteractorManager?

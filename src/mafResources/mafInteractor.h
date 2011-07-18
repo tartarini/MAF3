@@ -20,7 +20,8 @@
 namespace mafResources {
 
 // Class forwarding list
-
+class mafVME;
+    
 /**
 Class name: mafInteractor
 This class defines the base class for the interactor in MAF3.
@@ -80,10 +81,19 @@ public:
 
     /// Return the editing interaction style.
     mafCore::mafProxyInterfacePointer editingInteractionStyle();
+    
+    /// set the vme to the interactor
+    void setVME(mafVME *vme);
+    
+    /// set the graphic object to the interactor
+    void setGraphicObject(QObject *graphicObject);
 
 protected:
     /// Object destructor.
     /* virtual */ ~mafInteractor();
+    
+    mafVME *m_VME; ///< vme associated to interactor.
+    QObject *m_GraphicObject; ///< represents the graphic object for retrieve useful information.
 
 private:
     mafCore::mafProxyInterfacePointer m_DefaultInteractorStyle; ///< Default interaction style that will be associated with the mafVME.
@@ -101,7 +111,15 @@ inline mafCore::mafProxyInterfacePointer mafInteractor::defaultInteractionStyle(
 inline mafCore::mafProxyInterfacePointer mafInteractor::editingInteractionStyle() {
     return m_EditingInteractorStyle;
 }
+    
+inline void mafInteractor::setVME(mafVME *vme) {
+    m_VME = vme;
+}
 
+inline void mafInteractor::setGraphicObject(QObject *graphicObject) {
+    m_GraphicObject = graphicObject;
+}
+    
 } // namespace mafResources
 
 #endif // MAFINTERACTOR_H

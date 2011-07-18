@@ -12,6 +12,7 @@
 #include "mafPipeVisual.h"
 #include "mafVME.h"
 #include "mafInteractionManager.h"
+#include "mafInteractor.h"
 #include <mafProxyInterface.h>
 #include <mafEventBusManager.h>
 
@@ -45,6 +46,14 @@ bool mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::m
             argList.append(mafEventArgument(unsigned long, modifiers));
             argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
             emit vmePickedSignal(pickPos, modifiers, vme, e);
+            
+            //this code will enable interactor to use information regarding graphic objects and vme
+            mafInteractor *interactor = vme->activeInteractor();
+            if(interactor) {
+                interactor->setVME(vme);
+                interactor->setGraphicObject(m_GraphicObject);
+            }
+            
             return true;
         }
     }
