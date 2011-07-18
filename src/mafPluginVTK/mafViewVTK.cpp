@@ -22,6 +22,7 @@
 
 // vtk
 #include <vtkRenderWindow.h>
+#include <vtkRendererCollection.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkAssembly.h>
@@ -76,6 +77,10 @@ void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
 
 void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show) {
     Superclass::showSceneNode(node, show);
+    
+    if(m_VisibleObjects == 1) {
+        ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCamera();
+    }
 
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
 }
