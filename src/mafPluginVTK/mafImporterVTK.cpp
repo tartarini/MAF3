@@ -55,4 +55,3 @@ void mafImporterVTK::execute() {
     
     emit executionEnded();
 }
-
