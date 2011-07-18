@@ -31,9 +31,11 @@ bool mafOperationTransformVTK::acceptObject(mafCore::mafObjectBase *obj) {
 }
 
 bool mafOperationTransformVTK::initialize() {
-    Superclass::initialize();
+    bool result = Superclass::initialize();
     
     mafInteractorVTKTransform *interactor = mafNEW(mafPluginVTK::mafInteractorVTKTransform);
     mafVME *vme = qobject_cast<mafVME *>(input());
     vme->pushInteractor(interactor);
+    
+    return result;
 }
