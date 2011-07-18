@@ -18,6 +18,7 @@
 #include <vtkCompositeDataPipeline.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
+#include <vtkProperty.h>
 #include <vtkRendererCollection.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
@@ -37,6 +38,7 @@ mafPipeVisualVTKSelection::mafPipeVisualVTKSelection(const QString code_location
     m_Prop3D = vtkActor::New();
     m_Prop3D.setDestructionFunction(&vtkActor::Delete);
     vtkActor::SafeDownCast(m_Prop3D)->SetMapper(mapper);
+    vtkActor::SafeDownCast(m_Prop3D)->GetProperty()->SetLineWidth(3);
     mapper->Delete();
     m_Output = &m_Prop3D;
 }
