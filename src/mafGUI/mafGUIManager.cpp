@@ -882,7 +882,9 @@ QString mafGUIManager::strippedName(const QString &fullFileName) {
 }
 
 void mafGUIManager::save() {
+    bool enableSaveAs(false);
     if(m_CompleteFileName.isEmpty()) {
+        enableSaveAs = true;
         //open dialog for selecting the name of the session
         QFileDialog::Options options;
         // if (!native->isChecked())
@@ -912,15 +914,14 @@ void mafGUIManager::save() {
         m_CompleteFileName.append("/");
         m_CompleteFileName.append(fileNameWithExt);
 
-        //Store memento hierarchy
-        m_Logic->storeHierarchy(m_CompleteFileName);
-        qDebug() << m_CompleteFileName;
     } else {
         int index = m_CompleteFileName.lastIndexOf("/");
         m_LastPath = m_CompleteFileName.left(index);
-        m_Logic->storeHierarchy(m_CompleteFileName);
-        qDebug() << m_CompleteFileName;
     }
+    
+    //Store memento hierarchy
+    m_Logic->storeHierarchy(m_CompleteFileName, enableSaveAs);
+    qDebug() << m_CompleteFileName;
     emit updateApplicationName();
     updateRecentFileMenu(m_CompleteFileName);
 }
