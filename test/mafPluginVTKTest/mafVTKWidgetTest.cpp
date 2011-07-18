@@ -47,53 +47,17 @@ public:
 
     ~testInteractionManagerCustom();
 
-    double *position();
-
     int m_Counter; ///< Test variable;
     double m_Pos[3]; ///< Test variable;
-
-
+    
 public slots:
-    /// observer needed to receive the 'maf.local.resources.interaction.leftButtonPress' signal
-    void leftButtonPress(unsigned long modifiers);
-
-    /// observer needed to receive the 'maf.local.resources.interaction.leftButtonRelease' signal
-    void leftButtonRelease(unsigned long modifiers);
-
-    /// observer needed to receive the 'maf.local.resources.interaction.rightButtonRelease' signal
-    void rightButtonPress(unsigned long modifiers);
-
-    /// observer needed to receive the 'maf.local.resources.interaction.rightButtonRelease' signal
-    void rightButtonRelease(unsigned long modifiers);
-
-    /// observer needed to receive the 'maf.local.resources.interaction.middleButtonRelease' signal
-    void middleButtonPress(unsigned long modifiers);
-
-    /// observer needed to receive the 'maf.local.resources.interaction.middleButtonRelease' signal
-    void middleButtonRelease(unsigned long modifiers);
-
-    /// observer needed to receive the 'maf.local.resources.interaction.vmePick' signal
-    void vmePick(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *interf, QEvent *e);
-
-signals:
-    /// left button pressed.
-    void leftButtonPressSignal(unsigned long modifiers);
-
-    /// left button released.
-    void leftButtonReleaseSignal(unsigned long modifiers);
-
-    /// right button press.
-    void rightButtonPressSignal(unsigned long modifiers);
-
-    /// right button released.
-    void rightButtonReleaseSignal(unsigned long modifiers);
-
-    /// middle button press.
-    void middleButtonPressSignal(unsigned long modifiers);
-
-    /// middle button released.
-    void middleButtonReleaseSignal(unsigned long modifiers);
-
+    
+    /// called when left mouse button is pressed.
+    void mousePress(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
+    
+    /// called when left mouse button is released.
+    void mouseRelease(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
+    
 };
 
 testInteractionManagerCustom::~testInteractionManagerCustom() {
@@ -102,80 +66,24 @@ testInteractionManagerCustom::~testInteractionManagerCustom() {
 
 
 testInteractionManagerCustom::testInteractionManagerCustom(QString code_location) : mafObjectBase(code_location) {
-    mafRegisterLocalSignal("maf.local.resources.interaction.leftButtonPress", this, "leftButtonPressSignal(unsigned long)");
-    mafRegisterLocalCallback("maf.local.resources.interaction.leftButtonPress", this, "leftButtonPress(unsigned long)");
-
-    mafRegisterLocalSignal("maf.local.resources.interaction.leftButtonRelease", this, "leftButtonReleaseSignal(unsigned long)");
-    mafRegisterLocalCallback("maf.local.resources.interaction.leftButtonRelease", this, "leftButtonRelease(unsigned long)");
-
-    mafRegisterLocalSignal("maf.local.resources.interaction.rightButtonPress", this, "rightButtonPressSignal(unsigned long)");
-    mafRegisterLocalCallback("maf.local.resources.interaction.rightButtonPress", this, "rightButtonPress(unsigned long)");
-
-    mafRegisterLocalSignal("maf.local.resources.interaction.rightButtonRelease", this, "rightButtonReleaseSignal(unsigned long)");
-    mafRegisterLocalCallback("maf.local.resources.interaction.rightButtonRelease", this, "rightButtonRelease(unsigned long)");
-
-    mafRegisterLocalSignal("maf.local.resources.interaction.middleButtonPress", this, "middleButtonPressSignal(unsigned long)");
-    mafRegisterLocalCallback("maf.local.resources.interaction.middleButtonPress", this, "middleButtonPress(unsigned long)");
-
-    mafRegisterLocalSignal("maf.local.resources.interaction.middleButtonRelease", this, "middleButtonReleaseSignal(unsigned long)");
-    mafRegisterLocalCallback("maf.local.resources.interaction.middleButtonRelease", this, "middleButtonRelease(unsigned long)");
-
-    mafRegisterLocalCallback("maf.local.resources.interaction.vmePick", this, "vmePick(double *, unsigned long, mafCore::mafProxyInterface *,QEvent *)");
     m_Counter = 0;
 }
 
 
-void testInteractionManagerCustom::leftButtonPress(unsigned long modifiers) {
+void testInteractionManagerCustom::mousePress(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e) {
     Q_UNUSED(modifiers);
     ++m_Counter;
-    qDebug() << "leftButtonPress";
+    qDebug() << "mousePress";
+    
+    m_Pos[0] = pos[0];
+    m_Pos[1] = pos[1];
+    m_Pos[2] = pos[2];
 }
 
-void testInteractionManagerCustom::leftButtonRelease(unsigned long modifiers) {
+void testInteractionManagerCustom::mouseRelease(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e) {
     Q_UNUSED(modifiers);
-    ++m_Counter;
-    qDebug() << "leftButtonRelease";
-}
-
-void testInteractionManagerCustom::rightButtonPress(unsigned long modifiers) {
-    Q_UNUSED(modifiers);
-    ++m_Counter;
-    qDebug() << "rightButtonPress";
-}
-
-void testInteractionManagerCustom::rightButtonRelease(unsigned long modifiers) {
-    Q_UNUSED(modifiers);
-    ++m_Counter;
-    qDebug() << "rightButtonRelease";
-}
-
-void testInteractionManagerCustom::middleButtonPress(unsigned long modifiers) {
-    Q_UNUSED(modifiers);
-    ++m_Counter;
-    qDebug() << "middleButtonPress";
-}
-
-void testInteractionManagerCustom::middleButtonRelease(unsigned long modifiers) {
-    Q_UNUSED(modifiers);
-    ++m_Counter;
-    qDebug() << "middleButtonRelease";
-}
-
-void testInteractionManagerCustom::vmePick(double *pos, unsigned long modifiers,  mafCore::mafProxyInterface *interf, QEvent * e) {
-    Q_UNUSED(interf);
-
-     ++m_Counter;
-     m_Pos[0] = pos[0];
-     m_Pos[1] = pos[1];
-     m_Pos[2] = pos[2];
-
-     // check for ctrl and shift pressure
-     QVERIFY((modifiers&(1<<MAF_SHIFT_KEY))!=0);
-     QVERIFY((modifiers&(1<<MAF_CTRL_KEY))==0);
-     QVERIFY((modifiers&(1<<MAF_ALT_KEY))==0);
-}
-double *testInteractionManagerCustom::position() {
-    return m_Pos;
+    --m_Counter;
+    qDebug() << "mouseRelease";
 }
 
 
@@ -204,8 +112,8 @@ private slots:
     /// Initialize test variables
     void initTestCase() {
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
-        initializeGraphicResources();
         m_CustomManager = mafNEW(testInteractionManagerCustom);
+        initializeGraphicResources();
     }
 
     /// Cleanup test variables memory allocation.
@@ -251,6 +159,11 @@ void mafVTKWidgetTest::initializeGraphicResources() {
 
     m_VTKWidget = new mafVTKWidget();
     m_VTKWidget->setParent(w);
+    
+    bool result(false);
+    result = connect(m_VTKWidget, SIGNAL(mousePressSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), m_CustomManager, SLOT(mousePress(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
+    result = connect(m_VTKWidget, SIGNAL(mouseReleaseSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), m_CustomManager, SLOT(mouseRelease(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
+    result= connect(m_VTKWidget, SIGNAL(mouseMoveSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), m_CustomManager, SLOT(mouseMove(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
 
     m_Renderer = vtkRenderer::New();
     m_VTKWidget->GetRenderWindow()->AddRenderer(m_Renderer);
@@ -289,6 +202,7 @@ void mafVTKWidgetTest::mafVTKWidgetConnectionTest() {
     events.addMousePress(Qt::LeftButton, Qt::ShiftModifier);
     events.simulate(m_VTKWidget);
     //Send some interaction events by VTK (left Button press picking the actor)
+    QVERIFY(m_CustomManager->m_Counter == 1);
 
     //Create a sphere on the picking position
     vtkSmartPointer<vtkSphereSource> pickSphere = vtkSmartPointer<vtkSphereSource>::New();
@@ -297,19 +211,14 @@ void mafVTKWidgetTest::mafVTKWidgetConnectionTest() {
     pickSphereMapper->SetInputConnection(pickSphere->GetOutputPort());
     vtkSmartPointer<vtkActor> pickSphereActor = vtkSmartPointer<vtkActor>::New();
     pickSphereActor->SetMapper(pickSphereMapper);
-    double *pos;
-    pos = m_CustomManager->position();
 
     pickSphereActor->GetProperty()->SetColor(1,0,0);
-    pickSphere->SetCenter(m_CustomManager->position());
+    pickSphere->SetCenter(m_CustomManager->m_Pos);
     pickSphere->SetRadius(0.1);
     pickSphere->Update();
     m_Renderer->AddActor(pickSphereActor);
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(2000);
-
-    //Check if events has been captured by testInteractionManagerCustom
-    QVERIFY(m_CustomManager->m_Counter == 1);
 }
 
 void mafVTKWidgetTest::mafVTKWidgetLeftButtonReleaseTest() {
@@ -317,8 +226,7 @@ void mafVTKWidgetTest::mafVTKWidgetLeftButtonReleaseTest() {
     QPoint point = QPoint(1200000, 50);
     events.addMouseRelease(Qt::LeftButton, 0, point);
     events.simulate(m_VTKWidget);
-
-    QVERIFY(m_CustomManager->m_Counter == 2);
+    QVERIFY(m_CustomManager->m_Counter == 0);
 }
 
 void mafVTKWidgetTest::mafVTKWidgetRightButtonPressTest() {
@@ -326,8 +234,7 @@ void mafVTKWidgetTest::mafVTKWidgetRightButtonPressTest() {
     QPoint point = QPoint(1200000, 50);
     events.addMousePress(Qt::RightButton, 0, point);
     events.simulate(m_VTKWidget);
-
-    QVERIFY(m_CustomManager->m_Counter == 3);
+    QVERIFY(m_CustomManager->m_Counter == 1);
 }
 
 void mafVTKWidgetTest::mafVTKWidgetRightButtonReleaseTest() {
@@ -335,8 +242,7 @@ void mafVTKWidgetTest::mafVTKWidgetRightButtonReleaseTest() {
     QPoint point = QPoint(12000000, 50);
     events.addMouseRelease(Qt::RightButton, 0, point);
     events.simulate(m_VTKWidget);
-
-    QVERIFY(m_CustomManager->m_Counter == 4);
+    QVERIFY(m_CustomManager->m_Counter == 0);
 }
 
 void mafVTKWidgetTest::mafVTKWidgetMiddleButtonPressTest() {
@@ -344,8 +250,7 @@ void mafVTKWidgetTest::mafVTKWidgetMiddleButtonPressTest() {
     QPoint point = QPoint(1200000, 50);
     events.addMousePress(Qt::MidButton, 0, point);
     events.simulate(m_VTKWidget);
-
-    QVERIFY(m_CustomManager->m_Counter == 5);
+    QVERIFY(m_CustomManager->m_Counter == 1);
 }
 
 void mafVTKWidgetTest::mafVTKWidgetMiddleButtonReleaseTest() {
@@ -353,8 +258,7 @@ void mafVTKWidgetTest::mafVTKWidgetMiddleButtonReleaseTest() {
     QPoint point = QPoint(1200000, 50);
     events.addMouseRelease(Qt::MidButton, 0, point);
     events.simulate(m_VTKWidget);
-
-    QVERIFY(m_CustomManager->m_Counter == 6);
+    QVERIFY(m_CustomManager->m_Counter == 0);
 }
 
 MAF_REGISTER_TEST(mafVTKWidgetTest);

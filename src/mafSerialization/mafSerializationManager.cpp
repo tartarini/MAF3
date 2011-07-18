@@ -24,7 +24,7 @@ mafSerializationManager* mafSerializationManager::instance() {
     return &instanceSerializationManager;
 }
 
-mafSerializationManager::mafSerializationManager(const QString code_location) : mafObjectBase(code_location), m_CurrentExternalDataCodec(NULL) {
+mafSerializationManager::mafSerializationManager(const QString code_location) : mafObjectBase(code_location), m_CurrentExternalDataCodec(NULL), m_IgnoreModified(false) {
     mafSerializationRegistration::registerSerializationObjects();
 
     initializeConnections();
@@ -46,6 +46,8 @@ void mafSerializationManager::initializeConnections() {
     provider->createNewId("maf.local.serialization.plugCodec");
     provider->createNewId("maf.local.serialization.plugSerializer");
     provider->createNewId("maf.local.serialization.save");
+    provider->createNewId("maf.local.serialization.changeIgnoreModified"); ///< used before save for having Save As behaviour
+    provider->createNewId("maf.local.serialization.ignoreModified"); 
     provider->createNewId("maf.local.serialization.load");
     provider->createNewId("maf.local.serialization.export");
     provider->createNewId("maf.local.serialization.import");
@@ -54,6 +56,8 @@ void mafSerializationManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.serialization.plugCodec", this, "plugCodecInModule(const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.plugSerializer", this, "plugSerializerInModule(const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.save", this, "save(mafCore::mafMemento *, const QString &, const QString &)");
+    mafRegisterLocalSignal("maf.local.serialization.changeIgnoreModified", this, "setIgnoreModifiedSignal(bool)");
+    mafRegisterLocalSignal("maf.local.serialization.ignoreModified", this, "ignoreModifiedSignal()");
     mafRegisterLocalSignal("maf.local.serialization.load", this, "load(const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.export", this, "exportData(mafCore::mafProxyInterface *, const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.import", this, "importData(const QString &, const QString &)");
@@ -62,9 +66,15 @@ void mafSerializationManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.serialization.plugCodec", this, "plugCodec(const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.plugSerializer", this, "plugSerializer(const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.save", this, "saveMemento(mafCore::mafMemento *, const QString &, const QString &)");
+    mafRegisterLocalCallback("maf.local.serialization.changeIgnoreModified", this, "setIgnoreModified(bool)");
+    mafRegisterLocalCallback("maf.local.serialization.ignoreModified", this, "ignoreModified()");
     mafRegisterLocalCallback("maf.local.serialization.load", this, "loadMemento(const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.export", this, "exportExternalData(mafCore::mafProxyInterface *, const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.import", this, "importExternalData(const QString &, const QString &)");
+}
+
+void mafSerializationManager::setIgnoreModified(bool value) {
+    m_IgnoreModified = value;
 }
 
 void mafSerializationManager::saveMemento(mafMemento *memento, const QString &url, const QString &encode_type) {

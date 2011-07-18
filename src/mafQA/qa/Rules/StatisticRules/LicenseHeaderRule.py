@@ -37,6 +37,6 @@ class LicenseHeaderRule(AbstractRule):
       if(headerFound == True and licenseFound == True):
           return self.MarkedList
       
-      self.MarkedList.append("<item><file>"+(os.path.split(self.FullPathInputFile)[-2])+ "/" +(os.path.split(self.FullPathInputFile)[-1]) + "</file></item>")
+      self.MarkedList.append("<item><file>"+(os.path.split(self.FullPathInputFile)[-1]) + "</file></item>")
       return self.MarkedList
                   

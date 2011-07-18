@@ -88,7 +88,7 @@ public slots:
     mafCore::mafHierarchy *requestNewHierarchy();
 
     /// Save hierarchy in a memento
-    void storeHierarchy(QString fileName);
+    void storeHierarchy(QString fileName, bool enableSaveAs = false);
 
     /// Load hierarchy from a memento.
     void restoreHierarchy(QString fileName);

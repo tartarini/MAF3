@@ -20,6 +20,7 @@
 #include "mafGUIRegistration.h"
 #include "mafMdiSubWindow.h"
 #include "mafTreeWidget.h"
+#include "mafFindWidget.h"
 #include "mafTextEditWidget.h"
 
 #include <mafLogic.h>
@@ -109,6 +110,7 @@ private:
 
     mafGUI::mafGUIManager *m_GUIManager; ///< Manager for the GUI widgets creation and initialization.
     mafGUI::mafTreeWidget  *m_Tree; ///< Manage the resource's tree hierarchy.
+    mafGUI::mafFindWidget *m_FindWidget; ///< Widget able to find words in a text.
     mafGUI::mafDragDropModel  *m_Model; ///< Tree model of the mafResources with drag&Drop operation.
 
     mafGUI::mafTextEditWidget *m_LogWidget;

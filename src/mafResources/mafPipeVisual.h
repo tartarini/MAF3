@@ -71,7 +71,7 @@ private:
     
 signals:
     /// signal emitted when the pick already happened. The information will be forwarded to the Interaction Manager.
-    void vmePickedSignal(double *pickPos, unsigned long modifiers , mafVME *vme);
+    void vmePickedSignal(double *pickPos, unsigned long modifiers, mafVME *vme, QEvent *e);
     
 public slots:
     /// Set the visibility of its rendering scene.

@@ -185,7 +185,11 @@ void mafLogic::restoreSettings() {
 }
 
 
-void mafLogic::storeHierarchy(QString fileName) {
+void mafLogic::storeHierarchy(QString fileName, bool enableSaveAs) {
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(bool, enableSaveAs));
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.changeIgnoreModified", mafEventTypeLocal, &argList);
+    
     // Get hierarchy
     mafCore::mafHierarchyPointer hierarchy;
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
@@ -195,12 +199,19 @@ void mafLogic::storeHierarchy(QString fileName) {
     REQUIRE(mementoHiearachy != NULL);
 
     // Serialize memento to file
-    mafEventArgumentsList argList;
     QString encodeType = "XML";
+    argList.clear();
     argList.append(mafEventArgument(mafCore::mafMemento *, mementoHiearachy));
     argList.append(mafEventArgument(QString, fileName));
     argList.append(mafEventArgument(QString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal, &argList);
+    mafDEL(mementoHiearachy);
+    
+    // assign false to the ignore modified of the serialization manager
+    argList.clear();
+    argList.append(mafEventArgument(bool, false));
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.changeIgnoreModified", mafEventTypeLocal, &argList);
+    
 }
 
 void mafLogic::restoreHierarchy(QString fileName) {

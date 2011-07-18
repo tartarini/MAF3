@@ -32,112 +32,48 @@ class MAFRESOURCESSHARED_EXPORT mafInteractionManager : public mafCore::mafObjec
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
 
+signals:
+    /// signals for discover if a vme is picked
+    void vmePickSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
+    
+private slots:
+
+    /// called when left mouse button is pressed.
+    void mousePress(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
+
+    /// called when left mouse button is released.
+    void mouseRelease(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
+    
+    /// called when mouse is moving.
+    void mouseMove(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
+
+    /// mouse enters in the render window.
+    void enter(unsigned long modifiers, QEvent *e);
+
+    /// mouse exits from the render window.
+    void leave(unsigned long modifiers, QEvent *e);
+
+    /// press a key char.
+    void keyPress(QEvent *e);
+
+    /// release a key char.
+    void keyRelease(QEvent *e);
+    
+    /// called when the wheel is moving forward.
+    void mouseWheelForward(unsigned long modifiers, QEvent *e);
+
+    /// called when the wheel is moving backward.
+    void mouseWheelBackward(unsigned long modifiers, QEvent *e);
+    
+    /// called when a vme has been picked
+    void vmePicked(double *pos, unsigned long modifiers, mafVME *vme, QEvent *e);
+
 public:
     /// Return an instance of the Manager
     static mafInteractionManager *instance();
-
+    
     /// Destroy the singleton instance. To be called at the end of the application.
     void shutdown();
-
-signals:
-    /// left button pressed.
-    void leftButtonPressSignal(unsigned long modifier);
-
-    /// left button released.
-    void leftButtonReleaseSignal(unsigned long modifier);
-
-    /// middle button pressed.
-    void middleButtonPressSignal(unsigned long modifier);
-
-    /// middle button released.
-    void middleButtonReleaseSignal(unsigned long modifier);
-
-    /// right button pressed.
-    void rightButtonPressSignal(unsigned long modifier);
-
-    /// right button released.
-    void rightButtonReleaseSignal(unsigned long modifier);
-
-    /// enter..
-    void enterSignal();
-
-    /// leave..
-    void leaveSignal();
-
-    /// key pressed
-    void keyPressSignal();
-
-    /// key released
-    void keyReleaseSignal();
-
-    /// char..
-    void charSignal();
-
-    /// mouse moved.
-    void mouseMoveSignal(unsigned long modifier);
-
-    /// mouse wheel moved forward.
-    void mouseWheelForwardSignal(unsigned long modifier);
-
-    /// mouse wheel moved backward
-    void mouseWheelBackwardSignal(unsigned long modifier);
-
-    /// pick..
-    void pickSignal();
-
-
-private slots:
-    /// called when a new VME has been selected.
-    void vmeSelected(mafVME *vme);
-
-    /// called when left mouse button is pressed.
-    void leftButtonPress(unsigned long modifier);
-
-    /// called when left mouse button is released.
-    void leftButtonRelease(unsigned long modifier);
-
-    /// called when middle mouse button is pressed.
-    void middleButtonPress(unsigned long modifier);
-
-    /// called when middle mouse button is released.
-    void middleButtonRelease(unsigned long modifier);
-
-    /// called when right mouse button is pressed.
-    void rightButtonPress(unsigned long modifier);
-
-    /// called when right mouse button is released.
-    void rightButtonRelease(unsigned long modifier);
-
-    /// called when left mouse button is pressed.
-    void enter();
-
-    /// called when left mouse button is pressed.
-    void leave();
-
-    /// called when left mouse button is pressed.
-    void keyPress();
-
-    /// called when left mouse button is pressed.
-    void keyRelease();
-
-    /// called when left mouse button is pressed.
-    void keyChar();
-
-    /// called when left mouse button is pressed.
-    void mouseMove(unsigned long modifier);
-
-    /// called when left mouse button is pressed.
-    void mouseWheelForward(unsigned long modifier);
-
-    /// called when left mouse button is pressed.
-    void mouseWheelBackward(unsigned long modifier);
-
-    /// called when left mouse button is pressed.
-    void pick();
-    
-    /// called when a vme has been picked
-    void vmePicked(double *pos, unsigned long modifiers, mafVME *vme);
-
 
 private:
     /// Object constructor.
@@ -146,8 +82,11 @@ private:
     /// Object destructor
     /*virtual*/ ~mafInteractionManager();
 
-    /// Create IDs and connect signals with slots for manage interaction's events.
-    void initializeConnections();
+    /// initialize the manager.
+    void initialize();
+
+    mafVME *m_VME;
+    
 };
 
 } // namespace mafResources

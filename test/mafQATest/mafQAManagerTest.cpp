@@ -12,30 +12,8 @@
 #include <mafTestSuite.h>
 #include <mafQAManager.h>
 
-#ifdef WIN32
-#define TEST_SCRIPT_NAME "dir"
-    #ifdef QT_DEBUG
-        #define TEST_LIBRARY_NAME "mafPluginTest.dll"
-    #else
-        #define TEST_LIBRARY_NAME "mafPluginTest.dll"
-    #endif
-#else
-    #define TEST_SCRIPT_NAME "whoami"
-    #ifdef __APPLE__
-        #ifdef QT_DEBUG
-            #define TEST_LIBRARY_NAME "mafPluginTest.dylib"
-        #else
-            #define TEST_LIBRARY_NAME "mafPluginTest.dylib"
-        #endif
-    #else
-        #ifdef QT_DEBUG
-            #define TEST_LIBRARY_NAME "mafPluginTest.so"
-        #else
-            #define TEST_LIBRARY_NAME "mafPluginTest.so"
-        #endif
-    #endif
-#endif
-
+#define TEST_SCRIPT_NAME "python"
+#define TEST_LIBRARY_NAME "mafPluginTest.mafplugin"
 
 using namespace mafCore;
 using namespace mafQA;
@@ -162,15 +140,26 @@ void mafQAManagerTest::runPythonScriptTest() {
 }
 
 void mafQAManagerTest::runScriptTest() {
-    /*qDebug() << "Asynchronous:";
+    //create temporary script
+    QFile file("temporaryPythonScript.py");
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        return;
+    }
+    QTextStream out(&file);
+    out << "import os" << "\n";
+    out << "print \"Test Python Script\"" << "\n";
+
+    file.close();
+
+    //TODO: these tests don't work
+    qDebug() << "Asynchronous:";
     QStringList argList;
+    argList.append("temporaryPythonScript.py");
     int res = m_QAManager->runScript(TEST_SCRIPT_NAME,argList, false);
-    QCOMPARE(res, 0);*/
+    QCOMPARE(res, 0);
 
     //launch sync
     qDebug() << "Synchronous:";
-    QStringList argList;
-    int res;
     res = m_QAManager->runScript(TEST_SCRIPT_NAME,argList, true);
     QCOMPARE(res, 0);
 }

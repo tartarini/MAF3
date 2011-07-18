@@ -29,8 +29,8 @@ int main(int argc, char *argv[]) {
     mafRegisterObjectAndAcceptBind(mafOperationSimpleApp);
 
     // Plug the object's information into the framework
-    logic->plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
-    logic->plugObject("mafResources::mafOperation", "mafResources::mafOperationTransform", "Transform");
+    //logic->plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
+    //logic->plugObject("mafResources::mafOperation", "mafResources::mafOperationTransform", "Transform");
 
     //@TODO need to handle different views of the same type
 /*

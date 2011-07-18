@@ -51,7 +51,13 @@ public slots:
 
     /// find text.
     void find(QString textToFind);
+
+    /// set match case falg.
+    void setMatchCase(bool matchCase);
     
+    /// set match whole word falg.
+    void setMatchWhole(bool matchWhole);
+
 signals:
     /// Signal needed to update the text into the Text Widget.
     void updateText(const QString text);
@@ -62,6 +68,8 @@ private:
 
     QTextEdit *m_TextEditor; ///< text editor widget in which browse or edit text.
     QSyntaxHighlighter *m_Highlighter; ///< syntax highlighter to apply on text editor.
+    bool m_MatchCase; ///< Flag for match case finding.
+    bool m_MatchWhole; ///< Flag for match whole word finding.
 
     // GUARDARE l'esempio qcompleter!!
 

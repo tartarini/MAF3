@@ -71,7 +71,7 @@ void mafVTKInteractorPicker::initializeConnections() {
 void mafVTKInteractorPicker::vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj) {
     //Check if this is the interactor of the vme picked.
     mafResources::mafVME *vme = qobject_cast<mafResources::mafVME*>(obj);
-    if(vme->interactor() != this) {
+    if(vme->activeInteractor() != this) {
         return;
     }
 
