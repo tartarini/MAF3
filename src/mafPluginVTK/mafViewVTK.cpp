@@ -60,7 +60,9 @@ void mafViewVTK::create() {
     m_PipeVisualSelection->setGraphicObject(m_RenderWidget);
     
     // push camera interactor
-    mafInteractor *interactor = mafNEW(mafPluginVTK::mafInteractorVTKCamera);
+    mafInteractorVTKCamera *interactor = mafNEW(mafPluginVTK::mafInteractorVTKCamera);
+    vtkRenderWindowInteractor *iren = ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->GetInteractor();
+    interactor->setInteractorVTK(iren);
     pushInteractor(interactor);
     mafDEL(interactor);
 }

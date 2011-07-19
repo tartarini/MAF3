@@ -75,8 +75,6 @@ void mafVTKWidget::mousePressEvent(QMouseEvent* e) {
                                    e->type() == QEvent::MouseButtonDblClick ? 1 : 0);
 
     this->getModifiers(iren);
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
     // Check if a VME has been picked
     this->mousePress(iren, e);
@@ -99,8 +97,6 @@ void mafVTKWidget::mouseReleaseEvent(QMouseEvent* e) {
                                    (e->modifiers() & Qt::ShiftModifier ) > 0 ? 1 : 0);
 
     this->getModifiers(iren);
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(unsigned long, m_Modifiers));
 
     // Check if a VME has been picked
     this->mouseRelease(iren, e);
@@ -123,14 +119,10 @@ void mafVTKWidget::mouseMoveEvent(QMouseEvent* e) {
                                    (e->modifiers() & Qt::ShiftModifier ) > 0 ? 1 : 0);
     
     this->getModifiers(iren);
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(unsigned long, m_Modifiers));
     
     // Check if a VME has been picked
     this->mouseMove(iren, e);
-    
 }
-
 
 void mafVTKWidget::wheelEvent(QWheelEvent* e) {
     vtkRenderWindowInteractor* iren = NULL;
@@ -154,7 +146,7 @@ void mafVTKWidget::wheelEvent(QWheelEvent* e) {
 
     //wheel event signal need to be created
 
-    // invoke vtk event
+    // invoke VTK event
     // if delta is positive, it is a forward wheel event
     if(e->delta() > 0) {
         iren->InvokeEvent(vtkCommand::MouseWheelForwardEvent, e); //Move into InteractorManager?
@@ -165,27 +157,27 @@ void mafVTKWidget::wheelEvent(QWheelEvent* e) {
 
 void mafVTKWidget::getModifiers(vtkRenderWindowInteractor* iren) {
     //check "shift" modifier.
-    int flag = 1<<MAF_SHIFT_KEY;
+    int flag = 1 << MAF_SHIFT_KEY;
     if (iren->GetShiftKey()) {
-        m_Modifiers=m_Modifiers|flag;
+        m_Modifiers = m_Modifiers|flag;
     } else {
-        m_Modifiers=m_Modifiers&(~flag);
+        m_Modifiers = m_Modifiers&(~flag);
     }
 
     //check "ctrl" modifier.
-    flag = 1<<MAF_CTRL_KEY;
+    flag = 1 << MAF_CTRL_KEY;
     if (iren->GetControlKey()) {
-        m_Modifiers=m_Modifiers|flag;
+        m_Modifiers = m_Modifiers|flag;
     } else {
-        m_Modifiers=m_Modifiers&(~flag);
+        m_Modifiers = m_Modifiers&(~flag);
     }
 
     //check "alt" modifier.
-    flag = 1<<MAF_ALT_KEY;
+    flag = 1 << MAF_ALT_KEY;
     if (iren->GetAltKey()) {
-        m_Modifiers=m_Modifiers|flag;
+        m_Modifiers = m_Modifiers|flag;
     } else {
-        m_Modifiers=m_Modifiers&(~flag);
+        m_Modifiers = m_Modifiers&(~flag);
     }
 }
 
@@ -209,7 +201,6 @@ void mafVTKWidget::pickProp(vtkRenderWindowInteractor* iren, QEvent *e, mafCore:
             (*actorPicked) = actor;
         }
     }
-
 }
 
 void mafVTKWidget::mousePress(vtkRenderWindowInteractor* iren, QEvent *e) {
@@ -220,7 +211,7 @@ void mafVTKWidget::mousePress(vtkRenderWindowInteractor* iren, QEvent *e) {
     emit mousePressSignal(posPicked, m_Modifiers, &actorPicked, e);
     
     // invoke appropriate VTK event
-    switch(((QMouseEvent *)e)->button()) {
+    /*switch(((QMouseEvent *)e)->button()) {
         case Qt::LeftButton:
             iren->InvokeEvent(vtkCommand::LeftButtonPressEvent, e); //Move into InteractorManager?
             break;
@@ -235,7 +226,7 @@ void mafVTKWidget::mousePress(vtkRenderWindowInteractor* iren, QEvent *e) {
             
         default:
             break;
-    }
+    }*/
 
     
 }
@@ -246,7 +237,7 @@ void mafVTKWidget::mouseRelease(vtkRenderWindowInteractor* iren, QEvent *e) {
     pickProp(iren, e, &actorPicked, posPicked);    emit mouseReleaseSignal(posPicked, m_Modifiers, &actorPicked, e);
     
     // invoke appropriate vtk event
-    switch(((QMouseEvent *)e)->button()) {
+    /*switch(((QMouseEvent *)e)->button()) {
         case Qt::LeftButton:
             iren->InvokeEvent(vtkCommand::LeftButtonReleaseEvent, e); //Move into InteractorManager?
             break;
@@ -261,7 +252,7 @@ void mafVTKWidget::mouseRelease(vtkRenderWindowInteractor* iren, QEvent *e) {
             
         default:
             break;
-    }
+    }*/
 
 }
 void mafVTKWidget::mouseMove(vtkRenderWindowInteractor* iren, QEvent *e) {
@@ -271,7 +262,7 @@ void mafVTKWidget::mouseMove(vtkRenderWindowInteractor* iren, QEvent *e) {
     pickProp(iren, e, &actorPicked, posPicked);    emit mouseMoveSignal(posPicked, m_Modifiers, &actorPicked, e);
     
     // invoke vtk event
-    iren->InvokeEvent(vtkCommand::MouseMoveEvent, e); //Move into InteractorManager?
+//    iren->InvokeEvent(vtkCommand::MouseMoveEvent, e); //Move into InteractorManager?
 
 }
 
