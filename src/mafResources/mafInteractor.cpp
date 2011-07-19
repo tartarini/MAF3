@@ -14,11 +14,11 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafInteractor::mafInteractor(const QString code_location) : mafObjectBase(code_location), m_DefaultInteractorStyle(NULL), m_EditingInteractorStyle(NULL) {
+mafInteractor::mafInteractor(const QString code_location) : mafObjectBase(code_location)/*, m_DefaultInteractorStyle(NULL), m_EditingInteractorStyle(NULL)*/ {
 }
 
-mafInteractor::mafInteractor(mafProxyInterfacePointer default_is, mafProxyInterfacePointer edit_is, const QString code_location) : mafObjectBase(code_location), m_DefaultInteractorStyle(default_is), m_EditingInteractorStyle(edit_is) {
-}
+/*mafInteractor::mafInteractor(mafProxyInterfacePointer default_is, mafProxyInterfacePointer edit_is, const QString code_location) : mafObjectBase(code_location), m_DefaultInteractorStyle(default_is), m_EditingInteractorStyle(edit_is) {
+}*/
 
 mafInteractor::~mafInteractor() {
 }
@@ -59,7 +59,7 @@ void mafInteractor::mouseWheelBackward(unsigned long modifiers, QEvent *e) {
     
 }
 
-void mafInteractor::setDefaultInteractionStyle(mafProxyInterfacePointer is) {
+/*void mafInteractor::setDefaultInteractionStyle(mafProxyInterfacePointer is) {
     if(is == m_DefaultInteractorStyle) {
         return;
     }
@@ -72,3 +72,4 @@ void mafInteractor::setEditingInteractionStyle(mafProxyInterfacePointer is) {
     }
     m_EditingInteractorStyle = is;
 }
+*/

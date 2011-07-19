@@ -68,19 +68,19 @@ public:
     mafInteractor(const QString code_location = "");
 
     /// Object constructor
-    mafInteractor(mafCore::mafProxyInterfacePointer default_is, mafCore::mafProxyInterfacePointer edit_is = NULL, const QString code_location = "");
+    //mafInteractor(mafCore::mafProxyInterfacePointer default_is, mafCore::mafProxyInterfacePointer edit_is = NULL, const QString code_location = "");
 
     /// Allow to assign the default interaction style.
-    void setDefaultInteractionStyle(mafCore::mafProxyInterfacePointer is);
+//    void setDefaultInteractionStyle(mafCore::mafProxyInterfacePointer is);
 
     /// Return the default interaction style.
-    mafCore::mafProxyInterfacePointer defaultInteractionStyle();
+//    mafCore::mafProxyInterfacePointer defaultInteractionStyle();
 
     /// Allow to assign the editing interaction style.
-    void setEditingInteractionStyle(mafCore::mafProxyInterfacePointer is);
+//    void setEditingInteractionStyle(mafCore::mafProxyInterfacePointer is);
 
     /// Return the editing interaction style.
-    mafCore::mafProxyInterfacePointer editingInteractionStyle();
+//    mafCore::mafProxyInterfacePointer editingInteractionStyle();
     
     /// set the vme to the interactor
     void setVME(mafVME *vme);
@@ -96,21 +96,21 @@ protected:
     QObject *m_GraphicObject; ///< represents the graphic object for retrieve useful information.
 
 private:
-    mafCore::mafProxyInterfacePointer m_DefaultInteractorStyle; ///< Default interaction style that will be associated with the mafVME.
-    mafCore::mafProxyInterfacePointer m_EditingInteractorStyle; ///< Interaction style associated to the mafVME and used during the editing operations of the data inside the mafVME itself.
+//    mafCore::mafProxyInterfacePointer m_DefaultInteractorStyle; ///< Default interaction style that will be associated with the mafVME.
+//    mafCore::mafProxyInterfacePointer m_EditingInteractorStyle; ///< Interaction style associated to the mafVME and used during the editing operations of the data inside the mafVME itself.
 };
 
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline mafCore::mafProxyInterfacePointer mafInteractor::defaultInteractionStyle() {
+/*inline mafCore::mafProxyInterfacePointer mafInteractor::defaultInteractionStyle() {
     return m_DefaultInteractorStyle;
 }
 
 inline mafCore::mafProxyInterfacePointer mafInteractor::editingInteractionStyle() {
     return m_EditingInteractorStyle;
-}
+}*/
     
 inline void mafInteractor::setVME(mafVME *vme) {
     m_VME = vme;

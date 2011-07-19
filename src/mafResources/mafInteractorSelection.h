@@ -40,7 +40,7 @@ public:
     mafInteractorSelection(const QString code_location = "");
 
     /// Object constructor
-    mafInteractorSelection(mafCore::mafProxyInterfacePointer default_is, mafCore::mafProxyInterfacePointer edit_is = NULL, const QString code_location = "");
+//    mafInteractorSelection(mafCore::mafProxyInterfacePointer default_is, mafCore::mafProxyInterfacePointer edit_is = NULL, const QString code_location = "");
     
 protected:
     /// Object destructor.
