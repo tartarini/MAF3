@@ -156,10 +156,6 @@ inline mafResource *mafResource::output() {
     return m_Output;
 }
 
-inline mafInteractor *mafResource::popInteractor() {
-    return m_InteractorStack.pop();
-}
-
 inline mafInteractor *mafResource::activeInteractor() {
     QReadLocker locker(m_Lock);
     return m_InteractorStack.top();

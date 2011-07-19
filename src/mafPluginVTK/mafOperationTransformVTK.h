@@ -44,6 +44,9 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafOperationTransformVTK();
 
+    /// Terminate the operation's execution.
+    /*virtual*/ void terminated();
+
 private:
 };
 
