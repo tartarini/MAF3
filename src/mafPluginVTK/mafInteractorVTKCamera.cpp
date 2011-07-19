@@ -30,7 +30,7 @@ mafInteractorVTKCamera::mafInteractorVTKCamera(const QString code_location) : ma
 }
 
 mafInteractorVTKCamera::~mafInteractorVTKCamera() {
-    mafDEL(m_RenderWindowInteractor);
+    m_RenderWindowInteractor->Delete();
 }
 
 void mafInteractorVTKCamera::mousePress(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
