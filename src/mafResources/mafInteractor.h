@@ -87,6 +87,9 @@ public:
     
     /// set the graphic object to the interactor
     void setGraphicObject(QObject *graphicObject);
+    
+    /// request if is a blocking interactor
+    bool isBlocking();
 
 protected:
     /// Object destructor.
@@ -94,6 +97,7 @@ protected:
     
     mafVME *m_VME; ///< vme associated to interactor.
     QObject *m_GraphicObject; ///< represents the graphic object for retrieve useful information.
+    bool m_Blocking; ///< means if the interactor block all default interactors or not. (default is false)
 
 private:
 //    mafCore::mafProxyInterfacePointer m_DefaultInteractorStyle; ///< Default interaction style that will be associated with the mafVME.
@@ -118,6 +122,10 @@ inline void mafInteractor::setVME(mafVME *vme) {
 
 inline void mafInteractor::setGraphicObject(QObject *graphicObject) {
     m_GraphicObject = graphicObject;
+}
+    
+inline bool mafInteractor::isBlocking() {
+    return m_Blocking;
 }
     
 } // namespace mafResources

@@ -14,7 +14,7 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafInteractor::mafInteractor(const QString code_location) : mafObjectBase(code_location)/*, m_DefaultInteractorStyle(NULL), m_EditingInteractorStyle(NULL)*/ {
+mafInteractor::mafInteractor(const QString code_location) : mafObjectBase(code_location), m_Blocking(false)/*, m_DefaultInteractorStyle(NULL), m_EditingInteractorStyle(NULL)*/ {
 }
 
 /*mafInteractor::mafInteractor(mafProxyInterfacePointer default_is, mafProxyInterfacePointer edit_is, const QString code_location) : mafObjectBase(code_location), m_DefaultInteractorStyle(default_is), m_EditingInteractorStyle(edit_is) {
