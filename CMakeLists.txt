@@ -74,32 +74,29 @@ if(MAF_PLUGINVTK)
   mafDependentOption(VTK_MAF "Build vtkMAF module." ON MAF_PLUGINVTK ON)
 endif(MAF_PLUGINVTK)
 
-### tests and examples dependencies 
-if(BUILD_TEST_SUITE OR BUILD_EXAMPLES)
+### examples dependencies 
+if(BUILD_EXAMPLES)
     set( MAF_TIME_SPACE ON ) 
-    mafDependentOption(MAF_TIME_SPACE "Build Test module for mafTimeSpace." ON BUILD_EXAMPLES ON)
+    mafDependentOption(MAF_TIME_SPACE "Build module for mafTimeSpace." ON BUILD_EXAMPLES ON)
     
     set( MAF_SERIALIZATION ON ) 
-    mafDependentOption(MAF_SERIALIZATION "Build Test module for mafSerialization." ON BUILD_EXAMPLES ON)
+    mafDependentOption(MAF_SERIALIZATION "Build module for mafSerialization." ON BUILD_EXAMPLES ON)
     
     set( MAF_RESOURCES ON ) 
-    mafDependentOption(MAF_RESOURCES "Build Test module for mafResources." ON BUILD_EXAMPLES ON)
+    mafDependentOption(MAF_RESOURCES "Build module for mafResources." ON BUILD_EXAMPLES ON)
     
     set( MAF_PLUGINVTK ON ) 
-    mafDependentOption(MAF_PLUGINVTK "Build Test module for mafPluginVTK." ON BUILD_EXAMPLES ON)
+    mafDependentOption(MAF_PLUGINVTK "Build module for mafPluginVTK." ON BUILD_EXAMPLES ON)
    
     set( VTK_MAF ON ) 
-    mafDependentOption(VTK_MAF "Build Test module for vtkMAF." ON MAF_PLUGINVTK ON)
-   
-    set( MAF_RESOURCES ON ) 
-    mafDependentOption(MAF_RESOURCES "Build mafResources module." ON BUILD_EXAMPLES ON)
+    mafDependentOption(VTK_MAF "Build module for vtkMAF." ON BUILD_EXAMPLES ON)
     
     set( MAF_APPLICATION_LOGIC ON ) 
-    mafDependentOption(MAF_APPLICATION_LOGIC "Build Test module for mafApplicationLogic." ON BUILD_EXAMPLES ON)
+    mafDependentOption(MAF_APPLICATION_LOGIC "Build module for mafApplicationLogic." ON BUILD_EXAMPLES ON)
     
     set( MAF_QTGUI ON ) 
     mafDependentOption(MAF_QTGUI "Build Test module for mafGUI." ON BUILD_EXAMPLES ON)
-endif(BUILD_TEST_SUITE OR BUILD_EXAMPLES)
+endif(BUILD_EXAMPLES)
 
 if(BUILD_QA)
     set( BUILD_DOCUMENTATION ON ) 
