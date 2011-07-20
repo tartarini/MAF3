@@ -42,10 +42,10 @@ void mafInteractionManager::mousePress(double *pos, unsigned long modifiers, maf
     
     if(m_VME && m_VME->activeInteractor()) {
         m_VME->activeInteractor()->mousePress(pos, modifiers, m_VME, e);
-        if(!m_VME->activeInteractor()->isBlocking()) {
+        if(!m_VME->activeInteractor()->isBlocking() && m_DefaultInteractor) {
             m_DefaultInteractor->mousePress(pos, modifiers, m_VME, e);
         }
-    } else {
+    } else if (m_DefaultInteractor) {
         m_DefaultInteractor->mousePress(pos, modifiers, m_VME, e);
     }
 }
@@ -53,10 +53,10 @@ void mafInteractionManager::mousePress(double *pos, unsigned long modifiers, maf
 void mafInteractionManager::mouseRelease(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e) {
     if(m_VME && m_VME->activeInteractor()) {
         m_VME->activeInteractor()->mouseRelease(pos, modifiers, m_VME, e);
-        if(!m_VME->activeInteractor()->isBlocking()) {
+        if(!m_VME->activeInteractor()->isBlocking() && m_DefaultInteractor) {
             m_DefaultInteractor->mouseRelease(pos, modifiers, m_VME, e);
         }
-    } else {
+    } else if (m_DefaultInteractor) {
         m_DefaultInteractor->mouseRelease(pos, modifiers, m_VME, e);
     }
     
@@ -67,10 +67,10 @@ void mafInteractionManager::mouseRelease(double *pos, unsigned long modifiers, m
 void mafInteractionManager::mouseMove(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e) {
     if(m_VME && m_VME->activeInteractor()) {
         m_VME->activeInteractor()->mouseMove(pos, modifiers, m_VME, e);
-        if(!m_VME->activeInteractor()->isBlocking()) {
+        if(!m_VME->activeInteractor()->isBlocking() && m_DefaultInteractor) {
             m_DefaultInteractor->mouseMove(pos, modifiers, m_VME, e);
         }
-    } else {
+    } else if (m_DefaultInteractor) {
         m_DefaultInteractor->mouseMove(pos, modifiers, m_VME, e);
     }
 }
@@ -78,10 +78,10 @@ void mafInteractionManager::mouseMove(double *pos, unsigned long modifiers, mafC
 void mafInteractionManager::enter(unsigned long modifiers, QEvent *e) {
     if(m_VME && m_VME->activeInteractor()) {
         m_VME->activeInteractor()->enter(modifiers, e);
-        if(!m_VME->activeInteractor()->isBlocking()) {
+        if(!m_VME->activeInteractor()->isBlocking() && m_DefaultInteractor) {
             m_DefaultInteractor->enter(modifiers, e);
         }
-    } else {
+    } else if (m_DefaultInteractor) {
         m_DefaultInteractor->enter(modifiers, e);
     }
 }
@@ -89,10 +89,10 @@ void mafInteractionManager::enter(unsigned long modifiers, QEvent *e) {
 void mafInteractionManager::leave(unsigned long modifiers, QEvent *e) {
     if(m_VME && m_VME->activeInteractor()) {
         m_VME->activeInteractor()->leave(modifiers, e);
-        if(!m_VME->activeInteractor()->isBlocking()) {
+        if(!m_VME->activeInteractor()->isBlocking() && m_DefaultInteractor) {
             m_DefaultInteractor->leave(modifiers, e);
         }
-    } else {
+    } else if (m_DefaultInteractor) {
         m_DefaultInteractor->leave(modifiers, e);
     }
 }
@@ -100,10 +100,10 @@ void mafInteractionManager::leave(unsigned long modifiers, QEvent *e) {
 void mafInteractionManager::keyPress(QEvent *e) {
     if(m_VME && m_VME->activeInteractor()) {
         m_VME->activeInteractor()->keyPress(e);
-        if(!m_VME->activeInteractor()->isBlocking()) {
+        if(!m_VME->activeInteractor()->isBlocking() && m_DefaultInteractor) {
             m_DefaultInteractor->keyPress(e);
         }
-    } else {
+    } else if (m_DefaultInteractor) {
         m_DefaultInteractor->keyPress(e);
     }
 }
@@ -111,10 +111,10 @@ void mafInteractionManager::keyPress(QEvent *e) {
 void mafInteractionManager::keyRelease(QEvent *e) {
     if(m_VME && m_VME->activeInteractor()) {
         m_VME->activeInteractor()->keyRelease(e);
-        if(!m_VME->activeInteractor()->isBlocking()) {
+        if(!m_VME->activeInteractor()->isBlocking() && m_DefaultInteractor) {
             m_DefaultInteractor->keyRelease(e);
         }
-    } else {
+    } else if (m_DefaultInteractor) {
         m_DefaultInteractor->keyRelease(e);
     }
 }
@@ -123,10 +123,10 @@ void mafInteractionManager::keyRelease(QEvent *e) {
 void mafInteractionManager::mouseWheelForward(unsigned long modifiers, QEvent *e) {
     if(m_VME && m_VME->activeInteractor()) {
         m_VME->activeInteractor()->mouseWheelForward(modifiers, e);
-        if(!m_VME->activeInteractor()->isBlocking()) {
+        if(!m_VME->activeInteractor()->isBlocking() && m_DefaultInteractor) {
             m_DefaultInteractor->mouseWheelForward(modifiers, e);
         }
-    } else {
+    } else if (m_DefaultInteractor) {
         m_DefaultInteractor->mouseWheelForward(modifiers, e);
     }
 }
@@ -134,10 +134,10 @@ void mafInteractionManager::mouseWheelForward(unsigned long modifiers, QEvent *e
 void mafInteractionManager::mouseWheelBackward(unsigned long modifiers, QEvent *e) {
     if(m_VME && m_VME->activeInteractor()) {
         m_VME->activeInteractor()->mouseWheelBackward(modifiers, e);
-        if(!m_VME->activeInteractor()->isBlocking()) {
+        if(!m_VME->activeInteractor()->isBlocking() && m_DefaultInteractor) {
             m_DefaultInteractor->mouseWheelBackward(modifiers, e);
         }
-    } else {
+    } else if (m_DefaultInteractor) {
         m_DefaultInteractor->mouseWheelBackward(modifiers, e);
     }
 }
