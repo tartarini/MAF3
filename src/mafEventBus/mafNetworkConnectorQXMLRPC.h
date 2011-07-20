@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef mafNetworkConnectorQXMLRPC_H
-#define mafNetworkConnectorQXMLRPC_H
+#ifndef MAFNETWORKCONNECTORQXMLRPC_H
+#define MAFNETWORKCONNECTORQXMLRPC_H
 
 // include list
 #include "mafNetworkConnector.h"
@@ -95,4 +95,4 @@ private:
 Q_DECLARE_METATYPE(xmlrpc::Variant);
 
 
-#endif // mafNetworkConnectorQXMLRPC_H
+#endif // MAFNETWORKCONNECTORQXMLRPC_H
