@@ -72,6 +72,9 @@ private slots:
     /// called when a view is selected, used for initializing the default interactor.
     void setActiveView(mafCore::mafObjectBase *obj);
 
+    /// called when select a vme
+    void vmeSelect(mafCore::mafObjectBase *obj);
+    
 public:
     /// Return an instance of the Manager
     static mafInteractionManager *instance();

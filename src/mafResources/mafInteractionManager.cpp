@@ -35,6 +35,9 @@ mafInteractionManager::~mafInteractionManager() {
 
 void mafInteractionManager::initialize() {
     mafRegisterLocalCallback("maf.local.resources.view.select", this, "setActiveView(mafCore::mafObjectBase *)")
+    // VME selection callback.
+    // Callback related to the VME selection
+    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)")
 }
 
 void mafInteractionManager::mousePress(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e) {
@@ -149,6 +152,10 @@ void mafInteractionManager::vmePicked(double *pos, unsigned long modifiers, mafV
 void mafInteractionManager::setActiveView(mafObjectBase *obj) {
     mafView *v = qobject_cast<mafView *>(obj);
     m_DefaultInteractor = v->activeInteractor();
+}
+
+void mafInteractionManager::vmeSelect(mafObjectBase *node) {
+    m_VME = (mafVME *) node;
 }
 
 
