@@ -13,7 +13,7 @@ class InlineDetectionRule(AbstractRule):
         members = self.dom.getElementsByTagName('memberdef')
         for member in members:
           attrs = member.attributes
-          if(attrs["kind"].value  == "function" and attrs["inline"].value  == "yes"):
+          if(attrs["kind"].value  == self.ParameterList[0] and attrs[self.ParameterList[1]].value  == "yes"):
             functionName = member.getElementsByTagName('name')[0].firstChild.nodeValue
             #self.MarkedList.append((str(className))+"-> "+functionName+ "<-")
             self.MarkedList.append("<item>\n"\
