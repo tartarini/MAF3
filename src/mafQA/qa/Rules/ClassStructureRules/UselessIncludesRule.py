@@ -14,6 +14,10 @@ class UselessIncludesRule(AbstractRule):
         baseClassName = ""
         try:
             baseClassName = self.dom.getElementsByTagName('compounddef')[0].getElementsByTagName('basecompoundref')[0].firstChild.nodeValue
+            try:
+                baseClassName = baseClassName[baseClassName.index("::")+2:]
+            except:
+                pass
         except:
             pass
         refInclude = self.dom.getElementsByTagName('compounddef')[0].getElementsByTagName('includes')[0].attributes["refid"].value
