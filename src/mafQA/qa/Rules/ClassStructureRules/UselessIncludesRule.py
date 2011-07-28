@@ -57,7 +57,7 @@ class UselessIncludesRule(AbstractRule):
                 #check type
                 typeVariable = None
                 try:
-                  typeVariable = member.getElementsByTagName('type')[0].firstChild.nodeValue
+                  typeVariable = member.getElementsByTagName('definition')[0].firstChild.nodeValue
                 except:
                     pass
                 #check
