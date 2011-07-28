@@ -36,6 +36,15 @@ bool mafOperationTransformVTK::initialize() {
     mafInteractorVTKTransform *interactor = mafNEW(mafPluginVTK::mafInteractorVTKTransform);
     mafVME *vme = qobject_cast<mafVME *>(input());
     vme->pushInteractor(interactor);
+    mafDEL(interactor);
     
     return result;
 }
+
+void mafOperationTransformVTK::terminated() {
+    mafVME *vme = qobject_cast<mafVME *>(input());
+    vme->popInteractor();
+    
+    Superclass::terminated();
+}
+

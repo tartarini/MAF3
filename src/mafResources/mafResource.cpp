@@ -27,8 +27,7 @@ mafResource::~mafResource() {
     m_InputList = NULL;
     
     while (!m_InteractorStack.isEmpty()) {
-        mafInteractor *inter = m_InteractorStack.pop();
-        inter->release();
+        popInteractor();
     }
     
     delete m_Lock;
@@ -190,4 +189,11 @@ void mafResource::pushInteractor(mafInteractor *i) {
     m_Lock->unlock();
     emit interactorAttached();
 }
+
+mafInteractor *mafResource::popInteractor() {
+    mafInteractor *interactor = m_InteractorStack.pop();
+    mafDEL(interactor);
+    return interactor;
+}
+
 

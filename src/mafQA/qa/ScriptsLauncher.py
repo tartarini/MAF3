@@ -43,9 +43,10 @@ def run(param):
         linesRule = r.readlines()
         #  print linesRule
   
-        sourceDir = str(linesRule[1]).rsplit("=")[1]
+        sourceDir = eval(str(linesRule[1]).rsplit("=")[1])
   
         command = python + line + " " + sourceDir + " " + resultDir + "/"
+        print command
         os.system(command.replace("\"","").replace("\r", "").replace("\n", ""))
 
     print "QA SUCCESSFUL"

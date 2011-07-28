@@ -16,11 +16,11 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafInteractorSelection::mafInteractorSelection(const QString code_location) : mafInteractor(NULL, NULL, code_location) {
+mafInteractorSelection::mafInteractorSelection(const QString code_location) : mafInteractor(code_location) {
 }
 
-mafInteractorSelection::mafInteractorSelection(mafProxyInterfacePointer default_is, mafProxyInterfacePointer edit_is, const QString code_location) : mafInteractor(default_is, edit_is, code_location) {
-}
+/*mafInteractorSelection::mafInteractorSelection(mafProxyInterfacePointer default_is, mafProxyInterfacePointer edit_is, const QString code_location) : mafInteractor(default_is, edit_is, code_location) {
+}*/
 
 mafInteractorSelection::~mafInteractorSelection() {
 }

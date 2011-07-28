@@ -14,6 +14,7 @@
 #include "mafVTKWidget.h"
 #include "mafSceneNodeVTK.h"
 #include "mafPipeVisualVTKSelection.h"
+#include "mafInteractorVTKCamera.h"
 
 #include <mafPipeVisual.h>
 #include <mafVME.h>
@@ -57,6 +58,13 @@ void mafViewVTK::create() {
     //create the instance for selection pipe.
     m_PipeVisualSelection = mafNEW(mafPluginVTK::mafPipeVisualVTKSelection);
     m_PipeVisualSelection->setGraphicObject(m_RenderWidget);
+    
+    // push camera interactor
+    mafInteractorVTKCamera *interactor = mafNEW(mafPluginVTK::mafInteractorVTKCamera);
+    vtkRenderWindowInteractor *iren = ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->GetInteractor();
+    interactor->setInteractorVTK(iren);
+    pushInteractor(interactor);
+    mafDEL(interactor);
 }
 
 mafSceneNode *mafViewVTK::createSceneNode(mafVME *vme) {

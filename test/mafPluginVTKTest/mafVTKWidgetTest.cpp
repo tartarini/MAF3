@@ -29,6 +29,7 @@
 #include <QVTKWidget.h>
 #include <QMainWindow>
 
+using namespace mafEventBus;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
@@ -111,6 +112,18 @@ private slots:
 
     /// Initialize test variables
     void initTestCase() {
+        
+        //retrieve root
+        mafObject *root;
+        QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
+        
+        //select
+        mafEventArgumentsList argList;
+        argList.append(mafEventArgument(mafCore::mafObjectBase *, root));
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+
+        
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
         m_CustomManager = mafNEW(testInteractionManagerCustom);
         initializeGraphicResources();

@@ -68,6 +68,17 @@ private slots:
         initializeGraphicResources();
 
         m_Picker = mafNEW(mafPluginVTK::mafVTKInteractorPicker);
+        
+        //retrieve root
+        mafObject *root;
+        QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
+        
+        //select
+        mafEventArgumentsList argList;
+        argList.append(mafEventArgument(mafCore::mafObjectBase *, root));
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+
     }
 
     /// Cleanup test variables memory allocation.

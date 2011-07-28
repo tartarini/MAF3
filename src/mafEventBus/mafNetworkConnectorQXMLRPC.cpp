@@ -40,7 +40,6 @@ mafNetworkConnectorQXMLRPC::~mafNetworkConnectorQXMLRPC() {
     }
 }
 
-//retrieve an instance of the object
 mafNetworkConnector *mafNetworkConnectorQXMLRPC::clone() {
     mafNetworkConnectorQXMLRPC *copy = new mafNetworkConnectorQXMLRPC();
     return copy;

@@ -44,4 +44,6 @@ mafMacroInstallProject()
 
 
 ######### TEMPORARY CODE ######### qa toolkit will be extracted from MAF
-add_subdirectory(qa)
+if(BUILD_QA)
+    add_subdirectory(qa)
+endif(BUILD_QA)

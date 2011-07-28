@@ -25,6 +25,7 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 
 mafInteractorVTKTransform::mafInteractorVTKTransform(const QString code_location) : mafInteractor(code_location), m_PositionInitialized(false) {
+    m_Blocking = true;
 }
 
 mafInteractorVTKTransform::~mafInteractorVTKTransform(){
