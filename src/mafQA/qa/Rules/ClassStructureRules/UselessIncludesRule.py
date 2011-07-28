@@ -48,7 +48,11 @@ class UselessIncludesRule(AbstractRule):
               attrs = member.attributes
               if(attrs["kind"].value  == "variable"):
                 #check type
-                typeVariable = member.getElementsByTagName('type')[0].firstChild.nodeValue
+                typeVariable = None
+                try:
+                  typeVariable = member.getElementsByTagName('type')[0].firstChild.nodeValue
+                except:
+                    pass
                 #check
                 if(typeVariable != None and item in typeVariable and not((item + "*") in typeVariable) and not((item + " *") in typeVariable)):
                   #include correct! exit from for loop
