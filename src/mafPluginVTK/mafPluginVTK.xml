@@ -6,6 +6,7 @@
 	<plug classtype="mafPluginVTK::mafViewVTK" baseclass="mafResources::mafView" label="VTK view"></plug>
 	<plug classtype="mafPluginVTK::mafOperationParametricSurface" baseclass="mafResources::mafOperation" label="Create Parametric Surface"></plug>
 	<plug classtype="mafPluginVTK::mafOperationTransformVTK" baseclass="mafResources::mafOperation" label="Transform VTK Data"></plug>
+    <plug classtype="mafPluginVTK::mafOperationVTKAddLandmark" baseclass="mafResources::mafOperation" label="Add VTK Landmark"></plug>
 	<plug classtype="mafPluginVTK::mafImporterVTK" baseclass="mafResources::mafImporter" label="Import VTK data"></plug>
 	<plug classtype="mafPluginVTK::mafExporterVTK" baseclass="mafResources::mafExporter" label="Export VTK data"></plug>
 	<plug classtype="mafPluginVTK::mafDataBoundaryAlgorithmVTK" baseclass="mafResources::mafDataBoundaryAlgorithm" label="VTK BoundaryAlgorithm"></plug>
