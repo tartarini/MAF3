@@ -139,6 +139,11 @@ void mafVMEManager::vmeRemove(mafObjectBase *vme) {
     vme_to_remove->detatchFromTree();
 //    removeVME(vme_to_remove);
 
+    // select root.
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase*, m_Root));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+
     m_VMEHierarchy->removeHierarchyNode(vme);
 }
 
