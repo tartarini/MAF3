@@ -73,6 +73,9 @@ public slots:
     /// Button to remove last inserted new landmark.
     void on_removeButton_released();
 
+    /// Set landmark radius.
+    void on_ALRadius_valueChanged(double radius);
+
 protected:
     /// Terminate the operation's execution.
     /*virtual*/ void terminated();
@@ -98,6 +101,7 @@ private:
     void setScalarValue(vtkPolyData *data, double scalarValue);
 
     double *m_Center; ///< point in which the pick happens.
+    double m_LandmarkRadius; ///< Landamrk radius.
     QList<mafResources::mafVME*> m_VMEList;
     mafVTKParametricSurfaceSphere *m_ParametricSphere; ///< Parametric surface used as marker.
     QList<mafCore::mafProxy<vtkAlgorithmOutput>> m_LandmarkContaineList; ///< List of container of landmark data.

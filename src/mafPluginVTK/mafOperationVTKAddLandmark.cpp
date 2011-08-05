@@ -23,14 +23,13 @@
 #include <vtkSphereSource.h>
 
 #define FIXED_MARKER_COLOR  0
-#define TMP_MARKER_COLOR    1
 
 using namespace mafPluginVTK;
 using namespace mafResources;
 using namespace mafEventBus;
 using namespace mafCore;
 
-mafOperationVTKAddLandmark::mafOperationVTKAddLandmark(const QString code_location) : mafOperation(code_location), m_Center(NULL), m_ParametricSphere(NULL) {
+mafOperationVTKAddLandmark::mafOperationVTKAddLandmark(const QString code_location) : mafOperation(code_location), m_Center(NULL), m_LandmarkRadius(0.5), m_ParametricSphere(NULL) {
     //set multithreaded to off
     m_MultiThreaded = false;
 
@@ -183,7 +182,7 @@ void mafOperationVTKAddLandmark::internalUpdate()
     if (m_ParametricSphere == NULL){
         //If doesn't exist yet, create a new parametric surface to be used as marker.
         m_ParametricSphere = mafNEW(mafPluginVTK::mafVTKParametricSurfaceSphere);
-        m_ParametricSphere->setProperty("sphereRadius", 0.5);
+        m_ParametricSphere->setProperty("sphereRadius", m_LandmarkRadius);
 
         //vtkAlgorithmOutputs should not be destroyed, so I put them in a list.
         mafCore::mafProxy<vtkAlgorithmOutput> landmarkContainer;
@@ -211,8 +210,6 @@ void mafOperationVTKAddLandmark::internalUpdate()
         vtkAlgorithm *producer = (*dataSet)->GetProducer();
         vtkDataObject *dataObject = producer->GetOutputDataObject(0);
         vtkPolyData* vtkData = vtkPolyData::SafeDownCast(dataObject);
-
-        this->setScalarValue(vtkData, TMP_MARKER_COLOR);
 
         // Select input VME before add VME.
         mafVME *vme = qobject_cast<mafVME *>(input());
@@ -243,14 +240,6 @@ void mafOperationVTKAddLandmark::internalUpdate()
         //Move or set the center of the marker.
         m_ParametricSphere->setCenter(m_Center);
         m_ParametricSphere->updateSurface();
-
-        /*vtkPolyData *data = NULL;
-        int n = m_AppendData->GetNumberOfInputConnections(0);
-        data = m_AppendData->GetInput(n-1);
-        if(data != NULL){
-            //Change color of the fixed marker.
-            this->setScalarValue(data, TMP_MARKER_COLOR);
-        }*/
     }
     m_VMEList.last()->dataSetCollection()->updateData();
 }
@@ -273,5 +262,13 @@ void mafOperationVTKAddLandmark::on_removeButton_released() {
         //remove last landmark
         mafDEL(m_ParametricSphere);
         removeLandmark(m_VMEList.count()-1);
+    }
+}
+
+void mafOperationVTKAddLandmark::on_ALRadius_valueChanged(double radius){
+    m_LandmarkRadius = radius;
+    if (m_ParametricSphere != NULL) {
+        m_ParametricSphere->setProperty("sphereRadius", m_LandmarkRadius);
+        m_ParametricSphere->updateSurface();
     }
 }
