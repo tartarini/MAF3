@@ -64,13 +64,15 @@ void mafOperationParametricSurface::visualizeParametricSurface() {
     m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
     m_VME->dataSetCollection()->setPose(0., 0., 0.);
     m_VME->dataSetCollection()->setOrientation(0., 0., 0.);
-    m_VME->setProperty("visibility", true);
+    //m_VME->setProperty("visibility", true);
     this->m_Output = m_VME;
 
     //Notify vme add
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
-mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+
+    //TODO: Visualize surface as it is added to the tree.
 }
 
 void mafOperationParametricSurface::initializeParametricSurfaces(){
