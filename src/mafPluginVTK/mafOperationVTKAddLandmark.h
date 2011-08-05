@@ -51,15 +51,6 @@ signals:
     /// Signal for VME picked.
     void vmePickedSignal(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj);
 
-    /// Store last picking point and allow to set a new picking point
-    void nextPickSignal();
-
-    /// Remove last picking position stored
-    void unDoPickSignal();
-    
-    /// Remove last picking position stored
-    void OKSignal();
-
 public slots:
     /// Execute the operation.
     /*virtual*/ void execute();
@@ -76,6 +67,12 @@ public slots:
     /// Set operation parameters.
     /*virtual*/ void setParameters(QVariantList parameters);
 
+    /// Button to insert a new landmark.
+    void on_nextButton_released();
+
+    /// Button to remove last inserted new landmark.
+    void on_removeButton_released();
+
 protected:
     /// Terminate the operation's execution.
     /*virtual*/ void terminated();
@@ -84,8 +81,8 @@ protected:
     /* virtual */~mafOperationVTKAddLandmark();
 
 private slots:
-    /// Called when a new pick is required.
-    void nextPick();
+    /// Called when a new insert landmark is required.
+    void fixLandmark();
 
 private:
     /// Initialize connection between signals and slots.
@@ -94,17 +91,16 @@ private:
     /// Create chosen surface.
     void internalUpdate();
 
+    /// Remove landmark.
+    void removeLandmark(int index);
+
     /// Set scalar value to input vtkPolyData.
     void setScalarValue(vtkPolyData *data, double scalarValue);
 
     double *m_Center; ///< point in which the pick happens.
-    vtkAppendPolyData *m_AppendData; /// Bunch of surfaces.
-    QList<double*> m_PointList;
     QList<mafResources::mafVME*> m_VMEList;
     mafVTKParametricSurfaceSphere *m_ParametricSphere; ///< Parametric surface used as marker.
-    mafResources::mafVME *m_VME; ///< Output VME;
-    mafResources::mafDataSet *m_DataSet; ///< Dataset of output VME;
-    mafCore::mafProxy<vtkAlgorithmOutput> m_LandmarkContainer; ///< output of the operation.
+    QList<mafCore::mafProxy<vtkAlgorithmOutput>> m_LandmarkContaineList; ///< List of container of landmark data.
 
 };
 
