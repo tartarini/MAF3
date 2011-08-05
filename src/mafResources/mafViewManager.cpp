@@ -41,7 +41,7 @@ mafViewManager::~mafViewManager() {
     mafUnregisterLocalCallback("maf.local.resources.view.create", this, "createView(QString)")    
     mafUnregisterLocalCallback("maf.local.resources.view.destroy", this, "destroyView(mafCore::mafObjectBase *)")
     mafUnregisterLocalCallback("maf.local.resources.view.select", this, "selectView(mafCore::mafObjectBase *)")
-    //mafUnregisterLocalCallback("maf.local.resources.view.selected", this, "selectedView()")
+    mafUnregisterLocalCallback("maf.local.resources.view.selected", this, "selectedView()")
     mafUnregisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShow(mafCore::mafObjectBase *, bool)")
     mafUnregisterLocalCallback("maf.local.logic.status.viewmanager.store", this, "createMemento()")
     mafUnregisterLocalCallback("maf.local.logic.status.viewmanager.restore", this, "setMemento(mafCore::mafMemento *, bool)")
