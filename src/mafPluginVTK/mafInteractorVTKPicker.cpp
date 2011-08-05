@@ -26,7 +26,9 @@ mafInteractorVTKPicker::mafInteractorVTKPicker(const QString code_location) : ma
 
 
 mafInteractorVTKPicker::~mafInteractorVTKPicker() {
-    m_CellPicker->Delete();
+    if (m_CellPicker) {
+        m_CellPicker->Delete();
+    }
 }
 
 void mafInteractorVTKPicker::mousePress(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
@@ -58,7 +60,6 @@ void mafInteractorVTKPicker::mousePress(double *pickPos, unsigned long modifiers
                 m_CellPicker->GetPickPosition(posPicked);
             }
         }
-
         emit vmePickedVTKSignal(posPicked, modifiers, obj, e);
     }
 }
