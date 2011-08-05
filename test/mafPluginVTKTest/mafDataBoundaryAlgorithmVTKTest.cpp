@@ -56,6 +56,7 @@ private slots:
         m_DataSource->SetXLength(5);
         m_DataSource->SetYLength(3);
         m_DataSource->SetZLength(8);
+        m_DataSource->Update();
 
         m_DataSourceContainer.setExternalCodecType("mafPluginVTK::mafExternalDataCodecVTK");
         m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
@@ -70,7 +71,6 @@ private slots:
         m_DataSetCube->setBoundaryAlgorithm(boundaryAlgorithm);
         m_DataSetCube->setDataValue(&m_DataSourceContainer);
         m_DataSetCube->setPoseMatrix(newMatrix);
-
     }
 
     /// Cleanup test variables memory allocation.
@@ -93,12 +93,12 @@ private:
 void mafDataBoundaryAlgorithmVTKTest::calculateBoundaryTest() {
     mafProxy<vtkAlgorithmOutput> *boundingBox = mafProxyPointerTypeCast(vtkAlgorithmOutput, m_DataSetCube->dataBoundary());
 
+    vtkAlgorithm *producer = (*boundingBox)->GetProducer();
+    vtkDataObject *dataObject = producer->GetOutputDataObject(0);
+    vtkDataSet* vtkData = vtkDataSet::SafeDownCast(dataObject);
 
-    vtkPolyDataMapper *box = vtkPolyDataMapper::New();
-    box->SetInputConnection(*boundingBox);
-    box->Update();
     double boundsOut[6];
-    box->GetBounds(boundsOut);
+    vtkData->GetBounds(boundsOut);
 
     double boundsIn[6] = {-2.5,2.5,-1.5,1.5,-4,4};
     QCOMPARE(boundsIn[0], boundsOut[0]);
@@ -107,7 +107,7 @@ void mafDataBoundaryAlgorithmVTKTest::calculateBoundaryTest() {
     QCOMPARE(boundsIn[3], boundsOut[3]);
     QCOMPARE(boundsIn[4], boundsOut[4]);
     QCOMPARE(boundsIn[5], boundsOut[5]);
-    box->Delete();
+    //box->Delete();
 }
 
 
