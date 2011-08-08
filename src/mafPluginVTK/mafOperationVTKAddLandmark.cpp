@@ -120,27 +120,31 @@ void mafOperationVTKAddLandmark::execute() {
 
 void mafOperationVTKAddLandmark::terminated() {
     if (m_Status == mafOperationStatusCanceled || m_Status == mafOperationStatusAborted) {
-        int i = 0;
-        for (;i < m_VMEList.count(); i++) {
-            mafEventArgumentsList argList;
-            argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VMEList.at(i)));
-            mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.remove", mafEventTypeLocal, &argList);
-        }
+        unDo();
     }
     mafVME *vme = qobject_cast<mafVME *>(input());
     vme->popInteractor();
 }
 
 void mafOperationVTKAddLandmark::unDo() {
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Output));
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.remove", mafEventTypeLocal, &argList);
+    int i = 0;
+    for (;i < m_VMEList.count(); i++) {
+        mafVME *vme = m_VMEList.at(i);
+        mafEventArgumentsList argList;
+        argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.remove", mafEventTypeLocal, &argList);
+    }
 }
 
 void mafOperationVTKAddLandmark::reDo() {
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Output));
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+    int i = 0;
+    for (;i < m_VMEList.count(); i++) {
+        mafVME *vme = m_VMEList.at(i);
+        mafEventArgumentsList argList;
+        argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+    }
+    
 }
 
 void mafOperationVTKAddLandmark::setParameters(QVariantList parameters) {
