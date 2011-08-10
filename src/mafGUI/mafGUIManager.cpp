@@ -18,7 +18,6 @@
 #include "mafGUIApplicationSettingsDialog.h"
 #include "mafTreeItemDelegate.h"
 #include "mafTreeItemSceneNodeDelegate.h"
-
 #include "mafOperationWidget.h"
 
 #include <mafObjectBase.h>
@@ -40,6 +39,9 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     mafCore::mafMessageHandler::instance()->setActiveLogger(m_Logger);
 
     mafRegisterLocalSignal("maf.local.gui.new", this, "newWorkinSessioneSignal()");
+    //mafRegisterLocalSignal("maf.local.gui.VMECheckState", this, "setVMECheckStateSignal(mafCore::mafObjectBase *, bool)");
+
+
     mafRegisterLocalCallback("maf.local.gui.new", this, "newWorkingSession()");
 
     mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)")
@@ -54,6 +56,8 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     // ViewManager's callback.
     mafRegisterLocalCallback("maf.local.resources.view.select", this, "viewSelected(mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.view.noneViews", this, "viewDestroyed()");
+    mafRegisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "setVMECheckState(mafCore::mafObjectBase *, bool)");
+
 
     m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
     connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*)), this, SLOT(showGui(mafCore::mafProxyInterface*)));
@@ -830,6 +834,18 @@ void mafGUIManager::selectVME(QModelIndex index) {
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventBus::mafEventTypeLocal, &argList);
 }
 
+void mafGUIManager::setVMECheckState(mafCore::mafObjectBase *vme, bool visible) {
+    if(m_TreeWidget) {
+        if (vme) {
+            QModelIndex index = m_Model->indexFromData(vme);
+            mafTreeItem *item = (mafTreeItem *)m_Model->itemFromIndex(index);
+            if (item->isCheckable() && item->checkState() != visible) {
+                item->setStatus(mafItemStatusCheckable, visible);
+            }
+        }
+    }
+}
+
 void mafGUIManager::chooseFileDialog(const QString title, const QString start_dir, const QString wildcard) {
     QString fileName = QFileDialog::getOpenFileName(m_MainWindow, title, start_dir, wildcard);
 }
@@ -985,3 +1001,4 @@ QObject *mafGUIManager::dataObject(QModelIndex index) {
     
     return obj;
 }
+
