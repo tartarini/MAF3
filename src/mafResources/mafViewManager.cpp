@@ -174,6 +174,12 @@ void mafViewManager::selectView(mafCore::mafObjectBase *view) {
 void mafViewManager::sceneNodeShow(mafCore::mafObjectBase *node, bool show) {
     mafSceneNode *node_to_show = NULL;
     node_to_show = qobject_cast<mafResources::mafSceneNode *>(node);
+
+    if(node_to_show == NULL && m_SelectedView) {
+        //If node is not a sceneNode, check if its a VME and get the corrsponding sceneNode
+        mafVME *vme_to_show = qobject_cast<mafResources::mafVME *>(node);
+        node_to_show = m_SelectedView->sceneNodeFromVme(vme_to_show);
+    }
     
     if(node_to_show != NULL) {
         if(m_SelectedView) {
