@@ -36,7 +36,7 @@ mafOperationVTKAddLandmark::mafOperationVTKAddLandmark(const QString code_locati
     m_UIFilename = "mafOperationAddLandmark.ui";
     setObjectName("mafOperationAddLandmark");
     m_VMEList.clear();
-    m_LandmarkContaineList.clear();
+    m_LandmarkContainerList.clear();
 }
 
 bool mafOperationVTKAddLandmark::initialize() {
@@ -193,14 +193,14 @@ void mafOperationVTKAddLandmark::internalUpdate()
         landmarkContainer.setExternalCodecType("VTK");
         landmarkContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         landmarkContainer = m_ParametricSphere->output();
-        m_LandmarkContaineList.append(landmarkContainer);
+        m_LandmarkContainerList.append(landmarkContainer);
 
         //Insert data into VME
         mafVME *landmarkVME = mafNEW(mafResources::mafVME);
         landmarkVME->setObjectName(mafTr("Landmark_%1").arg(m_VMEList.count()));
         mafDataSet *landmarkDataSet = mafNEW(mafResources::mafDataSet);
         landmarkDataSet->setBoundaryAlgorithmName("mafPluginVTK::mafDataBoundaryAlgorithmVTK");
-        landmarkDataSet->setDataValue(&m_LandmarkContaineList.last()/*landmarkContainer*/);
+        landmarkDataSet->setDataValue(&m_LandmarkContainerList.last()/*landmarkContainer*/);
         landmarkVME->dataSetCollection()->insertItem(landmarkDataSet, 0);
         landmarkVME->dataSetCollection()->setPose(0., 0., 0.);
         landmarkVME->dataSetCollection()->setOrientation(0., 0., 0.);
@@ -223,22 +223,27 @@ void mafOperationVTKAddLandmark::internalUpdate()
 
         //Notify vme add
         argList.clear();
-        argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VMEList.last()));
+        argList.append(mafEventArgument(mafCore::mafObjectBase *, landmarkVME));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+
+//         landmarkVME->setProperty("visibility", true);
+//         argList.clear();
+//         argList.append(mafEventArgument(mafCore::mafObjectBase*, landmarkVME));
+//         argList.append(mafEventArgument(bool, true));
+//         mafEventBusManager::instance()->notifyEvent("maf.local.gui.VMECheckState", mafEventTypeLocal, &argList);
 
         //TODO: Visualize landmark as they are added to the tree.
         /// view select
-        /*mafCore::mafObjectBase *sel_view;
-        QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_view);
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
-        mafView *view = qobject_cast<mafView*>(sel_view);
-        mafSceneNode *sn = view->sceneNodeFromVme(landmarkVME);
-
-        
-        argList.clear();
-        argList.append(mafEventArgument(mafCore::mafObjectBase*, (mafObjectBase*)sn));
-        argList.append(mafEventArgument(bool, true));
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);*/
+//         mafCore::mafObjectBase *sel_view;
+//         QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_view);
+//         mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
+//         mafView *view = qobject_cast<mafView*>(sel_view);
+//         mafSceneNode *sn = view->sceneNodeFromVme(landmarkVME);
+// 
+//         argList.clear();
+//         argList.append(mafEventArgument(mafCore::mafObjectBase*, (mafObjectBase*)sn));
+//         argList.append(mafEventArgument(bool, true));
+//         mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);
     }
     if(m_ParametricSphere != NULL){
         //Move or set the center of the marker.
