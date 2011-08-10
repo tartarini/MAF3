@@ -39,9 +39,6 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     mafCore::mafMessageHandler::instance()->setActiveLogger(m_Logger);
 
     mafRegisterLocalSignal("maf.local.gui.new", this, "newWorkinSessioneSignal()");
-    //mafRegisterLocalSignal("maf.local.gui.VMECheckState", this, "setVMECheckStateSignal(mafCore::mafObjectBase *, bool)");
-
-
     mafRegisterLocalCallback("maf.local.gui.new", this, "newWorkingSession()");
 
     mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)")
