@@ -104,7 +104,7 @@ private:
     double m_LandmarkRadius; ///< Landamrk radius.
     QList<mafResources::mafVME*> m_VMEList;
     mafVTKParametricSurfaceSphere *m_ParametricSphere; ///< Parametric surface used as marker.
-    QList<mafCore::mafProxy<vtkAlgorithmOutput>> m_LandmarkContaineList; ///< List of container of landmark data.
+    QList<mafCore::mafProxy<vtkAlgorithmOutput> > m_LandmarkContainerList; ///< List of container of landmark data.
 
 };
 
