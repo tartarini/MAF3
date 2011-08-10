@@ -72,7 +72,11 @@ void mafOperationParametricSurface::visualizeParametricSurface() {
     argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 
-    //TODO: Visualize surface as it is added to the tree.
+    //Visualize vme added
+    argList.clear();
+    argList.append(mafEventArgument(mafCore::mafObjectBase*, m_VME));
+    argList.append(mafEventArgument(bool, true));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);
 }
 
 void mafOperationParametricSurface::initializeParametricSurfaces(){
@@ -148,6 +152,7 @@ void mafOperationParametricSurface::updateParametricSurface() {
 
 void mafOperationParametricSurface::on_parametricSurfaceType_currentChanged(int index){
     this->setParametricSurfaceType(index);
+    m_ParametricSphere->updateSurface();
     this->updateParametricSurface();
 }
 
