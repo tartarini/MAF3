@@ -166,8 +166,9 @@ void mafViewManager::selectView(mafCore::mafObjectBase *view) {
             m_SelectedView->select(false);
         }
         m_SelectedView = v;
-        m_SelectedView->select(true); // ?!?
-        
+        //View must know if it is the selected one
+        //to inform GUIManager about visual pipe in use.
+        m_SelectedView->select(true);
     }
 }
 

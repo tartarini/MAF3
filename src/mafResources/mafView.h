@@ -84,6 +84,9 @@ protected:
     
     /// factory method for creating scenenode.
     virtual mafSceneNode *createSceneNode(mafVME *vme);
+
+    /// Emit signal to inform about visual pipe of the current node.
+    void notityVisualPipeSelected();
     
     QObject *m_RenderWidget; ///< Rendering widget for the view.
     mafCore::mafHierarchyPointer m_Scenegraph; ///< Scenegraph
