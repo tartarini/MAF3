@@ -123,8 +123,12 @@ void mafView::selectSceneNode(mafSceneNode *node, bool select) {
     Q_UNUSED(select);
 
     if(node && m_PipeVisualSelection) {
-        m_PipeVisualSelection->setInput(node->vme());
-        m_PipeVisualSelection->updatePipe();
+        if (node->property("visibility").toBool()) {
+            //This code starts the loading of data, so 
+            //it is called only if the node is visible.
+            m_PipeVisualSelection->setInput(node->vme());
+            m_PipeVisualSelection->updatePipe();
+        }
         m_PipeVisualSelection->setVisibility(node->property("visibility").toBool());
         notityVisualPipeSelected();
     }
