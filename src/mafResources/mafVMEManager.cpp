@@ -189,12 +189,15 @@ mafCore::mafHierarchyPointer mafVMEManager::requestVMEHierarchy() {
         m_Root->setObjectName("root");
         m_Root->setProperty("iconFile", ":/images/root.png");
 
-        //m_VMEHierarchy->addHierarchyNode(m_Root);
+        //Add root to hierarchy
         mafEventArgumentsList argList;
         argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Root));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 
-        this->vmeSelect(m_Root);
+        //Select root
+        argList.clear();
+        argList.append(mafEventArgument(mafCore::mafObjectBase*, m_Root));
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
      }
 
      return m_VMEHierarchy;
