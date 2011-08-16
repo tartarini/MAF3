@@ -759,9 +759,11 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
 
 void mafGUIManager::createView() {
     QAction *viewAction = (QAction *)QObject::sender();
-    QString view(viewAction->data().toString());
+    QString view_type(viewAction->data().toString());
+    QString view_name(viewAction->text());
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(QString, view));
+    argList.append(mafEventArgument(QString, view_type));
+    argList.append(mafEventArgument(QString, view_name));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList);
 
     mafCore::mafObjectBase *sel_view = NULL;
