@@ -68,7 +68,7 @@ signals:
     void destroyViewSignal(mafCore::mafObjectBase *view);
 
     /// Allow to create a new mafView given the type name as string. Return the created view on success.
-    void createViewSignal(QString view_type);
+    void createViewSignal(QString view_type, QString view_name);
 
     /// Notify the view creation to all observers.
     void viewCreatedSignal(mafCore::mafObjectBase *view);
@@ -83,7 +83,7 @@ signals:
     void noneViewsSignal();
 
     /// Signal associated to the 
-    void customPipeVisualForVMEInViewSignal(QString view_type, QString data_type, QString pipe_type);
+    void customPipeVisualForVMEInViewSignal(QString view_name, QString data_type, QString pipe_type);
 
 public slots:
     /// Create a memento class used to save the status of opened views. The caller has to delete the allocated memory he asked.
@@ -115,7 +115,7 @@ private slots:
     void destroyView(mafCore::mafObjectBase *view);
 
     /// Allow to create a new mafView given the type name as string. Return the pointer to the created view on success.
-    void createView(QString view_type);
+    void createView(QString view_type, QString view_name);
 
     /// Method called when a view has been destroyed (by someone else).
     void viewDestroyed();
@@ -127,7 +127,7 @@ private slots:
     void fillViews();
 
     /// Allows to register the information of bindings between data type and visual pipe for the given view type.
-    void customPipeVisualForVMEInView(QString view_type, QString data_type, QString pipe_type);
+    void customPipeVisualForVMEInView(QString view_name, QString data_type, QString pipe_type);
 
     /// Called by reparent of items in tree.
     void sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectBase *vmeParent);
