@@ -242,7 +242,6 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
         // Check the presence of the view in the list
         bool view_is_present = m_CreatedViewList.contains(v);
         if(!view_is_present) {
-            // TODO: add to the new view all the created VME wrapped into the mafSceneNode each one.
             // Connect the manager to the view destroyed signal
             connect(v, SIGNAL(destroyed()), this, SLOT(viewDestroyed()));
             // add the new created view to the list.
@@ -260,8 +259,10 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
             hierarchy->moveTreeIteratorToRootNode();
             QObject* rootNode = hierarchy->currentData();
             v->vmeAdd(qobject_cast<mafCore::mafObjectBase *>(rootNode));
+            //Fill the new scene graph, with all the created VME wrapped into the mafSceneNode each one.
             this->fillSceneGraph(v, hierarchy);
 
+            //Set VME hierarchy iterator to the original position.
             hierarchy->setIterator(temp_iterator);
             QObject* selectedVME = hierarchy->currentData();
             mafSceneNode *selectedNode = v->sceneNodeFromVme(qobject_cast<mafCore::mafObjectBase *>(selectedVME));
