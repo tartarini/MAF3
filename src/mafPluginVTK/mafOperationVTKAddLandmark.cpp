@@ -148,7 +148,8 @@ void mafOperationVTKAddLandmark::reDo() {
 }
 
 void mafOperationVTKAddLandmark::setParameters(QVariantList parameters) {
-    //@@TODO NEED TO IMPLEMENT
+    REQUIRE(parameters.count() == 1);
+    m_LandmarkRadius = parameters.at(0).toDouble();
 }
 
 void mafOperationVTKAddLandmark::fixLandmark() {
