@@ -137,7 +137,43 @@ void mafOperationParametricSurface::reDo() {
 }
 
 void mafOperationParametricSurface::setParameters(QVariantList parameters) {
-     //@@TODO NEED TO IMPLEMENT
+    //setParametricSurfaceType(parameters.at(0).toInt());
+    on_parametricSurfaceType_currentChanged(parameters.at(0).toInt());
+    switch (parameters.at(0).toInt()) {
+        case (PARAMETRIC_SPHERE):
+            REQUIRE(parameters.count() == 4);
+            on_sphereRadius_valueChanged(parameters.at(1).toDouble());
+            on_spherePhiRes_valueChanged(parameters.at(2).toDouble());
+            on_sphereThetaRes_valueChanged(parameters.at(3).toDouble());
+            break;
+        case (PARAMETRIC_CUBE):
+            REQUIRE(parameters.count() == 4);
+            on_cubeXLength_valueChanged(parameters.at(1).toDouble());
+            on_cubeYLength_valueChanged(parameters.at(2).toDouble());
+            on_cubeZLength_valueChanged(parameters.at(3).toDouble());
+            break;
+        case (PARAMETRIC_CONE):
+            REQUIRE(parameters.count() == 5);
+            on_coneRadius_valueChanged(parameters.at(1).toDouble());
+            on_coneHeight_valueChanged(parameters.at(2).toDouble());
+            on_coneRes_valueChanged(parameters.at(3).toDouble());
+            on_coneCapping_stateChanged(parameters.at(4).toInt());
+            break;
+        case (PARAMETRIC_CYLINDER):
+            REQUIRE(parameters.count() == 4);
+            on_cylinderRadius_valueChanged(parameters.at(1).toDouble());
+            on_cylinderHeight_valueChanged(parameters.at(2).toDouble());
+            on_cylinderRes_valueChanged(parameters.at(3).toDouble());
+            break;
+        case (PARAMETRIC_ELLIPSOID):
+            REQUIRE(parameters.count() == 6);
+            on_ellipsoidPhiRes_valueChanged(parameters.at(1).toDouble());
+            on_ellipsoidThetaRes_valueChanged(parameters.at(2).toDouble());
+            on_ellipsoidXLength_valueChanged(parameters.at(3).toDouble());
+            on_ellipsoidYLength_valueChanged(parameters.at(4).toDouble());
+            on_ellipsoidZLength_valueChanged(parameters.at(5).toDouble());
+            break;
+    }
 }
 
 void mafOperationParametricSurface::setParametricSurfaceType(int index){
