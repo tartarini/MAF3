@@ -441,14 +441,15 @@ void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
 void mafGUIManager::updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeVisual) {
     m_GUILoadedType = mafGUILoadedTypeVisualPipe;
     if (pipeVisual) {
-        if (m_CurrentPipeVisual != pipeVisual) {
-            m_CurrentPipeVisual = pipeVisual;
-            QString guiFilename = pipeVisual->uiFilename();
-            if(!guiFilename.isEmpty()) {
-                // Ask the UI Loader to load the view's GUI.
-                m_UILoader->uiLoad(guiFilename);
-                return;
-            } 
+        if (m_CurrentPipeVisual == pipeVisual) {
+            return;
+        }
+        m_CurrentPipeVisual = pipeVisual;
+        QString guiFilename = pipeVisual->uiFilename();
+        if(!guiFilename.isEmpty()) {
+            // Ask the UI Loader to load the view's GUI.
+            m_UILoader->uiLoad(guiFilename);
+            return;
         }
     } 
     m_CurrentPipeVisual = NULL;
