@@ -28,7 +28,6 @@ mafPipeVisualVTK::mafPipeVisualVTK(const QString code_location) : mafPipeVisual(
 
 mafPipeVisualVTK::~mafPipeVisualVTK() {
     m_GraphicObject = NULL;
-    setVisibility(false);
 }
 
 void mafPipeVisualVTK::updatedGraphicObject() {
