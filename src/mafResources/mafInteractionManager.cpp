@@ -41,8 +41,12 @@ void mafInteractionManager::initialize() {
 }
 
 void mafInteractionManager::mousePress(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e) {
+    // Reset the VME picked.
+    m_VME = NULL;
+    // Ask the visual pipes to pick a VME
     emit vmePickSignal(pos, modifiers, proxy, e);
-    
+
+    // m_VME is initialized with the picked VME if any otherwise it remains NULL
     if(m_VME && m_VME->activeInteractor()) {
         m_VME->activeInteractor()->mousePress(pos, modifiers, m_VME, e);
         if(!m_VME->activeInteractor()->isBlocking() && m_DefaultInteractor) {
@@ -62,8 +66,6 @@ void mafInteractionManager::mouseRelease(double *pos, unsigned long modifiers, m
     } else if (m_DefaultInteractor) {
         m_DefaultInteractor->mouseRelease(pos, modifiers, m_VME, e);
     }
-    
-    m_VME = NULL;
 }
 
 
