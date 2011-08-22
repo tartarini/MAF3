@@ -26,21 +26,34 @@ if (DOXYGEN_FOUND)
   configure_file(MAF3DoxyfileWithTests.in     ${CMAKE_BINARY_DIR}/qa/doc_output/MAF3DoxyfileWithTests IMMEDIATE @ONLY)
   configure_file(MAF3PythonDoxyfile.in     ${CMAKE_BINARY_DIR}/qa/doc_output/MAF3PythonDoxyfile IMMEDIATE @ONLY)
 
+
 execute_process(
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/qa/doc_output
   COMMAND ${CMAKE_COMMAND} -E remove_directory DocOutput
-  COMMAND ${DOXYGEN_EXECUTABLE} MAF3Doxyfile
 )
 
 execute_process(
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/qa/doc_output
   COMMAND ${CMAKE_COMMAND} -E remove_directory DocWithTestsOutput
-  COMMAND ${DOXYGEN_EXECUTABLE} MAF3DoxyfileWithTests
 )
 
 execute_process(
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/qa/doc_output
   COMMAND ${CMAKE_COMMAND} -E remove_directory PythonDocOutput
+)
+
+execute_process(
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/qa/doc_output
+  COMMAND ${DOXYGEN_EXECUTABLE} MAF3Doxyfile
+)
+
+execute_process(
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/qa/doc_output
+  COMMAND ${DOXYGEN_EXECUTABLE} MAF3DoxyfileWithTests
+)
+
+execute_process(
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/qa/doc_output
   COMMAND ${DOXYGEN_EXECUTABLE} MAF3PythonDoxyfile
 )
 

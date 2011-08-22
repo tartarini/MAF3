@@ -110,8 +110,6 @@ void mafView::removeSceneNode(mafSceneNode *node) {
     // Disconnect the view from the node
     disconnect(node, SIGNAL(destroyNode()),this, SLOT(sceneNodeDestroyed()));
 
-    //@TODO need to handle the removing of vtkAssebly from old parent
-    
     if(m_Scenegraph != NULL) {
         m_Scenegraph->removeHierarchyNode(node);
         m_SceneNodeList.removeOne(node);
@@ -123,12 +121,22 @@ void mafView::selectSceneNode(mafSceneNode *node, bool select) {
     Q_UNUSED(select);
 
     if(node && m_PipeVisualSelection) {
-        m_PipeVisualSelection->setInput(node->vme());
-        m_PipeVisualSelection->updatePipe();
+        if (node->property("visibility").toBool()) {
+            //This code starts the loading of data, so 
+            //it is called only if the node is visible.
+            m_PipeVisualSelection->setInput(node->vme());
+            m_PipeVisualSelection->updatePipe();
+        }
         m_PipeVisualSelection->setVisibility(node->property("visibility").toBool());
-        // emit signal to attach visual pipe gui
-        emit pipeVisualSelectedSignal(node->visualPipe());
+        if (m_Selected) {
+            notityVisualPipeSelected();
+        }
     }
+}
+
+void mafView::notityVisualPipeSelected() {
+    //emit signal to inform about visual pipe of the current node.
+    emit pipeVisualSelectedSignal(m_SelectedNode->visualPipe());
 }
 
 void mafView::showSceneNode(mafSceneNode *node, bool show) {
@@ -188,7 +196,7 @@ mafSceneNode *mafView::sceneNodeFromVme(mafObjectBase *vme) {
 void mafView::select(bool select) {
     m_Selected = select;
     if (select) {
-        selectSceneNode(m_SelectedNode, select);
+        notityVisualPipeSelected();
     }
 }
 

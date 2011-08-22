@@ -11,6 +11,7 @@
 
 #include "mafMementoViewManager.h"
 #include "mafResource.h"
+#include "mafView.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -30,6 +31,14 @@ mafMementoViewManager::mafMementoViewManager(const mafObjectBase *obj, const maf
         item.m_Multiplicity = 1;
         item.m_Value = QVariant(v->metaObject()->className());
         list->append(item);
+
+        mafView *view = qobject_cast<mafResources::mafView *>(v);
+        if(view != NULL) {
+            item.m_Name = "ViewName";
+            item.m_Multiplicity = 1;
+            item.m_Value = QVariant(view->viewName());
+            list->append(item);
+        }
     }
 }
 

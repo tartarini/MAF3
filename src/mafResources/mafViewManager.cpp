@@ -38,10 +38,10 @@ mafViewManager::~mafViewManager() {
     destroyAllViews();
     
     // Unregister callbacks...
-    mafUnregisterLocalCallback("maf.local.resources.view.create", this, "createView(QString)")    
+    mafUnregisterLocalCallback("maf.local.resources.view.create", this, "createView(QString, QString)")    
     mafUnregisterLocalCallback("maf.local.resources.view.destroy", this, "destroyView(mafCore::mafObjectBase *)")
     mafUnregisterLocalCallback("maf.local.resources.view.select", this, "selectView(mafCore::mafObjectBase *)")
-    //mafUnregisterLocalCallback("maf.local.resources.view.selected", this, "selectedView()")
+    mafUnregisterLocalCallback("maf.local.resources.view.selected", this, "selectedView()")
     mafUnregisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "sceneNodeShow(mafCore::mafObjectBase *, bool)")
     mafUnregisterLocalCallback("maf.local.logic.status.viewmanager.store", this, "createMemento()")
     mafUnregisterLocalCallback("maf.local.logic.status.viewmanager.restore", this, "setMemento(mafCore::mafMemento *, bool)")
@@ -52,7 +52,7 @@ mafViewManager::~mafViewManager() {
 
     
     // Unregister signals...
-    mafUnregisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(QString)")
+    mafUnregisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(QString, QString)")
     mafUnregisterLocalSignal("maf.local.resources.view.created", this, "viewCreatedSignal(mafCore::mafObjectBase *)")
     mafUnregisterLocalSignal("maf.local.resources.view.destroy", this, "destroyViewSignal(mafCore::mafObjectBase *)")
     mafUnregisterLocalSignal("maf.local.resources.view.select", this, "selectViewSignal(mafCore::mafObjectBase *)")
@@ -88,12 +88,17 @@ void mafViewManager::setMemento(mafMemento *memento, bool deep_memento) {
     Q_UNUSED(deep_memento);
 
     QString viewType;
+    QString viewName;
     mafMementoPropertyList *list = memento->mementoPropertyList();
     mafMementoPropertyItem item;
     foreach(item, *list) {
         if(item.m_Name == "ViewType") {
             viewType = item.m_Value.toString();
-            createView(viewType);
+            /*createView(viewType);*/
+        }
+        if(item.m_Name == "ViewName") {
+            viewName = item.m_Value.toString();
+            createView(viewType, viewName);
         }
     }
 }
@@ -114,7 +119,7 @@ void mafViewManager::initializeConnections() {
     provider->createNewId("maf.local.resources.view.customizeVisualization");
     
     // Register API signals.
-    mafRegisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(QString)")
+    mafRegisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(QString, QString)")
     mafRegisterLocalSignal("maf.local.resources.view.created", this, "viewCreatedSignal(mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.view.destroy", this, "destroyViewSignal(mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.view.select", this, "selectViewSignal(mafCore::mafObjectBase *)")
@@ -127,7 +132,7 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.view.customizeVisualization", this, "customPipeVisualForVMEInViewSignal(QString, QString, QString)")
 
     // Register private callbacks to the instance of the manager..
-    mafRegisterLocalCallback("maf.local.resources.view.create", this, "createView(QString)")
+    mafRegisterLocalCallback("maf.local.resources.view.create", this, "createView(QString, QString)")
     mafRegisterLocalCallback("maf.local.resources.view.destroy", this, "destroyView(mafCore::mafObjectBase *)")
     mafRegisterLocalCallback("maf.local.resources.view.select", this, "selectView(mafCore::mafObjectBase *)")
     mafRegisterLocalCallback("maf.local.resources.view.selected", this, "selectedView()")
@@ -144,13 +149,13 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.resources.view.sceneNodeReparent", this, "sceneNodeReparent(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
 }
 
-void mafViewManager::customPipeVisualForVMEInView(QString view_type, QString data_type, QString pipe_type) {
+void mafViewManager::customPipeVisualForVMEInView(QString view_name, QString data_type, QString pipe_type) {
     QHash<QString, QString> *hash;
-    if (!m_VisualizationBindHash.contains(view_type)) {
+    if (!m_VisualizationBindHash.contains(view_name)) {
         hash = new QHash<QString, QString>;
-        m_VisualizationBindHash.insert(view_type, hash);
+        m_VisualizationBindHash.insert(view_name, hash);
     }
-    hash = m_VisualizationBindHash.value(view_type);
+    hash = m_VisualizationBindHash.value(view_name);
     hash->insert(data_type, pipe_type);
 }
 
@@ -166,14 +171,21 @@ void mafViewManager::selectView(mafCore::mafObjectBase *view) {
             m_SelectedView->select(false);
         }
         m_SelectedView = v;
-        m_SelectedView->select(true); // ?!?
-        
+        //View must know if it is the selected one
+        //to inform GUIManager about visual pipe in use.
+        m_SelectedView->select(true);
     }
 }
 
 void mafViewManager::sceneNodeShow(mafCore::mafObjectBase *node, bool show) {
     mafSceneNode *node_to_show = NULL;
     node_to_show = qobject_cast<mafResources::mafSceneNode *>(node);
+
+    if(node_to_show == NULL && m_SelectedView) {
+        //If node is not a sceneNode, check if its a VME and get the corresponding sceneNode
+        mafVME *vme_to_show = qobject_cast<mafResources::mafVME *>(node);
+        node_to_show = m_SelectedView->sceneNodeFromVme(vme_to_show);
+    }
     
     if(node_to_show != NULL) {
         if(m_SelectedView) {
@@ -185,14 +197,15 @@ void mafViewManager::sceneNodeShow(mafCore::mafObjectBase *node, bool show) {
     }
 }
 
-void mafViewManager::createView(QString view_type) {
+void mafViewManager::createView(QString view_type, QString view_name) {
     REQUIRE(view_type.length() > 0);
 
     mafObjectBase *obj = mafNEWFromString(view_type);
     mafView *v = qobject_cast<mafResources::mafView *>(obj);
     if(v != NULL) {
-        if (m_VisualizationBindHash.contains(view_type)) {
-            v->plugVisualPipeBindingHash(m_VisualizationBindHash.value(view_type));
+        v->setViewName(view_name);
+        if (m_VisualizationBindHash.contains(view_name)) {
+            v->plugVisualPipeBindingHash(m_VisualizationBindHash.value(view_name));
         }
         addViewToCreatedList(v);
         selectView(obj);
@@ -229,7 +242,6 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
         // Check the presence of the view in the list
         bool view_is_present = m_CreatedViewList.contains(v);
         if(!view_is_present) {
-            // TODO: add to the new view all the created VME wrapped into the mafSceneNode each one.
             // Connect the manager to the view destroyed signal
             connect(v, SIGNAL(destroyed()), this, SLOT(viewDestroyed()));
             // add the new created view to the list.
@@ -247,8 +259,10 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
             hierarchy->moveTreeIteratorToRootNode();
             QObject* rootNode = hierarchy->currentData();
             v->vmeAdd(qobject_cast<mafCore::mafObjectBase *>(rootNode));
+            //Fill the new scene graph, with all the created VME wrapped into the mafSceneNode each one.
             this->fillSceneGraph(v, hierarchy);
 
+            //Set VME hierarchy iterator to the original position.
             hierarchy->setIterator(temp_iterator);
             QObject* selectedVME = hierarchy->currentData();
             mafSceneNode *selectedNode = v->sceneNodeFromVme(qobject_cast<mafCore::mafObjectBase *>(selectedVME));

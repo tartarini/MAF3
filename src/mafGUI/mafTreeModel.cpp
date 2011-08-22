@@ -127,9 +127,6 @@ void mafTreeModel::clearModel() {
 }
 
 void mafTreeModel::itemAttached(QObject *item, QObject *parent) {
-    // @TODO here set the code because if a view is present, need to attach an item
-    // with a scenenode (check with Roberto)
-    
     if (parent != NULL) {
         QModelIndex index = this->indexFromData(parent);
         this->insertNewItem(AsChild, item, index);

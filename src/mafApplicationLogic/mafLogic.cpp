@@ -117,20 +117,15 @@ mafCore::mafHierarchy *mafLogic::requestNewHierarchy() {
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, m_Hierarchy);
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.new", mafEventTypeLocal, NULL, &ret_val);
     
-    // select root
-    mafObject *root;
-    ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
-    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
-
     //fill the scenegraphs of all the views
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.fillViews");
     
     return m_Hierarchy;
 }
 
-void mafLogic::customizeVisualization(const QString view_type, const QString data_type, const QString pipe_visual_type) {
+void mafLogic::customizeVisualization(const QString view_name, const QString data_type, const QString pipe_visual_type) {
     mafEventBus::mafEventArgumentsList argList;
-    argList.append(mafEventArgument(QString, view_type));
+    argList.append(mafEventArgument(QString, view_name));
     argList.append(mafEventArgument(QString, data_type));
     argList.append(mafEventArgument(QString, pipe_visual_type));
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.customizeVisualization", mafEventTypeLocal, &argList);

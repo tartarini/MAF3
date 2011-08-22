@@ -101,8 +101,8 @@ void mafViewVTK::updateView() {
 
 void mafViewVTK::selectSceneNode(mafResources::mafSceneNode *node, bool select) {
     // remove from scene old selection
-    mafSceneNodeVTK *selected = qobject_cast<mafSceneNodeVTK *>(m_SelectedNode);
     mafProxy<vtkProp3D> *prop = mafProxyPointerTypeCast(vtkProp3D, m_PipeVisualSelection->output());
+    mafSceneNodeVTK *selected = qobject_cast<mafSceneNodeVTK *>(m_SelectedNode);
     if(selected) {
         selected->nodeAssembly()->RemovePart(*prop);
         m_PipeVisualSelection->render();

@@ -77,6 +77,9 @@ public:
 
     ///Get the selected scene node.
     mafSceneNode *selectedSceneNode();
+
+    /// Set name of the view (usually is the name that appears on the menu.
+    void setViewName(QString view_name);
     
 protected:
     /// Object destructor.
@@ -84,7 +87,11 @@ protected:
     
     /// factory method for creating scenenode.
     virtual mafSceneNode *createSceneNode(mafVME *vme);
+
+    /// Emit signal to inform about visual pipe of the current node.
+    void notityVisualPipeSelected();
     
+    QString m_ViewName; ///< Name associated to the specific view (usually name that appears in the view menu).
     QObject *m_RenderWidget; ///< Rendering widget for the view.
     mafCore::mafHierarchyPointer m_Scenegraph; ///< Scenegraph
     QHash<QString, QString> *m_VisualPipeHash; ///< Bind between dataType and Visual pipe.
@@ -107,6 +114,9 @@ public slots:
 
     /// Update view.
     virtual void updateView();
+
+    /// Get name of the view.
+    QString viewName() const;
 
 private slots:
 
@@ -144,6 +154,14 @@ inline QVariant mafView::hierarchy() const {
 
 inline mafSceneNode * mafView::selectedSceneNode(){
     return m_SelectedNode;
+}
+
+inline void  mafView::setViewName(QString view_name){
+    m_ViewName = view_name ;
+}
+
+inline QString mafView::viewName() const{
+    return m_ViewName;
 }
 
 } //namespace mafResources
