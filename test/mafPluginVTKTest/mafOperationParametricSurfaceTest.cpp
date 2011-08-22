@@ -71,7 +71,7 @@ private slots:
     /// Test the operation's execution.
     void testExecute();
 
-   /// Test Set/Get method of tparametric surface
+   /// Test Set/Get method of parametric surface
     void SetGetTest();
 
 private:
@@ -84,6 +84,14 @@ private:
 };
 
 void mafOperationParametricSurfaceTest::testExecute() {
+    //Set parameters ( create a cube )
+    QVariantList parameters;
+    parameters.append(QVariant(1));
+    parameters.append(QVariant(5.0));
+    parameters.append(QVariant(5.0));
+    parameters.append(QVariant(5.0));
+    m_OpParametric->setParameters(parameters);
+
     // execute the operation
     m_OpParametric->execute();
 

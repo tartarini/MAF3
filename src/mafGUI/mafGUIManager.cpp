@@ -18,7 +18,6 @@
 #include "mafGUIApplicationSettingsDialog.h"
 #include "mafTreeItemDelegate.h"
 #include "mafTreeItemSceneNodeDelegate.h"
-
 #include "mafOperationWidget.h"
 
 #include <mafObjectBase.h>
@@ -54,6 +53,8 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     // ViewManager's callback.
     mafRegisterLocalCallback("maf.local.resources.view.select", this, "viewSelected(mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.view.noneViews", this, "viewDestroyed()");
+    mafRegisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "setVMECheckState(mafCore::mafObjectBase *, bool)");
+
 
     m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
     connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*)), this, SLOT(showGui(mafCore::mafProxyInterface*)));
@@ -440,14 +441,15 @@ void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
 void mafGUIManager::updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeVisual) {
     m_GUILoadedType = mafGUILoadedTypeVisualPipe;
     if (pipeVisual) {
-        if (m_CurrentPipeVisual != pipeVisual) {
-            m_CurrentPipeVisual = pipeVisual;
-            QString guiFilename = pipeVisual->uiFilename();
-            if(!guiFilename.isEmpty()) {
-                // Ask the UI Loader to load the view's GUI.
-                m_UILoader->uiLoad(guiFilename);
-                return;
-            } 
+        if (m_CurrentPipeVisual == pipeVisual) {
+            return;
+        }
+        m_CurrentPipeVisual = pipeVisual;
+        QString guiFilename = pipeVisual->uiFilename();
+        if(!guiFilename.isEmpty()) {
+            // Ask the UI Loader to load the view's GUI.
+            m_UILoader->uiLoad(guiFilename);
+            return;
         }
     } 
     m_CurrentPipeVisual = NULL;
@@ -758,9 +760,11 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
 
 void mafGUIManager::createView() {
     QAction *viewAction = (QAction *)QObject::sender();
-    QString view(viewAction->data().toString());
+    QString view_type(viewAction->data().toString());
+    QString view_name(viewAction->text());
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(QString, view));
+    argList.append(mafEventArgument(QString, view_type));
+    argList.append(mafEventArgument(QString, view_name));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList);
 
     mafCore::mafObjectBase *sel_view = NULL;
@@ -828,6 +832,18 @@ void mafGUIManager::selectVME(QModelIndex index) {
     mafEventBus::mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, qobject_cast<mafCore::mafObjectBase *>(obj)));
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventBus::mafEventTypeLocal, &argList);
+}
+
+void mafGUIManager::setVMECheckState(mafCore::mafObjectBase *vme, bool visible) {
+    if(m_TreeWidget) {
+        if (vme) {
+            QModelIndex index = m_Model->indexFromData(vme);
+            mafTreeItem *item = (mafTreeItem *)m_Model->itemFromIndex(index);
+            if (item->isCheckable() && item->checkState() != visible) {
+                item->setStatus(mafItemStatusCheckable, visible);
+            }
+        }
+    }
 }
 
 void mafGUIManager::chooseFileDialog(const QString title, const QString start_dir, const QString wildcard) {
@@ -985,3 +1001,4 @@ QObject *mafGUIManager::dataObject(QModelIndex index) {
     
     return obj;
 }
+

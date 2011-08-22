@@ -196,6 +196,9 @@ private slots:
     /// Allow to send a vme selection request when an item has been clicked into the mafTreWidget.
     void selectVME(QModelIndex index);
 
+    /// Allow to visualize a VME from code.
+    void setVMECheckState(mafCore::mafObjectBase *sceneNode, bool visible);
+
     /// Allows to ask to open the selected recent file.
     void openRecentFile();
 

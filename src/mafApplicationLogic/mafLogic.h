@@ -72,7 +72,7 @@ public:
     void plugObject(const QString base_class, const QString class_type, const QString object_label);
 
     /// Plug the information to customize the visualization for a VME shown into the given view with the associated pipe visual.
-    void customizeVisualization(const QString view_type, const QString data_type, const QString pipe_visual_type);
+    void customizeVisualization(const QString view_name, const QString data_type, const QString pipe_visual_type);
 
 public slots:
     /// Allows to assign the application's working directory.

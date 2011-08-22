@@ -23,6 +23,7 @@
 
 #include "mafOperationParametricSurface.h"
 #include "mafOperationTransformVTK.h"
+#include "mafOperationVTKAddLandmark.h"
 #include "mafImporterVTK.h"
 #include "mafExporterVTK.h"
 
@@ -53,6 +54,7 @@ mafPluginRegistrator::mafPluginRegistrator() {
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKBox);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafOperationParametricSurface);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafOperationTransformVTK);
+    mafRegisterObjectAndAcceptBind(mafPluginVTK::mafOperationVTKAddLandmark);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafImporterVTK);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafExporterVTK);
     mafRegisterObject(mafPluginVTK::mafViewVTK);
@@ -77,6 +79,7 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKBox);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafOperationParametricSurface);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafOperationTransformVTK);
+    mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafOperationVTKAddLandmark);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafImporterVTK);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafExporterVTK);
     mafUnregisterObject(mafPluginVTK::mafViewVTK);
@@ -103,6 +106,7 @@ void mafPluginRegistrator::registerAllObjects() {
     mafPluggedObjectInformation viewVTK("VTK view", "mafPluginVTK::mafViewVTK");
     mafPluggedObjectInformation opParametricSurface("Create Parametric Surface", "mafPluginVTK::mafOperationParametricSurface");
     mafPluggedObjectInformation opTransformVTK("Transform VTK Data", "mafPluginVTK::mafOperationTransformVTK");
+    mafPluggedObjectInformation opVTKAddLandmark("Add VTK Landmark", "mafPluginVTK::mafOperationVTKAddLandmark");
     mafPluggedObjectInformation importerVTK("Import VTK data", "mafPluginVTK::mafImporterVTK");
     mafPluggedObjectInformation exporterVTK("Export VTK data", "mafPluginVTK::mafExporterVTK");
     mafPluggedObjectInformation externalDataCodecVTK("VTK codec", "mafPluginVTK::mafExternalDataCodecVTK");
@@ -117,6 +121,7 @@ void mafPluginRegistrator::registerAllObjects() {
     pluginHash.insertMulti("mafResources::mafView", viewVTK);
     pluginHash.insertMulti("mafResources::mafOperation", opParametricSurface);
     pluginHash.insertMulti("mafResources::mafOperation", opTransformVTK);
+    pluginHash.insertMulti("mafResources::mafOperation", opVTKAddLandmark);
     pluginHash.insertMulti("mafResources::mafImporter", importerVTK);
     pluginHash.insertMulti("mafResources::mafExporter", exporterVTK);
     pluginHash.insertMulti("mafCore::mafExternalDataCodec", externalDataCodecVTK);

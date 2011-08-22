@@ -69,7 +69,6 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
     QPixmap iconPixmap;
     
     QObject *objItem = objFromIndex(index);
-    //TODO: Check if necessary when setData will be modified
     QString value = objItem->property("objectName").toString();
     ((QStandardItemModel *)index.model())->setData(index, value, Qt::DisplayRole);
 

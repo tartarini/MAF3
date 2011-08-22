@@ -111,10 +111,12 @@ void mafViewManagerTest::mafViewManagerAllocationTest() {
 void mafViewManagerTest::createViewTest() {
     // Create a new view from its string type name.
     QString vt("mafResources::mafView");
+    QString vn("View test");
 
     // Send the message through the vent bus to create it.
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString, vt));
+    argList.append(mafEventArgument(QString, vn));
     m_EventBus->notifyEvent("maf.local.resources.view.create", mafEventTypeLocal, &argList);
 
     mafObjectBase *obj = m_Observer->view();
