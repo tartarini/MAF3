@@ -15,10 +15,39 @@ using namespace mafGUI;
 
 mafSyntaxHighlighter::mafSyntaxHighlighter(QTextDocument *parent):QSyntaxHighlighter(parent) {
     m_Lock = new QReadWriteLock(QReadWriteLock::Recursive);
+    initialize();
 }
 
 mafSyntaxHighlighter::~mafSyntaxHighlighter() {
     delete m_Lock;
+}
+
+void mafSyntaxHighlighter::initialize() {
+    //initialize several Formats
+    QTextCharFormat format;
+    format.setForeground(Qt::darkGreen);
+    format.setFontWeight(QFont::Bold);
+    m_Formats.insert("keywords", format);
+
+    format.setFontWeight(QFont::Bold);
+    format.setForeground(Qt::darkMagenta);
+    m_Formats.insert("class", format);
+
+    format.setForeground(Qt::red);
+    m_Formats.insert("singleLineComment", format);
+
+    format.setForeground(Qt::red);
+    m_Formats.insert("multiLineComment", format);
+
+    format.setForeground(Qt::darkGreen);
+    m_Formats.insert("quotation", format);
+
+    format.setFontItalic(true);
+    format.setForeground(Qt::blue);
+    m_Formats.insert("function", format);
+
+    m_CommentStartExpression = QRegExp("/\\*");
+    m_CommentEndExpression = QRegExp("\\*/");
 }
 
 void mafSyntaxHighlighter::highlightBlock(const QString &text) {
@@ -37,12 +66,11 @@ void mafSyntaxHighlighter::highlightBlock(const QString &text) {
     setCurrentBlockState(0);
 
     //this code is applied when there is a comment
-    
     if(m_CommentStartExpression.isEmpty()) {
         m_Lock->unlock();
         return;
     }
-    
+
     int startIndex = 0;
     if (previousBlockState() != 1)
         startIndex = m_CommentStartExpression.indexIn(text);
@@ -58,7 +86,7 @@ void mafSyntaxHighlighter::highlightBlock(const QString &text) {
             commentLength = endIndex - startIndex
                             + m_CommentEndExpression.matchedLength();
         }
-        setFormat(startIndex, commentLength, m_CommentFormat);
+        setFormat(startIndex, commentLength, m_Formats["multiLineComment"]);
         startIndex = m_CommentStartExpression.indexIn(text, startIndex + commentLength);
     }
     m_Lock->unlock();
@@ -82,12 +110,26 @@ void mafSyntaxHighlighter::setMultilineRule(QRegExp startPattern, QRegExp endPat
     m_Lock->lockForWrite();
     m_CommentStartExpression = startPattern;
     m_CommentEndExpression = endPattern;
-    m_CommentFormat = format;
+    insertFormat("multiLineComment", format);
     m_Lock->unlock();
 }
-
 
 void mafSyntaxHighlighter::removeRule(const QString& name) {
     QWriteLocker locker(m_Lock);
     m_HighlightingRules.remove(name);
+}
+
+void mafSyntaxHighlighter::insertFormat(const QString &name, QTextCharFormat format) {
+    QWriteLocker locker(m_Lock);
+    m_Formats.insert(name, format);
+}
+
+void mafSyntaxHighlighter::removeFormat(const QString& name) {
+    QWriteLocker locker(m_Lock);
+    m_Formats.remove(name);
+}
+
+const QTextCharFormat &mafSyntaxHighlighter::format(const QString &name) {
+    QReadLocker locker(m_Lock);
+    return m_Formats[name.toAscii()];
 }

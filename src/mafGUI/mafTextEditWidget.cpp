@@ -10,7 +10,7 @@
  */
 
 #include "mafTextEditWidget.h"
-#include "mafTextHighlighter.h"
+#include "mafSyntaxHighlighter.h"
 #include <QHBoxLayout>
 
 using namespace mafGUI;
@@ -54,7 +54,7 @@ void mafTextEditWidget::clear() {
 }
 
 void mafTextEditWidget::find(QString text){
-     mafTextHighlighter *textHighlighter = qobject_cast<mafTextHighlighter *>(m_Highlighter);
+     mafSyntaxHighlighter *textHighlighter = qobject_cast<mafSyntaxHighlighter *>(m_Highlighter);
 
     if (!text.isEmpty()) {
         QTextCharFormat format;

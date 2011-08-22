@@ -1,4 +1,4 @@
-/* mafInterpreter.cpp --- 
+/* mafInterpreterEditor.cpp --- 
  * 
  * Author: Julien Wintz
  * Copyright (C) 2008 - Julien Wintz, Inria.
@@ -31,12 +31,12 @@
 #endif
 
 #include <mafTextEditorSyntaxHighlighterPython.h>
-#include <mafInterpreter.h>
+#include <mafInterpreterEditor.h>
 #include <mafInterpreterPreferencesWidget.h>
 
 using namespace mafScriptInterpreter;
 
-mafInterpreter::mafInterpreter(QWidget *parent) : mafTextEditor(parent)
+mafInterpreterEditor::mafInterpreterEditor(QWidget *parent) : mafTextEditor(parent)
 {
     m_Interpreter = NULL;
     preferences = NULL;
@@ -52,16 +52,16 @@ mafInterpreter::mafInterpreter(QWidget *parent) : mafTextEditor(parent)
 
 }
 
-mafInterpreter::~mafInterpreter(void)
+mafInterpreterEditor::~mafInterpreterEditor(void)
 {
 }
 
-mafScriptEditor *mafInterpreter::interpreter(void)
+mafScriptEditor *mafInterpreterEditor::interpreter(void)
 {
     return m_Interpreter;
 }
 
-void mafInterpreter::keyPressEvent(QKeyEvent *event)
+void mafInterpreterEditor::keyPressEvent(QKeyEvent *event)
 {
     QTextCursor cursor = textCursor();
 
@@ -107,14 +107,14 @@ void mafInterpreter::keyPressEvent(QKeyEvent *event)
         mafTextEditor::keyPressEvent(event);
 }
 
-void mafInterpreter::mousePressEvent(QMouseEvent *event)
+void mafInterpreterEditor::mousePressEvent(QMouseEvent *event)
 {
     cursor = this->textCursor();
 
     mafTextEditor::mousePressEvent(event);
 }
 
-void mafInterpreter::mouseReleaseEvent(QMouseEvent *event)
+void mafInterpreterEditor::mouseReleaseEvent(QMouseEvent *event)
 {
     mafTextEditor::mouseReleaseEvent(event);
 
@@ -122,7 +122,7 @@ void mafInterpreter::mouseReleaseEvent(QMouseEvent *event)
         this->setTextCursor(cursor);
 }
 
-void mafInterpreter::readSettings(void)
+void mafInterpreterEditor::readSettings(void)
 {
     QSettings settings;
     settings.beginGroup("interpreter");
@@ -132,7 +132,7 @@ void mafInterpreter::readSettings(void)
     settings.endGroup();
 }
 
-void mafInterpreter::writeSettings(void)
+void mafInterpreterEditor::writeSettings(void)
 {
     QSettings settings;
     settings.beginGroup("interpreter");
@@ -142,12 +142,12 @@ void mafInterpreter::writeSettings(void)
     settings.endGroup();
 }
 
-void mafInterpreter::registerAsHandler(mafLog::Handler handler)
+void mafInterpreterEditor::registerAsHandler(mafLog::Handler handler)
 {
     mafLog::registerHandler(handler);
 }
 
-void mafInterpreter::registerInterpreter(mafScriptEditor *interpreter)
+void mafInterpreterEditor::registerInterpreter(mafScriptEditor *interpreter)
 {
     m_Interpreter = interpreter;
     m_Interpreter->setVerbose(false);
@@ -170,7 +170,7 @@ void mafInterpreter::registerInterpreter(mafScriptEditor *interpreter)
     this->appendPlainText(filter(m_Interpreter->prompt()));
 }
 
-mafInterpreterPreferencesWidget *mafInterpreter::preferencesWidget(QWidget *parent)
+mafInterpreterPreferencesWidget *mafInterpreterEditor::preferencesWidget(QWidget *parent)
 {
     if(!preferences)
         preferences = new mafInterpreterPreferencesWidget(this, parent);
@@ -178,7 +178,7 @@ mafInterpreterPreferencesWidget *mafInterpreter::preferencesWidget(QWidget *pare
     return preferences;
 }
 
-void mafInterpreter::onKeyUpPressed(void)
+void mafInterpreterEditor::onKeyUpPressed(void)
 {
     if(history.size() == 0)
         return;
@@ -207,7 +207,7 @@ void mafInterpreter::onKeyUpPressed(void)
     this->setTextCursor(cursor);
 }
 
-void mafInterpreter::onKeyDownPressed(void)
+void mafInterpreterEditor::onKeyDownPressed(void)
 {
     if(history_index == 0)
         return;
@@ -229,17 +229,17 @@ void mafInterpreter::onKeyDownPressed(void)
     }
 }
 
-void mafInterpreter::onKeyLeftPressed(void)
+void mafInterpreterEditor::onKeyLeftPressed(void)
 {
     // check cursor
 }
 
-void mafInterpreter::onKeyRightPressed(void)
+void mafInterpreterEditor::onKeyRightPressed(void)
 {
     // check cursor
 }
 
-void mafInterpreter::onKeyEnterPressed(void)
+void mafInterpreterEditor::onKeyEnterPressed(void)
 {
     int stat;
 
@@ -301,12 +301,12 @@ void mafInterpreter::onKeyEnterPressed(void)
     promptFlag = true;
 }
 
-void mafInterpreter::onKeyBackspacePressed(void)
+void mafInterpreterEditor::onKeyBackspacePressed(void)
 {
 
 }
 
-void mafInterpreter::output(const QString& result,  int *stat)
+void mafInterpreterEditor::output(const QString& result,  int *stat)
 {
     Q_UNUSED(stat);
 
@@ -323,7 +323,7 @@ void mafInterpreter::output(const QString& result,  int *stat)
     this->setTextCursor(cursor);
 }
 
-QString mafInterpreter::filter(QString text)
+QString mafInterpreterEditor::filter(QString text)
 {
     return text
         .remove(MAF_COLOR_FG_BLACK)
@@ -358,10 +358,10 @@ QString mafInterpreter::filter(QString text)
         .remove(MAF_NO_COLOR);
 }
 
-bool mafInterpreter::eventFilter(QObject *object, QEvent *event)
+bool mafInterpreterEditor::eventFilter(QObject *object, QEvent *event)
 {
     mafLogEvent *log = dynamic_cast<mafLogEvent *>(event);
-    mafInterpreter *interpreter = dynamic_cast<mafInterpreter *>(object);
+    mafInterpreterEditor *interpreter = dynamic_cast<mafInterpreterEditor *>(object);
 
     if (log && interpreter) {
         int stat; interpreter->output(log->message(), &stat);

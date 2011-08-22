@@ -29,7 +29,7 @@
 #include <mafScriptEditorPython.h>
 #endif
 
-#include <mafInterpreter.h>
+#include <mafInterpreterEditor.h>
 
 using namespace mafScriptInterpreter;
 
@@ -39,9 +39,9 @@ using namespace mafScriptInterpreter;
 
 QWidget *log_output;
 
-void tstRedirectLogHandler(mafLog::Level level, const QString& msg)
+void tstRedirectLogHandler(mafLog::LogType logType, const QString& msg)
 {
-    QCoreApplication::postEvent(log_output, new mafLogEvent(level, msg));
+    QCoreApplication::postEvent(log_output, new mafLogEvent(logType, msg));
 }
 
 // /////////////////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     QApplication application(argc, argv);
 
     AnyOption options;
-    options.addUsage("Usage: ./mafInterpreter [FLAG] ... [OPTION=VALUE] ...");
+    options.addUsage("Usage: ./mafInterpreterEditor [FLAG] ... [OPTION=VALUE] ...");
     options.addUsage("");
     options.addUsage("Mode:");
     options.addUsage(" -c  --console");

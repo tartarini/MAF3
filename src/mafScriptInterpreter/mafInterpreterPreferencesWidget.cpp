@@ -20,7 +20,7 @@
 #include <QtGui>
 #include <QtGui/QColorDialog>
 
-#include "mafInterpreter.h"
+#include "mafInterpreterEditor.h"
 #include "mafInterpreterPreferencesWidget.h"
 
 #include "ui_mafInterpreterPreferencesWidget.h"
@@ -33,7 +33,7 @@ class mafScriptInterpreter::mafInterpreterPreferencesWidgetPrivate
 public:
     Ui::mafInterpreterPreferencesWidget ui;
 
-    mafInterpreter *interpreter;
+    mafInterpreterEditor *interpreter;
 
     QFont  font;
     QColor foregroundColor;
@@ -41,7 +41,7 @@ public:
     int  backgroundOpacity;
 };
 
-mafInterpreterPreferencesWidget::mafInterpreterPreferencesWidget(mafInterpreter *interpreter, QWidget *parent) : mafGUIApplicationSettingsPage(parent)
+mafInterpreterPreferencesWidget::mafInterpreterPreferencesWidget(mafInterpreterEditor *interpreter, QWidget *parent) : mafGUIApplicationSettingsPage(parent)
 {
     d = new mafInterpreterPreferencesWidgetPrivate;
     d->interpreter     = interpreter;

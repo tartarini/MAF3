@@ -28,9 +28,9 @@ namespace mafScriptInterpreter {
 class MAFSCRIPTINTERPRETERSHARED_EXPORT mafLog
 {
 public:
-    enum Level { Output, Error, Debug, Warning, Critical, Fatal };
+    enum LogType { Output, Error, Debug, Warning, Critical, Fatal };
 
-    typedef void (*Handler)(Level level, const QString &message);
+    typedef void (*Handler)(LogType type, const QString &message);
 
     mafLog& operator<<(int value);
     mafLog& operator<<(float value);
@@ -52,10 +52,10 @@ public:
     static void disableRedirection(void);
 
 private:
-     mafLog(const QString& source, Level level);
+     mafLog(const QString& source, LogType logType);
 
 private:
-    Level   m_level;
+    LogType   m_LogType;
     QString m_source;
     QString m_log;
 
@@ -70,14 +70,14 @@ private:
 class MAFSCRIPTINTERPRETERSHARED_EXPORT mafLogEvent : public QEvent
 {
 public:
-    mafLogEvent(mafLog::Level level, const QString& msg);
+    mafLogEvent(mafLog::LogType logType, const QString& msg);
     
-    mafLog::Level level(void) const;
+    mafLog::LogType logType(void) const;
 
     QString message(void) const;
 
 private:
-    mafLog::Level m_level;
+    mafLog::LogType m_LogType;
 
     QString m_message;
 

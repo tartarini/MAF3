@@ -1,24 +1,16 @@
-/* mafInterpreter.h --- 
- * 
- * Author: Julien Wintz
- * Copyright (C) 2008 - Julien Wintz, Inria.
- * Created: Fri Apr 10 15:29:01 2009 (+0200)
- * Version: $Id$
- * Last-Updated: Fri Sep 11 13:43:41 2009 (+0200)
- *           By: Julien Wintz
- *     Update #: 40
+/*
+ *  mafInterpreterEditor.h
+ *  mafGui
+ *
+ *  Created by Paolo Quadrani - Daniele Giunchi on 10/06/11.
+ *  Copyright 2011 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
  */
 
-/* Commentary: 
- * 
- */
-
-/* Change log:
- * 
- */
-
-#ifndef MAFINTERPRETER_H
-#define MAFINTERPRETER_H
+#ifndef MAFINTERPRETEREDITOR_H
+#define MAFINTERPRETEREDITOR_H
 
 #include "mafScriptInterpreter_global.h"
 #include <mafLog.h>
@@ -30,13 +22,13 @@ namespace mafScriptInterpreter {
 class mafScriptEditor;
 class mafInterpreterPreferencesWidget;
 
-class MAFSCRIPTINTERPRETERSHARED_EXPORT mafInterpreter : public mafTextEditor
+class MAFSCRIPTINTERPRETERSHARED_EXPORT mafInterpreterEditor : public mafTextEditor
 {
     Q_OBJECT
 
 public:
-     mafInterpreter(QWidget *parent = 0);
-    ~mafInterpreter(void);
+     mafInterpreterEditor(QWidget *parent = 0);
+    ~mafInterpreterEditor(void);
 
     void  readSettings(void);
     void writeSettings(void);

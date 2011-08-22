@@ -32,8 +32,7 @@ using namespace mafScriptInterpreter;
 QMultiMap<QString, mafLog::Handler> mafLog::s_handlers;
 
 
-class mafStandardRedirector : public std::basic_streambuf<char>
-{
+class mafStandardRedirector : public std::basic_streambuf<char> {
 public:
     enum Channel { Out, Err, Log } ;
 
@@ -64,22 +63,19 @@ mafStandardRedirector *mafStandardRedirector::s_err = NULL;
 mafStandardRedirector *mafStandardRedirector::s_out = NULL;
 mafStandardRedirector *mafStandardRedirector::s_log = NULL;
 
-mafStandardRedirector::mafStandardRedirector(std::ostream &stream, Channel channel) : m_stream(stream), m_channel(channel)
-{
+mafStandardRedirector::mafStandardRedirector(std::ostream &stream, Channel channel) : m_stream(stream), m_channel(channel) {
     m_string = " ";
     m_buffer = stream.rdbuf();
     stream.rdbuf(this);
 }
 
-mafStandardRedirector::~mafStandardRedirector(void)
-{
+mafStandardRedirector::~mafStandardRedirector(void) {
     if (!m_string.empty()) flush();
 
     m_stream.rdbuf(m_buffer);
 }
 
-void mafStandardRedirector::flush(void)
-{
+void mafStandardRedirector::flush(void) {
     switch(m_channel) {
     case Err: 
         mafLog::error() << QString::fromStdString(m_string);
@@ -93,8 +89,7 @@ void mafStandardRedirector::flush(void)
     };
 }
 
-int mafStandardRedirector::overflow(int v)
-{
+int mafStandardRedirector::overflow(int v) {
     if (v == '\n') {
         mafLog::output() << m_string.c_str();
         m_string.erase(m_string.begin(), m_string.end());
@@ -104,24 +99,21 @@ int mafStandardRedirector::overflow(int v)
     return v;
 }
 
-std::streamsize mafStandardRedirector::xsputn(const char *p, std::streamsize n)
-{
+std::streamsize mafStandardRedirector::xsputn(const char *p, std::streamsize n) {
     if(p)
         m_string += QString::fromAscii(p, n).remove('\n').remove('\r').simplified().toStdString();
 
     return n;
 }
 
-bool mafStandardRedirector::initialize(void)
-{
+bool mafStandardRedirector::initialize(void) {
     if (!s_err) s_err = new mafStandardRedirector(std::cerr, mafStandardRedirector::Err);
     if (!s_out) s_out = new mafStandardRedirector(std::cout, mafStandardRedirector::Out);
     if (!s_log) s_log = new mafStandardRedirector(std::clog, mafStandardRedirector::Log);
     return true;
 }
 
-void mafStandardRedirector::uninitialize(void)
-{
+void mafStandardRedirector::uninitialize(void) {
     if (s_err) { delete s_err; s_err = NULL; }
     if (s_out) { delete s_out; s_out = NULL; }
     if (s_log) { delete s_log; s_log = NULL; }
@@ -191,7 +183,7 @@ mafLog mafLog::fatal(const QString& source)
     return mafLog(source, Fatal);
 }
 
-mafLog::mafLog(const QString& source, Level level) : m_level(level), m_source(source)
+mafLog::mafLog(const QString& source, LogType logType) : m_LogType(logType), m_source(source)
 {
 
 }
@@ -199,11 +191,11 @@ mafLog::mafLog(const QString& source, Level level) : m_level(level), m_source(so
 mafLog::~mafLog(void)
 {
      if (s_handlers.keys().contains(m_source))
-         foreach(Handler handler, s_handlers.values(m_source)) handler(m_level, m_log);
+         foreach(Handler handler, s_handlers.values(m_source)) handler(m_LogType, m_log);
      else
          qDebug() << m_log.toAscii().constData();
 
-     // qDebug().nospace() << QDate::currentDate().toString().toAscii().constData() << QTime::currentTime().toString().toAscii() << "(" << m_source << ") Level=" << m_level << "-" << m_log.toAscii();
+     // qDebug().nospace() << QDate::currentDate().toString().toAscii().constData() << QTime::currentTime().toString().toAscii() << "(" << m_source << ") LogType=" << m_LogType << "-" << m_log.toAscii();
 }
 
 void mafLog::registerHandler(Handler handler, const QString& source)
@@ -227,15 +219,15 @@ void mafLog::disableRedirection(void)
 // mafLogEvent
 // /////////////////////////////////////////////////////////////////
 
-mafLogEvent::mafLogEvent(mafLog::Level level, const QString& message) : QEvent(s_type)
+mafLogEvent::mafLogEvent(mafLog::LogType logType, const QString& message) : QEvent(s_type)
 {
-    this->m_level = level;
+    this->m_LogType = logType;
     this->m_message = message;
 }
 
-mafLog::Level mafLogEvent::level(void) const
+mafLog::LogType mafLogEvent::logType(void) const
 {
-    return m_level;
+    return m_LogType;
 }
 
 QString mafLogEvent::message(void) const
@@ -244,37 +236,3 @@ QString mafLogEvent::message(void) const
 }
 
 QEvent::Type mafLogEvent::s_type = static_cast<Type>(QEvent::registerEventType());
-
-// /////////////////////////////////////////////////////////////////
-// Helper functions
-// /////////////////////////////////////////////////////////////////
-
- mafLog mafOutput(void)
-{
-    return mafLog::output();
-}
-
- mafLog mafError(void)
-{
-    return mafLog::error();
-}
-
- mafLog mafDebug(void)
-{
-    return mafLog::debug();
-}
-
- mafLog mafWarning(void)
-{
-    return mafLog::warning();
-}
-
- mafLog mafCritical(void)
-{
-    return mafLog::critical();
-}
-
- mafLog mafFatal(void)
-{
-    return mafLog::fatal();
-}

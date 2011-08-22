@@ -55,20 +55,31 @@ public:
 
     /// Remove rule
     void removeRule(const QString &name);
-
+    
+    /// Insert new rule
+    void insertFormat(const QString &name, QTextCharFormat format);
+    /// Remove rule
+    void removeFormat(const QString &name);
+    
+    /// retrieve format from name
+    const QTextCharFormat &format(const QString &name);
+    
 protected:
     /// Set the text which will be highlighted
     /*virtual*/ void highlightBlock(const QString &text);
-
+    
 private:
+    /// initialize several patterns
+    void initialize();
+    
     mutable QReadWriteLock *m_Lock; ///< Lock variable for thread safe access to object.
-
-    QMultiMap<QString, mafHighlightingRule> m_HighlightingRules; ///< container with the entire list of rules
-
+    
+    QMap<QString, mafHighlightingRule> m_HighlightingRules; ///< container with the entire list of rules
+    QMap<QString, QTextCharFormat> m_Formats; ///< container with the entire list of rules
+    
     //sample for multiline comment
     QRegExp m_CommentStartExpression; ///< variable which set the pattern for starting a comment
     QRegExp m_CommentEndExpression; ///< variable which set the pattern for ending a comment
-    QTextCharFormat m_CommentFormat; ///< variable which set the format for multiline rule
 };
 
 } // end namespace
