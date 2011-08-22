@@ -176,6 +176,9 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
 
     //picking the actor
     QTestEventList events;
+    events.addMousePress(Qt::LeftButton);
+    events.simulate(m_VTKWidget);
+    
     events.addMouseRelease(Qt::LeftButton);
     events.simulate(m_VTKWidget);
 
@@ -195,9 +198,11 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //picking the actor in another point
     events.clear();
     QPoint point = QPoint(200, 200);
-    events.addMouseRelease(Qt::LeftButton, 0, point);
+    events.addMousePress(Qt::LeftButton,0 ,point);
     events.simulate(m_VTKWidget);
-
+    
+    events.addMouseRelease(Qt::LeftButton);
+    events.simulate(m_VTKWidget);
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(1000);
 
@@ -211,7 +216,10 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //picking the actor in another point after "Next Pick".
     events.clear();
     point = QPoint(200, 250);
-    events.addMouseRelease(Qt::LeftButton, 0, point);
+    events.addMousePress(Qt::LeftButton, 0, point);
+    events.simulate(m_VTKWidget);
+    
+    events.addMouseRelease(Qt::LeftButton);
     events.simulate(m_VTKWidget);
 
     m_VTKWidget->GetRenderWindow()->Render();
@@ -220,7 +228,10 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //picking the actor in another point
     events.clear();
     point = QPoint(300, 200);
-    events.addMouseRelease(Qt::LeftButton, 0, point);
+    events.addMousePress(Qt::LeftButton, 0, point);
+    events.simulate(m_VTKWidget);
+    
+    events.addMouseRelease(Qt::LeftButton);
     events.simulate(m_VTKWidget);
 
     m_VTKWidget->GetRenderWindow()->Render();
@@ -235,7 +246,10 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //picking the actor in another point
     events.clear();
     point = QPoint(350, 250);
-    events.addMouseRelease(Qt::LeftButton, 0, point);
+    events.addMousePress(Qt::LeftButton, 0, point);
+    events.simulate(m_VTKWidget);
+    
+    events.addMouseRelease(Qt::LeftButton);
     events.simulate(m_VTKWidget);
 
     m_VTKWidget->GetRenderWindow()->Render();
@@ -244,7 +258,10 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //remove a pick marker picking the sphere with ctrl modifier
     events.clear();
     point = QPoint(320, 220);
-    events.addMouseRelease(Qt::LeftButton, Qt::ControlModifier, point);
+    events.addMousePress(Qt::LeftButton, Qt::ControlModifier, point);
+    events.simulate(m_VTKWidget);
+    
+    events.addMouseRelease(Qt::LeftButton);
     events.simulate(m_VTKWidget);
 
     m_VTKWidget->GetRenderWindow()->Render();
@@ -259,7 +276,10 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //picking the actor in another point
     events.clear();
     point = QPoint(380, 220);
-    events.addMouseRelease(Qt::LeftButton, 0, point);
+    events.addMousePress(Qt::LeftButton, 0, point);
+    events.simulate(m_VTKWidget);
+    
+    events.addMouseRelease(Qt::LeftButton);
     events.simulate(m_VTKWidget);
 
     m_VTKWidget->GetRenderWindow()->Render();
@@ -268,7 +288,10 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //remove a pick marker picking the sphere with ctrl modifier
     events.clear();
     point = QPoint(375, 215);
-    events.addMouseRelease(Qt::LeftButton, Qt::ControlModifier, point);
+    events.addMousePress(Qt::LeftButton, Qt::ControlModifier, point);
+    events.simulate(m_VTKWidget);
+    
+    events.addMouseRelease(Qt::LeftButton);
     events.simulate(m_VTKWidget);
 
     m_VTKWidget->GetRenderWindow()->Render();
@@ -277,7 +300,10 @@ void mafVTKInteractorPickerTest::mafVTKInteractorPickerEventsTest() {
     //picking the actor in another point
     events.clear();
     point = QPoint(400, 210);
-    events.addMouseRelease(Qt::LeftButton, 0, point);
+    events.addMousePress(Qt::LeftButton, 0, point);
+    events.simulate(m_VTKWidget);
+    
+    events.addMouseRelease(Qt::LeftButton);
     events.simulate(m_VTKWidget);
 
     m_VTKWidget->GetRenderWindow()->Render();
