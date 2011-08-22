@@ -15,11 +15,14 @@
 #include <mafPipeVisualVTKSurface.h>
 #include <mafVTKParametricSurfaceEllipsoid.h>
 #include <mafVTKWidget.h>
+#include <mafDataBoundaryAlgorithmVTK.h>
+#include <vtkRenderWindowInteractor.h>
 #include <vtkAlgorithmOutput.h>
 #include <mafProxy.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkActor.h>
+#include <QMainWindow>
 #include <QDebug>
 
 using namespace mafResources;
@@ -40,6 +43,11 @@ using namespace mafPluginVTK;
 
 class mafVTKParametricSurfaceEllipsoidTest : public QObject {
     Q_OBJECT
+    //initialize all the graphic resources
+    void initializeGraphicResources();
+
+    //shutdown all the graphic resources
+    void shutdownGraphicResources();
 
 private slots:
     /// Initialize test variables
@@ -47,8 +55,6 @@ private slots:
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
-
-        m_RenderWidget = new mafVTKWidget();
 
         // Create the parametric ellipsoid.
         m_ParametricEllipsoid = mafNEW(mafPluginVTK::mafVTKParametricSurfaceEllipsoid);
@@ -62,9 +68,13 @@ private slots:
         //Insert data into VME
         m_VME = mafNEW(mafResources::mafVME);
         m_DataSet = mafNEW(mafResources::mafDataSet);
+        mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
+        boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
+        m_DataSet->setBoundaryAlgorithm(boundaryAlgorithm);
         m_DataSet->setDataValue(&m_DataSourceContainer);
         m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
         //! </snippet>
+        initializeGraphicResources();
     }
 
     /// Cleanup test variables memory allocation.
@@ -73,11 +83,11 @@ private slots:
         mafDEL(m_VME);
         mafDEL(m_ParametricEllipsoid);
         mafMessageHandler::instance()->shutdown();
-        delete m_RenderWidget;
+        shutdownGraphicResources();
     }
 
-   /// Test Set/Get method of parametric surface
-    void SetGetTest();
+    /// visualize parametric surface
+    void visualizeTest();
 
 
 private:
@@ -86,13 +96,32 @@ private:
     mafResources::mafDataSet *m_DataSet;
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
     QObject *m_RenderWidget; /// renderer widget
+    vtkRenderer *m_Renderer; ///< Accessory renderer
+    QMainWindow *w;
 };
 
-void mafVTKParametricSurfaceEllipsoidTest::SetGetTest() {
-    vtkRenderer *renderer = vtkRenderer::New();
-    vtkRenderWindow *renWin = ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow();
+void mafVTKParametricSurfaceEllipsoidTest::initializeGraphicResources() {
+    w = new QMainWindow();
+    w->setMinimumSize(640,480);
 
-    mafPipeVisualVTKSurface *pipe;
+    m_RenderWidget = new mafVTKWidget();
+    ((mafVTKWidget*)m_RenderWidget)->setParent(w);
+
+    m_Renderer = vtkRenderer::New();
+    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->AddRenderer(m_Renderer);
+
+    m_Renderer->SetBackground(0.1, 0.1, 0.1);
+    ((mafVTKWidget*)m_RenderWidget)->update();
+    w->show();
+}
+
+void mafVTKParametricSurfaceEllipsoidTest::shutdownGraphicResources() {
+    m_Renderer->Delete();
+    w->close();
+}
+
+void mafVTKParametricSurfaceEllipsoidTest::visualizeTest() {
+     mafPipeVisualVTKSurface *pipe;
     pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSurface);
     pipe->setInput(m_VME);
     pipe->setProperty("scalarVisibility", 0);
@@ -106,14 +135,11 @@ void mafVTKParametricSurfaceEllipsoidTest::SetGetTest() {
     QVERIFY(actor != NULL);
 
     // Connect the actor (contained into the container) with the renderer.
-    renderer->AddActor(*actor);
-    renWin->AddRenderer(renderer);
+    m_Renderer->AddActor(*actor);
 
-    renderer->SetBackground(0.1, 0.1, 0.1);
-    renWin->SetSize(640, 480);
-    renWin->SetPosition(400,0);
+    ((mafVTKWidget*)m_RenderWidget)->update();
+    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
 
-    renWin->Render();
     //iren->Start();
     QTest::qSleep(2000);
 
@@ -142,7 +168,6 @@ void mafVTKParametricSurfaceEllipsoidTest::SetGetTest() {
     QCOMPARE(m_ParametricEllipsoid->center()[1], 5.0);
     QCOMPARE(m_ParametricEllipsoid->center()[2], 20.5);
 
-    renderer->Delete();
     pipe->setGraphicObject(NULL);
     mafDEL(pipe);
 }

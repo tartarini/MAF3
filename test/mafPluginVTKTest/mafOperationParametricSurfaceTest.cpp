@@ -25,6 +25,7 @@
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkActor.h>
+#include <QMainWindow>
 #include <QDebug>
 
 using namespace mafResources;
@@ -45,6 +46,11 @@ using namespace mafPluginVTK;
 
 class mafOperationParametricSurfaceTest : public QObject {
     Q_OBJECT
+    //initialize all the graphic resources
+    void initializeGraphicResources();
+
+    //shutdown all the graphic resources
+    void shutdownGraphicResources();
 
 private slots:
     /// Initialize test variables
@@ -58,6 +64,7 @@ private slots:
         // Create the parametric operation.
         m_OpParametric = mafNEW(mafPluginVTK::mafOperationParametricSurface);
         m_RenderWidget = new mafVTKWidget();
+        initializeGraphicResources();
     }
 
     /// Cleanup test variables memory allocation.
@@ -66,22 +73,44 @@ private slots:
         m_VMEManager->shutdown();
         mafMessageHandler::instance()->shutdown();
         delete m_RenderWidget;
+        shutdownGraphicResources();
     }
 
     /// Test the operation's execution.
     void testExecute();
 
-   /// Test Set/Get method of parametric surface
-    void SetGetTest();
+    /// visualize parametric surface
+    void visualizeTest();
 
 private:
     mafOperationParametricSurface *m_OpParametric; ///< Parametric operation.
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a surface.
     mafVME *m_VmeAdded; ///< test object.
     mafResources::mafVMEManager *m_VMEManager; ///< instance of mafVMEManager.
-    
     QObject *m_RenderWidget; /// renderer widget
+    vtkRenderer *m_Renderer; ///< Accessory renderer
+    QMainWindow *w;
 };
+
+void mafOperationParametricSurfaceTest::initializeGraphicResources() {
+    w = new QMainWindow();
+    w->setMinimumSize(640,480);
+
+    m_RenderWidget = new mafVTKWidget();
+    ((mafVTKWidget*)m_RenderWidget)->setParent(w);
+
+    m_Renderer = vtkRenderer::New();
+    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->AddRenderer(m_Renderer);
+
+    m_Renderer->SetBackground(0.1, 0.1, 0.1);
+    ((mafVTKWidget*)m_RenderWidget)->update();
+    w->show();
+}
+
+void mafOperationParametricSurfaceTest::shutdownGraphicResources() {
+    m_Renderer->Delete();
+    w->close();
+}
 
 void mafOperationParametricSurfaceTest::testExecute() {
     //Set parameters ( create a cube )
@@ -101,10 +130,7 @@ void mafOperationParametricSurfaceTest::testExecute() {
     QVERIFY(m_VME != NULL);
 }
 
-void mafOperationParametricSurfaceTest::SetGetTest() {
-    vtkRenderer *renderer = vtkRenderer::New();
-    vtkRenderWindow *renWin = ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow();
-    
+void mafOperationParametricSurfaceTest::visualizeTest() {
     mafPipeVisualVTKSurface *pipe;
     pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSurface);
     pipe->setInput(m_VME);
@@ -118,20 +144,14 @@ void mafOperationParametricSurfaceTest::SetGetTest() {
     mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, pipe->output());
     QVERIFY(actor != NULL);
 
-    renWin->AddRenderer(renderer);
-    
     // Connect the actor (contained into the container) with the renderer.
-    renderer->AddActor(*actor);
+    m_Renderer->AddActor(*actor);
 
-    renderer->SetBackground(0.1, 0.1, 0.1);
-    renWin->SetSize(640, 480);
-    renWin->SetPosition(400,0);
-
-    renWin->Render();
+    ((mafVTKWidget*)m_RenderWidget)->update();
+    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
     //iren->Start();
     QTest::qSleep(2000);
 
-    renderer->Delete();
     pipe->setGraphicObject(NULL);
     mafDEL(pipe);
 }
