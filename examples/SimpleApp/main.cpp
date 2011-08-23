@@ -1,10 +1,14 @@
 #include <QtGui/QApplication>
 
 #include "mafOperationSimpleApp.h"
+#include "mafViewScriptInterpreterPython.h"
 #include "mafApplicationSettingsPageConfigurations.h"
 
 #include <mafMainWindow.h>
 #include <mafLogic.h>
+
+
+
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
@@ -27,7 +31,7 @@ int main(int argc, char *argv[]) {
     // to the mafObjectFactory can be done using the following macro:
     // mafRegisterObject(myClassCustom);
     mafRegisterObjectAndAcceptBind(mafOperationSimpleApp);
-
+    mafRegisterObject(mafViewScriptInterpreterPython);
     // Plug the object's information into the framework
     //logic->plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
     //logic->plugObject("mafResources::mafOperation", "mafResources::mafOperationTransform", "Transform");
@@ -42,6 +46,7 @@ int main(int argc, char *argv[]) {
 
     logic->customizeVisualization("VTK view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
 
+    logic->plugObject("mafResources::mafView", "mafViewScriptInterpreterPython", "Python Console");
     // Create the instance of the main window and pass to it the application's logic.
     // In this way the mafMainWondow class will also load the plug-ins present
     // in the default 'plugins' directory.
