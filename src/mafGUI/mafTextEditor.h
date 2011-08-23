@@ -20,15 +20,15 @@
 #ifndef MAFTEXTEDITOR_H
 #define MAFTEXTEDITOR_H
 
-#include "mafScriptInterpreter_global.h"
-#include <QtGui/QPlainTextEdit>
+#include "mafGUI_global.h"
+#include <QPlainTextEdit>
 
-namespace mafScriptInterpreter {
+namespace mafGUI {
 
 class mafTextEditorPreferencesWidget;
 class mafTextEditorPrivate;
 
-class MAFSCRIPTINTERPRETERSHARED_EXPORT mafTextEditorDocumentLayout : public QPlainTextDocumentLayout
+class MAFGUISHARED_EXPORT mafTextEditorDocumentLayout : public QPlainTextDocumentLayout
 {
     Q_OBJECT
 
@@ -51,7 +51,7 @@ public:
 
 class mafTextEditorDocumentPrivate;
 
-class MAFSCRIPTINTERPRETERSHARED_EXPORT mafTextEditorDocument : public QObject
+class MAFGUISHARED_EXPORT mafTextEditorDocument : public QObject
 {
     Q_OBJECT
 
@@ -84,7 +84,7 @@ private:
 // mafTextEditor
 // /////////////////////////////////////////////////////////////////
 
-class MAFSCRIPTINTERPRETERSHARED_EXPORT mafTextEditor : public QPlainTextEdit
+class MAFGUISHARED_EXPORT mafTextEditor : public QPlainTextEdit
 {
     Q_OBJECT
 

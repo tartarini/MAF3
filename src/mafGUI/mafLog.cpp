@@ -27,7 +27,7 @@
 #include <string>
 
 
-using namespace mafScriptInterpreter;
+using namespace mafGUI;
 
 QMultiMap<QString, mafLog::Handler> mafLog::s_handlers;
 

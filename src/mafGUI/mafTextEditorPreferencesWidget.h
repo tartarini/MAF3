@@ -20,15 +20,15 @@
 #ifndef MAFTEXTEDITORPREFERENCESWIDGET_H
 #define MAFTEXTEDITORPREFERENCESWIDGET_H
 
-#include "mafScriptInterpreter_global.h"
-#include <mafGUIApplicationSettingsPage.h>
+#include "mafGUI_global.h"
+#include "mafGUIApplicationSettingsPage.h"
 
-namespace mafScriptInterpreter {
+namespace mafGUI {
 
 class mafTextEditor;
 class mafTextEditorPreferencesWidgetPrivate;
 
-class MAFSCRIPTINTERPRETERSHARED_EXPORT mafTextEditorPreferencesWidget : public mafGUI::mafGUIApplicationSettingsPage
+class MAFGUISHARED_EXPORT mafTextEditorPreferencesWidget : public mafGUIApplicationSettingsPage
 {
     Q_OBJECT
 

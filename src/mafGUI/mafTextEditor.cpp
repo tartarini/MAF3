@@ -17,15 +17,16 @@
  * 
  */
 
-#include <QtGui>
+#include <QPainter>
+#include <QStyle>
 
 #include "mafLog.h"
 
 #include "mafTextEditor.h"
-#include "mafTextEditorSyntaxHighlighterPython.h"
+#include "mafSyntaxHighlighterPython.h"
 #include "mafTextEditorPreferencesWidget.h"
 
-namespace mafScriptInterpreter {
+namespace mafGUI {
     class mafTextEditorExtraArea : public QWidget
     {
     public:
@@ -75,7 +76,7 @@ namespace mafScriptInterpreter {
 
 }
 
-using namespace mafScriptInterpreter;
+using namespace mafGUI;
 
 
 mafTextEditorDocument::mafTextEditorDocument(void)
@@ -267,7 +268,7 @@ QTextDocument *mafTextEditorDocument::document(void)
 // mafTextEditorPrivate
 // /////////////////////////////////////////////////////////////////
 
-class mafScriptInterpreter::mafTextEditorPrivate
+class mafGUI::mafTextEditorPrivate
 {
 public:
     bool showLineNumbers;
@@ -370,7 +371,7 @@ bool mafTextEditor::open(const QString& fileName)
             new mafTextEditorSyntaxHighlighterCpp(this);*/
 
         if(fileName.endsWith(".py"))
-            new mafTextEditorSyntaxHighlighterPython(this);
+            new mafSyntaxHighlighterPython(this->document());
 
         /*if(fileName.endsWith(".tcl"))
             new mafTextEditorSyntaxHighlighterTcl(this);*/

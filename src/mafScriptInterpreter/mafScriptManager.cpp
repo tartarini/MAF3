@@ -63,9 +63,9 @@ void mafScriptManager::readSettings(void)
     settings.endGroup();
 
     if(d->module_path.isEmpty() && d->script_path.isEmpty()) {
-        mafLog::warning() << "Your maf config does not seem to be set correctly.";
-        mafLog::warning() << "Please set scripts.script_path.";
-        mafLog::warning() << "Please set scripts.module_path.";
+        mafGUI::mafLog::warning() << "Your maf config does not seem to be set correctly.";
+        mafGUI::mafLog::warning() << "Please set scripts.script_path.";
+        mafGUI::mafLog::warning() << "Please set scripts.module_path.";
     }
 }
 

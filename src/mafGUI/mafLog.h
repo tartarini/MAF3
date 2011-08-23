@@ -20,12 +20,12 @@
 #ifndef MAFLOG_H
 #define MAFLOG_H
 
-#include "mafScriptInterpreter_global.h"
+#include "mafGUI_global.h"
 #include <QtCore>
 
-namespace mafScriptInterpreter {
+namespace mafGUI {
 
-class MAFSCRIPTINTERPRETERSHARED_EXPORT mafLog
+class MAFGUISHARED_EXPORT mafLog
 {
 public:
     enum LogType { Output, Error, Debug, Warning, Critical, Fatal };
@@ -67,7 +67,7 @@ private:
 // mafLogEvent
 // /////////////////////////////////////////////////////////////////
 
-class MAFSCRIPTINTERPRETERSHARED_EXPORT mafLogEvent : public QEvent
+class MAFGUISHARED_EXPORT mafLogEvent : public QEvent
 {
 public:
     mafLogEvent(mafLog::LogType logType, const QString& msg);

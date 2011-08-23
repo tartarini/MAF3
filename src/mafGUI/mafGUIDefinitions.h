@@ -16,7 +16,7 @@
 
 #include <QWidget>
 #include <QUiLoader>
-#include <QTextEdit>
+#include <QPlainTextEdit>
 #include <QSyntaxHighlighter>
 #include <QTextCharFormat>
 

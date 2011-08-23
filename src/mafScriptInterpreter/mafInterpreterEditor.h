@@ -13,7 +13,7 @@
 #define MAFINTERPRETEREDITOR_H
 
 #include "mafScriptInterpreter_global.h"
-#include <mafLog.h>
+#include "mafLog.h"
 
 #include <mafTextEditor.h>
 
@@ -22,7 +22,7 @@ namespace mafScriptInterpreter {
 class mafScriptEditor;
 class mafInterpreterPreferencesWidget;
 
-class MAFSCRIPTINTERPRETERSHARED_EXPORT mafInterpreterEditor : public mafTextEditor
+class MAFSCRIPTINTERPRETERSHARED_EXPORT mafInterpreterEditor : public mafGUI::mafTextEditor
 {
     Q_OBJECT
 
@@ -34,7 +34,7 @@ public:
     void writeSettings(void);
 
     void registerInterpreter(mafScriptEditor *interpreter);
-    void registerAsHandler(mafLog::Handler handler);
+    void registerAsHandler(mafGUI::mafLog::Handler handler);
 
     QString filter(QString text);
 

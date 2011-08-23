@@ -31,6 +31,7 @@
 
 #include <mafInterpreterEditor.h>
 
+using namespace mafGUI;
 using namespace mafScriptInterpreter;
 
 // /////////////////////////////////////////////////////////////////
@@ -60,7 +61,6 @@ int main(int argc, char *argv[])
     options.addUsage("");
     options.addUsage("Script:");
     options.addUsage(" -i  --interpreter");
-    options.addUsage("     --interpreter=tcl    Run tcl     gui interpreter");
     options.addUsage("     --interpreter=python Run python  gui interpreter");
     options.setFlag("console", 'c');
     options.setOption("interpreter", 'i');

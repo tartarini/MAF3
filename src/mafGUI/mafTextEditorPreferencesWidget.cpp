@@ -17,17 +17,15 @@
  * 
  */
 
-#include <QtGui>
 
-#include <mafTextEditor.h>
-#include <mafTextEditorPreferencesWidget.h>
+#include "mafTextEditor.h"
+#include "mafTextEditorPreferencesWidget.h"
 
 #include "ui_mafTextEditorPreferencesWidget.h"
 
-using namespace mafGUI;
-using namespace mafScriptInterpreter;
-
-class mafScriptInterpreter::mafTextEditorPreferencesWidgetPrivate
+namespace mafGUI {
+	
+class mafTextEditorPreferencesWidgetPrivate
 {
 public:
     Ui::mafTextEditorPreferencesWidget ui;
@@ -40,6 +38,10 @@ public:
 
     QFont font;
 };
+
+}  // end namespace
+
+using namespace mafGUI;
 
 mafTextEditorPreferencesWidget::mafTextEditorPreferencesWidget(mafTextEditor *editor, QWidget *parent) : mafGUIApplicationSettingsPage(parent)
 {
