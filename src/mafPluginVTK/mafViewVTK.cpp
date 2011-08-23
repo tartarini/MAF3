@@ -78,6 +78,11 @@ void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
         mafSceneNodeVTK *n = qobject_cast<mafSceneNodeVTK *>(node);
         if(n) {
             m_Renderer->RemoveViewProp(n->nodeAssembly());
+            mafSceneNodeVTK *nParent = qobject_cast<mafSceneNodeVTK *>(node->parentNode());
+            if (nParent) {
+                nParent->nodeAssembly()->RemovePart(n->nodeAssembly());
+            }
+            
         }
     }
     Superclass::removeSceneNode(node);
