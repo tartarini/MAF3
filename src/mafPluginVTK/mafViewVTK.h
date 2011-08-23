@@ -58,10 +58,7 @@ protected:
     /// factory method for creating scenenode VTK.
     /*virtual*/ mafResources::mafSceneNode *createSceneNode(mafResources::mafVME *vme);
 
-
 private:
-    //mafCore::mafProxy<mafPluginVTK::mafVTKWidget> m_Widget; ///< VTK Widget on which will be rendered the scene.
-    mafVTKWidget *m_Widget; ///< VTK Widget on which will be rendered the scene.
     vtkRenderer *m_Renderer; ///< VTK render.
 };
 
