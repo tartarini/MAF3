@@ -110,6 +110,7 @@ void mafView::removeSceneNode(mafSceneNode *node) {
     // Disconnect the view from the node
     disconnect(node, SIGNAL(destroyNode()),this, SLOT(sceneNodeDestroyed()));
 
+    //@TODO need to handle the removing of vtkAssebly from old parent
     if(m_Scenegraph != NULL) {
         m_Scenegraph->removeHierarchyNode(node);
         m_SceneNodeList.removeOne(node);

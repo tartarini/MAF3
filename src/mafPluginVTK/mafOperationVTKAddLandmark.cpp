@@ -166,6 +166,7 @@ void mafOperationVTKAddLandmark::fixLandmark() {
             vtkPolyData* vtkData = vtkPolyData::SafeDownCast(dataObject);
 
             this->setScalarValue(vtkData, FIXED_MARKER_COLOR);
+            m_VMEList.last()->dataSetCollection()->updateData();
         }
     }
 }
