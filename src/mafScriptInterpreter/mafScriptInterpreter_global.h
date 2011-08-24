@@ -14,7 +14,7 @@
 
 #include <QtCore/qglobal.h>
 
-#if defined(mafScriptEditor_EXPORTS)
+#if defined(mafScriptInterpreter_EXPORTS)
 #  define MAFSCRIPTINTERPRETERSHARED_EXPORT Q_DECL_EXPORT
 #else
 #  define MAFSCRIPTINTERPRETERSHARED_EXPORT Q_DECL_IMPORT
