@@ -34,9 +34,9 @@ if(${MAF_QTGUI})
   ADD_SUBDIRECTORY(mafGUI)
 endif(${MAF_QTGUI})
 
-#experimental
-if(BUILD_WRAP)
+if(${MAF_SCRIPT_INTERPRETER})
   ADD_SUBDIRECTORY(mafScriptInterpreter)
-endif(BUILD_WRAP)
+endif(${MAF_SCRIPT_INTERPRETER})
+
 
 #message (".......................... Exiting ${CMAKE_CURRENT_LIST_FILE} ............................")
