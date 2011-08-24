@@ -8,7 +8,7 @@ namespace mafGUI {
 // forward declaration
 class mafTextDocument;
 
-class mafSyntaxHighlighterPython : public mafSyntaxHighlighter {
+class MAFGUISHARED_EXPORT mafSyntaxHighlighterPython : public mafSyntaxHighlighter {
 public:
      mafSyntaxHighlighterPython(QTextDocument *parent = 0);
 };
