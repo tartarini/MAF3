@@ -3,7 +3,7 @@
 #  MAF
 #
 #  Created by Daniele Giunchi - Paolo Quadrani on 10/09/10.
-#  Copyright 2009 B3C. All rights reserved.
+#  Copyright 2011 B3C. All rights reserved.
 #
 #  See Licence at: http://tiny.cc/QXJ4D
 #
@@ -47,7 +47,7 @@ endif()
 
 # modify CMAKE_BUILD_TYPE in order to set default configuration for non-IDE build
 if(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "MinGW Makefiles" AND NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
+	set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "MinGW Makefiles" AND NOT CMAKE_BUILD_TYPE)
 
 #############################################################################################
@@ -62,8 +62,9 @@ option(MAF_SERIALIZATION "Build mafSerialization module. mafCore and mafEventBus
 option(MAF_RESOURCES "Build mafResources module. mafCore and mafEventBus will be built anyway."               ON)
 option(MAF_PLUGINVTK "Build mafPluginVTK module. mafCore and mafEventBus will be built anyway."               ON)
 option(VTK_MAF "Build vtkMAF VTK extension library."                                                          ON)
-option(MAF_APPLICATION_LOGIC "Build mafApplicationLogic module.mafCore and mafEventBus will be built anyway." ON)
+option(MAF_APPLICATION_LOGIC "Build mafApplicationLogic module. mafCore and mafEventBus will be built anyway." ON)
 option(MAF_QTGUI "Build mafGUI module. mafCore and mafEventBus will be built anyway."                         ON)
+option(MAF_SCRIPT_INTERPRETER "Build mafScriptInterpreter module. mafCore, mafEventBus and mafGUI will be built anyway." OFF)
 
 ### set modules interdependencies
 include(CMake/mafUtilities.cmake)
@@ -73,6 +74,16 @@ if(MAF_PLUGINVTK)
   mafDependentOption(MAF_RESOURCES "Build mafResources module." ON MAF_PLUGINVTK ON)
   mafDependentOption(VTK_MAF "Build vtkMAF module." ON MAF_PLUGINVTK ON)
 endif(MAF_PLUGINVTK)
+
+if(MAF_SCRIPT_INTERPRETER)
+  SET( MAF_QTGUI ON )
+  mafDependentOption(MAF_QTGUI "Build mafGUI module." ON MAF_SCRIPT_INTERPRETER ON)
+endif(MAF_SCRIPT_INTERPRETER)
+
+if(MAF_QTGUI)
+  SET( MAF_APPLICATION_LOGIC ON )
+  mafDependentOption(MAF_APPLICATION_LOGIC "Build mafApplicationLogic module." ON MAF_QTGUI ON)
+endif(MAF_QTGUI)
 
 ### examples dependencies 
 if(BUILD_EXAMPLES)
@@ -96,12 +107,14 @@ if(BUILD_EXAMPLES)
     
     set( MAF_QTGUI ON ) 
     mafDependentOption(MAF_QTGUI "Build Test module for mafGUI." ON BUILD_EXAMPLES ON)
+	
+	set( MAF_SCRIPT_INTERPRETER ON ) 
+    mafDependentOption(MAF_SCRIPT_INTERPRETER "Build Test module for mafGUI." ON BUILD_EXAMPLES ON)
 endif(BUILD_EXAMPLES)
 
 if(BUILD_QA)
     set( BUILD_DOCUMENTATION ON ) 
     mafDependentOption(BUILD_DOCUMENTATION "Build Documentation for QA." ON BUILD_QA ON)
-
 endif(BUILD_QA)
 
 #############################################################################################
@@ -110,6 +123,13 @@ endif(BUILD_QA)
 if(BUILD_WRAP)
   include(CMake/mafMacroFindWrap.cmake)
 endif(BUILD_WRAP)
+
+#############################################################################################
+### Scripting (find python) If Wrap is enabled, don't need to find Python again!!
+#############################################################################################
+if(MAF_SCRIPT_INTERPRETER AND NOT BUILD_WRAP)
+  include(CMake/mafMacroFindPython.cmake)
+endif(MAF_SCRIPT_INTERPRETER AND NOT BUILD_WRAP)
 
 #############################################################################################
 ### Superbuild execution
