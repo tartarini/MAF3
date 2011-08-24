@@ -62,5 +62,6 @@ SET(MAF_PLUGINVTK "@MAF_PLUGINVTK@")
 SET(VTK_MAF "@VTK_MAF@")
 SET(MAF_APPLICATION_LOGIC "@MAF_APPLICATION_LOGIC@")
 SET(MAF_QTGUI "@MAF_QTGUI@")
+SET(MAF_SCRIPT_INTERPRETER "@MAF_SCRIPT_INTERPRETER@")
 
 #message (".......................... Exiting MAFConfig.cmake ............................")
