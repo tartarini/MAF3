@@ -1,6 +1,7 @@
 #include "mafViewScriptInterpreterPython.h"
 #include <mafInterpreterEditor.h>
 #include <mafScriptEditorPython.h>
+#include <mafScriptEditorPool.h>
 
 #include <mafLog.h>
 
@@ -20,7 +21,7 @@ mafViewScriptInterpreterPython::~mafViewScriptInterpreterPython() {
 }
 
 void mafViewScriptInterpreterPython::create() {
-    mafScriptEditor *interpreter = new mafScriptEditorPython;
+    mafScriptEditor *interpreter = mafScriptEditorPool::instance()->python();
 
     log_output = ((mafInterpreterEditor*)m_RenderWidget);
     ((mafInterpreterEditor*)m_RenderWidget)->registerInterpreter(interpreter);
