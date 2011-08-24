@@ -59,6 +59,7 @@ endif(SWIG_FOUND)
 find_package(PythonLibs QUIET)
 
 if(PYTHONLIBS_FOUND)
+  set(PYTHON_DEBUG_LIBRARY "")
   include_directories(${PYTHON_INCLUDE_PATH})
   get_filename_component(PYTHON_PATH ${PYTHON_LIBRARIES} PATH)
   link_directories(${PYTHON_PATH})
