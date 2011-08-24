@@ -29,6 +29,7 @@
 #include <Python.h>
 #ifdef READD_DEBUG
     #define _DEBUG
+    #undef READD_DEBUG
 #endif // READD_DEBUG
 
 using namespace mafScriptInterpreter;
