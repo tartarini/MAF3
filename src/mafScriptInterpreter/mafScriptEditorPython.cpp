@@ -22,7 +22,14 @@
 #undef _POSIX_C_SOURCE
 #undef _XOPEN_SOURCE
 
+#ifdef _DEBUG
+    #undef _DEBUG
+    #define READD_DEBUG
+#endif // _DEBUG
 #include <Python.h>
+#ifdef READD_DEBUG
+    #define _DEBUG
+#endif // READD_DEBUG
 
 using namespace mafScriptInterpreter;
 
