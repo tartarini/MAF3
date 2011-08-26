@@ -56,4 +56,4 @@ endif(SWIG_FOUND)
 ## Python
 ## #################################################################
 
-include(mafMacroFindPython.cmake)
+include(CMake/mafMacroFindPython.cmake)
