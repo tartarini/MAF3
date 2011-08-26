@@ -21,280 +21,66 @@
 #include <QStyle>
 
 #include "mafTextEditor.h"
+#include "mafTextEditorDocument.h"
+#include "mafTextEditorDocumentLayout.h"
 #include "mafTextEditorPreferencesWidget.h"
 
 namespace mafGUI {
-    class mafTextEditorExtraArea : public QWidget
-    {
+    class mafTextEditorExtraArea : public QWidget {
     public:
         mafTextEditorExtraArea(mafTextEditor *editor) : QWidget(editor) {
-            this->editor = editor;
+            this->m_Editor = editor;
             this->setAutoFillBackground(true);
         }
         
         QSize sizeHint(void) const {
-            return QSize(editor->extraAreaWidth(), 0);
+            return QSize(m_Editor->extraAreaWidth(), 0);
         }
         
     protected:
         void paintEvent(QPaintEvent *event) {
-            editor->extraAreaPaintEvent(event);
+            m_Editor->extraAreaPaintEvent(event);
         }
         
     private:
-        mafTextEditor *editor;
+        mafTextEditor *m_Editor;
     };
-    
-    class mafTextEditorDocumentPrivate
-    {
-    public:
-        enum LineTerminatorMode {
-            LFLineTerminator,
-            CRLFLineTerminator,
-            NativeLineTerminator =
-#if defined (Q_OS_WIN32)
-            CRLFLineTerminator
-#else
-            LFLineTerminator
-#endif
-        };
-        
-    public:
-        bool isBinaryData;
-        bool hasDecodingError;
-        
-        QString fileName;
-        QTextCodec *codec;
-        QTextDocument *document;
-        QByteArray decodingErrorSample;
-        
-        LineTerminatorMode lineTerminatorMode;
-    };
-
-}
-
-using namespace mafGUI;
-
-
-mafTextEditorDocument::mafTextEditorDocument(void)
-{
-    d = new mafTextEditorDocumentPrivate;
-
-    d->isBinaryData = false;
-    d->hasDecodingError = false;
-    d->lineTerminatorMode = mafTextEditorDocumentPrivate::NativeLineTerminator;
-
-    d->fileName = "untitled";
-    d->codec = QTextCodec::codecForLocale();
-    d->document = new QTextDocument(this);
-
-    emit titleChanged(d->fileName);
-}
-
-mafTextEditorDocument::~mafTextEditorDocument(void)
-{
-    delete d->document;
-    delete d;
-}
-
-bool mafTextEditorDocument::open(const QString& fileName)
-{
-    if (!fileName.isEmpty()) {
-        const QFileInfo fi(fileName);
-        d->fileName = fi.absoluteFilePath();
-
-        QFile file(fileName);
-        if (!file.exists())
-            return false;
-
-        if (!fi.isReadable())
-            return false;
-
-        if (!fi.isWritable()) {
-            if (!file.open(QIODevice::ReadOnly))
-                return false;
-        } else {
-            if (!file.open(QIODevice::ReadWrite))
-                return false;
-        }
-        QString title = fi.fileName();
-
-        QByteArray buf = file.readAll();
-        int bytesRead = buf.size();
-
-        QTextCodec *codec = d->codec;
-
-        if (bytesRead >= 4 && ((uchar(buf[0]) == 0xff && uchar(buf[1]) == 0xfe && uchar(buf[2]) == 0 && uchar(buf[3]) == 0)
-                               || (uchar(buf[0]) == 0 && uchar(buf[1]) == 0 && uchar(buf[2]) == 0xfe && uchar(buf[3]) == 0xff))) {
-            codec = QTextCodec::codecForName("UTF-32");
-        } else if (bytesRead >= 2 && ((uchar(buf[0]) == 0xff && uchar(buf[1]) == 0xfe)
-                                      || (uchar(buf[0]) == 0xfe && uchar(buf[1]) == 0xff))) {
-            codec = QTextCodec::codecForName("UTF-16");
-        } else if (!codec) {
-            codec = QTextCodec::codecForLocale();
-        }
-
-        QString text = d->codec->toUnicode(buf);
-        QByteArray verifyBuf = d->codec->fromUnicode(text);
-
-        int minSize = qMin(verifyBuf.size(), buf.size());
-        d->hasDecodingError = (minSize < buf.size()- 4
-                               || memcmp(verifyBuf.constData() + verifyBuf.size() - minSize,
-                                         buf.constData() + buf.size() - minSize, minSize));
-
-        if (d->hasDecodingError) {
-            int p = buf.indexOf('\n', 16384);
-            if (p < 0)
-                d->decodingErrorSample = buf;
-            else
-                d->decodingErrorSample = buf.left(p);
-        } else {
-            d->decodingErrorSample.clear();
-        }
-
-        int lf = text.indexOf('\n');
-        if (lf > 0 && text.at(lf-1) == QLatin1Char('\r')) {
-            d->lineTerminatorMode = mafTextEditorDocumentPrivate::CRLFLineTerminator;
-        } else if (lf >= 0) {
-            d->lineTerminatorMode = mafTextEditorDocumentPrivate::LFLineTerminator;
-        } else {
-            d->lineTerminatorMode = mafTextEditorDocumentPrivate::NativeLineTerminator;
-        }
-
-        d->document->setModified(false);
-        d->document->setUndoRedoEnabled(false);
-        if (d->isBinaryData)
-            d->document->setHtml(tr("<em>Binary data</em>"));
-        else
-            d->document->setPlainText(text);
-        d->document->setUndoRedoEnabled(true);
-
-        mafTextEditorDocumentLayout *documentLayout = qobject_cast<mafTextEditorDocumentLayout*>(d->document->documentLayout());
-        documentLayout->lastSaveRevision = 0;
-        d->document->setModified(false);
-
-        emit titleChanged(title);
-    }
-
-    return true;
-}
-
-bool mafTextEditorDocument::save(const QString& fileName)
-{
-    QString fName = d->fileName;
-    if (!fileName.isEmpty())
-        fName = fileName;
-
-    QFile file(fName);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
-        return false;
-
-    QString plainText = d->document->toPlainText();
-
-    if (d->lineTerminatorMode == mafTextEditorDocumentPrivate::CRLFLineTerminator)
-        plainText.replace(QLatin1Char('\n'), QLatin1String("\r\n"));
-
-    file.write(d->codec->fromUnicode(plainText));
-    if (!file.flush())
-        return false;
-    file.close();
-
-    const QFileInfo fi(fName);
-    d->fileName = fi.absoluteFilePath();
-
-    d->document->setModified(false);
-    emit titleChanged(fi.fileName());
-    emit changed();
-
-    d->isBinaryData = false;
-    d->hasDecodingError = false;
-    d->decodingErrorSample.clear();
-
-    return true;
-}
-
-bool mafTextEditorDocument::close(void)
-{
-    d->document->setPlainText("");
-
-    mafTextEditorDocumentLayout *documentLayout = qobject_cast<mafTextEditorDocumentLayout*>(d->document->documentLayout());
-    documentLayout->lastSaveRevision = 0;
-    d->document->setModified(false);
-
-    d->isBinaryData = false;
-    d->hasDecodingError = false;
-    d->decodingErrorSample.clear();
-
-    emit titleChanged("untitled");
-    emit changed();
-
-    return true;
-}
-
-bool mafTextEditorDocument::isReadOnly(void) const
-{
-    if (d->isBinaryData || d->hasDecodingError)
-        return true;
-    if (d->fileName.isEmpty())
-        return false;
-    const QFileInfo fi(d->fileName);
-    return !fi.isWritable();
-}
-
-bool mafTextEditorDocument::isModified(void) const
-{
-    return d->document->isModified();
-}
-
-bool mafTextEditorDocument::hasDecodingError(void)
-{
-    return d->hasDecodingError;
-}
-
-QString mafTextEditorDocument::fileName(void) const
-{
-    return d->fileName;
-}
-
-QTextDocument *mafTextEditorDocument::document(void)
-{
-    return d->document;
-}
+} // end namespace mafGUI
 
 // /////////////////////////////////////////////////////////////////
 // mafTextEditorPrivate
 // /////////////////////////////////////////////////////////////////
 
-class mafGUI::mafTextEditorPrivate
-{
+class mafGUI::mafTextEditorPrivate {
 public:
-    bool showLineNumbers;
-    bool showCurrentLine;
-    bool showRevisions;
+    bool m_ShowLineNumbers;
+    bool m_ShowCurrentLine;
+    bool m_ShowRevisions;
 
-    mafTextEditorDocument *document;
+    mafTextEditorDocument *m_Document;
 
-    mafTextEditorExtraArea *extraArea;
-    mafTextEditorPreferencesWidget *preferences;
+    mafTextEditorExtraArea *m_ExtraArea;
+    mafTextEditorPreferencesWidget *m_Preferences;
 };
 
 // /////////////////////////////////////////////////////////////////
 // mafTextEditorPrivate
 // /////////////////////////////////////////////////////////////////
 
-mafTextEditor::mafTextEditor(QWidget *parent) : QPlainTextEdit(parent)
-{
-    d = new mafTextEditorPrivate;
-    d->showLineNumbers = true;
-    d->showCurrentLine = true;
-    d->showRevisions = true;
+using namespace mafGUI;
 
-    d->extraArea = new mafTextEditorExtraArea(this);
-    d->preferences = NULL;
+mafTextEditor::mafTextEditor(QWidget *parent) : QPlainTextEdit(parent) {
+    m_PrivateClassPointer = new mafTextEditorPrivate;
+    m_PrivateClassPointer->m_ShowLineNumbers = true;
+    m_PrivateClassPointer->m_ShowCurrentLine = true;
+    m_PrivateClassPointer->m_ShowRevisions = true;
 
-    d->document = new mafTextEditorDocument;
+    m_PrivateClassPointer->m_ExtraArea = new mafTextEditorExtraArea(this);
+    m_PrivateClassPointer->m_Preferences = NULL;
+
+    m_PrivateClassPointer->m_Document = new mafTextEditorDocument;
     // begin setting up document
-    QTextDocument *doc = d->document->document();
+    QTextDocument *doc = m_PrivateClassPointer->m_Document->document();
     mafTextEditorDocumentLayout *documentLayout = qobject_cast<mafTextEditorDocumentLayout*>(doc->documentLayout());
     if(!documentLayout) {
         documentLayout = new mafTextEditorDocumentLayout(doc);
@@ -314,21 +100,19 @@ mafTextEditor::mafTextEditor(QWidget *parent) : QPlainTextEdit(parent)
 
     connect(doc, SIGNAL(contentsChanged()), this, SIGNAL(documentChanged()));
 
-    connect(d->document, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged(QString)));
+    connect(m_PrivateClassPointer->m_Document, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged(QString)));
 
     this->onUpdateExtraAreaWidth();
 
     this->installEventFilter(this);
 }
 
-mafTextEditor::~mafTextEditor(void)
-{
-    delete d;
+mafTextEditor::~mafTextEditor(void) {
+    delete m_PrivateClassPointer;
 }
 
-void mafTextEditor::readSettings(void)
-{    
-    QSettings settings("inria", "maf");
+void mafTextEditor::readSettings(void) {    
+    QSettings settings("SCS", "maf");
     settings.beginGroup("editor");
     this->setFont(settings.value("font").value<QFont>());
     this->setShowRevisions(settings.value("showRevisions").toBool());
@@ -337,9 +121,8 @@ void mafTextEditor::readSettings(void)
     settings.endGroup();
 }
 
-void mafTextEditor::writeSettings(void)
-{
-    QSettings settings("inria", "maf");
+void mafTextEditor::writeSettings(void) {
+    QSettings settings("SCS", "maf");
     settings.beginGroup("editor");
     settings.setValue("font", this->font());
     settings.setValue("showRevisions", this->showRevisions());
@@ -348,21 +131,18 @@ void mafTextEditor::writeSettings(void)
     settings.endGroup();
 }
 
-int mafTextEditor::currentLineNumber(void) const
-{
+int mafTextEditor::currentLineNumber(void) const {
     return this->textCursor().blockNumber() + 1;
 }
 
-int mafTextEditor::currentColumnNumber(void) const
-{
+int mafTextEditor::currentColumnNumber(void) const {
     return this->textCursor().position() - this->textCursor().block().position() + 1;
 }
 
-bool mafTextEditor::open(const QString& fileName)
-{
-    if (d->document->open(fileName)) {
+bool mafTextEditor::open(const QString& fileName) {
+    if (m_PrivateClassPointer->m_Document->open(fileName)) {
         moveCursor(QTextCursor::Start);
-        setReadOnly(d->document->hasDecodingError());
+        setReadOnly(m_PrivateClassPointer->m_Document->hasDecodingError());
 
         /*if(fileName.endsWith(".cpp") || fileName.endsWith(".cxx") || fileName.endsWith(".c") || fileName.endsWith(".h"))
             new mafTextEditorSyntaxHighlighterCpp(this);*/
@@ -379,103 +159,86 @@ bool mafTextEditor::open(const QString& fileName)
     return false;
 }
 
-bool mafTextEditor::save(const QString& fileName)
-{    
-    return d->document->save(fileName);
+bool mafTextEditor::save(const QString& fileName) {    
+    return m_PrivateClassPointer->m_Document->save(fileName);
 }
 
-bool mafTextEditor::close(void)
-{
-    return d->document->close();
+bool mafTextEditor::close(void) {
+    return m_PrivateClassPointer->m_Document->close();
 }
 
 bool mafTextEditor::isReadOnly(void) const
 {
-    return d->document->isReadOnly();
+    return m_PrivateClassPointer->m_Document->isReadOnly();
 }
 
-bool mafTextEditor::isModified(void) const
-{
-    return d->document->isModified();
+bool mafTextEditor::isModified(void) const {
+    return m_PrivateClassPointer->m_Document->isModified();
 }
 
-bool mafTextEditor::showLineNumbers(void)
-{
-    return d->showLineNumbers;
+bool mafTextEditor::showLineNumbers(void) {
+    return m_PrivateClassPointer->m_ShowLineNumbers;
 }
 
-bool mafTextEditor::showCurrentLine(void)
-{
-    return d->showCurrentLine;
+bool mafTextEditor::showCurrentLine(void) {
+    return m_PrivateClassPointer->m_ShowCurrentLine;
 }
 
-bool mafTextEditor::showRevisions(void)
-{
-    return d->showRevisions;
+bool mafTextEditor::showRevisions(void) {
+    return m_PrivateClassPointer->m_ShowRevisions;
 }
 
-QString mafTextEditor::fileName(void) const
-{
-    return d->document->fileName();
+QString mafTextEditor::fileName(void) const {
+    return m_PrivateClassPointer->m_Document->fileName();
 }
 
-QString mafTextEditor::currentLine(void) const
-{
+QString mafTextEditor::currentLine(void) const {
     QTextCursor tc = textCursor();
     tc.select(QTextCursor::LineUnderCursor);
     
     return tc.selectedText();
 }
 
-int mafTextEditor::backgroundOpacity(void) const
-{
+int mafTextEditor::backgroundOpacity(void) const {
     // return (int)(this->windowOpacity()*255);
 
     QPalette p(this->palette());
     return p.color(QPalette::Base).alpha();
 }
 
-QColor mafTextEditor::backgroundColor(void) const
-{
+QColor mafTextEditor::backgroundColor(void) const {
     QPalette p(palette());
     return p.color(QPalette::Base);
 }
 
-QColor mafTextEditor::foregroundColor(void) const
-{
+QColor mafTextEditor::foregroundColor(void) const {
     QPalette p(palette());
     return p.color(QPalette::Text);
 }
 
-mafTextEditorPreferencesWidget *mafTextEditor::preferencesWidget(QWidget *parent)
-{
-    if(!d->preferences)
-        d->preferences = new mafTextEditorPreferencesWidget(this, parent);
+mafTextEditorPreferencesWidget *mafTextEditor::preferencesWidget(QWidget *parent) {
+    if(!m_PrivateClassPointer->m_Preferences) {
+        m_PrivateClassPointer->m_Preferences = new mafTextEditorPreferencesWidget(this, parent);
+    }
 
-    return d->preferences;
+    return m_PrivateClassPointer->m_Preferences;
 }
 
-void mafTextEditor::setShowLineNumbers(bool show)
-{
-    d->showLineNumbers = show;
-
+void mafTextEditor::setShowLineNumbers(bool show) {
+    m_PrivateClassPointer->m_ShowLineNumbers = show;
     onUpdateExtraAreaWidth();
 }
 
-void mafTextEditor::setShowCurrentLine(bool show)
-{
-    d->showCurrentLine = show;
+void mafTextEditor::setShowCurrentLine(bool show) {
+    m_PrivateClassPointer->m_ShowCurrentLine = show;
 }
 
-void mafTextEditor::setShowRevisions(bool show)
-{
-    d->showRevisions = show;
-
+void mafTextEditor::setShowRevisions(bool show) {
+    m_PrivateClassPointer->m_ShowRevisions = show;
     onUpdateExtraAreaWidth();
 }
 
-void mafTextEditor::setBackgroundOpacity(int opacity)
-{
+void mafTextEditor::setBackgroundOpacity(int opacity) {
     // this->setWindowOpacity((qreal)(opacity/255.0));
 
     QPalette p(this->palette());
@@ -489,8 +252,7 @@ void mafTextEditor::setBackgroundOpacity(int opacity)
     this->viewport()->update();
 }
 
-void mafTextEditor::setBackgroundColor(QColor color)
-{
+void mafTextEditor::setBackgroundColor(QColor color) {
     QPalette p(this->palette());
     p.setColor(QPalette::Base, color);
 
@@ -499,8 +261,7 @@ void mafTextEditor::setBackgroundColor(QColor color)
     this->viewport()->update();
 }
 
-void mafTextEditor::setForegroundColor(QColor color)
-{
+void mafTextEditor::setForegroundColor(QColor color) {
     QPalette p(this->palette());
     p.setColor(QPalette::Text, color);
 
@@ -509,35 +270,31 @@ void mafTextEditor::setForegroundColor(QColor color)
     this->viewport()->update();
 }
 
-void mafTextEditor::changeEvent(QEvent *e)
-{
+void mafTextEditor::changeEvent(QEvent *e) {
     QPlainTextEdit::changeEvent(e);
 
     if (e->type() == QEvent::ApplicationFontChange || e->type() == QEvent::FontChange) {
-        if (d->extraArea) {
-            QFont f = d->extraArea->font();
+        if (m_PrivateClassPointer->m_ExtraArea) {
+            QFont f = m_PrivateClassPointer->m_ExtraArea->font();
             f.setPointSize(font().pointSize());
-            d->extraArea->setFont(f);
+            m_PrivateClassPointer->m_ExtraArea->setFont(f);
             onUpdateExtraAreaWidth();
-            d->extraArea->update();
+            m_PrivateClassPointer->m_ExtraArea->update();
         }
     }
 }
 
-void mafTextEditor::focusInEvent(QFocusEvent *event)
-{
+void mafTextEditor::focusInEvent(QFocusEvent *event) {
     QPlainTextEdit::focusInEvent(event);
 }
 
 #include <iostream>
 
-void mafTextEditor::keyPressEvent(QKeyEvent *event)
-{
+void mafTextEditor::keyPressEvent(QKeyEvent *event) {
     QPlainTextEdit::keyPressEvent(event);
 }
 
-void mafTextEditor::paintEvent(QPaintEvent *event)
-{
+void mafTextEditor::paintEvent(QPaintEvent *event) {
     const QColor baseColor = palette().base().color();
 
     const int blendBase   = (baseColor.value() > 128) ? 0 : 255;
@@ -550,7 +307,7 @@ void mafTextEditor::paintEvent(QPaintEvent *event)
 
     QPainter painter(viewport());
 
-    if(d->showCurrentLine) {
+    if(m_PrivateClassPointer->m_ShowCurrentLine) {
         QRect r = cursorRect();
         r.setX(0);
         r.setWidth(viewport()->width());
@@ -562,62 +319,60 @@ void mafTextEditor::paintEvent(QPaintEvent *event)
     QPlainTextEdit::paintEvent(event);
 }
 
-void mafTextEditor::resizeEvent(QResizeEvent *event)
-{
+void mafTextEditor::resizeEvent(QResizeEvent *event) {
     QPlainTextEdit::resizeEvent(event);
 
     QRect cr = viewport()->rect();
-    d->extraArea->setGeometry(QStyle::visualRect(layoutDirection(), cr, QRect(cr.left(), cr.top(), extraAreaWidth(), cr.height())));
+    m_PrivateClassPointer->m_ExtraArea->setGeometry(QStyle::visualRect(layoutDirection(), cr, QRect(cr.left(), cr.top(), extraAreaWidth(), cr.height())));
 }
 
-void mafTextEditor::closeEvent(QCloseEvent *event)
-{
+void mafTextEditor::closeEvent(QCloseEvent *event) {
     emit closed();
 }
 
-void mafTextEditor::wheelEvent(QWheelEvent *event)
-{
+void mafTextEditor::wheelEvent(QWheelEvent *event) {
     if (event->modifiers() & Qt::ControlModifier) {
         const int delta = event->delta();
-        if (delta < 0)
+        if (delta < 0) {
             zoomOut();
-        else if (delta > 0)
+        } else if (delta > 0) {
             zoomIn();
+        }
         return;
     }
 
     QPlainTextEdit::wheelEvent(event);
 }
 
-void mafTextEditor::zoomIn(int range)
-{
+void mafTextEditor::zoomIn(int range) {
     QFont f = font();
     const int newSize = f.pointSize() + range;
-    if (newSize <= 0)
+    if (newSize <= 0) {
         return;
+    }
     f.setPointSize(newSize);
     setFont(f);
 }
 
-void mafTextEditor::zoomOut(int range)
-{
+void mafTextEditor::zoomOut(int range) {
     zoomIn(-range);
 }
 
-int mafTextEditor::extraAreaWidth(void) const
-{
-    if(!d->showLineNumbers && !d->showRevisions)
+int mafTextEditor::extraAreaWidth(void) const {
+    if(!m_PrivateClassPointer->m_ShowLineNumbers && !m_PrivateClassPointer->m_ShowRevisions) {
         return 0;
+    }
 
     mafTextEditorDocumentLayout *documentLayout = qobject_cast<mafTextEditorDocumentLayout *>(this->document()->documentLayout());
 
-    if(!documentLayout)
+    if(!documentLayout) {
         return 0;
+    }
 
     int space = 0;
-    const QFontMetrics fm(d->extraArea->fontMetrics());
+    const QFontMetrics fm(m_PrivateClassPointer->m_ExtraArea->fontMetrics());
 
-    if (d->showLineNumbers) {
+    if (m_PrivateClassPointer->m_ShowLineNumbers) {
         int digits = 2;
         int max = qMax(1, this->blockCount());
         while (max >= 100) {
@@ -628,25 +383,24 @@ int mafTextEditor::extraAreaWidth(void) const
     }
 
     space += 4;
-
     return space;
 }
 
-void mafTextEditor::extraAreaPaintEvent(QPaintEvent *event)
-{
-    if(!d->showLineNumbers && !d->showRevisions)
+void mafTextEditor::extraAreaPaintEvent(QPaintEvent *event) {
+    if(!m_PrivateClassPointer->m_ShowLineNumbers && !m_PrivateClassPointer->m_ShowRevisions) {
         return;
+    }
 
     mafTextEditorDocumentLayout *documentLayout = qobject_cast<mafTextEditorDocumentLayout *>(this->document()->documentLayout());
 
-    QPalette palette = d->extraArea->palette();
+    QPalette palette = m_PrivateClassPointer->m_ExtraArea->palette();
     palette.setCurrentColorGroup(QPalette::Active);
 
-    QPainter painter(d->extraArea);
+    QPainter painter(m_PrivateClassPointer->m_ExtraArea);
 
     QFontMetrics fm(painter.fontMetrics());
 
-    const int extraAreaWidth = d->extraArea->width();
+    const int extraAreaWidth = m_PrivateClassPointer->m_ExtraArea->width();
 
     painter.fillRect(event->rect(), palette.color(QPalette::Base));
     painter.fillRect(event->rect().intersected(QRect(0, 0, extraAreaWidth, INT_MAX)), palette.color(QPalette::Background));
@@ -657,7 +411,6 @@ void mafTextEditor::extraAreaPaintEvent(QPaintEvent *event)
     int bottom = top;
 
     while (block.isValid() && top <= event->rect().bottom()) {
-
         top = bottom;
         bottom = top + (int)blockBoundingRect(block).height();
         QTextBlock nextBlock = block.next();
@@ -676,7 +429,7 @@ void mafTextEditor::extraAreaPaintEvent(QPaintEvent *event)
 
         painter.setPen(palette.color(QPalette::Dark));
 
-        if (d->showRevisions && block.revision() != documentLayout->lastSaveRevision) {
+        if (m_PrivateClassPointer->m_ShowRevisions && block.revision() != documentLayout->m_LastSaveRevision) {
             painter.save();
             painter.setRenderHint(QPainter::Antialiasing, false);
             if (block.revision() < 0)
@@ -687,7 +440,7 @@ void mafTextEditor::extraAreaPaintEvent(QPaintEvent *event)
             painter.restore();
         }
 
-        if (d->showLineNumbers) {
+        if (m_PrivateClassPointer->m_ShowLineNumbers) {
             const QString &number = QString::number(blockNumber + 1);
             painter.drawText(0, top, extraAreaWidth - 4, fm.height(), Qt::AlignRight, number);
         }
@@ -697,92 +450,55 @@ void mafTextEditor::extraAreaPaintEvent(QPaintEvent *event)
     }
 }
 
-void mafTextEditor::onBlockCountChanged(int) // >> slotUpdateExtraAreaWidth in basetexteditor.cpp
-{   
+void mafTextEditor::onBlockCountChanged(int) { // >> slotUpdateExtraAreaWidth in basetexteditor.cpp 
     this->onUpdateExtraAreaWidth();
 }
 
-void mafTextEditor::onUpdateExtraAreaWidth(void)
-{
+void mafTextEditor::onUpdateExtraAreaWidth(void) {
     this->setViewportMargins(this->extraAreaWidth(), 0, 0, 0);
 }
 
-void mafTextEditor::onModificationChanged(bool changed)
-{
-    if (changed)
+void mafTextEditor::onModificationChanged(bool changed) {
+    if (changed) {
         return;
+    }
 
     mafTextEditorDocumentLayout *documentLayout = qobject_cast<mafTextEditorDocumentLayout*>(this->document()->documentLayout());
-    int oldLastSaveRevision = documentLayout->lastSaveRevision;
-    documentLayout->lastSaveRevision = this->document()->revision();
+    int oldLastSaveRevision = documentLayout->m_LastSaveRevision;
+    documentLayout->m_LastSaveRevision = this->document()->revision();
 
-    if (oldLastSaveRevision != documentLayout->lastSaveRevision) {
+    if (oldLastSaveRevision != documentLayout->m_LastSaveRevision) {
         QTextBlock block = this->document()->begin();
         while (block.isValid()) {
             if (block.revision() < 0 || block.revision() != oldLastSaveRevision) {
-                block.setRevision(-documentLayout->lastSaveRevision - 1);
+                block.setRevision(-documentLayout->m_LastSaveRevision - 1);
             } else {
-                block.setRevision(documentLayout->lastSaveRevision);
+                block.setRevision(documentLayout->m_LastSaveRevision);
             }
             block = block.next();
         }
     }
-    d->extraArea->update();
+    m_PrivateClassPointer->m_ExtraArea->update();
 }
 
-void mafTextEditor::onUpdateRequest(const QRect &r, int dy)
-{
-    if (dy)
-        d->extraArea->scroll(0, dy);
-    else if (r.width() > 4) { // wider than cursor width, not just cursor blinking
-        d->extraArea->update(0, r.y(), d->extraArea->width(), r.height());
+void mafTextEditor::onUpdateRequest(const QRect &r, int dy) {
+    if (dy) {
+        m_PrivateClassPointer->m_ExtraArea->scroll(0, dy);
+    } else if (r.width() > 4) { // wider than cursor width, not just cursor blinking
+        m_PrivateClassPointer->m_ExtraArea->update(0, r.y(), m_PrivateClassPointer->m_ExtraArea->width(), r.height());
     }
 
-    if (r.contains(viewport()->rect()))
+    if (r.contains(viewport()->rect())) {
         this->onUpdateExtraAreaWidth();
+    }
 }
 
-void mafTextEditor::onCursorPositionChanged(void)
-{
+void mafTextEditor::onCursorPositionChanged(void) {
     this->viewport()->update();
 }
 
-QString mafTextEditor::textUnderCursor(void) const
-{
+QString mafTextEditor::textUnderCursor(void) const {
     QTextCursor tc = textCursor();
     tc.select(QTextCursor::WordUnderCursor);
     return tc.selectedText();
 }
-
-// /////////////////////////////////////////////////////////////////
-// CREDITS
-// /////////////////////////////////////////////////////////////////
-
-/*******************************************************************
- **
- ** Some parts of this file are part of Qt Creator
- **
- ** Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
- **
- ** Contact:  Qt Software Information (qt-info@nokia.com)
- **
- ** Commercial Usage
- **
- ** Licensees holding valid Qt Commercial licenses may use this file in
- ** accordance with the Qt Commercial License Agreement provided with the
- ** Software or, alternatively, in accordance with the terms contained in
- ** a written agreement between you and Nokia.
- **
- ** GNU Lesser General Public License Usage
- **
- ** Alternatively, this file may be used under the terms of the GNU Lesser
- ** General Public License version 2.1 as published by the Free Software
- ** Foundation and appearing in the file LICENSE.LGPL included in the
- ** packaging of this file.  Please review the following information to
- ** ensure the GNU Lesser General Public License version 2.1 requirements
- ** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
- **
- ** If you are unsure which license is appropriate for your use, please
- ** contact the sales department at qt-sales@nokia.com.
- **
- ******************************************************************/
