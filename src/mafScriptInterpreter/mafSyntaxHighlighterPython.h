@@ -5,10 +5,15 @@
 #include <mafSyntaxHighlighter.h>
 
 namespace mafScriptInterpreter {
-	
+
+/**
+    Class Name: mafSyntaxHighlighterPython
+    Highlighter for Python.
+*/
 class MAFSCRIPTINTERPRETERSHARED_EXPORT mafSyntaxHighlighterPython : public mafGUI::mafSyntaxHighlighter {
 public:
-     mafSyntaxHighlighterPython(QTextDocument *parent = 0);
+    ///Object Constructor. 
+    mafSyntaxHighlighterPython(QTextDocument *parent = 0);
 };
 
 } // end namespace

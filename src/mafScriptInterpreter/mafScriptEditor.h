@@ -3,7 +3,7 @@
  *  mafScriptInterpreter
  *
  *  Created by Daniele Giunchi on 08/11.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -28,6 +28,7 @@ Base class for script editor in a specific language.
 */
 class MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditor : public QObject {
     Q_OBJECT
+    
 public slots:
     /// Slot for load script.
     void load(const QString& file);
@@ -53,7 +54,7 @@ signals:
     
 public:
     /// Object constructor.
-             mafScriptEditor(QObject *parent = 0);
+    mafScriptEditor(QObject *parent = 0);
     /// Object destructor.
     virtual ~mafScriptEditor(void);
 

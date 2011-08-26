@@ -1,20 +1,12 @@
-/* mafScriptEditorPool.cpp --- 
- * 
- * Author: Julien Wintz
- * Copyright (C) 2008 - Julien Wintz, Inria.
- * Created: Mon Jan 26 09:48:03 2009 (+0100)
- * Version: $Id$
- * Last-Updated: Thu Oct 14 21:13:17 2010 (+0200)
- *           By: Julien Wintz
- *     Update #: 50
- */
-
-/* Commentary: 
- * 
- */
-
-/* Change log:
- * 
+/*
+ *  mafScriptEditorPool.cpp
+ *  mafScriptEditor
+ *
+ *  Created by Daniele Giunchi and Paolo Quadrani on 08/11.
+ *  Copyright 2011 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
  */
 
 #include <mafScriptEditorPython.h>

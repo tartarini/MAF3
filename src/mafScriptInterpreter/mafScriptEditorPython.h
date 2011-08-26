@@ -1,24 +1,16 @@
-/* mafScriptEditorPython.h --- 
- * 
- * Author: Julien Wintz
- * Copyright (C) 2008 - Julien Wintz, Inria.
- * Created: Wed Nov 26 16:28:12 2008 (+0100)
- * Version: $Id$
- * Last-Updated: Thu Feb 11 14:09:07 2010 (+0100)
- *           By: Julien Wintz
- *     Update #: 24
+/*
+ *  mafScriptEditorPython.h
+ *  mafScriptEditor
+ *
+ *  Created by Daniele Giunchi and Paolo Quadrani on 08/11.
+ *  Copyright 2011 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
  */
 
-/* Commentary: 
- * 
- */
-
-/* Change log:
- * 
- */
-
-#ifndef MAFSCRIPTINTERPRETERPYTHON_H
-#define MAFSCRIPTINTERPRETERPYTHON_H
+#ifndef MAFSCRIPTEDITORPYTHON_H
+#define MAFSCRIPTEDITORPYTHON_H
 
 #include "mafScriptInterpreter_global.h"
 
@@ -42,88 +34,52 @@ namespace mafScriptInterpreter {
 
 class mafScriptEditorPythonPrivate;
 
+/**
+ Class name: mafScriptEditorPython
+ This class represents the bridge class to python editor.
+ */
 class MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditorPython : public mafScriptEditor
 {
     Q_OBJECT
 
 public:
+    /// Object Constructor.
      mafScriptEditorPython(QObject *parent = 0);
+    /// Object Destructor.
     ~mafScriptEditorPython(void);
 
-    virtual void registerVariable(bool   &var, QString name, QString description = "");
-    virtual void registerVariable(int    &var, QString name, QString description = "");
-    virtual void registerVariable(double &var, QString name, QString description = "");
-    virtual void registerVariable(char * &var, QString name, QString description = "");
+    /// Register a boolean type variable with value, name and a description.
+    /*virtual*/ void registerVariable(bool   &var, QString name, QString description = "");
+    /// Register a integer type variable with value, name and a description.
+    /*virtual*/ void registerVariable(int    &var, QString name, QString description = "");
+    /// Register a double type variable with value, name and a description.
+    /*virtual*/ void registerVariable(double &var, QString name, QString description = "");
+    /// Register a char type variable with value, name and a description.
+    /*virtual*/ void registerVariable(char * &var, QString name, QString description = "");
+    
+    /// Unregister a variable.
+    /*virtual*/ void unregisterVariable(QString name);
 
-    virtual void unregisterVariable(QString name);
-
+    /// Permits all threads to run.
     void allowThreads(void);
+    /// Execute threads in blocking mode.
     void blockThreads(void);
 
 public slots:
+    /// Interpret command string.
     virtual QString interpret(const QString& command, int *stat);
+    /// Interpret command string with parameters.
     virtual QString interpret(const QString& command, const QStringList& args, int *stat);
-
-signals:
-    void interpreted(const QString& result, int *stat);
     
 protected:
+    /// Return prompt string.
     static char *prompt(void);
 
 private:
-    mafScriptEditorPythonPrivate *m_PrivateClassPointer;
-    PyObject *pModule;
-};
-
-// /////////////////////////////////////////////////////////////////
-// mafScriptEditorPythonModuleManager
-// /////////////////////////////////////////////////////////////////
-
-class MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditorPythonModuleManager : public QObject
-{
-    typedef int (*mafScriptEditorModuleInitializer)(void);
-
-public:
-    static mafScriptEditorPythonModuleManager* instance(void) {
-	if(!m_instance)
-	    m_instance = new mafScriptEditorPythonModuleManager;
-
-	return m_instance;
-    }
-
-    void initialize(mafScriptEditorPython *interpreter) {
-	int stat;
-
-        interpreter->blockThreads();
-
-	foreach(mafScriptEditorModuleInitializer initializer, initializers)
-	    initializer();
-
-        interpreter->allowThreads();
-
-	foreach(QString command, commands) 
-	    interpreter->interpret(command, &stat);
-    }
-
-    void registerInitializer(mafScriptEditorModuleInitializer initializer) {
-	initializers << initializer;
-    }
-
-    void registerCommand(QString command) {
-	commands << command;
-    }
-
-protected:
-     mafScriptEditorPythonModuleManager(void) {}
-    ~mafScriptEditorPythonModuleManager(void) {}
-
-private:
-    QList<mafScriptEditorModuleInitializer> initializers;
-    QList<QString> commands;
-
-    static mafScriptEditorPythonModuleManager *m_instance;
+    mafScriptEditorPythonPrivate *m_PrivateClassPointer; /// pimpl pattern.
+    PyObject *m_PythonModule; /// temporary python module.
 };
 
 } // end namespace
     
-#endif
+#endif // MAFSCRIPTEDITORPYTHON_H

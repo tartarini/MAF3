@@ -2,8 +2,8 @@
  *  mafScriptInterpreter_global.h
  *  mafScriptEditor
  *
- *  Created by Daniele Giunchi on 26/10/10.
- *  Copyright 2010 B3C. All rights reserved.
+ *  Created by Daniele Giunchi and Paolo Quadrani on 08/11.
+ *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *

@@ -1,20 +1,12 @@
-/* mafInterpreterConsole.cpp --- 
- * 
- * Author: Julien Wintz
- * Copyright (C) 2008 - Julien Wintz, Inria.
- * Created: Fri Apr 10 15:31:39 2009 (+0200)
- * Version: $Id$
- * Last-Updated: Thu Oct 14 21:20:30 2010 (+0200)
- *           By: Julien Wintz
- *     Update #: 400
- */
-
-/* Commentary: 
- * 
- */
-
-/* Change log:
- * 
+/*
+ *  mafInterpreterConsole.cpp
+ *  mafGui
+ *
+ *  Created by Paolo Quadrani - Daniele Giunchi on 10/06/11.
+ *  Copyright 2011 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
  */
 
 #include <iostream>
@@ -34,17 +26,15 @@ using namespace mafGUI;
 
 mafInterpreterConsole::mafInterpreterConsole(QWidget *parent) : mafTextEditor(parent) {
     m_Interpreter = NULL;
-    preferences = NULL;
+    m_Preferences = NULL;
 
-    history_index = 0;
-    history_dirty = false;
+    m_HistoryIndex = 0;
+    m_HistoryDirty = false;
 
     this->setShowLineNumbers(false);
     this->setShowCurrentLine(false);
     this->setShowRevisions(false);
     
-    promptFlag = false;
-
 }
 
 mafInterpreterConsole::~mafInterpreterConsole(void) {
@@ -101,7 +91,7 @@ void mafInterpreterConsole::keyPressEvent(QKeyEvent *event) {
 }
 
 void mafInterpreterConsole::mousePressEvent(QMouseEvent *event) {
-    cursor = this->textCursor();
+    m_Cursor = this->textCursor();
 
     mafTextEditor::mousePressEvent(event);
 }
@@ -109,8 +99,8 @@ void mafInterpreterConsole::mousePressEvent(QMouseEvent *event) {
 void mafInterpreterConsole::mouseReleaseEvent(QMouseEvent *event) {
     mafTextEditor::mouseReleaseEvent(event);
 
-    if(cursor.blockNumber() +1 != currentLineNumber() && cursor.columnNumber() <= filter(m_Interpreter->prompt()).size())
-        this->setTextCursor(cursor);
+    if(m_Cursor.blockNumber() +1 != currentLineNumber() && m_Cursor.columnNumber() <= filter(m_Interpreter->prompt()).size())
+        this->setTextCursor(m_Cursor);
 }
 
 void mafInterpreterConsole::readSettings(void) {
@@ -135,7 +125,6 @@ void mafInterpreterConsole::registerInterpreter(mafScriptEditor *interpreter) {
     m_Interpreter = interpreter;
     m_Interpreter->setVerbose(false);
 
-    connect(m_Interpreter, SIGNAL(interpreted(const QString&, int *)), this, SLOT(output(const QString&, int *)));
     connect(this, SIGNAL(input(const QString&, int *)), m_Interpreter,    SLOT(interpret(const QString&, int *)));
     connect(this, SIGNAL( load(const QString&)),        m_Interpreter,    SLOT(     load(const QString&)));
     connect(this, SIGNAL( save(const QString&)),        m_Interpreter,    SLOT(     save(const QString&)));
@@ -153,61 +142,61 @@ void mafInterpreterConsole::registerInterpreter(mafScriptEditor *interpreter) {
 }
 
 mafInterpreterPreferencesWidget *mafInterpreterConsole::preferencesWidget(QWidget *parent) {
-    if(!preferences)
-        preferences = new mafInterpreterPreferencesWidget(this, parent);
+    if(!m_Preferences)
+        m_Preferences = new mafInterpreterPreferencesWidget(this, parent);
 
-    return preferences;
+    return m_Preferences;
 }
 
 void mafInterpreterConsole::onKeyUpPressed(void) {
-    if(history.size() == 0) {
+    if(m_History.size() == 0) {
         return;
     }
 
-    if(history_index && history_index == (unsigned int)history.size()-1) {
+    if(m_HistoryIndex && m_HistoryIndex == (unsigned int)m_History.size()-1) {
         return;
     }
 
-    if(history_index == 0 && !history_dirty) {
+    if(m_HistoryIndex == 0 && !m_HistoryDirty) {
         QString line = currentLine();
         if(m_Interpreter)
             line.remove(filter(m_Interpreter->prompt()));
         
-        history.push_front(line);
-        history_dirty = true;
+        m_History.push_front(line);
+        m_HistoryDirty = true;
     }
 
-    history_index++;
+    m_HistoryIndex++;
 
     QTextCursor cursor = textCursor();
     cursor.movePosition(QTextCursor::StartOfLine);
     cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, filter(m_Interpreter->prompt()).size());
     cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
     cursor.removeSelectedText();
-    cursor.insertText(history.at(history_index));
+    cursor.insertText(m_History.at(m_HistoryIndex));
     cursor.movePosition(QTextCursor::EndOfLine);
     this->setTextCursor(cursor);
 }
 
 void mafInterpreterConsole::onKeyDownPressed(void) {
-    if(history_index == 0) {
+    if(m_HistoryIndex == 0) {
         return;
     }
 
-    history_index--;
+    m_HistoryIndex--;
 
     QTextCursor cursor = textCursor();
     cursor.movePosition(QTextCursor::StartOfLine);
     cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, filter(m_Interpreter->prompt()).size());
     cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
     cursor.removeSelectedText();
-    cursor.insertText(history.at(history_index));
+    cursor.insertText(m_History.at(m_HistoryIndex));
     cursor.movePosition(QTextCursor::EndOfLine);
     this->setTextCursor(cursor);
 
-    if(history_index == 0 && history_dirty) {
-        history.pop_front();
-        history_dirty = false;
+    if(m_HistoryIndex == 0 && m_HistoryDirty) {
+        m_History.pop_front();
+        m_HistoryDirty = false;
     }
 }
 
@@ -233,12 +222,12 @@ void mafInterpreterConsole::onKeyEnterPressed(void) {
     }
     
     if(!line.isEmpty()) {
-        if(history_index > 0 && history_dirty)
-            history.removeFirst();
+        if(m_HistoryIndex > 0 && m_HistoryDirty)
+            m_History.removeFirst();
 
-        history.push_front(line);
-        history_index = 0;
-        history_dirty = false;
+        m_History.push_front(line);
+        m_HistoryIndex = 0;
+        m_HistoryDirty = false;
     }
     
     if (line.startsWith(":load ")) {
@@ -280,8 +269,6 @@ void mafInterpreterConsole::onKeyEnterPressed(void) {
             output(result, &stat);
         }
     }
-    
-    promptFlag = true;
 }
 
 void mafInterpreterConsole::onKeyBackspacePressed(void) {

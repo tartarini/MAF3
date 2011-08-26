@@ -1,24 +1,17 @@
-/* mafScriptEditorPython.cpp --- 
- * 
- * Author: Julien Wintz
- * Copyright (C) 2008 - Julien Wintz, Inria.
- * Created: Wed Nov 26 16:29:02 2008 (+0100)
- * Version: $Id$
- * Last-Updated: Thu Feb 11 14:11:07 2010 (+0100)
- *           By: Julien Wintz
- *     Update #: 261
- */
-
-/* Commentary: 
- * 
- */
-
-/* Change log:
- * 
+/*
+ *  mafScriptEditorPython.cpp
+ *  mafScriptEditor
+ *
+ *  Created by Daniele Giunchi and Paolo Quadrani on 08/11.
+ *  Copyright 2011 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
  */
 
 #include "mafScriptEditorPython.h"
 #include "mafScriptEditorSynchronizer.h"
+#include "mafScriptEditorPythonModuleManager.h"
 #include <iostream>
 
 using namespace mafScriptInterpreter;
@@ -53,7 +46,7 @@ catchOutErr = CatchOutErr()\n\
 sys.stdout = catchOutErr\n\
 sys.stderr = catchOutErr\n"; //this is python code to redirect stdouts/stderr
     
-    pModule = PyImport_AddModule("__main__"); //create main module
+    m_PythonModule = PyImport_AddModule("__main__"); //create main module
     int res = PyRun_SimpleString(stdOutErr.c_str()); //invoke code to redirect
     
     // -- Setting up utilities
@@ -120,7 +113,7 @@ QString mafScriptEditorPython::interpret(const QString& command, int *stat)
     
     blockThreads();
     
-    PyObject *catcher = PyObject_GetAttrString(pModule,"catchOutErr"); //get our catchOutErr created above
+    PyObject *catcher = PyObject_GetAttrString(m_PythonModule,"catchOutErr"); //get our catchOutErr created above
     PyObject* empty = PyString_FromString("");
     PyObject_SetAttrString(catcher,"value", empty);
     
@@ -130,7 +123,7 @@ QString mafScriptEditorPython::interpret(const QString& command, int *stat)
     default: break;
     }
 
-    catcher = PyObject_GetAttrString(pModule,"catchOutErr"); //get our catchOutErr created above
+    catcher = PyObject_GetAttrString(m_PythonModule,"catchOutErr"); //get our catchOutErr created above
     PyErr_Print(); //make python print any errors
     
     QString res("");
@@ -182,8 +175,3 @@ char *mafScriptEditorPython::prompt(void)
     return QString("\033[01;35mpython\033[00m:\033[01;34m~\033[00m$ ").toAscii().data();
 }
 
-// /////////////////////////////////////////////////////////////////
-// mafScriptEditorPythonModuleManager
-// /////////////////////////////////////////////////////////////////
-
-MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditorPythonModuleManager *mafScriptEditorPythonModuleManager::m_instance = NULL;
