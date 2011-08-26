@@ -17,11 +17,7 @@
  * 
  */
 
-#include <mafScriptEditor.h>
-#if defined(HAVE_SWIG) && defined(HAVE_PYTHON)
 #include <mafScriptEditorPython.h>
-#endif
-
 #include "mafScriptEditorPool.h"
 
 using namespace mafScriptInterpreter;
@@ -42,26 +38,19 @@ mafScriptEditorPool *mafScriptEditorPool::instance(void)
 
 mafScriptEditor *mafScriptEditorPool::console(QString type)
 {
-#if defined(HAVE_SWIG) && defined(HAVE_PYTHON) && defined(HAVE_TCL)
     if(!d->interpreters.contains("console") || !d->interpreters.value("console"))
         d->interpreters.insert("console", new mafScriptEditorPython);
 
     return d->interpreters.value("console");
-#else
-    return NULL;
-#endif
 }
 
 mafScriptEditor *mafScriptEditorPool::python(void)
 {
-#if defined(HAVE_SWIG) && defined(HAVE_PYTHON)
-    if(!d->interpreters.contains("python") || !d->interpreters.value("python"))
-	d->interpreters.insert("python", new mafScriptEditorPython);
+    if(!d->interpreters.contains("python") || !d->interpreters.value("python")) {
+	    d->interpreters.insert("python", new mafScriptEditorPython);
+    }
 
     return d->interpreters.value("python");
-#else
-    return NULL;
-#endif
 }
 
 mafScriptEditorPool::mafScriptEditorPool(void) : QObject(), d(new mafScriptEditorPoolPrivate)

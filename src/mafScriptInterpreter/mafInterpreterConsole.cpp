@@ -23,10 +23,7 @@
 #include <QtCore>
 #include <QtGui>
 
-#include "mafScriptEditor.h"
-#if defined(HAVE_SWIG) && defined(HAVE_PYTHON)
 #include "mafScriptEditorPython.h"
-#endif
 
 #include <mafSyntaxHighlighterPython.h>
 #include <mafInterpreterConsole.h>
@@ -150,11 +147,9 @@ void mafInterpreterConsole::registerInterpreter(mafScriptEditor *interpreter) {
 
     mafSyntaxHighlighter *highlighter = NULL;
 
-#if defined(HAVE_SWIG) && defined(HAVE_PYTHON)
     if(dynamic_cast<mafScriptEditorPython *>(m_Interpreter)) {
         highlighter = new mafSyntaxHighlighterPython(this->document());
     }
-#endif
 
     Q_UNUSED(highlighter);
 
