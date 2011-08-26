@@ -1,5 +1,5 @@
 /*
- *  mafInterpreterEditor.h
+ *  mafInterpreterConsole.h
  *  mafGui
  *
  *  Created by Paolo Quadrani - Daniele Giunchi on 10/06/11.
@@ -22,13 +22,13 @@ namespace mafScriptInterpreter {
 class mafScriptEditor;
 class mafInterpreterPreferencesWidget;
 
-class MAFSCRIPTINTERPRETERSHARED_EXPORT mafInterpreterEditor : public mafGUI::mafTextEditor
+class MAFSCRIPTINTERPRETERSHARED_EXPORT mafInterpreterConsole : public mafGUI::mafTextEditor
 {
     Q_OBJECT
 
 public:
-     mafInterpreterEditor(QWidget *parent = 0);
-    ~mafInterpreterEditor(void);
+     mafInterpreterConsole(QWidget *parent = 0);
+    ~mafInterpreterConsole(void);
 
     void  readSettings(void);
     void writeSettings(void);
@@ -53,7 +53,7 @@ public slots:
     void output(const QString& result,  int *stat);
 
 signals:
-    void   input(const QString& command, int *stat);
+    QString   input(const QString& command, int *stat);
     void    load(const QString& path);
     void    save(const QString& path);
     void    help(void);
