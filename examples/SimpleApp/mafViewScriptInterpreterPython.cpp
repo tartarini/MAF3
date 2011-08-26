@@ -3,8 +3,6 @@
 #include <mafScriptEditorPython.h>
 #include <mafScriptEditorPool.h>
 
-#include <mafLog.h>
-
 using namespace mafScriptInterpreter;
 
 mafViewScriptInterpreterPython::mafViewScriptInterpreterPython(const QString code_location) : mafViewScriptInterpreter(code_location) {

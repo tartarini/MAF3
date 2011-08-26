@@ -145,8 +145,6 @@ protected:
     void focusInEvent(QFocusEvent *event);
     void keyPressEvent(QKeyEvent *event);
 
-    bool eventFilter(QObject *object, QEvent *event);
-
 protected:
     friend class mafTextEditorExtraArea;
     int  extraAreaWidth(void) const;

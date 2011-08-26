@@ -20,10 +20,7 @@
 #include <QPainter>
 #include <QStyle>
 
-#include "mafLog.h"
-
 #include "mafTextEditor.h"
-#include "mafSyntaxHighlighterPython.h"
 #include "mafTextEditorPreferencesWidget.h"
 
 namespace mafGUI {
@@ -370,8 +367,8 @@ bool mafTextEditor::open(const QString& fileName)
         /*if(fileName.endsWith(".cpp") || fileName.endsWith(".cxx") || fileName.endsWith(".c") || fileName.endsWith(".h"))
             new mafTextEditorSyntaxHighlighterCpp(this);*/
 
-        if(fileName.endsWith(".py"))
-            new mafSyntaxHighlighterPython(this->document());
+        /*if(fileName.endsWith(".py"))
+            new mafSyntaxHighlighterPython(this->document());*/
 
         /*if(fileName.endsWith(".tcl"))
             new mafTextEditorSyntaxHighlighterTcl(this);*/
@@ -590,19 +587,6 @@ void mafTextEditor::wheelEvent(QWheelEvent *event)
     }
 
     QPlainTextEdit::wheelEvent(event);
-}
-
-bool mafTextEditor::eventFilter(QObject *object, QEvent *event)
-{
-    mafLogEvent *logEvent = dynamic_cast<mafLogEvent *>(event);
-    mafTextEditor *editor = dynamic_cast<mafTextEditor *>(object);
-
-    if (logEvent && editor) {
-        editor->appendPlainText(logEvent->message());
-        return true;
-    } else {
-        return QObject::eventFilter(object, event);
-    }
 }
 
 void mafTextEditor::zoomIn(int range)

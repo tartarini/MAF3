@@ -13,7 +13,6 @@
 #define MAFINTERPRETEREDITOR_H
 
 #include "mafScriptInterpreter_global.h"
-#include "mafLog.h"
 
 #include <mafTextEditor.h>
 
@@ -34,7 +33,6 @@ public:
     void writeSettings(void);
 
     void registerInterpreter(mafScriptEditor *interpreter);
-    void registerAsHandler(mafGUI::mafLog::Handler handler);
 
     QString filter(QString text);
 
@@ -63,8 +61,6 @@ protected:
     void keyPressEvent(QKeyEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
-
-    bool eventFilter(QObject *object, QEvent *event);
 
 private:
     mafScriptEditor *m_Interpreter;

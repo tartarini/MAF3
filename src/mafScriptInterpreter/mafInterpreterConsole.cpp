@@ -131,10 +131,6 @@ void mafInterpreterConsole::writeSettings(void) {
     settings.endGroup();
 }
 
-void mafInterpreterConsole::registerAsHandler(mafGUI::mafLog::Handler handler) {
-    mafLog::registerHandler(handler);
-}
-
 void mafInterpreterConsole::registerInterpreter(mafScriptEditor *interpreter) {
     m_Interpreter = interpreter;
     m_Interpreter->setVerbose(false);
@@ -300,7 +296,7 @@ void mafInterpreterConsole::output(const QString& result,  int *stat) {
     if(!text.simplified().isEmpty())
         this->appendPlainText(filter(text));
 
-    //this->appendPlainText(filter(m_Interpreter->prompt()));
+    this->appendPlainText(filter(m_Interpreter->prompt()));
     
     
     QTextCursor cursor = textCursor();
@@ -340,21 +336,4 @@ QString mafInterpreterConsole::filter(QString text) {
         .remove(MAF_COLOR_FG_BD)
         .remove(MAF_COLOR_FG_UL)
         .remove(MAF_NO_COLOR);
-}
-
-bool mafInterpreterConsole::eventFilter(QObject *object, QEvent *event) {
-    mafLogEvent *log = dynamic_cast<mafLogEvent *>(event);
-    mafInterpreterConsole *interpreter = dynamic_cast<mafInterpreterConsole *>(object);
-
-    if (log && interpreter) {
-        int stat;
-        interpreter->output(log->message(), &stat);
-        return true;
-    } else {
-        if(promptFlag) {
-            this->appendPlainText(filter(m_Interpreter->prompt()));
-            promptFlag = false;
-        }
-        return QObject::eventFilter(object, event);
-    }
 }

@@ -20,8 +20,3 @@ include(${MAF_USE_FILE_CONFIG})
 ADD_SUBDIRECTORY(qaCheck)
 ADD_SUBDIRECTORY(RemoteCommunicationXMLRPC)
 ADD_SUBDIRECTORY(SimpleApp)
-
-if(BUILD_WRAP)
-  ADD_SUBDIRECTORY(mafInterpreter)
-endif(BUILD_WRAP)
-
