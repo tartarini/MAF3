@@ -141,7 +141,6 @@ public slots:
     QString help(void) const;
 
 signals:
-    void interpreted(const QString& result, int *stat);
     void stopped(void);
 
 protected:

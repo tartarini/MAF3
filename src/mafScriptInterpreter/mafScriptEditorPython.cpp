@@ -19,19 +19,6 @@
 
 #include <mafScriptEditorPython.h>
 
-#undef _POSIX_C_SOURCE
-#undef _XOPEN_SOURCE
-
-#ifdef _DEBUG
-    #undef _DEBUG
-    #define READD_DEBUG
-#endif // _DEBUG
-#include <Python.h>
-#ifdef READD_DEBUG
-    #define _DEBUG
-    #undef READD_DEBUG
-#endif // READD_DEBUG
-
 using namespace mafScriptInterpreter;
 
 #include <iostream>
@@ -124,16 +111,28 @@ mafScriptEditorPython::mafScriptEditorPython(QObject *parent) : mafScriptEditor(
     int argc = 0;
 
     // -- Redirection
-    init_redirector();
-    interpret("import sys",                           &stat);
-    interpret("import redirector",                    &stat);
-    interpret("sys.stdout = redirector.redirector()", &stat);
-    interpret("sys.stderr = sys.stdout",              &stat);
+    //init_redirector();
+    //interpret("import redirector",                    &stat);
+    //interpret("sys.stdout = redirector.redirector()", &stat);
+    //interpret("sys.stderr = sys.stdout",              &stat);
 
+    
+std::string stdOutErr = "import sys\n\
+class CatchOutErr:\n\
+    def __init__(self):\n\
+        self.value = ''\n\
+    def write(self, txt):\n\
+        self.value += txt\n\
+catchOutErr = CatchOutErr()\n\
+sys.stdout = catchOutErr\n\
+sys.stderr = catchOutErr\n"; //this is python code to redirect stdouts/stderr
+    
+    pModule = PyImport_AddModule("__main__"); //create main module
+    int res = PyRun_SimpleString(stdOutErr.c_str()); //invoke code to redirect
+    
     // -- Setting up utilities
-    interpret("import sys", &stat);
-    interpret("sys.path.append(\"" + mafScriptManager::instance()->modulePath() + "\")", &stat);
-
+    //interpret("import sys", &stat);
+    
     // -- Setting up managed modules
     mafScriptEditorPythonModuleManager::instance()->initialize(this);
 
@@ -192,23 +191,33 @@ void mafScriptEditorPython::blockThreads(void)
 
 QString mafScriptEditorPython::interpret(const QString& command, int *stat)
 {
-    redirection_occured = false;
+    
     blockThreads();
-
+    
+    PyObject *catcher = PyObject_GetAttrString(pModule,"catchOutErr"); //get our catchOutErr created above
+    PyObject* empty = PyString_FromString("");
+    PyObject_SetAttrString(catcher,"value", empty);
+    
     switch(PyRun_SimpleString(command.toAscii().constData())) {
     case  0: *stat = Status_Ok;    break;
     case -1: *stat = Status_Error; break;
     default: break;
     }
 
-    if(!redirection_occured)
-        emit interpreted("", stat);
+    catcher = PyObject_GetAttrString(pModule,"catchOutErr"); //get our catchOutErr created above
+    PyErr_Print(); //make python print any errors
+    
+    QString res("");
+
+    PyObject *output = PyObject_GetAttrString(catcher,"value"); //get the stdout and stderr from our catchOutErr object
+
+    res = PyString_AsString(output);
 
     mafScriptEditorSynchronizer::instance()->wake();
 
     allowThreads();
 
-    return "";
+    return res;
 }
 
 QString mafScriptEditorPython::interpret(const QString& command, const QStringList& args, int *stat)

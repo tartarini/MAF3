@@ -26,7 +26,7 @@
 
 namespace mafScriptInterpreter {
 
-class mafInterpreterEditor;
+class mafInterpreterConsole;
 class mafInterpreterPreferencesWidgetPrivate;
 
 class MAFSCRIPTINTERPRETERSHARED_EXPORT mafInterpreterPreferencesWidget : public mafGUI::mafGUIApplicationSettingsPage
@@ -34,7 +34,7 @@ class MAFSCRIPTINTERPRETERSHARED_EXPORT mafInterpreterPreferencesWidget : public
     Q_OBJECT
 
 public:
-     mafInterpreterPreferencesWidget(mafInterpreterEditor *editor, QWidget *parent = 0);
+     mafInterpreterPreferencesWidget(mafInterpreterConsole *editor, QWidget *parent = 0);
     ~mafInterpreterPreferencesWidget(void);
 
     void keyPressEvent(QKeyEvent *event);

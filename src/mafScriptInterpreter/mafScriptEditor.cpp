@@ -307,7 +307,7 @@ mafScriptEditor::mafScriptEditor(QObject *parent) : QObject(parent), d(new mafSc
 #ifndef Q_OS_WIN32
     d->console = new mafScriptEditorConsole(this);
 
-    connect(this, SIGNAL(interpreted(const QString&, int *)), d->console, SLOT(output(const QString&, int *)));
+    connect(d->console, SIGNAL(interpreted(const QString&, int *)), d->console, SLOT(output(const QString&, int *)));
     connect(d->console, SIGNAL(input(const QString&, int *)), this,    SLOT(interpret(const QString&, int *)));
     connect(d->console, SIGNAL( load(const QString&)),        this,    SLOT(     load(const QString&)));
     connect(d->console, SIGNAL( save(const QString&)),        this,    SLOT(     save(const QString&)));

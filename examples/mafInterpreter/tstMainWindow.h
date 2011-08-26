@@ -21,7 +21,7 @@
 #define TSTMAINWINDOW_H
 
 #include <QMainWindow>
-#include <mafInterpreterEditor.h>
+#include <mafInterpreterConsole.h>
 
 class tstMainWindowPrivate;
 
@@ -33,7 +33,7 @@ public:
      tstMainWindow(QWidget *parent = 0);
     ~tstMainWindow(void);
 
-    mafScriptInterpreter::mafInterpreterEditor *interpreter(void);
+    mafScriptInterpreter::mafInterpreterConsole *interpreter(void);
     
     /// syncronize all the splitters
     void synchronizeSplitters(QObject * sender);

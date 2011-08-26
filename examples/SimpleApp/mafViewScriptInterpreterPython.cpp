@@ -1,16 +1,9 @@
 #include "mafViewScriptInterpreterPython.h"
-#include <mafInterpreterEditor.h>
+#include <mafInterpreterConsole.h>
 #include <mafScriptEditorPython.h>
 #include <mafScriptEditorPool.h>
 
 #include <mafLog.h>
-
-QWidget *log_output;
-
-void tstRedirectLogHandler(mafGUI::mafLog::LogType logType, const QString& msg)
-{
-    QCoreApplication::postEvent(log_output, new mafGUI::mafLogEvent(logType, msg));
-}
 
 using namespace mafScriptInterpreter;
 
@@ -23,7 +16,5 @@ mafViewScriptInterpreterPython::~mafViewScriptInterpreterPython() {
 void mafViewScriptInterpreterPython::create() {
     mafScriptEditor *interpreter = mafScriptEditorPool::instance()->python();
 
-    log_output = ((mafInterpreterEditor*)m_RenderWidget);
-    ((mafInterpreterEditor*)m_RenderWidget)->registerInterpreter(interpreter);
-    ((mafInterpreterEditor*)m_RenderWidget)->registerAsHandler(tstRedirectLogHandler);
+    ((mafInterpreterConsole*)m_RenderWidget)->registerInterpreter(interpreter);
 }

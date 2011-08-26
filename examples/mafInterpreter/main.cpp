@@ -29,7 +29,7 @@
 #include <mafScriptEditorPython.h>
 #endif
 
-#include <mafInterpreterEditor.h>
+#include <mafInterpreterConsole.h>
 
 using namespace mafGUI;
 using namespace mafScriptInterpreter;
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     QApplication application(argc, argv);
 
     AnyOption options;
-    options.addUsage("Usage: ./mafInterpreterEditor [FLAG] ... [OPTION=VALUE] ...");
+    options.addUsage("Usage: ./mafInterpreterConsole [FLAG] ... [OPTION=VALUE] ...");
     options.addUsage("");
     options.addUsage("Mode:");
     options.addUsage(" -c  --console");

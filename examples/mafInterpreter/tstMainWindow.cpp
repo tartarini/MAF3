@@ -21,7 +21,7 @@
 
 #include "tstMainWindow.h"
 
-#include <mafInterpreterEditor.h>
+#include <mafInterpreterConsole.h>
 #include <mafInterpreterPreferencesWidget.h>
 
 class mafSplitter : public QSplitter
@@ -60,7 +60,7 @@ public:
 
     QAction *preferencesAction;
 
-    mafInterpreterEditor *interpreter;
+    mafInterpreterConsole *interpreter;
     mafSplitter *m_HorizontalSplitterTop; ///< horizontal splitter in top section 
     mafSplitter *m_HorizontalSplitterBottom; ///< horizontal splitter in bottom section
     QTextEdit *m_LeftTopPanel; ///< left/top panel
@@ -84,7 +84,7 @@ tstMainWindow::tstMainWindow(QWidget *parent) : QMainWindow(parent)
     //d->m_LeftTopPanel = new QTextEdit(d->m_HorizontalSplitterTop);
     //d->m_LeftTopPanel->setText("here... <b>command console</b> (progress for python console and scripts)");
     /// intepreter creation
-    d->interpreter = new mafInterpreterEditor(d->m_HorizontalSplitterTop);
+    d->interpreter = new mafInterpreterConsole(d->m_HorizontalSplitterTop);
     d->interpreter->readSettings();
     
     d->m_RightTopPanel = new QTextEdit(d->m_HorizontalSplitterTop);
@@ -116,7 +116,7 @@ tstMainWindow::~tstMainWindow(void)
     delete d;
 }
 
-mafInterpreterEditor *tstMainWindow::interpreter(void)
+mafInterpreterConsole *tstMainWindow::interpreter(void)
 {
     return d->interpreter;
 }

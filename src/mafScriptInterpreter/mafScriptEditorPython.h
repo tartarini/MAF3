@@ -24,7 +24,20 @@
 #include "mafScriptInterpreterDefinitions.h"
 
 #include <mafScriptEditor.h>
-#include <mafScriptManager.h>
+
+#undef _POSIX_C_SOURCE
+#undef _XOPEN_SOURCE
+
+#ifdef _DEBUG
+#undef _DEBUG
+#define READD_DEBUG
+#endif // _DEBUG
+#include <Python.h>
+#ifdef READD_DEBUG
+#define _DEBUG
+#undef READD_DEBUG
+#endif // READD_DEBUG
+
 
 namespace mafScriptInterpreter {
 
@@ -52,11 +65,15 @@ public slots:
     virtual QString interpret(const QString& command, int *stat);
     virtual QString interpret(const QString& command, const QStringList& args, int *stat);
 
+signals:
+    void interpreted(const QString& result, int *stat);
+    
 protected:
     static char *prompt(void);
 
 private:
     mafScriptEditorPythonPrivate *d;
+    PyObject *pModule;
 };
 
 // /////////////////////////////////////////////////////////////////
