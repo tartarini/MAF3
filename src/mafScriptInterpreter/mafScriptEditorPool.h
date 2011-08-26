@@ -21,7 +21,6 @@
 #define MAFSCRIPTINTERPRETERPOOL_H
 
 #include "mafScriptInterpreter_global.h"
-#include "mafScriptInterpreterDefinitions.h"
 
 namespace mafScriptInterpreter {
 
@@ -45,7 +44,7 @@ private:
     static mafScriptEditorPool *m_instance;
 
 private:
-    mafScriptEditorPoolPrivate *d;
+    mafScriptEditorPoolPrivate *m_PrivateClassPointer;
 };
 
 } //end namespace

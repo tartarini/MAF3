@@ -23,6 +23,7 @@
 #include <QtCore>
 #include <QtGui>
 #include <QtDebug>
+#include <QThread>
 
 namespace mafScriptInterpreter {
 

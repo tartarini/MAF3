@@ -43,51 +43,51 @@ public:
 
 mafInterpreterPreferencesWidget::mafInterpreterPreferencesWidget(mafInterpreterConsole *interpreter, QWidget *parent) : mafGUIApplicationSettingsPage(parent)
 {
-    d = new mafInterpreterPreferencesWidgetPrivate;
-    d->interpreter     = interpreter;
-    d->font            = interpreter->document()->defaultFont();
-    d->foregroundColor = interpreter->foregroundColor();
-    d->backgroundColor = interpreter->backgroundColor();
-    d->backgroundOpacity = interpreter->backgroundOpacity();
+    m_PrivateClassPointer = new mafInterpreterPreferencesWidgetPrivate;
+    m_PrivateClassPointer->interpreter     = interpreter;
+    m_PrivateClassPointer->font            = interpreter->document()->defaultFont();
+    m_PrivateClassPointer->foregroundColor = interpreter->foregroundColor();
+    m_PrivateClassPointer->backgroundColor = interpreter->backgroundColor();
+    m_PrivateClassPointer->backgroundOpacity = interpreter->backgroundOpacity();
 
-    d->ui.setupUi(this);
+    m_PrivateClassPointer->ui.setupUi(this);
 
-    d->ui.fontComboBox->setFont(d->font);
-    d->ui.sizeComboBox->setCurrentIndex(
-            d->font.pointSize() ==  6 ? 0 :
-            d->font.pointSize() ==  8 ? 1 :
-            d->font.pointSize() ==  9 ? 2 :
-            d->font.pointSize() == 10 ? 3 :
-            d->font.pointSize() == 11 ? 4 :
-            d->font.pointSize() == 12 ? 5 :
-            d->font.pointSize() == 14 ? 6 :
-            d->font.pointSize() == 16 ? 7 :
-            d->font.pointSize() == 18 ? 8 : 5);
+    m_PrivateClassPointer->ui.fontComboBox->setFont(m_PrivateClassPointer->font);
+    m_PrivateClassPointer->ui.sizeComboBox->setCurrentIndex(
+            m_PrivateClassPointer->font.pointSize() ==  6 ? 0 :
+            m_PrivateClassPointer->font.pointSize() ==  8 ? 1 :
+            m_PrivateClassPointer->font.pointSize() ==  9 ? 2 :
+            m_PrivateClassPointer->font.pointSize() == 10 ? 3 :
+            m_PrivateClassPointer->font.pointSize() == 11 ? 4 :
+            m_PrivateClassPointer->font.pointSize() == 12 ? 5 :
+            m_PrivateClassPointer->font.pointSize() == 14 ? 6 :
+            m_PrivateClassPointer->font.pointSize() == 16 ? 7 :
+            m_PrivateClassPointer->font.pointSize() == 18 ? 8 : 5);
 
     { // -- Setting text color
-    d->ui.textColorToolButton->setIconSize(d->ui.textColorToolButton->size());
-    QPixmap pix(d->ui.textColorToolButton->minimumSize());
-    pix.fill(d->foregroundColor);
-    d->ui.textColorToolButton->setIcon(pix);
+    m_PrivateClassPointer->ui.textColorToolButton->setIconSize(m_PrivateClassPointer->ui.textColorToolButton->size());
+    QPixmap pix(m_PrivateClassPointer->ui.textColorToolButton->minimumSize());
+    pix.fill(m_PrivateClassPointer->foregroundColor);
+    m_PrivateClassPointer->ui.textColorToolButton->setIcon(pix);
     } // -- Setting text color
 
     { // -- Setting background color
-    d->ui.backgroundColorToolButton->setIconSize(d->ui.backgroundColorToolButton->size());
-    QPixmap pix(d->ui.backgroundColorToolButton->minimumSize());
-    pix.fill(d->backgroundColor);
-    d->ui.backgroundColorToolButton->setIcon(pix);
+    m_PrivateClassPointer->ui.backgroundColorToolButton->setIconSize(m_PrivateClassPointer->ui.backgroundColorToolButton->size());
+    QPixmap pix(m_PrivateClassPointer->ui.backgroundColorToolButton->minimumSize());
+    pix.fill(m_PrivateClassPointer->backgroundColor);
+    m_PrivateClassPointer->ui.backgroundColorToolButton->setIcon(pix);
     } // -- Setting background color
 
     { // -- Setting opacity
-    d->ui.backgroundOpacitySlider->setValue(d->interpreter->backgroundOpacity());
+    m_PrivateClassPointer->ui.backgroundOpacitySlider->setValue(m_PrivateClassPointer->interpreter->backgroundOpacity());
     } // -- Setting opacity
 
-    connect(d->ui.fontComboBox, SIGNAL(currentFontChanged(QFont)), this, SLOT(onFontChosen(QFont)));
-    connect(d->ui.sizeComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(onSizeChosen(QString)));
+    connect(m_PrivateClassPointer->ui.fontComboBox, SIGNAL(currentFontChanged(QFont)), this, SLOT(onFontChosen(QFont)));
+    connect(m_PrivateClassPointer->ui.sizeComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(onSizeChosen(QString)));
 
-    connect(d->ui.textColorToolButton, SIGNAL(clicked()), this, SLOT(onTextColorClicked()));
-    connect(d->ui.backgroundColorToolButton, SIGNAL(clicked()), this, SLOT(onBackgroundColorClicked()));
-    connect(d->ui.backgroundOpacitySlider, SIGNAL(valueChanged(int)), this, SLOT(onBackgroundOpacityChanged(int)));
+    connect(m_PrivateClassPointer->ui.textColorToolButton, SIGNAL(clicked()), this, SLOT(onTextColorClicked()));
+    connect(m_PrivateClassPointer->ui.backgroundColorToolButton, SIGNAL(clicked()), this, SLOT(onBackgroundColorClicked()));
+    connect(m_PrivateClassPointer->ui.backgroundOpacitySlider, SIGNAL(valueChanged(int)), this, SLOT(onBackgroundOpacityChanged(int)));
     
     m_PageText = mafTr("Interpreter");
     m_PageIcon = QIcon(":/images/config.png");
@@ -114,50 +114,50 @@ void mafInterpreterPreferencesWidget::keyPressEvent(QKeyEvent *event)
 
 void mafInterpreterPreferencesWidget::onFontChosen(QFont font)
 {
-    d->interpreter->setFont(font);
+    m_PrivateClassPointer->interpreter->setFont(font);
 }
 
 void mafInterpreterPreferencesWidget::onSizeChosen(QString size)
 {
-    QFont f = d->interpreter->font();
+    QFont f = m_PrivateClassPointer->interpreter->font();
     f.setPointSize(size.toInt());
-    d->interpreter->setFont(f);
+    m_PrivateClassPointer->interpreter->setFont(f);
 }
 
 void mafInterpreterPreferencesWidget::onTextColorClicked(void)
 {
 #if QT_VERSION >= 0x040500
-    d->foregroundColor = QColorDialog::getColor(d->foregroundColor, this, "Choose text color");
+    m_PrivateClassPointer->foregroundColor = QColorDialog::getColor(m_PrivateClassPointer->foregroundColor, this, "Choose text color");
 #else
-    d->foregroundColor = QColorDialog::getColor(d->foregroundColor, this);
+    m_PrivateClassPointer->foregroundColor = QColorDialog::getColor(m_PrivateClassPointer->foregroundColor, this);
 #endif
 
-    QPixmap pix(d->ui.textColorToolButton->size());
-    pix.fill(d->foregroundColor);
-    d->ui.textColorToolButton->setIcon(pix);
+    QPixmap pix(m_PrivateClassPointer->ui.textColorToolButton->size());
+    pix.fill(m_PrivateClassPointer->foregroundColor);
+    m_PrivateClassPointer->ui.textColorToolButton->setIcon(pix);
     
-    d->interpreter->setForegroundColor(d->foregroundColor);
+    m_PrivateClassPointer->interpreter->setForegroundColor(m_PrivateClassPointer->foregroundColor);
 }
 
 void mafInterpreterPreferencesWidget::onBackgroundColorClicked(void)
 {
 #if QT_VERSION >= 0x040500
-    d->backgroundColor = QColorDialog::getColor(d->backgroundColor, this, "Choose background color");
+    m_PrivateClassPointer->backgroundColor = QColorDialog::getColor(m_PrivateClassPointer->backgroundColor, this, "Choose background color");
 #else
-    d->backgroundColor = QColorDialog::getColor(d->backgroundColor, this);
+    m_PrivateClassPointer->backgroundColor = QColorDialog::getColor(m_PrivateClassPointer->backgroundColor, this);
 #endif
 
-    QPixmap pix(d->ui.backgroundColorToolButton->size());
-    pix.fill(d->backgroundColor);
-    d->ui.backgroundColorToolButton->setIcon(pix);
+    QPixmap pix(m_PrivateClassPointer->ui.backgroundColorToolButton->size());
+    pix.fill(m_PrivateClassPointer->backgroundColor);
+    m_PrivateClassPointer->ui.backgroundColorToolButton->setIcon(pix);
     
     
-    d->interpreter->setBackgroundColor(d->backgroundColor);    
+    m_PrivateClassPointer->interpreter->setBackgroundColor(m_PrivateClassPointer->backgroundColor);    
 
 }
 
 void mafInterpreterPreferencesWidget::onBackgroundOpacityChanged(int value)
 {
-    d->interpreter->setBackgroundOpacity(value);
+    m_PrivateClassPointer->interpreter->setBackgroundOpacity(value);
 
 }

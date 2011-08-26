@@ -17,105 +17,31 @@
  * 
  */
 
-#include <mafScriptEditorPython.h>
+#include "mafScriptEditorPython.h"
+#include "mafScriptEditorSynchronizer.h"
+#include <iostream>
 
 using namespace mafScriptInterpreter;
 
-#include <iostream>
-
-static bool redirection_occured;
-
-static PyObject* redirector_init(PyObject *, PyObject *)
-{
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-
-static PyObject* redirector_write(PyObject *, PyObject *args)
-{
-    char* output;
-    PyObject *selfi;
-
-    if (!PyArg_ParseTuple(args, "Os", &selfi, &output))
- 	return NULL;
-
-    QString text(output);
-
-    if(!text.simplified().isEmpty())
-        std::cout << text.toAscii().constData() << std::flush << std::endl;
-
-    redirection_occured = true;
-
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-
-static PyMethodDef redirectorMethods[] =
-{
-    {"__init__", redirector_init, METH_VARARGS,
-     "initialize the stdout/err redirector"},
-    {"write", redirector_write, METH_VARARGS,
-     "implement the write method to redirect stdout/err"},
-    {NULL,NULL,0,NULL}
-};
-
-static PyMethodDef ModuleMethods[] = { {NULL,NULL,0,NULL} };
-
-void init_redirector(void)
-{
-    PyMethodDef *def;
-
-    PyObject *module = Py_InitModule("redirector", ModuleMethods);
-    PyObject *moduleDict = PyModule_GetDict(module);
-    PyObject *classDict = PyDict_New();
-    PyObject *className = PyString_FromString("redirector");
-    PyObject *fooClass = PyClass_New(NULL, classDict, className);
-    PyDict_SetItemString(moduleDict, "redirector", fooClass);
-    Py_DECREF(classDict);
-    Py_DECREF(className);
-    Py_DECREF(fooClass);
-
-    for (def = redirectorMethods; def->ml_name != NULL; def++) {
-        PyObject *func = PyCFunction_New(def, NULL);
-        PyObject *method = PyMethod_New(func, NULL, fooClass);
-        PyDict_SetItemString(classDict, def->ml_name, method);
-        Py_DECREF(func);
-        Py_DECREF(method);
-    }
-}
-
-// /////////////////////////////////////////////////////////////////
-// mafScriptEditorPythonPrivate
-// /////////////////////////////////////////////////////////////////
-
-class mafScriptInterpreter::mafScriptEditorPythonPrivate
-{
+/**
+ Class Name: mafScriptEditorPythonPrivate
+ Pimpl Pattern.
+ */
+class mafScriptInterpreter::mafScriptEditorPythonPrivate {
 public:
     unsigned int thread_level;
 
-    PyThreadState* thread_state;
+    PyThreadState* thread_state; ///< thread state for Python interpreter
 };
 
-// /////////////////////////////////////////////////////////////////
-// mafScriptEditorPython
-// /////////////////////////////////////////////////////////////////
-
-mafScriptEditorPython::mafScriptEditorPython(QObject *parent) : mafScriptEditor(parent), d(new mafScriptEditorPythonPrivate)
+mafScriptEditorPython::mafScriptEditorPython(QObject *parent) : mafScriptEditor(parent), m_PrivateClassPointer(new mafScriptEditorPythonPrivate)
 {
-    d->thread_level = 0;
-    d->thread_state = 0;
+    m_PrivateClassPointer->thread_level = 0;
+    m_PrivateClassPointer->thread_state = 0;
 
     int stat;
 
     Py_Initialize();
-    int argc = 0;
-
-    // -- Redirection
-    //init_redirector();
-    //interpret("import redirector",                    &stat);
-    //interpret("sys.stdout = redirector.redirector()", &stat);
-    //interpret("sys.stderr = sys.stdout",              &stat);
-
     
 std::string stdOutErr = "import sys\n\
 class CatchOutErr:\n\
@@ -143,9 +69,9 @@ mafScriptEditorPython::~mafScriptEditorPython(void)
 {
     Py_Finalize();
 
-    delete d;
+    delete m_PrivateClassPointer;
 
-    d = NULL;
+    m_PrivateClassPointer = NULL;
 }
 
 void mafScriptEditorPython::registerVariable(bool &var, QString name, QString description) 
@@ -175,18 +101,18 @@ void mafScriptEditorPython::unregisterVariable(QString name)
 
 void mafScriptEditorPython::allowThreads(void)
 {
-    d->thread_level--;
+    m_PrivateClassPointer->thread_level--;
 
-    if (d->thread_level == 0)
-        d->thread_state = PyEval_SaveThread();
+    if (m_PrivateClassPointer->thread_level == 0)
+        m_PrivateClassPointer->thread_state = PyEval_SaveThread();
 }
 
 void mafScriptEditorPython::blockThreads(void)
 {    
-    if((d->thread_level == 0) && (d->thread_state))
-        PyEval_RestoreThread(d->thread_state);
+    if((m_PrivateClassPointer->thread_level == 0) && (m_PrivateClassPointer->thread_state))
+        PyEval_RestoreThread(m_PrivateClassPointer->thread_state);
 
-    d->thread_level++;
+    m_PrivateClassPointer->thread_level++;
 }
 
 QString mafScriptEditorPython::interpret(const QString& command, int *stat)

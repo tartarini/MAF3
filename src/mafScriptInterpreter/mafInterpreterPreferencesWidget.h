@@ -48,7 +48,7 @@ public slots:
     void onBackgroundOpacityChanged(int value);
 
 private:
-    mafInterpreterPreferencesWidgetPrivate *d;
+    mafInterpreterPreferencesWidgetPrivate *m_PrivateClassPointer;
 };
     
 } //end namespace

@@ -20,4 +20,6 @@
 #  define MAFSCRIPTINTERPRETERSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
-#endif // MAFGUI_GLOBAL_H
+#include "mafScriptInterpreterDefinitions.h"
+
+#endif // MAFSCRIPTINTERPRETER_GLOBAL_H

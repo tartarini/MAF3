@@ -38,34 +38,34 @@ mafScriptEditorPool *mafScriptEditorPool::instance(void)
 
 mafScriptEditor *mafScriptEditorPool::console(QString type)
 {
-    if(!d->interpreters.contains("console") || !d->interpreters.value("console"))
-        d->interpreters.insert("console", new mafScriptEditorPython);
+    if(!m_PrivateClassPointer->interpreters.contains("console") || !m_PrivateClassPointer->interpreters.value("console"))
+        m_PrivateClassPointer->interpreters.insert("console", new mafScriptEditorPython);
 
-    return d->interpreters.value("console");
+    return m_PrivateClassPointer->interpreters.value("console");
 }
 
 mafScriptEditor *mafScriptEditorPool::python(void)
 {
-    if(!d->interpreters.contains("python") || !d->interpreters.value("python")) {
-	    d->interpreters.insert("python", new mafScriptEditorPython);
+    if(!m_PrivateClassPointer->interpreters.contains("python") || !m_PrivateClassPointer->interpreters.value("python")) {
+	    m_PrivateClassPointer->interpreters.insert("python", new mafScriptEditorPython);
     }
 
-    return d->interpreters.value("python");
+    return m_PrivateClassPointer->interpreters.value("python");
 }
 
-mafScriptEditorPool::mafScriptEditorPool(void) : QObject(), d(new mafScriptEditorPoolPrivate)
+mafScriptEditorPool::mafScriptEditorPool(void) : QObject(), m_PrivateClassPointer(new mafScriptEditorPoolPrivate)
 {
 
 }
 
 mafScriptEditorPool::~mafScriptEditorPool(void)
 {
-    foreach(mafScriptEditor *interpreter, d->interpreters.values())
+    foreach(mafScriptEditor *interpreter, m_PrivateClassPointer->interpreters.values())
 	delete interpreter;
 
-    delete d;
+    delete m_PrivateClassPointer;
 
-    d= NULL;
+    m_PrivateClassPointer = NULL;
 }
 
 mafScriptEditorPool *mafScriptEditorPool::m_instance = NULL;

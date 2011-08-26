@@ -21,7 +21,6 @@
 #define MAFSCRIPTINTERPRETERPYTHON_H
 
 #include "mafScriptInterpreter_global.h"
-#include "mafScriptInterpreterDefinitions.h"
 
 #include <mafScriptEditor.h>
 
@@ -72,7 +71,7 @@ protected:
     static char *prompt(void);
 
 private:
-    mafScriptEditorPythonPrivate *d;
+    mafScriptEditorPythonPrivate *m_PrivateClassPointer;
     PyObject *pModule;
 };
 

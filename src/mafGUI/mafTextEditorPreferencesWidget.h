@@ -54,7 +54,7 @@ public slots:
     void onCancelButtonClicked(void);
 
 private:
-    mafTextEditorPreferencesWidgetPrivate *d;
+    mafTextEditorPreferencesWidgetPrivate *m_PrivateClassPointer;
 };
     
 } // end namespace
