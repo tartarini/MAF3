@@ -1,20 +1,12 @@
-/* mafTextEditor.cpp --- 
- * 
- * Author: Julien Wintz
- * Copyright (C) 2008 - Julien Wintz, Inria.
- * Created: Fri Apr 10 09:23:18 2009 (+0200)
- * Version: $Id$
- * Last-Updated: Mon Aug 16 15:01:03 2010 (+0200)
- *           By: Julien Wintz
- *     Update #: 120
- */
-
-/* Commentary: 
- * See credits at end of file.
- */
-
-/* Change log:
- * 
+/*
+ *  mafTextEditor.cpp
+ *  mafScriptInterpreter
+ *
+ *  Created by Daniele Giunchi - Paolo Quadrani on 08/11.
+ *  Copyright 2011 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
  */
 
 #include <QPainter>

@@ -1,20 +1,12 @@
-/* mafTextEditorDocument.h --- 
- * 
- * Author: Julien Wintz
- * Copyright (C) 2008 - Julien Wintz, Inria.
- * Created: Fri Apr 10 09:23:52 2009 (+0200)
- * Version: $Id$
- * Last-Updated: Thu Jul 22 16:32:59 2010 (+0200)
- *           By: Julien Wintz
- *     Update #: 47
- */
-
-/* Commentary: 
- * 
- */
-
-/* Change log:
- * 
+/*
+ *  mafTextEditorDocument.h
+ *  mafScriptInterpreter
+ *
+ *  Created by Daniele Giunchi - Paolo Quadrani on 08/11.
+ *  Copyright 2011 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
  */
 
 #ifndef MAFTEXTEDITORDOCUMENT_H

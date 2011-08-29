@@ -1,21 +1,14 @@
-/* mafGlobal.h --- 
- * 
- * Author: Julien Wintz
- * Copyright (C) 2008 - Julien Wintz, Inria.
- * Created: Thu Oct 16 09:54:33 2008 (+0200)
- * Version: $Id$
- * Last-Updated: Tue Aug 24 12:47:35 2010 (+0200)
- *           By: Julien Wintz
- *     Update #: 111
+/*
+ *  mafScriptInterpreterDefinitions.h
+ *  mafScriptInterpreter
+ *
+ *  Created by Daniele Giunchi - Paolo Quadrani on 08/11.
+ *  Copyright 2011 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
  */
 
-/* Commentary: 
- * 
- */
-
-/* Change log:
- * 
- */
 
 #ifndef MAFSCRIPTINTERPRETERDEFINITIONS_H
 #define MAFSCRIPTINTERPRETERDEFINITIONS_H
