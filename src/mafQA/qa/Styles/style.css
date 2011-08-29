@@ -158,6 +158,7 @@ ol li
 { width: 207px;
   float: right;
   padding: 16px 0px 15px 0px;
+  overflow: hidden;
 }
 
 .sidebaritem
@@ -190,7 +191,7 @@ ol li
 
 .sbilinks{padding: 0px;}
 
-.sbilinks ul{margin: 0px auto;} 
+.sbilinks ul{margin: 0;} 
 
 .sbilinks li 
 { margin: 0px; 
