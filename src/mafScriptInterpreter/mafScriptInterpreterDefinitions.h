@@ -88,63 +88,6 @@ namespace mafScriptInterpreter {
 #define MAF_SUCCEED 1
 #define MAF_FAILURE 0
  
-// /////////////////////////////////////////////////////////////////
-// Helper functions
-// /////////////////////////////////////////////////////////////////
-
-inline QString mafReadFile(const QString& path)
-{
-    QFile file(path);
-
-    if(!file.open(QFile::ReadOnly))
-        qDebug() << "Unable to read file" << path;
-
-    QString contents = file.readAll();
-
-    file.close();
-
-    return contents;
-}
-
-inline bool mafApplicationArgumentsContain(int argc, char **argv, QString value)
-{
-    for(int i = 1; i < argc; i++)
-        if(QString(argv[i]) == value)
-            return true;
-
-    return false;
-}
-
-inline bool mafApplicationArgumentsContain(QCoreApplication *application, QString value)
-{
-    return mafApplicationArgumentsContain(application->argc(), application->argv(), value); // I know the previous is deprecated but it really shouldn't :-|
-}
-
-inline QString mafApplicationArgumentsValue(int argc, char **argv, QString key)
-{
-    for(int i = 1; i < argc; i++)
-        if(QString(argv[i]) == key)
-            return QString(argv[i+1]);
-
-    return QString();
-}
-
-inline QString mafApplicationArgumentsValue(QCoreApplication *application, QString key)
-{
-    return mafApplicationArgumentsValue(application->argc(), application->argv(), key); // I know the previous is deprecated but it really shouldn't :-|
-}
-
-// /////////////////////////////////////////////////////////////////
-// Hash functions
-// /////////////////////////////////////////////////////////////////
-
-inline uint qHash(const QStringList &key)
-{
-    uint hash = 0;
-    foreach(QString string, key)
-	hash = hash ^ qHash(string);
-    return hash;
-}
     
 } //end namespace
 
