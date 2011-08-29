@@ -62,8 +62,10 @@ bool mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::m
 }
 
 void mafPipeVisual::setVisibility(bool visible) {
-    m_Visibility = visible;
-    updateVisibility();
+    if(m_Visibility != visible){
+        m_Visibility = visible;
+        updateVisibility();
+    }
 }
 
 void mafPipeVisual::updateVisibility() {

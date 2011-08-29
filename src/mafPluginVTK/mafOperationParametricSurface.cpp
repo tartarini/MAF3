@@ -188,7 +188,6 @@ void mafOperationParametricSurface::updateParametricSurface() {
 
 void mafOperationParametricSurface::on_parametricSurfaceType_currentChanged(int index){
     this->setParametricSurfaceType(index);
-    m_ParametricSphere->updateSurface();
     this->updateParametricSurface();
 }
 

@@ -189,6 +189,7 @@ void mafVTKWidget::pickProp(vtkRenderWindowInteractor* iren, QEvent *e, mafCore:
     
     iren->GetEventPosition(mousePosX, mousePosY);
     vtkSmartPointer<vtkCellPicker> cellPicker = vtkSmartPointer<vtkCellPicker>::New();
+    cellPicker->SetTolerance(0.001);
     vtkRendererCollection *rc = iren->GetRenderWindow()->GetRenderers();
     vtkRenderer *r = NULL;
     rc->InitTraversal();

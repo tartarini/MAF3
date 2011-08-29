@@ -49,7 +49,7 @@ get_filename_component(CUR_ABSOLUTE_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
 include("${CUR_ABSOLUTE_DIR}/../MAFConfig.cmake")
 
 # Add cmake module path.
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${MAF_ROOT_DIR}/CMake")
+set(CMAKE_MODULE_PATH "${MAF_ROOT_DIR}/CMake")
 
 include(${CMAKE_MODULE_PATH}/mafCopySharedLibrariesInInstallDir.cmake)
 include(${CMAKE_MODULE_PATH}/mafMacroInitProject.cmake)
