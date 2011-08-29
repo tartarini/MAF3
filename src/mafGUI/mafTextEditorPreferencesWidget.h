@@ -1,20 +1,12 @@
-/* mafTextEditorPreferencesWidget.h --- 
- * 
- * Author: Julien Wintz
- * Copyright (C) 2008 - Julien Wintz, Inria.
- * Created: Fri Apr 10 09:24:10 2009 (+0200)
- * Version: $Id$
- * Last-Updated: Thu Aug  6 10:20:51 2009 (+0200)
- *           By: Julien Wintz
- *     Update #: 8
- */
-
-/* Commentary: 
- * 
- */
-
-/* Change log:
- * 
+/*
+ *  mafTextEditorPreferencesWidget.h
+ *  mafScriptEditor
+ *
+ *  Created by Daniele Giunchi and Paolo Quadrani on 08/11.
+ *  Copyright 2011 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
  */
 
 #ifndef MAFTEXTEDITORPREFERENCESWIDGET_H
@@ -28,33 +20,49 @@ namespace mafGUI {
 class mafTextEditor;
 class mafTextEditorPreferencesWidgetPrivate;
 
+/**
+ Class Name: mafTextEditorPreferencesWidget
+ Preference widget for the common mafTextEditor.
+ */
 class MAFGUISHARED_EXPORT mafTextEditorPreferencesWidget : public mafGUIApplicationSettingsPage
 {
     Q_OBJECT
-
-public:
-     mafTextEditorPreferencesWidget(mafTextEditor *editor, QWidget *parent);
-    ~mafTextEditorPreferencesWidget(void);
-
-    void keyPressEvent(QKeyEvent *event);
-
-signals:
-    void accepted(void);
-    void rejected(void);
-
+    
 public slots:
+    /// set the font to the console
     void onFontChosen(QFont);
+    /// called when the size is changed
     void onSizeChosen(QString);
-
+    
+    /// set the line numbers On or Off. 
     void onNumbersCkeckBoxChanged(int);
+    /// set if the current line is highlighted.
     void onHighlightCkeckBoxChanged(int);
+    // set if showing revisions.
     void onRevisionsCkeckBoxChanged(int);
-
+    
+    /// called when click OK button.
     void onOkButtonClicked(void);
+    /// called when click Cancel button.
     void onCancelButtonClicked(void);
 
+signals:
+    /// signal emitted when the change is accepted.
+    void accepted(void);
+    /// signal emitted when the change is rejected.
+    void rejected(void);
+
+public:
+    /// Object Constructor.
+     mafTextEditorPreferencesWidget(mafTextEditor *editor, QWidget *parent);
+    /// Object Destructor.
+    ~mafTextEditorPreferencesWidget(void);
+
+    /// key event handler.
+    void keyPressEvent(QKeyEvent *event);
+
 private:
-    mafTextEditorPreferencesWidgetPrivate *m_PrivateClassPointer;
+    mafTextEditorPreferencesWidgetPrivate *m_PrivateClassPointer; ///< pimpl pattern.
 };
     
 } // end namespace

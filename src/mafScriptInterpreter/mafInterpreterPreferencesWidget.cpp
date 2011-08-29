@@ -1,20 +1,12 @@
-/* mafInterpreterPreferencesWidget.cpp --- 
- * 
- * Author: Julien Wintz
- * Copyright (C) 2008 - Julien Wintz, Inria.
- * Created: Fri Apr 10 09:24:22 2009 (+0200)
- * Version: $Id$
- * Last-Updated: Thu Aug  6 10:24:27 2009 (+0200)
- *           By: Julien Wintz
- *     Update #: 54
- */
-
-/* Commentary: 
- * 
- */
-
-/* Change log:
- * 
+/*
+ *  mafInterpreterPreferencesWidget.cpp
+ *  mafScriptEditor
+ *
+ *  Created by Daniele Giunchi and Paolo Quadrani on 08/11.
+ *  Copyright 2011 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
  */
 
 #include <QtGui>
@@ -27,13 +19,16 @@
 
 using namespace mafGUI;
 using namespace mafScriptInterpreter;
-
+/**
+ Class Name: mafInterpreterPreferencesWidgetPrivate.
+ pimpl pattern.
+ */
 class mafScriptInterpreter::mafInterpreterPreferencesWidgetPrivate
 {
 public:
-    Ui::mafInterpreterPreferencesWidget ui;
+    Ui::mafInterpreterPreferencesWidget ui; ///< user interface.
 
-    mafInterpreterConsole *interpreter;
+    mafInterpreterConsole *interpreter; ///< interpreter console.
 
     QFont  font;
     QColor foregroundColor;
@@ -41,8 +36,7 @@ public:
     int  backgroundOpacity;
 };
 
-mafInterpreterPreferencesWidget::mafInterpreterPreferencesWidget(mafInterpreterConsole *interpreter, QWidget *parent) : mafGUIApplicationSettingsPage(parent)
-{
+mafInterpreterPreferencesWidget::mafInterpreterPreferencesWidget(mafInterpreterConsole *interpreter, QWidget *parent) : mafGUIApplicationSettingsPage(parent) {
     m_PrivateClassPointer = new mafInterpreterPreferencesWidgetPrivate;
     m_PrivateClassPointer->interpreter     = interpreter;
     m_PrivateClassPointer->font            = interpreter->document()->defaultFont();

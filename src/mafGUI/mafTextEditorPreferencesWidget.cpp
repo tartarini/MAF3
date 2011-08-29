@@ -1,20 +1,12 @@
-/* mafTextEditorPreferencesWidget.cpp --- 
- * 
- * Author: Julien Wintz
- * Copyright (C) 2008 - Julien Wintz, Inria.
- * Created: Fri Apr 10 09:24:22 2009 (+0200)
- * Version: $Id$
- * Last-Updated: Wed Dec 23 10:40:58 2009 (+0100)
- *           By: Julien Wintz
- *     Update #: 23
- */
-
-/* Commentary: 
- * 
- */
-
-/* Change log:
- * 
+/*
+ *  mafTextEditorPreferencesWidget.h
+ *  mafScriptEditor
+ *
+ *  Created by Daniele Giunchi and Paolo Quadrani on 08/11.
+ *  Copyright 2011 B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
  */
 
 
@@ -24,19 +16,22 @@
 #include "ui_mafTextEditorPreferencesWidget.h"
 
 namespace mafGUI {
-	
+/**
+ Class Name: mafTextEditorPreferencesWidgetPrivate.
+ pimpl pattern.
+ */
 class mafTextEditorPreferencesWidgetPrivate
 {
 public:
-    Ui::mafTextEditorPreferencesWidget ui;
+    Ui::mafTextEditorPreferencesWidget ui; ///< user interface.
 
-    mafTextEditor *editor;
+    mafTextEditor *editor; ///< instance of the text editor.
 
-    bool showLineNumbers;
-    bool showCurrentLine;
-    bool showRevisions;
+    bool showLineNumbers; ///< flag for showing line numbers.
+    bool showCurrentLine; ///< flag for showing current line highlighting.
+    bool showRevisions; ///< flag for showing revisions.
 
-    QFont font;
+    QFont font; ///< current font.
 };
 
 }  // end namespace
