@@ -29,38 +29,21 @@ class MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditorPythonModuleManager : pub
 
 public:
     /// Return the singleton instance.
-    static mafScriptEditorPythonModuleManager* instance(void) {
-	if(!m_instance)
-	    m_instance = new mafScriptEditorPythonModuleManager;
-
-	return m_instance;
-    }
+    static mafScriptEditorPythonModuleManager* instance(void);
 
     /// Initialize interpreters.
-    void initialize(mafScriptEditorPython *interpreter) {
-	int stat;
-    interpreter->blockThreads();
-	foreach(mafScriptEditorModuleInitializer initializer, initializers)
-	    initializer();
-
-    interpreter->allowThreads();
-	foreach(QString command, commands) 
-	    interpreter->interpret(command, &stat);
-    }
+    void initialize(mafScriptEditorPython *interpreter);
 
     /// Register initializer function.
-    void registerInitializer(mafScriptEditorModuleInitializer initializer) {
-	initializers << initializer;
-    }
+    void registerInitializer(mafScriptEditorModuleInitializer initializer);
 
     /// Register commands.
-    void registerCommand(QString command) {
-	commands << command;
-    }
+    void registerCommand(QString command);
 
 protected:
     /// Object Constructor.
     mafScriptEditorPythonModuleManager(void) {}
+
     /// Object Destructor.
     ~mafScriptEditorPythonModuleManager(void) {}
 
@@ -71,6 +54,18 @@ private:
     static mafScriptEditorPythonModuleManager *m_instance; /// singleton instance.
 };
 
+/////////////////////////////////////////////////////////////
+// Inline methods
+/////////////////////////////////////////////////////////////
+
+inline void mafScriptEditorPythonModuleManager::registerInitializer(mafScriptEditorModuleInitializer initializer) {
+    initializers << initializer;
+}
+
+inline void mafScriptEditorPythonModuleManager::registerCommand(QString command) {
+    commands << command;
+}
+
 } // end namespace
-    
+
 #endif // MAFSCRIPTEDITORPYTHONMODULEMANAGER_H

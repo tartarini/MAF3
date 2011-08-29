@@ -14,3 +14,22 @@
 using namespace mafScriptInterpreter;
 
 MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditorPythonModuleManager *mafScriptEditorPythonModuleManager::m_instance = NULL;
+
+mafScriptEditorPythonModuleManager* mafScriptEditorPythonModuleManager::instance(void) {
+    if(!m_instance) {
+        m_instance = new mafScriptEditorPythonModuleManager;
+    }
+
+    return m_instance;
+}
+
+void mafScriptEditorPythonModuleManager::initialize(mafScriptEditorPython *interpreter) {
+    int stat;
+    interpreter->blockThreads();
+    foreach(mafScriptEditorModuleInitializer initializer, initializers)
+        initializer();
+
+    interpreter->allowThreads();
+    foreach(QString command, commands) 
+        interpreter->interpret(command, &stat);
+}
