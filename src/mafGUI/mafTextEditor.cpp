@@ -52,7 +52,6 @@ public:
     bool m_ShowRevisions;
 
     mafTextEditorDocument *m_Document;
-
     mafTextEditorExtraArea *m_ExtraArea;
 };
 
@@ -64,9 +63,8 @@ using namespace mafGUI;
 
 mafTextEditor::mafTextEditor(QWidget *parent) : QPlainTextEdit(parent) {
     m_PrivateClassPointer = new mafTextEditorPrivate;
-    m_PrivateClassPointer->m_ShowLineNumbers = true;
-    m_PrivateClassPointer->m_ShowCurrentLine = true;
-    m_PrivateClassPointer->m_ShowRevisions = true;
+
+    readSettings();
 
     m_PrivateClassPointer->m_ExtraArea = new mafTextEditorExtraArea(this);
     m_PrivateClassPointer->m_Document = new mafTextEditorDocument;
@@ -102,23 +100,13 @@ mafTextEditor::~mafTextEditor(void) {
     delete m_PrivateClassPointer;
 }
 
-void mafTextEditor::readSettings(void) {    
+void mafTextEditor::readSettings(void) {
     QSettings settings;
     settings.beginGroup("editor");
     this->setFont(settings.value("font").value<QFont>());
     this->setShowRevisions(settings.value("showRevisions").toBool());
     this->setShowCurrentLine(settings.value("showCurrentLine").toBool());
     this->setShowLineNumbers(settings.value("showLineNumbers").toBool());
-    settings.endGroup();
-}
-
-void mafTextEditor::writeSettings(void) {
-    QSettings settings;
-    settings.beginGroup("editor");
-    settings.setValue("font", this->font());
-    settings.setValue("showRevisions", this->showRevisions());
-    settings.setValue("showCurrentLine", this->showCurrentLine());
-    settings.setValue("showLineNumbers", this->showLineNumbers());
     settings.endGroup();
 }
 
