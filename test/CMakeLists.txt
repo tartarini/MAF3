@@ -36,7 +36,9 @@ if(${MAF_QTGUI})
   ADD_SUBDIRECTORY(mafGUITest)
 endif(${MAF_QTGUI})
 
-
+if(${MAF_SCRIPT_INTERPRETER})
+  ADD_SUBDIRECTORY(mafScriptInterpreterTest)
+endif(${MAF_SCRIPT_INTERPRETER})
 
 
 
