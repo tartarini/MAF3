@@ -95,8 +95,6 @@ public slots:
 
     /// Read the previous stored settings
     void  readSettings(void);
-    /// Write the console settings.
-    void writeSettings(void);
 
     /// 
     void zoomIn(int range = 1);
