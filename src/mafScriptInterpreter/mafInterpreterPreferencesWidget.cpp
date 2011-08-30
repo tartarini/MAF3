@@ -61,14 +61,14 @@ mafInterpreterPreferencesWidget::mafInterpreterPreferencesWidget(QWidget *parent
 
     { // -- Setting text color
     m_PrivateClassPointer->ui.textColorToolButton->setIconSize(m_PrivateClassPointer->ui.textColorToolButton->size());
-    QPixmap pix(m_PrivateClassPointer->ui.textColorToolButton->minimumSize());
+    QPixmap pix(m_PrivateClassPointer->ui.textColorToolButton->size());
     pix.fill(m_PrivateClassPointer->foregroundColor);
     m_PrivateClassPointer->ui.textColorToolButton->setIcon(pix);
     } // -- Setting text color
 
     { // -- Setting background color
     m_PrivateClassPointer->ui.backgroundColorToolButton->setIconSize(m_PrivateClassPointer->ui.backgroundColorToolButton->size());
-    QPixmap pix(m_PrivateClassPointer->ui.backgroundColorToolButton->minimumSize());
+    QPixmap pix(m_PrivateClassPointer->ui.backgroundColorToolButton->size());
     pix.fill(m_PrivateClassPointer->backgroundColor);
     m_PrivateClassPointer->ui.backgroundColorToolButton->setIcon(pix);
     } // -- Setting background color
@@ -107,32 +107,41 @@ void mafInterpreterPreferencesWidget::onSizeChosen(QString size) {
 }
 
 void mafInterpreterPreferencesWidget::onTextColorClicked(void) {
+    QColor color;
 #if QT_VERSION >= 0x040500
-    m_PrivateClassPointer->foregroundColor = QColorDialog::getColor(m_PrivateClassPointer->foregroundColor, this, "Choose text color");
+    color = QColorDialog::getColor(m_PrivateClassPointer->foregroundColor, this, "Choose text color");
 #else
-    m_PrivateClassPointer->foregroundColor = QColorDialog::getColor(m_PrivateClassPointer->foregroundColor, this);
+    color = QColorDialog::getColor(m_PrivateClassPointer->foregroundColor, this);
 #endif
 
+    if (!color.isValid()) {
+        return;
+    }
+
+    m_PrivateClassPointer->foregroundColor = color;
     QPixmap pix(m_PrivateClassPointer->ui.textColorToolButton->size());
     pix.fill(m_PrivateClassPointer->foregroundColor);
     m_PrivateClassPointer->ui.textColorToolButton->setIcon(pix);
     
-    //m_PrivateClassPointer->interpreter->setForegroundColor(m_PrivateClassPointer->foregroundColor);
     writeSettings();
 }
 
 void mafInterpreterPreferencesWidget::onBackgroundColorClicked(void) {
+    QColor color;
 #if QT_VERSION >= 0x040500
-    m_PrivateClassPointer->backgroundColor = QColorDialog::getColor(m_PrivateClassPointer->backgroundColor, this, "Choose background color");
+    color = QColorDialog::getColor(m_PrivateClassPointer->backgroundColor, this, "Choose background color");
 #else
-    m_PrivateClassPointer->backgroundColor = QColorDialog::getColor(m_PrivateClassPointer->backgroundColor, this);
+    color = QColorDialog::getColor(m_PrivateClassPointer->backgroundColor, this);
 #endif
 
+    if (!color.isValid()) {
+        return;
+    }
+
+    m_PrivateClassPointer->backgroundColor = color;
     QPixmap pix(m_PrivateClassPointer->ui.backgroundColorToolButton->size());
     pix.fill(m_PrivateClassPointer->backgroundColor);
     m_PrivateClassPointer->ui.backgroundColorToolButton->setIcon(pix);
-    
-    
-    //m_PrivateClassPointer->interpreter->setBackgroundColor(m_PrivateClassPointer->backgroundColor);    
+       
     writeSettings();
 }
