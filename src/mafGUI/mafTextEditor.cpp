@@ -64,8 +64,6 @@ using namespace mafGUI;
 mafTextEditor::mafTextEditor(QWidget *parent) : QPlainTextEdit(parent) {
     m_PrivateClassPointer = new mafTextEditorPrivate;
 
-    readSettings();
-
     m_PrivateClassPointer->m_ExtraArea = new mafTextEditorExtraArea(this);
     m_PrivateClassPointer->m_Document = new mafTextEditorDocument;
 
@@ -94,6 +92,8 @@ mafTextEditor::mafTextEditor(QWidget *parent) : QPlainTextEdit(parent) {
 
     this->onUpdateExtraAreaWidth();
     this->installEventFilter(this);
+
+    readSettings();
 }
 
 mafTextEditor::~mafTextEditor(void) {
