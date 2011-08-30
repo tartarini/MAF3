@@ -18,7 +18,6 @@
 
 namespace mafGUI {
 
-class mafTextEditorPreferencesWidget;
 class mafTextEditorPrivate;
 
 /**
@@ -62,9 +61,6 @@ public:
     QColor backgroundColor(void) const;
     /// 
     QColor foregroundColor(void) const;
-
-    /// Return the widget of the console preferences.
-    mafTextEditorPreferencesWidget *preferencesWidget(QWidget *parent = 0);
 
     /// Allows to visualize the line numbers.
     void setShowLineNumbers(bool show);

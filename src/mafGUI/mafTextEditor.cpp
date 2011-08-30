@@ -9,13 +9,15 @@
  *
  */
 
-#include <QPainter>
-#include <QStyle>
-
 #include "mafTextEditor.h"
 #include "mafTextEditorDocument.h"
 #include "mafTextEditorDocumentLayout.h"
-#include "mafTextEditorPreferencesWidget.h"
+
+#include <QPainter>
+#include <QStyle>
+#include <QSettings>
+#include <QTextBlock>
+
 
 namespace mafGUI {
     class mafTextEditorExtraArea : public QWidget {
@@ -52,7 +54,6 @@ public:
     mafTextEditorDocument *m_Document;
 
     mafTextEditorExtraArea *m_ExtraArea;
-    mafTextEditorPreferencesWidget *m_Preferences;
 };
 
 // /////////////////////////////////////////////////////////////////
@@ -68,9 +69,8 @@ mafTextEditor::mafTextEditor(QWidget *parent) : QPlainTextEdit(parent) {
     m_PrivateClassPointer->m_ShowRevisions = true;
 
     m_PrivateClassPointer->m_ExtraArea = new mafTextEditorExtraArea(this);
-    m_PrivateClassPointer->m_Preferences = NULL;
-
     m_PrivateClassPointer->m_Document = new mafTextEditorDocument;
+
     // begin setting up document
     QTextDocument *doc = m_PrivateClassPointer->m_Document->document();
     mafTextEditorDocumentLayout *documentLayout = qobject_cast<mafTextEditorDocumentLayout*>(doc->documentLayout());
@@ -95,7 +95,6 @@ mafTextEditor::mafTextEditor(QWidget *parent) : QPlainTextEdit(parent) {
     connect(m_PrivateClassPointer->m_Document, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged(QString)));
 
     this->onUpdateExtraAreaWidth();
-
     this->installEventFilter(this);
 }
 
@@ -104,7 +103,7 @@ mafTextEditor::~mafTextEditor(void) {
 }
 
 void mafTextEditor::readSettings(void) {    
-    QSettings settings("SCS", "maf");
+    QSettings settings;
     settings.beginGroup("editor");
     this->setFont(settings.value("font").value<QFont>());
     this->setShowRevisions(settings.value("showRevisions").toBool());
@@ -114,7 +113,7 @@ void mafTextEditor::readSettings(void) {
 }
 
 void mafTextEditor::writeSettings(void) {
-    QSettings settings("SCS", "maf");
+    QSettings settings;
     settings.beginGroup("editor");
     settings.setValue("font", this->font());
     settings.setValue("showRevisions", this->showRevisions());
@@ -192,8 +191,6 @@ QString mafTextEditor::currentLine(void) const {
 }
 
 int mafTextEditor::backgroundOpacity(void) const {
-    // return (int)(this->windowOpacity()*255);
-
     QPalette p(this->palette());
     return p.color(QPalette::Base).alpha();
 }
@@ -206,14 +203,6 @@ QColor mafTextEditor::backgroundColor(void) const {
 QColor mafTextEditor::foregroundColor(void) const {
     QPalette p(palette());
     return p.color(QPalette::Text);
-}
-
-mafTextEditorPreferencesWidget *mafTextEditor::preferencesWidget(QWidget *parent) {
-    if(!m_PrivateClassPointer->m_Preferences) {
-        m_PrivateClassPointer->m_Preferences = new mafTextEditorPreferencesWidget(this, parent);
-    }
-
-    return m_PrivateClassPointer->m_Preferences;
 }
 
 void mafTextEditor::setShowLineNumbers(bool show) {
@@ -231,8 +220,6 @@ void mafTextEditor::setShowRevisions(bool show) {
 }
 
 void mafTextEditor::setBackgroundOpacity(int opacity) {
-    // this->setWindowOpacity((qreal)(opacity/255.0));
-
     QPalette p(this->palette());
 
     QColor color = p.color(QPalette::Base);
@@ -240,7 +227,6 @@ void mafTextEditor::setBackgroundOpacity(int opacity) {
     p.setColor(QPalette::Window, color);
 
     this->setPalette(p);
-    
     this->viewport()->update();
 }
 
@@ -249,7 +235,6 @@ void mafTextEditor::setBackgroundColor(QColor color) {
     p.setColor(QPalette::Base, color);
 
     this->setPalette(p);
-
     this->viewport()->update();
 }
 
@@ -258,7 +243,6 @@ void mafTextEditor::setForegroundColor(QColor color) {
     p.setColor(QPalette::Text, color);
 
     this->setPalette(p);
-
     this->viewport()->update();
 }
 
@@ -356,7 +340,6 @@ int mafTextEditor::extraAreaWidth(void) const {
     }
 
     mafTextEditorDocumentLayout *documentLayout = qobject_cast<mafTextEditorDocumentLayout *>(this->document()->documentLayout());
-
     if(!documentLayout) {
         return 0;
     }
@@ -389,7 +372,6 @@ void mafTextEditor::extraAreaPaintEvent(QPaintEvent *event) {
     palette.setCurrentColorGroup(QPalette::Active);
 
     QPainter painter(m_PrivateClassPointer->m_ExtraArea);
-
     QFontMetrics fm(painter.fontMetrics());
 
     const int extraAreaWidth = m_PrivateClassPointer->m_ExtraArea->width();

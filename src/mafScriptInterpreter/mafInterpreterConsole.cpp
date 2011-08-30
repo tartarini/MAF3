@@ -9,25 +9,17 @@
  *
  */
 
-#include <iostream>
-
-#include <QtDebug>
-#include <QtCore>
-#include <QtGui>
-
 #include "mafScriptEditorPython.h"
 
 #include <mafSyntaxHighlighterPython.h>
 #include <mafInterpreterConsole.h>
-#include <mafInterpreterPreferencesWidget.h>
+
 
 using namespace mafScriptInterpreter;
 using namespace mafGUI;
 
 mafInterpreterConsole::mafInterpreterConsole(QWidget *parent) : mafTextEditor(parent) {
     m_Interpreter = NULL;
-    m_Preferences = NULL;
-
     m_HistoryIndex = 0;
     m_HistoryDirty = false;
 
@@ -48,43 +40,30 @@ void mafInterpreterConsole::keyPressEvent(QKeyEvent *event) {
     QTextCursor cursor = textCursor();
 
     if(event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
-
         this->onKeyEnterPressed();
-
     } else if(event->key() == Qt::Key_Backspace) {
-
         if(cursor.columnNumber() > filter(m_Interpreter->prompt()).size())
             mafTextEditor::keyPressEvent(event);
         
         this->onKeyBackspacePressed();
-
     } else if(event->key() == Qt::Key_Up) {
         this->onKeyUpPressed();
-
     } else if(event->key() == Qt::Key_Down) {
         this->onKeyDownPressed();
-
     } else if(event->key() == Qt::Key_Left) {
-
         if(event->modifiers() & Qt::ControlModifier) {
             cursor.movePosition(QTextCursor::StartOfLine);
             cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, filter(m_Interpreter->prompt()).size());
 
             this->setTextCursor(cursor);
-        }
-        
-        else if(cursor.columnNumber() > filter(m_Interpreter->prompt()).size())
+        } else if(cursor.columnNumber() > filter(m_Interpreter->prompt()).size())
             mafTextEditor::keyPressEvent(event);
-        
         this->onKeyLeftPressed();
-
     } else if(event->key() == Qt::Key_Right) {
-
-        if(cursor.columnNumber() < currentLine().size())
+        if(cursor.columnNumber() < currentLine().size()) {
             mafTextEditor::keyPressEvent(event);
-
+        }
         this->onKeyRightPressed();
-
     } else {
         mafTextEditor::keyPressEvent(event);
     }
@@ -92,7 +71,6 @@ void mafInterpreterConsole::keyPressEvent(QKeyEvent *event) {
 
 void mafInterpreterConsole::mousePressEvent(QMouseEvent *event) {
     m_Cursor = this->textCursor();
-
     mafTextEditor::mousePressEvent(event);
 }
 
@@ -107,8 +85,8 @@ void mafInterpreterConsole::readSettings(void) {
     QSettings settings;
     settings.beginGroup("interpreter");
     this->setFont(settings.value("font").value<QFont>());    
-    this->setBackgroundColor(settings.value("backgroundcolor", Qt::darkGray).value<QColor>());
-    this->setForegroundColor(settings.value("foregroundcolor", Qt::white).value<QColor>());
+    this->setBackgroundColor(settings.value("backgroundcolor", Qt::white).value<QColor>());
+    this->setForegroundColor(settings.value("foregroundcolor", Qt::black).value<QColor>());
     settings.endGroup();
 }
 
@@ -139,13 +117,6 @@ void mafInterpreterConsole::registerInterpreter(mafScriptEditor *interpreter) {
     Q_UNUSED(highlighter);
 
     this->appendPlainText(filter(m_Interpreter->prompt()));
-}
-
-mafInterpreterPreferencesWidget *mafInterpreterConsole::preferencesWidget(QWidget *parent) {
-    if(!m_Preferences)
-        m_Preferences = new mafInterpreterPreferencesWidget(this, parent);
-
-    return m_Preferences;
 }
 
 void mafInterpreterConsole::onKeyUpPressed(void) {
@@ -235,35 +206,22 @@ void mafInterpreterConsole::onKeyEnterPressed(void) {
         
     } else if (line.startsWith(":save ")) {
         emit save(line.remove(":save "));
-        
     } else if (line.startsWith(":emacs")) {
-        std::cerr << "emacs bindings not supported in gui mode" << std::endl;
-        
+        qWarning() << "emacs bindings not supported in gui mode";
         emit input("", &stat);
-        
     } else if (line.startsWith(":vi")) {
-        std::cerr << "vi bindings not supported in gui mode" << std::endl;
-        
+        qWarning() << "vi bindings not supported in gui mode";
         emit input("", &stat);
-        
     } else if (line.startsWith(":help")) {
-        std::cerr << "File manipulation:";
-        std::cerr << " :load [file]        loads file and interprets its content" << std::endl;
-        std::cerr << " :save [file]        saves interpreter history to file" << std::endl;
-        std::cerr << "" << std::endl;
-        
+        qWarning() << "File manipulation:";
+        qWarning() << " :load [file]        loads file and interprets its content";
+        qWarning() << " :save [file]        saves interpreter history to file";
         emit input("", &stat);
-        
     } else if (line.startsWith(":man ")) {
-        
         emit input("", &stat);
-
     } else if(line.isEmpty()) {
-
         this->appendPlainText(filter(m_Interpreter->prompt()));
-
     } else {
-
         QString result = emit input(line, &stat);
         if(!result.isEmpty()) {
             output(result, &stat);

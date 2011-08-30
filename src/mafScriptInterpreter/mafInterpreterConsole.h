@@ -18,7 +18,6 @@
 namespace mafScriptInterpreter {
 
 class mafScriptEditor;
-class mafInterpreterPreferencesWidget;
 
 /**
     Class Name: mafInterpreterConsole
@@ -74,9 +73,6 @@ public:
     /// Apply a highlight filter to the text.
     QString filter(QString text);
     
-    /// Return its own preference widget.
-    mafInterpreterPreferencesWidget *preferencesWidget(QWidget *parent = 0);
-    
     /// Return current script editor.
     mafScriptEditor *interpreter(void);
 
@@ -90,8 +86,6 @@ protected:
 
 private:
     mafScriptEditor *m_Interpreter; ///< script interpreter
-    mafInterpreterPreferencesWidget *m_Preferences; ///< preference widget.
-    
     QTextCursor m_Cursor; ///< mouse cursor.
     
     QStringList  m_History; ///< history list.
