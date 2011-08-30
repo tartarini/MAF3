@@ -64,8 +64,6 @@ public:
     
     /// Read settings for the interpreter.
     void  readSettings(void);
-    /// Write settings for the interpreter.
-    void writeSettings(void);
     
     /// Initialize signal/slot connections.
     void registerInterpreter(mafScriptEditor *interpreter);

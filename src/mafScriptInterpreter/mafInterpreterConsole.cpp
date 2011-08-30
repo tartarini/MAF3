@@ -23,10 +23,7 @@ mafInterpreterConsole::mafInterpreterConsole(QWidget *parent) : mafTextEditor(pa
     m_HistoryIndex = 0;
     m_HistoryDirty = false;
 
-    this->setShowLineNumbers(false);
-    this->setShowCurrentLine(false);
-    this->setShowRevisions(false);
-    
+    readSettings();
 }
 
 mafInterpreterConsole::~mafInterpreterConsole(void) {
@@ -77,7 +74,7 @@ void mafInterpreterConsole::mousePressEvent(QMouseEvent *event) {
 void mafInterpreterConsole::mouseReleaseEvent(QMouseEvent *event) {
     mafTextEditor::mouseReleaseEvent(event);
 
-    if(m_Cursor.blockNumber() +1 != currentLineNumber() && m_Cursor.columnNumber() <= filter(m_Interpreter->prompt()).size())
+    if(m_Cursor.blockNumber() + 1 != currentLineNumber() && m_Cursor.columnNumber() <= filter(m_Interpreter->prompt()).size())
         this->setTextCursor(m_Cursor);
 }
 
@@ -87,15 +84,6 @@ void mafInterpreterConsole::readSettings(void) {
     this->setFont(settings.value("font").value<QFont>());    
     this->setBackgroundColor(settings.value("backgroundcolor", Qt::white).value<QColor>());
     this->setForegroundColor(settings.value("foregroundcolor", Qt::black).value<QColor>());
-    settings.endGroup();
-}
-
-void mafInterpreterConsole::writeSettings(void) {
-    QSettings settings;
-    settings.beginGroup("interpreter");
-    settings.setValue("font", this->font());    
-    settings.setValue("backgroundcolor", this->backgroundColor());
-    settings.setValue("foregroundcolor", this->foregroundColor());
     settings.endGroup();
 }
 
