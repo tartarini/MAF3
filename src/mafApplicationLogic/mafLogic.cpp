@@ -140,31 +140,45 @@ void mafLogic::plugObject(const QString base_class, const QString class_type, co
 
 void mafLogic::loadPlugins(QString plugin_dir) {
     // Compose the plugin absolute directory.
-    QString pluginDir = plugin_dir.isEmpty() ? (m_ApplicationDirectory + QDir::toNativeSeparators("/plugins/")) : plugin_dir;
-    pluginDir = QDir::cleanPath(pluginDir);
+    QString pluginsDir = plugin_dir.isEmpty() ? (m_ApplicationDirectory + QDir::toNativeSeparators("/plugins/")) : plugin_dir;
+    pluginsDir = QDir::cleanPath(pluginsDir);
     
-    // Check for plugins to load
-    QStringList filters;
-    filters << PLUGIN_EXTENSION_FILTER;
-    QDir dir(pluginDir);
-    dir.setNameFilters(filters);
-    dir.setFilter(QDir::Files);
-    QStringList plugin_list = dir.entryList();
+    //check all plugin dirs
+    QDir pdir(pluginsDir);
+    pdir.setFilter(QDir::Dirs | QDir::NoDot | QDir::NoDotDot );
+    QStringList plugin_dir_list = pdir.entryList();
 
-    mafEventArgumentsList argList;
-
-    // For each plugin file ask the plugin manager to load it through the event bus.
-    foreach(QString file, plugin_list) {
+    foreach(QString p, plugin_dir_list) {
+        // Check for plugins to load
+        QStringList filters;
+        filters << PLUGIN_EXTENSION_FILTER;
+        QString abs = pluginsDir;
+        abs.append(QDir::toNativeSeparators("/" + p + "/"));
+        QDir dir(abs);
+        dir.setNameFilters(filters);
+        dir.setFilter(QDir::Files);
+        QStringList plugin_list = dir.entryList();
+        
+        qDebug() << plugin_list;
+        
+        mafEventArgumentsList argList;
+        
+        // For each plugin file ask the plugin manager to load it through the event bus.
+        foreach(QString file, plugin_list) {
+            argList.clear();
+            file = dir.absoluteFilePath(file);
+            char *v = file.toAscii().data();
+            argList.append(mafEventArgument(QString, file));
+            mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.loadLibrary", mafEventTypeLocal, &argList);
+        }
+        
+        // Plug also the custom objects plugged from the vertical application.
         argList.clear();
-        file = dir.absoluteFilePath(file);
-        argList.append(mafEventArgument(QString, file));
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.loadLibrary", mafEventTypeLocal, &argList);
-    }
+        argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, m_CustomPluggedObjectsHash));
+        mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.registerLibrary", mafEventTypeLocal, &argList);
 
-    // Plug also the custom objects plugged from the vertical application.
-    argList.clear();
-    argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, m_CustomPluggedObjectsHash));
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.registerLibrary", mafEventTypeLocal, &argList);
+    }
+    
 }
 
 void mafLogic::storeSettings() {
