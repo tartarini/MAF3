@@ -148,6 +148,7 @@ void mafLogic::loadPlugins(QString plugin_dir) {
     pdir.setFilter(QDir::Dirs | QDir::NoDot | QDir::NoDotDot );
     QStringList plugin_dir_list = pdir.entryList();
 
+    mafEventArgumentsList argList;
     foreach(QString p, plugin_dir_list) {
         // Check for plugins to load
         QStringList filters;
@@ -161,8 +162,6 @@ void mafLogic::loadPlugins(QString plugin_dir) {
         
         qDebug() << plugin_list;
         
-        mafEventArgumentsList argList;
-        
         // For each plugin file ask the plugin manager to load it through the event bus.
         foreach(QString file, plugin_list) {
             argList.clear();
@@ -171,14 +170,12 @@ void mafLogic::loadPlugins(QString plugin_dir) {
             argList.append(mafEventArgument(QString, file));
             mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.loadLibrary", mafEventTypeLocal, &argList);
         }
-        
-        // Plug also the custom objects plugged from the vertical application.
-        argList.clear();
-        argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, m_CustomPluggedObjectsHash));
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.registerLibrary", mafEventTypeLocal, &argList);
-
     }
-    
+
+    // Plug also the custom objects plugged from the vertical application.
+    argList.clear();
+    argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, m_CustomPluggedObjectsHash));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.registerLibrary", mafEventTypeLocal, &argList);
 }
 
 void mafLogic::storeSettings() {
