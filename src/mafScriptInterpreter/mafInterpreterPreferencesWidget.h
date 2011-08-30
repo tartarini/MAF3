@@ -19,7 +19,6 @@
 
 namespace mafScriptInterpreter {
 
-class mafInterpreterConsole;
 class mafInterpreterPreferencesWidgetPrivate;
 
 /**
@@ -28,9 +27,10 @@ class mafInterpreterPreferencesWidgetPrivate;
  - text color
  - background color
  */
-class MAFSCRIPTINTERPRETERSHARED_EXPORT mafInterpreterPreferencesWidget : public mafGUI::mafGUIApplicationSettingsPage
-{
+class MAFSCRIPTINTERPRETERSHARED_EXPORT mafInterpreterPreferencesWidget : public mafGUI::mafGUIApplicationSettingsPage {
     Q_OBJECT
+    /// typedef macro.
+    mafSuperclassMacro(mafGUI::mafGUIApplicationSettingsPage);
 
 public slots:
     /// set the font to the console
@@ -42,20 +42,18 @@ public slots:
     void onTextColorClicked(void);
     /// change color of background
     void onBackgroundColorClicked(void);
-    /// change background opacity
-    void onBackgroundOpacityChanged(int value);
 
 public:
     /// Object Constructor.
-     mafInterpreterPreferencesWidget(mafInterpreterConsole *editor, QWidget *parent = 0);
+     mafInterpreterPreferencesWidget(QWidget *parent = 0);
     /// Destructor Constructor.
     ~mafInterpreterPreferencesWidget(void);
 
-    /// key event handler.
-    void keyPressEvent(QKeyEvent *event);
-
 private:
     mafInterpreterPreferencesWidgetPrivate *m_PrivateClassPointer; ///< pimpl pattern.
+
+    /// Allows to write the updated preferences.
+    void writeSettings(void);
 };
     
 } //end namespace

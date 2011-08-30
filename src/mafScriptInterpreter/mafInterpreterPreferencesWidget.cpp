@@ -12,7 +12,6 @@
 #include <QtGui>
 #include <QtGui/QColorDialog>
 
-#include "mafInterpreterConsole.h"
 #include "mafInterpreterPreferencesWidget.h"
 
 #include "ui_mafInterpreterPreferencesWidget.h"
@@ -28,21 +27,23 @@ class mafScriptInterpreter::mafInterpreterPreferencesWidgetPrivate
 public:
     Ui::mafInterpreterPreferencesWidget ui; ///< user interface.
 
-    mafInterpreterConsole *interpreter; ///< interpreter console.
-
     QFont  font;
     QColor foregroundColor;
     QColor backgroundColor;
-    int  backgroundOpacity;
 };
 
-mafInterpreterPreferencesWidget::mafInterpreterPreferencesWidget(mafInterpreterConsole *interpreter, QWidget *parent) : mafGUIApplicationSettingsPage(parent) {
+mafInterpreterPreferencesWidget::mafInterpreterPreferencesWidget(QWidget *parent) : mafGUIApplicationSettingsPage(parent) {
+    m_PageText = mafTr("Script Interpreter");
+    m_PageIcon = QIcon(":/images/config.png");
+
     m_PrivateClassPointer = new mafInterpreterPreferencesWidgetPrivate;
-    m_PrivateClassPointer->interpreter     = interpreter;
-    m_PrivateClassPointer->font            = interpreter->document()->defaultFont();
-    m_PrivateClassPointer->foregroundColor = interpreter->foregroundColor();
-    m_PrivateClassPointer->backgroundColor = interpreter->backgroundColor();
-    m_PrivateClassPointer->backgroundOpacity = interpreter->backgroundOpacity();
+
+    QSettings settings;
+    m_PrivateClassPointer->font            = settings.value("editor/font").value<QFont>();
+    settings.beginGroup("interpreter");
+    m_PrivateClassPointer->foregroundColor = settings.value("foregroundcolor", Qt::black).value<QColor>();
+    m_PrivateClassPointer->backgroundColor = settings.value("backgroundcolor", Qt::white).value<QColor>();
+    settings.endGroup();
 
     m_PrivateClassPointer->ui.setupUi(this);
 
@@ -72,54 +73,40 @@ mafInterpreterPreferencesWidget::mafInterpreterPreferencesWidget(mafInterpreterC
     m_PrivateClassPointer->ui.backgroundColorToolButton->setIcon(pix);
     } // -- Setting background color
 
-    { // -- Setting opacity
-    m_PrivateClassPointer->ui.backgroundOpacitySlider->setValue(m_PrivateClassPointer->interpreter->backgroundOpacity());
-    } // -- Setting opacity
-
     connect(m_PrivateClassPointer->ui.fontComboBox, SIGNAL(currentFontChanged(QFont)), this, SLOT(onFontChosen(QFont)));
     connect(m_PrivateClassPointer->ui.sizeComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(onSizeChosen(QString)));
 
     connect(m_PrivateClassPointer->ui.textColorToolButton, SIGNAL(clicked()), this, SLOT(onTextColorClicked()));
     connect(m_PrivateClassPointer->ui.backgroundColorToolButton, SIGNAL(clicked()), this, SLOT(onBackgroundColorClicked()));
-    connect(m_PrivateClassPointer->ui.backgroundOpacitySlider, SIGNAL(valueChanged(int)), this, SLOT(onBackgroundOpacityChanged(int)));
-    
-    m_PageText = mafTr("Interpreter");
-    m_PageIcon = QIcon(":/images/config.png");
 }
 
-mafInterpreterPreferencesWidget::~mafInterpreterPreferencesWidget(void)
-{
+mafInterpreterPreferencesWidget::~mafInterpreterPreferencesWidget(void) {
 
 }
 
-void mafInterpreterPreferencesWidget::keyPressEvent(QKeyEvent *event)
-{
-    switch(event->key()) {
-    case Qt::Key_Escape:
-        this->hide();
-        break;
-    case Qt::Key_Enter:
-    case Qt::Key_Return:
-        break;
-    default:
-        break;
-    }
+void mafInterpreterPreferencesWidget::writeSettings(void) {
+    QSettings settings;
+    settings.setValue("editor/font", m_PrivateClassPointer->font);
+    settings.beginGroup("interpreter");
+    settings.setValue("backgroundcolor", m_PrivateClassPointer->backgroundColor);
+    settings.setValue("foregroundcolor", m_PrivateClassPointer->foregroundColor);
+    settings.endGroup();
+    settings.sync();
 }
 
-void mafInterpreterPreferencesWidget::onFontChosen(QFont font)
-{
-    m_PrivateClassPointer->interpreter->setFont(font);
+void mafInterpreterPreferencesWidget::onFontChosen(QFont font) {
+    m_PrivateClassPointer->font = font;
+    writeSettings();
 }
 
-void mafInterpreterPreferencesWidget::onSizeChosen(QString size)
-{
-    QFont f = m_PrivateClassPointer->interpreter->font();
+void mafInterpreterPreferencesWidget::onSizeChosen(QString size) {
+    QFont f = m_PrivateClassPointer->font;
     f.setPointSize(size.toInt());
-    m_PrivateClassPointer->interpreter->setFont(f);
+    m_PrivateClassPointer->font = f;
+    writeSettings();
 }
 
-void mafInterpreterPreferencesWidget::onTextColorClicked(void)
-{
+void mafInterpreterPreferencesWidget::onTextColorClicked(void) {
 #if QT_VERSION >= 0x040500
     m_PrivateClassPointer->foregroundColor = QColorDialog::getColor(m_PrivateClassPointer->foregroundColor, this, "Choose text color");
 #else
@@ -130,11 +117,11 @@ void mafInterpreterPreferencesWidget::onTextColorClicked(void)
     pix.fill(m_PrivateClassPointer->foregroundColor);
     m_PrivateClassPointer->ui.textColorToolButton->setIcon(pix);
     
-    m_PrivateClassPointer->interpreter->setForegroundColor(m_PrivateClassPointer->foregroundColor);
+    //m_PrivateClassPointer->interpreter->setForegroundColor(m_PrivateClassPointer->foregroundColor);
+    writeSettings();
 }
 
-void mafInterpreterPreferencesWidget::onBackgroundColorClicked(void)
-{
+void mafInterpreterPreferencesWidget::onBackgroundColorClicked(void) {
 #if QT_VERSION >= 0x040500
     m_PrivateClassPointer->backgroundColor = QColorDialog::getColor(m_PrivateClassPointer->backgroundColor, this, "Choose background color");
 #else
@@ -146,12 +133,6 @@ void mafInterpreterPreferencesWidget::onBackgroundColorClicked(void)
     m_PrivateClassPointer->ui.backgroundColorToolButton->setIcon(pix);
     
     
-    m_PrivateClassPointer->interpreter->setBackgroundColor(m_PrivateClassPointer->backgroundColor);    
-
-}
-
-void mafInterpreterPreferencesWidget::onBackgroundOpacityChanged(int value)
-{
-    m_PrivateClassPointer->interpreter->setBackgroundOpacity(value);
-
+    //m_PrivateClassPointer->interpreter->setBackgroundColor(m_PrivateClassPointer->backgroundColor);    
+    writeSettings();
 }

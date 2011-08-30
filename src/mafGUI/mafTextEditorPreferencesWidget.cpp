@@ -10,7 +10,6 @@
  */
 
 
-#include "mafTextEditor.h"
 #include "mafTextEditorPreferencesWidget.h"
 
 #include "ui_mafTextEditorPreferencesWidget.h"
@@ -25,8 +24,6 @@ class mafTextEditorPreferencesWidgetPrivate
 public:
     Ui::mafTextEditorPreferencesWidget ui; ///< user interface.
 
-    mafTextEditor *editor; ///< instance of the text editor.
-
     bool showLineNumbers; ///< flag for showing line numbers.
     bool showCurrentLine; ///< flag for showing current line highlighting.
     bool showRevisions; ///< flag for showing revisions.
@@ -38,16 +35,19 @@ public:
 
 using namespace mafGUI;
 
-mafTextEditorPreferencesWidget::mafTextEditorPreferencesWidget(mafTextEditor *editor, QWidget *parent) : mafGUIApplicationSettingsPage(parent)
-{
+mafTextEditorPreferencesWidget::mafTextEditorPreferencesWidget(QWidget *parent) : mafGUIApplicationSettingsPage(parent) {
+    m_PageText = mafTr("Text Editor");
+    m_PageIcon = QIcon(":/images/config.png");
+
     m_PrivateClassPointer = new mafTextEditorPreferencesWidgetPrivate;
 
-    m_PrivateClassPointer->editor = editor;
-    m_PrivateClassPointer->font   = editor->document()->defaultFont();
-
-    m_PrivateClassPointer->showLineNumbers = editor->showLineNumbers();
-    m_PrivateClassPointer->showCurrentLine = editor->showCurrentLine();
-    m_PrivateClassPointer->showRevisions = editor->showRevisions();
+    QSettings settings;
+    settings.beginGroup("editor");
+    m_PrivateClassPointer->font   = settings.value("font").value<QFont>();
+    m_PrivateClassPointer->showLineNumbers = settings.value("showLineNumbers").toBool();
+    m_PrivateClassPointer->showCurrentLine = settings.value("showCurrentLine").toBool();
+    m_PrivateClassPointer->showRevisions = settings.value("showRevisions").toBool();
+    settings.endGroup();
 
     m_PrivateClassPointer->ui.setupUi(this);
 
@@ -73,71 +73,44 @@ mafTextEditorPreferencesWidget::mafTextEditorPreferencesWidget(mafTextEditor *ed
     connect(m_PrivateClassPointer->ui.numbersCheckBox,   SIGNAL(stateChanged(int)), this, SLOT(onNumbersCkeckBoxChanged(int)));
     connect(m_PrivateClassPointer->ui.highlightCheckBox, SIGNAL(stateChanged(int)), this, SLOT(onHighlightCkeckBoxChanged(int)));
     connect(m_PrivateClassPointer->ui.revisionsCheckBox, SIGNAL(stateChanged(int)), this, SLOT(onRevisionsCkeckBoxChanged(int)));
-
-    connect(m_PrivateClassPointer->ui.buttonBox, SIGNAL(accepted()), this, SLOT(onOkButtonClicked()));
-    connect(m_PrivateClassPointer->ui.buttonBox, SIGNAL(rejected()), this, SLOT(onCancelButtonClicked()));
 }
 
-mafTextEditorPreferencesWidget::~mafTextEditorPreferencesWidget(void)
-{
+mafTextEditorPreferencesWidget::~mafTextEditorPreferencesWidget(void) {
 
 }
 
-void mafTextEditorPreferencesWidget::keyPressEvent(QKeyEvent *event)
-{
-    switch(event->key()) {
-    case Qt::Key_Escape:        
-        this->hide();
-        break;
-    case Qt::Key_Enter:
-    case Qt::Key_Return:
-        this->onOkButtonClicked();
-        break;
-    default:
-        break;
-    }
-}
-
-void mafTextEditorPreferencesWidget::onFontChosen(QFont font)
-{
+void mafTextEditorPreferencesWidget::onFontChosen(QFont font) {
     m_PrivateClassPointer->font = font;
+    writeSettings();
 }
 
-void mafTextEditorPreferencesWidget::onSizeChosen(QString size)
-{
+void mafTextEditorPreferencesWidget::onSizeChosen(QString size) {
     m_PrivateClassPointer->font.setPointSize(size.toInt());
+    writeSettings();
 }
 
-void mafTextEditorPreferencesWidget::onNumbersCkeckBoxChanged(int state)
-{
+void mafTextEditorPreferencesWidget::onNumbersCkeckBoxChanged(int state) {
     m_PrivateClassPointer->showLineNumbers = state;
+    writeSettings();
 }
 
-void mafTextEditorPreferencesWidget::onHighlightCkeckBoxChanged(int state)
-{
+void mafTextEditorPreferencesWidget::onHighlightCkeckBoxChanged(int state) {
     m_PrivateClassPointer->showCurrentLine = state;
+    writeSettings();
 }
 
-void mafTextEditorPreferencesWidget::onRevisionsCkeckBoxChanged(int state)
-{
+void mafTextEditorPreferencesWidget::onRevisionsCkeckBoxChanged(int state) {
     m_PrivateClassPointer->showRevisions = state;
+    writeSettings();
 }
 
-void mafTextEditorPreferencesWidget::onOkButtonClicked(void)
-{
-    m_PrivateClassPointer->editor->setFont(m_PrivateClassPointer->font);
-    m_PrivateClassPointer->editor->setShowLineNumbers(m_PrivateClassPointer->showLineNumbers);
-    m_PrivateClassPointer->editor->setShowCurrentLine(m_PrivateClassPointer->showCurrentLine);
-    m_PrivateClassPointer->editor->setShowRevisions(m_PrivateClassPointer->showRevisions);
-
-    this->hide();
-
-    emit accepted();
-}
-
-void mafTextEditorPreferencesWidget::onCancelButtonClicked(void)
-{
-    this->hide();
-
-    emit rejected();
+void mafTextEditorPreferencesWidget::writeSettings(void) {
+    QSettings settings;
+    settings.beginGroup("editor");
+    settings.setValue("font", m_PrivateClassPointer->font);
+    settings.setValue("showRevisions", m_PrivateClassPointer->showRevisions);
+    settings.setValue("showCurrentLine", m_PrivateClassPointer->showCurrentLine);
+    settings.setValue("showLineNumbers", m_PrivateClassPointer->showLineNumbers);
+    settings.endGroup();
+    settings.sync();
 }
