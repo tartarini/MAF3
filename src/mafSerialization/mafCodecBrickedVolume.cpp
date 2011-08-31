@@ -515,8 +515,8 @@ void mafCodecBrickedVolume::marshall(const QVariant &value) {
             break;
         }
         case QVariant::Hash: {
-            QHash<QString, QVariant> hash = value.toHash();
-            QHash<QString, QVariant>::ConstIterator index = hash.begin();
+            QVariantHash hash = value.toHash();
+            QVariantHash::ConstIterator index = hash.begin();
             m_DataStreamWrite << QString("hash");
             while(index != hash.end()) {
                 marshall(index.key());

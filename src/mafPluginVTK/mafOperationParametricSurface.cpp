@@ -136,42 +136,89 @@ void mafOperationParametricSurface::reDo() {
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 }
 
-void mafOperationParametricSurface::setParameters(QVariantList parameters) {
-    //setParametricSurfaceType(parameters.at(0).toInt());
-    on_parametricSurfaceType_currentChanged(parameters.at(0).toInt());
-    switch (parameters.at(0).toInt()) {
+void mafOperationParametricSurface::setParameters(const QVariantHash &parameters) {
+    int type = parameters["parametricSurfaceType"].toInt();
+    on_parametricSurfaceType_currentChanged(type);
+    switch (type) {
         case (PARAMETRIC_SPHERE):
-            REQUIRE(parameters.count() == 4);
-            on_sphereRadius_valueChanged(parameters.at(1).toDouble());
-            on_spherePhiRes_valueChanged(parameters.at(2).toDouble());
-            on_sphereThetaRes_valueChanged(parameters.at(3).toDouble());
+            if(parameters.contains("sphereRadius")) {
+                on_sphereRadius_valueChanged(parameters["sphereRadius"].toDouble());    
+            }
+            
+            if(parameters.contains("spherePhiRes")) {
+                on_spherePhiRes_valueChanged(parameters["spherePhiRes"].toDouble());    
+            }
+            
+            if(parameters.contains("sphereThetaRes")) {
+                on_sphereThetaRes_valueChanged(parameters["sphereThetaRes"].toDouble());    
+            }
+            
             break;
         case (PARAMETRIC_CUBE):
-            REQUIRE(parameters.count() == 4);
-            on_cubeXLength_valueChanged(parameters.at(1).toDouble());
-            on_cubeYLength_valueChanged(parameters.at(2).toDouble());
-            on_cubeZLength_valueChanged(parameters.at(3).toDouble());
+            if(parameters.contains("cubeXLength")) {
+                on_cubeXLength_valueChanged(parameters["cubeXLength"].toDouble());    
+            }
+            
+            if(parameters.contains("cubeYLength")) {
+                on_cubeYLength_valueChanged(parameters["cubeYLength"].toDouble());    
+            }
+            
+            if(parameters.contains("cubeZLength")) {
+                on_cubeZLength_valueChanged(parameters["cubeZLength"].toDouble());    
+            }
             break;
         case (PARAMETRIC_CONE):
-            REQUIRE(parameters.count() == 5);
-            on_coneRadius_valueChanged(parameters.at(1).toDouble());
-            on_coneHeight_valueChanged(parameters.at(2).toDouble());
-            on_coneRes_valueChanged(parameters.at(3).toDouble());
-            on_coneCapping_stateChanged(parameters.at(4).toInt());
+            if(parameters.contains("coneRadius")) {
+                on_coneRadius_valueChanged(parameters["coneRadius"].toDouble());    
+            }
+            
+            if(parameters.contains("coneHeight")) {
+                on_coneHeight_valueChanged(parameters["coneHeight"].toDouble());    
+            }
+            
+            if(parameters.contains("coneRes")) {
+                on_coneRes_valueChanged(parameters["coneRes"].toDouble());    
+            }
+            
+            if(parameters.contains("coneCapping")) {
+                on_coneCapping_stateChanged(parameters["coneCapping"].toInt());    
+            }
+            
             break;
         case (PARAMETRIC_CYLINDER):
-            REQUIRE(parameters.count() == 4);
-            on_cylinderRadius_valueChanged(parameters.at(1).toDouble());
-            on_cylinderHeight_valueChanged(parameters.at(2).toDouble());
-            on_cylinderRes_valueChanged(parameters.at(3).toDouble());
+            if(parameters.contains("cylinderRadius")) {
+                on_cylinderRadius_valueChanged(parameters["cylinderRadius"].toDouble());    
+            }
+            
+            if(parameters.contains("cylinderHeight")) {
+                on_cylinderHeight_valueChanged(parameters["cylinderHeight"].toDouble());    
+            }
+            
+            if(parameters.contains("cylinderRes")) {
+                on_cylinderRes_valueChanged(parameters["cylinderRes"].toDouble());    
+            }
             break;
         case (PARAMETRIC_ELLIPSOID):
-            REQUIRE(parameters.count() == 6);
-            on_ellipsoidPhiRes_valueChanged(parameters.at(1).toDouble());
-            on_ellipsoidThetaRes_valueChanged(parameters.at(2).toDouble());
-            on_ellipsoidXLength_valueChanged(parameters.at(3).toDouble());
-            on_ellipsoidYLength_valueChanged(parameters.at(4).toDouble());
-            on_ellipsoidZLength_valueChanged(parameters.at(5).toDouble());
+            if(parameters.contains("ellipsoidPhiRes")) {
+                on_ellipsoidPhiRes_valueChanged(parameters["ellipsoidPhiRes"].toDouble());    
+            }
+            
+            if(parameters.contains("ellipsoidThetaRes")) {
+                on_ellipsoidThetaRes_valueChanged(parameters["ellipsoidThetaRes"].toDouble());    
+            }
+            
+            if(parameters.contains("ellipsoidXLength")) {
+                on_ellipsoidXLength_valueChanged(parameters["ellipsoidXLength"].toDouble());    
+            }
+
+            if(parameters.contains("ellipsoidYLength")) {
+                on_ellipsoidYLength_valueChanged(parameters["ellipsoidYLength"].toDouble());    
+            }
+            
+            if(parameters.contains("ellipsoidZLength")) {
+                on_ellipsoidZLength_valueChanged(parameters["ellipsoidZLength"].toDouble());    
+            }
+
             break;
     }
 }

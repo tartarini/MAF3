@@ -22,20 +22,39 @@ class mafAlgorithm : public mafResources::mafOperation {
     Q_OBJECT
     mafSuperclassMacro(mafResources::mafOperation);
 
+    Q_PROPERTY(QString inputFileName READ inputFileName WRITE setInputFileName)
+    Q_PROPERTY(QString outputFileName READ outputFileName WRITE setOutputFileName)
+    Q_PROPERTY(int iterations READ iterations WRITE setIterations)
+
+public slots:    
+    /// Execute the resource algorithm.
+    /*virtual*/ void execute();
+    
 signals:
     /// Trigger the start execution of the operation.
     void startExecution();
 
-public slots:
-    /// set Parameters of the operation
-    /* virtual */ void setParameters(QList<QVariant> parameters);
-
-    /// Execute the resource algorithm.
-    /*virtual*/ void execute();
-
 public:
     /// Object constructor
     mafAlgorithm(const QString code_location = "");
+
+    /// return input file name.
+    QString inputFileName() const;
+
+    /// return output file name.
+    QString outputFileName() const;
+    
+    /// return number of iterations.
+    int iterations() const;
+    
+    /// set input file name.
+    void setInputFileName(const QString &f);
+
+    /// set output file name.
+    void setOutputFileName(const QString &f);
+    
+    /// set number of iterations.
+    void setIterations(const int i);
     
 protected:
     /// Terminate the operation.

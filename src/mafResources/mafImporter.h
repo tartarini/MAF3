@@ -30,6 +30,13 @@ class MAFRESOURCESSHARED_EXPORT mafImporter : public mafOperation {
     Q_PROPERTY(QString filename READ filename WRITE setFilename)
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafOperation);
+
+public slots:
+    /// Allows to call the piece of algorithm that is needed to restore the previous state of the operation's execution.
+    /*virtual*/ void unDo();
+    
+    /// Allows to call the piece of algorithm that is needed to apply the operation again.
+    /*virtual*/ void reDo();
     
 public:
     /// Object constructor.
@@ -65,15 +72,6 @@ protected:
 private:
     QString m_Filename; ///< Filename of external data to import.
 
-public slots:
-    /// Allows to call the piece of algorithm that is needed to restore the previous state of the operation's execution.
-    /*virtual*/ void unDo();
-    
-    /// Allows to call the piece of algorithm that is needed to apply the operation again.
-    /*virtual*/ void reDo();
-    
-    /// Set operation parameters.
-    /*virtual*/ void setParameters(QVariantList parameters);
 };
     
 inline void mafImporter::setFilename(const QString f) {

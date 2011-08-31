@@ -114,11 +114,11 @@ void mafOperationParametricSurfaceTest::shutdownGraphicResources() {
 
 void mafOperationParametricSurfaceTest::testExecute() {
     //Set parameters ( create a cube )
-    QVariantList parameters;
-    parameters.append(QVariant(1));
-    parameters.append(QVariant(5.0));
-    parameters.append(QVariant(5.0));
-    parameters.append(QVariant(5.0));
+    QVariantHash parameters;
+    parameters.insert("type", QVariant(1));
+    parameters.insert("cubeXLength", QVariant(5.0));
+    parameters.insert("cubeYLength", QVariant(5.0));
+    parameters.insert("cubeZLength", QVariant(5.0));
     m_OpParametric->setParameters(parameters);
 
     // execute the operation

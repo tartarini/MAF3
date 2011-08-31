@@ -65,10 +65,10 @@ void mafEventTest::mafEventAccessorsTest() {
     m_Event->setEventTopic(topic);
     QCOMPARE(m_Event->eventTopic(), topic);
 
-    const mafEventHash *cdict = m_Event->entries(); //const metod
+    const QVariantHash *cdict = m_Event->entries(); //const metod
     QVERIFY(cdict != NULL);
 
-    mafEventHash *dict = m_Event->entries();
+    QVariantHash *dict = m_Event->entries();
     QVERIFY(dict != NULL);
 
     QVariant var = (*m_Event)[TOPIC];

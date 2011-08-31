@@ -93,13 +93,13 @@ void mafOperationTransformTest::testExecute() {
     ry = 45.0;
     rz = 60.0;
     
-    QVariantList parameters;
-    parameters << rx;
-    parameters << ry;
-    parameters << rz;
-    parameters << x;
-    parameters << y;
-    parameters << z;
+    QVariantHash parameters;
+    parameters.insert( "xPos" , x);
+    parameters.insert( "yPos" , y);
+    parameters.insert( "zPos" , z);
+    parameters.insert( "xRot" , rx);
+    parameters.insert( "yRot" , ry);
+    parameters.insert( "zRot" , rz);
     
     m_OpTransform->setParameters(parameters);
     

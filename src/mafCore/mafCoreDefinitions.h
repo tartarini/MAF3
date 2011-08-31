@@ -39,7 +39,7 @@ typedef QtMsgHandler mafMsgHandlingFunction;
     static_cast<mafCore::mafProxy<dataType> *>(proxyInterfacePointer)
     
 /// typedef that represents dictionary entries ( key  , value )
-typedef QHash<QString, QVariant> mafDictionary;
+typedef QVariantHash mafDictionary;
 typedef mafDictionary * mafDictionaryPointer;
 
 

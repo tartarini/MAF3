@@ -79,10 +79,6 @@ bool mafExporterVTK::acceptObject(mafCore::mafObjectBase *obj) {
     return result;
 }
 
-void mafExporterVTK::setParameters(QVariantList parameters) {
-    m_Filename = parameters.at(0).toString();
-}
-
 void mafExporterVTK::terminated() {
     
 }

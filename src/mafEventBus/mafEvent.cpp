@@ -14,12 +14,12 @@
 using namespace mafEventBus;
 
 mafEvent::mafEvent() {
-    m_EventHash = new mafEventHash();
+    m_EventHash = new QVariantHash();
 }
 
 /// Overload object constructor.
 mafEvent::mafEvent(QString topic, mafEventType event_type, mafSignatureType signature_type, QObject *objectPointer, QString signature) {
-    m_EventHash = new mafEventHash();
+    m_EventHash = new QVariantHash();
     entries()->insert(TOPIC, topic);
     entries()->insert(TYPE, static_cast<int>(event_type));
     entries()->insert(SIGTYPE, static_cast<int>(signature_type));
@@ -34,11 +34,11 @@ mafEvent::~mafEvent() {
     delete m_EventHash;
 }
 
-mafEventHash *mafEvent::entries() {
+QVariantHash *mafEvent::entries() {
     return m_EventHash;
 }
 
-mafEventHash *mafEvent::entries() const {
+QVariantHash *mafEvent::entries() const {
     return m_EventHash;
 }
 

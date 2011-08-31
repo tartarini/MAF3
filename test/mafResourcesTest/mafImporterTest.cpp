@@ -74,8 +74,8 @@ void mafImporterTest::filenameTest() {
     QCOMPARE(import_file, f);
     
     m_Importer->setFilename("");
-    QVariantList parameters;
-    parameters.append(QVariant(import_file));
+    QVariantHash parameters;
+    parameters.insert("filename", QVariant(import_file));
     m_Importer->setParameters(parameters);
 
     f = m_Importer->filename();

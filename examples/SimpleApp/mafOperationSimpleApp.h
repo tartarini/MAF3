@@ -28,14 +28,12 @@ public slots:
     /// Execute the resource algorithm.
     /*virtual*/ void execute();
 
+    /// slot for editing text.
     void on_textTest_textEdited(QString text);
 
+    /// slot for turn on/off scalar.
     void on_checkScalar_clicked(bool state);
     
-    /// Set operation parameters.
-    /*virtual*/ void setParameters(QVariantList parameters);
-
-
 public:
     /// Object constructor.
     mafOperationSimpleApp(const QString code_location = "");
@@ -43,8 +41,10 @@ public:
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
     
+    /// set scalar flag.
     void setCheckScalar(bool s);
     
+    /// return scalar flag.
     bool checkScalar() const;
     
 protected:
@@ -52,8 +52,12 @@ protected:
     /*virtual*/ void terminated();
     
 private:
-    bool m_CheckScalar;
+    bool m_CheckScalar; ///<  scalar flag.
 };
+
+/////////////////////////////////
+/// inline functions
+/////////////////////////////////
 
 inline bool mafOperationSimpleApp::checkScalar() const {
     return m_CheckScalar;

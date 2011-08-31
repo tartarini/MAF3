@@ -42,7 +42,7 @@ mafOperationManager::mafOperationManager(const QString code_location) : mafObjec
 mafOperationManager::~mafOperationManager() {
     // Unregister callbacks.
     mafUnregisterLocalCallback("maf.local.resources.operation.start", this, "startOperation(const QString)")
-    mafUnregisterLocalCallback("maf.local.resources.operation.setParameters", this, "setOperationParameters(QVariantList)")
+    mafUnregisterLocalCallback("maf.local.resources.operation.setParameters", this, "setOperationParameters(const QVariantHash)")
     mafUnregisterLocalCallback("maf.local.resources.operation.execute", this, "executeOperation()")
     mafUnregisterLocalCallback("maf.local.resources.operation.executeWithParameters", this, "executeWithParameters(QVariantList)")
     mafUnregisterLocalCallback("maf.local.resources.operation.stop", this, "stopOperation()")
@@ -55,7 +55,7 @@ mafOperationManager::~mafOperationManager() {
     // Unregister signals...
     mafUnregisterLocalSignal("maf.local.resources.operation.start", this, "startOperationSignal(const QString)")
     mafUnregisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)")
-    mafUnregisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(QVariantList)")
+    mafUnregisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(const QVariantHash )")
     mafUnregisterLocalSignal("maf.local.resources.operation.execute", this, "executeOperationSignal()")
     mafUnregisterLocalSignal("maf.local.resources.operation.executed", this, "executedOperationSignal()")
     mafUnregisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(QVariantList)")
@@ -100,7 +100,7 @@ void mafOperationManager::initializeConnections() {
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.operation.start", this, "startOperationSignal(const QString)")
     mafRegisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)")
-    mafRegisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(QVariantList)")
+    mafRegisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(const QVariantHash)")
     mafRegisterLocalSignal("maf.local.resources.operation.execute", this, "executeOperationSignal()")
     mafRegisterLocalSignal("maf.local.resources.operation.executed", this, "executedOperationSignal()")
     mafRegisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(QVariantList)")
@@ -113,7 +113,7 @@ void mafOperationManager::initializeConnections() {
 
     // Register private callbacks to the instance of the manager..
     mafRegisterLocalCallback("maf.local.resources.operation.start", this, "startOperation(const QString)")
-    mafRegisterLocalCallback("maf.local.resources.operation.setParameters", this, "setOperationParameters(QVariantList)")
+    mafRegisterLocalCallback("maf.local.resources.operation.setParameters", this, "setOperationParameters(const QVariantHash)")
     mafRegisterLocalCallback("maf.local.resources.operation.execute", this, "executeOperation()")
     mafRegisterLocalCallback("maf.local.resources.operation.executeWithParameters", this, "executeWithParameters(QVariantList)")
     mafRegisterLocalCallback("maf.local.resources.operation.stop", this, "stopOperation()")
@@ -133,11 +133,11 @@ void mafOperationManager::executeWithParameters(QVariantList op_with_parameters)
 
     this->startOperation(op_to_run);
     //parameters contains as second argument a list of QVariant which are passed to the operation
-    m_CurrentOperation->setParameters(op_with_parameters.at(1).toList());
+    m_CurrentOperation->setParameters(op_with_parameters.at(1).toHash()); 
     this->executeOperation();
 }
 
-void mafOperationManager::setOperationParameters(QVariantList parameters) {
+void mafOperationManager::setOperationParameters(const QVariantHash &parameters) {
     REQUIRE(m_CurrentOperation);
     m_CurrentOperation->setParameters(parameters);
 }

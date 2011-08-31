@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
 
     //event dictionary
     mafEventBus::mafEvent event_dictionary;
-    event_dictionary[TOPIC] = "maf.remote.eventBus.comunication.xmlrpc";
+    event_dictionary[TOPIC] = "maf.remote.eventBus.communication.send.xmlrpc";
     event_dictionary[TYPE] = mafEventBus::mafEventTypeRemote;
 
     //remote event parameters
@@ -40,11 +40,11 @@ int main(int argc, char *argv[]) {
     QVariantList dataParameters;
     dataParameters.append("mafAlgorithm");
 
-    QVariantList operationParameters;
-    operationParameters.append("input");
-    operationParameters.append("output");
-    operationParameters.append(3);
-    dataParameters.push_back(operationParameters); //here must be put a dictionary
+    QVariantHash operationParameters;
+    operationParameters.insert("inputFileName", "input");
+    operationParameters.insert("outputFileName", "output");
+    operationParameters.insert("iterations", 3);
+    dataParameters.push_back(operationParameters);
 
     listToSend.append(Q_ARG(QVariantList, dataParameters));
 

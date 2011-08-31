@@ -62,8 +62,18 @@ mafOperationVTKAddLandmark::~mafOperationVTKAddLandmark(){
         mafVME *vme = m_VMEList.at(i);
         mafDEL(vme);
     }
+    
     m_VMEList.clear();
 }
+
+double mafOperationVTKAddLandmark::radius() const {
+    return m_LandmarkRadius;
+}
+
+void mafOperationVTKAddLandmark::setRadius(double r) {
+    m_LandmarkRadius = r;
+}
+
 
 void mafOperationVTKAddLandmark::vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
     //Check if ctrl is pressed
@@ -144,7 +154,6 @@ void mafOperationVTKAddLandmark::reDo() {
         argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
     }
-    
 }
 
 void mafOperationVTKAddLandmark::setParameters(QVariantList parameters) {

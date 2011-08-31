@@ -53,16 +53,16 @@ public:
     //QString eventIdName() const;
 
     /// Redefined operator to have access to the entries owned.
-    mafEventHash *entries();
+    QVariantHash *entries();
 
     /// Redefined operator to have access to the entries owned.
-    mafEventHash *entries() const;
+    QVariantHash *entries() const;
 
     /// Overload operator for rapid access to mafDictionaryEntries
     QVariant &operator[](QString key) const;
 
 private:
-    mafEventHash *m_EventHash;
+    QVariantHash *m_EventHash;
 };
 
 typedef mafEvent * mafEventPointer;

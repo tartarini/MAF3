@@ -27,6 +27,15 @@ bool mafOperation::initialize() {
     return true;
 }
 
+void mafOperation::setParameters(const QVariantHash &parameters) {
+    QHashIterator<QString, QVariant> i(parameters);
+    while (i.hasNext()) {
+        i.next();
+        this->setProperty(i.key().toAscii().constData(), i.value()); 
+    } 
+
+}
+
 void mafOperation::terminate() {
     if (m_Status == mafOperationStatusExecuting) {
         m_Status = mafOperationStatusIdle;

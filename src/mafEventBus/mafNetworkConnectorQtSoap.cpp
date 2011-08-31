@@ -180,8 +180,8 @@ QtSoapType *mafNetworkConnectorQtSoap::marshall(const QString name, const QVaria
             break;
         }
         case QVariant::Hash: {
-            QHash<QString, QVariant> hash = parameter.toHash();
-            QHash<QString, QVariant>::ConstIterator iter = hash.begin();
+            QVariantHash hash = parameter.toHash();
+            QVariantHash::ConstIterator iter = hash.begin();
             QtSoapArray *arr = new QtSoapArray(QtSoapQName(name, ""), QtSoapType::String, parameter.toHash().size());
             int index = 0;
             while( iter != hash.end() ) {
@@ -216,14 +216,14 @@ void mafNetworkConnectorQtSoap::send(const QString methodName, mafEventArguments
     //REQUIRE(params->at(0).canConvert(QVariant::Hash) == true);
 
     QString type = argList->at(0).name();
-    if(argList == NULL || type != "mafEventHash") {
+    if(argList == NULL || type != "QVariantHash") {
         qDebug() << "NULL or invalid argument, nothing to send!";
         return;
     }
     m_Request.clear();
     m_Request.setMethod(methodName);
-    mafEventHash *values;
-    values = reinterpret_cast<mafEventHash *> (argList->at(0).data());
+    QVariantHash *values;
+    values = reinterpret_cast<QVariantHash *> (argList->at(0).data());
     int i = 0, size = values->size();
     for(;i<size;++i) {
         m_Request.addMethodArgument(marshall(values->keys().at(i), values->values().at(i)));

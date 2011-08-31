@@ -97,9 +97,6 @@ class mafNetworkConnector;
 /// Hash table that associate the communication protocol with the corresponding network connector class (Eg. XMLRPC, mafEventBus::mafNetworkConnectorQXMLRPC)
 typedef QHash<QString, mafNetworkConnector *> mafNetworkConnectorHash;
 
-/// typedef that represents dictionary entries ( key  , value )
-typedef QHash<QString, QVariant> mafEventHash;
-
 ///< Enum that identify the mafEventType's type: Local or Remote.
 typedef enum {
     mafEventTypeLocal,

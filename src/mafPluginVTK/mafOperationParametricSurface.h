@@ -50,7 +50,7 @@ public slots:
     int parametricSurfaceType();
 
     /// Set operation parameters.
-    /*virtual*/ void setParameters(QVariantList parameters);
+    /*virtual*/void setParameters(const QVariantHash &parameters);
 
     /// Execute the operation.
     /*virtual*/ void execute();

@@ -37,9 +37,6 @@ public slots:
     /// execution method
     /*virtual*/ void execute();
     
-    /// Set operation parameters.
-    /*virtual*/ void setParameters(QVariantList parameters);
-
 };
 
 testOperation::testOperation(const QString code_location) : mafOperation(code_location) {
@@ -53,12 +50,6 @@ void testOperation::execute() {
 void testOperation::terminated() {
     
 }
-
-void testOperation::setParameters(QVariantList parameters) {
-    Q_UNUSED(parameters);
-}
-
-
 
 /**
  Class name: mafOperationTest
