@@ -8,6 +8,7 @@
 #include <mafLogic.h>
 
 
+#include <mafInterpreterPreferencesWidget.h>
 
 
 int main(int argc, char *argv[]) {
@@ -55,6 +56,9 @@ int main(int argc, char *argv[]) {
     // plug custom application's setting page
     mafApplicationSettingsPageConfigurations *page = new mafApplicationSettingsPageConfigurations();
     w.plugApplicationSettingsPage(page);
+
+    mafScriptInterpreter::mafInterpreterPreferencesWidget *interpreterPrefs = new mafScriptInterpreter::mafInterpreterPreferencesWidget();
+    w.plugApplicationSettingsPage(interpreterPrefs);
 
     // Eventually call the loadPlugins method with custom directory to allow the application
     // load custom plugins located in custom directories.
