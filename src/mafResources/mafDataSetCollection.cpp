@@ -153,7 +153,7 @@ void mafDataSetCollection::position(double pos[3], double t) {
     }
 }
 
-void mafDataSetCollection::setPose(const mafMatrix matrix, double t) {
+void mafDataSetCollection::setPose(const mafMatrix &matrix, double t) {
     // Find the matrix at the given timestamp
     mafMatrix *m = poseMatrix(t);
     if(m == NULL) {
@@ -161,6 +161,15 @@ void mafDataSetCollection::setPose(const mafMatrix matrix, double t) {
     }
     *m = matrix;
     emit(modifiedObject());
+}
+
+void mafDataSetCollection::synchronizeItemWithPose(const mafMatrix &matrix, double t) {
+    // Find the matrix at the given timestamp
+    mafMatrix *m = poseMatrix(t);
+    if(m == NULL) {
+        return;
+    }
+    *m = matrix;
 }
 
 mafMatrix *mafDataSetCollection::poseMatrix(double t) {
