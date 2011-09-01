@@ -16,10 +16,50 @@
 using namespace mafCore;
 using namespace mafResources;
 
+/**
+ Class name: testPoseObserver
+ observer class that is used to receive modifiedObject notifications
+ */
+class testPoseObserver : public QObject {
+    Q_OBJECT
+
+public slots:
+    /// Set at true the value of modified flag status.
+    void turnOnModifyFlag();
+
+public:
+    /// Object constructor.
+    testPoseObserver();
+
+    /// Return the modified flag status.
+    bool isModified();
+
+    /// Reset the modify flag status to false.
+    void resetModifyFlag();
+
+private:
+    bool m_Modified; ///< Modify flag.
+};
+
+testPoseObserver::testPoseObserver() : QObject(), m_Modified(false) {
+}
+
+inline bool testPoseObserver::isModified() {
+    return m_Modified;
+}
+
+void testPoseObserver::turnOnModifyFlag() {
+    m_Modified = true;
+}
+
+void testPoseObserver::resetModifyFlag() {
+    m_Modified = false;
+}
+
 //--------------------------------------------------------------------------------------------------------
 /**
  Class name: testCustomExternalData
- This class implements the external data type to give as value for mafVME after has beed wrapped with mafProxy.
+ This class implements the external data type to give as value for mafVME after has been wrapped with mafProxy.
  */
 class testCustomExternalData {
 public:
@@ -35,7 +75,7 @@ private:
 
 /**
  Class name: testCustomAnotherExternalData
- This class implements the external data type to give as value for mafVME after has beed wrapped with mafProxy.
+ This class implements the external data type to give as value for mafVME after has been wrapped with mafProxy.
  */
 class testCustomAnotherExternalData {
 public:
@@ -75,11 +115,15 @@ private slots:
         //! <snippet>
         m_Collection = mafNEW(mafResources::mafDataSetCollection);
         //! </snippet>
+
+        m_PoseObserver = new testPoseObserver;
+        connect(m_Collection, SIGNAL(modifiedObject()), m_PoseObserver, SLOT(turnOnModifyFlag()), Qt::DirectConnection);
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_Collection);
+        delete m_PoseObserver;
         mafMessageHandler::instance()->shutdown();
     }
 
@@ -87,6 +131,8 @@ private slots:
     void collectionAllocationTest();
     /// Test orientation and pose for mafDataSetCollection
     void collectionPoseMatrixTest();
+    /// Test the pose matrix synchronization
+    void collectionSynchronizePoseTest();
     /// Test new item insertion
     void collectionInsertItemTest();
     /// Test the setDataSet method
@@ -96,6 +142,7 @@ private slots:
 
 private:
     mafDataSetCollection *m_Collection; ///< Test var.
+    testPoseObserver *m_PoseObserver; ///< Modify dataset collection's pose observer;
 };
 
 void mafDataSetCollectionTest::collectionAllocationTest() {
@@ -126,6 +173,29 @@ void mafDataSetCollectionTest::collectionPoseMatrixTest() {
     QCOMPARE(pose[0], rx);
     QCOMPARE(pose[1], ry);
     QCOMPARE(pose[2], rz);
+}
+
+void mafDataSetCollectionTest::collectionSynchronizePoseTest() {
+    // reset the modify flag
+    m_PoseObserver->resetModifyFlag();
+
+    mafMatrix m;
+    m.setIdentity();
+    m.setElement(0, 1, 2.5);
+
+    // Assign a pose matrix (collection notify the changes)
+    m_Collection->setPose(m);
+    bool res = m_PoseObserver->isModified();
+    QVERIFY(res);
+
+    // reset again the modify flag
+    m_PoseObserver->resetModifyFlag();
+
+    m.setIdentity();
+    m_Collection->synchronizeItemWithPose(m);
+    
+    res = m_PoseObserver->isModified();
+    QVERIFY(!res);
 }
 
 void mafDataSetCollectionTest::collectionInsertItemTest() {
@@ -171,7 +241,7 @@ void mafDataSetCollectionTest::collectionDataSetTest() {
     bool result = false;
 
     // initialize the VME with this first mafDataSet.
-    // The mafVME has no data value inserted before, so it hsould accept it and the type of the mafVME
+    // The mafVME has no data value inserted before, so it should accept it and the type of the mafVME
     // should became compliant with this external data type.
     result = m_Collection->setDataSet(data);
 

@@ -45,7 +45,10 @@ public:
     void setPose(double rx, double ry, double rz, double x = 0.0, double y = 0.0, double z = 0.0, double t = -1);
 
     /// Assign the pose matrix to the current data.
-    void setPose(const mafMatrix matrix, double t = -1);
+    void setPose(const mafMatrix &matrix, double t = -1);
+
+    /// Assign the given matrix passed as argument without notifying connected slots with modifiedObject
+    void synchronizeItemWithPose(const mafMatrix &matrix, double t = -1);
 
     /// Return the current data pose matrix.
     mafMatrix *poseMatrix(double t = -1);

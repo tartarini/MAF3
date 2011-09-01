@@ -67,7 +67,7 @@ private slots:
     void createMementoTest();
     /// memento assignment test case.
     void setMementoTest();
-    /// accept vesitor test case.
+    /// accept visitor test case.
     void acceptVisitorTest();
     /// Test the Object's addTag functionality.
     void addTagTest();
@@ -75,6 +75,10 @@ private slots:
     void removeTagTest();
     /// Test the Object's filterTag functionality.
     void filterTagTest();
+    /// Test the Object's addScript functionality.
+    void addScriptTest();
+    /// Test the Object's removeScript functionality.
+    void removeScriptTest();
     /// Test isEqual method.
     void isEqualTest();    
     /// Test setDictionary method.
@@ -176,6 +180,29 @@ void mafObjectTest::filterTagTest() {
     m_ObjTestVar->filterTags("bad", &filteredList);
     n = filteredList.count();
     QVERIFY(n == 0);
+}
+
+void mafObjectTest::addScriptTest() {
+    // Add a new script -> return true.
+    QVERIFY(m_ObjTestVar->addScript("#import system;"));
+
+    // Add an existing script -> return false (not added to the list).
+    QVERIFY(m_ObjTestVar->addScript("#import system;") == false);
+
+    QVERIFY(m_ObjTestVar->addScript("print 2+3;"));
+
+    int s = m_ObjTestVar->scriptList()->size();
+    QVERIFY(s == 2);
+}
+
+void mafObjectTest::removeScriptTest() {
+    QVERIFY(m_ObjTestVar->removeScript("#import system;"));
+    QVERIFY(!m_ObjTestVar->removeScript("not existing script"));
+
+    int s = m_ObjTestVar->scriptList()->size();
+    QVERIFY(s == 1);
+
+    QVERIFY(m_ObjTestVar->removeScript(0));
 }
 
 void mafObjectTest::isEqualTest() {

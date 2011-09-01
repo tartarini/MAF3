@@ -3,7 +3,7 @@
  *  mafCore
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *  
  *  See Licence at: http://tiny.cc/QXJ4D
  *  
@@ -66,12 +66,12 @@ public:
      This is used to implement a sort of undo mechanism for the object's state, but can be used also by the
     serialization mechanism to serialize data into the selected storage type.
     The 'deep_memento' flag is used to avoid the copy of the object unique hash in normal operation like
-    undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
+    undo or copy/paste operations. The complete object save is instead needed for serialization purposes.*/
     virtual void setMemento(mafMemento *memento, bool deep_memento = false);
     
     /// Add string tag to the tag list, that will categorize the object.
     /** This list of tags wants to define a series of strings that describe the object and
-    categorize it in the cloud of MAF3 objects (like a photo tags on Flickr).
+    categorize it in the cloud of MAF3 objects (like photo tags on Flickr).
     This method return true if the tag is added correctly, otherwise false.
     It return false also if you are trying to add and already added tag.*/
     bool addTag(QString tag);
@@ -85,6 +85,18 @@ public:
     /// Return the list of all tag inserted.
     const QVariantList *tagList() const;
 
+    /// Add a script to the scriptList.
+    bool addScript(QString script);
+
+    /// Remove from the script list the given script.
+    bool removeScript(QString script);
+
+    /// Remove from the script list the script at given index.
+    bool removeScript(int scriptIndex);
+
+    /// Return the list of all scripts inserted.
+    const QVariantList *scriptList() const;
+
     /// Return the dictionary associated to the object.
     mafDictionary *dictionary() const;
 
@@ -96,6 +108,9 @@ public:
 
     /// Return status of progress to be used in a progress bar.
     int progressStatus() const;
+
+    /// Method used to initialize the object's script list.
+    void setScriptList(const QVariantList &list);
 
 public slots:
     /// Method used to initialize the object's tag list.
@@ -109,9 +124,9 @@ protected:
     mafObjectLockStatus m_LockStatus; ///< Contains the status of object lock.
     int m_ProgressStatus; ///< Contains the progress status.
 
-
 private:
     QVariantList *m_TagList; ///< Tag list that categorize the object.
+    QVariantList *m_ScriptList; ///< List containing scripts associated to the object.
     mafDictionary* m_Dictionary; ///< Dictionary associated to the object.
 };
 
@@ -125,6 +140,10 @@ inline QString mafObject::iconFile() const {
 
 inline const QVariantList *mafObject::tagList() const {
     return m_TagList;
+}
+
+inline const QVariantList *mafObject::scriptList() const {
+    return m_ScriptList;
 }
 
 inline mafDictionary *mafObject::dictionary() const {
