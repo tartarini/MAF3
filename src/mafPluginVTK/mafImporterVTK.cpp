@@ -31,12 +31,10 @@ void mafImporterVTK::execute() {
 
     m_Status = mafOperationStatusExecuting;
     
-    if (!filename().isEmpty()) {
-        checkImportFile();
-        if (m_Status == mafOperationStatusAborted) {
-            cleanup();
-            return;
-        }
+    checkImportFile();
+    if (m_Status == mafOperationStatusAborted) {
+        cleanup();
+        return;
     }
     
     m_Reader->SetFileName(filename().toAscii().constData());
