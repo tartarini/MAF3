@@ -216,14 +216,14 @@ void mafNetworkConnectorQtSoap::send(const QString methodName, mafEventArguments
     //REQUIRE(params->at(0).canConvert(QVariant::Hash) == true);
 
     QString type = argList->at(0).name();
-    if(argList == NULL || type != "QVariantHash") {
+    if(argList == NULL || type != "QVariantMap") {
         qDebug() << "NULL or invalid argument, nothing to send!";
         return;
     }
     m_Request.clear();
     m_Request.setMethod(methodName);
-    QVariantHash *values;
-    values = reinterpret_cast<QVariantHash *> (argList->at(0).data());
+    QVariantMap *values;
+    values = reinterpret_cast<QVariantMap *> (argList->at(0).data());
     int i = 0, size = values->size();
     for(;i<size;++i) {
         m_Request.addMethodArgument(marshall(values->keys().at(i), values->values().at(i)));

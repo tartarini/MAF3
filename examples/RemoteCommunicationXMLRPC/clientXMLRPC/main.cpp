@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
     QVariantList dataParameters;
     dataParameters.append("mafAlgorithm");
 
-    QVariantHash operationParameters;
+    QVariantMap operationParameters;
     operationParameters.insert("inputFileName", "input");
     operationParameters.insert("outputFileName", "output");
     operationParameters.insert("iterations", 3);

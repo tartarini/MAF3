@@ -68,7 +68,7 @@ signals:
     void operationDidStart(mafCore::mafObjectBase *operation);
 
     /// Signal connected to the setOperationParameters slot.
-    void setOperationParametersSignal(const QVariantHash &parameters);
+    void setOperationParametersSignal(const QVariantMap &parameters);
 
     /// Signal connected to the executeOperation slot.
     void executeOperationSignal();
@@ -111,7 +111,7 @@ private slots:
     /**
         @param parameters List of parameters to be asigned to the current operation.
     */
-    void setOperationParameters(const QVariantHash &parameters);
+    void setOperationParameters(const QVariantMap &parameters);
 
     /// Execute current operation.
     /**

@@ -133,7 +133,7 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     mafEventArgumentsList myList; // create list to send
 
     //inside there is ONE hash which has name, value
-    QVariantHash values;
+    QVariantMap values;
 
     //this is value 1
     QString valueToSend = "EternoDolore";
@@ -145,7 +145,7 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
 
 
     //append inside the list
-    myList.push_back(mafEventArgument(QVariantHash, values));
+    myList.push_back(mafEventArgument(QVariantMap, values));
 
     // send call
     m_NetWorkConnectorQtSoap->setAction("myEcho");
@@ -173,7 +173,7 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     mafEventArgumentsList myList; // create list to send
 
     //inside there is ONE hash which has name, value
-    QVariantHash values;
+    QVariantMap values;
 
     //this is value 1
     QString valueToSend = "IBM";
@@ -185,7 +185,7 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
 
 
     //append inside the list
-    myList.push_back(mafEventArgument(QVariantHash,values));
+    myList.push_back(mafEventArgument(QVariantMap,values));
 
     QtSoapNamespaces &registry = QtSoapNamespaces::instance();
     registry.registerNamespace("ns", "http://echo.services.core.carbon.wso2.org");
@@ -217,7 +217,7 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     mafEventArgumentsList myList; // create list to send
 
     //inside there is ONE hash which has name, value
-    QVariantHash values;
+    QVariantMap values;
 
     //this is value 1
     QList<QString> list1;
@@ -239,7 +239,7 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     values.insert("arrData", v2);
 
     //append inside the list
-    myList.push_back(mafEventArgument(QVariantHash,values));
+    myList.push_back(mafEventArgument(QVariantMap,values));
 
     // send call
     m_NetWorkConnectorQtSoap->setAction("testArray");
@@ -267,11 +267,11 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionWithGSO
     mafEventArgumentsList myList; // create list to send
 
     //inside there is ONE hash which has name, value
-    QVariantHash values;
+    QVariantMap values;
     values.insert("input", "stringTest");
 
     //append inside the list
-    myList.push_back(mafEventArgument(QVariantHash,values));
+    myList.push_back(mafEventArgument(QVariantMap,values));
 
     // send call
     m_NetWorkConnectorQtSoap->registerNamespace("h", "http://tempuri.org/h.xsd");

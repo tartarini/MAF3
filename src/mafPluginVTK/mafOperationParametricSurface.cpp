@@ -136,7 +136,7 @@ void mafOperationParametricSurface::reDo() {
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 }
 
-void mafOperationParametricSurface::setParameters(const QVariantHash &parameters) {
+void mafOperationParametricSurface::setParameters(const QVariantMap &parameters) {
     int type = parameters["parametricSurfaceType"].toInt();
     on_parametricSurfaceType_currentChanged(type);
     switch (type) {

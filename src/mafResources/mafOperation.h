@@ -42,7 +42,7 @@ signals:
 public slots:
     
     /// Set operation parameters.
-    virtual void setParameters(const QVariantHash &parameters);
+    virtual void setParameters(const QVariantMap &parameters);
 
     /// Allows to call the piece of algorithm that is needed to restore the previous state of the operation's execution.
     virtual void unDo();

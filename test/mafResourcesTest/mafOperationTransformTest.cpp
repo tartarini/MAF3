@@ -93,7 +93,7 @@ void mafOperationTransformTest::testExecute() {
     ry = 45.0;
     rz = 60.0;
     
-    QVariantHash parameters;
+    QVariantMap parameters;
     parameters.insert( "xPos" , x);
     parameters.insert( "yPos" , y);
     parameters.insert( "zPos" , z);
