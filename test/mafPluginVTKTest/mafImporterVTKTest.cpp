@@ -136,8 +136,8 @@ void mafImporterVTKTest::initializeTestData() {
 void mafImporterVTKTest::importVTKFile() {
     QVariantList op;
     op.append(QVariant("mafPluginVTK::mafImporterVTK"));
-    QVariantList params;
-    params.append(QVariant(m_VTKFile));
+    QVariantMap params;
+    params.insert("filename", QVariant(m_VTKFile));
     op.push_back(params); // Needs push_back to preserve the QVariantList structure as second element of the main variant list.
 
     mafEventArgumentsList listToSend;
