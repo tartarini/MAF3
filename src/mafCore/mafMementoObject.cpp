@@ -3,7 +3,7 @@
  *  mafCore
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *  
  *  See Licence at: http://tiny.cc/QXJ4D
  *  
@@ -49,6 +49,12 @@ mafMementoObject::mafMementoObject(const mafObject *obj, const QString code_loca
     itemTagList.m_Name = "TagList";
     itemTagList.m_Value = *obj->tagList();
     list->append(itemTagList);
+
+    mafMementoPropertyItem itemScriptList;
+    itemScriptList.m_Multiplicity = obj->tagList()->count();
+    itemScriptList.m_Name = "ScriptList";
+    itemScriptList.m_Value = *obj->scriptList();
+    list->append(itemScriptList);
 
     mafMementoPropertyItem itemDic;
     itemDic.m_Multiplicity = obj->dictionary()->count();
