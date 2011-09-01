@@ -127,9 +127,9 @@ void mafExporterVTKTest::exportVMEinVTKFile() {
     listToSend.append(mafEventArgument(QVariantList, op));
     m_EventBus->notifyEvent("maf.local.resources.operation.executeWithParameters", mafEventTypeLocal, &listToSend);
 
-    QTime dieTime = QTime::currentTime().addSecs(3);
+    QTime dieTime = QTime::currentTime().addSecs(10);
     while(QTime::currentTime() < dieTime) {
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 3);
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 10);
     }
 
     vtkSmartPointer<vtkDataSetReader> reader = vtkSmartPointer<vtkDataSetReader>::New();
