@@ -34,7 +34,7 @@ mafMacroWrapTargetFiles()
 
 # Create the library.
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS} ${PYTHON_LIBRARIES})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 
 ## #################################################################
 ## copy mnu file
