@@ -96,6 +96,10 @@ void mafObjectTest::mafObjectConstructorTest() {
     mafObject *obj = mafNEW(mafCore::mafObject);
     //! </snippet>
     QVERIFY(obj != NULL);
+
+    mafDictionary *dic = obj->dictionary();
+    QVERIFY(dic != NULL);
+
     mafDEL(obj);
 }
 
@@ -162,6 +166,8 @@ void mafObjectTest::addTagTest() {
     QVERIFY(m_ObjTestVar->addTag("mafObject"));
     QVERIFY(m_ObjTestVar->addTag("maf framework"));
     QVERIFY(m_ObjTestVar->addTag("Test"));
+    int s = m_ObjTestVar->tagList()->size();
+    QVERIFY(s == 4);
 }
 
 void mafObjectTest::removeTagTest() {

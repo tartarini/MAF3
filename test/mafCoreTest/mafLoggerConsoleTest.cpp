@@ -65,6 +65,17 @@ void mafLoggerConsoleTest::logMesageTest() {
 
     // Test QtWarningMsg
     m_Logger->logMessage(QtWarningMsg, msg);
+
+    // ... Critical
+    m_Logger->logMessage(QtCriticalMsg, msg);
+
+    // ... and Fatal.
+    m_Logger->logMessage(QtFatalMsg, msg);
+
+    // Test suite debug and warning messages...
+    m_Logger->setLogMode(mafLogModeTestSuite);
+    m_Logger->logMessage(QtDebugMsg, msg);
+    m_Logger->logMessage(QtWarningMsg, msg);
 }
 
 MAF_REGISTER_TEST(mafLoggerConsoleTest);

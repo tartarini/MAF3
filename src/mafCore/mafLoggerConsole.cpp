@@ -42,6 +42,7 @@ void mafLoggerConsole::loggedMessage(const QtMsgType type, const QString &msg) {
         break;
     case QtFatalMsg:
         printf("Fatal: %s\n", msg.toStdString().c_str());    
-        abort();
+        //abort();
+        break;
     }
 }
