@@ -44,15 +44,15 @@ public:
     void setLogMode(const mafLogMode mode);
 
     /// Return the current logging modality.
-    mafLogMode logMode() const {return m_LogMode;}
+    mafLogMode logMode() const;
 
     /// Enable or disable logging.
-    void setEnabled(bool enabled = true) {m_Enabled = enabled;}
+    void setEnabled(bool enabled = true);
 
     /// Return the status of logging; enabled or no.
-    bool enabled() const {return m_Enabled;}
+    bool enabled() const;
 
-    /// Method used to log the given message into the specific ouput stream.
+    /// Method used to log the given message into the specific output stream.
     void logMessage(const QtMsgType type, QString &msg);
 
     /// Clear all the logged messages until now.
@@ -63,7 +63,7 @@ protected:
     /* virtual */~mafLogger();
 
     /// Virtual method implementation of logMessage.
-    /** You have to redefine this method in your sublass and put here your strategy to store the log message into the specific output stream media (file, db, buffer, console, ...).*/
+    /** You have to redefine this method in your subclass and put here your strategy to store the log message into the specific output stream media (file, db, buffer, console, ...).*/
     virtual void loggedMessage(const QtMsgType type, const QString &msg) = 0;
 
 private:
@@ -71,6 +71,22 @@ private:
     bool m_Enabled; ///< Flag to indicate if logging is enabled or no.
 };
 
+/////////////////////////////////////////////////////////////
+// Inline methods
+/////////////////////////////////////////////////////////////
+
+inline void mafLogger::setEnabled(bool enabled) {
+    m_Enabled = enabled;
 }
+
+inline mafLogMode mafLogger::logMode() const {
+    return m_LogMode;
+}
+
+inline bool mafLogger::enabled() const {
+    return m_Enabled;
+}
+
+} // namespace mafCore
 
 #endif // MAFLOGGER_H
