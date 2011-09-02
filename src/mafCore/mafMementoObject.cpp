@@ -51,7 +51,7 @@ mafMementoObject::mafMementoObject(const mafObject *obj, const QString code_loca
     list->append(itemTagList);
 
     mafMementoPropertyItem itemScriptList;
-    itemScriptList.m_Multiplicity = obj->tagList()->count();
+    itemScriptList.m_Multiplicity = obj->scriptList()->count();
     itemScriptList.m_Name = "ScriptList";
     itemScriptList.m_Value = *obj->scriptList();
     list->append(itemScriptList);
