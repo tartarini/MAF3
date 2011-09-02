@@ -76,11 +76,14 @@ void mafVisitorFindObjectsTest::mafVisitorFindObjectsObjectListTest() {
     mafObjectBase * obj1 = mafNEW(mafCore::mafObjectBase);
     mafObjectBase * obj2 = mafNEW(mafCore::mafObjectBase);
 
-    QVERIFY(m_VisitorFindObjects->objectsList()->count() == 0);
+    mafObjectsList *list = m_VisitorFindObjects->objectsList();
+    QVERIFY(list->count() == 0);
     m_VisitorFindObjects->visit(obj1);
-    QVERIFY(m_VisitorFindObjects->objectsList()->count() == 1);
+    list = m_VisitorFindObjects->objectsList();
+    QVERIFY(list->count() == 1);
     m_VisitorFindObjects->visit(obj2);
-    QVERIFY(m_VisitorFindObjects->objectsList()->count() == 2);
+    list = m_VisitorFindObjects->objectsList();
+    QVERIFY(list->count() == 2);
 
     mafDEL(obj1);
     mafDEL(obj2);
