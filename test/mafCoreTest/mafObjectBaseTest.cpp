@@ -14,6 +14,23 @@
 
 using namespace mafCore;
 
+class testObjectBaseCustom : public mafObjectBase {
+    Q_OBJECT
+    Q_PROPERTY(bool customBool READ customBool)
+
+public:
+    /// Return the internal boolean variable.
+    bool customBool() const;
+
+protected:
+private:
+    bool m_CustomVar; ///< test var.
+};
+
+inline bool testObjectBaseCustom::customBool() const {
+    return m_CustomVar;
+}
+
 /**
  Class name: mafObjectBaseTest
  This class implements the test suite for mafObjectBase.
@@ -48,6 +65,9 @@ private slots:
     /// Test the isEqual method.
     void isEqualTest();
 
+    /// Modified test
+    void modifiedTest();
+
 private:
     mafObjectBase *m_ObjTestVar; ///< Test variable
 };
@@ -74,17 +94,28 @@ void mafObjectBaseTest::objectIdTest() {
 //}
 
 void mafObjectBaseTest::isEqualTest() {
-//    QString hash_key = "test string";
-//    m_ObjTestVar->createHashCode(hash_key);
-//
-//    mafObjectBase *obj2 = mafNEW(mafCore::mafObjectBase);
-//    obj2->createHashCode(hash_key);
-//
-//    QVERIFY(m_ObjTestVar->isEqual(obj2));
-//    bool result = *m_ObjTestVar == *obj2;
-//    QVERIFY(result);
-//
-//    delete obj2;
+    testObjectBaseCustom *obj = new testObjectBaseCustom();
+    bool res = m_ObjTestVar->isEqual(obj);
+    QVERIFY(!res);
+    
+    testObjectBaseCustom *obj2 = new testObjectBaseCustom();
+    res = obj->isEqual(obj2);
+    QVERIFY(res);
+
+    obj2->release();
+    obj->release();
+}
+
+void mafObjectBaseTest::modifiedTest() {
+    m_ObjTestVar->setModified();
+    bool res = m_ObjTestVar->modified();
+    QVERIFY(res);
+
+    m_ObjTestVar->setModified(false);
+    res = m_ObjTestVar->modified();
+    QVERIFY(!res);
+
+    m_ObjTestVar->description();
 }
 
 MAF_REGISTER_TEST(mafObjectBaseTest);
