@@ -21,14 +21,20 @@
 #include <vtkRenderer.h>
 #include <vtkCamera.h>
 
+#include <vtkRenderWindowInteractor.h>
+#include <vtkInteractorStyleTrackballActor.h>
+
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafInteractorVTKTransform::mafInteractorVTKTransform(const QString code_location) : mafInteractor(code_location), m_PositionInitialized(false) {
+mafInteractorVTKTransform::mafInteractorVTKTransform(const QString code_location) : mafInteractor(code_location), m_DragObject(false), m_PreviousVTKInteractor(NULL) {
     m_Blocking = true;
+    
+    m_CurrentVTKInteractor = vtkInteractorStyleTrackballActor::New();
 }
 
 mafInteractorVTKTransform::~mafInteractorVTKTransform(){
+    m_CurrentVTKInteractor->Delete();
 }
 
 void mafInteractorVTKTransform::mousePress(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
@@ -42,21 +48,65 @@ void mafInteractorVTKTransform::mousePress(double *pickPos, unsigned long modifi
         return;
     }
     
-    m_Renderer = w->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+    vtkRenderWindowInteractor *rwi = w->GetRenderWindow()->GetInteractor();
+    m_PreviousVTKInteractor = rwi->GetInteractorStyle();
+    m_PreviousVTKInteractor->Register(NULL);
+    rwi->SetInteractorStyle(m_CurrentVTKInteractor);
+    m_CurrentVTKInteractor->Register(NULL);
     
-    Translate(me->pos());
+    switch(((QMouseEvent *)e)->button()) {
+        case Qt::LeftButton:
+            rwi->InvokeEvent(vtkCommand::LeftButtonPressEvent, e);
+            break;
+        case Qt::MidButton:
+            rwi->InvokeEvent(vtkCommand::MiddleButtonPressEvent, e);
+            break;
+        case Qt::RightButton:
+            rwi->InvokeEvent(vtkCommand::RightButtonPressEvent, e);
+            break;
+        default:
+            break;
+    }
     
-    m_PositionInitialized = true;
+    m_DragObject = true;
 }
 
 
 void mafInteractorVTKTransform::mouseRelease(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
-    m_Renderer = NULL;
-    m_PositionInitialized = false;
+    mafVTKWidget *w = qobject_cast<mafVTKWidget *>(m_GraphicObject);
+    if(w == NULL) {
+        return;
+    }
+    vtkRenderWindowInteractor *rwi = w->GetRenderWindow()->GetInteractor();
+
+    switch(((QMouseEvent *)e)->button()) {
+        case Qt::LeftButton:
+            rwi->InvokeEvent(vtkCommand::LeftButtonReleaseEvent, e);
+            break;
+        case Qt::MidButton:
+            rwi->InvokeEvent(vtkCommand::MiddleButtonReleaseEvent, e);
+            break;
+        case Qt::RightButton:
+            rwi->InvokeEvent(vtkCommand::RightButtonReleaseEvent, e);
+            break;
+        default:
+            break;
+    }
+    
+    rwi->SetInteractorStyle(m_PreviousVTKInteractor);
+    
+    m_DragObject = false;
 }
 
 void mafInteractorVTKTransform::mouseMove(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
-    /// if LeftButton is pressed
+    if(!m_DragObject) return;
+    
+    mafVTKWidget *w = qobject_cast<mafVTKWidget *>(m_GraphicObject);
+    if(w == NULL) {
+        return;
+    }
+    vtkRenderWindowInteractor *rwi = w->GetRenderWindow()->GetInteractor();
+
     if(m_Renderer == NULL) {
         return;
     }
@@ -66,52 +116,7 @@ void mafInteractorVTKTransform::mouseMove(double *pickPos, unsigned long modifie
         return;
     }
     
-    QMouseEvent *me = (QMouseEvent *) e;
-    Translate(me->pos());
+    rwi->InvokeEvent(vtkCommand::MouseMoveEvent, e);
     
-    //Check if ctrl is pressed
-    if((modifiers&(1<<MAF_CTRL_KEY))!=0) {
-        
-    } else {
-        //this->internalUpdate();
-    }
-
     
-}
-
-void mafInteractorVTKTransform::Translate(QPoint point2D) {    
-    //    vtkCamera *camera = renderer->GetActiveCamera();
-//    double viewPlaneNormal[3];
-//    double viewUp[3];
-//    camera->GetViewPlaneNormal(viewPlaneNormal);
-//    camera->GetViewUp(viewUp);
-//    
-    double coordinates[3]; 
-    coordinates[0] = point2D.x(); 
-    coordinates[1] = point2D.y(); 
-    coordinates[2] = 0; 
-    
-    m_Renderer->SetDisplayPoint(coordinates); 
-    m_Renderer->DisplayToView(); 
-    m_Renderer->GetViewPoint(coordinates); 
-    m_Renderer->ViewToWorld(); 
-    double *wNewPoint = m_Renderer->GetWorldPoint(); 
-    
-    // apply transform to vme
-    if(m_PositionInitialized) {
-        double pos[3];
-        m_VME->dataSetCollection()->position(pos);
-        
-        pos[0] += (wNewPoint[0] - m_LastPosition3D[0]) /50. ; 
-        pos[1] += (wNewPoint[1] - m_LastPosition3D[1]) /50. ;
-        pos[2] += (wNewPoint[2] - m_LastPosition3D[2]) /50. ;
-
-        m_VME->dataSetCollection()->setPosition(pos);
-        qDebug() << pos[0]  << " " << pos[1] << " " << pos[2];
-    }
-    
-    // memorize old position
-    m_LastPosition3D[0] = wNewPoint[0];
-    m_LastPosition3D[1] = wNewPoint[1];
-    m_LastPosition3D[2] = wNewPoint[2];
 }

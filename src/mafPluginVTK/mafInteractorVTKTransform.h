@@ -17,6 +17,7 @@
 
 // Foundation Class forwarding list
 class vtkRenderer;
+class vtkInteractorObserver;
 
 namespace mafPluginVTK {
 
@@ -49,12 +50,10 @@ protected:
     /* virtual */~mafInteractorVTKTransform();
 
 private:    
-    /// method for translate the vme, giving the new screen coordinates
-    void Translate(QPoint point2D);
-     
-    double m_LastPosition3D[3]; ///< represents the previous 3D position
-    bool m_PositionInitialized;
+    bool m_DragObject; ///< flag put to true when the mouse button is pressed and to false when it is released.
     vtkRenderer *m_Renderer; ///< renderer initialized on mouse press and put to NULL in mouse release
+    vtkInteractorObserver *m_PreviousVTKInteractor; ///< represents the old interactor.
+    vtkInteractorObserver *m_CurrentVTKInteractor; ///< represents the interactor currently attached
 };
 
 /////////////////////////////////////////////////////////////
