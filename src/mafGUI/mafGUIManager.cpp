@@ -839,7 +839,8 @@ void mafGUIManager::setVMECheckState(mafCore::mafObjectBase *vme, bool visible) 
         if (vme) {
             QModelIndex index = m_Model->indexFromData(vme);
             mafTreeItem *item = (mafTreeItem *)m_Model->itemFromIndex(index);
-            if (item->isCheckable() && item->checkState() != visible) {
+            bool checked = item->checkState() == Qt::Checked || item->checkState() == Qt::PartiallyChecked;
+            if (item->isCheckable() && checked != visible) {
                 item->setStatus(mafItemStatusCheckable, visible);
             }
         }
