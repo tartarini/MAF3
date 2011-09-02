@@ -39,6 +39,9 @@ private slots:
     /// Test the set/get external data type.
     void externalDataTypeTest();
 
+    /// Test the set/get external codec type.
+    void externalCodecTypeTest();
+
 private:
     mafProxyInterface *m_ContainerInterface; ///< Test var.
 };
@@ -53,6 +56,11 @@ void mafProxyInterfaceTest::externalDataTypeTest() {
     QCOMPARE(m_ContainerInterface->externalDataType(), ext);
 }
 
+void mafProxyInterfaceTest::externalCodecTypeTest() {
+    QString ext("myCustomCodecType");
+    m_ContainerInterface->setExternalCodecType(ext);
+    QCOMPARE(m_ContainerInterface->externalCodecType(), ext);
+}
 
 MAF_REGISTER_TEST(mafProxyInterfaceTest);
 #include "mafProxyInterfaceTest.moc"
