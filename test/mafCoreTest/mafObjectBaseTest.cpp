@@ -19,6 +19,9 @@ class testObjectBaseCustom : public mafObjectBase {
     Q_PROPERTY(bool customBool READ customBool)
 
 public:
+    /// Object constructor.
+    testObjectBaseCustom() : m_CustomVar(true) {};
+    
     /// Return the internal boolean variable.
     bool customBool() const;
 
