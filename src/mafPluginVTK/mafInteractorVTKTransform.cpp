@@ -22,7 +22,7 @@
 #include <vtkCamera.h>
 
 #include <vtkRenderWindowInteractor.h>
-#include <vtkInteractorStyleTrackballActor.h>
+#include <vtkMAFInteractorStyleTrackballActor.h>
 
 using namespace mafResources;
 using namespace mafPluginVTK;
@@ -30,7 +30,7 @@ using namespace mafPluginVTK;
 mafInteractorVTKTransform::mafInteractorVTKTransform(const QString code_location) : mafInteractor(code_location), m_DragObject(false), m_PreviousVTKInteractor(NULL) {
     m_Blocking = true;
     
-    m_CurrentVTKInteractor = vtkInteractorStyleTrackballActor::New();
+    m_CurrentVTKInteractor = vtkMAFInteractorStyleTrackballActor::New();
 }
 
 mafInteractorVTKTransform::~mafInteractorVTKTransform(){
@@ -67,7 +67,7 @@ void mafInteractorVTKTransform::mousePress(double *pickPos, unsigned long modifi
         default:
             break;
     }
-    
+
     m_DragObject = true;
 }
 
@@ -117,6 +117,4 @@ void mafInteractorVTKTransform::mouseMove(double *pickPos, unsigned long modifie
     }
     
     rwi->InvokeEvent(vtkCommand::MouseMoveEvent, e);
-    
-    
 }
