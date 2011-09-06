@@ -14,17 +14,17 @@
 =========================================================================*/
 #include "vtkMAFInteractorStyleTrackballActor.h"
 
-#include "vtkCamera.h"
-#include "vtkCellPicker.h"
-#include "vtkCallbackCommand.h"
-#include "vtkMath.h"
-#include "vtkMatrix4x4.h"
-#include "vtkObjectFactory.h"
-#include "vtkAssemblyPath.h"
-#include "vtkProp3D.h"
-#include "vtkRenderWindowInteractor.h"
-#include "vtkRenderer.h"
-#include "vtkTransform.h"
+#include <vtkCamera.h>
+#include <vtkCellPicker.h>
+#include <vtkCallbackCommand.h>
+#include <vtkMath.h>
+#include <vtkMatrix4x4.h>
+#include <vtkObjectFactory.h>
+#include <vtkAssemblyPath.h>
+#include <vtkProp3D.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkRenderer.h>
+#include <vtkTransform.h>
 
 vtkStandardNewMacro(vtkMAFInteractorStyleTrackballActor);
 

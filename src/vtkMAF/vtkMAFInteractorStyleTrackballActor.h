@@ -34,11 +34,12 @@
 #ifndef __vtkMAFInteractorStyleTrackballActor_h
 #define __vtkMAFInteractorStyleTrackballActor_h
 
-#include "vtkInteractorStyle.h"
+#include "vtkMAF_global.h"
+#include <vtkInteractorStyle.h>
 
 class vtkCellPicker;
 
-class VTK_RENDERING_EXPORT vtkMAFInteractorStyleTrackballActor : public vtkInteractorStyle
+class VTK_vtkMAF_EXPORT vtkMAFInteractorStyleTrackballActor : public vtkInteractorStyle
 {
 public:
   static vtkMAFInteractorStyleTrackballActor *New();
