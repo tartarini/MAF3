@@ -613,3 +613,7 @@ void vtkMAFInteractorStyleTrackballActor::Prop3DTransform(vtkProp3D *prop3D,
   newTransform->Delete();
 }
 
+vtkProp3D *vtkMAFInteractorStyleTrackballActor::GetProp3D() {
+    return this->InteractionProp;
+}
+

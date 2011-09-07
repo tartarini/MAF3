@@ -38,6 +38,7 @@
 #include <vtkInteractorStyle.h>
 
 class vtkCellPicker;
+class vtkProp3D;
 
 class VTK_vtkMAF_EXPORT vtkMAFInteractorStyleTrackballActor : public vtkInteractorStyle
 {
@@ -67,6 +68,8 @@ public:
   virtual void Dolly();
   virtual void UniformScale();
 
+  vtkProp3D *GetProp3D();
+    
 protected:
   vtkMAFInteractorStyleTrackballActor();
   ~vtkMAFInteractorStyleTrackballActor();
