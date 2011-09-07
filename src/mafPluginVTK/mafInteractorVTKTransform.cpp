@@ -11,6 +11,8 @@
 
 #include <QMouseEvent>
 
+#include <mafDataSetCollection.h>
+
 #include "mafInteractorVTKTransform.h"
 #include "mafVTKWidget.h"
 #include <mafMatrix.h>
@@ -20,6 +22,7 @@
 #include <vtkRendererCollection.h>
 #include <vtkRenderer.h>
 #include <vtkCamera.h>
+#include <vtkMatrix4x4.h>
 
 #include <vtkRenderWindowInteractor.h>
 #include <vtkMAFInteractorStyleTrackballActor.h>
@@ -117,4 +120,13 @@ void mafInteractorVTKTransform::mouseMove(double *pickPos, unsigned long modifie
     }
     
     rwi->InvokeEvent(vtkCommand::MouseMoveEvent, e);
+    vtkProp3D *prop = m_CurrentVTKInteractor->GetProp3D();
+    vtkMatrix4x4 *m = prop->GetMatrix();
+    mafMatrix c;
+    for(int i = 0; i<4; ++i) {
+        for(int j = 0; j<4; ++j) {
+            c.setElement(i,j, m->Element[i][j]);
+        }
+    }
+    vme->dataSetCollection()->synchronizeItemWithPose(c);
 }
