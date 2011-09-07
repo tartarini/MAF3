@@ -33,7 +33,7 @@ public:
     /// Return the current value of m_View
     mafObjectBase *view();
 
-public slots:
+public Q_SLOTS:
     /// View Created slot
     void viewCreatedSlot(mafCore::mafObjectBase *view);
 
@@ -61,7 +61,7 @@ void testViewManagerObserver::viewCreatedSlot(mafCore::mafObjectBase *view) {
 class mafViewManagerTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();

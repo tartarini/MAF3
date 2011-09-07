@@ -118,7 +118,7 @@ public:
     /// Object constructor.
     testDataSetObserver(const QString code_location = "");
 
-public slots:
+public Q_SLOTS:
     void dataDidConnected();
     void dataDidDisconnected();
 };
@@ -151,7 +151,7 @@ void testDataSetObserver::dataDidDisconnected() {
 class mafDataSetTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();

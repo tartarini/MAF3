@@ -177,7 +177,7 @@ void mafInterpreterConsole::onKeyEnterPressed(void) {
     }
 
     if (line == "bye" || line == "exit" || line == "quit") {
-        emit stopped();
+        Q_EMIT stopped();
     }
     
     if(!line.isEmpty()) {
@@ -190,27 +190,27 @@ void mafInterpreterConsole::onKeyEnterPressed(void) {
     }
     
     if (line.startsWith(":load ")) {
-        emit load(line.remove(":load "));
+        Q_EMIT load(line.remove(":load "));
         
     } else if (line.startsWith(":save ")) {
-        emit save(line.remove(":save "));
+        Q_EMIT save(line.remove(":save "));
     } else if (line.startsWith(":emacs")) {
         qWarning() << "emacs bindings not supported in gui mode";
-        emit input("", &stat);
+        Q_EMIT input("", &stat);
     } else if (line.startsWith(":vi")) {
         qWarning() << "vi bindings not supported in gui mode";
-        emit input("", &stat);
+        Q_EMIT input("", &stat);
     } else if (line.startsWith(":help")) {
         qWarning() << "File manipulation:";
         qWarning() << " :load [file]        loads file and interprets its content";
         qWarning() << " :save [file]        saves interpreter history to file";
-        emit input("", &stat);
+        Q_EMIT input("", &stat);
     } else if (line.startsWith(":man ")) {
-        emit input("", &stat);
+        Q_EMIT input("", &stat);
     } else if(line.isEmpty()) {
         this->appendPlainText(filter(m_Interpreter->prompt()));
     } else {
-        QString result = emit input(line, &stat);
+        QString result = Q_EMIT input(line, &stat);
         if(!result.isEmpty()) {
             output(result, &stat);
         }

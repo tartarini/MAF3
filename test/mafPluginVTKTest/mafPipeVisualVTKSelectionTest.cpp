@@ -37,7 +37,7 @@ using namespace mafPluginVTK;
 class mafPipeVisualVTKSelectionTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         // Install the MAF3 Message handler for logging pourposes...

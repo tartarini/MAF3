@@ -56,7 +56,7 @@ public:
     /// Reset the internal var value.
     void resetVar() {m_Var = 0;}
 
-public slots:
+public Q_SLOTS:
     /// Test slot that will receive the timeoutReached event.
     void updateObject();
 
@@ -98,7 +98,7 @@ void testObjectCustom::updateObject() {
 class mafTimerTest: public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         m_TimerTest = mafNEW(mafTimeSpace::mafTimer);

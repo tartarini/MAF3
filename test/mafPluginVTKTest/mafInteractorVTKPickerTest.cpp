@@ -60,7 +60,7 @@ class mafInteractorVTKPickerTest : public QObject {
     //shutdown all the graphic resources
     void shutdownGraphicResources();
 
-private slots:
+private Q_SLOTS:
 
     /// Initialize test variables
     void initTestCase() {
@@ -95,7 +95,7 @@ private slots:
     /// mafInteractorVTKPickerTest event connection test case.
     void mafInteractorVTKPickerEventsTest();
 
-    public slots:
+    public Q_SLOTS:
     /// Called when a VME has been picked.
     /*virtual*/ void vmePicked(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e);
 

@@ -74,7 +74,7 @@ public:
     /// update ui widgets with properties, using USER flag in Q_PROPERTY.
     void updateUI(QObject *selfUI = NULL);
     
-    /// Allows to emit the incrementReference in a thread safe way.
+    /// Allows to Q_EMIT the incrementReference in a thread safe way.
     void retain();
     
     /// Allows to decrease the reference count of the object.
@@ -88,7 +88,7 @@ public:
 
 
 
-private slots:
+private Q_SLOTS:
     /// increment of 1 unit the reference count.
     void ref();
 
@@ -108,7 +108,7 @@ protected:
     /// Object destructor.
     virtual ~mafObjectBase();
 
-signals:
+Q_SIGNALS:
     /// Signal emitted to alert all receivers that the object has been modified.
     void modifiedObject();
     

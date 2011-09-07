@@ -47,7 +47,7 @@ public:
     /// Whenever an event occurs, this function is called with the event model option and the index that corresponds to the item being edited.
     /*virtual*/ bool editorEvent ( QEvent * event, QAbstractItemModel * model, const QStyleOptionViewItem & option, const QModelIndex & index );
 
-public slots:
+public Q_SLOTS:
 
 private:
     /// Return the QObject corrisponding to index.

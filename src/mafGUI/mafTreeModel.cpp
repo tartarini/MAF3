@@ -130,11 +130,11 @@ void mafTreeModel::itemAttached(QObject *item, QObject *parent) {
     if (parent != NULL) {
         QModelIndex index = this->indexFromData(parent);
         this->insertNewItem(AsChild, item, index);
-        emit itemAdded(index);
+        Q_EMIT itemAdded(index);
     }
 
     QModelIndex index = this->indexFromData(parent);
-    emit dataChanged(index, index);
+    Q_EMIT dataChanged(index, index);
 }
 
 void mafTreeModel::itemDetached(QObject *item) {

@@ -41,7 +41,7 @@ public:
     /// Return the prompt
     QString prompt(void) const;
 
-public slots:
+public Q_SLOTS:
     /// Start the console.
     void start(Priority priority = InheritPriority);
     /// Stop the console.
@@ -49,7 +49,7 @@ public slots:
     /// Return the output in result string.
     void output(const QString& result,  int *stat);
 
-signals:
+Q_SIGNALS:
     /// signal used when insert an input
     void   input(const QString& command, int *stat);
     /// signal used when load a file

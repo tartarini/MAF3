@@ -178,16 +178,16 @@ void mafResource::terminate() {
 }
 
 void mafResource::execute() {
-    emit executionEnded();
+    Q_EMIT executionEnded();
 }
 
 void mafResource::pushInteractor(mafInteractor *i) {
-    emit interactorDetach();
+    Q_EMIT interactorDetach();
     m_Lock->lockForWrite();
     m_InteractorStack.push(i);
     i->retain();
     m_Lock->unlock();
-    emit interactorAttached();
+    Q_EMIT interactorAttached();
 }
 
 mafInteractor *mafResource::popInteractor() {

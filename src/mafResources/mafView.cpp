@@ -36,8 +36,8 @@ mafView::mafView(const QString code_location) : mafResource(code_location), m_Re
 
 mafView::~mafView() {   
     clearScene();
-    // emit signal to detach visual pipe gui
-    emit pipeVisualSelectedSignal(NULL);
+    // Q_EMIT signal to detach visual pipe gui
+    Q_EMIT pipeVisualSelectedSignal(NULL);
 }
 
 
@@ -134,8 +134,8 @@ void mafView::selectSceneNode(mafSceneNode *node, bool select) {
 }
 
 void mafView::notityVisualPipeSelected() {
-    //emit signal to inform about visual pipe of the current node.
-    emit pipeVisualSelectedSignal(m_SelectedNode->visualPipe());
+    //Q_EMIT signal to inform about visual pipe of the current node.
+    Q_EMIT pipeVisualSelectedSignal(m_SelectedNode->visualPipe());
 }
 
 void mafView::showSceneNode(mafSceneNode *node, bool show) {

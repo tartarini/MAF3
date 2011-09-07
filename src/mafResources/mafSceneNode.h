@@ -98,11 +98,11 @@ private:
     mafVisibilityPolicy m_VisibilityPolicy; ///< Visibility policy determines in which way, on show/hide , the visual pipe will be treated.
     mafSceneNode *m_ParentNode; ///< Parent node.
 
-signals:
+Q_SIGNALS:
     /// Alert the view that the node can be deleted because its inner VME has been destroyed.
     void destroyNode();
 
-public slots:
+public Q_SLOTS:
     QObject *dataObject();
     
     /// Set the visibility of its rendering scene.

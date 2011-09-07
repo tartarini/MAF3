@@ -30,7 +30,7 @@ class mafVMEManagerTest : public QObject {
 /// create a huge vme tree for benchmark.
 void unbalancedTreeRandomCreation(unsigned int numberOfElements); 
     
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();

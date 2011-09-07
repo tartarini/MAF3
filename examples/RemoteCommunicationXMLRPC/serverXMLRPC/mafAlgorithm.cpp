@@ -30,7 +30,7 @@ void mafAlgorithm::execute() {
                         << QString::number(m_IterationParameter);
 
     bool ok = QProcess::execute("./testProcess" ,commandAndParameters) == 0;
-    emit executionEnded();
+    Q_EMIT executionEnded();
 }
 
 void mafAlgorithm::terminated() {

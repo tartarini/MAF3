@@ -77,11 +77,11 @@ void mafOperationWidget::changeEvent(QEvent *e) {
 }
 
 void mafOperationWidget::execute() {
-    emit operationDismissed();
+    Q_EMIT operationDismissed();
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
 }
 
 void mafOperationWidget::cancel() {
-    emit operationDismissed();
+    Q_EMIT operationDismissed();
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.stop", mafEventTypeLocal);
 }

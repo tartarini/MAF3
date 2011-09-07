@@ -35,7 +35,7 @@ public:
     /// Object constructor.
     mafInteractorVTKTransform(const QString code_location = "");
 
-public slots:
+public Q_SLOTS:
     /// Called when the any mouse button is pressed
     /*virtual*/ void mousePress(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e);
 

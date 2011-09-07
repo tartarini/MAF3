@@ -43,6 +43,6 @@ void mafOperationWorker::run() {
 
 void mafOperationWorker::abortExecution() {
     if ( m_Operation->canAbort() ) {
-        emit workAborted();
+        Q_EMIT workAborted();
     }
 }

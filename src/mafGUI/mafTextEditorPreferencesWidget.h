@@ -28,7 +28,7 @@ class MAFGUISHARED_EXPORT mafTextEditorPreferencesWidget : public mafGUIApplicat
     /// typedef macro.
     mafSuperclassMacro(mafGUI::mafGUIApplicationSettingsPage);
 
-public slots:
+public Q_SLOTS:
     /// set the font to the console
     void onFontChosen(QFont);
     /// called when the size is changed
@@ -43,7 +43,7 @@ public slots:
     // set if showing revisions.
     void onRevisionsCkeckBoxChanged(int);
 
-signals:
+Q_SIGNALS:
     /// signal emitted when the change is accepted.
     void accepted(void);
     /// signal emitted when the change is rejected.

@@ -36,7 +36,7 @@ class mafExporterVTKTest: public QObject {
     /// Prepare the test data to be used into the test suite.
     void initializeTestData();
     
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();

@@ -44,7 +44,7 @@ public:
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
 
-public slots:
+public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change.
     /*virtual*/ void updatePipe(double t = -1);
     

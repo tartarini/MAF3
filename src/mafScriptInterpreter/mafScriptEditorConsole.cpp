@@ -121,29 +121,29 @@ void mafScriptEditorConsole::run(void)
         mafScriptEditorSynchronizer::instance()->lock();
 
         if (line.startsWith(":load ")) {
-            emit load(line.remove(":load "));
+            Q_EMIT load(line.remove(":load "));
 
         } else if (line.startsWith(":save ")) {
-            emit save(line.remove(":save "));
+            Q_EMIT save(line.remove(":save "));
 
         } else if (line.startsWith(":emacs")) {
             std::cerr << "switching to emacs bindings" << std::endl;
 
             registerBindings("emacs");
 
-            emit input("", &stat);
+            Q_EMIT input("", &stat);
 
         } else if (line.startsWith(":vi")) {
             std::cerr << "switching to vi bindings" << std::endl;
 
             registerBindings("vi");
 
-            emit input("", &stat);
+            Q_EMIT input("", &stat);
 
         } else if (line.startsWith(":plugins")) {
             //mafPluginManager::instance()->printPlugins();
 
-            //emit input("", &stat);
+            //Q_EMIT input("", &stat);
 
         } else if (line.startsWith(":help")) {
             std::cerr << "Plugins:" << std::endl;
@@ -161,7 +161,7 @@ void mafScriptEditorConsole::run(void)
             std::cerr << " :man [page]         displays documentation for page" << std::endl;
             std::cerr << "" << std::endl;
 
-            emit input("", &stat);
+            Q_EMIT input("", &stat);
 
         } else if (line.startsWith(":man ")) {
             
@@ -181,14 +181,14 @@ void mafScriptEditorConsole::run(void)
             process.start(program, arguments);
             process.waitForFinished(-1);
 
-            emit output(QString(process.readAll()), &stat);
+            Q_EMIT output(QString(process.readAll()), &stat);
 #endif
 
-            emit input("", &stat);
+            Q_EMIT input("", &stat);
 
         } else if (count > 0) {
             
-            emit input(line, &stat);
+            Q_EMIT input(line, &stat);
 
         }
 
@@ -205,7 +205,7 @@ void mafScriptEditorConsole::run(void)
         m_PrivateClassPointer->m_ElEngine = 0l;
     }
 
-    emit stopped();
+    Q_EMIT stopped();
 #endif
 }
 

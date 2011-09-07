@@ -44,7 +44,7 @@ public:
     /// fill the given string list with the timer types.
 //    void timerTypes(QStringList *timer_types);
 
-signals:
+Q_SIGNALS:
     /// Signal needed to create the timer.
     mafCore::mafId createTimerSignal(int interval, bool one_shot = true);
 
@@ -60,7 +60,7 @@ signals:
     /// Signal that allows to stop the timer associated to the Event_Id given as argument. The id is returned by the createTimer method.
     void stopTimerSignal(mafCore::mafId id);
 
-private slots:
+private Q_SLOTS:
     /// Create a new timer and connect through the mafEventBus the timer signal to the object's callback signature.
     /** This method will create a new timer for the requestor. The new timer will be connected to the requestor's callback (slot)
     and when the timer reach the timeout, the event will be raised. The method return the event_id associated to the timer created

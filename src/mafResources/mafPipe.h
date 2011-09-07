@@ -52,7 +52,7 @@ public:
     /// Get the input of the pipe.
     mafVMEList *inputList();
 
-public slots:
+public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change
     virtual void updatePipe(double t = -1) = 0;
 

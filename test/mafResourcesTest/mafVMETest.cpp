@@ -37,7 +37,7 @@ public:
     /// Return the string variable initialized and updated from the data pipe.
     QString pipeline() {return m_PipeLine;}
 
-public slots:
+public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change
     /*virtual*/ void updatePipe(double t = -1);
 
@@ -66,11 +66,11 @@ public:
     /// Constructor
     testVMEConcurrentAccess(mafVME *vme);
     
-signals:
+Q_SIGNALS:
     /// Finish the threaded elaboration.
     void finished();
     
-public slots:
+public Q_SLOTS:
     /// Start the VME access.
     void startElaboration();
     
@@ -121,7 +121,7 @@ void testVMEConcurrentAccess::startElaboration() {
     }
     mafDEL(m);
     
-    emit finished();
+    Q_EMIT finished();
 }
 
 //------------------------------------------------------------------------------------------
@@ -142,7 +142,7 @@ void testVMEConcurrentAccess::startElaboration() {
 class mafVMETest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();

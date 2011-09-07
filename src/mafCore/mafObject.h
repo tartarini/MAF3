@@ -112,7 +112,7 @@ public:
     /// Method used to initialize the object's script list.
     void setScriptList(const QVariantList &list);
 
-public slots:
+public Q_SLOTS:
     /// Method used to initialize the object's tag list.
     void setTagList(const QVariantList &list);
 

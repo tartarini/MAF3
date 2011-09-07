@@ -38,11 +38,11 @@ mafObjectBase::~mafObjectBase() {
 }
 
 void mafObjectBase::retain() {
-    emit incrementReference();
+    Q_EMIT incrementReference();
 }
 
 void mafObjectBase::release() {
-    emit decreaseReference();
+    Q_EMIT decreaseReference();
 }
 
 void mafObjectBase::setModified(bool m) {

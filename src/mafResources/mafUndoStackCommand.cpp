@@ -28,5 +28,5 @@ mafUndoStackCommand::~mafUndoStackCommand() {
 }
 
 void mafUndoStackCommand::execute() {
-    emit executeCommand();
+    Q_EMIT executeCommand();
 }

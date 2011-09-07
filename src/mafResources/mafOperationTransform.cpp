@@ -145,7 +145,7 @@ void mafOperationTransform::execute() {
     m_Matrix = m_DataSetCollection->poseMatrix()->clone();
     m_Matrix->description();
     qDebug() << mafTr("Executing transform operation...");
-    emit executionEnded();
+    Q_EMIT executionEnded();
 }
 
 void mafOperationTransform::unDo() {

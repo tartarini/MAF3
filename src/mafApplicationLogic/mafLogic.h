@@ -74,7 +74,7 @@ public:
     /// Plug the information to customize the visualization for a VME shown into the given view with the associated pipe visual.
     void customizeVisualization(const QString view_name, const QString data_type, const QString pipe_visual_type);
 
-public slots:
+public Q_SLOTS:
     /// Allows to assign the application's working directory.
     void setWorkingDirectory(const QString wd);
 
@@ -93,7 +93,7 @@ public slots:
     /// Load hierarchy from a memento.
     void restoreHierarchy(QString fileName);
 
-signals:
+Q_SIGNALS:
     /// Signal emitted when a recent file is asked to be opened. The argument of the signal contains the filename.
     void openFile(const QString filename);
 

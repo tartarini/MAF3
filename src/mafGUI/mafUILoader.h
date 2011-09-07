@@ -29,7 +29,7 @@ class MAFGUISHARED_EXPORT mafUILoader : public mafCore::mafObjectBase {
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
 
-signals:
+Q_SIGNALS:
     /// signal for inform that the user interface has been loaded from file
     void uiLoadedSignal(mafCore::mafProxyInterface *guiWidget);
 

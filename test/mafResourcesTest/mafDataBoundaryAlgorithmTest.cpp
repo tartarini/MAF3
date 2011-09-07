@@ -82,7 +82,7 @@ void testDataBoundaryAlgorithmCustom::bounds(double bounds[6]) {
 class mafDataBoundaryAlgorithmTest: public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();

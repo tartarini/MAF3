@@ -53,7 +53,7 @@ void mafExporterVTK::execute() {
         qCritical(mafTr("Unable to export the data in VTK format.").toAscii().constData());
     }
     
-    emit executionEnded();
+    Q_EMIT executionEnded();
 }
 
 bool mafExporterVTK::acceptObject(mafCore::mafObjectBase *obj) {

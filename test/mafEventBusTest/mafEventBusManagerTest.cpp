@@ -34,13 +34,13 @@ public:
     /// register a custom callback
     void registerCustomCallback();
 
-public slots:
+public Q_SLOTS:
     /// Test slot that will increment the value of m_Var when an UPDATE_OBJECT event is raised.
     void updateObject();
     void setObjectValue(int v);
     int returnObjectValue();
 
-signals:
+Q_SIGNALS:
     void valueModified(int v);
     void objectModified();
     int returnObjectValueSignal();
@@ -176,7 +176,7 @@ QString testNetworkConnectorForEventBus::connectorStatus() {
 class mafEventBusManagerTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         m_EventBus = mafEventBusManager::instance();

@@ -111,7 +111,7 @@ private:
     mafResourceList *m_InputList; ///< Resource input List
     QStack<mafInteractor*> m_InteractorStack; ///< Stack of Interactor styles.
 
-signals:
+Q_SIGNALS:
     /// Start the execution of the resource.
     void startExecution();
 
@@ -127,15 +127,15 @@ signals:
     /// Notify an interactor has been attached.
     void interactorAttached();
 
-public slots:
+public Q_SLOTS:
     /// Slot called when an input is destroyed outside. It has to be removed automatically from the input list.
     void inputDestroyed();
 
     /// Execute the resource algorithm.
     /**
-        Resource emit the executionEnded signal at the end of the execute code so that the observer connected to it
+        Resource Q_EMIT the executionEnded signal at the end of the execute code so that the observer connected to it
         can finalize the execution mechanism. The subclassing mafResource and overriding the execute slot, at the end of
-        the execution code the custom resource MUST call mafResource::execute() or emit the executionEnded signal.
+        the execution code the custom resource MUST call mafResource::execute() or Q_EMIT the executionEnded signal.
     */
     virtual void execute();
 

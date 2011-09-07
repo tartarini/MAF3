@@ -12,7 +12,7 @@ class mafImporterWidget : public QWidget
 {
     Q_OBJECT
 
-public slots:
+public Q_SLOTS:
     void on_browseFileButton_clicked();
 
 public:

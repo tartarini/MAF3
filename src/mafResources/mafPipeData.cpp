@@ -62,7 +62,7 @@ mafVME *mafPipeData::output(double t) {
 
     if(modified()) {
         updatePipe(t);
-        emit(modifiedObject());
+        Q_EMIT(modifiedObject());
     }
 
     if(m_DecoratorPipe) {

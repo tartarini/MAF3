@@ -29,7 +29,7 @@ Base class for script editor in a specific language.
 class MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditor : public QObject {
     Q_OBJECT
     
-public slots:
+public Q_SLOTS:
     /// Slot for load script.
     void load(const QString& file);
     /// Slot for save script.
@@ -48,7 +48,7 @@ public slots:
     /// Invoke help to display.
     QString help(void) const;
 
-signals:
+Q_SIGNALS:
     /// Signal launched after stopping the console.
     void stopped(void);
     

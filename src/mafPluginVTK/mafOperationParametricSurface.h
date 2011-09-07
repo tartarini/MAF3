@@ -42,7 +42,7 @@ public:
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
 
-public slots:
+public Q_SLOTS:
     /// Set type of parametric surface used as marker.
     void setParametricSurfaceType(int parametricSurfaceType);
 

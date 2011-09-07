@@ -45,7 +45,7 @@ protected:
     /// Terminate the execution.
     /*virtual*/ void terminated();
     
-public slots:
+public Q_SLOTS:
     /// execution method
     /*virtual*/ void execute();
 
@@ -66,7 +66,7 @@ void testEndlessOperation::execute() {
         return;
     }
 
-    emit executionEnded();
+    Q_EMIT executionEnded();
 }
 
 void testEndlessOperation::terminated() {
@@ -94,7 +94,7 @@ protected:
     /// Terminate the execution.
     /*virtual*/ void terminated();
     
-public slots:
+public Q_SLOTS:
     /// execution method
     /*virtual*/ void execute();
     
@@ -122,7 +122,7 @@ void testNotUndoOperation::execute() {
         }
     }
 
-    emit executionEnded();
+    Q_EMIT executionEnded();
 }
 
 void testNotUndoOperation::terminated() {
@@ -139,7 +139,7 @@ class testUndoOperation : public mafResources::mafOperation {
     Q_OBJECT
     mafSuperclassMacro(mafResources::mafOperation);
 
-public slots:
+public Q_SLOTS:
     /// execution method
     /*virtual*/ void execute();
 
@@ -200,7 +200,7 @@ void testUndoOperation::execute() {
 
     qDebug() << this->objectName() << " emitting executionEnded...";
     mafDEL(vme);
-    emit executionEnded();
+    Q_EMIT executionEnded();
 }
 
 void testUndoOperation::unDo() {
@@ -229,7 +229,7 @@ void testUndoOperation::terminated() {
 class mafOperationManagerTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafRegisterLocalSignal("maf.local.resources.vme.add.test", this, "vmeAddSignalTest(mafCore::mafObjectBase *)")
@@ -291,10 +291,10 @@ public:
     /// Utility method to retrieve the execution pool.
     const mafExecutionPool *retrievePool();
 
-public slots:
+public Q_SLOTS:
     void vmeAddTest(mafCore::mafObjectBase *vme);
 
-signals:
+Q_SIGNALS:
     void vmeAddSignalTest(mafCore::mafObjectBase *vme);
 
 private:

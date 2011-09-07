@@ -49,7 +49,7 @@ void mafHierarchy::addHierarchyNode(QObject* node, QObject *parentNode) {
         obj->retain();
     }
     
-    emit itemAttached(node, parentNode);
+    Q_EMIT itemAttached(node, parentNode);
 }
 
 void mafHierarchy::removeCurrentHierarchyNode() {
@@ -79,7 +79,7 @@ void mafHierarchy::removeHierarchyNode(QObject *node) {
     // Move the iterator to the node to remove.
     moveTreeIteratorToNode(node);
     // notify the observer that a node is going to be detached.
-    emit itemDetached(node);
+    Q_EMIT itemDetached(node);
     // Remove the node from the hierarchy => the item will be deleted !!
     removeCurrentHierarchyNode();
 }
@@ -104,7 +104,7 @@ void mafHierarchy::reparentHierarchyNode(QObject *node, QObject *parentNode) {
     }
     
     // Needed to update the model connected to the hierarchy.
-    emit itemReparent(node, parentNode);
+    Q_EMIT itemReparent(node, parentNode);
 }
 
 bool mafHierarchy::canAddNodeToParent(QObject *node, QObject *parent) {
@@ -176,7 +176,7 @@ void mafHierarchy::clear() {
     m_Tree->erase(m_TreeIterator);
     m_TreeIterator.null();
     
-    emit clearTree();
+    Q_EMIT clearTree();
 }
 
 void mafHierarchy::setIterator(mafTree<QObject *>::iterator iterator) {

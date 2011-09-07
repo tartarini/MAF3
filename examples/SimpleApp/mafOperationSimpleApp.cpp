@@ -35,7 +35,7 @@ void mafOperationSimpleApp::setCheckScalar(bool s) {
 
 void mafOperationSimpleApp::execute() {
     qDebug() << mafTr("Executing demo operation...");
-    emit executionEnded();
+    Q_EMIT executionEnded();
 }
 
 void mafOperationSimpleApp::on_textTest_textEdited(QString text) {

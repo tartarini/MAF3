@@ -23,7 +23,7 @@ using namespace mafCore;
 class mafMementoHierarchyTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         // Create before the instance of the Serialization manager, which will register signals.

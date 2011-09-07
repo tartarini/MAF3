@@ -45,7 +45,7 @@ public:
     /// append Text in the area.
     void append(const QString text);
 
-public slots:
+public Q_SLOTS:
     /// clear text area.
     void clear();
 
@@ -58,7 +58,7 @@ public slots:
     /// set match whole word falg.
     void setMatchWhole(bool matchWhole);
 
-signals:
+Q_SIGNALS:
     /// Signal needed to update the text into the Text Widget.
     void updateText(const QString text);
 

@@ -35,7 +35,7 @@ public:
     /// Return the string variable initialized and updated from the data pipe.
     QString pipeline() {return m_PipeLine;}
 
-public slots:
+public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change
     /*virtual*/ void updatePipe(double t = -1);
 
@@ -59,7 +59,7 @@ void testPipeCustom::updatePipe(double t) {
 class mafPipeTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();

@@ -51,7 +51,7 @@ public:
     /// Object constructor
     testCustomManager(const QString code_location = "");
 
-public slots:
+public Q_SLOTS:
     /// observer needed to receive the 'extDataLoaded' signal
     void createdExtData(mafCore::mafProxyInterface *data);
 };
@@ -92,7 +92,7 @@ void testCustomManager::createdExtData(mafCore::mafProxyInterface *data) {
 class mafSerializationVTKTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();

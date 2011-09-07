@@ -50,7 +50,7 @@ public:
     of the widgets present in it.*/
     void setupSettingsDialog();
 
-public slots:
+public Q_SLOTS:
     /// Allow to update the shown page according to the item selected on icon's list.
     void changePage(QListWidgetItem *current, QListWidgetItem *previous);
 

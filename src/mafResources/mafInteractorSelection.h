@@ -31,7 +31,7 @@ class MAFRESOURCESSHARED_EXPORT mafInteractorSelection : public mafInteractor {
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafInteractor);
 
-public slots:
+public Q_SLOTS:
     /// Called when a VME has been picked.
     /*virtual*/ void mousePress(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e);
 

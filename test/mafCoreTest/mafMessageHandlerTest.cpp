@@ -34,7 +34,7 @@ using namespace mafCore;
 class mafMessageHandlerTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         m_Handler = mafMessageHandler::instance();

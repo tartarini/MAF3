@@ -125,7 +125,7 @@ void mafOperationVTKAddLandmark::vmePicked(double *pickPos, unsigned long modifi
 void mafOperationVTKAddLandmark::execute() {
     fixLandmark();
     m_Status = mafOperationStatusExecuting;
-    emit executionEnded();
+    Q_EMIT executionEnded();
 }
 
 void mafOperationVTKAddLandmark::terminated() {

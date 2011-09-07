@@ -56,6 +56,8 @@ MACRO(mafMacroInitProject test)
   ELSE(WIN32)
     ADD_DEFINITIONS(-w)
   ENDIF(WIN32)
+
+  ADD_DEFINITIONS(-DQT_NO_KEYWORDS)
   
   ## Add the project binary dir as include dir for the .moc files.
   INCLUDE_DIRECTORIES("${PROJECT_BINARY_DIR}")

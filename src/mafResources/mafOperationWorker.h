@@ -44,11 +44,11 @@ public:
     /// Object destructor.
     /* virtual */ ~mafOperationWorker();
 
-public slots:
+public Q_SLOTS:
     /// Abort the operation execution thread.
     void abortExecution();
 
-signals:
+Q_SIGNALS:
     /// Signal emitted to notify that the work has been completed.
     void workDone();
 

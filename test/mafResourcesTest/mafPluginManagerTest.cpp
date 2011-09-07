@@ -39,7 +39,7 @@ public:
     /// Return the plugged pipe.
     mafPipeData *pluggedPipe();
 
-public slots:
+public Q_SLOTS:
     /// Slots that will receive the REGISTER_PLUGIN event.
     void pluggedObject(mafCore::mafPluggedObjectsHash pluginHash);
 
@@ -94,7 +94,7 @@ mafPipeData *testPluginObserver::pluggedPipe() {
 class mafPluginManagerTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();

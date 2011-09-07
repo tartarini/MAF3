@@ -27,7 +27,7 @@ namespace mafPluginVTK {
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafOperationTransform);
 
-public slots:
+public Q_SLOTS:
 
 public:
     /// Object constructor.

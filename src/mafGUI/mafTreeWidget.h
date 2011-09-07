@@ -31,7 +31,7 @@ public:
     /// Object Constructor
     mafTreeWidget(QWidget *parent = 0);
 
-public slots:
+public Q_SLOTS:
     //void refresh(void);
 
 private:

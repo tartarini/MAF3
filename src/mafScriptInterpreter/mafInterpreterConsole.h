@@ -26,7 +26,7 @@ class mafScriptEditor;
 class MAFSCRIPTINTERPRETERSHARED_EXPORT mafInterpreterConsole : public mafGUI::mafTextEditor {
     Q_OBJECT
 
-public slots:
+public Q_SLOTS:
     /// Key Command Event 
     void onKeyUpPressed(void);
     /// Key Command Event 
@@ -43,7 +43,7 @@ public slots:
     /// Return output
     void output(const QString& result,  int *stat);
 
-signals:
+Q_SIGNALS:
     /// Signal emitted when input is inserted.
     QString   input(const QString& command, int *stat);
     /// Signal emitted when load an external script.

@@ -38,7 +38,7 @@ public:
     /// Object constructor.
     mafVTKParametricSurfaceCube(const QString code_location = "");
 
-public slots:
+public Q_SLOTS:
 
     /// Update surface with parameters.
     /*virtual*/ void updateSurface();
@@ -47,7 +47,7 @@ protected:
     /// Object destructor.
     /*virtual*/ ~mafVTKParametricSurfaceCube();
 
-private slots:
+private Q_SLOTS:
     /// Set the X Length for the parametric cube.
     void setCubeXLength(double XLength);
 

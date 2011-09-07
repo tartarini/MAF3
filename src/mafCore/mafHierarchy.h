@@ -94,7 +94,7 @@ public:
     undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
-signals:
+Q_SIGNALS:
     /// Signal emitted when a new item is attached to the hierarchy.
     void itemAttached(QObject *item, QObject *parent);
 

@@ -58,11 +58,11 @@ public:
     /// Assign the operation's GUI
     void setOperationGUI(QWidget *gui);
 
-signals:
+Q_SIGNALS:
     /// Signal to alert the observet that the operation GUI has been dismissed.
     void operationDismissed();
 
-public slots:
+public Q_SLOTS:
     /// Execute the operation
     void execute();
 

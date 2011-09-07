@@ -33,11 +33,11 @@ class MAFRESOURCESSHARED_EXPORT mafInteractionManager : public mafCore::mafObjec
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
 
-signals:
+Q_SIGNALS:
     /// signals for discover if a vme is picked
     void vmePickSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
     
-private slots:
+private Q_SLOTS:
 
     /// called when left mouse button is pressed.
     void mousePress(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);

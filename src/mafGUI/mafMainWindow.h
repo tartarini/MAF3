@@ -58,7 +58,7 @@ public:
     /// Performs all the necessary steps to setup settings and synchronize all GUI elements to get ready to start, then show the main window.
     void setupMainWindow();
 
-public slots:
+public Q_SLOTS:
     /// Show/Hide the collaboration dock widget.
     void updateCollaborationDockVisibility(bool visible);
 
@@ -71,7 +71,7 @@ public slots:
     /// Set name of the application.
     void updateApplicationName();
 
-protected slots:
+protected Q_SLOTS:
     /// Observe the viewCreatedSignal emitted by the mafViewManager.
     /* Attach the render context to the GUI widget */
     virtual void viewCreated(mafCore::mafObjectBase *view);
@@ -82,7 +82,7 @@ protected slots:
     /// Slot called when a dynamic loaded GUI needs to be removed from the panel.
     virtual void loadedGUIToRemove(int type);
 
-private slots:
+private Q_SLOTS:
     /// Allow to call the code to save the user data through the logic module.
     bool save();
 

@@ -76,7 +76,7 @@ public:
     /// Allows to set the foreground color
     void setForegroundColor(QColor color);
 
-signals:
+Q_SIGNALS:
     /// Signal used to notify that the console title changed.
     void titleChanged(QString);
     /// Signal used to notify that the document associated with the text widget changed.
@@ -84,7 +84,7 @@ signals:
     /// Signal emitted when the text widget is closed.
     void closed(void);
 
-public slots:
+public Q_SLOTS:
     /// Allows to open a script stored into a file.
     bool open(const QString& fileName);
     /// Allows to save the console content into a file.
@@ -124,7 +124,7 @@ protected:
     /// 
     void extraAreaPaintEvent(QPaintEvent *event);
 
-protected slots:
+protected Q_SLOTS:
     /// 
     void onBlockCountChanged(int);
     /// 

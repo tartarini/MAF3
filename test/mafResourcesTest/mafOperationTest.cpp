@@ -33,7 +33,7 @@ protected:
     /// Terminate the execution.
     /*virtual*/ void terminated();
     
-public slots:
+public Q_SLOTS:
     /// execution method
     /*virtual*/ void execute();
     
@@ -44,7 +44,7 @@ testOperation::testOperation(const QString code_location) : mafOperation(code_lo
 }
 
 void testOperation::execute() {
-    emit executionEnded();
+    Q_EMIT executionEnded();
 }
 
 void testOperation::terminated() {
@@ -68,7 +68,7 @@ void testOperation::terminated() {
 class mafOperationTest: public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();

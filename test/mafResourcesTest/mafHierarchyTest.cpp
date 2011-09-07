@@ -40,7 +40,7 @@ protected:
     /// Object destructor.
     /* virtual */ ~testVisualPipeCustom() {};
 
-public slots:
+public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change.
     /*virtual*/ void updatePipe(double t = -1) {Q_UNUSED(t);};
 
@@ -65,7 +65,7 @@ private:
 class mafHierarchyTest: public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();

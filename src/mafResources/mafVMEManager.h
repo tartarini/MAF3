@@ -48,7 +48,7 @@ public:
     /// Return hierarchy indexing the mafVME
     mafCore::mafHierarchy *hierarchy() const;
 
-signals:
+Q_SIGNALS:
     /// Return the current selected vme.
     mafCore::mafObjectBase *selectedVMESignal() const;
 
@@ -76,7 +76,7 @@ signals:
     /// Signal for calculating absolute pose matrix of a VME
     mafResources::mafMatrixPointer absolutePoseMatrixSignal(mafCore::mafObjectBase *vme);
 
-private slots:
+private Q_SLOTS:
     /// Return the current selected vme.
     mafCore::mafObjectBase *selectedVME() const;
 

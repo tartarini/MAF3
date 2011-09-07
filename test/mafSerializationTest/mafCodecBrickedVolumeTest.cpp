@@ -33,7 +33,7 @@ using namespace mafSerialization;
 class mafCodecBrickedVolumeTest: public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase();
 

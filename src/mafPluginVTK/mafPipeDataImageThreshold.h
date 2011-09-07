@@ -70,7 +70,7 @@ public:
     /// Return the thresholding modality.
     unsigned int thresholdMode();
 
-public slots:
+public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change
     /*virtual*/ void updatePipe(double t = -1);
 

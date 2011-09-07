@@ -209,7 +209,7 @@ void mafVTKWidget::mousePress(vtkRenderWindowInteractor* iren, QEvent *e) {
     mafCore::mafProxy<vtkProp> actorPicked;
     
     pickProp(iren, e, &actorPicked, posPicked);
-    emit mousePressSignal(posPicked, m_Modifiers, &actorPicked, e);
+    Q_EMIT mousePressSignal(posPicked, m_Modifiers, &actorPicked, e);
     
     // invoke appropriate VTK event
     /*switch(((QMouseEvent *)e)->button()) {
@@ -235,7 +235,7 @@ void mafVTKWidget::mouseRelease(vtkRenderWindowInteractor* iren, QEvent *e) {
     double posPicked[3];
     mafCore::mafProxy<vtkProp> actorPicked;
     
-    pickProp(iren, e, &actorPicked, posPicked);    emit mouseReleaseSignal(posPicked, m_Modifiers, &actorPicked, e);
+    pickProp(iren, e, &actorPicked, posPicked);    Q_EMIT mouseReleaseSignal(posPicked, m_Modifiers, &actorPicked, e);
     
     // invoke appropriate vtk event
     /*switch(((QMouseEvent *)e)->button()) {
@@ -260,7 +260,7 @@ void mafVTKWidget::mouseMove(vtkRenderWindowInteractor* iren, QEvent *e) {
     double posPicked[3];
     mafCore::mafProxy<vtkProp> actorPicked;
     
-    pickProp(iren, e, &actorPicked, posPicked);    emit mouseMoveSignal(posPicked, m_Modifiers, &actorPicked, e);
+    pickProp(iren, e, &actorPicked, posPicked);    Q_EMIT mouseMoveSignal(posPicked, m_Modifiers, &actorPicked, e);
     
     // invoke vtk event
 //    iren->InvokeEvent(vtkCommand::MouseMoveEvent, e); //Move into InteractorManager?

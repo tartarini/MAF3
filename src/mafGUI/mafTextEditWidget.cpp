@@ -76,7 +76,7 @@ void mafTextEditWidget::find(QString text){
 }
 
 void mafTextEditWidget::append(const QString text) {
-    emit updateText(text);
+    Q_EMIT updateText(text);
 }
 
 void mafTextEditWidget::setHighlighter(QSyntaxHighlighter *highlighter) {

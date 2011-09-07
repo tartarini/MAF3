@@ -65,7 +65,7 @@ public:
     /// Execute threads in blocking mode.
     void blockThreads(void);
 
-public slots:
+public Q_SLOTS:
     /// Interpret command string.
     virtual QString interpret(const QString& command, int *stat);
     /// Interpret command string with parameters.

@@ -55,7 +55,7 @@ bool testObjectCustomForCoreRegistration::acceptObject(mafCore::mafObjectBase *o
 class mafCoreRegistrationTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafCoreRegistration::registerCoreObjects();

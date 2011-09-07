@@ -148,7 +148,7 @@ private:
     mafTreeWidget   *m_TreeWidget;  ///< Visualize the tree model.
     mafApplicationLogic::mafLogic *m_Logic; ///< Logic of the application.
 
-signals:
+Q_SIGNALS:
     /// Signal emitted when the GUI panel has been loaded.
     void guiLoaded(int type, QWidget *w);
 
@@ -161,7 +161,7 @@ signals:
     /// Signal used to ask for updating of application name.
     void updateApplicationName();
 
-public slots:
+public Q_SLOTS:
     /// Fill the operation and view menu with the plugged objects.
     void fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash);
 
@@ -177,7 +177,7 @@ public slots:
     /// Return name of working file.
     QString fileName();
 
-private slots:
+private Q_SLOTS:
     /// Start the operation associated with the operation's action activated.
     void startOperation();
 

@@ -36,7 +36,7 @@ public:
     /// define the single API interface of all he classes that inherits from it
     virtual void execute() = 0;
 
-signals:
+Q_SIGNALS:
     /// Signal used to trigger the start of the given command.
     void executeCommand();
 

@@ -26,11 +26,11 @@ class mafAlgorithm : public mafResources::mafOperation {
     Q_PROPERTY(QString outputFileName READ outputFileName WRITE setOutputFileName)
     Q_PROPERTY(int iterations READ iterations WRITE setIterations)
 
-public slots:    
+public Q_SLOTS:    
     /// Execute the resource algorithm.
     /*virtual*/ void execute();
     
-signals:
+Q_SIGNALS:
     /// Trigger the start execution of the operation.
     void startExecution();
 

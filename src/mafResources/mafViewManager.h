@@ -51,7 +51,7 @@ public:
     /// Destroy the singleton instance. To be called at the end of the application.
     void shutdown();
 
-signals:
+Q_SIGNALS:
     /// Return the selected view
     mafCore::mafObjectBase * selectedViewSignal();
 
@@ -85,7 +85,7 @@ signals:
     /// Signal associated to the 
     void customPipeVisualForVMEInViewSignal(QString view_name, QString data_type, QString pipe_type);
 
-public slots:
+public Q_SLOTS:
     /// Create a memento class used to save the status of opened views. The caller has to delete the allocated memory he asked.
     /** This method allows to save the status of opened views when logic
     emits the signal maf.local.logic.settings.view.store.
@@ -101,7 +101,7 @@ public slots:
     undo or copy/paste operations. The complete object save is instead needed for serialization purposes.*/
     void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
-private slots:
+private Q_SLOTS:
     /// Allow to keep track of the selected view.
     mafCore::mafObjectBase *selectedView();
 

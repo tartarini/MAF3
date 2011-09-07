@@ -41,7 +41,7 @@ public:
     /// Object constructor
     testCustomManager(const QString code_location = "");
 
-public slots:
+public Q_SLOTS:
     /// observer needed to receive the 'mementoLoaded' signal
     void createdMemento(mafCore::mafMemento *m);
 };
@@ -81,7 +81,7 @@ void testCustomManager::createdMemento(mafCore::mafMemento *m) {
 class mafSerializationManagerTest: public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         // Create before the instance of the Serialization manager, which will register signals.

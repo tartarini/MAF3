@@ -37,7 +37,7 @@ public:
         return m_IsUILoaded;
     }
 
-public slots:
+public Q_SLOTS:
    ///return a value when the gui is loaded
    void uiLoaded(mafCore::mafProxyInterface *widget);
 
@@ -69,7 +69,7 @@ void testmafUILoaderCustom::uiLoaded(mafCore::mafProxyInterface  *widget) {
 class mafUILoaderTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         m_UILoader = new testmafUILoaderCustom();

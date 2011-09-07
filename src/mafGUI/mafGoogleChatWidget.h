@@ -15,7 +15,7 @@ protected:
     void showError(const QString &msg);
     QWebElement document() const;
 
-private slots:
+private Q_SLOTS:
 
     void adjustLoginButton();
     void inputPassword();

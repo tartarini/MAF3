@@ -31,14 +31,14 @@ namespace mafEventBus {
 class MAFEVENTBUSSHARED_EXPORT mafNetworkConnectorREST : public mafNetworkConnector {
     Q_OBJECT
 
-signals:
+Q_SIGNALS:
 
-public slots:
+public Q_SLOTS:
     /// Allow to send a network request.
     /** Contains the conversion between maf datatypes and qxmlrpc datatype based both on QVariant. */
     /*virtual*/ void send(const QString event_id, mafEventArgumentsList *argList);
 
-private slots:
+private Q_SLOTS:
 
 public:
     /// object constructor.

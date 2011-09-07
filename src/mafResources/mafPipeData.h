@@ -49,7 +49,7 @@ public:
     /// Get output of the pipe at a specific time
     mafVME *output(double t = -1);
 
-protected slots:
+protected Q_SLOTS:
     /// Allow to execute and update the pipeline when something change.
     /** By default it simply initialize the output with the first element in the input list.*/
     /*virtual*/ void updatePipe(double t = -1);

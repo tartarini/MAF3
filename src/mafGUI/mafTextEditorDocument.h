@@ -43,7 +43,7 @@ public:
 
     QTextDocument *document(void);
 
-signals:
+Q_SIGNALS:
     void titleChanged(QString);
     void changed(void);
 

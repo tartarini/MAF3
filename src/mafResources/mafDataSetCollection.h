@@ -121,7 +121,7 @@ public:
     /// Overload of [] operator to extract the item at given index.
     mafDataSet * operator [](unsigned int index);
 
-private slots:
+private Q_SLOTS:
     /// Method called when an item has been destroyed
     void itemDestroyed();
 

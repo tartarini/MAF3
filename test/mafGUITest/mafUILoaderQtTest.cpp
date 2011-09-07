@@ -33,7 +33,7 @@ public:
     /// Return the inner m_Widget variable
     QWidget *widgetLoaded();
 
-public slots:
+public Q_SLOTS:
     /// UI loader callback.
     void uiQtLoaded(mafCore::mafProxyInterface *widget);
 
@@ -63,7 +63,7 @@ void testUILoaderRequestor::uiQtLoaded(mafCore::mafProxyInterface *widget) {
 class mafUILoaderQtTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();

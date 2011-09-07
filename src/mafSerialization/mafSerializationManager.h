@@ -39,7 +39,7 @@ class MAFSERIALIZATIONSHARED_EXPORT mafSerializationManager : mafCore::mafObject
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
 
-signals:
+Q_SIGNALS:
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
     void save(mafCore::mafMemento *memento, const QString &url, const QString &encode_type = "RAW");
 
@@ -67,7 +67,7 @@ signals:
     /// signal for ignore modified.
     bool ignoreModifiedSignal();
 
-private slots:
+private Q_SLOTS:
     /// Manage the save for the given object.
     /** The 'url' parameter is used to tell the Manager on which media type store the memento.
     This information is written into the url protocol. The last optional parameter (encode_type) is used to customize

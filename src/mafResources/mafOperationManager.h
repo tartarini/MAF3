@@ -57,7 +57,7 @@ public:
     /// Destroy the singleton instance. To be called at the end of the application.
     void shutdown();
 
-signals:
+Q_SIGNALS:
     /// Signal connected to the startOperation private slot.
     void startOperationSignal(const QString operation);
 
@@ -97,7 +97,7 @@ signals:
     /// Signal connected with the executionPool slot.
     const mafExecutionPool *executionPoolSignal();
 
-private slots:
+private Q_SLOTS:
     /// Start operation and set that operation as current one
     /**
         This method allows to create and start a given operation's type. After its initialization an operationDidStart signal is
@@ -122,7 +122,7 @@ private slots:
 
     /// Called when the operation has terminated its execution.
     /**
-        All the operation should emit the signal executionEnded at the end of the execution. In this way the operation
+        All the operation should Q_EMIT the signal executionEnded at the end of the execution. In this way the operation
         manager is notified and can finalize the operation execution lifetime by placing the operation into the undo stack
         if it support the undo or it is deleted.
     */

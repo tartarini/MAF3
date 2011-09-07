@@ -85,7 +85,7 @@ void mafGUIManager::newWorkingSession() {
     QModelIndex index = m_Model->index(0, 0);
     m_TreeWidget->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
     m_CompleteFileName = "";
-    emit updateApplicationName();
+    Q_EMIT updateApplicationName();
 }
 
 void mafGUIManager::quitApplication() {
@@ -661,7 +661,7 @@ void mafGUIManager::removeOperationGUI() {
     QMenu *opMenu = (QMenu *)this->menuItemByName("Operations");
     opMenu->setEnabled(true);
     m_GUILoadedType = mafGUILoadedTypeOperation;
-    emit guiTypeToRemove(m_GUILoadedType);
+    Q_EMIT guiTypeToRemove(m_GUILoadedType);
 }
 
 mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *parent) {
@@ -716,7 +716,7 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
     switch(m_GUILoadedType) {
         case mafGUILoadedTypeOperation:
             m_OperationWidget->setOperationGUI(widget);
-            emit guiLoaded(m_GUILoadedType, m_OperationWidget);
+            Q_EMIT guiLoaded(m_GUILoadedType, m_OperationWidget);
         break;
         case mafGUILoadedTypeView:
         break;
@@ -724,12 +724,12 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
             {
                 if (m_VisualPipeWidget) {
                     m_VisualPipeWidget->close();
-                    emit guiTypeToRemove(mafGUILoadedTypeVisualPipe);
+                    Q_EMIT guiTypeToRemove(mafGUILoadedTypeVisualPipe);
                 }
                 m_VisualPipeWidget = widget;
                 if (m_CurrentPipeVisual && m_VisualPipeWidget) {
                     mafConnectObjectWithGUI(m_CurrentPipeVisual, m_VisualPipeWidget);
-                    emit guiLoaded(m_GUILoadedType, m_VisualPipeWidget);
+                    Q_EMIT guiLoaded(m_GUILoadedType, m_VisualPipeWidget);
                 }
             }
         break;
@@ -737,7 +737,7 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
         {
             if (m_VMEWidget) {
                 m_VMEWidget->close();
-                emit guiTypeToRemove(mafGUILoadedTypeVme);
+                Q_EMIT guiTypeToRemove(mafGUILoadedTypeVme);
             }
             m_VMEWidget = widget;
 
@@ -747,7 +747,7 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
 
             if (sel_vme) {
                 mafConnectObjectWithGUI(sel_vme, m_VMEWidget);
-                emit guiLoaded(m_GUILoadedType, m_VMEWidget);
+                Q_EMIT guiLoaded(m_GUILoadedType, m_VMEWidget);
             }
         }
         break;
@@ -861,7 +861,7 @@ void mafGUIManager::openRecentFile() {
             mafEventBusManager::instance()->notifyEvent("maf.local.logic.openFile", mafEventTypeLocal, &argList);
 
             m_CompleteFileName = file_to_open;
-            emit updateApplicationName();
+            Q_EMIT updateApplicationName();
             updateRecentFileMenu(m_CompleteFileName);
         } else {
             qCritical() << mafTr("Cannot find file <%1>. File doesn't exist.").arg(file_to_open);
@@ -939,7 +939,7 @@ void mafGUIManager::save() {
     //Store memento hierarchy
     m_Logic->storeHierarchy(m_CompleteFileName, enableSaveAs);
     qDebug() << m_CompleteFileName;
-    emit updateApplicationName();
+    Q_EMIT updateApplicationName();
     updateRecentFileMenu(m_CompleteFileName);
 }
 
@@ -970,7 +970,7 @@ void mafGUIManager::open() {
     //Load memento hierarchy
     m_Logic->restoreHierarchy(files[0]);
     m_CompleteFileName = files[0];
-    emit updateApplicationName();
+    Q_EMIT updateApplicationName();
 
     int index = m_CompleteFileName.lastIndexOf("/");
     m_LastPath = m_CompleteFileName.left(index);

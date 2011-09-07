@@ -45,7 +45,7 @@ bool mafPipeVisual::vmePick(double *pickPos, unsigned long modifiers, mafCore::m
             argList.append(mafEventArgument(double *, pickPos));
             argList.append(mafEventArgument(unsigned long, modifiers));
             argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
-            emit vmePickedSignal(pickPos, modifiers, vme, e);
+            Q_EMIT vmePickedSignal(pickPos, modifiers, vme, e);
             
             //this code will enable interactor to use information regarding graphic objects and vme
             mafInteractor *interactor = vme->activeInteractor();

@@ -69,18 +69,18 @@ private:
 
     bool m_Visibility; ///< Contains the visibility status of the owned object/s
     
-signals:
+Q_SIGNALS:
     /// signal emitted when the pick already happened. The information will be forwarded to the Interaction Manager.
     void vmePickedSignal(double *pickPos, unsigned long modifiers, mafVME *vme, QEvent *e);
     
-public slots:
+public Q_SLOTS:
     /// Set the visibility of its rendering scene.
     virtual void setVisibility(bool visible);
     
     /// Allows to ask the rendering engine to render the graphic scene.
     virtual void render() = 0;
     
-private slots:
+private Q_SLOTS:
     /// Forward the vmePick event if the pick hits the current visualized VME.
     bool vmePick(double *pickPos, unsigned long, mafCore::mafProxyInterface *actor, QEvent *e);
 };

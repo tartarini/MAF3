@@ -67,7 +67,7 @@ public:
     /// reset the value of the variable.
     void resetVar() {m_Var = 0;}
 
-public slots:
+public Q_SLOTS:
     /// Test slot that will receive the timeoutReached event.
     void updateObject();
 
@@ -106,7 +106,7 @@ void testObjectCustomListener::updateObject() {
 class mafTimeManagerTest: public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         m_TimerId = -1;

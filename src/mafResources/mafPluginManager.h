@@ -55,7 +55,7 @@ public:
     /// Return the Plug-in information structure
     mafPluginInfo pluginInformation(QString plugin_name);
 
-signals:
+Q_SIGNALS:
     /// Signal emitted by the external library that wants to register its own objects.
     void registerPluginToManager(mafCore::mafPluggedObjectsHash pluginHash);
 
@@ -65,7 +65,7 @@ signals:
     /// Signal emitted to query for plugins that extend a given base class type.
     mafCore::mafPluggedObjectInformationList *queryPluggedObjectsSignal(const QString &baseMAFClassExtended);
 
-public slots:
+public Q_SLOTS:
     /// Loads a plugin
     void loadPlugin(const QString &pluginFilename);
 

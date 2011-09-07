@@ -50,7 +50,7 @@ private:
     bool m_ScalarVisibility; ///< Flag to activate scalar visibility.
     bool m_ImmediateRendering; ///< Flag to activate immediate rendering mode.
 
-public slots:
+public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change.
     /*virtual*/ void updatePipe(double t = -1);
 };

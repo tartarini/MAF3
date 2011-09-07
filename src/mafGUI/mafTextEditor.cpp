@@ -291,7 +291,7 @@ void mafTextEditor::resizeEvent(QResizeEvent *event) {
 }
 
 void mafTextEditor::closeEvent(QCloseEvent *event) {
-    emit closed();
+    Q_EMIT closed();
 }
 
 void mafTextEditor::wheelEvent(QWheelEvent *event) {

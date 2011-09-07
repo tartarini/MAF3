@@ -35,11 +35,11 @@ class MAFRESOURCESSHARED_EXPORT mafOperation : public mafResource {
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
 
-signals:
+Q_SIGNALS:
     /// Trigger the undo execution.
     void undoExecution();
 
-public slots:
+public Q_SLOTS:
     
     /// Set operation parameters.
     virtual void setParameters(const QVariantMap &parameters);
@@ -53,7 +53,7 @@ public slots:
     /// Terminate the execution by resetting the m_IsRunning at false.
     void terminate();
 
-private slots:
+private Q_SLOTS:
     /// Terminate the execution.
     void abort();
     

@@ -36,7 +36,7 @@ public:
     /// Object constructor.
     mafImporterVTK(const QString code_location = "");
     
-public slots:
+public Q_SLOTS:
     /// Execute the resource algorithm.
     /*virtual*/ void execute();
     

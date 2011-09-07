@@ -55,7 +55,7 @@ using namespace mafEventBus;
 class mafSerializationRawBinaryExtDataTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();

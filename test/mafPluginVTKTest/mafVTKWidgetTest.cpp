@@ -51,7 +51,7 @@ public:
     int m_Counter; ///< Test variable;
     double m_Pos[3]; ///< Test variable;
     
-public slots:
+public Q_SLOTS:
     
     /// called when left mouse button is pressed.
     void mousePress(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
@@ -108,7 +108,7 @@ class mafVTKWidgetTest : public QObject {
     //shutdown all the graphic resources
     void shutdownGraphicResources();
 
-private slots:
+private Q_SLOTS:
 
     /// Initialize test variables
     void initTestCase() {

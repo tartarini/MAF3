@@ -34,7 +34,7 @@ class MAFRESOURCESSHARED_EXPORT mafInteractor : public mafCore::mafObjectBase {
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
 
-public slots:
+public Q_SLOTS:
     
     /// called when left mouse button is pressed.
     virtual void mousePress(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e);

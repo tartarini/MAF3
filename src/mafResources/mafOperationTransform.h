@@ -35,7 +35,7 @@ class MAFRESOURCESSHARED_EXPORT mafOperationTransform : public mafOperation {
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafOperation);
 
-public slots:
+public Q_SLOTS:
     /// Execute the resource algorithm.
     /*virtual*/ void execute();
 

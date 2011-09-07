@@ -81,7 +81,7 @@ public:
     undo or copy/paste operations. The complete object save is instead needed for serialization purposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
 
-    /// Allow to emit the detached signal, so to alert all the observers that the vme is not more inside the tree.
+    /// Allow to Q_EMIT the detached signal, so to alert all the observers that the vme is not more inside the tree.
     void detatchFromTree();
 
     /// Allow to lock/unlock the readability of the VME.
@@ -120,14 +120,14 @@ public:
     /// Return the length of the 3D bounding box of the data at the current timestamp.
     double length();
 
-signals:
+Q_SIGNALS:
     /// Alert observers that the VME has been detatched from the hierarchy tree.
     void detatched();
 
     /// Notify the lock state for the current VME when the lock state change.
     void vmeLocked(int);
 
-public slots:
+public Q_SLOTS:
     /// Set the current timestamp for the VME.
     void setTimestamp(double t);
 

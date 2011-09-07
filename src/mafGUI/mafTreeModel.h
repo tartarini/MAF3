@@ -32,7 +32,7 @@ class MAFGUISHARED_EXPORT mafTreeModel : public QStandardItemModel {
 
     Q_PROPERTY(unsigned int treeModelStatus READ treeModelStatus WRITE setTreeModelStatus)
     
-public slots:
+public Q_SLOTS:
     /// select the object from the data, return true if selected, false otherwise.
     void selectItem(const QItemSelection &selected, const QItemSelection &deselected);
     
@@ -51,7 +51,7 @@ public slots:
     /// clear the model
     void clearModel();
     
-signals:
+Q_SIGNALS:
     /// signal emitted when an item has been added to the hierarchy.
     void itemAdded(QModelIndex index);
     //void save();

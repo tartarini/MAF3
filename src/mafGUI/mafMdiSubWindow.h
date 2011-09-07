@@ -33,7 +33,7 @@ public:
     /// Object constructor.
     mafMdiSubWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 
-public slots:
+public Q_SLOTS:
     /// set the visibility of the window.
     /*virtual*/ void setVisible(bool visible);
 
@@ -43,7 +43,7 @@ protected:
 
     QEvent *ce; ///<  this represents a qt event object.
 
-private slots:
+private Q_SLOTS:
     /// represents the function called when the animation is terminated.
     void animationEnded();
 };

@@ -51,5 +51,5 @@ void mafImporterVTK::execute() {
     mafResources::mafVME * vme = qobject_cast<mafResources::mafVME *> (this->m_Output);
     vme->dataSetCollection()->itemAtCurrentTime()->setBoundaryAlgorithmName("mafPluginVTK::mafDataBoundaryAlgorithmVTK");
     
-    emit executionEnded();
+    Q_EMIT executionEnded();
 }

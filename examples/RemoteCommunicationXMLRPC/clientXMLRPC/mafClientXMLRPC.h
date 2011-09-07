@@ -26,7 +26,7 @@ public:
     /// create connection to the server at parametric address/port
     void connectToServer(unsigned int port, QString address);
 
-//public slots:
+//public Q_SLOTS:
     /// send request to the server
     void sendRequestToServer(mafEventBus::mafEvent *event_dictionary, mafEventBus::mafEventArgumentsList *listToSend = NULL);
 

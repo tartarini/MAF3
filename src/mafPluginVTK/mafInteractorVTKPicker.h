@@ -32,7 +32,7 @@ This class defines the class for the VTK interactor picker.
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafInteractor);
 
-public slots:
+public Q_SLOTS:
     /// Called when a VME has been picked.
     /*virtual*/ void mousePress(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e);
 
@@ -43,7 +43,7 @@ public:
     /// Object constructor
     mafInteractorVTKPicker(mafCore::mafProxyInterfacePointer default_is, mafCore::mafProxyInterfacePointer edit_is = NULL, const QString code_location = "");
     
-signals:
+Q_SIGNALS:
         void vmePickedVTKSignal(double *pos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e);
 
 protected:

@@ -33,7 +33,7 @@ using namespace mafCore;
 class mafLoggerBufferTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         //! <snippet>

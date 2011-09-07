@@ -56,7 +56,7 @@ mafTextEditorDocument::mafTextEditorDocument(void) {
     m_PrivateClassPointer->m_Codec = QTextCodec::codecForLocale();
     m_PrivateClassPointer->m_Document = new QTextDocument(this);
 
-    emit titleChanged(m_PrivateClassPointer->m_FileName);
+    Q_EMIT titleChanged(m_PrivateClassPointer->m_FileName);
 }
 
 mafTextEditorDocument::~mafTextEditorDocument(void) {
@@ -139,7 +139,7 @@ bool mafTextEditorDocument::open(const QString& fileName) {
         documentLayout->m_LastSaveRevision = 0;
         m_PrivateClassPointer->m_Document->setModified(false);
 
-        emit titleChanged(title);
+        Q_EMIT titleChanged(title);
     }
 
     return true;
@@ -168,8 +168,8 @@ bool mafTextEditorDocument::save(const QString& fileName) {
     m_PrivateClassPointer->m_FileName = fi.absoluteFilePath();
 
     m_PrivateClassPointer->m_Document->setModified(false);
-    emit titleChanged(fi.fileName());
-    emit changed();
+    Q_EMIT titleChanged(fi.fileName());
+    Q_EMIT changed();
 
     m_PrivateClassPointer->m_IsBinaryData = false;
     m_PrivateClassPointer->m_HasDecodingError = false;
@@ -189,8 +189,8 @@ bool mafTextEditorDocument::close(void) {
     m_PrivateClassPointer->m_HasDecodingError = false;
     m_PrivateClassPointer->m_DecodingErrorSample.clear();
 
-    emit titleChanged("untitled");
-    emit changed();
+    Q_EMIT titleChanged("untitled");
+    Q_EMIT changed();
 
     return true;
 }

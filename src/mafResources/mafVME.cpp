@@ -74,7 +74,7 @@ void mafVME::setCanRead(bool lock) {
     }
     m_LockStatus = m_CanRead ? mafObjectLockNone : mafObjectLockRead;
     m_Lock->unlock();
-    emit vmeLocked(m_LockStatus);
+    Q_EMIT vmeLocked(m_LockStatus);
 }
 
 void mafVME::setCanWrite(bool lock) {
@@ -85,7 +85,7 @@ void mafVME::setCanWrite(bool lock) {
     m_CanWrite = lock;
     m_LockStatus = m_CanWrite ? mafObjectLockNone : mafObjectLockWrite;
     m_Lock->unlock();
-    emit vmeLocked(m_LockStatus);
+    Q_EMIT vmeLocked(m_LockStatus);
 }
 
 void mafVME::setTimestamp(double t) {
@@ -132,7 +132,7 @@ void mafVME::execute() {
 }
 
 void mafVME::detatchFromTree() {
-    emit(detatched());
+    Q_EMIT(detatched());
 }
 
 mafDataSetCollection *mafVME::dataSetCollection() {

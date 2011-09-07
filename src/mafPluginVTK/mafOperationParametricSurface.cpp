@@ -113,7 +113,7 @@ void mafOperationParametricSurface::execute() {
     m_Status = mafOperationStatusExecuting;
     mafDEL(m_DataSet);
     mafDEL(m_VME);
-    emit executionEnded();
+    Q_EMIT executionEnded();
 }
 
 void mafOperationParametricSurface::terminated() {

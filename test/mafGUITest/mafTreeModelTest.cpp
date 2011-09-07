@@ -30,7 +30,7 @@ using namespace mafResources;
 class mafTreeModelTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         // Register all the creatable objects for the mafGUI module.

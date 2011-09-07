@@ -39,7 +39,7 @@ class MAFPLUGINVTKSHARED_EXPORT mafOperationVTKAddLandmark : public mafResources
 
     Q_PROPERTY(double radius READ radius WRITE setRadius)
 
-public slots:
+public Q_SLOTS:
     /// Execute the operation.
     /*virtual*/ void execute();
     
@@ -64,12 +64,12 @@ public slots:
     /// Set landmark radius.
     void on_ALRadius_valueChanged(double radius);
     
-private slots:
+private Q_SLOTS:
     /// Called when a new insert landmark is required.
     void fixLandmark();
 
     
-signals:
+Q_SIGNALS:
     /// Signal for VME picked.
     void vmePickedSignal(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj);
 

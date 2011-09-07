@@ -40,7 +40,7 @@ class MAFRESOURCESSHARED_EXPORT mafDataSet : public mafCore::mafObject {
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObject);
 
-signals:
+Q_SIGNALS:
     /// Signal emitted when data value has been added to the mafDataSet.
     void dataValueConnected();
     /// Signal emitted when data value has been removed from mafDataSet.

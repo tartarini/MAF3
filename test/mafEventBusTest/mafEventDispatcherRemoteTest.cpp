@@ -30,7 +30,7 @@ using namespace mafEventBus;
 class mafEventDispatcherRemoteTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         m_EventDispatcherRemote = new mafEventDispatcherRemote();

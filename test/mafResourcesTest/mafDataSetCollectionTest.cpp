@@ -23,7 +23,7 @@ using namespace mafResources;
 class testPoseObserver : public QObject {
     Q_OBJECT
 
-public slots:
+public Q_SLOTS:
     /// Set at true the value of modified flag status.
     void turnOnModifyFlag();
 
@@ -107,7 +107,7 @@ private:
 class mafDataSetCollectionTest : public QObject {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();

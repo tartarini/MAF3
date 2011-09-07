@@ -103,12 +103,12 @@ protected:
     
     unsigned int m_VisibleObjects;
 
-signals:
+Q_SIGNALS:
 
     /// Notify selection of a sceneNode. 
     void pipeVisualSelectedSignal(mafCore::mafObjectBase *pipeVisual);
         
-public slots:
+public Q_SLOTS:
     /// Wrap the new VME into a mafSceneNode.
     void vmeAdd(mafCore::mafObjectBase *vme);
 
@@ -118,7 +118,7 @@ public slots:
     /// Get name of the view.
     QString viewName() const;
 
-private slots:
+private Q_SLOTS:
 
     /// Called when the scene node has been destroyed.
     void sceneNodeDestroy();

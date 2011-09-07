@@ -44,7 +44,7 @@ public:
     /// Renders the delegate using the given painter and style option for the item specified by index.
     /*virtual */ void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-public slots:
+public Q_SLOTS:
 
 private:
     /// Return the QObject corrisponding to index.

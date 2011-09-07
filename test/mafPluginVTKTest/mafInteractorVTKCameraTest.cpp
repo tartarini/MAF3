@@ -60,7 +60,7 @@ class mafInteractorVTKCameraTest : public QObject {
     //shutdown all the graphic resources
     void shutdownGraphicResources();
 
-private slots:
+private Q_SLOTS:
 
     /// Initialize test variables
     void initTestCase() {

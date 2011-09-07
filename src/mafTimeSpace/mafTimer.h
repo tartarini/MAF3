@@ -61,11 +61,11 @@ public:
     /// Stop the timer.
     void stop();
 
-signals:
+Q_SIGNALS:
     /// Signal emitted when the inner QTimer rise the timeout event.
     void timeoutReached();
 
-public slots:
+public Q_SLOTS:
     /// method that will be called by QTimer whe the timeout is reached.
     void update();
 

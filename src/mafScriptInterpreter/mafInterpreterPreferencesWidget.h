@@ -32,7 +32,7 @@ class MAFSCRIPTINTERPRETERSHARED_EXPORT mafInterpreterPreferencesWidget : public
     /// typedef macro.
     mafSuperclassMacro(mafGUI::mafGUIApplicationSettingsPage);
 
-public slots:
+public Q_SLOTS:
     /// set the font to the console
     void onFontChosen(QFont);
     /// called when the window size has been changed

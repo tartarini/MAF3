@@ -44,7 +44,7 @@ void mafInteractionManager::mousePress(double *pos, unsigned long modifiers, maf
     // Reset the VME picked.
     m_VME = NULL;
     // Ask the visual pipes to pick a VME
-    emit vmePickSignal(pos, modifiers, proxy, e);
+    Q_EMIT vmePickSignal(pos, modifiers, proxy, e);
 
     // m_VME is initialized with the picked VME if any otherwise it remains NULL
     if(m_VME && m_VME->activeInteractor()) {

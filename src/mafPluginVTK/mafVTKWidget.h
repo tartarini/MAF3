@@ -48,7 +48,7 @@ public:
     /// Allows to show the axes representing the global reference system. This method has to be called after that the renderer has been added to the renderwindow.
     void showAxes(bool show = true);
 
-signals:
+Q_SIGNALS:
     /// picked button pressed.
     void vmePickSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent * e);
     

@@ -42,7 +42,7 @@ public:
     /// Object constructor.
     mafVTKParametricSurfaceEllipsoid(const QString code_location = "");
 
-public slots:
+public Q_SLOTS:
 
     /// Update surface with parameters.
     /*virtual*/ void updateSurface();
@@ -51,7 +51,7 @@ protected:
     /// Object destructor.
     /*virtual*/ ~mafVTKParametricSurfaceEllipsoid();
 
-private slots:
+private Q_SLOTS:
 
     /// Set the resolution of the parametric ellipsoid.
     void setEllipsoidPhiRes(double ellipsoidPhiRes);

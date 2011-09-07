@@ -47,7 +47,7 @@ protected:
 private:
     vtkAssembly *m_Assembly; ///< Assembly containing the prop 3D to visualize.
 
-public slots:
+public Q_SLOTS:
     /// update the position of the vme.
     void update();
     
