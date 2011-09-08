@@ -40,6 +40,7 @@ mafViewVTK::~mafViewVTK() {
     mafDEL(m_PipeVisualSelection);
     if(m_Renderer) {
         m_Renderer->Delete();
+        m_Renderer = NULL;
     }
 }
 

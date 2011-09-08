@@ -67,6 +67,7 @@ mafAxes::mafAxes(vtkRenderer *ren, mafResources::mafVME* vme) {
     m_AxesActor->GetProperty()->SetLineWidth(2);
     m_AxesActor->VisibilityOff();
     m_AxesActor->PickableOff();
+    m_Renderer->Register(NULL);
     m_Renderer->AddActor2D(m_AxesActor);
     axesMapper->Delete();
 }
@@ -90,6 +91,7 @@ void mafAxes::askAbsolutePoseMatrix() {
 
 mafAxes::~mafAxes() {
 	m_Renderer->RemoveActor2D(m_AxesActor);
+    m_Renderer->UnRegister(NULL);
     m_Coord->Delete();
     m_AxesActor->Delete();
 }
