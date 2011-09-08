@@ -61,9 +61,16 @@ void mafSceneNodeVTK::setParentNode(const mafSceneNode *parent) {
         parentNodeVTK->nodeAssembly()->AddPart(m_Assembly);
     }
     
+    mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(m_GraphicObject);
+    if (widget == NULL) {
+        return;
+    }
+
     if(parent == NULL) { //root case
-        mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(m_GraphicObject);
         widget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->AddViewProp(m_Assembly);
+    }
+    if (visibility()) {
+        widget->GetRenderWindow()->Render();
     }
 }
 
