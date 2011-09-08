@@ -29,3 +29,16 @@ void mafTreeWidget::contextMenuEvent(QContextMenuEvent *e) {
         QMenu::exec(actions, e->globalPos());
     }
 }
+
+void mafTreeWidget::dragMoveEvent(QDragMoveEvent *event) {
+    QTreeView::dragMoveEvent(event);
+
+    QPoint p = event->pos();
+    QModelIndex item = indexAt(p);
+    
+    if(item.isValid()) {
+        if(!this->isExpanded(item)) {
+            this->expand(item);
+        }
+    }
+}
