@@ -27,13 +27,18 @@ stored in mafTreeModel.
 */
 class MAFGUISHARED_EXPORT mafTreeWidget : public QTreeView {
     Q_OBJECT
-public:
-    /// Object Constructor
-    mafTreeWidget(QWidget *parent = 0);
 
 public slots:
     //void refresh(void);
 
+public:
+    /// Object Constructor
+    mafTreeWidget(QWidget *parent = 0);
+
+protected:
+    /// handle the drag & move event
+    /*virtual*/ void dragMoveEvent(QDragMoveEvent *event);
+    
 private:
     void contextMenuEvent(QContextMenuEvent *e);
 
