@@ -33,7 +33,6 @@ using namespace mafPluginVTK;
 
 mafInteractorVTKTransform::mafInteractorVTKTransform(const QString code_location) : mafInteractor(code_location), m_DragObject(false), m_PreviousVTKInteractor(NULL) {
     m_Blocking = true;
-    
     m_CurrentVTKInteractor = vtkMAFInteractorStyleTrackballActor::New();
 }
 
@@ -54,7 +53,9 @@ void mafInteractorVTKTransform::mousePress(double *pickPos, unsigned long modifi
     
     vtkRenderWindowInteractor *rwi = w->GetRenderWindow()->GetInteractor();
     m_PreviousVTKInteractor = rwi->GetInteractorStyle();
-    m_PreviousVTKInteractor->Register(NULL);
+    if(m_PreviousVTKInteractor) {
+        m_PreviousVTKInteractor->Register(NULL);
+    }
     rwi->SetInteractorStyle(m_CurrentVTKInteractor);
     m_CurrentVTKInteractor->Register(NULL);
     
