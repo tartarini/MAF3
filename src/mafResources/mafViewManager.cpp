@@ -230,9 +230,10 @@ void mafViewManager::sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::maf
         mafCore::mafHierarchy *sceneGraph = view->hierarchy().value<mafCore::mafHierarchyPointer>();
         if (sceneGraph != NULL) {
             //get sceneNodes corresponding to VMEs from each view
-            mafCore::mafObjectBase* sn = view->sceneNodeFromVme(sceneNode->vme());
-            mafCore::mafObjectBase* snParent = view->sceneNodeFromVme(sceneNodeParent->vme());
+            mafSceneNode* sn = view->sceneNodeFromVme(sceneNode->vme());
+            mafSceneNode* snParent = view->sceneNodeFromVme(sceneNodeParent->vme());
             sceneGraph->reparentHierarchyNode(sn, snParent);
+            sn->setParentNode(snParent);
         }
     }
 }

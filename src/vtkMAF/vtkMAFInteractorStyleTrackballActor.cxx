@@ -20,11 +20,13 @@
 #include <vtkMath.h>
 #include <vtkMatrix4x4.h>
 #include <vtkObjectFactory.h>
+#include <vtkAssembly.h>
 #include <vtkAssemblyPath.h>
 #include <vtkProp3D.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
 #include <vtkTransform.h>
+#include <vtkProp3DCollection.h>
 
 vtkStandardNewMacro(vtkMAFInteractorStyleTrackballActor);
 
@@ -32,7 +34,7 @@ vtkStandardNewMacro(vtkMAFInteractorStyleTrackballActor);
 vtkMAFInteractorStyleTrackballActor::vtkMAFInteractorStyleTrackballActor() 
 {
   this->MotionFactor    = 10.0;
-  this->InteractionProp = NULL;
+  this->InteractionAssembly = NULL;
   this->InteractionPicker = vtkCellPicker::New();
   this->InteractionPicker->SetTolerance(0.001);
 }
@@ -91,7 +93,7 @@ void vtkMAFInteractorStyleTrackballActor::OnLeftButtonDown()
 
   this->FindPokedRenderer(x, y);
   this->FindPickedActor(x, y);
-  if (this->CurrentRenderer == NULL || this->InteractionProp == NULL)
+  if (this->CurrentRenderer == NULL || this->InteractionAssembly == NULL)
     {
     return;
     }
@@ -143,7 +145,7 @@ void vtkMAFInteractorStyleTrackballActor::OnMiddleButtonDown()
 
   this->FindPokedRenderer(x, y);
   this->FindPickedActor(x, y);
-  if (this->CurrentRenderer == NULL || this->InteractionProp == NULL)
+  if (this->CurrentRenderer == NULL || this->InteractionAssembly == NULL)
     {
     return;
     }
@@ -187,7 +189,7 @@ void vtkMAFInteractorStyleTrackballActor::OnRightButtonDown()
 
   this->FindPokedRenderer(x, y);
   this->FindPickedActor(x, y);
-  if (this->CurrentRenderer == NULL || this->InteractionProp == NULL)
+  if (this->CurrentRenderer == NULL || this->InteractionAssembly == NULL)
     {
     return;
     }
@@ -215,7 +217,7 @@ void vtkMAFInteractorStyleTrackballActor::OnRightButtonUp()
 //----------------------------------------------------------------------------
 void vtkMAFInteractorStyleTrackballActor::Rotate()
 {
-  if (this->CurrentRenderer == NULL || this->InteractionProp == NULL)
+  if (this->CurrentRenderer == NULL || this->InteractionAssembly == NULL)
     {
     return;
     }
@@ -224,10 +226,10 @@ void vtkMAFInteractorStyleTrackballActor::Rotate()
   vtkCamera *cam = this->CurrentRenderer->GetActiveCamera();
 
   // First get the origin of the assembly
-  double *obj_center = this->InteractionProp->GetCenter();
+  double *obj_center = this->InteractionAssembly->GetCenter();
   
   // GetLength gets the length of the diagonal of the bounding box
-  double boundRadius = this->InteractionProp->GetLength() * 0.5;
+  double boundRadius = this->InteractionAssembly->GetLength() * 0.5;
 
   // Get the view up and view right vectors
   double view_up[3], view_look[3], view_right[3];
@@ -293,7 +295,7 @@ void vtkMAFInteractorStyleTrackballActor::Rotate()
     rotate[1][3] = view_right[2];
     
     
-    this->Prop3DTransform(this->InteractionProp,
+    this->Prop3DTransform(this->InteractionAssembly,
                           obj_center,
                           2, 
                           rotate, 
@@ -315,7 +317,7 @@ void vtkMAFInteractorStyleTrackballActor::Rotate()
 //----------------------------------------------------------------------------
 void vtkMAFInteractorStyleTrackballActor::Spin()
 {
-  if ( this->CurrentRenderer == NULL || this->InteractionProp == NULL )
+  if ( this->CurrentRenderer == NULL || this->InteractionAssembly == NULL )
     {
     return;
     }
@@ -325,7 +327,7 @@ void vtkMAFInteractorStyleTrackballActor::Spin()
   
   // Get the axis to rotate around = vector from eye to origin
 
-  double *obj_center = this->InteractionProp->GetCenter();
+  double *obj_center = this->InteractionAssembly->GetCenter();
 
   double motion_vector[3];
   double view_point[3];
@@ -370,7 +372,7 @@ void vtkMAFInteractorStyleTrackballActor::Spin()
   rotate[0][2] = motion_vector[1];
   rotate[0][3] = motion_vector[2];
   
-  this->Prop3DTransform( this->InteractionProp,
+  this->Prop3DTransform( this->InteractionAssembly,
                          obj_center,
                          1, 
                          rotate, 
@@ -390,7 +392,7 @@ void vtkMAFInteractorStyleTrackballActor::Spin()
 //----------------------------------------------------------------------------
 void vtkMAFInteractorStyleTrackballActor::Pan()
 {
-  if (this->CurrentRenderer == NULL || this->InteractionProp == NULL)
+  if (this->CurrentRenderer == NULL || this->InteractionAssembly == NULL)
     {
     return;
     }
@@ -399,7 +401,7 @@ void vtkMAFInteractorStyleTrackballActor::Pan()
   
   // Use initial center as the origin from which to pan
 
-  double *obj_center = this->InteractionProp->GetCenter();
+  double *obj_center = this->InteractionAssembly->GetCenter();
 
   double disp_obj_center[3], new_pick_point[4];
   double old_pick_point[4], motion_vector[3];
@@ -421,18 +423,18 @@ void vtkMAFInteractorStyleTrackballActor::Pan()
   motion_vector[1] = new_pick_point[1] - old_pick_point[1];
   motion_vector[2] = new_pick_point[2] - old_pick_point[2];
   
-  if (this->InteractionProp->GetUserMatrix() != NULL)
+  if (this->InteractionAssembly->GetUserMatrix() != NULL)
     {
     vtkTransform *t = vtkTransform::New();
     t->PostMultiply();
-    t->SetMatrix(this->InteractionProp->GetUserMatrix());
+    t->SetMatrix(this->InteractionAssembly->GetUserMatrix());
     t->Translate(motion_vector[0], motion_vector[1], motion_vector[2]);
-    this->InteractionProp->GetUserMatrix()->DeepCopy(t->GetMatrix());
+    this->InteractionAssembly->GetUserMatrix()->DeepCopy(t->GetMatrix());
     t->Delete();
     }
   else
     {
-    this->InteractionProp->AddPosition(motion_vector[0],
+    this->InteractionAssembly->AddPosition(motion_vector[0],
                                        motion_vector[1],
                                        motion_vector[2]);
     }
@@ -448,7 +450,7 @@ void vtkMAFInteractorStyleTrackballActor::Pan()
 //----------------------------------------------------------------------------
 void vtkMAFInteractorStyleTrackballActor::Dolly()
 {
-  if (this->CurrentRenderer == NULL || this->InteractionProp == NULL)
+  if (this->CurrentRenderer == NULL || this->InteractionAssembly == NULL)
     {
     return;
     }
@@ -473,19 +475,19 @@ void vtkMAFInteractorStyleTrackballActor::Dolly()
   motion_vector[1] = (view_point[1] - view_focus[1]) * dollyFactor;
   motion_vector[2] = (view_point[2] - view_focus[2]) * dollyFactor;
   
-  if (this->InteractionProp->GetUserMatrix() != NULL)
+  if (this->InteractionAssembly->GetUserMatrix() != NULL)
     {
     vtkTransform *t = vtkTransform::New();
     t->PostMultiply();
-    t->SetMatrix(this->InteractionProp->GetUserMatrix());
+    t->SetMatrix(this->InteractionAssembly->GetUserMatrix());
     t->Translate(motion_vector[0], motion_vector[1], 
                  motion_vector[2]);
-    this->InteractionProp->GetUserMatrix()->DeepCopy(t->GetMatrix());
+    this->InteractionAssembly->GetUserMatrix()->DeepCopy(t->GetMatrix());
     t->Delete();
     }
   else
     {
-    this->InteractionProp->AddPosition(motion_vector);
+    this->InteractionAssembly->AddPosition(motion_vector);
     }
   
   if (this->AutoAdjustCameraClippingRange)
@@ -499,7 +501,7 @@ void vtkMAFInteractorStyleTrackballActor::Dolly()
 //----------------------------------------------------------------------------
 void vtkMAFInteractorStyleTrackballActor::UniformScale()
 {
-  if (this->CurrentRenderer == NULL || this->InteractionProp == NULL)
+  if (this->CurrentRenderer == NULL || this->InteractionAssembly == NULL)
     {
     return;
     }
@@ -508,7 +510,7 @@ void vtkMAFInteractorStyleTrackballActor::UniformScale()
 
   int dy = rwi->GetEventPosition()[1] - rwi->GetLastEventPosition()[1];
  
-  double *obj_center = this->InteractionProp->GetCenter();
+  double *obj_center = this->InteractionAssembly->GetCenter();
   double *center = this->CurrentRenderer->GetCenter();
 
   double yf = dy / center[1] * this->MotionFactor;
@@ -519,7 +521,7 @@ void vtkMAFInteractorStyleTrackballActor::UniformScale()
   double scale[3];
   scale[0] = scale[1] = scale[2] = scaleFactor;
   
-  this->Prop3DTransform(this->InteractionProp,
+  this->Prop3DTransform(this->InteractionAssembly,
                         obj_center,
                         0, 
                         rotate, 
@@ -542,16 +544,19 @@ void vtkMAFInteractorStyleTrackballActor::PrintSelf(ostream& os, vtkIndent inden
 //----------------------------------------------------------------------------
 void vtkMAFInteractorStyleTrackballActor::FindPickedActor(int x, int y)
 {
-  this->InteractionPicker->Pick(x, y, 0.0, this->CurrentRenderer);
-  vtkAssemblyPath *path = this->InteractionPicker->GetPath(); //change how retrieve prop
-  vtkProp *prop = path->GetLastNode()->GetViewProp(); //
-  if (prop != NULL)
-    {
-    this->InteractionProp = vtkProp3D::SafeDownCast(prop);
-    }
-  else
-    {
-    this->InteractionProp = NULL;
+    this->InteractionPicker->Pick(x, y, 0.0, this->CurrentRenderer);
+    vtkAssemblyPath *path = this->InteractionPicker->GetPath(); //change how retrieve prop
+    vtkProp *prop = path->GetLastNode()->GetViewProp(); //
+    
+    vtkAssemblyNode *itemP;
+    int num = path->GetNumberOfItems();
+    path->InitTraversal();
+    itemP = path->GetNextNode();
+    
+    this->InteractionAssembly = NULL;
+    while(itemP->GetViewProp()->IsA("vtkAssembly")) {
+        this->InteractionAssembly = vtkAssembly::SafeDownCast(itemP->GetViewProp());
+        itemP = path->GetNextNode();        
     }
 }
 
@@ -613,7 +618,6 @@ void vtkMAFInteractorStyleTrackballActor::Prop3DTransform(vtkProp3D *prop3D,
   newTransform->Delete();
 }
 
-vtkProp3D *vtkMAFInteractorStyleTrackballActor::GetProp3D() {
-    return this->InteractionProp;
+vtkAssembly *vtkMAFInteractorStyleTrackballActor::GetInteractionAssembly() {
+    return InteractionAssembly;
 }
-

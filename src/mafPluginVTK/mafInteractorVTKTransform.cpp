@@ -23,8 +23,9 @@
 #include <vtkRenderer.h>
 #include <vtkCamera.h>
 #include <vtkMatrix4x4.h>
-
+#include <vtkAssembly.h>
 #include <vtkRenderWindowInteractor.h>
+
 #include <vtkMAFInteractorStyleTrackballActor.h>
 
 using namespace mafResources;
@@ -120,8 +121,8 @@ void mafInteractorVTKTransform::mouseMove(double *pickPos, unsigned long modifie
     }
     
     rwi->InvokeEvent(vtkCommand::MouseMoveEvent, e);
-    vtkProp3D *prop = m_CurrentVTKInteractor->GetProp3D();
-    vtkMatrix4x4 *m = prop->GetMatrix();
+    vtkAssembly *assembly = m_CurrentVTKInteractor->GetInteractionAssembly();
+    vtkMatrix4x4 *m = assembly->GetMatrix();
     mafMatrix c;
     for(int i = 0; i<4; ++i) {
         for(int j = 0; j<4; ++j) {
@@ -129,4 +130,5 @@ void mafInteractorVTKTransform::mouseMove(double *pickPos, unsigned long modifie
         }
     }
     vme->dataSetCollection()->synchronizeItemWithPose(c);
+
 }

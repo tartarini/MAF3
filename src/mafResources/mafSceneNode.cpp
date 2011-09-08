@@ -17,10 +17,10 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-mafSceneNode::mafSceneNode(const QString code_location) : mafObject(code_location), m_VisualPipe(NULL), m_VisualPipeType(""), m_VME(NULL), m_VisibilityPolicy(mafVisibilityPolicyDestroyOnHide) {
+mafSceneNode::mafSceneNode(const QString code_location) : mafObject(code_location), m_VisualPipe(NULL), m_VisualPipeType(""), m_VME(NULL), m_VisibilityPolicy(mafVisibilityPolicyDestroyOnHide), m_ParentNode(NULL) {
 }
 
-mafSceneNode::mafSceneNode(mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location): mafObject(code_location), m_VME(vme), m_VisualPipe(NULL),m_VisualPipeType(visualPipeType), m_Visibility(false), m_VisualizationStatus(mafVisualizationStatusVisible), m_VisibilityPolicy(mafVisibilityPolicyDestroyOnHide), m_GraphicObject(graphicObject) {
+mafSceneNode::mafSceneNode(mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location): mafObject(code_location), m_GraphicObject(graphicObject), m_VME(vme), m_VisualPipe(NULL),m_VisualPipeType(visualPipeType), m_Visibility(false), m_VisualizationStatus(mafVisualizationStatusVisible), m_VisibilityPolicy(mafVisibilityPolicyDestroyOnHide), m_ParentNode(NULL) {
     REQUIRE(vme);
     connect(vme, SIGNAL(detatched()), this, SIGNAL(destroyNode()));
     m_VME = vme;

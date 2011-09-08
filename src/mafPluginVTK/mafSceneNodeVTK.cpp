@@ -47,8 +47,15 @@ mafSceneNodeVTK::~mafSceneNodeVTK() {
 }
 
 void mafSceneNodeVTK::setParentNode(const mafSceneNode *parent) {
+    //remove assembly from old parent
+    const mafSceneNodeVTK *parentNodeVTK;
+    if(parentNode()) {
+        parentNodeVTK = dynamic_cast<const mafSceneNodeVTK *>(parentNode());
+        parentNodeVTK->nodeAssembly()->RemovePart(m_Assembly);
+    }
+    
     Superclass::setParentNode(parent);
-    const mafSceneNodeVTK *parentNodeVTK = dynamic_cast<const mafSceneNodeVTK *>(parent);
+    parentNodeVTK = dynamic_cast<const mafSceneNodeVTK *>(parent);
     if (parentNodeVTK) {
         update();
         parentNodeVTK->nodeAssembly()->AddPart(m_Assembly);
