@@ -223,20 +223,24 @@ void mafTreeModel::insertNewItem(Insert insert,
         }
     }
     
-    //mafTreeItem *oldItem = (mafTreeItem *)this->itemFromIndex(indexFromData(obj));
     mafTreeItem *newItem = createNewItem(parent, obj);
-    /*if (oldItem) {
-        int i = 0, size = oldItem->rowCount();
-        for(; i < size; ++i) {
-            QObject *child = ((mafTreeItem *)oldItem->child(i))->data();
-            insertNewItem(AsChild, child, newItem->index());
-        }
-    }*/
 }
 
 bool mafTreeModel::removeRows(int row, int count, const QModelIndex &parent) {
     if (parent.isValid()) {
-        return QStandardItemModel::removeRows(row, count, parent);
+        //here need to reselect
+        QModelIndex o = parent.child(row, 0); //the object which will be removed
+        mafTreeItem *i = (mafTreeItem *) this->itemFromIndex(o); 
+        QObject *d = i->data(); //catch the data of the item
+        
+        bool result = QStandardItemModel::removeRows(row, count, parent);
+        
+        // new current index
+        QModelIndex n = this->indexFromData(d);
+        // new item
+        m_CurrentItem = (mafTreeItem *) this->itemFromIndex(n); 
+                                                  
+        return result;
     }
     return false;
 }
