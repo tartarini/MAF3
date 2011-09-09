@@ -35,7 +35,7 @@ class MAFRESOURCESSHARED_EXPORT mafDataSet : public mafCore::mafObject {
     Q_PROPERTY(QString externalCodecType READ externalCodecType WRITE setExternalCodecType)
     Q_PROPERTY(QString boundaryAlgorithmName READ boundaryAlgorithmName WRITE setBoundaryAlgorithmName)
     Q_PROPERTY(QVariantList bounds READ bounds WRITE setBounds)
-    Q_PROPERTY(mafMatrix * poseMatrix READ poseMatrix WRITE setPoseMatrix)
+    Q_PROPERTY(QString poseMatrix READ poseMatrixString WRITE setPoseMatrixString)
     
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObject);
@@ -62,8 +62,14 @@ public:
     /// Set the pose for the current data.
     void setPoseMatrix(const mafMatrix *matrix);
 
+    /// Set the pose for the current data throught matrixString.
+    void setPoseMatrixString(const QString matrixString);
+
     /// Return the pose matrix of the current data.
     mafMatrix *poseMatrix();
+
+    /// Return the pose matrixString of the current data.
+    QString poseMatrixString();
 
     /// Set the boundary algorithm function to be used to calculate the data value boundary according also to its pose matrix.
     void setBoundaryAlgorithm(mafDataBoundaryAlgorithm *algorithm);
