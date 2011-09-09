@@ -232,31 +232,19 @@ bool mafTreeModel::removeRows(int row, int count, const QModelIndex &parent) {
         QModelIndex o = parent.child(row, 0); //the object which will be removed
         mafTreeItem *i = (mafTreeItem *) this->itemFromIndex(o); 
         QObject *d = i->data(); //catch the data of the item
-        
+                
         bool result = QStandardItemModel::removeRows(row, count, parent);
+        if(result) {    
+            m_ItemsHash.remove(dataHash(d));
+            // new current index
+            QModelIndex n = this->indexFromData(d);
+            // new item
+            m_CurrentItem = (mafTreeItem *) this->itemFromIndex(n);
+        }
         
-        // new current index
-        QModelIndex n = this->indexFromData(d);
-        // new item
-        m_CurrentItem = (mafTreeItem *) this->itemFromIndex(n); 
-                                                  
         return result;
     }
     return false;
-}
-
-void mafTreeModel::removeFromList(const QModelIndex &index) {
-    mafTreeItem *temp = (mafTreeItem *)this->itemFromIndex(index);
-    if(temp->parent() == NULL) {
-        qDebug() << mafTr("Impossible removing the root");
-        return;
-    }
-    int i = 0, size = temp->rowCount();
-    for(; i < size; ++i) {
-        removeFromList(temp->index().child(i, 0));
-    }
-    
-    m_ItemsHash.remove(dataHash(temp->data()));
 }
 
 QModelIndex mafTreeModel::currentIndex() {
@@ -269,11 +257,12 @@ QModelIndex mafTreeModel::currentIndex() {
 
 QModelIndex mafTreeModel::indexFromData(QObject *data) {
     if (data != NULL) {
-        mafTreeItem *ti = m_ItemsHash.value(dataHash(data),NULL);
+        QString h = dataHash(data);
+        mafTreeItem *ti = m_ItemsHash.value(h, NULL);
         if(ti == NULL) {
             return QModelIndex();
         }
-    return ti->index();
+        return ti->index();
     }
 }
 
