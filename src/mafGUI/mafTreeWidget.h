@@ -38,12 +38,13 @@ public:
 protected:
     /// handle the drag & move event
     /*virtual*/ void dragMoveEvent(QDragMoveEvent *event);
-    
+    /*virtual*/ bool event(QEvent *event);
 private:
     void contextMenuEvent(QContextMenuEvent *e);
 
     QAction *m_ActionShow;
     QAction *m_ActionDelete;
+
 };
 
 } //end namespace

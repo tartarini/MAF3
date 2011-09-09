@@ -75,9 +75,6 @@ public:
     /// Remove row form the model.
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
-    /// remove item from the model
-    void removeFromList(const QModelIndex &index);
-
     /// This function return QModelIndex of the passed data.
     QModelIndex indexFromData(QObject *data);
 
