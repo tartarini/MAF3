@@ -263,6 +263,8 @@ void mafCodecXML::marshall(const QVariant &value ){
                 m_XMLStreamWriter.writeEndElement();
             }
             else {
+                qCritical() << QString( "Cannot handle type");
+
                //self representation?
             }
             break;
