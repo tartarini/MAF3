@@ -31,33 +31,16 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, bool binary, const QS
   mafMementoPropertyList *list = mementoPropertyList();
   mafMatrix *matrix = m_DataSet->poseMatrix();
 
-  if(matrix) {
-      QVariantList matrixList; //should I use double instead of QVariant?
-
-      int r = 0;
-      for ( ; r < 4; ++r) {
-          int c = 0;
-          for ( ; c < 4 ; ++c ) {
-              matrixList.append(matrix->element(r,c));
-
-          }
-      }
-      mafMementoPropertyItem item;
-      item.m_Multiplicity = matrixList.count();
-      item.m_Name = "poseMatrix";
-      item.m_Value = matrixList;
-      list->append(item);
-  }
-      mafMementoPropertyItem item;
-     
-      //Store fileName
-      item.m_Multiplicity = 1;
-      item.m_Name = "fileName";
-      QString fileName(obj->objectHash());
-      fileName.append(".");
-      fileName.append(m_DataSet->externalCodecType().toLower());
-      item.m_Value = fileName;
-      list->append(item);
+  mafMementoPropertyItem item;
+ 
+  //Store fileName
+  item.m_Multiplicity = 1;
+  item.m_Name = "fileName";
+  QString fileName(obj->objectHash());
+  fileName.append(".");
+  fileName.append(m_DataSet->externalCodecType().toLower());
+  item.m_Value = fileName;
+  list->append(item);
 }
 
 mafMementoDataSet::~mafMementoDataSet() {
