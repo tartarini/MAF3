@@ -51,6 +51,7 @@ void mafSerializationManager::initializeConnections() {
     provider->createNewId("maf.local.serialization.load");
     provider->createNewId("maf.local.serialization.export");
     provider->createNewId("maf.local.serialization.import");
+    provider->createNewId("maf.local.serialization.request.workingDirectory");
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.serialization.plugCodec", this, "plugCodecInModule(const QString &, const QString &)");
@@ -61,7 +62,8 @@ void mafSerializationManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.serialization.load", this, "load(const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.export", this, "exportData(mafCore::mafProxyInterface *, const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.import", this, "importData(const QString &, const QString &)");
-
+    mafRegisterLocalSignal("maf.local.serialization.request.workingDirectory", this, "requestWorkingDirectorySignal()");
+    
     // Register private callbacks.
     mafRegisterLocalCallback("maf.local.serialization.plugCodec", this, "plugCodec(const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.plugSerializer", this, "plugSerializer(const QString &, const QString &)");
@@ -71,6 +73,7 @@ void mafSerializationManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.serialization.load", this, "loadMemento(const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.export", this, "exportExternalData(mafCore::mafProxyInterface *, const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.import", this, "importExternalData(const QString &, const QString &)");
+    mafRegisterLocalCallback("maf.local.serialization.request.workingDirectory", this, "requestWorkingDirectory()");
 }
 
 void mafSerializationManager::setIgnoreModified(bool value) {
@@ -98,6 +101,10 @@ void mafSerializationManager::saveMemento(mafMemento *memento, const QString &ur
         qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
         return;
     }
+    
+    QString f = u.toLocalFile();
+    QFileInfo fi(f);
+    m_WorkingDirectory = fi.absolutePath();
 
     QString s = u.scheme();
     QString serializer_type = m_SerializerHash[s];
@@ -137,7 +144,11 @@ mafMemento *mafSerializationManager::loadMemento(const QString &url, const QStri
         qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
         return NULL;
     }
-
+    
+    QString f = u.toLocalFile();
+    QFileInfo fi(f);
+    m_WorkingDirectory = fi.absolutePath();
+    
     QString s = u.scheme();
     QString serializer_type = m_SerializerHash[s];
 
@@ -268,4 +279,8 @@ void mafSerializationManager::plugCodec(const QString &encoding_type, const QStr
 
 void mafSerializationManager::shutdown() {
     mafDEL(m_CurrentExternalDataCodec);
+}
+
+QString mafSerializationManager::requestWorkingDirectory() {
+    return m_WorkingDirectory;
 }

@@ -41,10 +41,10 @@ public:
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
 
     /// Encode property item.
-     virtual void encodeItem(mafMementoPropertyItem *item, QString path);
+     virtual void encodeItem(mafMementoPropertyItem *item);
 
     /// Decode property item.
-     virtual void decodeItem(mafMementoPropertyItem *item, QString path);
+     virtual void decodeItem(mafMementoPropertyItem *item);
 
     /// this method de-serialize the member variables from the given stream.
     mafMementoPropertyList *mementoPropertyList();

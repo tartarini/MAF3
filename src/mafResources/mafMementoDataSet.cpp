@@ -63,7 +63,7 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, bool binary, const QS
 mafMementoDataSet::~mafMementoDataSet() {
 }
 
-void mafMementoDataSet::encodeItem(mafMementoPropertyItem *item, QString path) {
+void mafMementoDataSet::encodeItem(mafMementoPropertyItem *item) {
     bool ignoreModified(false);
     QGenericReturnArgument ret_val = mafEventReturnArgument(bool, ignoreModified);
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.ignoreModified", mafEventTypeLocal, NULL, &ret_val);
@@ -73,6 +73,17 @@ void mafMementoDataSet::encodeItem(mafMementoPropertyItem *item, QString path) {
         //Generate file name and save external data
         QString fileName(item->m_Value.toString());
         QString url;
+        
+        QString path;
+        QGenericReturnArgument path_val = mafEventReturnArgument(QString, path);
+        mafEventBusManager::instance()->notifyEvent("maf.local.serialization.request.workingDirectory", mafEventTypeLocal, NULL, &path_val);
+
+        QDir p(path);
+        if(!p.exists()) {
+            qWarning() << "Invalid Path: data will be saved in the application directory.";
+            path = QDir::toNativeSeparators("./");
+        }
+        
         QTextStream(&url) << path << "/" << fileName;
         mafProxyInterface *container = m_DataSet->dataValue();
         QString encodeType = container->externalCodecType();
@@ -86,21 +97,32 @@ void mafMementoDataSet::encodeItem(mafMementoPropertyItem *item, QString path) {
     }
 }
 
-void mafMementoDataSet::decodeItem(mafMementoPropertyItem *item, QString path) {
-  if (item->m_Name == "fileName") {
-    //check if eChild is a file Name
-    QString fileName;
-    fileName = item->m_Value.toString();
-    QByteArray url;
-    url.append(path);
-    url.append("/");
-    url.append(fileName);
-    QUrl u = QUrl::fromEncoded(url);
-    if (u.isValid()) {
-      //write external file url
-      item->m_Value = u.toString();
+void mafMementoDataSet::decodeItem(mafMementoPropertyItem *item) {
+    if (item->m_Name == "fileName") {
+        //check if eChild is a file Name
+        QString fileName;
+        fileName = item->m_Value.toString();
+          
+        QString path;
+        QGenericReturnArgument path_val = mafEventReturnArgument(QString, path);
+        mafEventBusManager::instance()->notifyEvent("maf.local.serialization.request.workingDirectory", mafEventTypeLocal, NULL, &path_val);
+        
+        QDir p(path);
+        if(!p.exists()) {
+            qWarning() << "Invalid Path: data will be saved in the application directory.";
+            path = QDir::toNativeSeparators("./");
+        }
+          
+        QByteArray url;
+        url.append(path);
+        url.append("/");
+        url.append(fileName);
+        QUrl u = QUrl::fromEncoded(url);
+        if (u.isValid()) {
+            //write external file url
+            item->m_Value = u.toString();
+        } 
     } 
-  } 
 }
  
 

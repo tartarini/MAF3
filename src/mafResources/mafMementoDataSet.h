@@ -41,10 +41,10 @@ public:
     mafMementoDataSet(const mafCore::mafObject *obj, bool binary = true, const QString code_location = "");
 
     /// Encode property item.
-    /* virtual */ void encodeItem(mafCore::mafMementoPropertyItem *item, QString path);
+    /* virtual */ void encodeItem(mafCore::mafMementoPropertyItem *item);
 
     /// Decode property item.
-    /* virtual */ void decodeItem(mafCore::mafMementoPropertyItem *item, QString path);
+    /* virtual */ void decodeItem(mafCore::mafMementoPropertyItem *item);
 
     /// Return time stamp.
     //double timeStamp() const; 

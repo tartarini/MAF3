@@ -31,12 +31,6 @@ void mafCodecRawBinary::encode(mafMemento *memento) {
     m_DataStreamWrite.setDevice(m_Device);
     m_DataStreamWrite.setVersion(QDataStream::Qt_4_6);
 
-    //TODO: I presume m_Device is a file...
-    QString path;
-    QFile *file = qobject_cast<QFile*>(m_Device);
-    if(file) {
-        path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
-    }
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     mafMementoPropertyItem item;
 
@@ -53,14 +47,12 @@ void mafCodecRawBinary::encode(mafMemento *memento) {
     m_DataStreamWrite << ot;
 
     foreach(item, *propList) { //for cycle should be inside each encodeItem
-      m_DataStreamWrite << item.m_Name;
-      m_DataStreamWrite << (int)item.m_Multiplicity;
-      marshall(item.m_Value); //If will be removed: each memento will have its "encodeItem", and marshall will be moved in a separated class
+        m_DataStreamWrite << item.m_Name;
+        m_DataStreamWrite << (int)item.m_Multiplicity;
+        marshall(item.m_Value); //If will be removed: each memento will have its "encodeItem", and marshall will be moved in a separated class
 
-      if (mementoType == "mafResources::mafMementoDataSet") {
-        // use mafMementoDataSet to encode dataSet items.
-        memento->encodeItem(&item, path);
-      }
+        memento->encodeItem(&item);
+      
     }
 
     QObject *obj;
@@ -83,12 +75,6 @@ mafMemento *mafCodecRawBinary::decode() {
       m_DataStreamRead >> mementoTagSeparator;
     }
     
-    //TODO: I presume m_Device is a file...
-    QString path;
-    QFile *file = qobject_cast<QFile*>(m_Device);
-    if(file) {
-        path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
-    }
     m_DataStreamRead >> serializationPatternString;
     m_DataStreamRead >> mementoType;
     m_DataStreamRead >> objType;
@@ -122,10 +108,8 @@ mafMemento *mafCodecRawBinary::decode() {
             QString typeName;
             m_DataStreamRead >> typeName;
             item.m_Value = demarshall(typeName, item.m_Multiplicity);
-            if(mementoType == "mafResources::mafMementoDataSet") {
-              // use mafMementoDataSet to encode dataSet items.
-              memento->decodeItem(&item, path);
-            } 
+            memento->decodeItem(&item);
+             
             propList->append(item);
         } else {
             int parentLevel = m_LevelDecode;
