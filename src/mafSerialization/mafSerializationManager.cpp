@@ -282,5 +282,10 @@ void mafSerializationManager::shutdown() {
 }
 
 QString mafSerializationManager::requestWorkingDirectory() {
+    QDir p(m_WorkingDirectory);
+    if(!p.exists()) {
+        qWarning() << "Invalid Path: data will be saved in the application directory.";
+        m_WorkingDirectory = QDir::toNativeSeparators("./");
+    }
     return m_WorkingDirectory;
 }

@@ -60,12 +60,6 @@ void mafMementoDataSet::encodeItem(mafMementoPropertyItem *item) {
         QString path;
         QGenericReturnArgument path_val = mafEventReturnArgument(QString, path);
         mafEventBusManager::instance()->notifyEvent("maf.local.serialization.request.workingDirectory", mafEventTypeLocal, NULL, &path_val);
-
-        QDir p(path);
-        if(!p.exists()) {
-            qWarning() << "Invalid Path: data will be saved in the application directory.";
-            path = QDir::toNativeSeparators("./");
-        }
         
         QTextStream(&url) << path << "/" << fileName;
         mafProxyInterface *container = m_DataSet->dataValue();
@@ -90,12 +84,6 @@ void mafMementoDataSet::decodeItem(mafMementoPropertyItem *item) {
         QGenericReturnArgument path_val = mafEventReturnArgument(QString, path);
         mafEventBusManager::instance()->notifyEvent("maf.local.serialization.request.workingDirectory", mafEventTypeLocal, NULL, &path_val);
         
-        QDir p(path);
-        if(!p.exists()) {
-            qWarning() << "Invalid Path: data will be saved in the application directory.";
-            path = QDir::toNativeSeparators("./");
-        }
-          
         QByteArray url;
         url.append(path);
         url.append("/");
