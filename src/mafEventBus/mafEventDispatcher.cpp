@@ -78,7 +78,7 @@ bool mafEventDispatcher::isSignaturePresent(const mafEvent &props) const {
     }
 
     QObject *objParameter = props[OBJECT].value<QObject *>();
-    foreach(itemEventProp, itemEventPropList) {
+    Q_FOREACH(itemEventProp, itemEventPropList) {
         QObject *objInList = (*itemEventProp)[OBJECT].value<QObject *>();
         if(objInList == objParameter && (*itemEventProp)[SIGNATURE].toString() == props[SIGNATURE].toString()) {
             return true;
@@ -335,7 +335,7 @@ bool mafEventDispatcher::registerSignal(const mafEvent &props) {
     mafEvent *currentEvent;
     bool cumulativeConnect = true;
      if(sig.length() > 0 && objSignal != NULL) {
-         foreach(currentEvent, itemEventPropList) {
+         Q_FOREACH(currentEvent, itemEventPropList) {
 
              QString observer_sig = CALLBACK_SIGNATURE;
              observer_sig.append((*currentEvent)[SIGNATURE].toString());

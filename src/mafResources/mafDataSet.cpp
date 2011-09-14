@@ -138,7 +138,7 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
 
     mafMementoPropertyList *list = memento->mementoPropertyList();
     mafMementoPropertyItem item;
-    foreach(item, *list) {
+    Q_FOREACH(item, *list) {
         if(item.m_Name == "poseMatrix") {
             //Restore the pose matrix
             mafMatrix *mat = new mafMatrix();

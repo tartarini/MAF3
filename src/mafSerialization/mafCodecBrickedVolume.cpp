@@ -53,7 +53,7 @@ void mafCodecBrickedVolume::encode(mafMemento *memento) {
     bool multiresolution = false;
 
     mafMementoPropertyList *propList = memento->mementoPropertyList();
-    foreach(mafMementoPropertyItem item, *propList) {
+    Q_FOREACH(mafMementoPropertyItem item, *propList) {
         // ignore these temporary properties
         if (item.m_Name == "fileName"           ||
             item.m_Name == "originalDimensions" ||
@@ -102,14 +102,14 @@ void mafCodecBrickedVolume::encode(mafMemento *memento) {
         } else if (item.m_Name == "spacing") {
             QVariantList list = item.m_Value.toList();
             REQUIRE(list.size() == 3);
-            foreach(QVariant iter, list) {
+            Q_FOREACH(QVariant iter, list) {
                 float value = iter.toFloat();
                 m_DataStreamWrite << value;
             }
         } else if (item.m_Name == "posMatrix") {
             QVariantList list = item.m_Value.toList();
             REQUIRE(list.size() == 16);
-            foreach(QVariant iter, list) {
+            Q_FOREACH(QVariant iter, list) {
                 float value = iter.toDouble();
                 m_DataStreamWrite << value;
             }
@@ -337,7 +337,7 @@ void mafCodecBrickedVolume::update(mafCore::mafMemento *memento) {
     int updatedDimensions[3] = { -1, -1, -1 };
 
     mafMementoPropertyList *propList = memento->mementoPropertyList();
-    foreach(mafMementoPropertyItem item, *propList) {
+    Q_FOREACH(mafMementoPropertyItem item, *propList) {
         // information about the highest resolution volume
         if (item.m_Name == "originalDimensions") {
             QVariantList list = item.m_Value.toList();
@@ -490,7 +490,7 @@ void mafCodecBrickedVolume::marshall(const QVariant &value) {
         case QVariant::StringList:
         case QVariant::List: {
             m_DataStreamWrite << QString("list");
-            foreach(QVariant item, value.toList()) {
+            Q_FOREACH(QVariant item, value.toList()) {
                 marshall(item);
             }
             break;

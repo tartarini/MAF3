@@ -24,7 +24,7 @@ void mafTestRegistry::registerTest(QObject* test) {
 
 int mafTestRegistry::runTests(int argc, char* argv[]) {
 	int result = 0;
-    foreach(QObject* test, m_TestSuite) {
+    Q_FOREACH(QObject* test, m_TestSuite) {
 		result |= QTest::qExec(test, argc, argv);
 	}
 	return result;

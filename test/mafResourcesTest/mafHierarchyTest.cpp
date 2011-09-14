@@ -308,7 +308,7 @@ void mafHierarchyTest::unbalancedTreeRandomCreation(unsigned int numberOfElement
 
 void mafHierarchyTest::unbalancedTreeDestruction() {
     mafVME *vme;
-    foreach(vme, m_VMEList) {
+    Q_FOREACH(vme, m_VMEList) {
         mafDEL(vme);
     }
     m_VMEList.clear();

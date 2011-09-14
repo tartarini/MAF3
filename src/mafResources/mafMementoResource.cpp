@@ -25,7 +25,7 @@ mafMementoResource::mafMementoResource(const mafObject *obj, const mafResourceLi
 
     QStringList hashLists;
     mafResource *o = NULL;
-    foreach(o, *inputList) {
+    Q_FOREACH(o, *inputList) {
         QString hash = o->objectHash();
         hashLists.append(hash);
     }

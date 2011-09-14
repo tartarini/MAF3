@@ -94,7 +94,7 @@ bool mafLogic::initialize() {
     
     QLibrary *handler(NULL);
     bool result(true);
-    foreach(so, sharedObjects) {
+    Q_FOREACH(so, sharedObjects) {
         handler = mafInitializeModule(so);
         if(handler) {
             m_LibraryHandlersHash.insert(so, handler);
@@ -149,7 +149,7 @@ void mafLogic::loadPlugins(QString plugin_dir) {
     QStringList plugin_dir_list = pdir.entryList();
 
     mafEventArgumentsList argList;
-    foreach(QString p, plugin_dir_list) {
+    Q_FOREACH(QString p, plugin_dir_list) {
         // Check for plugins to load
         QStringList filters;
         filters << PLUGIN_EXTENSION_FILTER;
@@ -163,7 +163,7 @@ void mafLogic::loadPlugins(QString plugin_dir) {
         qDebug() << plugin_list;
         
         // For each plugin file ask the plugin manager to load it through the event bus.
-        foreach(QString file, plugin_list) {
+        Q_FOREACH(QString file, plugin_list) {
             argList.clear();
             file = dir.absoluteFilePath(file);
             char *v = file.toAscii().data();

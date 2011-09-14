@@ -48,7 +48,7 @@ static void mafConnectObjectWithGUI(mafCore::mafObjectBase *obj, QWidget *gui) {
     obj->updateUI((QObject *)gui);
     // do the same thing for all the the operation's children
     QObjectList children = obj->children();
-    foreach(QObject *child, children) {
+    Q_FOREACH(QObject *child, children) {
         mafCore::mafObjectBase *child_obj = qobject_cast<mafCore::mafObjectBase *>(child);
         if(child_obj) {
             child_obj->connectObjectSlotsByName((QObject *)gui);

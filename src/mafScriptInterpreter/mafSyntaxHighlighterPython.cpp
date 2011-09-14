@@ -161,7 +161,7 @@ mafSyntaxHighlighterPython::mafSyntaxHighlighterPython(QTextDocument *parent) : 
     format.setFontWeight(QFont::Bold);
         
     int count = 0;
-    foreach(const QString &pattern, keywords) {
+    Q_FOREACH(const QString &pattern, keywords) {
         insertRule(QString::number(count++), QRegExp(pattern), format);
     }
 

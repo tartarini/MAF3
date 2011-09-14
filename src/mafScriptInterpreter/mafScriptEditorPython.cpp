@@ -32,7 +32,7 @@ mafScriptEditorPython::mafScriptEditorPython(QObject *parent) : mafScriptEditor(
     m_PrivateClassPointer->thread_level = 0;
     m_PrivateClassPointer->thread_state = 0;
 
-    int stat;
+    //int stat;
 
     Py_Initialize();
     

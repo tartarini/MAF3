@@ -101,7 +101,7 @@ void mafGUIManager::createToolbar(QDomElement node) {
     QToolBar *toolBar = m_MainWindow->addToolBar(tr(title.toAscii().constData()));
 
     QStringList actionList = actions.split(",");
-    foreach (QString action, actionList) {
+    Q_FOREACH (QString action, actionList) {
         toolBar->addAction((QAction*)menuItemByName(action));
     }
 
@@ -392,7 +392,7 @@ void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
     QMenu *opMenu = (QMenu *)this->menuItemByName("Operations");
     QList<QAction *> opActions = opMenu->actions();
     QString op;
-    foreach(QAction *action, opActions) {
+    Q_FOREACH(QAction *action, opActions) {
         op = action->data().toString();
         action->setEnabled(accepted_list.contains(op));
     }
@@ -400,7 +400,7 @@ void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
     QMenu *impMenu = (QMenu *)this->menuItemByName("Import");
     QList<QAction *> impActions= impMenu->actions();
     QString imp;
-    foreach(QAction *action, impActions) {
+    Q_FOREACH(QAction *action, impActions) {
         imp = action->data().toString();
         action->setEnabled(accepted_list.contains(imp));
     }
@@ -408,7 +408,7 @@ void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
     QMenu *expMenu = (QMenu *)this->menuItemByName("Export");
     QList<QAction *> expActions= expMenu->actions();
     QString exp;
-    foreach(QAction *action, expActions) {
+    Q_FOREACH(QAction *action, expActions) {
         exp = action->data().toString();
         action->setEnabled(accepted_list.contains(exp));
     }

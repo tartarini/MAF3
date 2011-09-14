@@ -53,7 +53,7 @@ void mafSyntaxHighlighter::initialize() {
 void mafSyntaxHighlighter::highlightBlock(const QString &text) {
     m_Lock->lockForWrite();
     
-    foreach (const mafHighlightingRule &rule, m_HighlightingRules) {
+    Q_FOREACH (const mafHighlightingRule &rule, m_HighlightingRules) {
         QRegExp expression(rule.m_Pattern);
         int index = expression.indexIn(text);
         while (index >= 0) {

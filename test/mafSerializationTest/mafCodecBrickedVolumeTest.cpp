@@ -922,7 +922,7 @@ void mafCodecBrickedVolumeTest::updateTest() {
 
 mafMementoPropertyItem mafCodecBrickedVolumeTest::findPropertyItem(mafMemento *menento, QString name){
     mafMementoPropertyList *propList = menento->mementoPropertyList();
-    foreach(mafMementoPropertyItem item, *propList) {
+    Q_FOREACH(mafMementoPropertyItem item, *propList) {
         if (item.m_Name == name)
             return item;
     }
@@ -932,7 +932,7 @@ mafMementoPropertyItem mafCodecBrickedVolumeTest::findPropertyItem(mafMemento *m
 
 void mafCodecBrickedVolumeTest::verifyGrayMemento(mafMemento *memento, int level, int startPos[3], int dimensions[3]) {
     mafMementoPropertyList *propList = memento->mementoPropertyList();
-    foreach(mafMementoPropertyItem item, *propList) {
+    Q_FOREACH(mafMementoPropertyItem item, *propList) {
         mafMementoPropertyItem comparedItem = findPropertyItem(m_GrayMemento, item.m_Name);
         if (item.m_Name == "fileName") {
             continue;
@@ -974,7 +974,7 @@ void mafCodecBrickedVolumeTest::verifyGrayMemento(mafMemento *memento, int level
 
 void mafCodecBrickedVolumeTest::verifyRGBMemento(mafMemento *memento, int level, int startPos[3], int dimensions[3]) {
     mafMementoPropertyList *propList = memento->mementoPropertyList();
-    foreach(mafMementoPropertyItem item, *propList) {
+    Q_FOREACH(mafMementoPropertyItem item, *propList) {
         mafMementoPropertyItem comparedItem = findPropertyItem(m_RGBMemento, item.m_Name);
         if (item.m_Name == "fileName") {
             continue;
@@ -1018,7 +1018,7 @@ void mafCodecBrickedVolumeTest::verifyRGBMemento(mafMemento *memento, int level,
 
 void mafCodecBrickedVolumeTest::verifyFloatMemento(mafMemento *memento, int level, int startPos[3], int dimensions[3]) {
     mafMementoPropertyList *propList = memento->mementoPropertyList();
-    foreach(mafMementoPropertyItem item, *propList) {
+    Q_FOREACH(mafMementoPropertyItem item, *propList) {
         mafMementoPropertyItem comparedItem = findPropertyItem(m_FloatMemento, item.m_Name);
         if (item.m_Name == "fileName") {
             continue;

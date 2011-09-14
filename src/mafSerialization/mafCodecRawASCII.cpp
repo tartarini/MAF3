@@ -52,7 +52,7 @@ void mafCodecRawASCII::encode(mafMemento *memento) {
     QString ot = memento->objectClassType();
     m_DataTextWrite << ot << endl;
 
-    foreach(item, *propList) { //for should be inside each encodeItem
+    Q_FOREACH(item, *propList) { //for should be inside each encodeItem
       m_DataTextWrite << item.m_Name << ' ';
       m_DataTextWrite << (int)item.m_Multiplicity << endl;
       marshall(item.m_Value); //If will be removed: each memento will have its "encodeItem", and marshall will be moved in a separated class
@@ -65,7 +65,7 @@ void mafCodecRawASCII::encode(mafMemento *memento) {
 
     QObject *obj;
     ++m_LevelEncode;
-    foreach(obj, memento->children()) {
+    Q_FOREACH(obj, memento->children()) {
         this->encode((mafMemento *)obj);
     }
     --m_LevelEncode;
@@ -174,7 +174,7 @@ void mafCodecRawASCII::marshall(const QVariant &value ){
         case QVariant::StringList:
         case QVariant::List: {
                 m_DataTextWrite << QString("list") << ' ';
-                foreach( QVariant item, value.toList() ) {
+                Q_FOREACH( QVariant item, value.toList() ) {
                         marshall( item );
                     }
                 if(value.toList().count() == 0){

@@ -26,10 +26,10 @@ mafScriptEditorPythonModuleManager* mafScriptEditorPythonModuleManager::instance
 void mafScriptEditorPythonModuleManager::initialize(mafScriptEditorPython *interpreter) {
     int stat;
     interpreter->blockThreads();
-    foreach(mafScriptEditorModuleInitializer initializer, initializers)
+    Q_FOREACH(mafScriptEditorModuleInitializer initializer, initializers)
         initializer();
 
     interpreter->allowThreads();
-    foreach(QString command, commands) 
+    Q_FOREACH(QString command, commands) 
         interpreter->interpret(command, &stat);
 }

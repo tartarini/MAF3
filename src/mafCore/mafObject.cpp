@@ -42,7 +42,7 @@ void mafObject::setMemento(mafMemento *memento, bool deep_memento) {
     REQUIRE(memento->objectClassType() == this->metaObject()->className());
 
     mafMementoPropertyItem item;
-    foreach(item, *memento->mementoPropertyList()) {
+    Q_FOREACH(item, *memento->mementoPropertyList()) {
         QString name = item.m_Name;
         if(name != "objectHash" || deep_memento) {
             if( name.compare("TagList") == 0 ) {
@@ -78,7 +78,7 @@ bool mafObject::removeTag(QString tag) {
 void mafObject::filterTags(QString tag_pattern, QVariantList *filtered_list) {
     filtered_list->clear();
     QVariant temp;
-    foreach(temp, *m_TagList) {
+    Q_FOREACH(temp, *m_TagList) {
         if(temp.toString().contains(tag_pattern)) {
             filtered_list->append(temp);
         }

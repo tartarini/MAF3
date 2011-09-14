@@ -354,7 +354,7 @@ void mafOperationManager::cleanUndoStack(QList<mafOperation*>::Iterator start, Q
 
 void mafOperationManager::flushUndoStack() {
     mafOperation *op;
-    foreach(op, m_UndoStack) {
+    Q_FOREACH(op, m_UndoStack) {
         mafDEL(op);
     }
     m_UndoStack.clear();

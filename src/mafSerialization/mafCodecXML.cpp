@@ -60,7 +60,7 @@ void mafCodecXML::encode(mafMemento *memento) {
     m_XMLStreamWriter.writeAttribute("serializationPattern", serializationPattern);
     m_XMLStreamWriter.writeAttribute("objectClassType", ot);
 
-    foreach(item, *propList) {
+    Q_FOREACH(item, *propList) {
         m_XMLStreamWriter.writeStartElement("item");
         m_XMLStreamWriter.writeAttribute("name", item.m_Name);
         m_XMLStreamWriter.writeAttribute("multiplicity", QString::number(item.m_Multiplicity));
@@ -74,7 +74,7 @@ void mafCodecXML::encode(mafMemento *memento) {
 
     QObject *obj;
     ++m_LevelEncode;
-    foreach(obj, memento->children()) {
+    Q_FOREACH(obj, memento->children()) {
         this->encode((mafMemento *)obj);
     }
     --m_LevelEncode;
@@ -202,7 +202,7 @@ void mafCodecXML::marshall(const QVariant &value ){
         case QVariant::StringList:
         case QVariant::List: {
                 m_XMLStreamWriter.writeAttribute("arrayType", "list");
-                foreach( QVariant item, value.toList() ) {
+                Q_FOREACH( QVariant item, value.toList() ) {
                         marshall( item );
                     }
                 break;

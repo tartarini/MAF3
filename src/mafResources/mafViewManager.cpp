@@ -91,7 +91,7 @@ void mafViewManager::setMemento(mafMemento *memento, bool deep_memento) {
     QString viewName;
     mafMementoPropertyList *list = memento->mementoPropertyList();
     mafMementoPropertyItem item;
-    foreach(item, *list) {
+    Q_FOREACH(item, *list) {
         if(item.m_Name == "ViewType") {
             viewType = item.m_Value.toString();
             /*createView(viewType);*/
@@ -308,7 +308,7 @@ void mafViewManager::destroyView(mafCore::mafObjectBase *view) {
 
 void mafViewManager::destroyAllViews() {
     mafResourceList viewList = m_CreatedViewList;
-    foreach(mafResource *v, viewList) {
+    Q_FOREACH(mafResource *v, viewList) {
         destroyView(v);
     }
     viewList.clear();
@@ -350,7 +350,7 @@ void mafViewManager::clearView(mafCore::mafObjectBase *view) {
 
 void mafViewManager::clearViews() {
     mafResourceList viewList = m_CreatedViewList;
-    foreach(mafResource *v, viewList) {
+    Q_FOREACH(mafResource *v, viewList) {
         clearView(v);
     }
 }
@@ -360,7 +360,7 @@ void mafViewManager::fillViews() {
     mafCore::mafHierarchyPointer hierarchy;
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
-    foreach(mafResource *v, viewList) {
+    Q_FOREACH(mafResource *v, viewList) {
         fillSceneGraph((mafView *)v, hierarchy);
     }
 }

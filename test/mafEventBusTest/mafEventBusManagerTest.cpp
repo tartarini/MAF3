@@ -82,10 +82,10 @@ public:
     testNetworkConnectorForEventBus();
 
     /// Create and initialize client
-    /*virtual*/ void createClient(QString hostName, unsigned int port);
+    /*virtual*/ void createClient(const QString hostName, const unsigned int port);
 
     /// Return the string variable initializated and updated from the data pipe.
-    /*virtual*/ void createServer(unsigned int port);
+    /*virtual*/ void createServer(const unsigned int port);
 
     /// Allow to send a network request.
     /*virtual*/ void send(const QString event_id, mafEventArgumentsList *params);
@@ -117,7 +117,7 @@ testNetworkConnectorForEventBus::testNetworkConnectorForEventBus() : mafNetworkC
      m_Protocol = "FakeProtocol";
 }
 
-void testNetworkConnectorForEventBus::createServer(unsigned int port) {
+void testNetworkConnectorForEventBus::createServer(const unsigned int port) {
     m_ConnectorStatus = "Server Created - Port: ";
     m_ConnectorStatus.append(QString::number(port));
 }
@@ -126,7 +126,7 @@ void testNetworkConnectorForEventBus::startListen() {
     m_ConnectorStatus = "Server Listening";
 }
 
-void testNetworkConnectorForEventBus::createClient(QString hostName, unsigned int port) {
+void testNetworkConnectorForEventBus::createClient(const QString hostName, const unsigned int port) {
     m_ConnectorStatus = "Client Created - Host: ";
     m_ConnectorStatus.append(hostName);
     m_ConnectorStatus.append(" Port: ");

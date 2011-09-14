@@ -30,7 +30,7 @@ void mafImporterWidget::setOperationGUI(QWidget *gui) {
         m_Operation->updateUI((QObject *)gui);
         // do the same thing for all the the operations'children
         QObjectList children = m_Operation->children();
-        foreach(QObject *child, children) {
+        Q_FOREACH(QObject *child, children) {
             mafCore::mafObjectBase *obj = qobject_cast<mafCore::mafObjectBase *>(child);
             if(obj) {
                 obj->connectObjectSlotsByName((QObject *)gui);

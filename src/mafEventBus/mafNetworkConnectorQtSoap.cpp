@@ -159,7 +159,7 @@ QtSoapType *mafNetworkConnectorQtSoap::marshall(const QString name, const QVaria
         case QVariant::List: {
                 QtSoapArray *arr = new QtSoapArray(QtSoapQName(name, ""), QtSoapType::String, parameter.toList().size());
                 int index = 0;
-                foreach( QVariant item, parameter.toList() ) {
+                Q_FOREACH( QVariant item, parameter.toList() ) {
                     arr->insert(index, marshall(QString("Elem_").append(QString::number(index)), item ));
                     ++index;
                     }

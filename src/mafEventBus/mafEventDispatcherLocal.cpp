@@ -40,7 +40,7 @@ void mafEventDispatcherLocal::notifyEvent(const mafEvent &event_dictionary, mafE
 
 
 
-    foreach(itemEventProp, items) {
+    Q_FOREACH(itemEventProp, items) {
         if((*itemEventProp)[SIGNATURE].toString().length() != 0) {
             QString signal_to_emit = (*itemEventProp)[SIGNATURE].toString().split("(")[0];
             QObject *obj = (*itemEventProp)[OBJECT].value<QObject *>();

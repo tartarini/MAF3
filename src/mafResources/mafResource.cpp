@@ -36,7 +36,7 @@ mafResource::~mafResource() {
 bool mafResource::isObjectValid() const {
     if(Superclass::isObjectValid()) {
         mafResource *obj = NULL;
-        foreach(obj, *m_InputList) {
+        Q_FOREACH(obj, *m_InputList) {
             if(obj == NULL) {
                 return false;
             }
@@ -151,7 +151,7 @@ void mafResource::setMemento(mafMemento *memento, bool deep_memento) {
     QStringList hashLists;
     mafMementoPropertyList *list = memento->mementoPropertyList();
     mafMementoPropertyItem item;
-    foreach(item, *list) {
+    Q_FOREACH(item, *list) {
         if(item.m_Name == "InputList") {
             hashLists.append(item.m_Value.toStringList());
         }
@@ -162,7 +162,7 @@ void mafResource::setMemento(mafMemento *memento, bool deep_memento) {
     mafObjectRegistry *reg = mafObjectRegistry::instance();
     mafResource *res;
     QString hash;
-    foreach(hash, hashLists) {
+    Q_FOREACH(hash, hashLists) {
         res = qobject_cast<mafResource *>(reg->objectFromHash(hash));
         if(res != NULL) {
             addInput(res);

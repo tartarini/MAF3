@@ -67,11 +67,11 @@ QString mafScriptEditor::help(void) const
     QString message;
 
     message += "Functions:\n";
-    foreach(QString name, m_PrivateClassPointer->functionDescription.keys())
+    Q_FOREACH(QString name, m_PrivateClassPointer->functionDescription.keys())
 	message += "\t" + name + ": " + m_PrivateClassPointer->functionDescription.value(name) + "\n";
 
     message += "Variables:\n";
-    foreach(QString name, m_PrivateClassPointer->variableDescription.keys())
+    Q_FOREACH(QString name, m_PrivateClassPointer->variableDescription.keys())
 	message += "\t" + name + ": " + m_PrivateClassPointer->variableDescription.value(name) + "\n";
 
     return message;

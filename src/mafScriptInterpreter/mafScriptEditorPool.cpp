@@ -52,7 +52,7 @@ mafScriptEditorPool::mafScriptEditorPool(void) : QObject(), m_PrivateClassPointe
 
 mafScriptEditorPool::~mafScriptEditorPool(void)
 {
-    foreach(mafScriptEditor *interpreter, m_PrivateClassPointer->interpreters.values())
+    Q_FOREACH(mafScriptEditor *interpreter, m_PrivateClassPointer->interpreters.values())
 	delete interpreter;
 
     delete m_PrivateClassPointer;

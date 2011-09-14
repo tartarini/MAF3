@@ -115,7 +115,7 @@ void mafNetworkConnectorQXMLRPC::registerServerMethod(mafRegisterMethodsMap regi
         return;
     }
     // cycle over map:  method name and parameter list
-    foreach (QString key, registerMethodsList.keys()) {
+    Q_FOREACH (QString key, registerMethodsList.keys()) {
        const unsigned int parametersNumber = registerMethodsList.value(key).count();
        switch(parametersNumber) {
        case 1:

@@ -701,7 +701,7 @@ void mafCodecVolumeTest::updateTest() {
 
 mafMementoPropertyItem mafCodecVolumeTest::findPropertyItem(mafMemento *menento, QString name){
     mafMementoPropertyList *propList = menento->mementoPropertyList();
-    foreach(mafMementoPropertyItem item, *propList) {
+    Q_FOREACH(mafMementoPropertyItem item, *propList) {
         if (item.m_Name == name)
             return item;
     }
@@ -711,7 +711,7 @@ mafMementoPropertyItem mafCodecVolumeTest::findPropertyItem(mafMemento *menento,
 
 void mafCodecVolumeTest::verifyGrayMemento(mafMemento *memento, int level, int startPos[3], int dimensions[3]) {
     mafMementoPropertyList *propList = memento->mementoPropertyList();
-    foreach(mafMementoPropertyItem item, *propList) {
+    Q_FOREACH(mafMementoPropertyItem item, *propList) {
         mafMementoPropertyItem comparedItem = findPropertyItem(m_GrayMemento, item.m_Name);
         if (item.m_Name == "fileName") {
             continue;
@@ -753,7 +753,7 @@ void mafCodecVolumeTest::verifyGrayMemento(mafMemento *memento, int level, int s
 
 void mafCodecVolumeTest::verifyRGBMemento(mafMemento *memento, int level, int startPos[3], int dimensions[3]) {
     mafMementoPropertyList *propList = memento->mementoPropertyList();
-    foreach(mafMementoPropertyItem item, *propList) {
+    Q_FOREACH(mafMementoPropertyItem item, *propList) {
         mafMementoPropertyItem comparedItem = findPropertyItem(m_RGBMemento, item.m_Name);
         if (item.m_Name == "fileName") {
             continue;

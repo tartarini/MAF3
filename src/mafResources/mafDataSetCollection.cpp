@@ -365,7 +365,7 @@ void mafDataSetCollection::setMemento(mafMemento *memento, bool deep_memento) {
   mafMementoPropertyItem item;
 
   QList<double> timeList;
-  foreach(item, *list) {
+  Q_FOREACH(item, *list) {
     if(item.m_Name == "timeStamp") {
       //Fill the collection with timeStamps. Later will be filled with data set.
       timeList.append(item.m_Value.toDouble());
