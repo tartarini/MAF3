@@ -106,6 +106,11 @@ void mafViewVTK::updateView() {
 }
 
 void mafViewVTK::selectSceneNode(mafResources::mafSceneNode *node, bool select) {
+    if (m_SelectedNode && m_SelectedNode->isEqual(node) && 
+        m_PipeVisualSelection && m_PipeVisualSelection->input() &&
+        m_PipeVisualSelection->input()->isEqual(m_SelectedNode->vme())) {
+        return;
+    }
     // remove from scene old selection
     mafProxy<vtkProp3D> *prop = mafProxyPointerTypeCast(vtkProp3D, m_PipeVisualSelection->output());
     mafSceneNodeVTK *selected = qobject_cast<mafSceneNodeVTK *>(m_SelectedNode);
