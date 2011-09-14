@@ -93,9 +93,11 @@ void mafSceneNodeVTK::update() {
     vtkMatrix4x4 *vtkMatrix = vtkMatrix4x4::New();
     vtkMatrix->DeepCopy(matrix->rawData());
     
-    //vtkMatrix->PrintSelf(std::cout, vtkIndent(2));
-    
     m_Assembly->SetUserMatrix(vtkMatrix);
     m_Assembly->Modified();
     vtkMatrix->Delete();
+
+    if (visualPipe()) {
+        visualPipe()->updatePipe();
+    }
 }
