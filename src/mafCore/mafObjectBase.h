@@ -71,9 +71,6 @@ public:
     /// Allows the generic connection, using the Qt notation on_ObjectName1_signal with on_ObjectName2_slot.
     void connectObjectSlotsByName(QObject *signal_object);
 
-    /// update ui widgets with properties, using USER flag in Q_PROPERTY.
-    void updateUI(QObject *selfUI = NULL);
-    
     /// Allows to Q_EMIT the incrementReference in a thread safe way.
     void retain();
     
@@ -86,7 +83,9 @@ public:
     /// dump the description of the object (information, attributes, variables...)
     virtual void description() const;
 
-
+public slots:
+    /// update ui widgets with properties, using USER flag in Q_PROPERTY.
+    void updateUI(QObject *selfUI = NULL);
 
 private Q_SLOTS:
     /// increment of 1 unit the reference count.
@@ -94,8 +93,6 @@ private Q_SLOTS:
 
     /// delete the object.
     void deleteObject();
-
-    
 
 protected:
     /// set the hash code for the current object.
@@ -119,7 +116,7 @@ Q_SIGNALS:
     void decreaseReference();
 
     /// Signal emitted to update gui.
-    void updateGuiSignal();
+    void updateGuiSignal(QObject *selfUI);
 
 private:
     mafId m_ObjectId; ///< Unique ID which identifies the object.

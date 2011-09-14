@@ -27,8 +27,11 @@ mafPipeVisualVTK::mafPipeVisualVTK(const QString code_location) : mafPipeVisual(
 }
 
 mafPipeVisualVTK::~mafPipeVisualVTK() {
-    m_GraphicObject = NULL;
-    setVisibility(false);
+    m_Prop3D->SetVisibility(false);
+    if (m_Axes) {
+        delete m_Axes;
+        m_Axes = NULL;
+    }
 }
 
 void mafPipeVisualVTK::updatedGraphicObject() {
@@ -62,7 +65,7 @@ void mafPipeVisualVTK::updateVisibility() {
         }
         m_Axes->setVisibility(true);
     } else {
-        if (m_Axes && m_GraphicObject) {
+        if (m_Axes) {
             delete m_Axes;
             m_Axes = NULL;
         }

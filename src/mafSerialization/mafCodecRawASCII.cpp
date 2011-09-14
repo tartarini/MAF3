@@ -31,12 +31,6 @@ void mafCodecRawASCII::encode(mafMemento *memento) {
     m_DataTextWrite.setDevice(m_Device);
     m_DataTextWrite.setFieldAlignment(QTextStream::AlignLeft);
 
-    //TODO: I presume m_Device is a file...
-    QString path;
-    QFile *file = qobject_cast<QFile*>(m_Device);
-    if(file) {
-        path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
-    }
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     mafMementoPropertyItem item;
 
@@ -57,10 +51,8 @@ void mafCodecRawASCII::encode(mafMemento *memento) {
       m_DataTextWrite << (int)item.m_Multiplicity << endl;
       marshall(item.m_Value); //If will be removed: each memento will have its "encodeItem", and marshall will be moved in a separated class
 
-      if (mementoType == "mafResources::mafMementoDataSet") {
-        // use mafMementoDataSet to encode dataSet items.
-        memento->encodeItem(&item, path);
-      }
+      memento->encodeItem(&item);
+      
     }
 
     QObject *obj;
@@ -82,14 +74,7 @@ mafMemento *mafCodecRawASCII::decode() {
         m_DataTextRead.setDevice(m_Device);
         m_DataTextRead >> mementoTagSeparator;
     }
-
-    //TODO: I presume m_Device is a file...
-    QString path;
-    QFile *file = qobject_cast<QFile*>(m_Device);
-    if(file) {
-        path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
-    }
-
+    
     m_DataTextRead >> serializationPatternString;
     m_DataTextRead >> mementoType;
     m_DataTextRead >> objType;
@@ -123,10 +108,8 @@ mafMemento *mafCodecRawASCII::decode() {
             QString typeName;
             m_DataTextRead >> typeName;
             item.m_Value = demarshall(typeName, item.m_Multiplicity);
-            if (mementoType == "mafResources::mafMementoDataSet") {
-              // use mafMementoDataSet to encode dataSet items.
-              memento->decodeItem(&item, path);
-            } 
+            memento->decodeItem(&item);
+             
             propList->append(item);
         } else {
             int parentLevel = m_LevelDecode;

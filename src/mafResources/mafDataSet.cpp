@@ -41,6 +41,26 @@ mafMatrix *mafDataSet::poseMatrix() {
     return m_Matrix;
 }
 
+QString mafDataSet::poseMatrixString() {
+    if(m_Matrix == NULL) {
+        m_Matrix = new mafMatrix();
+        m_Matrix->setIdentity();
+    }
+    QString matrixString;
+    //Create a string with the values of matrix element separeted by a blank space.
+    int r = 0;
+    for ( ; r < 4; ++r) {
+        int c = 0;
+        for ( ; c < 4 ; ++c ) {
+            matrixString.append(QString::number(m_Matrix->element(r,c)));
+            if (r != 3 || c != 3) {
+                matrixString.append(" ");
+            }
+        }
+    }
+    return matrixString;
+}
+
 void mafDataSet::setBoundaryAlgorithm(mafDataBoundaryAlgorithm *algorithm) {
     if(m_DataBoundaryAlgorithm != algorithm) {
         mafDEL(m_DataBoundaryAlgorithm);
@@ -103,6 +123,38 @@ void mafDataSet::setPoseMatrix(const mafMatrix *matrix) {
     setModified();
 }
 
+void mafDataSet::setPoseMatrixString(const QString matrixString) {
+    if(matrixString.isEmpty()) {
+        return;
+    }
+    QStringList list = matrixString.split(" ");
+    //Check if string represents a matrix
+    int numElement = list.count();
+    int i = 0;
+    bool ok;
+    for ( ; i < numElement; i++ ) {
+        list[i].toDouble(&ok);
+        if (!ok || numElement != 16) {
+            qWarning("%s", mafTr("Trying to assign an invalid string to pose Matrix.").toAscii().data());
+            return;
+        }
+    }
+
+    mafMatrix *matrix = new mafMatrix();
+    int counter = 0;
+    int r = 0;
+    for ( ; r < 4; ++r) {
+        int c = 0;
+        for ( ; c < 4 ; ++c) {
+            double val = list[counter].toDouble();
+            matrix->setElement(r,c,val);
+            ++counter;
+        }
+    }
+    m_Matrix = matrix->clone();
+    setModified();
+}
+
 mafMemento *mafDataSet::createMemento() const {
     mafMemento *m = Superclass::createMemento();
     mafMementoDataSet *mementoDataSet = new mafMementoDataSet(this, mafCodeLocation);
@@ -139,21 +191,6 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
     mafMementoPropertyList *list = memento->mementoPropertyList();
     mafMementoPropertyItem item;
     Q_FOREACH(item, *list) {
-        if(item.m_Name == "poseMatrix") {
-            //Restore the pose matrix
-            mafMatrix *mat = new mafMatrix();
-            int counter = 0;
-            int r = 0;
-            for ( ; r < 4; ++r) {
-                int c = 0;
-                for ( ; c < 4 ; ++c) {
-                    double val = item.m_Value.toList()[counter].toDouble();
-                    mat->setElement(r,c,val);
-                    ++counter;
-                }
-            }
-            this->setPoseMatrix(mat);
-        } 
         if (item.m_Name == "fileName") {
             //Save informations about external file, and load data later, when the data is needed.
             QString nameOfFile = item.m_Value.toString();

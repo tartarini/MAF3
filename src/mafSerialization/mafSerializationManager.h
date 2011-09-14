@@ -66,7 +66,10 @@ Q_SIGNALS:
     
     /// signal for ignore modified.
     bool ignoreModifiedSignal();
-
+    
+    /// signal for requesting working directory.
+    QString requestWorkingDirectorySignal();
+    
 private Q_SLOTS:
     /// Manage the save for the given object.
     /** The 'url' parameter is used to tell the Manager on which media type store the memento.
@@ -99,6 +102,9 @@ private Q_SLOTS:
     /// return ignore modified value.
     bool ignoreModified();
 
+    /// return requesting working directory.
+    QString requestWorkingDirectory();
+    
 public:
     /// Return an instance of the Manager
     static mafSerializationManager *instance();
@@ -124,6 +130,7 @@ private:
     mafCore::mafExternalDataCodec *m_CurrentExternalDataCodec; ///< contains the instance of the last created external data codec.
     bool m_IgnoreModified; ///< global variable which is used for determine if all the mementoes modified flag needa to be ignored.
 
+    QString m_WorkingDirectory; ///< global variable for point out in which directory all the session files will be saved.
 };
 
 /////////////////////////////////////////////////////////////

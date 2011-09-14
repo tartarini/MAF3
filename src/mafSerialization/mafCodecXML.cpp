@@ -31,12 +31,6 @@ void mafCodecXML::encode(mafMemento *memento) {
     REQUIRE(memento != NULL);
     REQUIRE(m_Device != NULL);
     
-    //TODO: I presume m_Device is a file...
-    QString path;
-    QFile *file = qobject_cast<QFile*>(m_Device);
-    if(file) {
-        path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
-    }
     mafMementoPropertyList *propList = memento->mementoPropertyList();
     mafMementoPropertyItem item;
 
@@ -65,10 +59,9 @@ void mafCodecXML::encode(mafMemento *memento) {
         m_XMLStreamWriter.writeAttribute("name", item.m_Name);
         m_XMLStreamWriter.writeAttribute("multiplicity", QString::number(item.m_Multiplicity));
         marshall(item.m_Value);
-        if (mementoType == "mafResources::mafMementoDataSet") {
-          // use mafMementoDataSet to encode dataSet items.
-          memento->encodeItem(&item, path);
-        } 
+        // use mafMementoDataSet to encode dataSet items.
+        memento->encodeItem(&item);
+         
         m_XMLStreamWriter.writeEndElement();
     }
 
@@ -95,12 +88,6 @@ mafMemento *mafCodecXML::decode() {
       m_XMLStreamReader.readNextStartElement(); //start document item
     }
 
-    //TODO: I presume m_Device is a file...
-    QString path;
-    QFile *file = qobject_cast<QFile*>(m_Device);
-    if(file) {
-        path = ((QFile *) m_Device)->fileName().section('/', 0, -2);
-    }
     QString mementoType;
     QString objType;
 
@@ -139,9 +126,8 @@ mafMemento *mafCodecXML::decode() {
         item.m_Name = m_XMLStreamReader.attributes().value("name").toString();
         item.m_Multiplicity = m_XMLStreamReader.attributes().value("multiplicity").toString().toUInt();
         item.m_Value = demarshall(&m_XMLStreamReader);
-        if (mementoType == "mafResources::mafMementoDataSet") {
-          memento->decodeItem(&item, path);
-        } 
+        memento->decodeItem(&item);
+         
         propList->append(item);
       }
 
@@ -263,6 +249,8 @@ void mafCodecXML::marshall(const QVariant &value ){
                 m_XMLStreamWriter.writeEndElement();
             }
             else {
+                qCritical() << QString( "Cannot handle type");
+
                //self representation?
             }
             break;

@@ -36,6 +36,7 @@ mafPipeVisualVTKSelection::mafPipeVisualVTKSelection(const QString code_location
     vtkPolyDataMapper *mapper = vtkPolyDataMapper::New();
     mapper->SetInputConnection(0, m_OutlineCornerFilter->GetOutputPort(0));
     m_Prop3D = vtkActor::New();
+    m_Prop3D->SetPickable(0);
     m_Prop3D.setDestructionFunction(&vtkActor::Delete);
     vtkActor::SafeDownCast(m_Prop3D)->SetMapper(mapper);
     vtkActor::SafeDownCast(m_Prop3D)->GetProperty()->SetLineWidth(3);

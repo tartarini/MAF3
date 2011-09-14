@@ -45,6 +45,8 @@ mafOperationParametricSurface::~mafOperationParametricSurface() {
     mafDEL(m_ParametricCone);
     mafDEL(m_ParametricCylinder);
     mafDEL(m_ParametricEllipsoid);
+    mafDEL(m_DataSet);
+    mafDEL(m_VME)
 }
 
 void mafOperationParametricSurface::visualizeParametricSurface() {
@@ -111,8 +113,6 @@ int mafOperationParametricSurface::parametricSurfaceType() {
 
 void mafOperationParametricSurface::execute() {
     m_Status = mafOperationStatusExecuting;
-    mafDEL(m_DataSet);
-    mafDEL(m_VME);
     Q_EMIT executionEnded();
 }
 

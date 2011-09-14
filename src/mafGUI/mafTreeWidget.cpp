@@ -10,6 +10,7 @@
  */
 
 #include "mafTreeWidget.h"
+#include "mafTreeModel.h"
 #include <QMenu>
 
 using namespace mafGUI;
@@ -28,4 +29,28 @@ void mafTreeWidget::contextMenuEvent(QContextMenuEvent *e) {
     if (actions.count() > 0) {
         QMenu::exec(actions, e->globalPos());
     }
+}
+
+void mafTreeWidget::dragMoveEvent(QDragMoveEvent *event) {
+    QTreeView::dragMoveEvent(event);
+    QPoint p = event->pos();
+    QModelIndex item = indexAt(p);
+    
+    if(item.isValid()) {
+        if(!this->isExpanded(item)) {
+            this->expand(item);
+        }
+    }
+}
+
+bool mafTreeWidget::event(QEvent *event) {
+    bool result = QTreeView::event(event);
+    
+    if(event->type() == QEvent::ChildRemoved) {
+        this->clearSelection();
+        mafTreeModel *m = (mafTreeModel *)model();
+        this->selectionModel()->setCurrentIndex(m->currentIndex(), QItemSelectionModel::Select);
+    } 
+    
+    return result;
 }

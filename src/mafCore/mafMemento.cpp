@@ -56,13 +56,11 @@ bool mafMemento::isEqual(const mafObjectBase *obj) const {
     return true;
 }
 
-void mafMemento::encodeItem(mafMementoPropertyItem *item, QString path) {
+void mafMemento::encodeItem(mafMementoPropertyItem *item) {
   Q_UNUSED(item);
-  Q_UNUSED(path);
 }
 
-void mafMemento::decodeItem(mafMementoPropertyItem *item, QString path) {
+void mafMemento::decodeItem(mafMementoPropertyItem *item) {
   Q_UNUSED(item);
-  Q_UNUSED(path);
 }
 

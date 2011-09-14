@@ -23,8 +23,9 @@
 #include <vtkRenderer.h>
 #include <vtkCamera.h>
 #include <vtkMatrix4x4.h>
-
+#include <vtkAssembly.h>
 #include <vtkRenderWindowInteractor.h>
+
 #include <vtkMAFInteractorStyleTrackballActor.h>
 
 using namespace mafResources;
@@ -32,7 +33,6 @@ using namespace mafPluginVTK;
 
 mafInteractorVTKTransform::mafInteractorVTKTransform(const QString code_location) : mafInteractor(code_location), m_DragObject(false), m_PreviousVTKInteractor(NULL) {
     m_Blocking = true;
-    
     m_CurrentVTKInteractor = vtkMAFInteractorStyleTrackballActor::New();
 }
 
@@ -53,7 +53,9 @@ void mafInteractorVTKTransform::mousePress(double *pickPos, unsigned long modifi
     
     vtkRenderWindowInteractor *rwi = w->GetRenderWindow()->GetInteractor();
     m_PreviousVTKInteractor = rwi->GetInteractorStyle();
-    m_PreviousVTKInteractor->Register(NULL);
+    if(m_PreviousVTKInteractor) {
+        m_PreviousVTKInteractor->Register(NULL);
+    }
     rwi->SetInteractorStyle(m_CurrentVTKInteractor);
     m_CurrentVTKInteractor->Register(NULL);
     
@@ -120,8 +122,8 @@ void mafInteractorVTKTransform::mouseMove(double *pickPos, unsigned long modifie
     }
     
     rwi->InvokeEvent(vtkCommand::MouseMoveEvent, e);
-    vtkProp3D *prop = m_CurrentVTKInteractor->GetProp3D();
-    vtkMatrix4x4 *m = prop->GetMatrix();
+    vtkAssembly *assembly = m_CurrentVTKInteractor->GetInteractionAssembly();
+    vtkMatrix4x4 *m = assembly->GetMatrix();
     mafMatrix c;
     for(int i = 0; i<4; ++i) {
         for(int j = 0; j<4; ++j) {
@@ -129,4 +131,5 @@ void mafInteractorVTKTransform::mouseMove(double *pickPos, unsigned long modifie
         }
     }
     vme->dataSetCollection()->synchronizeItemWithPose(c);
+    emit(updateGuiSignal(NULL));
 }
