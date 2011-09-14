@@ -131,5 +131,5 @@ void mafInteractorVTKTransform::mouseMove(double *pickPos, unsigned long modifie
         }
     }
     vme->dataSetCollection()->synchronizeItemWithPose(c);
-
+    emit(updateGuiSignal(NULL));
 }

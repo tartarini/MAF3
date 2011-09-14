@@ -27,8 +27,6 @@ namespace mafPluginVTK {
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafOperationTransform);
 
-public slots:
-
 public:
     /// Object constructor.
     mafOperationTransformVTK(const QString code_location = "");
