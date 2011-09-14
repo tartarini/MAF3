@@ -43,12 +43,6 @@ public:
     /// Return the flag to activate scalar visibility.
     bool scalarVisibility();
 
-    /// Set the flag to activate scalar visibility.
-    void setEdgeVisibility(bool edgeVisibility);
-
-    /// Return the flag to activate edge visibility.
-    int edgeVisibility();
-
     /// Return the flag to activate immediate rendering mode.
     bool immediateRendering();
 
