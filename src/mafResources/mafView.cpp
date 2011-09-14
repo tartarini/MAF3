@@ -172,7 +172,10 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
         } else {
             --m_VisibleObjects;
         }
-        node->setVisibility(show);      
+        node->setVisibility(show);
+        if(m_PipeVisualSelection) {
+            m_PipeVisualSelection->setVisibility(show);
+        }
     }
 }
 
