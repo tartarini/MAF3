@@ -83,7 +83,7 @@ public:
     /// dump the description of the object (information, attributes, variables...)
     virtual void description() const;
 
-public slots:
+public Q_SLOTS:
     /// update ui widgets with properties, using USER flag in Q_PROPERTY.
     void updateUI(QObject *selfUI = NULL);
 
