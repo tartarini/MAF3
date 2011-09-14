@@ -69,7 +69,7 @@ void mafPipeVisualVTKSelection::updatePipe(double t) {
     if (dataSet == NULL) {
         m_OutlineCornerFilter->RemoveAllInputs();
     } else {
-        m_OutlineCornerFilter->SetInputConnection((*dataSet));
+        m_OutlineCornerFilter->SetInputConnection(*dataSet);
         m_OutlineCornerFilter->Update();
     }
 }
