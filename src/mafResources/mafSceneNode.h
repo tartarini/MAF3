@@ -30,7 +30,7 @@ class MAFRESOURCESSHARED_EXPORT mafSceneNode : public mafCore::mafObject {
     Q_PROPERTY(unsigned int visualizationStatus READ visualizationStatus WRITE setVisualizationStatus)
     Q_PROPERTY(QString VMEName READ VMEName WRITE setVMEName)
     Q_PROPERTY(QString dataHash READ dataHash)
-    Q_PROPERTY(unsigned int VisibilityPolicy READ visibilityPolicy WRITE setVisibilityPolicy)
+    Q_PROPERTY(unsigned int visibilityPolicy READ visibilityPolicy WRITE setVisibilityPolicy)
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObject);
 
