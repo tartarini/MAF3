@@ -50,6 +50,9 @@ void mafObjectBase::setModified(bool m) {
 }
 
 bool mafObjectBase::isEqual(const mafObjectBase *obj) const {
+    if (obj == NULL) {
+        return false;
+    }
     const QMetaObject* my_meta = metaObject();
 
     const QMetaObject* obj_meta = obj->metaObject();

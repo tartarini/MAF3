@@ -221,7 +221,7 @@ mafMatrixPointer mafVMEManager::absolutePoseMatrix(mafCore::mafObjectBase *vme) 
     while(m_VMEHierarchy->hasParent()) {
         m_VMEHierarchy->moveTreeIteratorToParent();
         mafVME *parentVME = qobject_cast<mafVME *>(m_VMEHierarchy->currentData());
-        mafMatrix *matrixParentVME = parentVME->dataSetCollection()->poseMatrix();        
+        mafMatrix *matrixParentVME = parentVME->dataSetCollection()->poseMatrix();
         *result = (*matrixParentVME) * (*result);
     }
         
