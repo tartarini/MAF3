@@ -34,10 +34,15 @@ mafView::mafView(const QString code_location) : mafResource(code_location), m_Re
 }
 
 
-mafView::~mafView() {   
+mafView::~mafView() {
     clearScene();
+<<<<<<< HEAD
     // Q_EMIT signal to detach visual pipe gui
     Q_EMIT pipeVisualSelectedSignal(NULL);
+=======
+    // emit signal to detach visual pipe GUI
+    emit pipeVisualSelectedSignal(NULL);
+>>>>>>> Added comments.
 }
 
 
@@ -87,12 +92,15 @@ void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
 }
 
 void mafView::vmeSelect(mafObjectBase *node) {
+    // Check if it is a mafSceneNode...
     mafSceneNode *node_to_select = qobject_cast<mafResources::mafSceneNode *>(node);
     if(node_to_select == NULL) {
+        // Check if it is a mafVME...
         mafVME *vme_to_select = qobject_cast<mafResources::mafVME *>(node);
         node_to_select = sceneNodeFromVme(vme_to_select);
     }
     if(NULL == node_to_select) {
+        // Something wrong happened, generate a warning...
         qWarning("%s", mafTr("Trying to select an object that is not present in tree.").toAscii().data());
         return;
     }
