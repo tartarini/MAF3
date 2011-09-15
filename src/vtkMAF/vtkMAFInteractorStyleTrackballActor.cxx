@@ -25,6 +25,8 @@
 #include <vtkProp3D.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
+#include <vtkRendererCollection.h>
+#include <vtkRenderWindow.h>
 #include <vtkTransform.h>
 #include <vtkProp3DCollection.h>
 
@@ -46,39 +48,55 @@ vtkMAFInteractorStyleTrackballActor::~vtkMAFInteractorStyleTrackballActor()
 }
 
 //----------------------------------------------------------------------------
+void vtkMAFInteractorStyleTrackballActor::FindInteractiveRenderer(int x, int y) {
+    vtkRendererCollection *rc;
+    vtkRenderer *ren;
+    rc = this->Interactor->GetRenderWindow()->GetRenderers();
+    rc->InitTraversal();
+    while(ren = rc->GetNextItem()) {
+        if (ren->GetInteractive()) {
+            if (this->InteractionPicker->Pick(x, y, 0.0, ren) != 0) {
+                SetCurrentRenderer(ren);
+                return;
+            }
+        }
+    }
+}
+
+//----------------------------------------------------------------------------
 void vtkMAFInteractorStyleTrackballActor::OnMouseMove() 
 {
-  int x = this->Interactor->GetEventPosition()[0];
-  int y = this->Interactor->GetEventPosition()[1];
+//  int x = this->Interactor->GetEventPosition()[0];
+//  int y = this->Interactor->GetEventPosition()[1];
 
   switch (this->State) 
     {
     case VTKIS_ROTATE:
-      this->FindPokedRenderer(x, y);
+//      this->FindInteractiveRenderer(x, y);
       this->Rotate();
       this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
       break;
 
     case VTKIS_PAN:
-      this->FindPokedRenderer(x, y);
+//      this->FindInteractiveRenderer(x, y);
       this->Pan();
-      this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
+//      this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
       break;
 
     case VTKIS_DOLLY:
-      this->FindPokedRenderer(x, y);
+//      this->FindInteractiveRenderer(x, y);
       this->Dolly();
       this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
       break;
 
     case VTKIS_SPIN:
-      this->FindPokedRenderer(x, y);
+//      this->FindInteractiveRenderer(x, y);
       this->Spin();
       this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
       break;
 
     case VTKIS_USCALE:
-      this->FindPokedRenderer(x, y);
+//      this->FindInteractiveRenderer(x, y);
       this->UniformScale();
       this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
       break;
@@ -91,7 +109,7 @@ void vtkMAFInteractorStyleTrackballActor::OnLeftButtonDown()
   int x = this->Interactor->GetEventPosition()[0];
   int y = this->Interactor->GetEventPosition()[1];
 
-  this->FindPokedRenderer(x, y);
+  this->FindInteractiveRenderer(x, y);
   this->FindPickedActor(x, y);
   if (this->CurrentRenderer == NULL || this->InteractionAssembly == NULL)
     {
@@ -143,7 +161,7 @@ void vtkMAFInteractorStyleTrackballActor::OnMiddleButtonDown()
   int x = this->Interactor->GetEventPosition()[0];
   int y = this->Interactor->GetEventPosition()[1];
 
-  this->FindPokedRenderer(x, y);
+  this->FindInteractiveRenderer(x, y);
   this->FindPickedActor(x, y);
   if (this->CurrentRenderer == NULL || this->InteractionAssembly == NULL)
     {
@@ -187,7 +205,7 @@ void vtkMAFInteractorStyleTrackballActor::OnRightButtonDown()
   int x = this->Interactor->GetEventPosition()[0];
   int y = this->Interactor->GetEventPosition()[1];
 
-  this->FindPokedRenderer(x, y);
+  this->FindInteractiveRenderer(x, y);
   this->FindPickedActor(x, y);
   if (this->CurrentRenderer == NULL || this->InteractionAssembly == NULL)
     {
@@ -544,19 +562,22 @@ void vtkMAFInteractorStyleTrackballActor::PrintSelf(ostream& os, vtkIndent inden
 //----------------------------------------------------------------------------
 void vtkMAFInteractorStyleTrackballActor::FindPickedActor(int x, int y)
 {
-    this->InteractionPicker->Pick(x, y, 0.0, this->CurrentRenderer);
-    vtkAssemblyPath *path = this->InteractionPicker->GetPath(); //change how retrieve prop
-    vtkProp *prop = path->GetLastNode()->GetViewProp(); //
-    
-    vtkAssemblyNode *itemP;
-    int num = path->GetNumberOfItems();
-    path->InitTraversal();
-    itemP = path->GetNextNode();
-    
-    this->InteractionAssembly = NULL;
-    while(itemP->GetViewProp()->IsA("vtkAssembly")) {
-        this->InteractionAssembly = vtkAssembly::SafeDownCast(itemP->GetViewProp());
-        itemP = path->GetNextNode();        
+    if(this->InteractionPicker->Pick(x, y, 0.0, this->CurrentRenderer) != 0) {
+        vtkAssemblyPath *path = this->InteractionPicker->GetPath(); //change how retrieve prop
+        if (path) {
+            vtkProp *prop = path->GetLastNode()->GetViewProp(); //
+
+            vtkAssemblyNode *itemP;
+            int num = path->GetNumberOfItems();
+            path->InitTraversal();
+            itemP = path->GetNextNode();
+
+            this->InteractionAssembly = NULL;
+            while(itemP->GetViewProp()->IsA("vtkAssembly")) {
+                this->InteractionAssembly = vtkAssembly::SafeDownCast(itemP->GetViewProp());
+                itemP = path->GetNextNode();        
+            }
+        }
     }
 }
 
