@@ -39,7 +39,7 @@ if(${MAF_SCRIPT_INTERPRETER})
 endif(${MAF_SCRIPT_INTERPRETER})
 
 
-ADD_SUBDIRECTORY(mafPluginGimias)
+#ADD_SUBDIRECTORY(mafPluginGimias)
 
 
 #message (".......................... Exiting ${CMAKE_CURRENT_LIST_FILE} ............................")
