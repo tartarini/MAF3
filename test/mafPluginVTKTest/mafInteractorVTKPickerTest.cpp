@@ -116,8 +116,7 @@ void mafInteractorVTKPickerTest::initializeGraphicResources() {
     m_VTKWidget = new mafVTKWidget();
     m_VTKWidget->setParent(w);
 
-    m_Renderer = vtkRenderer::New();
-    m_VTKWidget->GetRenderWindow()->AddRenderer(m_Renderer);
+    m_Renderer = m_VTKWidget->renderer();
 
     m_Renderer->SetBackground(0.1, 0.1, 0.1);
     m_VTKWidget->update();
@@ -125,7 +124,6 @@ void mafInteractorVTKPickerTest::initializeGraphicResources() {
 }
 
 void mafInteractorVTKPickerTest::shutdownGraphicResources() {
-    m_Renderer->Delete();
     w->close();
 }
 
