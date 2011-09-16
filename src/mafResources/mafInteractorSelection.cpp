@@ -14,6 +14,7 @@
 #include <QMouseEvent>
 
 using namespace mafCore;
+using namespace mafEventBus;
 using namespace mafResources;
 
 mafInteractorSelection::mafInteractorSelection(const QString code_location) : mafInteractor(code_location) {
@@ -26,6 +27,17 @@ mafInteractorSelection::~mafInteractorSelection() {
 }
 
 void mafInteractorSelection::mousePress(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
+    //check if is possible select a new selection
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, obj));
+    bool selectable(false);
+    QGenericReturnArgument ret_val = mafEventReturnArgument(bool, selectable);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.canSelectVME", mafEventTypeLocal, &argList, &ret_val);
+    
+    if(!selectable) {
+        return;
+    }
+    
     QMouseEvent *me = (QMouseEvent *)e;
     if(me->button() == Qt::LeftButton) {
         mafEventBus::mafEventArgumentsList argList;

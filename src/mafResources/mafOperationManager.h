@@ -42,6 +42,7 @@ The manager defines these Topics:
 - maf.local.resources.operation.sizeUndoStack retrieve number of elements of undo stack.
 - maf.local.resources.operation.currentRunning retrieve current operation.
 - maf.local.resources.operation.executionPool Return the execution pool containing the running operations.
+- maf.local.resources.operation.canSelectVME Return a boolean checking if the passed vme can be selected.
 
 @sa mafOperation mafOperationWorker
 */
@@ -96,6 +97,9 @@ Q_SIGNALS:
 
     /// Signal connected with the executionPool slot.
     const mafExecutionPool *executionPoolSignal();
+    
+    /// Signal connected to canSelectVME slot.
+    bool canSelectVMESignal(mafCore::mafObjectBase *vme);
 
 private Q_SLOTS:
     /// Start operation and set that operation as current one
@@ -160,6 +164,9 @@ private Q_SLOTS:
     /// Return the execution pool containing the runngin operations in background.
     const mafExecutionPool *executionPool() const;
 
+    /// return if the vme can be selected or not (checking if a non threadable operation is running or if the vme is not locked).
+    bool canSelectVME(mafCore::mafObjectBase *vme);
+    
 protected:
     /// Object destructor
     /*virtual*/ ~mafOperationManager();

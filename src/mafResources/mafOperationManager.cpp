@@ -51,6 +51,8 @@ mafOperationManager::~mafOperationManager() {
     mafUnregisterLocalCallback("maf.local.resources.operation.sizeUndoStack", this, "undoStackSize()")
     mafUnregisterLocalCallback("maf.local.resources.operation.currentRunning", this, "currentOperation()")
     mafUnregisterLocalCallback("maf.local.resources.operation.executionPool", this, "executionPool()")
+    mafUnregisterLocalCallback("maf.local.resources.operation.canSelectVME", this, "canSelectVME(mafCore::mafObjectBase *)")    
+    
     
     // Unregister signals...
     mafUnregisterLocalSignal("maf.local.resources.operation.start", this, "startOperationSignal(const QString)")
@@ -65,7 +67,8 @@ mafOperationManager::~mafOperationManager() {
     mafUnregisterLocalSignal("maf.local.resources.operation.sizeUndoStack", this, "undoStackSizeSignal()")
     mafUnregisterLocalSignal("maf.local.resources.operation.currentRunning", this, "currentOperationSignal()")
     mafUnregisterLocalSignal("maf.local.resources.operation.executionPool", this, "executionPoolSignal()")
-
+    mafUnregisterLocalSignal("maf.local.resources.operation.canSelectVME", this, "canSelectVMESignal(mafCore::mafObjectBase *)")
+    
     mafIdProvider *provider = mafIdProvider::instance();
     provider->removeId("maf.local.resources.operation.start");
     provider->removeId("maf.local.resources.operation.setParameters");
@@ -79,6 +82,7 @@ mafOperationManager::~mafOperationManager() {
     provider->removeId("maf.local.resources.operation.sizeUndoStack");
     provider->removeId("maf.local.resources.operation.currentRunning");
     provider->removeId("maf.local.resources.operation.executionPool");
+    provider->removeId("maf.local.resources.operation.canSelectVME");
 }
 
 void mafOperationManager::initializeConnections() {
@@ -96,6 +100,7 @@ void mafOperationManager::initializeConnections() {
     provider->createNewId("maf.local.resources.operation.sizeUndoStack");
     provider->createNewId("maf.local.resources.operation.currentRunning");
     provider->createNewId("maf.local.resources.operation.executionPool");
+    provider->createNewId("maf.local.resources.operation.canSelectVME");
 
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.operation.start", this, "startOperationSignal(const QString)")
@@ -110,6 +115,7 @@ void mafOperationManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.operation.sizeUndoStack", this, "undoStackSizeSignal()")
     mafRegisterLocalSignal("maf.local.resources.operation.currentRunning", this, "currentOperationSignal()")
     mafRegisterLocalSignal("maf.local.resources.operation.executionPool", this, "executionPoolSignal()")
+    mafRegisterLocalSignal("maf.local.resources.operation.canSelectVME", this, "canSelectVME(mafCore::mafObjectBase *)")
 
     // Register private callbacks to the instance of the manager..
     mafRegisterLocalCallback("maf.local.resources.operation.start", this, "startOperation(const QString)")
@@ -122,6 +128,7 @@ void mafOperationManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.resources.operation.sizeUndoStack", this, "undoStackSize()")
     mafRegisterLocalCallback("maf.local.resources.operation.currentRunning", this, "currentOperation()")
     mafRegisterLocalCallback("maf.local.resources.operation.executionPool", this, "executionPool()")
+    mafRegisterLocalCallback("maf.local.resources.operation.canSelectVME", this, "canSelectVME(mafCore::mafObjectBase *)")    
 }
 
 
@@ -358,4 +365,15 @@ void mafOperationManager::flushUndoStack() {
         mafDEL(op);
     }
     m_UndoStack.clear();
+}
+
+bool mafOperationManager::canSelectVME(mafCore::mafObjectBase *vme) {
+    //single thread case
+    if(m_CurrentOperation && !m_CurrentOperation->isMultiThreaded()) {
+        return false;
+    }
+    
+    // multithread case
+    mafVME *v = qobject_cast<mafVME *>(vme);    
+    return v->canRead();
 }
