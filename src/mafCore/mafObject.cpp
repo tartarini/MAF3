@@ -53,7 +53,14 @@ void mafObject::setMemento(mafMemento *memento, bool deep_memento) {
             } else if (name.compare("ScriptList") == 0) {
                 setScriptList(item.m_Value.toList());
             } else {
-                this->setProperty(name.toAscii(), item.m_Value);
+                int index = this->metaObject()->indexOfProperty(name.toAscii());
+                if (index == -1) {
+                    qWarning() << "Trying to restore a property not found";
+                } else {
+                    if(this->metaObject()->property(index).isWritable()) {
+                        this->setProperty(name.toAscii(), item.m_Value);
+                    }
+                }
             }
         }
     }
