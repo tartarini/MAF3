@@ -16,6 +16,7 @@
 #include "mafPluginVTKDefinitions.h"
 #include <QVTKWidget.h>
 
+class vtkRenderer;
 
 namespace mafPluginVTK {
 
@@ -47,6 +48,9 @@ public:
 
     /// Allows to show the axes representing the global reference system. This method has to be called after that the renderer has been added to the renderwindow.
     void showAxes(bool show = true);
+
+    /// Return the renderer associated with the given layer name.
+    vtkRenderer *renderer(const QString layerName = "base");
 
 Q_SIGNALS:
     /// picked button pressed.
@@ -80,13 +84,16 @@ private:
     /// check if a vtk actor is picked
     void pickProp(vtkRenderWindowInteractor* iren, QEvent *e, mafCore::mafProxyInterface *proxy, double *posPicked);
 
-    
     /// initialize connections
     void initializeConnections();
     
     unsigned long m_Modifiers;  ///< Optional modifiers for the button.
 
     mafAxes *m_Axes; ///< Tool representing a global reference system.
+    
+    QHash<QString, vtkRenderer *> m_LayerHash; ///< Hash table that store the renderers associated with specific layer.
+    vtkRenderer *m_RendererTool; ///< Renderer associated to the tool layer.
+    vtkRenderer *m_RendererBase; ///< Renderer associated to the base layer.
 };
 
 } // namespace mafPluginVTK

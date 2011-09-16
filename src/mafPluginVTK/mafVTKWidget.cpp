@@ -31,9 +31,31 @@ using namespace mafPluginVTK;
 
 mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f), m_Axes(NULL) {
     initializeConnections();
+    vtkRenderWindow *renWin = GetRenderWindow();
+    // Set the number of layers for the render window.
+    renWin->SetNumberOfLayers(2);
+
+    // Layer in which draw the 3D objects
+    m_RendererBase = vtkRenderer::New();
+    m_RendererBase->SetLayer(0);
+    m_RendererBase->SetInteractive(1);
+    // Layer in which draw the 3D tools like axes, gizmos...
+    m_RendererTool = vtkRenderer::New();
+    m_RendererTool->SetLayer(1);
+    m_RendererTool->SetInteractive(1);
+    // Assign to the tool layer the same active camera of the base layer, so to synchronize camera interaction.
+    m_RendererTool->SetActiveCamera(m_RendererBase->GetActiveCamera());
+    // Add both layers to the render window
+    renWin->AddRenderer(m_RendererBase);
+    renWin->AddRenderer(m_RendererTool);
+    // ... and to the layer hash.
+    m_LayerHash.insert("base", m_RendererBase);
+    m_LayerHash.insert("tool", m_RendererTool);
 }
 
 mafVTKWidget::~mafVTKWidget() {
+    m_RendererBase->Delete();
+    m_RendererTool->Delete();
     if (m_Axes != NULL) {
         delete m_Axes;
         m_Axes = NULL;
@@ -47,13 +69,12 @@ void mafVTKWidget::initializeConnections() {
     result= connect(this, SIGNAL(mouseMoveSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mouseMove(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
 }
 
+vtkRenderer *mafVTKWidget::renderer(const QString layerName) {
+    return m_LayerHash.value(layerName, NULL);
+}
+
 void mafVTKWidget::showAxes(bool show) {
-    vtkRenderer *ren = GetRenderWindow()->GetRenderers()->GetFirstRenderer();
-    if(ren) {
-        m_Axes = new mafAxes(ren);
-    } else {
-        return;
-    }
+    m_Axes = new mafAxes(m_RendererTool);
     m_Axes->setVisibility(show);
 }
 
@@ -210,61 +231,18 @@ void mafVTKWidget::mousePress(vtkRenderWindowInteractor* iren, QEvent *e) {
     
     pickProp(iren, e, &actorPicked, posPicked);
     Q_EMIT mousePressSignal(posPicked, m_Modifiers, &actorPicked, e);
-    
-    // invoke appropriate VTK event
-    /*switch(((QMouseEvent *)e)->button()) {
-        case Qt::LeftButton:
-            iren->InvokeEvent(vtkCommand::LeftButtonPressEvent, e); //Move into InteractorManager?
-            break;
-            
-        case Qt::MidButton:
-            iren->InvokeEvent(vtkCommand::MiddleButtonPressEvent, e); //Move into InteractorManager?
-            break;
-            
-        case Qt::RightButton:
-            iren->InvokeEvent(vtkCommand::RightButtonPressEvent, e); //Move into InteractorManager?
-            break;
-            
-        default:
-            break;
-    }*/
-
-    
 }
 void mafVTKWidget::mouseRelease(vtkRenderWindowInteractor* iren, QEvent *e) {
     double posPicked[3];
     mafCore::mafProxy<vtkProp> actorPicked;
     
     pickProp(iren, e, &actorPicked, posPicked);    Q_EMIT mouseReleaseSignal(posPicked, m_Modifiers, &actorPicked, e);
-    
-    // invoke appropriate vtk event
-    /*switch(((QMouseEvent *)e)->button()) {
-        case Qt::LeftButton:
-            iren->InvokeEvent(vtkCommand::LeftButtonReleaseEvent, e); //Move into InteractorManager?
-            break;
-            
-        case Qt::MidButton:
-            iren->InvokeEvent(vtkCommand::MiddleButtonReleaseEvent, e); //Move into InteractorManager?
-            break;
-            
-        case Qt::RightButton:
-            iren->InvokeEvent(vtkCommand::RightButtonReleaseEvent, e); //Move into InteractorManager?
-            break;
-            
-        default:
-            break;
-    }*/
-
 }
 void mafVTKWidget::mouseMove(vtkRenderWindowInteractor* iren, QEvent *e) {
     double posPicked[3];
     mafCore::mafProxy<vtkProp> actorPicked;
     
     pickProp(iren, e, &actorPicked, posPicked);    Q_EMIT mouseMoveSignal(posPicked, m_Modifiers, &actorPicked, e);
-    
-    // invoke vtk event
-//    iren->InvokeEvent(vtkCommand::MouseMoveEvent, e); //Move into InteractorManager?
-
 }
 
 // overloaded resize handler
