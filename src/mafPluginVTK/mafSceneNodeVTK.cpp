@@ -17,12 +17,12 @@
 #include <mafDataSetCollection.h>
 
 #include <vtkRenderer.h>
-#include <vtkRendererCollection.h>
 #include <vtkRenderWindow.h>
 #include <vtkProp3D.h>
 #include <vtkProp3DCollection.h>
 #include <vtkAssembly.h>
 #include <vtkMatrix4x4.h>
+#include <vtkAxesActor.h>
 
 #include <QDebug>
 
@@ -37,12 +37,17 @@ mafSceneNodeVTK::mafSceneNodeVTK(const QString code_location) : mafSceneNode(cod
 mafSceneNodeVTK::mafSceneNodeVTK(mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location): mafSceneNode(vme, graphicObject, visualPipeType, code_location)  {
     m_Assembly = vtkAssembly::New();
     m_Assembly->SetPickable(1);
+    m_AxesActor = vtkAxesActor::New();
+    m_AxesActor->AxisLabelsOff();
+    m_AxesActor->SetPickable(0);
+    m_AxesActor->SetVisibility(0);
     update();
     
     connect(vme->dataSetCollection(), SIGNAL(modifiedObject()), this, SLOT(update()), Qt::DirectConnection);
 }
 
 mafSceneNodeVTK::~mafSceneNodeVTK() {
+    m_AxesActor->Delete();
     m_Assembly->Delete();
 }
 
@@ -67,7 +72,7 @@ void mafSceneNodeVTK::setParentNode(const mafSceneNode *parent) {
     }
 
     if(parent == NULL) { //root case
-        widget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->AddViewProp(m_Assembly);
+        widget->renderer("base")->AddViewProp(m_Assembly);
     }
     if (visibility()) {
         widget->GetRenderWindow()->Render();
@@ -76,11 +81,17 @@ void mafSceneNodeVTK::setParentNode(const mafSceneNode *parent) {
 
 void mafSceneNodeVTK::setVisibility(bool visible) {
     mafSceneNode::setVisibility(visible);
-    
+    m_AxesActor->SetVisibility(visible ? 1 : 0);
+
     if(visible) {
         mafProxy<vtkProp3D> *prop = mafProxyPointerTypeCast(vtkProp3D, visualPipe()->output());
         if(!m_Assembly->GetParts()->IsItemPresent(*prop)) {
+            mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(m_GraphicObject);
             m_Assembly->AddPart(*prop);
+            m_Assembly->AddPart(m_AxesActor);
+            if (widget) {
+                widget->renderer("tool")->AddActor(m_AxesActor);
+            }
         }
         update();
         visualPipe()->render();
