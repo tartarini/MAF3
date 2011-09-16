@@ -111,10 +111,6 @@ void mafInteractorVTKTransform::mouseMove(double *pickPos, unsigned long modifie
         return;
     }
     vtkRenderWindowInteractor *rwi = w->GetRenderWindow()->GetInteractor();
-
-    if(m_Renderer == NULL) {
-        return;
-    }
     
     mafResources::mafVME *vme = qobject_cast<mafResources::mafVME*>(obj);
     if(vme == NULL) {
