@@ -34,15 +34,15 @@ notified when new timestamp has been assigned to the system.
 */
 class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_OBJECT
-    Q_PROPERTY(bool canRead READ canRead WRITE setCanRead)
-    Q_PROPERTY(bool canWrite READ canWrite WRITE setCanWrite)
-    Q_PROPERTY(bool dataLoaded READ dataLoaded)
-    Q_PROPERTY(QString boundXmin READ boundXmin)
-    Q_PROPERTY(QString boundYmin READ boundYmin)
-    Q_PROPERTY(QString boundZmin READ boundZmin)
-    Q_PROPERTY(QString boundXmax READ boundXmax)
-    Q_PROPERTY(QString boundYmax READ boundYmax)
-    Q_PROPERTY(QString boundZmax READ boundZmax)
+    Q_PROPERTY(bool canRead READ canRead WRITE setCanRead STORED false)
+    Q_PROPERTY(bool canWrite READ canWrite WRITE setCanWrite STORED false)
+    Q_PROPERTY(bool dataLoaded READ dataLoaded STORED false)
+    Q_PROPERTY(QString boundXmin READ boundXmin STORED false)
+    Q_PROPERTY(QString boundYmin READ boundYmin STORED false)
+    Q_PROPERTY(QString boundZmin READ boundZmin STORED false)
+    Q_PROPERTY(QString boundXmax READ boundXmax STORED false)
+    Q_PROPERTY(QString boundYmax READ boundYmax STORED false)
+    Q_PROPERTY(QString boundZmax READ boundZmax STORED false)
 
 
     /// typedef macro.

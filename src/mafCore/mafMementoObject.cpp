@@ -26,8 +26,10 @@ mafMementoObject::mafMementoObject(const mafObject *obj, const QString code_loca
     for ( ; i < num; ++i) {
         mafMementoPropertyItem item;
         const QMetaProperty qmp = meta->property(i);
+        if(!qmp.isStored()) {
+            continue;
+        }
         QString propName = qmp.name();
-
         QVariant value = obj->property(propName.toAscii());
 
         if (value.canConvert(QVariant::List)) {
