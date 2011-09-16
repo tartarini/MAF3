@@ -12,21 +12,13 @@
 #include <QMouseEvent>
 
 #include "mafInteractorVTKCamera.h"
-#include "mafVTKWidget.h"
-#include <mafMatrix.h>
-#include <mafVME.h>
-#include <mafDataSetCollection.h>
 
-#include <vtkRenderWindow.h>
-#include <vtkRendererCollection.h>
-#include <vtkRenderer.h>
-#include <vtkCamera.h>
+#include <vtkCommand.h>
 #include <vtkRenderWindowInteractor.h>
 
-using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafInteractorVTKCamera::mafInteractorVTKCamera(const QString code_location) : mafInteractor(code_location), m_RenderWindowInteractor(NULL) {
+mafInteractorVTKCamera::mafInteractorVTKCamera(const QString code_location) : mafResources::mafInteractor(code_location), m_RenderWindowInteractor(NULL) {
 }
 
 mafInteractorVTKCamera::~mafInteractorVTKCamera() {
@@ -34,6 +26,7 @@ mafInteractorVTKCamera::~mafInteractorVTKCamera() {
 
 void mafInteractorVTKCamera::mousePress(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
     switch(((QMouseEvent *)e)->button()) {
+        m_RenderWindowInteractor->FindPokedRenderer(((QMouseEvent *)e)->x(), ((QMouseEvent *)e)->y());
         case Qt::LeftButton:
             m_RenderWindowInteractor->InvokeEvent(vtkCommand::LeftButtonPressEvent, e);
             break;
