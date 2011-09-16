@@ -22,8 +22,6 @@ class vtkProp3D;
 
 namespace mafPluginVTK {
 
-class mafAxes;
-
 /**
  Class name: mafPipeVisualVTK
  This class represents visual pipe used to render VTK polydata.
@@ -60,7 +58,6 @@ protected:
 
 private:
     vtkRenderer *m_Renderer; ///< Current VTK Renderer.
-    mafAxes     *m_Axes; ///< Axes needed to show the reference system for the associated VME.
     bool m_ScalarVisibility; ///< Flag to activate scalar visibility.
     bool m_ImmediateRendering; ///< Flag to activate immediate rendering mode.
     
