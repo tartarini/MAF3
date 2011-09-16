@@ -23,7 +23,6 @@
 
 // vtk
 #include <vtkRenderWindow.h>
-#include <vtkRendererCollection.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkAssembly.h>
@@ -38,10 +37,10 @@ mafViewVTK::mafViewVTK(const QString code_location) : mafView(code_location), m_
 
 mafViewVTK::~mafViewVTK() {
     mafDEL(m_PipeVisualSelection);
-    if(m_Renderer) {
+/*    if(m_Renderer) {
         m_Renderer->Delete();
         m_Renderer = NULL;
-    }
+    }*/
 }
 
 void mafViewVTK::create() {
@@ -50,10 +49,7 @@ void mafViewVTK::create() {
     // Create the instance of the VTK Widget
     m_RenderWidget = new mafVTKWidget();
     m_RenderWidget->setObjectName("VTKWidget");
-    // Create the renderer
-    m_Renderer = vtkRenderer::New();
-    // and assign it to the widget.
-    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->AddRenderer(m_Renderer);
+    m_Renderer = ((mafVTKWidget*)m_RenderWidget)->renderer();
     ((mafVTKWidget*)m_RenderWidget)->showAxes(true);
     
     //create the instance for selection pipe.
@@ -83,7 +79,6 @@ void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
             if (nParent) {
                 nParent->nodeAssembly()->RemovePart(n->nodeAssembly());
             }
-            
         }
     }
     Superclass::removeSceneNode(node);
@@ -93,7 +88,7 @@ void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show) {
     Superclass::showSceneNode(node, show);
     
     if(m_VisibleObjects == 1) {
-        ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCamera();
+        m_Renderer->ResetCamera();
     }
 
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
