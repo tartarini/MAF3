@@ -55,10 +55,10 @@ void mafInteractorVTKPicker::mousePress(double *pickPos, unsigned long modifiers
         vtkRenderer *r = NULL;
         rc->InitTraversal();
         while(r = rc->GetNextItem()) {
-            int picked = m_CellPicker->Pick(mousePosX, mousePosY, 0, r);
-            if(picked) {
+            if(m_CellPicker->Pick(mousePosX, mousePosY, 0, r)) {
                 m_CellPicker->GetPickPosition(posPicked);
                 Q_EMIT vmePickedVTKSignal(posPicked, modifiers, obj, e);
+                return;
             }
         }
     }
