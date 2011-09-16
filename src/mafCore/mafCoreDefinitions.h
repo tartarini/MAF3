@@ -62,7 +62,7 @@ enum mafObjectLock {
     mafObjectLockNone = 0x0,
     mafObjectLockRead = 0x1,
     mafObjectLockWrite = 0x2,
-    mafObjectLockProgres = 0x4
+    mafObjectLockProgress = 0x4
 };
 
    

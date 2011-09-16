@@ -77,7 +77,7 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
     if (lockStatus & mafCore::mafObjectLockNone) {
        item->setIcon(QIcon(objItem->property("iconFile").toString()));
     }
-    if (lockStatus & mafCore::mafObjectLockProgres)  {
+    if (lockStatus & mafCore::mafObjectLockProgress)  {
         //Drawing Progress bar (first to be covered by item label).
         int checkSpacer = 5;
         if (item->isCheckable()) {
