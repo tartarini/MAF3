@@ -107,8 +107,7 @@ void mafVTKParametricSurfaceConeTest::initializeGraphicResources() {
     m_RenderWidget = new mafVTKWidget();
     ((mafVTKWidget*)m_RenderWidget)->setParent(w);
 
-    m_Renderer = vtkRenderer::New();
-    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->AddRenderer(m_Renderer);
+    m_Renderer = ((mafVTKWidget*)m_RenderWidget)->renderer();
 
     m_Renderer->SetBackground(0.1, 0.1, 0.1);
     ((mafVTKWidget*)m_RenderWidget)->update();
@@ -116,7 +115,6 @@ void mafVTKParametricSurfaceConeTest::initializeGraphicResources() {
 }
 
 void mafVTKParametricSurfaceConeTest::shutdownGraphicResources() {
-    m_Renderer->Delete();
     w->close();
 }
 

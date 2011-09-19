@@ -99,8 +99,7 @@ void mafInteractorVTKCameraTest::initializeGraphicResources() {
     m_VTKWidget = new mafVTKWidget();
     m_VTKWidget->setParent(w);
 
-    m_Renderer = vtkRenderer::New();
-    m_VTKWidget->GetRenderWindow()->AddRenderer(m_Renderer);
+    m_Renderer = m_VTKWidget->renderer();
 
     m_Renderer->SetBackground(0.1, 0.1, 0.1);
     m_VTKWidget->update();
@@ -108,7 +107,6 @@ void mafInteractorVTKCameraTest::initializeGraphicResources() {
 }
 
 void mafInteractorVTKCameraTest::shutdownGraphicResources() {
-    m_Renderer->Delete();
     w->close();
 }
 
