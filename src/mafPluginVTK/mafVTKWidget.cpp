@@ -29,33 +29,22 @@ using namespace mafEventBus;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f), m_Axes(NULL) {
+mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f), m_Axes(NULL), m_RendererBase(NULL), m_RendererTool(NULL) {
     initializeConnections();
     vtkRenderWindow *renWin = GetRenderWindow();
     // Set the number of layers for the render window.
     renWin->SetNumberOfLayers(2);
 
     // Layer in which draw the 3D objects
-    m_RendererBase = vtkRenderer::New();
-    m_RendererBase->SetLayer(0);
-    m_RendererBase->SetInteractive(1);
-    // Layer in which draw the 3D tools like axes, gizmos...
-    m_RendererTool = vtkRenderer::New();
-    m_RendererTool->SetLayer(1);
-    m_RendererTool->SetInteractive(1);
-    // Assign to the tool layer the same active camera of the base layer, so to synchronize camera interaction.
-    m_RendererTool->SetActiveCamera(m_RendererBase->GetActiveCamera());
-    // Add both layers to the render window
-    renWin->AddRenderer(m_RendererBase);
-    renWin->AddRenderer(m_RendererTool);
-    // ... and to the layer hash.
-    m_LayerHash.insert("base", m_RendererBase);
-    m_LayerHash.insert("tool", m_RendererTool);
+    m_RendererBase = createLayer("base");
+    m_RendererTool = createLayer("tool");
 }
 
 mafVTKWidget::~mafVTKWidget() {
-    m_RendererBase->Delete();
-    m_RendererTool->Delete();
+    QHash<QString, vtkRenderer*>::iterator iter;
+    for (iter = m_LayerHash.begin(); iter != m_LayerHash.end(); iter++) {
+        iter.value()->Delete();
+    }
     if (m_Axes != NULL) {
         delete m_Axes;
         m_Axes = NULL;
@@ -69,8 +58,57 @@ void mafVTKWidget::initializeConnections() {
     result= connect(this, SIGNAL(mouseMoveSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mouseMove(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
 }
 
-vtkRenderer *mafVTKWidget::renderer(const QString layerName) {
-    return m_LayerHash.value(layerName, NULL);
+vtkRenderer *mafVTKWidget::createLayer(const QString layerName) {
+    vtkRenderer *renderer = m_LayerHash.value(layerName, NULL);
+    if (m_LayerHash.keys().indexOf(layerName) == -1) {
+        // New layer
+        // Update the number of layers of the render window.
+        unsigned int numLayers = m_LayerHash.size();
+        vtkRenderWindow *renWin = GetRenderWindow();
+        renWin->SetNumberOfLayers(numLayers + 1);
+        // Create the renderer associated with the given layer's name
+        renderer = vtkRenderer::New();
+        renderer->SetLayer(numLayers);
+        renderer->SetInteractive(1);
+        // Link the camera to that one present into the base renderer (if available)
+        if (m_RendererBase != NULL) {
+            renderer->SetActiveCamera(m_RendererBase->GetActiveCamera());
+        }
+        // Add the new renderer to the render window
+        renWin->AddRenderer(renderer);
+        // ... and to the layer hash.
+        m_LayerHash.insert(layerName, renderer);
+    }
+    return renderer;
+}
+
+bool mafVTKWidget::deleteLayer(const QString layerName) {
+    if (layerName == "base" || layerName == "tool") {
+        return false;
+    }
+    
+    // Retrieve the renderer associated to the layer. Remove all the view props and delete the renderer.
+    vtkRenderer *renderer = m_LayerHash.value(layerName);
+    renderer->RemoveAllViewProps();
+    renderer->Delete();
+    // Remove the layer from the hash
+    int n = m_LayerHash.remove(layerName);
+    // and update the number of layers.
+    GetRenderWindow()->SetNumberOfLayers(m_LayerHash.size());
+    return n == 1;
+}
+
+void mafVTKWidget::showLayer(const QString layerName, bool show) {
+    vtkRenderer *renderer = m_LayerHash.value(layerName);
+    vtkPropCollection *propCollection = renderer->GetViewProps();
+    int n = propCollection->GetNumberOfItems();
+    int i = 0;
+    for (; i < n; ++i) {
+        vtkProp3D *prop = vtkProp3D::SafeDownCast(propCollection->GetItemAsObject(i));
+        if (prop && prop->GetVisibility() != show) {
+            prop->SetVisibility(show ? 1 : 0);
+        }
+    }
 }
 
 void mafVTKWidget::showAxes(bool show) {

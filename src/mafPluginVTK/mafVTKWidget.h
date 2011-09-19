@@ -49,8 +49,29 @@ public:
     /// Allows to show the axes representing the global reference system. This method has to be called after that the renderer has been added to the renderwindow.
     void showAxes(bool show = true);
 
+    //////////////////////////////////////////////// Layers API
+
+    /// Allows to create a new layer. The new layer is put on top of all the other existing layers. Return the renderer associated with the created layer name.
+    vtkRenderer *createLayer(const QString layerName);
+    
+    /// Allows to delete the given layer. Return true on success, false otherwise.
+    /** All the objects shown in that layer will be hidden and removed from the renderer.
+    Only the layer created by the user can be deleted; "base" and "tool" layers can not be removed.*/
+    bool deleteLayer(const QString layerName);
+
+    /// Allows to move the layer at the specific layer index (0 .. n), where '0' is the background, 'n' is the front one
+    void moveLayerTo(const QString layerName, unsigned int layerLevel);
+    
+    /// Allows to hide/show all the objects associated with the given layer.
+    void showLayer(const QString layerName, bool show = true);
+
     /// Return the renderer associated with the given layer name.
-    vtkRenderer *renderer(const QString layerName = "base");
+    vtkRenderer *renderer(const QString layerName = "base") const;
+
+    /// Return the list of all available layers.
+    QList<QString> layersList() const;
+
+    ////////////////////////////////////////////////
 
 Q_SIGNALS:
     /// picked button pressed.
@@ -81,7 +102,7 @@ private:
     /// handle the event mouse move
     void mouseMove(vtkRenderWindowInteractor* iren, QEvent *e);
     
-    /// check if a vtk actor is picked
+    /// check if a VTK actor is picked
     void pickProp(vtkRenderWindowInteractor* iren, QEvent *e, mafCore::mafProxyInterface *proxy, double *posPicked);
 
     /// initialize connections
@@ -95,6 +116,18 @@ private:
     vtkRenderer *m_RendererTool; ///< Renderer associated to the tool layer.
     vtkRenderer *m_RendererBase; ///< Renderer associated to the base layer.
 };
+
+/////////////////////////////////////////////////////////////
+// Inline methods
+/////////////////////////////////////////////////////////////
+
+inline vtkRenderer *mafVTKWidget::renderer(const QString layerName) const {
+    return m_LayerHash.value(layerName, NULL);
+}
+
+inline QList<QString> mafVTKWidget::layersList() const {
+    return m_LayerHash.keys();
+}
 
 } // namespace mafPluginVTK
 
