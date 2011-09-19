@@ -156,6 +156,8 @@ private Q_SLOTS:
     /// MiddleButtonPress event connection test case.
     void mafVTKWidgetMiddleButtonReleaseTest();
 
+    /// Layer API test.
+    void mafVTKWidgetLayerTest();
 
 private:
     testInteractionManagerCustom *m_CustomManager; ///< Test var.
@@ -178,16 +180,13 @@ void mafVTKWidgetTest::initializeGraphicResources() {
     result = connect(m_VTKWidget, SIGNAL(mouseReleaseSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), m_CustomManager, SLOT(mouseRelease(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
     result= connect(m_VTKWidget, SIGNAL(mouseMoveSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), m_CustomManager, SLOT(mouseMove(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
 
-    m_Renderer = vtkRenderer::New();
-    m_VTKWidget->GetRenderWindow()->AddRenderer(m_Renderer);
-
+    m_Renderer = m_VTKWidget->renderer();
     m_Renderer->SetBackground(0.1, 0.1, 0.1);
     m_VTKWidget->update();
     w->show();
 }
 
 void mafVTKWidgetTest::shutdownGraphicResources() {
-    m_Renderer->Delete();
     w->close();
 }
 
@@ -272,6 +271,42 @@ void mafVTKWidgetTest::mafVTKWidgetMiddleButtonReleaseTest() {
     events.addMouseRelease(Qt::MidButton, 0, point);
     events.simulate(m_VTKWidget);
     QVERIFY(m_CustomManager->m_Counter == 0);
+}
+
+void mafVTKWidgetTest::mafVTKWidgetLayerTest() {
+    // test that at begin there are 2 layers: "base" and "tool"
+    QList<QString> layers = m_VTKWidget->layersList();
+    int n = layers.size();
+    QVERIFY(n == 2);
+
+    // Layers that should always exists: 'base' and 'tool'
+    int idx = layers.indexOf("base");
+    QVERIFY(idx != -1);
+
+    idx = layers.indexOf("tool");
+    QVERIFY(idx != -1);
+
+    // Create a new layer:
+    vtkRenderer *ren = m_VTKWidget->createLayer("test");
+    QVERIFY(ren);
+
+    // Try to create the "base" layer => return the pointer of the renderer associated with the existing one, don't create a twin layer.
+    ren = m_VTKWidget->createLayer("base");
+
+    vtkRenderer *base = m_VTKWidget->renderer();
+    QCOMPARE(ren, base);
+
+    layers = m_VTKWidget->layersList();
+    n = layers.size();
+    QVERIFY(n == 3);
+
+    // Delete the created layer
+    bool res = m_VTKWidget->deleteLayer("test");
+    QVERIFY(res);
+
+    layers = m_VTKWidget->layersList();
+    n = layers.size();
+    QVERIFY(n == 2);
 }
 
 MAF_REGISTER_TEST(mafVTKWidgetTest);
