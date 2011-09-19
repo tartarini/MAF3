@@ -19,10 +19,11 @@
 #include <mafProxy.h>
 #include <mafPluginManager.h>
 #include <mafPlugin.h>
-#include <vtkDataSetReader.h>
-#include <vtkSmartPointer.h>
 
 #include <mafVTKWidget.h>
+
+#include <vtkDataSetReader.h>
+#include <vtkSmartPointer.h>
 
 #include <vtkImageData.h>
 #include <vtkActor.h>

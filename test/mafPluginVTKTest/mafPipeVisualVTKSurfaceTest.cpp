@@ -19,11 +19,12 @@
 #include <mafProxy.h>
 #include <mafPluginManager.h>
 #include <mafPlugin.h>
+
+#include <mafVTKWidget.h>
+
 #include <vtkAppendPolyData.h>
 #include <vtkCubeSource.h>
 #include <vtkSmartPointer.h>
-
-#include <mafVTKWidget.h>
 
 #include <vtkPolyData.h>
 #include <vtkActor.h>
