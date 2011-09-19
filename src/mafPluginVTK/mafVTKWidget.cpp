@@ -99,15 +99,29 @@ bool mafVTKWidget::deleteLayer(const QString layerName) {
 }
 
 void mafVTKWidget::showLayer(const QString layerName, bool show) {
-    vtkRenderer *renderer = m_LayerHash.value(layerName);
-    vtkPropCollection *propCollection = renderer->GetViewProps();
-    int n = propCollection->GetNumberOfItems();
-    int i = 0;
-    for (; i < n; ++i) {
-        vtkProp3D *prop = vtkProp3D::SafeDownCast(propCollection->GetItemAsObject(i));
-        if (prop && prop->GetVisibility() != show) {
-            prop->SetVisibility(show ? 1 : 0);
+    vtkRenderer *renderer = m_LayerHash.value(layerName, NULL);
+    if (renderer) {
+        vtkPropCollection *propCollection = renderer->GetViewProps();
+        int n = propCollection->GetNumberOfItems();
+        int i = 0;
+        for (; i < n; ++i) {
+            vtkProp3D *prop = vtkProp3D::SafeDownCast(propCollection->GetItemAsObject(i));
+            if (prop && prop->GetVisibility() != show) {
+                prop->SetVisibility(show ? 1 : 0);
+            }
         }
+    }
+}
+
+void mafVTKWidget::moveLayerTo(const QString layerName, unsigned int layerLevel) {
+    vtkRenderer *renderer = m_LayerHash.value(layerName, NULL);
+    if (renderer) {
+        int n = m_LayerHash.size();
+        if (layerLevel >= n) {
+            qWarning() << layerLevel << mafTr(" Layer level should be >= 0 and < ") << n;
+            return;
+        }
+        renderer->SetLayer(layerLevel);
     }
 }
 
