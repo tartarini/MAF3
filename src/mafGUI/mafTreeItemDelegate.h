@@ -46,6 +46,9 @@ public:
 
     /// set the lock for all the items globally.
     static void setGlobalLock(bool globalLock);
+    
+    /// return global lock for selection.
+    static bool globalLock();
 
 protected:
     /// Return the QObject corrisponding to index.

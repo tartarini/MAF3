@@ -77,8 +77,10 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
     //Get lock status
     uint lockStatus = objItem->property("lockStatus").toUInt();
     if (lockStatus & mafCore::mafObjectLockNone) {
-       item->setIcon(QIcon(objItem->property("iconFile").toString()));
+        iconPixmap = QPixmap(objItem->property("iconFile").toString());
+        item->setIcon(QIcon(iconPixmap));
     }
+    
     if (lockStatus & mafCore::mafObjectLockProgress)  {
         //Drawing Progress bar (first to be covered by item label).
         int checkSpacer = 5;
@@ -110,7 +112,7 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
     }
     
     if (m_GlobalLock || lockStatus & mafCore::mafObjectLockRead || lockStatus & mafCore::mafObjectLockWrite)  {
-        //Set lock icon and diable item
+        //Set lock icon and disable item
         iconPixmap = QPixmap(":/images/lock_icon.png");
         item->setIcon(QIcon(iconPixmap));
         options.state = QStyle::State_ReadOnly; //set item locked
@@ -128,4 +130,8 @@ QObject *mafTreeItemDelegate::objFromIndex(const QModelIndex &index) const {
 
 void mafTreeItemDelegate::setGlobalLock(bool globalLock) {
     m_GlobalLock = globalLock;
+}
+
+bool mafTreeItemDelegate::globalLock() {
+    return m_GlobalLock;
 }
