@@ -31,7 +31,8 @@ class MAFRESOURCESSHARED_EXPORT mafOperation : public mafResource {
     Q_OBJECT
     Q_PROPERTY(bool running READ isRunning)
     Q_PROPERTY(bool canAbort READ canAbort)
-
+    Q_PROPERTY(bool isMultiThread READ isMultiThreaded)
+    
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
 

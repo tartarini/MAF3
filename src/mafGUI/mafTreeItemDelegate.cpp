@@ -26,7 +26,10 @@ using namespace mafCore;
 using namespace mafGUI;
 using namespace mafEventBus;
 
-mafTreeItemDelegate::mafTreeItemDelegate(QObject *parent) : QStyledItemDelegate(parent), m_isSceneNode(false ){
+
+bool mafTreeItemDelegate::m_GlobalLock = false;
+
+mafTreeItemDelegate::mafTreeItemDelegate(QObject *parent) : QStyledItemDelegate(parent) {
 }
 
 QWidget *mafTreeItemDelegate::createEditor( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const {
@@ -63,13 +66,12 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
      return;
    }
     mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
-    bool check = item->isCheckable();
     QStyleOptionViewItemV4 options = option;
     initStyleOption(&options, index);
     QPixmap iconPixmap;
     
     QObject *objItem = objFromIndex(index);
-    QString value = objItem->property("objectName").toString();
+    QString value = objItem->objectName();
     ((QStandardItemModel *)index.model())->setData(index, value, Qt::DisplayRole);
 
     //Get lock status
@@ -106,8 +108,8 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
         painter->restore();
         //I can set an icon for Uploading/Donloading
     }
-
-    if (lockStatus & mafCore::mafObjectLockRead || lockStatus & mafCore::mafObjectLockWrite)  {
+    
+    if (m_GlobalLock || lockStatus & mafCore::mafObjectLockRead || lockStatus & mafCore::mafObjectLockWrite)  {
         //Set lock icon and diable item
         iconPixmap = QPixmap(":/images/lock_icon.png");
         item->setIcon(QIcon(iconPixmap));
@@ -122,4 +124,8 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 QObject *mafTreeItemDelegate::objFromIndex(const QModelIndex &index) const {
     mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
     return item->data();
+}
+
+void mafTreeItemDelegate::setGlobalLock(bool globalLock) {
+    m_GlobalLock = globalLock;
 }

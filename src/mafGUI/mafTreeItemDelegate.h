@@ -44,16 +44,14 @@ public:
     /// Renders the delegate using the given painter and style option for the item specified by index.
     /*virtual */ void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-public Q_SLOTS:
+    /// set the lock for all the items globally.
+    static void setGlobalLock(bool globalLock);
 
-private:
+protected:
     /// Return the QObject corrisponding to index.
     QObject *objFromIndex(const QModelIndex &index) const;
 
-    bool m_isSceneNode;
-
-
-
+    static bool m_GlobalLock;
 };
 
 }

@@ -25,6 +25,7 @@ mafSceneNode::mafSceneNode(mafVME *vme, QObject *graphicObject, const QString vi
     connect(vme, SIGNAL(detatched()), this, SIGNAL(destroyNode()));
     m_VME = vme;
     this->setProperty("iconFile",m_VME->property("iconFile"));
+    this->setObjectName(m_VME->objectName());
 }
 
 mafSceneNode::~mafSceneNode() {
@@ -69,6 +70,7 @@ bool mafSceneNode::createVisualPipe() {
 void mafSceneNode::setVMEName(QString name) {
     if(m_VME) {
         m_VME->setProperty("objectName", name);
+        setObjectName(name);
     }
 }
 
