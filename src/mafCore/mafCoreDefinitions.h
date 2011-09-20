@@ -59,10 +59,10 @@ typedef enum {
 
 /// Enumeration that define the status of the object.
 enum mafObjectLock {
-    mafObjectLockNone = 0x0,
-    mafObjectLockRead = 0x1,
-    mafObjectLockWrite = 0x2,
-    mafObjectLockProgress = 0x4
+    mafObjectLockNone = 0x1,
+    mafObjectLockRead = 0x2,
+    mafObjectLockWrite = 0x4,
+    mafObjectLockProgress = 0x8
 };
 
    
