@@ -16,7 +16,6 @@
 #include "mafLoggerWidget.h"
 #include "mafTextEditWidget.h"
 #include "mafGUIApplicationSettingsDialog.h"
-#include "mafTreeItemDelegate.h"
 #include "mafTreeItemSceneNodeDelegate.h"
 #include "mafOperationWidget.h"
 
@@ -650,11 +649,17 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
     
     if(guiFilename.isEmpty()) {
         showGui(NULL);
-        return;
+    } else {    
+        // Ask the UI Loader to load the operation's GUI.
+        m_UILoader->uiLoad(guiFilename);
     }
     
-    // Ask the UI Loader to load the operation's GUI.
-    m_UILoader->uiLoad(guiFilename);
+    // block the selection if the operation is single thread
+    mafTreeItemDelegate *d = (mafTreeItemDelegate *) m_TreeWidget->itemDelegate();
+    d->setGlobalLock(true);
+    m_TreeWidget->setEnabled(false);
+
+        
 }
 
 void mafGUIManager::removeOperationGUI() {
@@ -662,6 +667,11 @@ void mafGUIManager::removeOperationGUI() {
     opMenu->setEnabled(true);
     m_GUILoadedType = mafGUILoadedTypeOperation;
     Q_EMIT guiTypeToRemove(m_GUILoadedType);
+    
+    /// enable the tree
+    mafTreeItemDelegate *d = (mafTreeItemDelegate *) m_TreeWidget->itemDelegate();
+    d->setGlobalLock(false);
+    m_TreeWidget->setEnabled(true);
 }
 
 mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *parent) {
