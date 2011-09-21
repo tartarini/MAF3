@@ -44,6 +44,7 @@ class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_PROPERTY(QString boundYmax READ boundYmax STORED false)
     Q_PROPERTY(QString boundZmax READ boundZmax STORED false)
 
+    Q_PROPERTY(QString objectType READ objectType STORED false)
 
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
@@ -119,6 +120,9 @@ public:
 
     /// Return the length of the 3D bounding box of the data at the current timestamp.
     double length();
+    
+    /// retrieve object Type
+    QString objectType() const;
 
 Q_SIGNALS:
     /// Alert observers that the VME has been detatched from the hierarchy tree.
@@ -166,6 +170,12 @@ inline bool mafVME::canRead() const {
 inline bool mafVME::canWrite() const {
     QReadLocker locker(m_Lock);
     return m_CanWrite;
+}
+    
+    
+inline QString mafVME::objectType() const{
+    QString str(this->metaObject()->className());
+    return str.split("::").last();
 }
 
 } // mafResources
