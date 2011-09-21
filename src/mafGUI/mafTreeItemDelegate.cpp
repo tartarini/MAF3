@@ -29,10 +29,11 @@ using namespace mafEventBus;
 
 bool mafTreeItemDelegate::m_GlobalLock = false;
 
-mafTreeItemDelegate::mafTreeItemDelegate(QObject *parent) : QStyledItemDelegate(parent) {
+mafTreeItemDelegate::mafTreeItemDelegate(QObject *parent) : QStyledItemDelegate(parent), isEditing(false){
 }
 
 QWidget *mafTreeItemDelegate::createEditor( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const {
+    isEditing = true;
     QObject *objItem = objFromIndex(index);
     int lockStatus = objItem->property("lockStatus").toInt();
     QWidget *editor = NULL;
@@ -60,6 +61,7 @@ void mafTreeItemDelegate::setModelData(QWidget * editor, QAbstractItemModel * mo
     mafTreeItem *item = (mafTreeItem *)((QStandardItemModel *)index.model())->itemFromIndex(index);
     QObject *objItem = item->data();
     objItem->setProperty("objectName", value );
+    isEditing = false;
 }
 
 void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
@@ -74,12 +76,14 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
     QObject *objItem = objFromIndex(index);
     QString value = objItem->objectName();
     ((QStandardItemModel *)index.model())->setData(index, value, Qt::DisplayRole);
-
+    
     //Get lock status
     uint lockStatus = objItem->property("lockStatus").toUInt();
     if (lockStatus & mafCore::mafObjectLockNone) {
         iconPixmap = QPixmap(objItem->property("iconFile").toString());
-        item->setIcon(QIcon(iconPixmap));
+        if(!isEditing) {
+            item->setIcon(QIcon(iconPixmap));
+        } 
     }
     
     if (lockStatus & mafCore::mafObjectLockProgress)  {
@@ -119,6 +123,7 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
         options.state = QStyle::State_ReadOnly; //set item locked
     }
 
+    
     //Drawing tree item
     QStyledItemDelegate::paint(painter, options, index);
 }

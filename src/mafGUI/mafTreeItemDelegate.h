@@ -55,6 +55,7 @@ protected:
     QObject *objFromIndex(const QModelIndex &index) const;
 
     static bool m_GlobalLock;
+    mutable bool isEditing;
 };
 
 }
