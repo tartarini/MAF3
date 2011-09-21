@@ -37,13 +37,14 @@ QWidget *mafTreeItemDelegate::createEditor( QWidget * parent, const QStyleOption
     int lockStatus = objItem->property("lockStatus").toInt();
     QWidget *editor = NULL;
     // Not allow VME name editing to locked item.
-    if (lockStatus == mafCore::mafObjectLockNone) {
+    if (lockStatus & mafCore::mafObjectLockNone) {
         editor = QStyledItemDelegate::createEditor(parent, option, index);
     }
     return editor;
 }
 
 void mafTreeItemDelegate::setEditorData( QWidget * editor, const QModelIndex & index ) const {
+    QStyledItemDelegate::setEditorData(editor, index);
     QString text = index.model()->data(index, Qt::EditRole).toString();
     QLineEdit *textEditor = static_cast<QLineEdit*>(editor);
     textEditor->setText(text);
