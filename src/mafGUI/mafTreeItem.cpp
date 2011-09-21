@@ -14,6 +14,7 @@
 using namespace mafGUI;
 
 mafTreeItem::mafTreeItem(QObject *obj) : QStandardItem(obj->objectName()) {
+    setIcon(QIcon(obj->property("iconFile").toString()));
     setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|
              Qt::ItemIsEditable);
     m_Data = obj;
