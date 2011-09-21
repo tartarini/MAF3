@@ -205,6 +205,8 @@ mafMemento *mafHierarchy::createMemento() const {
 }
 
 void mafHierarchy::setMemento(mafMemento *memento, bool deep_memento) {
+    //@@ TODO this is a fake hierarchy! because the recursion is shared between all mafObjects!!!!!!!!
+    
     this->moveTreeIteratorToRootNode();
 
     // Design by contract condition.
