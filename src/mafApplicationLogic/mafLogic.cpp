@@ -118,7 +118,7 @@ mafCore::mafHierarchy *mafLogic::requestNewHierarchy() {
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.new", mafEventTypeLocal, NULL, &ret_val);
     
     //fill the scenegraphs of all the views
-    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.fillViews");
+    //mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.fillViews");
     
     return m_Hierarchy;
 }
@@ -245,5 +245,15 @@ void mafLogic::restoreHierarchy(QString fileName) {
     //fill the scenegraphs of all the views
     // @@ TODO if hierarchy will handle all the hierarchy , and not shared the effort with all the other Objects, this method would be useless:
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.fillViews");
+    
+    //retrieve root
+    mafObject *root;
+    retVal = mafEventReturnArgument(mafCore::mafObject *, root);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &retVal);
+    
+    //select
+    argList.clear();
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, root));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 
 }
