@@ -46,6 +46,10 @@ void mafView::clearScene() {
     m_SelectedNode = NULL;
     
     m_SceneNodeList.clear();
+    Q_EMIT pipeVisualSelectedSignal(NULL);
+    if(m_PipeVisualSelection) {
+        m_PipeVisualSelection->setInput(NULL);
+    }
 }
 
 void mafView::create() {

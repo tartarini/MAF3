@@ -29,10 +29,16 @@ mafPipe::~mafPipe() {
 }
 
 void mafPipe::setInput(mafVME *vme) {
-    REQUIRE(vme != NULL);
+    //REQUIRE(vme != NULL);
     if(!m_InputList->isEmpty()) {
         removeInput(0);
     }
+    
+    if(vme == NULL) {
+        setModified();
+        return;
+    }
+    
     m_InputList->append(vme);
 
     mafDataSetCollection *datSetCollection = vme->dataSetCollection();
