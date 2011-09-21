@@ -164,7 +164,7 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
     REQUIRE(memento != NULL);
     REQUIRE(memento->objectClassType() == this->metaObject()->className());
 
-    // save selected node
+    // retrieve selected node
     mafCore::mafObjectBase *sel_vme;
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
