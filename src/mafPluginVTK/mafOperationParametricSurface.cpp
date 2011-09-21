@@ -31,11 +31,6 @@ mafOperationParametricSurface::mafOperationParametricSurface(const QString code_
     this->setParametricSurfaceType(m_ParametricSurfaceType);
     this->initializeParametricSurfaces();
     this->visualizeParametricSurface();
-    
-    //set the icon file for vme
-    
-    m_VME->setProperty("iconFile",  ":/images/surface.png");
-    
 }
 
 mafOperationParametricSurface::~mafOperationParametricSurface() {
@@ -73,6 +68,9 @@ void mafOperationParametricSurface::visualizeParametricSurface() {
     //m_VME->setProperty("visibility", true);
     this->m_Output = m_VME;
 
+    //set the icon file for vme
+    m_VME->setProperty("iconFile",  ":/images/surface.png");
+    
     //Notify vme add
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
