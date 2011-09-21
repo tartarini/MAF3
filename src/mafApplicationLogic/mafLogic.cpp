@@ -241,4 +241,9 @@ void mafLogic::restoreHierarchy(QString fileName) {
     // Set memento loaded to hierarchy
     m_Hierarchy->setMemento(mementoHierarchy);
     mafDEL(mementoHierarchy);
+    
+    //fill the scenegraphs of all the views
+    // @@ TODO if hierarchy will handle all the hierarchy , and not shared the effort with all the other Objects, this method would be useless:
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.fillViews");
+
 }
