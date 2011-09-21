@@ -81,6 +81,9 @@ public:
     /// Set name of the view (usually is the name that appears on the menu.
     void setViewName(QString view_name);
     
+    /// update scene nodes information from vmes.
+    void updateSceneNodesInformation();
+    
 protected:
     /// Object destructor.
     /* virtual */ ~mafView();

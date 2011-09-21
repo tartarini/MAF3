@@ -212,3 +212,15 @@ void mafView::select(bool select) {
 void mafView::updateView() {
 }
 
+void mafView::updateSceneNodesInformation() {
+    QListIterator<mafSceneNode *> list(m_SceneNodeList);
+    while (list.hasNext()) {
+        mafSceneNode *sn = list.next();
+        
+        /// @@TODO refactor memento vme for handling Properties before adding vme. (can be a new signal for example load)
+        sn->setObjectName(sn->vme()->objectName());
+        sn->setProperty("iconFile", sn->vme()->property("iconFile"));
+    }
+    
+}
+
