@@ -279,19 +279,26 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
 }
 
 void mafViewManager::fillSceneGraph(mafView *v, mafCore::mafHierarchy *hierarchy) {
-  int i = 0, size = hierarchy->currentNumberOfChildren();
-  for(i; i < size; i++) {
-    hierarchy->moveTreeIteratorToNthChild(i);
-    QObject *vme = hierarchy->currentData();
-    hierarchy->moveTreeIteratorToParent();
-    QObject *vmeParent = hierarchy->currentData();
-    mafSceneNode *parentNode = v->sceneNodeFromVme(qobject_cast<mafCore::mafObjectBase *>(vmeParent));
-    v->selectSceneNode(parentNode, parentNode->property("visibility").toBool());
-    v->vmeAdd(qobject_cast<mafCore::mafObjectBase *>(vme));
-    hierarchy->moveTreeIteratorToNthChild(i);
-    fillSceneGraph(v, hierarchy);
-    hierarchy->moveTreeIteratorToParent();
-  }
+    /// @TODO this method needs to be removed, because it's a patch for updating the scenegraph
+    // used in two points:
+    // 1) when create a view (the cycle has been iterted)
+    // 2) when open a file and a view is already present (the cycle has not been used)
+  
+    int i = 0, size = hierarchy->currentNumberOfChildren();
+    for(i; i < size; i++) {
+        hierarchy->moveTreeIteratorToNthChild(i);
+        QObject *vme = hierarchy->currentData();
+        hierarchy->moveTreeIteratorToParent();
+        QObject *vmeParent = hierarchy->currentData();
+        mafSceneNode *parentNode = v->sceneNodeFromVme(qobject_cast<mafCore::mafObjectBase *>(vmeParent));
+        v->selectSceneNode(parentNode, parentNode->property("visibility").toBool());
+        v->vmeAdd(qobject_cast<mafCore::mafObjectBase *>(vme));
+        hierarchy->moveTreeIteratorToNthChild(i);
+        fillSceneGraph(v, hierarchy);
+        hierarchy->moveTreeIteratorToParent();
+    }
+
+    v->updateSceneNodesInformation();
 }
 
 void mafViewManager::destroyView(mafCore::mafObjectBase *view) {
