@@ -253,7 +253,6 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
             mafCore::mafHierarchyPointer hierarchy;
             QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
             mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
-            mafTree<QObject *>::iterator temp_iterator = hierarchy->iterator();
 
             //Create root scenenode
             v->selectSceneNode(NULL, false);
@@ -264,10 +263,10 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
             this->fillSceneGraph(v, hierarchy);
 
             //Set VME hierarchy iterator to the original position.
-            hierarchy->setIterator(temp_iterator);
-            QObject* selectedVME = hierarchy->currentData();
+            mafCore::mafObjectBase *selectedVME;
+            ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, selectedVME);
+            mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
             mafSceneNode *selectedNode = v->sceneNodeFromVme(qobject_cast<mafCore::mafObjectBase *>(selectedVME));
-            
             v->selectSceneNode(selectedNode, selectedNode->property("visualizationStatus").toUInt() == mafVisualizationStatusVisible);
             
             // Notify the view creation.
@@ -281,7 +280,7 @@ void mafViewManager::addViewToCreatedList(mafView *v) {
 void mafViewManager::fillSceneGraph(mafView *v, mafCore::mafHierarchy *hierarchy) {
     /// @TODO this method needs to be removed, because it's a patch for updating the scenegraph
     // used in two points:
-    // 1) when create a view (the cycle has been iterted)
+    // 1) when create a view (the cycle has been iterated)
     // 2) when open a file and a view is already present (the cycle has not been used)
   
     int i = 0, size = hierarchy->currentNumberOfChildren();
