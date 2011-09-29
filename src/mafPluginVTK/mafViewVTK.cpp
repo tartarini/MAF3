@@ -111,7 +111,6 @@ void mafViewVTK::selectSceneNode(mafResources::mafSceneNode *node, bool select) 
     mafSceneNodeVTK *selected = qobject_cast<mafSceneNodeVTK *>(m_SelectedNode);
     if(selected) {
         selected->nodeAssembly()->RemovePart(*prop);
-        m_PipeVisualSelection->render();
     }
     //select new scenenode
     mafView::selectSceneNode(node,select);
@@ -122,6 +121,6 @@ void mafViewVTK::selectSceneNode(mafResources::mafSceneNode *node, bool select) 
             sn->nodeAssembly()->AddPart(*prop);
         } 
         sn->update();
-        m_PipeVisualSelection->render();
-    } 
+    }
+    updateView();
 }
