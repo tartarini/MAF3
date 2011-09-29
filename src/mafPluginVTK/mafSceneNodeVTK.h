@@ -16,9 +16,10 @@
 #include <mafSceneNode.h>
 
 class vtkAssembly;
-class vtkAxesActor;
 
 namespace mafPluginVTK {
+
+class mafToolVTKAxes;
 
 /**
 Class name: mafSceneNodeVTK
@@ -47,7 +48,7 @@ protected:
 
 private:
     vtkAssembly *m_Assembly; ///< Assembly containing the prop 3D to visualize.
-    vtkAxesActor *m_AxesActor; ///< Axes to show the reference system of the node.
+    mafToolVTKAxes *m_AxesTool; ///< Axes to show the reference system of the node.
 
 public Q_SLOTS:
     /// update the position of the vme.
@@ -55,7 +56,6 @@ public Q_SLOTS:
     
     /// Set the visibility of its rendering scene.
     /*virtual*/ void setVisibility(bool visible);
-
 };
 
 inline vtkAssembly *mafSceneNodeVTK::nodeAssembly() const {
