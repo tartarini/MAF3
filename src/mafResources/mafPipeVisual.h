@@ -77,9 +77,6 @@ public Q_SLOTS:
     /// Set the visibility of its rendering scene.
     virtual void setVisibility(bool visible);
     
-    /// Allows to ask the rendering engine to render the graphic scene.
-    virtual void render() = 0;
-    
 private Q_SLOTS:
     /// Forward the vmePick event if the pick hits the current visualized VME.
     bool vmePick(double *pickPos, unsigned long, mafCore::mafProxyInterface *actor, QEvent *e);

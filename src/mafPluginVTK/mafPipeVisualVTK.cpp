@@ -30,13 +30,6 @@ void mafPipeVisualVTK::updatedGraphicObject() {
     m_Renderer = widget->renderer();
 }
 
-void mafPipeVisualVTK::render() {
-    mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(graphicObject());
-    if (widget != NULL) {
-        widget->GetRenderWindow()->Render();
-    }
-}
-
 void mafPipeVisualVTK::setScalarVisibility(bool scalarVisibility) {
     m_ScalarVisibility = scalarVisibility;
 }
@@ -48,7 +41,6 @@ void mafPipeVisualVTK::setImmediateRendering (bool immediateRendering) {
 void mafPipeVisualVTK::updateVisibility() {
     PRINT_FUNCTION_NAME_INFORMATION
     m_Prop3D->SetVisibility(visibility());
-    render();
 }
 
 void mafPipeVisualVTK::updatePipe(double t) {
