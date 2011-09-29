@@ -68,6 +68,9 @@ public:
     /// check if the operation is running.
     bool isRunning() const;
     
+    /// return the current status of the operation.
+    mafOperationStatus status() const;
+    
     /// Initialize the operation. Put here the initialization of operation's parameters.
     virtual bool initialize();
     
@@ -100,6 +103,10 @@ protected:
 /////////////////////////////////////////////////////////////
 inline bool mafOperation::isRunning() const {
     return m_Status == mafOperationStatusExecuting;
+}
+    
+inline mafOperationStatus mafOperation::status() const {
+    return m_Status;
 }
 
 inline bool mafOperation::canUnDo() const {
