@@ -369,7 +369,7 @@ void mafOperationManager::flushUndoStack() {
 
 bool mafOperationManager::canSelectVME(mafCore::mafObjectBase *vme) {
     //single thread case
-    bool isStarted = m_CurrentOperation->status() == mafOperationStatusStarted;
+    bool isStarted = (m_CurrentOperation != NULL) && (m_CurrentOperation->status() == mafOperationStatusStarted);
     if(isStarted) {
         return false;
     }
@@ -378,7 +378,7 @@ bool mafOperationManager::canSelectVME(mafCore::mafObjectBase *vme) {
         return false;
     }
     
-    // multithread case
+    // multi thread case
     mafVME *v = qobject_cast<mafVME *>(vme);    
     return v->canRead();
 }
