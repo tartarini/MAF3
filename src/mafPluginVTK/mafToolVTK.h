@@ -5,7 +5,7 @@
  *  Created by Paolo Quadrani on 27/09/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -16,12 +16,15 @@
 #include "mafPluginVTK_global.h"
 #include <mafTool.h>
 
+class vtkRenderer;
+class vtkProp3D;
+class vtkAbstractWidget;
+
 namespace mafPluginVTK {
 
 /**
  Class name: mafToolVTK
- This is the base class for the MAF3 tools. Tools are used to represent widgets or more in general
- objects that are used to perform task but don't need to be persistent on disk.
+ This is the base class for tools based on VTK library.
  */
 class MAFPLUGINVTKSHARED_EXPORT mafToolVTK : public mafResources::mafTool {
     Q_OBJECT
@@ -36,6 +39,25 @@ public:
 protected:
     /// Object destructor.
     /* virtual */ ~mafToolVTK();
+
+    /// Called when a new graphic object has been set.
+    /** This method has to be re-defined to update stuff linked to the graphic object.*/
+    /*virtual*/ void updatedGraphicObject();
+
+	/// Add a vtkProp3D to the tool layer.
+	virtual void addProp(vtkProp3D *prop);
+	
+	/// Remove a vtkProp3D from the tool layer.
+	virtual void removeProp(vtkProp3D *prop);
+	
+	/// Add a VTK widget to the tool layer.
+	virtual void addWidget(vtkAbstractWidget *w);
+	
+	/// Remove a VTK widget from the tool layer.
+	virtual void removeWidget(vtkAbstractWidget *w);
+
+private:
+    vtkRenderer *m_RendererTool; ///< Renderer used to place tools.
 };
 
 } //namespace mafResources
