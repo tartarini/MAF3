@@ -95,10 +95,6 @@ void mafPipeVisualVTKMIPVolume::updatePipe(double t) {
     updateFunctions(vtkData);
     
     m_Mapper->Update();
-    //Keep ImmediateModeRendering off: it slows rendering
-    //m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
-
-    render();
 }
 
 void mafPipeVisualVTKMIPVolume::updateFunctions(vtkDataSet *dataset) {
