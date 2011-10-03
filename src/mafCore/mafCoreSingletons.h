@@ -3,9 +3,9 @@
  *  mafCore
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -18,6 +18,7 @@
 #include "mafObjectRegistry.h"
 #include "mafObjectFactory.h"
 #include "mafMessageHandler.h"
+#include "mafThreadSynchronizer.h"
 
 namespace mafCore {
 
@@ -27,10 +28,10 @@ namespace mafCore {
  */
 class MAFCORESHARED_EXPORT mafCoreSingletons {
     public:
-    /// Initialize all the singletones present in the mafCore module.
+    /// Initialize all the singletons present in the mafCore module.
     static void mafSingletonsInitialize();
 
-    /// Shutdown all the singletones and destroy the unique instance.
+    /// Shutdown all the singletons and destroy the unique instance.
     static void mafSingletonsShutdown();
 };
 
@@ -39,10 +40,10 @@ class MAFCORESHARED_EXPORT mafCoreSingletons {
 extern "C" {
     /// Given the library name, it will load the library and will call the 'initModule' global function.
     /** This function will load the library name given as parameter, will search for the inner method 'initModule'
-    and will call it so to initialize the module's singletones and register defined objects into the mafObjectFactory.*/
+    and will call it so to initialize the module's singletons and register defined objects into the mafObjectFactory.*/
     MAFCORESHARED_EXPORT QLibrary *mafInitializeModule(QString module_library);
 
-    /// Given the library handler, it will call the shutdown of the singletones defined in it and unload the library.
+    /// Given the library handler, it will call the shutdown of the singletons defined in it and unload the library.
     MAFCORESHARED_EXPORT bool mafShutdownModule(QLibrary *libraryHandler);
 }
 
