@@ -10,7 +10,7 @@
  */
 
 #include "mafScriptEditorPython.h"
-#include "mafScriptEditorSynchronizer.h"
+#include <mafThreadSynchronizer.h>
 #include "mafScriptEditorPythonModuleManager.h"
 #include <iostream>
 
@@ -132,7 +132,7 @@ QString mafScriptEditorPython::interpret(const QString& command, int *stat)
 
     res = PyString_AsString(output);
 
-    mafScriptEditorSynchronizer::instance()->wake();
+    mafCore::mafThreadSynchronizer::instance()->wake();
 
     allowThreads();
 
