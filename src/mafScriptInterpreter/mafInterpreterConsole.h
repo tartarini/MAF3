@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef MAFINTERPRETEREDITOR_H
-#define MAFINTERPRETEREDITOR_H
+#ifndef MAFINTERPRETERCONSOLE_H
+#define MAFINTERPRETERCONSOLE_H
 
 #include "mafScriptInterpreter_global.h"
 #include <mafTextEditor.h>
@@ -92,6 +92,6 @@ private:
     
 };
     
-} // end namespace
+} // namespace mafScriptInterpreter
 
 #endif
