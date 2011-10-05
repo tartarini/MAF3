@@ -3,9 +3,9 @@
  *  mafEventBus
  *
  *  Created by Daniele Giunchi on 11/04/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -68,7 +68,7 @@ void mafNetworkConnectorQXMLRPC::createServer(const unsigned int port) {
     m_Server->setProperty("port", port);
 
     // Create a new ID to allow methods registration on new server instance.
-    QString id_name(mafTr("maf.remote.eventbus.communication.send.xmlrpc.serverMethods%1").arg(port));
+    //QString id_name(mafTr("maf.remote.eventbus.communication.send.xmlrpc.serverMethods%1").arg(port));
 
     // Register the signal to the event bus.
     /*mafRegisterRemoteSignal(id_name, this, "registerMethodsServer(mafRegisterMethodsMap)");
@@ -76,7 +76,7 @@ void mafNetworkConnectorQXMLRPC::createServer(const unsigned int port) {
             this, SLOT(registerServerMethod(mafRegisterMethodsMap)));*/
 
     QList<QVariant::Type> parametersForRegisterteredFunction;
-    parametersForRegisterteredFunction.append(QVariant::String); //return argument
+    parametersForRegisterteredFunction.append(QVariant::Map); //return argument
     parametersForRegisterteredFunction.append(QVariant::List); //parameters to send, event control parameters
     parametersForRegisterteredFunction.append(QVariant::List); //parameters to send, data parameters
 
@@ -206,8 +206,8 @@ void mafNetworkConnectorQXMLRPC::xmlrpcSend(const QString &methodName, QList<xml
 
 void mafNetworkConnectorQXMLRPC::processReturnValue( int requestId, QVariant value ) {
     Q_UNUSED( requestId );
-    Q_ASSERT( value.canConvert( QVariant::String ) );
-    qDebug("%s", value.toString().toAscii().data());
+    Q_ASSERT( value.canConvert( QVariant::Map ) );
+    qDebug("%s", value.toMap().value("returnValue").toString().toAscii().data());
     mafEventBusManager::instance()->notifyEvent("maf.local.eventBus.remoteCommunicationDone", mafEventTypeLocal);
 }
 
@@ -233,8 +233,12 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
       EVENT_METHOD_SIGNATURE,
     };
 
+    QMap<QString, xmlrpc::Variant> returnMap;
     if(parameters.at(EVENT_PARAMETERS).toList().count() == 0) {
-        m_Server->sendReturnValue( requestId, QString("No Command to Execute, command list is empty") );
+        returnMap.insert("returnValue", "FAIL");
+        returnMap.insert("errorMessage", mafTr("No Command to Execute, command list is empty"));
+        m_Server->sendReturnValue( requestId, returnMap );
+        return;
     }
 
     //here eventually can be used a filter for events
@@ -257,10 +261,12 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
         dictionary.setEventTopic(id_name);
         dictionary.setEventType(mafEventTypeLocal);
         mafEventBusManager::instance()->notifyEvent(dictionary, argList);
-        m_Server->sendReturnValue( requestId, QString("OK") );
+        returnMap.insert("returnValue", "OK");
     } else {
-        m_Server->sendReturnValue( requestId, QString("FAIL") );
+        returnMap.insert("returnValue", "FAIL");
     }
+    m_Server->sendReturnValue( requestId, returnMap );
+
     if(argList){
         delete argList;
         argList = NULL;
