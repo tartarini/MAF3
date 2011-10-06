@@ -5,7 +5,7 @@
  *  Created by Roberto Mucci on 24/06/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -81,7 +81,8 @@ private Q_SLOTS:
         
         // Import a vtk volume.
         m_Reader = vtkDataSetReader::New();
-        m_Reader->SetFileName(m_VTKFile.toAscii().constData());
+        QByteArray ba = m_VTKFile.toAscii();
+        m_Reader->SetFileName(ba.constData());
         m_Reader->Update();
         
         //! <snippet>

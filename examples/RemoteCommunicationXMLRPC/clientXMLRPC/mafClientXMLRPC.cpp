@@ -34,10 +34,13 @@ void mafClientXMLRPC::connectToServer(unsigned int port, QString address) {
         m_Address = address;
         bool res = m_Logic->createClient("XMLRPC", m_Address, m_Port);
 
+        QByteArray ba;
         if(res) {
-            qDebug("%s", mafTr("Client has been created").toAscii().data());
+            ba = mafTr("Client has been created").toAscii();
+            qDebug("%s", ba.data());
         } else {
-            qCritical("%s", mafTr("Problem on create instance of the Client").toAscii().data());
+            ba = mafTr("Problem on create instance of the Client").toAscii();
+            qCritical("%s", ba.data());
         }
     }
 }

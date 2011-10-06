@@ -3,9 +3,9 @@
  *  SimpleApp
  *
  *  Created by Paolo Quadrani on 14/12/10.
- *  Copyright 2010 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -345,7 +345,8 @@ void mafMainWindow::subWindowDestroyed() {
     mafEventBus::mafEventArgumentsList argList;
     mafObjectBase *view = m_ViewSubWindowHash.value(subWindow);
     if(view == NULL) {
-        qCritical(mafTr("View doesn't exist!!").toAscii().constData());
+        QByteArray ba = mafTr("View doesn't exist!!").toAscii();
+        qCritical(ba.constData());
         return;
     }
     argList.append(mafEventArgument(mafCore::mafObjectBase *, view));
@@ -363,7 +364,8 @@ void mafMainWindow::subWindowSelected(QMdiSubWindow *sub_win) {
         mafEventBus::mafEventArgumentsList argList;
         mafObjectBase *view = m_ViewSubWindowHash.value(sub_win);
         if(view == NULL) {
-            qCritical(mafTr("View doesn't exist!!").toAscii().constData());
+            QByteArray ba = mafTr("View doesn't exist!!").toAscii();
+            qCritical(ba.constData());
             return;
         }
         argList.append(mafEventArgument(mafCore::mafObjectBase *, view));

@@ -3,9 +3,9 @@
  *  mafEventBus
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009-2011 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -228,7 +228,8 @@ void mafEventBusManager::startListen() {
     if(connector) {
         connector->startListen();
     } else {
-        qWarning("%s", mafTr("Server can not start. Create it first, then call startListen again!!").toAscii().data());
+        QByteArray ba = mafTr("Server can not start. Create it first, then call startListen again!!").toAscii();
+        qWarning("%s", ba.data());
     }
 }
 

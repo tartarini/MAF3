@@ -308,10 +308,13 @@ bool mafEventDispatcher::registerSignal(const mafEvent &props) {
     if(m_SignalsHash.contains(topic)) {// && (this->isSignaturePresent(signal_props) == true)) {
         // Only one signal for a given id can be registered!!
         QObject *obj = props[OBJECT].value<QObject *>();
+        QByteArray ba;
         if(obj != NULL) {
-            qWarning("%s", mafTr("Object %1 is trying to register a signal with Topic '%2' that has been already registered!!").arg(obj->metaObject()->className(), topic).toAscii().data());
+            ba = mafTr("Object %1 is trying to register a signal with Topic '%2' that has been already registered!!").arg(obj->metaObject()->className(), topic).toAscii();
+            qWarning("%s", ba.data());
         } else {
-            qWarning("%s", mafTr("NULL is trying to register a signal with Topic '%2' that has been already registered!!").arg(topic).toAscii().data());
+            ba = mafTr("NULL is trying to register a signal with Topic '%2' that has been already registered!!").arg(topic).toAscii();
+            qWarning("%s", ba.data());
         }
         return false;
     }

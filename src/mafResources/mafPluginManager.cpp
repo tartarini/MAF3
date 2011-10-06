@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -109,7 +109,8 @@ void mafPluginManager::registerPlugin(mafCore::mafPluggedObjectsHash pluginHash)
         objInfo = iter.value();
         base_class = iter.key();
         if(base_class.isEmpty()) {
-            qWarning("%s", mafTr("Try to plug %1 that has no base class reference!!").arg(objInfo.m_ClassType).toAscii().data());
+            QByteArray ba = mafTr("Try to plug %1 that has no base class reference!!").arg(objInfo.m_ClassType).toAscii();
+            qWarning("%s", ba.data());
         } else {
             m_PluggedObjectsHash.insertMulti(base_class, objInfo);
 

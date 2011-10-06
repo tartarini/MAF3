@@ -5,7 +5,7 @@
  *  Created by Paolo Quadrani on 28/09/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -103,9 +103,10 @@ void vtkButtonWidgetTest::TestButtonWidget() {
    QString fname(VTK_DATA_DIR);
    fname.append("Data/beach.tif");
    
+   QByteArray ba = fname.toAscii();
    fname = QDir::toNativeSeparators(fname);
    VTK_CREATE(vtkTIFFReader, image1);
-   image1->SetFileName(fname.toAscii().data());
+   image1->SetFileName(ba.data());
    image1->SetOrientationType( 4 );
    image1->Update();
  
@@ -113,9 +114,10 @@ void vtkButtonWidgetTest::TestButtonWidget() {
    QString fname2(VTK_DATA_DIR);
    fname2.append("Data/fran_cut.png");
 
+   ba = fname2.toAscii();
    fname2 = QDir::toNativeSeparators(fname2);
    VTK_CREATE(vtkPNGReader, image2);
-   image2->SetFileName(fname2.toAscii().data());
+   image2->SetFileName(ba.data());
    image2->Update();
  
    // Create a mace out of filters.
@@ -335,9 +337,10 @@ void vtkButtonWidgetTest::TestButtonWidget() {
    QString fname3(VTK_DATA_DIR);
    fname3.append("Data/ironProt.vtk");
 
+   ba = fname3.toAscii();
    fname3 = QDir::toNativeSeparators(fname3);
    VTK_CREATE(vtkStructuredPointsReader, reader);
-   reader->SetFileName(fname3.toAscii().data());
+   reader->SetFileName(ba.data());
    
    // Create transfer mapping scalar value to opacity
    VTK_CREATE(vtkPiecewiseFunction, opacityTransferFunction);

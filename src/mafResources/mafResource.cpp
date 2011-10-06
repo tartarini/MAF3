@@ -5,7 +5,7 @@
  *  Created by Roberto Mucci - Paolo Quadrani - Daniele Giunchi on 30/12/09.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -67,7 +67,8 @@ int mafResource::setInput(mafResource *resource, const int idx) {
     REQUIRE(idx >= 0);
 
     if(m_InputList->contains(resource)) {
-        qWarning("%s", mafTr("Object %1 already present in input list").arg(resource->objectName()).toAscii().data());
+        QByteArray ba = mafTr("Object %1 already present in input list").arg(resource->objectName()).toAscii();
+        qWarning("%s", ba.data());
         return m_InputList->indexOf(resource);
     }
 
@@ -100,7 +101,8 @@ void mafResource::removeInput(const int idx) {
         // remove the object from the input list
         m_InputList->removeAt(idx);
     } else {
-        qWarning("%s", mafTr("Index %1 outside input list range.").arg(idx).toAscii().data());
+        QByteArray ba = mafTr("Index %1 outside input list range.").arg(idx).toAscii();
+        qWarning("%s", ba.data());
     }
 }
 
@@ -111,7 +113,8 @@ void mafResource::removeInput(mafResource *resource) {
     if(idx != -1) {
         removeInput(idx);
     } else {
-        qWarning("%s", mafTr("Object %1 not present in input list").arg(resource->objectName()).toAscii().data());
+        QByteArray ba = mafTr("Object %1 not present in input list").arg(resource->objectName()).toAscii();
+        qWarning("%s", ba.data());
     }
 }
 

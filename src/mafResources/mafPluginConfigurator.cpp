@@ -5,7 +5,7 @@
  *  Created by Paolo Quadrani on 06/06/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -17,7 +17,8 @@ using namespace mafResources;
 void mafPluginConfigurator::parseConfigurationFile(QDomNode current) {
     mafEventBus::mafEventArgumentsList argList;
     mafCore::mafPluggedObjectsHash pluginHash;
-    char *name = current.nodeName().toAscii().data();
+    QByteArray ba = current.nodeName().toAscii();
+    char *name = ba.data();
     QDomNodeList dnl = current.childNodes();
     for (int n=0; n < dnl.count(); ++n) {
         QDomNode node = dnl.item(n);

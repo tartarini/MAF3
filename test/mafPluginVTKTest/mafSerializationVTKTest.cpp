@@ -3,9 +3,9 @@
  *  mafPluginVTKTest
  *
  *  Created by Roberto Mucci on 26/03/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -61,7 +61,8 @@ testCustomManager::testCustomManager(QString code_location) : mafObjectBase(code
 }
 
 void testCustomManager::createdExtData(mafCore::mafProxyInterface *data) {
-    qDebug("%s", mafTr("External data loaded!!").toAscii().data());
+    QByteArray ba = mafTr("External data loaded!!").toAscii();
+    qDebug("%s", ba.data());
     QVERIFY(data != NULL);
 
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data);

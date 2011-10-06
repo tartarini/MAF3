@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -135,7 +135,8 @@ void mafDataSet::setPoseMatrixString(const QString matrixString) {
     for ( ; i < numElement; i++ ) {
         list[i].toDouble(&ok);
         if (!ok || numElement != 16) {
-            qWarning("%s", mafTr("Trying to assign an invalid string to pose Matrix.").toAscii().data());
+            QByteArray ba = mafTr("Trying to assign an invalid string to pose Matrix.").toAscii();
+            qWarning("%s", ba.data());
             return;
         }
     }

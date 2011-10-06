@@ -5,7 +5,7 @@
  *  Created by Daniele Giunchi and Paolo Quadrani on 08/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -27,8 +27,7 @@ public:
     PyThreadState* thread_state; ///< thread state for Python interpreter
 };
 
-mafScriptEditorPython::mafScriptEditorPython(QObject *parent) : mafScriptEditor(parent), m_PrivateClassPointer(new mafScriptEditorPythonPrivate)
-{
+mafScriptEditorPython::mafScriptEditorPython(QObject *parent) : mafScriptEditor(parent), m_PrivateClassPointer(new mafScriptEditorPythonPrivate) {
     m_PrivateClassPointer->thread_level = 0;
     m_PrivateClassPointer->thread_state = 0;
 
@@ -58,8 +57,7 @@ sys.stderr = catchOutErr\n"; //this is python code to redirect stdouts/stderr
     registerPrompt(&prompt);
 }
 
-mafScriptEditorPython::~mafScriptEditorPython(void)
-{
+mafScriptEditorPython::~mafScriptEditorPython(void) {
     Py_Finalize();
 
     delete m_PrivateClassPointer;
@@ -67,60 +65,57 @@ mafScriptEditorPython::~mafScriptEditorPython(void)
     m_PrivateClassPointer = NULL;
 }
 
-void mafScriptEditorPython::registerVariable(bool &var, QString name, QString description) 
-{
+void mafScriptEditorPython::registerVariable(bool &var, QString name, QString description)  {
 
 }
 
-void mafScriptEditorPython::registerVariable(int &var, QString name, QString description) 
-{
+void mafScriptEditorPython::registerVariable(int &var, QString name, QString description)  {
 
 }
 
-void mafScriptEditorPython::registerVariable(double &var, QString name, QString description) 
-{
+void mafScriptEditorPython::registerVariable(double &var, QString name, QString description)  {
 
 }
 
-void mafScriptEditorPython::registerVariable(char * &var, QString name, QString description) 
-{
+void mafScriptEditorPython::registerVariable(char * &var, QString name, QString description)  {
 
 }
 
-void mafScriptEditorPython::unregisterVariable(QString name)
-{
+void mafScriptEditorPython::unregisterVariable(QString name) {
 
 }
 
-void mafScriptEditorPython::allowThreads(void)
-{
+void mafScriptEditorPython::allowThreads(void) {
     m_PrivateClassPointer->thread_level--;
 
     if (m_PrivateClassPointer->thread_level == 0)
         m_PrivateClassPointer->thread_state = PyEval_SaveThread();
 }
 
-void mafScriptEditorPython::blockThreads(void)
-{    
+void mafScriptEditorPython::blockThreads(void) {
     if((m_PrivateClassPointer->thread_level == 0) && (m_PrivateClassPointer->thread_state))
         PyEval_RestoreThread(m_PrivateClassPointer->thread_state);
 
     m_PrivateClassPointer->thread_level++;
 }
 
-QString mafScriptEditorPython::interpret(const QString& command, int *stat)
-{
-    
+QString mafScriptEditorPython::interpret(const QString& command, int *stat) {
     blockThreads();
     
     PyObject *catcher = PyObject_GetAttrString(m_PythonModule,"catchOutErr"); //get our catchOutErr created above
     PyObject* empty = PyString_FromString("");
     PyObject_SetAttrString(catcher,"value", empty);
     
-    switch(PyRun_SimpleString(command.toAscii().constData())) {
-    case  0: *stat = Status_Ok;    break;
-    case -1: *stat = Status_Error; break;
-    default: break;
+    QByteArray ba = command.toAscii();
+    switch(PyRun_SimpleString(ba.constData())) {
+        case  0:
+            *stat = Status_Ok;
+        break;
+        case -1:
+            *stat = Status_Error;
+        break;
+        default:
+        break;
     }
 
     catcher = PyObject_GetAttrString(m_PythonModule,"catchOutErr"); //get our catchOutErr created above
@@ -139,8 +134,7 @@ QString mafScriptEditorPython::interpret(const QString& command, int *stat)
     return res;
 }
 
-QString mafScriptEditorPython::interpret(const QString& command, const QStringList& args, int *stat)
-{
+QString mafScriptEditorPython::interpret(const QString& command, const QStringList& args, int *stat) {
     QString result = "";
 
     blockThreads();
@@ -148,20 +142,21 @@ QString mafScriptEditorPython::interpret(const QString& command, const QStringLi
     PyObject *modname = PyString_FromString("__main__");
     PyObject *mod = PyImport_Import(modname);
     if (mod) {
-	PyObject *mdict = PyModule_GetDict(mod);
-	PyObject *func = PyDict_GetItemString(mdict, command.toAscii().constData());
-	if (func) {
-	    if (PyCallable_Check(func)) {
-		PyObject *args = PyTuple_New(0);
-		PyObject *rslt = PyObject_CallObject(func, args);
-		if (rslt) {
-		    result = QString(PyString_AsString(rslt));
-		    Py_XDECREF(rslt);
-		}
-		Py_XDECREF(args);
-	    }
-	}        
-	Py_XDECREF(mod);
+	    PyObject *mdict = PyModule_GetDict(mod);
+        QByteArray ba = command.toAscii();
+	    PyObject *func = PyDict_GetItemString(mdict, ba.constData());
+	    if (func) {
+	        if (PyCallable_Check(func)) {
+		        PyObject *args = PyTuple_New(0);
+		        PyObject *rslt = PyObject_CallObject(func, args);
+		            if (rslt) {
+		            result = QString(PyString_AsString(rslt));
+		            Py_XDECREF(rslt);
+		        }
+		        Py_XDECREF(args);
+	        }
+	    }        
+	    Py_XDECREF(mod);
     }
     Py_XDECREF(modname);
 
@@ -170,8 +165,8 @@ QString mafScriptEditorPython::interpret(const QString& command, const QStringLi
     return result;
 }
 
-char *mafScriptEditorPython::prompt(void)
-{
-    return QString("\033[01;35mpython\033[00m:\033[01;34m~\033[00m$ ").toAscii().data();
+char *mafScriptEditorPython::prompt(void) {
+    QByteArray ba = QString("\033[01;35mpython\033[00m:\033[01;34m~\033[00m$ ").toAscii();
+    return ba.data();
 }
 

@@ -5,7 +5,7 @@
  *  Created by Paolo Quadrani on 30/12/09.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -111,7 +111,8 @@ void mafVMEManager::initializeConnections() {
 void mafVMEManager::vmeSelect(mafObjectBase *vme) {
     mafVME *vme_to_select = qobject_cast<mafResources::mafVME *>(vme);
     if(NULL == vme_to_select) {
-        qWarning("%s", mafTr("Trying to select an object that not represent a mafVME.").toAscii().data());
+        QByteArray ba = mafTr("Trying to select an object that not represent a mafVME.").toAscii();
+        qWarning("%s", ba.data());
         return;
     }
     // VME has been selected.
@@ -121,7 +122,8 @@ void mafVMEManager::vmeSelect(mafObjectBase *vme) {
 void mafVMEManager::vmeAdd(mafObjectBase *vme) {
     mafVME *vme_to_add = qobject_cast<mafResources::mafVME *>(vme);
     if(NULL == vme_to_add) {
-        qWarning("%s", mafTr("Trying to add an object that not represent a mafVME.").toAscii().data());
+        QByteArray ba = mafTr("Trying to add an object that not represent a mafVME.").toAscii();
+        qWarning("%s", ba.data());
         return;
     }
     // VME has been added.
@@ -132,7 +134,8 @@ void mafVMEManager::vmeAdd(mafObjectBase *vme) {
 void mafVMEManager::vmeRemove(mafObjectBase *vme) {
     mafVME *vme_to_remove = qobject_cast<mafResources::mafVME *>(vme);
     if(NULL == vme_to_remove) {
-        qWarning("%s", mafTr("Trying to remove an object that not represent a mafVME.").toAscii().data());
+        QByteArray ba = mafTr("Trying to remove an object that not represent a mafVME.").toAscii();
+        qWarning("%s", ba.data());
         return;
     }
     // VME has been removed.

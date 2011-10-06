@@ -127,11 +127,11 @@ testDataSetObserver::testDataSetObserver(QString code_location) : mafObjectBase(
 }
 
 void testDataSetObserver::dataDidConnected() {
-    qDebug("%s", mafTr("Dataset I'm observing has been connected!!").toAscii().data());
+    qDebug() << mafTr("Dataset I'm observing has been connected!!");
 }
 
 void testDataSetObserver::dataDidDisconnected() {
-    qDebug("%s", mafTr("Dataset I'm observing has been disconnected!!").toAscii().data());
+    qDebug() << mafTr("Dataset I'm observing has been disconnected!!");
 }
 
 //------------------------------------------------------------------------------------------

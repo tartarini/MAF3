@@ -38,9 +38,11 @@ QLibrary *mafInitializeModule(QString module_library) {
     QLibrary *libraryHandler;
 
     libraryHandler = new QLibrary(module_library);
+    QByteArray ba;
     if(!libraryHandler->load()) {
         QString err_msg(mafTr("Could not load '%1'").arg(module_library));
-        qCritical("%s", err_msg.toAscii().constData());
+        ba = err_msg.toAscii();
+        qCritical("%s", ba.constData());
         return false;
     }
 
@@ -48,11 +50,12 @@ QLibrary *mafInitializeModule(QString module_library) {
     initModule = reinterpret_cast<mafFnInitModule *>(libraryHandler->resolve("initializeModule"));
     if(!initModule) {
         QString err_msg(mafTr("'%1' module can not be initialized!!").arg(module_library));
-        qCritical("%s", err_msg.toAscii().constData());
+        ba = err_msg.toAscii();
+        qCritical("%s", ba.constData());
         return NULL;
     }
 
-    // ...and if no errors occourred, call the module initialization.
+    // ...and if no errors occurred, call the module initialization.
     initModule();
     return libraryHandler;
 }
@@ -67,11 +70,12 @@ bool mafShutdownModule(QLibrary *libraryHandler) {
     shutdownModule = reinterpret_cast<mafFnShutdownModule *>(libraryHandler->resolve("shutdownModule"));
     if(!shutdownModule) {
         QString err_msg(mafTr("'%1' module can not shutdown!!").arg(libraryHandler->fileName()));
-        qCritical("%s", err_msg.toAscii().constData());
+        QByteArray ba = err_msg.toAscii();
+        qCritical("%s", ba.constData());
         return false;
     }
 
-    // ...and if no errors occourred, call the module shutdown.
+    // ...and if no errors occurred, call the module shutdown.
     shutdownModule();
 
     // and then unload the library.

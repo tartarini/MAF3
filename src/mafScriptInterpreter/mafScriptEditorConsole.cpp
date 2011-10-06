@@ -56,7 +56,8 @@ void mafScriptEditorConsole::registerPrompt(char *(*prompt)(void))
 void mafScriptEditorConsole::registerBindings(QString style)
 {
 #ifdef HAVE_EDITLINE
-    el_set(m_PrivateClassPointer->m_ElEngine, EL_EDITOR, style.toAscii().constData());    
+    QByteArray ba = style.toAscii();
+    el_set(m_PrivateClassPointer->m_ElEngine, EL_EDITOR, ba.constData());    
 #endif
 }
 
@@ -115,8 +116,10 @@ void mafScriptEditorConsole::run(void)
         if (line == "bye" || line == "exit" || line == "quit")
             break;
         
-        if(line != "")
-            history(m_PrivateClassPointer->m_ElHistory, &(m_PrivateClassPointer->m_ElEvent), H_ENTER, line.toAscii().constData());
+        if(line != "") {
+            QByteArray ba = line.toAscii();
+            history(m_PrivateClassPointer->m_ElHistory, &(m_PrivateClassPointer->m_ElEvent), H_ENTER, ba.constData());
+        }
 
         mafScriptEditorSynchronizer::instance()->lock();
 
@@ -213,6 +216,8 @@ void mafScriptEditorConsole::run(void)
 
 void mafScriptEditorConsole::output(const QString& result, int *stat)
 {
-    if(!result.simplified().isEmpty())
-	std::cout << (*stat == mafScriptEditor::Status_Ok ? MAF_NO_COLOR : MAF_COLOR_FG_RED) << result.toAscii().constData() << MAF_NO_COLOR << std::endl;
+    if(!result.simplified().isEmpty()) {
+        QByteArray ba = result.toAscii();
+	    std::cout << (*stat == mafScriptEditor::Status_Ok ? MAF_NO_COLOR : MAF_COLOR_FG_RED) << ba.constData() << MAF_NO_COLOR << std::endl;
+    }
 }

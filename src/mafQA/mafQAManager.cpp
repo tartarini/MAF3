@@ -3,9 +3,9 @@
  *  mafQA
  *
  *  Created by Paolo Quadrani on 17/08/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -89,7 +89,8 @@ void mafQAManager::printOnConsole() {
 void mafQAManager::printOnFile(QString filename) {
     QFile f(filename);
     if(!f.open(QIODevice::WriteOnly)) {
-        qCritical("%s", mafTr("Unable to open file %1").arg(filename).toAscii().constData());
+        QByteArray ba = mafTr("Unable to open file %1").arg(filename).toAscii();
+        qCritical("%s", ba.constData());
     }
     QTextStream dataStream(&f);
     dataStream << *m_ResultBuffer;

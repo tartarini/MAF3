@@ -3,9 +3,9 @@
  *  mafApplicationLogic
  *
  *  Created by Paolo Quadrani on 17/09/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -52,7 +52,8 @@ void mafLogicLight::sendRequestToServer(mafEvent *event_dictionary, mafEventArgu
     //need check for event coherency
     mafEventType evType = event_dictionary->eventType();
     if(evType != mafEventTypeRemote) {
-        qWarning("%s", mafTr("Wrong event type").toAscii().data());
+        QByteArray ba = mafTr("Wrong event type").toAscii();
+        qWarning("%s", ba.data());
         return;
     }
     m_EventBus->notifyEvent(*event_dictionary, argList);
