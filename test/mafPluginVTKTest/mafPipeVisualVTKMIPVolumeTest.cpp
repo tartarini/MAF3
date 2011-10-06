@@ -33,7 +33,7 @@
 // render window stuff
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
-#include <vtkRenderWindowInteractor.h>
+#include <QMainWindow>
 
 #ifdef WIN32
     #define TEST_LIBRARY_NAME "mafPluginVTK.dll"
@@ -66,6 +66,11 @@ using namespace mafPluginVTK;
 
 class mafPipeVisualVTKMIPVolumeTest : public QObject {
     Q_OBJECT
+    //initialize all the graphic resources
+    void initializeGraphicResources();
+
+    //shutdown all the graphic resources
+    void shutdownGraphicResources();
 
 private Q_SLOTS:
     /// Initialize test variables
@@ -74,8 +79,6 @@ private Q_SLOTS:
         mafResourcesRegistration::registerResourcesObjects();
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKMIPVolume)
 
-        m_RenderWidget = new mafVTKWidget();
-        
         m_VTKFile = "/Users/danielegiunchi/Desktop/sample/CropTestVolumeSP.vtk";
         
         // Import a vtk volume.
@@ -99,6 +102,8 @@ private Q_SLOTS:
         m_DataSet->setDataValue(&m_DataSourceContainer);
         m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
         //! </snippet>
+        m_RenderWidget = new mafVTKWidget();
+        initializeGraphicResources();
     }
 
     /// Cleanup test variables memory allocation.
@@ -109,7 +114,7 @@ private Q_SLOTS:
         mafDEL(m_VME);
         mafMessageHandler::instance()->shutdown();
         delete m_RenderWidget;
-
+        shutdownGraphicResources();
     }
 
     /// Test the creation of the vtkActor
@@ -126,12 +131,29 @@ private:
     vtkDataSetReader *m_Reader;
     QString m_VTKFile; ///< file name of the vtk test
     QObject *m_RenderWidget; /// renderer widget
+    vtkRenderer *m_Renderer; ///< Accessory renderer
+    QMainWindow *w;
 };
 
-void mafPipeVisualVTKMIPVolumeTest::updatePipeTest() {
-    vtkRenderer *renderer = vtkRenderer::New();
-    vtkRenderWindow *renWin = ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow();
+void mafPipeVisualVTKMIPVolumeTest::initializeGraphicResources() {
+    w = new QMainWindow();
+    w->setMinimumSize(640,480);
 
+    m_RenderWidget = new mafVTKWidget();
+    ((mafVTKWidget*)m_RenderWidget)->setParent(w);
+
+    m_Renderer = ((mafVTKWidget*)m_RenderWidget)->renderer();
+
+    m_Renderer->SetBackground(0.1, 0.1, 0.1);
+    ((mafVTKWidget*)m_RenderWidget)->update();
+    w->show();
+}
+
+void mafPipeVisualVTKMIPVolumeTest::shutdownGraphicResources() {
+    w->close();
+}
+
+void mafPipeVisualVTKMIPVolumeTest::updatePipeTest() {
     mafPipeVisualVTKMIPVolume *pipe;
     pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKMIPVolume);
     pipe->setInput(m_VME);
@@ -143,20 +165,14 @@ void mafPipeVisualVTKMIPVolumeTest::updatePipeTest() {
     mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, pipe->output());
     QVERIFY(actor != NULL);
 
-    renWin->AddRenderer(renderer);
-    
     // Connect the actor (contained into the container) with the renderer.
-    renderer->AddActor(*actor);
+    m_Renderer->AddActor(*actor);
+    m_Renderer->ResetCamera(); 
 
-    renderer->SetBackground(0.1, 0.1, 0.1);
-    renWin->SetSize(640, 480);
-    renWin->SetPosition(400,0);
-
-    renWin->Render();
-    //iren->Start();
+    ((mafVTKWidget*)m_RenderWidget)->update();
+    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
+    
     QTest::qSleep(2000);
-
-    renderer->Delete();
     pipe->setGraphicObject(NULL);
     mafDEL(pipe);
 }
@@ -184,7 +200,6 @@ void mafPipeVisualVTKMIPVolumeTest::updatePipeTestFromPlugIn() {
     QString check("mafPluginVTK::mafPipeVisualVTKMIPVolume");
     QVERIFY(binding_class_list.contains(check));
 
-
     //! <snippet>
     mafPipeVisual *visualPipe = (mafPipeVisual *)mafNEWFromString("mafPluginVTK::mafPipeVisualVTKMIPVolume");
     visualPipe->setInput(m_VME);
@@ -196,25 +211,14 @@ void mafPipeVisualVTKMIPVolumeTest::updatePipeTestFromPlugIn() {
     mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, visualPipe->output());
     //! </snippet>
     
-    vtkRenderWindow *m_RenWin = vtkRenderWindow::New();
-    vtkRenderer *m_Renderer = vtkRenderer::New();
     m_Renderer->AddActor(*actor);
-    vtkRenderWindowInteractor *m_Iren = vtkRenderWindowInteractor::New();
-    m_RenWin->AddRenderer(m_Renderer);
-    m_Iren->SetRenderWindow(m_RenWin);
-    
-    m_Renderer->SetBackground(1.0, 1.0, 1.0);
-    m_RenWin->SetSize(640, 480);
-    m_RenWin->SetPosition(200,0);
-
-    m_RenWin->Render();
+    m_Renderer->ResetCamera(); 
+    ((mafVTKWidget*)m_RenderWidget)->update();
+    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
     //iren->Start();
     QTest::qSleep(2000);
 
     //Change scalarVisibility flag
-    m_Iren->Delete();
-    m_RenWin->Delete();
-    m_Renderer->Delete();
     mafDEL(visualPipe);
 
     pluginManager->shutdown();

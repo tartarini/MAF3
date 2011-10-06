@@ -17,6 +17,8 @@
 #include <mafDataSet.h>
 #include <mafProxy.h>
 
+#include <mafVTKWidget.h>
+
 #include <vtkAlgorithmOutput.h>
 #include <vtkSphereSource.h>
 #include <vtkPolyDataMapper.h>
@@ -24,6 +26,7 @@
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
+#include <QMainWindow>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -36,6 +39,11 @@ using namespace mafPluginVTK;
  */
 class mafPipeVisualVTKBoxTest : public QObject {
     Q_OBJECT
+    //initialize all the graphic resources
+    void initializeGraphicResources();
+
+    //shutdown all the graphic resources
+    void shutdownGraphicResources();
 
 private Q_SLOTS:
     /// Initialize test variables
@@ -82,34 +90,17 @@ private Q_SLOTS:
         m_SphereMapper = vtkPolyDataMapper::New();
         m_SphereActor = vtkActor::New();
         m_SphereActor->SetMapper(m_SphereMapper);
-
-        m_RenWin = vtkRenderWindow::New();
-        m_Renderer = vtkRenderer::New();
-        m_Renderer->AddActor(m_SphereActor);
-        m_Iren = vtkRenderWindowInteractor::New();
-        m_RenWin->AddRenderer(m_Renderer);
-        m_Iren->SetRenderWindow(m_RenWin);
-
-        m_Renderer->SetBackground(0.1, 0.1, 0.1);
-        m_RenWin->SetSize(640, 480);
-        m_RenWin->SetPosition(200,0);
+        m_RenderWidget = new mafVTKWidget();
+        initializeGraphicResources();
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        m_DataSourceLow->Delete();
-        m_DataSourceHigh->Delete();
-
-        m_SphereMapper->Delete();
-        m_SphereActor->Delete();
-
-        m_RenWin->Delete();
-        m_Renderer->Delete();
-        m_Iren->Delete();
-
         mafDEL(m_VME);
         mafDEL(m_VisualPipeSelection);
         mafMessageHandler::instance()->shutdown();
+        m_RenderWidget = new mafVTKWidget();
+        shutdownGraphicResources();
     }
 
     /// Allocation test for the mafPipeVisualVTKBox.
@@ -131,10 +122,28 @@ private:
 
     vtkPolyDataMapper *m_SphereMapper; ///< Mapper to show the VME inner data.
     vtkActor *m_SphereActor; ///< Actor for the m_SphereMapper.
-    vtkRenderWindow *m_RenWin; ///< Accessory render window to show the rendered data
+    QObject *m_RenderWidget; /// renderer widget
     vtkRenderer *m_Renderer; ///< Accessory renderer
-    vtkRenderWindowInteractor *m_Iren; ///< Accessory interactor.
+    QMainWindow *w;
 };
+
+void mafPipeVisualVTKBoxTest::initializeGraphicResources() {
+    w = new QMainWindow();
+    w->setMinimumSize(640,480);
+
+    m_RenderWidget = new mafVTKWidget();
+    ((mafVTKWidget*)m_RenderWidget)->setParent(w);
+
+    m_Renderer = ((mafVTKWidget*)m_RenderWidget)->renderer();
+
+    m_Renderer->SetBackground(0.1, 0.1, 0.1);
+    ((mafVTKWidget*)m_RenderWidget)->update();
+    w->show();
+}
+
+void mafPipeVisualVTKBoxTest::shutdownGraphicResources() {
+    w->close();
+}
 
 void mafPipeVisualVTKBoxTest::allocationTest() {
     QVERIFY(m_VisualPipeSelection != NULL);
@@ -153,7 +162,9 @@ void mafPipeVisualVTKBoxTest::createPipeTest() {
     // Connect the actor (contained into the container) with the renderer.
     m_Renderer->AddActor(*actor);
 
-    m_RenWin->Render();
+    ((mafVTKWidget*)m_RenderWidget)->update();
+    m_Renderer->ResetCamera();
+    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
     QTest::qSleep(2000);
 }
 
@@ -164,7 +175,9 @@ void mafPipeVisualVTKBoxTest::updatePipeTest() {
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, sphere->dataValue());
     m_SphereMapper->SetInputConnection(*dataSet);
 
-    m_RenWin->Render();
+    ((mafVTKWidget*)m_RenderWidget)->update();
+    m_Renderer->ResetCamera();
+    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
     QTest::qSleep(2000);
 }
 

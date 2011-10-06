@@ -136,6 +136,7 @@ void mafVTKParametricSurfaceCubeTest::visualizeTest() {
 
     // Connect the actor (contained into the container) with the renderer.
     m_Renderer->AddActor(*actor);
+    m_Renderer->ResetCamera();
 
     ((mafVTKWidget*)m_RenderWidget)->update();
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();

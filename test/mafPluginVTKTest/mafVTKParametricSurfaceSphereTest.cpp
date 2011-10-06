@@ -108,7 +108,6 @@ void mafVTKParametricSurfaceSphereTest::initializeGraphicResources() {
     ((mafVTKWidget*)m_RenderWidget)->setParent(w);
 
     m_Renderer = ((mafVTKWidget*)m_RenderWidget)->renderer();
-
     m_Renderer->SetBackground(0.1, 0.1, 0.1);
     ((mafVTKWidget*)m_RenderWidget)->update();
     w->show();
@@ -134,6 +133,7 @@ void mafVTKParametricSurfaceSphereTest::visualizeTest() {
 
     // Connect the actor (contained into the container) with the renderer.
     m_Renderer->AddActor(*actor);
+    m_Renderer->ResetCamera();
 
     ((mafVTKWidget*)m_RenderWidget)->update();
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();

@@ -146,6 +146,7 @@ void mafOperationParametricSurfaceTest::visualizeTest() {
     m_Renderer->AddActor(*actor);
 
     ((mafVTKWidget*)m_RenderWidget)->update();
+    m_Renderer->ResetCamera();
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
     //iren->Start();
     QTest::qSleep(2000);
@@ -153,7 +154,6 @@ void mafOperationParametricSurfaceTest::visualizeTest() {
     pipe->setGraphicObject(NULL);
     mafDEL(pipe);
 }
-
 
 MAF_REGISTER_TEST(mafOperationParametricSurfaceTest);
 #include "mafOperationParametricSurfaceTest.moc"

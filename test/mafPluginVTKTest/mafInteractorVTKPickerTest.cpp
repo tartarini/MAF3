@@ -185,6 +185,8 @@ void mafInteractorVTKPickerTest::mafInteractorVTKPickerEventsTest() {
 
     mafProxy<vtkActor> *sphereActor = mafProxyPointerTypeCast(vtkActor, pipe->output());
     m_Renderer->AddActor(*sphereActor);
+    m_Renderer->ResetCamera();
+
     m_VTKWidget->GetRenderWindow()->Render();
     m_VTKWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCamera();
     QTest::qSleep(1000);
@@ -194,6 +196,7 @@ void mafInteractorVTKPickerTest::mafInteractorVTKPickerEventsTest() {
     QTestEventList events;
     events.addMousePress(Qt::LeftButton, Qt::ControlModifier);
     events.simulate(m_VTKWidget);
+    m_VTKWidget->GetRenderWindow()->Render();
     
     pipe->setGraphicObject(NULL);
     mafDEL(pipe);

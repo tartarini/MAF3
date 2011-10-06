@@ -12,14 +12,7 @@
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafResourcesRegistration.h>
-//#include <mafPipeVisualVTKSurface.h>
 #include <mafVTKParametricSurface.h>
-//#include <vtkRenderWindowInteractor.h>
-//#include <vtkAlgorithmOutput.h>
-//#include <mafProxy.h>
-//#include <vtkRenderWindow.h>
-//#include <vtkRenderer.h>
-//#include <vtkActor.h>
 #include <QDebug>
 
 using namespace mafResources;
