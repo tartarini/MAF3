@@ -5,7 +5,7 @@
  *  Created by Roberto Mucci on 10/02/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -54,7 +54,8 @@ void mafOperationParametricSurface::visualizeParametricSurface() {
     m_ParametricContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
     m_ParametricContainer = currentSurface->output();
 
-    char *v = m_ParametricContainer.externalDataType().toAscii().data();
+    QByteArray ba = m_ParametricContainer.externalDataType().toAscii();
+    char *v = ba.data();
     
     //Insert data into VME
     m_VME = mafNEW(mafResources::mafVME);

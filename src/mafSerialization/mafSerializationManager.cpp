@@ -3,9 +3,9 @@
  *  mafSerialization
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -84,10 +84,12 @@ void mafSerializationManager::saveMemento(mafMemento *memento, const QString &ur
     REQUIRE(memento != NULL);
 
     QString codecType;
+    QByteArray ba;
     if(m_CodecHash.contains(encode_type)) {
         codecType = m_CodecHash.value(encode_type);
     } else {
-        qWarning("%s", mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toAscii().data());
+        ba = mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toAscii();
+        qWarning("%s", ba.data());
         codecType = m_CodecHash.value("RAW");
     }
     
@@ -98,7 +100,8 @@ void mafSerializationManager::saveMemento(mafMemento *memento, const QString &ur
     QUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
-        qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
+        ba = mafTr("Invalid URL: %1").arg(u.toString()).toAscii();
+        qCritical("%s", ba.data());
         return;
     }
     
@@ -129,8 +132,10 @@ void mafSerializationManager::saveMemento(mafMemento *memento, const QString &ur
 }
 
 mafMemento *mafSerializationManager::loadMemento(const QString &url, const QString &encode_type) {
+    QByteArray ba;
     if(!m_CodecHash.contains(encode_type)) {
-        qCritical("%s", mafTr("No codec associated with the '%1' encoding type.").arg(encode_type).toAscii().data());
+        ba = mafTr("No codec associated with the '%1' encoding type.").arg(encode_type).toAscii();
+        qCritical("%s", ba.data());
         return NULL;
     }
 
@@ -141,7 +146,8 @@ mafMemento *mafSerializationManager::loadMemento(const QString &url, const QStri
     QUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
-        qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
+        ba = mafTr("Invalid URL: %1").arg(u.toString()).toAscii();
+        qCritical("%s", ba.data());
         return NULL;
     }
     
@@ -165,7 +171,8 @@ mafMemento *mafSerializationManager::loadMemento(const QString &url, const QStri
     mafMemento *m = codec->decode();
 
     if(m == NULL) {
-        qCritical("%s", mafTr("Impossible load memento.").toAscii().data());
+        ba = mafTr("Impossible load memento.").toAscii();
+        qCritical("%s", ba.data());
         mafDEL(codec);
         mafDEL(ser);
         return NULL;
@@ -183,10 +190,12 @@ void mafSerializationManager::exportExternalData(mafCore::mafProxyInterface *ext
     REQUIRE(externalData != NULL);
 
     QString codecType;
+    QByteArray ba;
     if(m_CodecHash.contains(encode_type)) {
         codecType = m_CodecHash.value(encode_type);
     } else {
-        qWarning("%s", mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toAscii().data());
+        ba = mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toAscii();
+        qWarning("%s", ba.data());
         codecType = m_CodecHash.value("RAW");
     }
 
@@ -198,8 +207,9 @@ void mafSerializationManager::exportExternalData(mafCore::mafProxyInterface *ext
     QUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
-        qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
-         return;
+        ba = mafTr("Invalid URL: %1").arg(u.toString()).toAscii();
+        qCritical("%s", ba.data());
+        return;
      }
 
     QString s = u.scheme();
@@ -229,8 +239,10 @@ void mafSerializationManager::exportExternalData(mafCore::mafProxyInterface *ext
 }
 
 mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const QString &url, const QString &encode_type) {
+    QByteArray ba;
     if(!m_CodecHash.contains(encode_type)) {
-        qCritical("%s", mafTr("No codec associated with the '%1' encoding type.").arg(encode_type).toAscii().data());
+        ba = mafTr("No codec associated with the '%1' encoding type.").arg(encode_type).toAscii();
+        qCritical("%s", ba.data());
         return NULL;
     }
 
@@ -238,7 +250,8 @@ mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const Q
     QUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
-        qCritical("%s", mafTr("Invalid URL: %1").arg(u.toString()).toAscii().data());
+        ba = mafTr("Invalid URL: %1").arg(u.toString()).toAscii();
+        qCritical("%s", ba.data());
         return NULL;
     }
 

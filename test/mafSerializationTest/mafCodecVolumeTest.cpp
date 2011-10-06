@@ -3,9 +3,9 @@
  *  mafSerializationTest
  *
  *  Created by Yubo Tao on 28/12/10.
- *  Copyright 2010 University of Bedfordshire. All rights reserved.
+ *  Copyright 2011 University of Bedfordshire. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -744,9 +744,10 @@ void mafCodecVolumeTest::verifyGrayMemento(mafMemento *memento, int level, int s
                     }
                 }
             }
-        } else { 
-            QVERIFY2(item.m_Name == comparedItem.m_Name, item.m_Name.toAscii().data());
-            QVERIFY2(item.m_Value == comparedItem.m_Value, item.m_Name.toAscii().data());
+        } else {
+            QByteArray ba = item.m_Name.toAscii();
+            QVERIFY2(item.m_Name == comparedItem.m_Name, ba.data());
+            QVERIFY2(item.m_Value == comparedItem.m_Value, ba.data());
         }
     }
 }
@@ -789,8 +790,9 @@ void mafCodecVolumeTest::verifyRGBMemento(mafMemento *memento, int level, int st
                 }
             }
         } else {
-            QVERIFY2(item.m_Name == comparedItem.m_Name, item.m_Name.toAscii().data());
-            QVERIFY2(item.m_Value == comparedItem.m_Value, item.m_Name.toAscii().data());
+            QByteArray ba = item.m_Name.toAscii();
+            QVERIFY2(item.m_Name == comparedItem.m_Name, ba.data());
+            QVERIFY2(item.m_Value == comparedItem.m_Value, ba.data());
         }
     }
 }

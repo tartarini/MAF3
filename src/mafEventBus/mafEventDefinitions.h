@@ -3,9 +3,9 @@
  *  mafEventBus
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -41,7 +41,8 @@
         mafEventBus::mafEvent *properties = new mafEventBus::mafEvent(topic, mafEventBus::mafEventTypeLocal, mafEventBus::mafSignatureTypeSignal, static_cast<QObject*>(sender), signature); \
         bool ok = mafEventBus::mafEventBusManager::instance()->addEventProperty(*properties);\
         if(!ok) {\
-            qWarning("%s", mafTr("Some problem occourred during the signal registration with ID '%1'.").arg(topic).toAscii().data());\
+            QByteArray ba = mafTr("Some problem occourred during the signal registration with ID '%1'.").arg(topic).toAscii();\
+            qWarning("%s", ba.data());\
             if(properties) {delete properties; properties = NULL;} \
             }\
     }
@@ -51,7 +52,8 @@
         mafEventBus::mafEvent *properties = new mafEventBus::mafEvent(topic, mafEventBus::mafEventTypeRemote, mafEventBus::mafSignatureTypeSignal, static_cast<QObject*>(sender), signature); \
         bool ok =  mafEventBus::mafEventBusManager::instance()->addEventProperty(*properties);\
         if(!ok) {\
-            qWarning("%s", mafTr("Some problem occourred during the signal registration with ID '%1'.").arg(topic).toAscii().data());\
+            QByteArray ba = mafTr("Some problem occourred during the signal registration with ID '%1'.").arg(topic).toAscii();\
+            qWarning("%s", ba.data());\
             if(properties) {delete properties; properties = NULL;} \
         }\
     }
@@ -61,7 +63,8 @@
         mafEventBus::mafEvent *properties = new mafEventBus::mafEvent(topic, mafEventBus::mafEventTypeLocal, mafEventBus::mafSignatureTypeCallback, static_cast<QObject*>(observer), signature); \
         bool ok =  mafEventBus::mafEventBusManager::instance()->addEventProperty(*properties);\
         if(!ok) {\
-            qWarning("%s", mafTr("Some problem occourred during the callback registration with ID '%1'.").arg(topic).toAscii().data());\
+            QByteArray ba = mafTr("Some problem occourred during the callback registration with ID '%1'.").arg(topic).toAscii();\
+            qWarning("%s", ba.data());\
             if(properties) {delete properties; properties = NULL;} \
         }\
     }
@@ -84,7 +87,8 @@
         mafEventBus::mafEvent *properties = new mafEventBus::mafEvent(topic, mafEventBus::mafEventTypeRemote, mafEventBus::mafSignatureTypeCallback, static_cast<QObject*>(sender), signature); \
         bool ok =  mafEventBus::mafEventBusManager::instance()->addEventProperty(*properties);\
         if(!ok) {\
-            qWarning("%s", mafTr("Some problem occourred during the callback registration with ID '%1'.").arg(topic).toAscii().data());\
+            QByteArray ba = mafTr("Some problem occourred during the callback registration with ID '%1'.").arg(topic).toAscii();\
+            qWarning("%s", ba.data());\
             if(properties) {delete properties; properties = NULL;} \
         }\
     }

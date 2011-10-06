@@ -5,7 +5,7 @@
  *  Created by Daniele Giunchi - Paolo Quadrani on 24/03/10.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -42,7 +42,8 @@ void mafSceneNode::setVisualPipe(QString visualPipeType) {
     }
     
     if(visualPipeType.isEmpty()) {
-        qCritical(mafTr("Pipe type not valid, impossible create Visual pipe!").toAscii().constData());
+        QByteArray ba = mafTr("Pipe type not valid, impossible create Visual pipe!").toAscii();
+        qCritical(ba.constData());
         return;
     }
     

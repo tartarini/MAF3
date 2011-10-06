@@ -3,9 +3,9 @@
  *  mafCore
  *
  *  Created by Paolo Quadrani on 17/09/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *  
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *  
  */
 
@@ -71,7 +71,8 @@ bool mafObjectBase::isEqual(const mafObjectBase *obj) const {
         QVariant obj_value = obj->property(obj_name.toAscii());
         QString my_name = my_qmp.name();
         QVariant my_value = property(my_name.toAscii());
-        char *n = my_name.toAscii().data();
+        QByteArray ba = my_name.toAscii();
+        char *n = ba.data();
         if((my_name != obj_name) || (my_value != obj_value)) {
             return false;
         }

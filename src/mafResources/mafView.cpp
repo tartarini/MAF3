@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Roberto Mucci on 30/03/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -100,7 +100,8 @@ void mafView::vmeSelect(mafObjectBase *node) {
     }
     if(NULL == node_to_select) {
         // Something wrong happened, generate a warning...
-        qWarning("%s", mafTr("Trying to select an object that is not present in tree.").toAscii().data());
+        QByteArray ba = mafTr("Trying to select an object that is not present in tree.").toAscii();
+        qWarning("%s", ba.data());
         return;
     }
     selectSceneNode(node_to_select, true);
@@ -167,8 +168,8 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
         //if originally in visual pipe hash, is not present that binding data-pipe visual,
         // request to the PluginManager possible visual pipe accepting vme object.
         mafPluggedObjectInformationList *vpsHash = mafPluginManager::instance()->queryPluggedObjects("mafResources::mafPipeVisual");
-        
-        qWarning("%s", mafTr("Visual pipe not found for '%1' of data!").arg(vp).toAscii().data());
+        QByteArray ba = mafTr("Visual pipe not found for '%1' of data!").arg(vp).toAscii();
+        qWarning("%s", ba.data());
         return;
     }
 

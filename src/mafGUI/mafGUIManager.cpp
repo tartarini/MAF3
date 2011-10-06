@@ -3,9 +3,9 @@
  *  mafGUI
  *
  *  Created by Paolo Quadrani on 26/10/10.
- *  Copyright 2010 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -97,7 +97,8 @@ void mafGUIManager::createToolbar(QDomElement node) {
     QString title = attributes.namedItem("title").nodeValue();
     QString actions = attributes.namedItem("actionList").nodeValue();
 
-    QToolBar *toolBar = m_MainWindow->addToolBar(tr(title.toAscii().constData()));
+    QByteArray ba = title.toAscii();
+    QToolBar *toolBar = m_MainWindow->addToolBar(tr(ba.constData()));
 
     QStringList actionList = actions.split(",");
     Q_FOREACH (QString action, actionList) {
@@ -117,16 +118,19 @@ void mafGUIManager::createAction(QDomElement node) {
     QString slot = attributes.namedItem("slot").nodeValue();
     QString topic = attributes.namedItem("topic").nodeValue();
 
-    QAction *action = new QAction(QIcon(icon), mafTr(title.toAscii().constData()), this);
-    action->setIconText(mafTr(title.toAscii().constData()));
+    QByteArray ba = title.toAscii();
+    QAction *action = new QAction(QIcon(icon), mafTr(ba.constData()), this);
+    action->setIconText(mafTr(ba.constData()));
     action->setObjectName(title);
 //    action->setShortcuts(QKeySequence::New);
-    action->setStatusTip(mafTr(tip.toAscii().constData()));
+    ba = tip.toAscii();
+    action->setStatusTip(mafTr(ba.constData()));
     action->setCheckable(checkable.toInt() != 0);
     action->setChecked(checked.toInt() != 0);
     if (!slot.isEmpty()) {
         slot.prepend(CALLBACK_SIGNATURE);
-        connect(action, SIGNAL(triggered()), this, slot.toAscii().constData());
+        ba = slot.toAscii();
+        connect(action, SIGNAL(triggered()), this, ba.constData());
     }
     if (!topic.isEmpty()) {
         mafIdProvider *provider = mafIdProvider::instance();
@@ -146,15 +150,16 @@ void mafGUIManager::createMenuItem(QDomElement node) {
     QString title = attributes.namedItem("title").nodeValue();
     QString parentName = attributes.namedItem("parent").nodeValue();
 
+    QByteArray ba = title.toAscii();
     if (parentName.isEmpty()) {
         // Create a new menu item.
         QMenuBar *menuBar = m_MainWindow->menuBar();
-        m_CurrentMenu = menuBar->addMenu(mafTr(title.toAscii().constData()));
+        m_CurrentMenu = menuBar->addMenu(mafTr(ba.constData()));
         m_CurrentMenu->setObjectName(title);
         m_MenuItemList.append(m_CurrentMenu);
     } else {
         // Create the new menu as child of the given parent.
-        QMenu *menu = new QMenu(mafTr(title.toAscii().constData()));
+        QMenu *menu = new QMenu(mafTr(ba.constData()));
         menu->setObjectName(title);
         QMenu *parentMenu = (QMenu *)this->menuItemByName(parentName);
         if (parentMenu) {
@@ -191,7 +196,8 @@ void mafGUIManager::parseMenuAttributes(QDomNode current) {
 
 QDomNode mafGUIManager::parseMenuTree(QDomNode current) {
     // Get the menu items...
-    char *name = current.nodeName().toAscii().data();
+    QByteArray ba = current.nodeName().toAscii();
+    char *name = ba.data();
     QDomNodeList dnl = current.childNodes();
     for (int n=0; n < dnl.count(); ++n) {
         QDomNode node = dnl.item(n);
@@ -335,7 +341,8 @@ void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pl
             QVariant data_type(objInfo.m_ClassType);
             action->setData(data_type);
             QMenu *menu;
-            char *bc = base_class.toAscii().data();
+            QByteArray ba = base_class.toAscii();
+            char *bc = ba.data();
             if(base_class == "mafResources::mafOperation") {
                 // Add a new item to the operation's menu.
                 menu = (QMenu *)this->menuItemByName("Operations");

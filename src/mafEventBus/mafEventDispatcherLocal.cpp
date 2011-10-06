@@ -3,9 +3,9 @@
  *  mafEventBus
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -94,8 +94,10 @@ void mafEventDispatcherLocal::notifyEvent(const mafEvent &event_dictionary, mafE
                              Qt::DirectConnection, argList->at(0), argList->at(1), argList->at(2), argList->at(3), argList->at(4), \
                              argList->at(5), argList->at(6), argList->at(7), argList->at(8), argList->at(9));
                             break;
-                        default:
-                            qWarning("%s", mafTr("Number of arguments not supported. Max 10 arguments").toAscii().data());
+                        default: {
+                            QByteArray ba = mafTr("Number of arguments not supported. Max 10 arguments").toAscii();
+                            qWarning("%s", ba.data());
+                        }
                     } //switch
                  } else { //use return value
                     switch (argList->count()) {
@@ -146,8 +148,10 @@ void mafEventDispatcherLocal::notifyEvent(const mafEvent &event_dictionary, mafE
                             *returnArg, argList->at(0), argList->at(1), argList->at(2), argList->at(3), argList->at(4), \
                             argList->at(5), argList->at(6), argList->at(7), argList->at(8), argList->at(9));
                             break;
-                        default:
-                            qWarning("%s", mafTr("Number of arguments not supported. Max 10 arguments").toAscii().data());
+                        default: {
+                            QByteArray ba = mafTr("Number of arguments not supported. Max 10 arguments").toAscii();
+                            qWarning("%s", ba.data());
+                        }
                     } //switch
                  }
             } else {

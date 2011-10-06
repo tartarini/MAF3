@@ -3,9 +3,9 @@
  *  mafApplicationLogic
  *
  *  Created by Daniele Giunchi on 28/06/10.
- *  Copyright 2009-2010 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -166,7 +166,8 @@ void mafLogic::loadPlugins(QString plugin_dir) {
         Q_FOREACH(QString file, plugin_list) {
             argList.clear();
             file = dir.absoluteFilePath(file);
-            char *v = file.toAscii().data();
+            QByteArray ba = file.toAscii();
+            char *v = ba.data();
             argList.append(mafEventArgument(QString, file));
             mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.loadLibrary", mafEventTypeLocal, &argList);
         }
@@ -234,7 +235,8 @@ void mafLogic::restoreHierarchy(QString fileName) {
     QGenericReturnArgument retVal = mafEventReturnArgument(mafCore::mafMemento*, mementoHierarchy);
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal, &argList, &retVal);
     if(mementoHierarchy == NULL) {
-        qCritical("%s", mafTr("Impossible to load MSF").toAscii().data());
+        QByteArray ba = mafTr("Impossible to load MSF").toAscii();
+        qCritical("%s", ba.data());
         return;
     }
 
@@ -242,7 +244,7 @@ void mafLogic::restoreHierarchy(QString fileName) {
     m_Hierarchy->setMemento(mementoHierarchy);
     mafDEL(mementoHierarchy);
     
-    //fill the scenegraphs of all the views
+    //fill the scene graphs of all the views
     // @@ TODO if hierarchy will handle all the hierarchy , and not shared the effort with all the other Objects, this method would be useless:
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.fillViews");
     

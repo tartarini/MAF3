@@ -3,9 +3,9 @@
  *  clientXMLRPC
  *
  *  Created by Paolo Quadrani on 17/09/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -15,8 +15,10 @@
 
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
+    QByteArray ba;
     if(argc != 3) {
-        qDebug("%s", mafTr("Usage: \nclientXMLRPC port server_address").toAscii().data());
+        ba = mafTr("Usage: \nclientXMLRPC port server_address").toAscii();
+        qDebug("%s", ba.data());
         exit(0);
     }
 

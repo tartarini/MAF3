@@ -3,9 +3,9 @@
  *  mafPluginTest
  *
  *  Created by Roberto Mucci on 14/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -14,13 +14,15 @@
 using namespace mafPluginTest;
 
 mafPipeDataSurfacePluginTest::mafPipeDataSurfacePluginTest(const QString code_location) : mafPipeData(code_location) {
-    qDebug("%s", mafTr("plugin pipeline created!!").toAscii().data());
+    QByteArray ba = mafTr("plugin pipeline created!!").toAscii();
+    qDebug("%s", ba.data());
 }
 
 mafPipeDataSurfacePluginTest::~mafPipeDataSurfacePluginTest() {
 }
 
 void mafPipeDataSurfacePluginTest::updatePipe(double t) {
-    qDebug("%s", mafTr("plugin executed at time %1!!").arg(t).toAscii().data());
+    QByteArray ba = mafTr("plugin executed at time %1!!").arg(t).toAscii();
+    qDebug("%s", ba.data());
     Superclass::updatePipe(t);
 }

@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Roberto Mucci - Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -73,7 +73,8 @@ void mafPipe::removeInput(mafVME *vme) {
     if(idx != -1) {
         m_InputList->removeAt(idx);
     } else {
-        qWarning("%s", mafTr("Object %1 not present in input list").arg(vme->objectName()).toAscii().data());
+        QByteArray ba = mafTr("Object %1 not present in input list").arg(vme->objectName()).toAscii();
+        qWarning("%s", ba.data());
     }
 }
 
@@ -84,6 +85,7 @@ void mafPipe::removeInput(const int idx) {
         mafVME *vme = m_InputList->at(idx);
         m_InputList->removeAt(idx);
     } else {
-        qWarning("%s", mafTr("Index %1 outside input list range.").arg(idx).toAscii().data());
+        QByteArray ba = mafTr("Index %1 outside input list range.").arg(idx).toAscii();
+        qWarning("%s", ba.data());
     }
 }

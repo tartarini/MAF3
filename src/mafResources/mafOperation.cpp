@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -29,11 +29,12 @@ bool mafOperation::initialize() {
 
 void mafOperation::setParameters(const QVariantMap &parameters) {
     QMapIterator<QString, QVariant> i(parameters);
+    QByteArray ba;
     while (i.hasNext()) {
         i.next();
-        this->setProperty(i.key().toAscii().constData(), i.value()); 
+        ba = i.key().toAscii();
+        this->setProperty(ba.constData(), i.value()); 
     } 
-
 }
 
 void mafOperation::terminate() {
