@@ -31,13 +31,6 @@ using namespace mafPluginVTK;
 
 mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f), m_Axes(NULL), m_RendererBase(NULL), m_RendererTool(NULL) {
     initializeConnections();
-    vtkRenderWindow *renWin = GetRenderWindow();
-    // Set the number of layers for the render window.
-    renWin->SetNumberOfLayers(2);
-
-    // Layer in which draw the 3D objects
-    m_RendererBase = createLayer("base");
-    m_RendererTool = createLayer("tool");
 }
 
 mafVTKWidget::~mafVTKWidget() {
@@ -56,6 +49,16 @@ void mafVTKWidget::initializeConnections() {
     result = connect(this, SIGNAL(mousePressSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mousePress(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
     result = connect(this, SIGNAL(mouseReleaseSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mouseRelease(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
     result= connect(this, SIGNAL(mouseMoveSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mouseMove(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
+}
+
+void mafPluginVTK::mafVTKWidget::initializeLayers() {
+    vtkRenderWindow *renWin = GetRenderWindow();
+    // Set the number of layers for the render window.
+    //renWin->SetNumberOfLayers(2);
+
+    // Layer in which draw the 3D objects
+    m_RendererBase = createLayer("base");
+    m_RendererTool = createLayer("tool");
 }
 
 vtkRenderer *mafVTKWidget::createLayer(const QString layerName) {
@@ -300,4 +303,11 @@ void mafVTKWidget::mouseMove(vtkRenderWindowInteractor* iren, QEvent *e) {
 // overloaded resize handler
 void mafVTKWidget::resizeEvent(QResizeEvent* event) {
     QVTKWidget::resizeEvent(event);
+}
+
+vtkRenderer *mafVTKWidget::renderer(const QString layerName) {
+    if (m_LayerHash.count() == 0) {
+        initializeLayers();
+    }
+    return m_LayerHash.value(layerName, NULL);
 }
