@@ -100,8 +100,7 @@ private Q_SLOTS:
 void vtkButtonWidgetTest::TestButtonWidget() {
    // Create an image for the button
    QString fname(MAF_DATA_DIR);
-   fname.append("Images/beach.tif");
-   
+   fname.append("/Images/beach.tif");
    QByteArray ba = fname.toAscii();
    fname = QDir::toNativeSeparators(fname);
    VTK_CREATE(vtkTIFFReader, image1);
@@ -111,7 +110,7 @@ void vtkButtonWidgetTest::TestButtonWidget() {
  
    // Create an image for the button
    QString fname2(MAF_DATA_DIR);
-   fname2.append("Images/fran_cut.png");
+   fname2.append("/Images/fran_cut.png");
 
    ba = fname2.toAscii();
    fname2 = QDir::toNativeSeparators(fname2);
@@ -334,7 +333,7 @@ void vtkButtonWidgetTest::TestButtonWidget() {
    // A volume rendered button!
    // Create the reader for the data
    QString fname3(MAF_DATA_DIR);
-   fname3.append("VTK/ironProt.vtk");
+   fname3.append("/VTK/ironProt.vtk");
 
    ba = fname3.toAscii();
    fname3 = QDir::toNativeSeparators(fname3);
