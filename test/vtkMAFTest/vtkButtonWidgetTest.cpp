@@ -9,12 +9,11 @@
  *
  */
 
+#include "mafTestConfig.h"
 #include <mafTestSuite.h>
 
 #include <mafCoreSingletons.h>
 #include <mafCoreRegistration.h>
-
-#define VTK_DATA_DIR "C:\\Devel\\MAF3\\TestData\\vtkdata-5.8.0\\"
 
 using namespace mafCore;
 
@@ -100,8 +99,8 @@ private Q_SLOTS:
 
 void vtkButtonWidgetTest::TestButtonWidget() {
    // Create an image for the button
-   QString fname(VTK_DATA_DIR);
-   fname.append("Data/beach.tif");
+   QString fname(MAF_DATA_DIR);
+   fname.append("Images/beach.tif");
    
    QByteArray ba = fname.toAscii();
    fname = QDir::toNativeSeparators(fname);
@@ -111,8 +110,8 @@ void vtkButtonWidgetTest::TestButtonWidget() {
    image1->Update();
  
    // Create an image for the button
-   QString fname2(VTK_DATA_DIR);
-   fname2.append("Data/fran_cut.png");
+   QString fname2(MAF_DATA_DIR);
+   fname2.append("Images/fran_cut.png");
 
    ba = fname2.toAscii();
    fname2 = QDir::toNativeSeparators(fname2);
@@ -334,8 +333,8 @@ void vtkButtonWidgetTest::TestButtonWidget() {
  
    // A volume rendered button!
    // Create the reader for the data
-   QString fname3(VTK_DATA_DIR);
-   fname3.append("Data/ironProt.vtk");
+   QString fname3(MAF_DATA_DIR);
+   fname3.append("VTK/ironProt.vtk");
 
    ba = fname3.toAscii();
    fname3 = QDir::toNativeSeparators(fname3);

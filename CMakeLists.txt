@@ -22,6 +22,7 @@ option(BUILD_EXAMPLES "Build Examples"              OFF)
 option(BUILD_QA "Build Q&A"                         OFF)
 option(BUILD_DOCUMENTATION "Build documentation"    OFF)
 option(BUILD_WRAP "Build Wrap"                      OFF)
+option(DATA_TEST "Download MAF Data Test"           OFF)
 
 
 option(MAF_USE_GIT_PROTOCOL "If ON use git protocol, otherwise http"                   OFF)
@@ -32,6 +33,14 @@ mark_as_advanced(MAF_SUPERBUILD)
 FIND_PACKAGE(Git)
 if(NOT GIT_FOUND)
   message(FATAL_ERROR "error: Install Git and try to re-configure")
+endif()
+
+
+FIND_PACKAGE(Subversion)
+if(NOT Subversion_FOUND)
+  message(STATUS "error: Install Subversion for enable tests.")
+  set(BUILD_TEST_SUITE OFF)
+  set(DATA_TEST OFF)
 endif()
 
 # git protocol to be used
@@ -66,6 +75,14 @@ option(MAF_APPLICATION_LOGIC "Build mafApplicationLogic module. mafCore and mafE
 option(MAF_QTGUI "Build mafGUI module. mafCore and mafEventBus will be built anyway."                         ON)
 option(MAF_SCRIPT_INTERPRETER "Build mafScriptInterpreter module. mafCore, mafEventBus and mafGUI will be built anyway." OFF)
 
+set(MAF_DATA_DIR)
+find_path(MAF_DATA_DIR "README.txt" PATHS "${MAF_SOURCE_DIR}/../maf3data")
+
+if(${MAF_DATA_DIR})
+else(${MAF_DATA_DIR})
+  set(MAF_DATA_DIR "${MAF_SOURCE_DIR}/../maf3data")
+endif(${MAF_DATA_DIR})
+  
 ### set modules interdependencies
 include(CMake/mafUtilities.cmake)
 if(MAF_PLUGINVTK)
@@ -112,6 +129,12 @@ if(BUILD_EXAMPLES)
     mafDependentOption(MAF_SCRIPT_INTERPRETER "Build Test module for mafGUI." ON BUILD_EXAMPLES ON)
 endif(BUILD_EXAMPLES)
 
+### examples dependencies 
+if(BUILD_TEST_SUITE)
+    set( DATA_TEST ON ) 
+    mafDependentOption(DATA_TEST "Download Data Test." ON BUILD_TEST_SUITE ON)
+endif(BUILD_TEST_SUITE)
+
 if(BUILD_QA)
     set( BUILD_DOCUMENTATION ON ) 
     mafDependentOption(BUILD_DOCUMENTATION "Build Documentation for QA." ON BUILD_QA ON)
@@ -151,6 +174,15 @@ endif(MAF_SUPERBUILD)
 add_subdirectory(src)
 
 #############################################################################################
+### DATA
+#############################################################################################
+
+if(DATA_TEST)
+  include(CMake/mafDataTestDownload.cmake)
+  mafDataTestDownload()
+endif(DATA_TEST)
+
+#############################################################################################
 ### TESTS
 #############################################################################################
 
@@ -173,3 +205,4 @@ endif(BUILD_EXAMPLES)
 if(BUILD_DOCUMENTATION)
   add_subdirectory(doc)
 endif(BUILD_DOCUMENTATION)
+

@@ -1,6 +1,8 @@
 #message (".......................... Entering ${CMAKE_CURRENT_LIST_FILE} ............................")
 
 include(${MAF_USE_FILE_CONFIG})
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/mafTestConfig.h.in ${CMAKE_CURRENT_BINARY_DIR}/mafTestConfig.h)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 ADD_SUBDIRECTORY(mafCoreTest)
 ADD_SUBDIRECTORY(mafEventBusTest)
@@ -39,11 +41,6 @@ endif(${MAF_QTGUI})
 if(${MAF_SCRIPT_INTERPRETER})
   ADD_SUBDIRECTORY(mafScriptInterpreterTest)
 endif(${MAF_SCRIPT_INTERPRETER})
-
-
-
-
-
 
 
 

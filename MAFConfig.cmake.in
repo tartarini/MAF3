@@ -26,6 +26,9 @@ set(BUILD_QA "@BUILD_QA@")
 # MAF options
 #set(MAF_USE_PYTHON "@MAF_USE_PYTHON@")
 
+# build maf quality assurance
+set(DATA_TEST "@DATA_TEST@")
+
 # The CMake macros dir.
 set(MAF_ROOT_DIR "@MAF_ROOT_DIR@")
 
@@ -43,6 +46,8 @@ set(MAF_USE_FILE "@MAF_USE_FILE_CONFIG@")
 
 # The MAF binary directory where libraries and executables will be generated.
 set(MAF_BIN_DIRS_CONFIG "@MAF_BIN_DIRS_CONFIG@")
+# set maf data dir
+set(MAF_DATA_DIR "@MAF_DATA_DIR@")
 
 # Components needed to build modules from outside a MAF build tree or 
 # from outside a MAF installation tree
