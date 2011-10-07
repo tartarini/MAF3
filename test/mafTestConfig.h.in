@@ -1,0 +1,3 @@
+/* Define the base dir for the data test */
+#cmakedefine MAF_DATA_DIR "@MAF_DATA_DIR@"
+
