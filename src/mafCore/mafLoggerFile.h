@@ -3,9 +3,9 @@
  *  mafCore
  *
  *  Created by Paolo Quadrani on 17/09/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -22,7 +22,7 @@ namespace mafCore {
 
 /**
  Class name: mafLoggerFile
- This class defines the MAF3 logging class that will store messages into a file on filesystem.
+ This class defines the MAF3 logging class that will store messages into a file on file system.
  @sa maf Logger mafLoggerConsole mafLoggerBuffer mafMessageHandler
  */
 class MAFCORESHARED_EXPORT mafLoggerFile : public mafLogger {
@@ -43,13 +43,13 @@ public:
     /*virtual*/ void clearLogHistory();
 
     /// Return the filename associated to the last session of logs.
-    const QString lastLogFile() const {return m_LastLogFile;}
+    const QString lastLogFile() const;
 
 protected:
     /// Object destructor.
     /* virtual */~mafLoggerFile();
 
-    /// Method used to log the given message to the filesystem.
+    /// Method used to log the given message to the file system.
     /*virtual*/ void loggedMessage(const QtMsgType type, const QString &msg);
 
     /// Clear history logs from the last temporary file.
@@ -67,6 +67,14 @@ private:
     QString m_LastLogFile; ///< Filename of last logged file. Useful to retrieve information of file log when application cresh.
 };
 
+/////////////////////////////////////////////////////////////
+// Inline methods
+/////////////////////////////////////////////////////////////
+
+inline const QString mafLoggerFile::lastLogFile() const {
+    return m_LastLogFile;
 }
+
+} // namespace mafCore
 
 #endif // MAFLOGGERFILE_H
