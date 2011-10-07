@@ -45,12 +45,14 @@ void mafExporterVTK::execute() {
     mafProxyInterface *dv = data->dataValue();
     mafProxy<vtkAlgorithmOutput> *value = mafProxyPointerTypeCast(vtkAlgorithmOutput, dv);
     m_Writer->SetInputConnection(0, *value);
-    const char *f = filename().toAscii().constData();
-    m_Writer->SetFileName(m_Filename.toAscii().constData());
+    QByteArray ba = filename().toAscii();
+    const char *f = ba.constData();
+    m_Writer->SetFileName(f);
     
     int result = m_Writer->Write();
     if(result == 0) {
-        qCritical(mafTr("Unable to export the data in VTK format.").toAscii().constData());
+        ba = mafTr("Unable to export the data in VTK format.").toAscii();
+        qCritical(ba.constData());
     }
     
     Q_EMIT executionEnded();
@@ -60,7 +62,8 @@ bool mafExporterVTK::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafResources::mafVME *>(obj);
     bool result(false);
     if (vme == NULL) {
-        qCritical(mafTr("Missing VME!!").toAscii().constData());
+        QByteArray ba = mafTr("Missing VME!!").toAscii();
+        qCritical(ba.constData());
         return result;
     }
     mafDataSetCollection *dc = vme->dataSetCollection();

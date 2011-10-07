@@ -5,7 +5,7 @@
  *  Created by Daniele Giunchi on 26/10/10.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -72,10 +72,12 @@ void mafTreeModel::buildModel(bool init) {
 void mafTreeModel::replaceDataModel(bool init) {
     QObject *data;
     mafTreeItem *ti;
+    QByteArray ba;
     if(init) {
         m_Hierarchy->moveTreeIteratorToRootNode();
         data = m_Hierarchy->currentData();
-        char *v = data->objectName().toAscii().data();
+        ba = data->objectName().toAscii();
+        char *v = ba.data();
         ti = m_ItemsHash.value(dataHash(data));
         ti->setObject(data);
         ti->setStatus(mafItemStatusNotCheckable, false);
@@ -85,7 +87,8 @@ void mafTreeModel::replaceDataModel(bool init) {
     for(;i < size; ++i) {
         m_Hierarchy->moveTreeIteratorToNthChild(i);
         data = m_Hierarchy->currentData();
-        char *v = data->objectName().toAscii().data();
+        ba = data->objectName().toAscii();
+        char *v = ba.data();
         ti = m_ItemsHash.value(dataHash(data));
         ti->setObject(data);
         
@@ -189,7 +192,8 @@ void mafTreeModel::itemReparent(QObject *obj, QObject *parent) {
     newParent->appendRow(newItem);
     m_ItemsHash.insert(dataHash(obj), newItem);
 
-    char *v = obj->objectName().toAscii().data();
+    QByteArray ba = obj->objectName().toAscii();
+    char *v = ba.data();
     int i=0, size = child->rowCount();
     for(;i<size;i++) {
         itemReparent(((mafTreeItem *)child->child(i))->data(), newItem->data());

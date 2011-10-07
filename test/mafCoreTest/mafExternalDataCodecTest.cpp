@@ -3,9 +3,9 @@
  *  mafSerializationTest
  *
  *  Created by Paolo Quadrani on 22/09/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -39,6 +39,7 @@ public:
 
 private:
     QString m_CodecString; ///< Test Var.
+    QByteArray m_ByteArray; ///< Test var.
 };
 
 testExternalDataCodecCustom::testExternalDataCodecCustom(const QString code_location) : mafExternalDataCodec(code_location) {
@@ -55,7 +56,8 @@ char * testExternalDataCodecCustom::encode(bool binary) {
     Q_UNUSED(binary);
     m_CodecString.clear();
     m_CodecString.append("Coded data");
-    return m_CodecString.toAscii().data();
+    m_ByteArray = m_CodecString.toAscii();
+    return m_ByteArray.data();
 }
 //------------------------------------------------------------------------------------------
 
@@ -72,7 +74,7 @@ private Q_SLOTS:
         m_ExternalDataCodec = mafNEW(testExternalDataCodecCustom);
     }
 
-    /// Cleanup tes variables memory allocation.
+    /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_ExternalDataCodec);
     }
@@ -96,7 +98,8 @@ void mafExternalDataCodecTest::mafCodecAllocationTest() {
 
 void mafExternalDataCodecTest::encodeTest() {
     char * outputString = m_ExternalDataCodec->encode();
-    bool compare = strcmp(outputString, m_ExternalDataCodec->codecString().toAscii().data()) == 0;
+    QByteArray ba = m_ExternalDataCodec->codecString().toAscii();
+    bool compare = strcmp(outputString, ba.data()) == 0;
     QVERIFY(compare);
 }
 
@@ -104,7 +107,8 @@ void mafExternalDataCodecTest::decodeTest() {
     QString res = "Coded data";
 
     // Call the encode function by passing the string as argument.
-    m_ExternalDataCodec->decode(res.toAscii().data());
+    QByteArray ba = res.toAscii();
+    m_ExternalDataCodec->decode(ba.data());
 
     QString stringReturned(m_ExternalDataCodec->codecString());
 

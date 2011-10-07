@@ -3,9 +3,9 @@
  *  mafCore
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *  
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *  
  */
 
@@ -42,7 +42,8 @@ mafId mafIdProvider::createNewId(const QString id_name) {
             m_IdHash.insert(m_Id, id_name);
         } else {
             // if the Event id is already defined, return the previous defined ID value.
-            qWarning("%s", mafTr("ID with name '%1'' has been already defined!").arg(id_name).toAscii().data());
+            QByteArray ba = mafTr("ID with name '%1'' has been already defined!").arg(id_name).toAscii();
+            qWarning("%s", ba.data());
             return id_value;
         }
     }

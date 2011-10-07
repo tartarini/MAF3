@@ -3,9 +3,9 @@
  *  mafSerialization
  *
  *  Created by Yubo Tao on 21/12/10.
- *  Copyright 2010 University of Bedfordshire. All rights reserved.
+ *  Copyright 2011 University of Bedfordshire. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -738,7 +738,8 @@ void mafCodecVolume::encode(QString url, void *data, int dataType, int component
     // open file
     QFile file(url);
     if (!file.open(QIODevice::WriteOnly)) {
-        qCritical("%s", mafTr("Not able to open file '%1'").arg(url).toAscii().data());
+        QByteArray ba = mafTr("Not able to open file '%1'").arg(url).toAscii();
+        qCritical("%s", ba.data());
         return;
     }
 
@@ -763,7 +764,8 @@ void * mafCodecVolume::decode(QString url, int dataType, int componentNum, int o
     // open file
     QFile file(url);
     if (!file.open(QIODevice::ReadOnly)) {
-        qCritical("%s", mafTr("Not able to open file '%1'").arg(url).toAscii().data());
+        QByteArray ba = mafTr("Not able to open file '%1'").arg(url).toAscii();
+        qCritical("%s", ba.data());
         return 0;
     } 
 

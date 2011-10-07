@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Roberto Mucci - Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -28,7 +28,8 @@ mafPipeData::~mafPipeData() {
 int mafPipeData::addInput(mafVME *vme) {
     REQUIRE(vme != NULL);
     if(this->inputList()->contains(vme)) {
-        qWarning("%s", mafTr("Object %1 already present in input list").arg(vme->objectName()).toAscii().data());
+        QByteArray ba = mafTr("Object %1 already present in input list").arg(vme->objectName()).toAscii();
+        qWarning("%s", ba.data());
         return this->inputList()->indexOf(vme);
     }
 

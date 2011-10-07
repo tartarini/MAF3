@@ -61,7 +61,8 @@ testCustomManager::testCustomManager(QString code_location) : mafObjectBase(code
 }
 
 void testCustomManager::createdMemento(mafCore::mafMemento *m) {
-    qDebug("%s", mafTr("Memento loaded!!").toAscii().data());
+    QByteArray ba = mafTr("Memento loaded!!").toAscii();
+    qDebug("%s", ba.data());
     QVERIFY(m != NULL);
     mafDEL(m);
 }

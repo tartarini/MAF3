@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Roberto Mucci - Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -102,7 +102,8 @@ void mafVME::setDataPipe(const QString &pipe_type) {
     if ( new_pipe ) {
         setDataPipe(new_pipe);
     } else {
-        qWarning("%s", mafTr("%1 does not represent a type of mafPipeData.").arg(pipe_type).toAscii().data());
+        QByteArray ba = mafTr("%1 does not represent a type of mafPipeData.").arg(pipe_type).toAscii();
+        qWarning("%s", ba.data());
     }
     mafDEL(obj);
 }

@@ -3,9 +3,9 @@
  *  mafSerialization
  *
  *  Created by Yubo Tao on 23/12/10.
- *  Copyright 2010 University of Bedfordshire. All rights reserved.
+ *  Copyright 2011 University of Bedfordshire. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -874,16 +874,20 @@ void mafCodecBrickedVolume::fillVolumeWithBrick(char *volumeData, char *brickDat
 void mafCodecBrickedVolume::encode(QString url, void *data, int dataType, int componentNum, int dimensions[3], int brickSize, int levels) {
     // open all files
     QFile bpiFile(url + ".bpi"), bevFile(url + ".bev"), bvFile(url + ".bv");
+    QByteArray ba;
     if (!bpiFile.open(QIODevice::WriteOnly)) {
-        qCritical("%s", mafTr("Not able to open file '%1'.bpi").arg(url).toAscii().data());
+        ba = mafTr("Not able to open file '%1'.bpi").arg(url).toAscii();
+        qCritical("%s", ba.data());
         return;
     }
     if (!bevFile.open(QIODevice::WriteOnly)) {
-        qCritical("%s", mafTr("Not able to open file '%1'.bev").arg(url).toAscii().data());
+        ba = mafTr("Not able to open file '%1'.bev").arg(url).toAscii();
+        qCritical("%s", ba.data());
         return;
     }
     if (!bvFile.open(QIODevice::WriteOnly)) {
-        qCritical("%s", mafTr("Not able to open file '%1'.bv").arg(url).toAscii().data());
+        ba = mafTr("Not able to open file '%1'.bv").arg(url).toAscii();
+        qCritical("%s", ba.data());
         return;
     }
 
@@ -938,16 +942,20 @@ void mafCodecBrickedVolume::encode(QString url, void *data, int dataType, int co
 void * mafCodecBrickedVolume::decode(QString url, int dataType, int componentNum, int originalDimensions[3], int brickSize, int startPos[3], int dimensions[3], int level) {
     // open all files
     QFile bpiFile(url + ".bpi"), bevFile(url + ".bev"), bvFile(url + ".bv");
+    QByteArray ba;
     if (!bpiFile.open(QIODevice::ReadOnly)) {
-        qCritical("%s", mafTr("Not able to open file '%1'.bpi").arg(url).toAscii().data());
+        ba = mafTr("Not able to open file '%1'.bpi").arg(url).toAscii();
+        qCritical("%s", ba.data());
         return 0;
     }
     if (!bevFile.open(QIODevice::ReadOnly)) {
-        qCritical("%s", mafTr("Not able to open file '%1'.bev").arg(url).toAscii().data());
+        ba = mafTr("Not able to open file '%1'.bev").arg(url).toAscii();
+        qCritical("%s", ba.data());
         return 0;
     }
     if (!bvFile.open(QIODevice::ReadOnly)) {
-        qCritical("%s", mafTr("Not able to open file '%1'.bv").arg(url).toAscii().data());
+        ba = mafTr("Not able to open file '%1'.bv").arg(url).toAscii();
+        qCritical("%s", ba.data());
         return 0;
     }
 
@@ -1011,7 +1019,7 @@ void * mafCodecBrickedVolume::decode(QString url, int dataType, int componentNum
                 if(equal) { // read the data from brick equal voxels
                     fillVolumeWithEqualBrick(volumeData, bevData + position, startPos, dimensions, brickStartPos, brickSize, bytesPerVoxel);
                 } else {    // read the data from brick voxels
-                    if(!bvData) {   // the first memeory mapping
+                    if(!bvData) {   // the first memory mapping
                         bvStartPos = position;
                         if (bvStartPos + mappedBytes > bvSize) mappedBytes = bvSize - bvStartPos;
                         bvData = (char *)bvFile.map(bvStartPos, mappedBytes); 

@@ -3,9 +3,9 @@
  *  mafResourcesTest
  *
  *  Created by Roberto Mucci on 24/05/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -105,7 +105,8 @@ char *testExtDataCodecCustom::encode(bool binary) {
     mafProxy<QString> *dataSet = mafProxyPointerTypeCast(QString, this->externalData());
     QString dataString = dataSet->externalData()->toAscii();
     char *output_string = new char[dataString.size()+1];
-    memcpy(output_string,dataString.toAscii().data(),dataString.size()+1);
+    QByteArray ba = dataString.toAscii();
+    memcpy(output_string, ba.data(),dataString.size()+1);
     return output_string;
 }
 

@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -192,7 +192,8 @@ void mafViewManager::sceneNodeShow(mafCore::mafObjectBase *node, bool show) {
             m_SelectedView->showSceneNode(node_to_show, show);
             //m_SelectedPipeVisual = node_to_show->visualPipe();
         } else {
-            qCritical(mafTr("There is no view selected.").toAscii().constData());
+            QByteArray ba = mafTr("There is no view selected.").toAscii();
+            qCritical(ba.constData());
         }
     }
 }

@@ -3,9 +3,9 @@
  *  mafSerializationTest
  *
  *  Created by Yubo Tao on 30/12/10.
- *  Copyright 2010 University of Bedfordshire. All rights reserved.
+ *  Copyright 2011 University of Bedfordshire. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -965,9 +965,10 @@ void mafCodecBrickedVolumeTest::verifyGrayMemento(mafMemento *memento, int level
                     }
                 }
             }
-        } else { 
-            QVERIFY2(item.m_Name == comparedItem.m_Name, item.m_Name.toAscii().data());
-            QVERIFY2(item.m_Value == comparedItem.m_Value, item.m_Name.toAscii().data());
+        } else {
+            QByteArray ba = item.m_Name.toAscii();
+            QVERIFY2(item.m_Name == comparedItem.m_Name, ba.data());
+            QVERIFY2(item.m_Value == comparedItem.m_Value, ba.data());
         }
     }
 }
@@ -1010,8 +1011,9 @@ void mafCodecBrickedVolumeTest::verifyRGBMemento(mafMemento *memento, int level,
                 }
             }
         } else {
-            QVERIFY2(item.m_Name == comparedItem.m_Name, item.m_Name.toAscii().data());
-            QVERIFY2(item.m_Value == comparedItem.m_Value, item.m_Name.toAscii().data());
+            QByteArray ba = item.m_Name.toAscii();
+            QVERIFY2(item.m_Name == comparedItem.m_Name, ba.data());
+            QVERIFY2(item.m_Value == comparedItem.m_Value, ba.data());
         }
     }
 }
@@ -1051,11 +1053,12 @@ void mafCodecBrickedVolumeTest::verifyFloatMemento(mafMemento *memento, int leve
                     }
                 }
             }
-        } else { 
-            QVERIFY2(item.m_Name == comparedItem.m_Name, item.m_Name.toAscii().data());
+        } else {
+            QByteArray ba = item.m_Name.toAscii();
+            QVERIFY2(item.m_Name == comparedItem.m_Name, ba.data());
             QString a = item.m_Value.toString();
             QString b = comparedItem.m_Value.toString();
-            QVERIFY2(item.m_Value == comparedItem.m_Value, item.m_Name.toAscii().data());
+            QVERIFY2(item.m_Value == comparedItem.m_Value, ba.data());
         }
     }
 }

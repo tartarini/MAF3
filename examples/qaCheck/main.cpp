@@ -15,14 +15,14 @@
 #include "mafQAChecker.h"
 
 void printUsage() {
-    qDebug("%s", mafTr("\n--------------------------------").toAscii().data());
-    qDebug("%s", mafTr("Usage: qaCheck command").toAscii().data());
-    qDebug("%s", mafTr("--------------------------------").toAscii().data());
-    qDebug("%s", mafTr("commands available:").toAscii().data());
-    qDebug("%s", mafTr("qaCheck run      python_script_to_run [parameters]").toAscii().data());
-    qDebug("%s", mafTr("qaCheck validate plugin_to_validate").toAscii().data());
-    qDebug("%s", mafTr("qaCheck profile  script_to_profile [parameters]").toAscii().data());
-    qDebug("%s", mafTr("\n").toAscii().data());
+    qDebug() << mafTr("\n--------------------------------");
+    qDebug() << mafTr("Usage: qaCheck command");
+    qDebug() << mafTr("--------------------------------");
+    qDebug() << mafTr("commands available:");
+    qDebug() << mafTr("qaCheck run      python_script_to_run [parameters]");
+    qDebug() << mafTr("qaCheck validate plugin_to_validate");
+    qDebug() << mafTr("qaCheck profile  script_to_profile [parameters]");
+    qDebug() << mafTr("\n");
 }
 
 int main(int argc, char *argv[]) {

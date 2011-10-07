@@ -66,7 +66,7 @@ public:
     void showLayer(const QString layerName, bool show = true);
 
     /// Return the renderer associated with the given layer name.
-    vtkRenderer *renderer(const QString layerName = "base") const;
+    vtkRenderer *renderer(const QString layerName = "base");
 
     /// Return the list of all available layers.
     QList<QString> layersList() const;
@@ -107,6 +107,9 @@ private:
 
     /// initialize connections
     void initializeConnections();
+
+    /// initialize layers
+    void initializeLayers();
     
     unsigned long m_Modifiers;  ///< Optional modifiers for the button.
 
@@ -120,10 +123,6 @@ private:
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
-
-inline vtkRenderer *mafVTKWidget::renderer(const QString layerName) const {
-    return m_LayerHash.value(layerName, NULL);
-}
 
 inline QList<QString> mafVTKWidget::layersList() const {
     return m_LayerHash.keys();

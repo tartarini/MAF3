@@ -3,9 +3,9 @@
  *  mafEventBus
  *
  *  Created by Daniele Giunchi on 11/04/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -68,7 +68,7 @@ void mafNetworkConnectorQXMLRPC::createServer(const unsigned int port) {
     m_Server->setProperty("port", port);
 
     // Create a new ID to allow methods registration on new server instance.
-    QString id_name(mafTr("maf.remote.eventbus.communication.send.xmlrpc.serverMethods%1").arg(port));
+    //QString id_name(mafTr("maf.remote.eventbus.communication.send.xmlrpc.serverMethods%1").arg(port));
 
     // Register the signal to the event bus.
     /*mafRegisterRemoteSignal(id_name, this, "registerMethodsServer(mafRegisterMethodsMap)");
@@ -76,7 +76,7 @@ void mafNetworkConnectorQXMLRPC::createServer(const unsigned int port) {
             this, SLOT(registerServerMethod(mafRegisterMethodsMap)));*/
 
     QList<QVariant::Type> parametersForRegisterteredFunction;
-    parametersForRegisterteredFunction.append(QVariant::String); //return argument
+    parametersForRegisterteredFunction.append(QVariant::Map); //return argument
     parametersForRegisterteredFunction.append(QVariant::List); //parameters to send, event control parameters
     parametersForRegisterteredFunction.append(QVariant::List); //parameters to send, data parameters
 
@@ -111,7 +111,8 @@ void mafNetworkConnectorQXMLRPC::stopServer() {
 
 void mafNetworkConnectorQXMLRPC::registerServerMethod(mafRegisterMethodsMap registerMethodsList) {
     if(m_Server->isListening()) {
-        qDebug("%s", mafTr("Server is already listening on port %1").arg(m_Server->property("port").toUInt()).toAscii().data());
+        QByteArray ba = mafTr("Server is already listening on port %1").arg(m_Server->property("port").toUInt()).toAscii();
+        qDebug("%s", ba.data());
         return;
     }
     // cycle over map:  method name and parameter list
@@ -153,6 +154,7 @@ void mafNetworkConnectorQXMLRPC::startListen() {
 
 void mafNetworkConnectorQXMLRPC::send(const QString event_id, mafEventArgumentsList *argList) {
     QList<xmlrpc::Variant> *vl = NULL;
+    QByteArray ba;
     if(argList != NULL) {
         vl = new QList<xmlrpc::Variant>();
 
@@ -161,7 +163,8 @@ void mafNetworkConnectorQXMLRPC::send(const QString event_id, mafEventArgumentsL
             QString typeArgument;
             typeArgument = argList->at(i).name();
             if(typeArgument != "QVariantList") {
-                qWarning("%s", mafTr("Remote Dispatcher need to have arguments that are QVariantList").toAscii().data());
+                ba = mafTr("Remote Dispatcher need to have arguments that are QVariantList").toAscii();
+                qWarning("%s", ba.data());
                 delete vl;
                 return;
             }
@@ -175,7 +178,8 @@ void mafNetworkConnectorQXMLRPC::send(const QString event_id, mafEventArgumentsL
             vl->push_back(var); //only the first parameter represent the whole list of arguments
         }
         if(size == 0) {
-            qWarning("%s", mafTr("Remote Dispatcher need to have at least one argument that is a QVariantList").toAscii().data());
+            ba = mafTr("Remote Dispatcher need to have at least one argument that is a QVariantList").toAscii();
+            qWarning("%s", ba.data());
             return;
         }
     }
@@ -206,14 +210,16 @@ void mafNetworkConnectorQXMLRPC::xmlrpcSend(const QString &methodName, QList<xml
 
 void mafNetworkConnectorQXMLRPC::processReturnValue( int requestId, QVariant value ) {
     Q_UNUSED( requestId );
-    Q_ASSERT( value.canConvert( QVariant::String ) );
-    qDebug("%s", value.toString().toAscii().data());
+    Q_ASSERT( value.canConvert( QVariant::Map ) );
+    QByteArray ba = value.toMap().value("returnValue").toString().toAscii();
+    qDebug("%s", ba.data());
     mafEventBusManager::instance()->notifyEvent("maf.local.eventBus.remoteCommunicationDone", mafEventTypeLocal);
 }
 
 void mafNetworkConnectorQXMLRPC::processFault( int requestId, int errorCode, QString errorString ) {
     // Log the error.
-    qDebug("%s", mafTr("Process Fault for requestID %1 with error %2 - %3").arg(QString::number(requestId), QString::number(errorCode), errorString).toAscii().data());
+    QByteArray ba = mafTr("Process Fault for requestID %1 with error %2 - %3").arg(QString::number(requestId), QString::number(errorCode), errorString).toAscii();
+    qDebug("%s", ba.data());
     mafEventBusManager::instance()->notifyEvent("maf.local.eventBus.remoteCommunicationFailed", mafEventTypeLocal);
 }
 
@@ -233,8 +239,12 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
       EVENT_METHOD_SIGNATURE,
     };
 
+    QMap<QString, xmlrpc::Variant> returnMap;
     if(parameters.at(EVENT_PARAMETERS).toList().count() == 0) {
-        m_Server->sendReturnValue( requestId, QString("No Command to Execute, command list is empty") );
+        returnMap.insert("returnValue", "FAIL");
+        returnMap.insert("errorMessage", mafTr("No Command to Execute, command list is empty"));
+        m_Server->sendReturnValue( requestId, returnMap );
+        return;
     }
 
     //here eventually can be used a filter for events
@@ -257,10 +267,12 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
         dictionary.setEventTopic(id_name);
         dictionary.setEventType(mafEventTypeLocal);
         mafEventBusManager::instance()->notifyEvent(dictionary, argList);
-        m_Server->sendReturnValue( requestId, QString("OK") );
+        returnMap.insert("returnValue", "OK");
     } else {
-        m_Server->sendReturnValue( requestId, QString("FAIL") );
+        returnMap.insert("returnValue", "FAIL");
     }
+    m_Server->sendReturnValue( requestId, returnMap );
+
     if(argList){
         delete argList;
         argList = NULL;

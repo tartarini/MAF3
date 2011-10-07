@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -68,7 +68,8 @@ void mafDataSetCollection::setInterpolator(const QString &interpolator_type) {
     if(new_interpolator) {
         setInterpolator(new_interpolator);
     } else {
-        qWarning("%s", mafTr("%1 does not represent a type of mafInterpolator.").arg(interpolator_type).toAscii().data());
+        QByteArray ba = mafTr("%1 does not represent a type of mafInterpolator.").arg(interpolator_type).toAscii();
+        qWarning("%s", ba.data());
     }
 }
 
@@ -179,7 +180,8 @@ mafMatrix *mafDataSetCollection::poseMatrix(double t) {
     if(item != NULL) {
         m = item->poseMatrix();
     } else {
-        qWarning("%s", mafTr("Item at timestamp %1 does not exist! Try 'insertItem' before.").arg(t).toAscii().data());
+        QByteArray ba = mafTr("Item at timestamp %1 does not exist! Try 'insertItem' before.").arg(t).toAscii();
+        qWarning("%s", ba.data());
     }
     return m;
 }
@@ -262,6 +264,7 @@ bool mafDataSetCollection::insertItem(mafDataSet *item, double t) {
 bool mafDataSetCollection::setDataSet(mafDataSet *data, double t) {
     REQUIRE(data != NULL);
 
+    QByteArray ba;
     if(acceptData(data)) {
         // Find the matrix at the given timestamp
         mafDataSet *item = itemAt(t);
@@ -278,11 +281,13 @@ bool mafDataSetCollection::setDataSet(mafDataSet *data, double t) {
 
             return true;
         } else {
-            qWarning("%s", mafTr("Item at timestamp %1 can not be modified, because it doesn't exist! Try 'insertItem' before").arg(t).toAscii().data());
+            ba = mafTr("Item at timestamp %1 can not be modified, because it doesn't exist! Try 'insertItem' before").arg(t).toAscii();
+            qWarning("%s", ba.data());
             return false;
         }
     }
-    qWarning("%s", mafTr("Item at timestamp %1 can not be accepted! Acceptable type is %2").arg(QString::number(t), m_DataTypeAccepted).toAscii().data());
+    ba = mafTr("Item at timestamp %1 can not be accepted! Acceptable type is %2").arg(QString::number(t), m_DataTypeAccepted).toAscii();
+    qWarning("%s", ba.data());
     return false;
 }
 

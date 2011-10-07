@@ -3,9 +3,9 @@
  *  mafSerialization
  *
  *  Created by Daniele Giunchi and Roberto Mucci on 19/01/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -98,7 +98,8 @@ mafMemento *mafCodecXML::decode() {
 
     mafMemento* memento = (mafMemento *)mafNEWFromString(mementoType);
     if(memento == NULL) {
-        qCritical("%s", mafTr("Problem on loading memento: %1").arg(mementoType).toAscii().data());
+        QByteArray ba = mafTr("Problem on loading memento: %1").arg(mementoType).toAscii();
+        qCritical("%s", ba.data());
         return NULL;
     }
     memento->setObjectClassType(objType);

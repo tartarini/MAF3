@@ -22,7 +22,7 @@ mafAlgorithm::mafAlgorithm(const QString code_location) : mafOperation(code_loca
 
 void mafAlgorithm::execute() {
     m_Status = mafOperationStatusExecuting;
-    qDebug("%s", mafTr("Executing testProcess!!!").toAscii().data());
+    qDebug() << mafTr("Executing testProcess!!!");
 
     QStringList commandAndParameters;
     commandAndParameters << m_FileNameInput.toAscii()  \
