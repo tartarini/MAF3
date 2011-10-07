@@ -203,12 +203,24 @@ void mafDataSet::setMemento(mafMemento *memento, bool deep_memento) {
 void mafDataSet::updateDataValue() {
   if (!m_FileName.isEmpty()){
     QString encodeType = externalCodecType();
-    mafCore::mafProxyInterface *container;
+    mafCore::mafProxyInterface *container = NULL;
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString, m_FileName));
     argList.append(mafEventArgument(QString, encodeType));
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafProxyInterface *, container);
-    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.import", mafEventTypeLocal, &argList, &ret_val);
+    qDebug() << "mafDataset" << QThread::currentThread();
+            QThread *ctb = this->thread();        
+      this->moveToThread(QCoreApplication::instance()->thread());
+      QThread *cta = this->thread();
+//      QMutex m;
+//      m.lock();
+//      
+      
+      mafEventBusManager::instance()->notifyEvent("maf.local.serialization.import", mafEventTypeLocal, &argList, &ret_val);
+      
+//      mafEventBusManager::instance()->w.wait(&m);
+//      m.unlock();
+    
     if (container != NULL) {
         setDataValue(container);
         setExternalCodecType(encodeType);
