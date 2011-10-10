@@ -101,8 +101,9 @@ void vtkButtonWidgetTest::TestButtonWidget() {
    // Create an image for the button
    QString fname(MAF_DATA_DIR);
    fname.append("/Images/beach.tif");
-   QByteArray ba = fname.toAscii();
    fname = QDir::toNativeSeparators(fname);
+   QByteArray ba = fname.toAscii();
+
    VTK_CREATE(vtkTIFFReader, image1);
    image1->SetFileName(ba.data());
    image1->SetOrientationType( 4 );
@@ -111,9 +112,9 @@ void vtkButtonWidgetTest::TestButtonWidget() {
    // Create an image for the button
    QString fname2(MAF_DATA_DIR);
    fname2.append("/Images/fran_cut.png");
-
-   ba = fname2.toAscii();
    fname2 = QDir::toNativeSeparators(fname2);
+   ba = fname2.toAscii();
+   
    VTK_CREATE(vtkPNGReader, image2);
    image2->SetFileName(ba.data());
    image2->Update();
@@ -334,9 +335,9 @@ void vtkButtonWidgetTest::TestButtonWidget() {
    // Create the reader for the data
    QString fname3(MAF_DATA_DIR);
    fname3.append("/VTK/ironProt.vtk");
-
-   ba = fname3.toAscii();
    fname3 = QDir::toNativeSeparators(fname3);
+   ba = fname3.toAscii();
+   
    VTK_CREATE(vtkStructuredPointsReader, reader);
    reader->SetFileName(ba.data());
    
