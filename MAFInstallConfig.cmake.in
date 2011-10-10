@@ -41,13 +41,6 @@ get_filename_component(MAF_HOME ${MAF_HOME} ABSOLUTE)
 # The CMake macros dir.
 set(MAF_CMAKE_DIR "${MAF_HOME}/@MAF_INSTALL_LIB_DIR@/CMake")
 
-# MAF Libs libraries.  Those listed here should
-# automatically pull in their dependencies.
-set(MAF_Libs_LIBRARIES "@MAF_Libs_LIBRARIES@")
-
-# MAF Base libraries.  Those listed here should
-# automatically pull in their dependencies.
-set(MAF_LIBRARIES "@MAF_Base_LIBRARIES@")
 
 # MAF Base library directories.
 set(MAF_LIBRARY_DIRS 
