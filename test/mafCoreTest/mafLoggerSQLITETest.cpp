@@ -34,9 +34,6 @@ class mafLoggerSQLITETest : public QObject {
 private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
-        //! <snippet>
-        m_Logger = mafNEW(mafCore::mafLoggerSQLITE);
-        //! </snippet>
     }
 
     /// Cleanup test variables memory allocation.
@@ -55,17 +52,34 @@ private Q_SLOTS:
 
 private:
     mafLoggerSQLITE *m_Logger; ///< Test variable
-    mafLogger *m_DefaultLogger;
 };
 
 void mafLoggerSQLITETest::mafLoggerSQLITEConstructorTest() {
+    QString logName("log_");
+    logName.append(QDateTime::currentDateTime().toString("yyyy_MMM_dd_hh_mm"));
+//    logName.append(".db");
+    
+    m_Logger = mafNEW(mafCore::mafLoggerSQLITE);
     QVERIFY(m_Logger != NULL);
+
+    QString res = m_Logger->lastLogFile();
+    QVERIFY(res.contains(logName));
 }
 
 void mafLoggerSQLITETest::logMessageTest() {
+    QString msg("Test for mafLoggerSQLITE");
+    m_Logger->logMessage(QtDebugMsg, msg);
+
+    msg = "Warning log message....";
+    m_Logger->logMessage(QtWarningMsg, msg);
 }
 
 void mafLoggerSQLITETest::clearLogHistoryTest() {
+    QString oldLog = m_Logger->lastLogFile();
+    m_Logger->clearLogHistory();
+    QString res = m_Logger->lastLogFile();
+
+    QVERIFY(res != oldLog);
 }
 
 MAF_REGISTER_TEST(mafLoggerSQLITETest);
