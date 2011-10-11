@@ -46,7 +46,10 @@ public:
     bool isConnected();
 
     /// Allows to execute the query on the table model connected to the BD.
-    void setQuery(const QString &queryString);
+    void setQueryTable(const QString &queryString);
+
+    /// Allows to execute the query on the BD.
+    void setQueryDb(const QString &queryString);
 
     /// Return the record associated to the given index. If the index is out of bound NULL is returned.
     QSqlRecord record(int idx);
@@ -57,6 +60,9 @@ public Q_SLOTS:
 
     /// Submit all the changes to the DB.
     void submitAllChanges();
+
+    /// Allows to compress the DB and store temporary tables into memory.
+    void optimizeDB();
 
 protected:
     /// Object destructor.

@@ -13,6 +13,7 @@
 
 #include <QSqlDatabase>
 #include <QSqlTableModel>
+#include <QSqlQuery>
 
 using namespace mafCore;
 
@@ -52,10 +53,16 @@ void mafSQLITE::setTableName(const QString name) {
     m_TableModel->select();
 }
 
-void mafSQLITE::setQuery(const QString &queryString) {
+void mafSQLITE::setQueryTable(const QString &queryString) {
     REQUIRE(m_TableModel != NULL && isConnected());
 
     ((QSqlQueryModel *)m_TableModel)->setQuery(queryString, m_TableModel->database());
+}
+
+void mafSQLITE::setQueryDb(const QString &queryString) {
+    QSqlDatabase db = m_TableModel->database();
+    QSqlQuery query(db);
+    query.exec(queryString);
 }
 
 QSqlRecord mafSQLITE::record(int idx) {
@@ -97,4 +104,9 @@ void mafSQLITE::submitAllChanges() {
         m_TableModel->submitAll();
         setModified(false);
     }
+}
+
+void mafSQLITE::optimizeDB() {
+    setQueryDb("VACUUM");
+    setQueryDb("PRAGMA temp_store = MEMORY;");
 }
