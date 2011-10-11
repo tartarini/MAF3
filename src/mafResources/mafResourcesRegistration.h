@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -13,21 +13,7 @@
 #define MAFRESOURCESREGISTRATION_H
 
 // Includes list
-#include "mafVME.h"
-#include "mafInterpolatorBefore.h"
-#include "mafInterpolatorNearest.h"
-#include "mafDataSet.h"
-#include "mafDataSetCollection.h"
-#include "mafView.h"
-#include "mafSceneNode.h"
-#include "mafHierarchy.h"
-#include "mafMementoResource.h"
-#include "mafMementoDataSet.h"
-#include "mafMementoDataSetCollection.h"
-#include "mafMementoVME.h"
-#include "mafInteractor.h"
-#include "mafVisitorFindSceneNodeByVMEHash.h"
-#include "mafOperationTransform.h"
+#include "mafResources_global.h"
 
 namespace mafResources {
 
