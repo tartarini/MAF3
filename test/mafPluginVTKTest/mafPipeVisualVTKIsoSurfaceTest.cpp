@@ -20,6 +20,8 @@
 #include <mafProxy.h>
 #include <mafPluginManager.h>
 #include <mafPlugin.h>
+#include <mafVME.h>
+#include <mafDataSet.h>
 
 #include <mafVTKWidget.h>
 
