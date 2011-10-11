@@ -103,7 +103,7 @@ void mafSQLITETest::fillTableTest() {
 
     // Dump the table on console
     QString queryString("SELECT * FROM maf3Team");
-    m_SQLITE->setQuery(queryString);
+    m_SQLITE->setQueryTable(queryString);
 
     int r = 0;
     QSqlRecord record = m_SQLITE->record(r);
