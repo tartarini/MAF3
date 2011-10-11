@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -46,6 +46,13 @@ Q_SIGNALS:
     /// Signal emitted when data value has been removed from mafDataSet.
     void dataValueDisconnected();
 
+    /// Emitted when mafDataSet needs to load the external data value.
+    void loadDataSignal();
+
+private Q_SLOTS:
+    /// Load external data and fill the mafDataSet.
+    void updateDataValue();
+
 public:
     /// Object constructor.
     mafDataSet(const QString code_location = "");
@@ -62,7 +69,7 @@ public:
     /// Set the pose for the current data.
     void setPoseMatrix(const mafMatrix *matrix);
 
-    /// Set the pose for the current data throught matrixString.
+    /// Set the pose for the current data through matrixString.
     void setPoseMatrixString(const QString matrixString);
 
     /// Return the pose matrix of the current data.
@@ -103,11 +110,8 @@ public:
      This is used to implement a sort of undo mechanism for the object's state, but can be used also by the
     serialization mechanism to serialize data into the selected storage type.
     The 'deep_memento' flag is used to avoid the copy of the object unique hash in normal operation like
-    undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
+    undo or copy/paste operations. The complete object save is instead needed for serialization purposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
-
-    /// Load external data and fill the mafDataSet.
-    void updateDataValue();
 
     /// Return type of data contained in the mafDataSet.
     QString externalDataType() const; 
