@@ -5,7 +5,7 @@
  *  Created by Paolo Quadrani on 07/10/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -14,16 +14,16 @@
 
 // Includes list
 #include "mafLogger.h"
-#include <QTemporaryFile>
 
 namespace mafCore {
 
 // Class forwarding list
+class mafSQLITE;
 
 /**
  Class name: mafLoggerSQLITE
  This class defines the MAF3 logging class that will store messages into a SQLITE DB.
- @sa maf Logger mafLoggerConsole mafLoggerBuffer mafLoggerFile mafMessageHandler
+ @sa mafLogger mafLoggerConsole mafLoggerBuffer mafLoggerFile mafMessageHandler
  */
 class MAFCORESHARED_EXPORT mafLoggerSQLITE : public mafLogger {
     Q_OBJECT
@@ -59,13 +59,18 @@ protected:
 
     /// Create a new temporary file reference.
     /** This method is called by the constructor and by the clearLogHistory methods
-    to initialize a new temporary file.*/
-    void initializeNewTemporaryFile();
+    to initialize a new log file.*/
+    void initializeNewLogFile();
 
 private:
-    QTemporaryFile *m_TempFileLog; ///< Temporary File containing all the logged messages for a specific session.
+    mafSQLITE *m_SQLITE; ///< Pointer to the SQLITE db manager.
     QString m_LastLogFile; ///< Filename of last logged file. Useful to retrieve information of file log when application cresh.
+    static int m_PrimaryLogKey; ///< Primary key.
 };
+
+/////////////////////////////////////////////////////////////
+// Inline methods
+/////////////////////////////////////////////////////////////
 
 inline const QString mafLoggerSQLITE::lastLogFile() const {
 	return m_LastLogFile;
