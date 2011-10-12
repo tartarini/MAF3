@@ -32,6 +32,7 @@ public:
     QPushButton *m_SubmitButton; ///< Submit workflow.
     QPushButton *m_RemoveButton; ///< Remove workflow.
     QListWidget *m_WorkflowList; ///< List of available workflow.
+    QListWidget *m_ParametersList; ///< List of parameters file.
 
 
     QAction *m_ActionCase; ///< Match case menu.
