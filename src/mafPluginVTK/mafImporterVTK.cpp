@@ -10,6 +10,8 @@
  */
 
 #include "mafImporterVTK.h"
+#include <mafVME.h>
+#include <mafDataSet.h>
 
 #include <vtkDataSetReader.h>
 

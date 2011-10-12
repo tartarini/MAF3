@@ -12,6 +12,7 @@
 #include <mafTestSuite.h>
 #include <mafImporterVTK.h>
 #include <mafDataSet.h>
+#include <mafVME.h>
 #include <mafVMEManager.h>
 #include <mafOperationManager.h>
 #include <mafProxy.h>

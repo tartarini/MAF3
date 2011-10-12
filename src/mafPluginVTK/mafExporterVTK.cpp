@@ -5,11 +5,14 @@
  *  Created by Daniele Giunchi on 04/04/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
 #include "mafExporterVTK.h"
+#include <mafVME.h>
+#include <mafDataSetCollection.h>
+#include <mafDataSet.h>
 
 #include <vtkDataSetWriter.h>
 #include <vtkAlgorithmOutput.h>

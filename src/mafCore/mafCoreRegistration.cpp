@@ -3,13 +3,25 @@
  *  mafCore
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
 #include "mafCoreRegistration.h"
+#include "mafObjectFactory.h"
+#include "mafObject.h"
+#include "mafSQLITE.h"
+#include "mafMementoObject.h"
+#include "mafLoggerBuffer.h"
+#include "mafLoggerFile.h"
+#include "mafLoggerConsole.h"
+#include "mafLoggerSQLITE.h"
+#include "mafMonitorRAM.h"
+#include "mafMonitorHardDisk.h"
+#include "mafHierarchy.h"
+#include "mafMementoHierarchy.h"
 
 using namespace mafCore;
 
@@ -30,4 +42,36 @@ QStringList mafCoreRegistration::acceptObject(mafCore::mafObjectBase *obj) {
 
 void mafCoreRegistration::unregisterUnbind( const QString& className ) {
     m_BindingMap.remove(className);
+}
+
+void mafCoreRegistration::registerCoreObjects() {
+    mafRegisterObject(mafCore::mafObjectBase);
+    mafRegisterObject(mafCore::mafObject);
+    mafRegisterObject(mafCore::mafSQLITE);
+    mafRegisterObject(mafCore::mafMemento);
+    mafRegisterObject(mafCore::mafMementoObject);
+    mafRegisterObject(mafCore::mafLoggerBuffer);
+    mafRegisterObject(mafCore::mafLoggerFile);
+    mafRegisterObject(mafCore::mafLoggerConsole);
+    mafRegisterObject(mafCore::mafLoggerSQLITE);
+    mafRegisterObject(mafCore::mafMonitorRAM);
+    mafRegisterObject(mafCore::mafMonitorHardDisk);
+    mafRegisterObject(mafCore::mafHierarchy);
+    mafRegisterObject(mafCore::mafMementoHierarchy);
+}
+
+void mafCoreRegistration::unregisterCoreObjects() {
+    mafUnregisterObject(mafCore::mafObjectBase);
+    mafUnregisterObject(mafCore::mafObject);
+    mafUnregisterObject(mafCore::mafSQLITE);
+    mafUnregisterObject(mafCore::mafMemento);
+    mafUnregisterObject(mafCore::mafMementoObject);
+    mafUnregisterObject(mafCore::mafLoggerBuffer);
+    mafUnregisterObject(mafCore::mafLoggerFile);
+    mafUnregisterObject(mafCore::mafLoggerConsole);
+    mafUnregisterObject(mafCore::mafLoggerSQLITE);
+    mafUnregisterObject(mafCore::mafMonitorRAM);
+    mafUnregisterObject(mafCore::mafMonitorHardDisk);
+    mafUnregisterObject(mafCore::mafHierarchy);
+    mafUnregisterObject(mafCore::mafMementoHierarchy);
 }

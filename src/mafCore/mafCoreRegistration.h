@@ -3,9 +3,9 @@
  *  mafCore
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -14,16 +14,6 @@
 
 // Includes list
 #include "mafCore_global.h"
-#include "mafObjectFactory.h"
-#include "mafObject.h"
-#include "mafMementoObject.h"
-#include "mafLoggerBuffer.h"
-#include "mafLoggerFile.h"
-#include "mafLoggerConsole.h"
-#include "mafMonitorRAM.h"
-#include "mafMonitorHardDisk.h"
-#include "mafHierarchy.h"
-#include "mafMementoHierarchy.h"
 
 #define mafRegisterObjectAndAcceptBind(maf_object_type) \
     mafRegisterObject(maf_object_type);\
@@ -38,42 +28,18 @@ namespace mafCore {
 
 /**
  Class name: mafCoreRegistration
- This class allows object rigisteration for all the classes present in mafCore module.
+ This class allows object reregistration for all the classes present in mafCore module.
  @sa mafObjectFactory
  */
 class MAFCORESHARED_EXPORT mafCoreRegistration {
     public:
     /// Register all the concrete objects that can be instantiated by the mafObjectFactory.
     /** This registration is needed to instantiate object by using the mafNEWFromString macro present in objectFactory which needs as input the object type to instantiate as string.*/
-    static void registerCoreObjects() {
-        mafRegisterObject(mafCore::mafObjectBase);
-        mafRegisterObject(mafCore::mafObject);
-        mafRegisterObject(mafCore::mafMemento);
-        mafRegisterObject(mafCore::mafMementoObject);
-        mafRegisterObject(mafCore::mafLoggerBuffer);
-        mafRegisterObject(mafCore::mafLoggerFile);
-        mafRegisterObject(mafCore::mafLoggerConsole);
-        mafRegisterObject(mafCore::mafMonitorRAM);
-        mafRegisterObject(mafCore::mafMonitorHardDisk);
-        mafRegisterObject(mafCore::mafHierarchy);
-        mafRegisterObject(mafCore::mafMementoHierarchy);
-    }
+    static void registerCoreObjects();
 
     /// Register all the concrete objects that can be instantiated by the mafObjectFactory.
     /** This registration is needed to instantiate object by using the mafNEWFromString macro present in objectFactory which needs as input the object type to instantiate as string.*/
-    static void unregisterCoreObjects() {
-        mafUnregisterObject(mafCore::mafObjectBase);
-        mafUnregisterObject(mafCore::mafObject);
-        mafUnregisterObject(mafCore::mafMemento);
-        mafUnregisterObject(mafCore::mafMementoObject);
-        mafUnregisterObject(mafCore::mafLoggerBuffer);
-        mafUnregisterObject(mafCore::mafLoggerFile);
-        mafUnregisterObject(mafCore::mafLoggerConsole);
-        mafUnregisterObject(mafCore::mafMonitorRAM);
-        mafUnregisterObject(mafCore::mafMonitorHardDisk);
-        mafUnregisterObject(mafCore::mafHierarchy);
-        mafUnregisterObject(mafCore::mafMementoHierarchy);
-    }
+    static void unregisterCoreObjects();
 
     /// Register bind function for the acceptObject static method.
     template<typename T> static void registerBind(const QString &className);

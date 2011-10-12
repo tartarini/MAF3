@@ -3,9 +3,9 @@
  *  mafCore
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -19,6 +19,7 @@ static void mafMessageHandlerOutput(QtMsgType type, const char *msg) {
     mafMessageHandler *handler = mafMessageHandler::instance();
     QString msg_to_forward = msg;
     mafLogger *current_logger = handler->activeLogger();
+    mafLogger *secondary_logger = handler->secondaryLogger();
     if(current_logger->enabled()) {
         mafLogMode lm = current_logger->logMode();
         if(lm == mafLogModeOnlyCritical && type != QtCriticalMsg) {
@@ -34,13 +35,15 @@ static void mafMessageHandlerOutput(QtMsgType type, const char *msg) {
             return;
         }
         current_logger->logMessage(type, msg_to_forward);
+        if (secondary_logger) {
+            secondary_logger->logMessage(type, msg_to_forward);
+        }
     }
 }
 
 
-mafMessageHandler::mafMessageHandler() : m_ActiveLogger(NULL) {
+mafMessageHandler::mafMessageHandler() : m_ActiveLogger(NULL), m_DefaultLogger(NULL), m_SecondaryLogger(NULL) {
     m_Lock = new QReadWriteLock(QReadWriteLock::Recursive);
-
 }
 
 mafMessageHandler::~mafMessageHandler() {
@@ -104,4 +107,10 @@ void mafMessageHandler::setActiveLogger(mafLogger *logger) {
 
 void mafMessageHandler::setDeafultLoggerAsActive() {
     m_ActiveLogger = m_DefaultLogger;
+}
+
+void mafMessageHandler::setSecondaryLogger(mafLogger *logger) {
+    mafDEL(m_SecondaryLogger);
+    m_SecondaryLogger = logger;
+    m_SecondaryLogger->retain();
 }

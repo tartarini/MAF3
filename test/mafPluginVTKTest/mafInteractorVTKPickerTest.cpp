@@ -3,9 +3,9 @@
  *  mafPluginVTKTest
  *
  *  Created by Roberto Mucci on 26/03/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -17,8 +17,11 @@
 #include <mafDataBoundaryAlgorithmVTK.h>
 #include <mafInteractorVTKPicker.h>
 #include <mafVTKParametricSurfaceSphere.h>
+#include <mafVME.h>
+#include <mafDataSet.h>
 
 #include <mafProxy.h>
+
 #include <vtkAlgorithmOutput.h>
 #include <vtkSphereSource.h>
 #include <vtkSmartPointer.h>

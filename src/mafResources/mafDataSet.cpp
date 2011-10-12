@@ -21,6 +21,7 @@ mafDataSet::mafDataSet(const QString code_location) : mafObject(code_location), 
     for(int i = 0; i < 6; i++) {
         m_Bounds.append(0);
     }
+    QObject::connect(this, SIGNAL(loadDataSignal()), this, SLOT(updateDataValue()), Qt::BlockingQueuedConnection);
 }
 
 mafDataSet::~mafDataSet() {
@@ -108,10 +109,11 @@ void mafDataSet::setDataValue(mafProxyInterface *data_value) {
 }
 
 mafProxyInterface *mafDataSet::dataValue() {
-  if (m_DataValue == NULL) {
-    updateDataValue();
-  }
-  return m_DataValue;
+    if (m_DataValue == NULL) {
+//        Q_EMIT loadDataSignal();
+        updateDataValue();
+    }
+    return m_DataValue;
 }
 
 void mafDataSet::setPoseMatrix(const mafMatrix *matrix) {
