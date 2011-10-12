@@ -18,6 +18,7 @@
 #include <mafExternalDataCodec.h>
 #include <mafProxy.h>
 #include <mafProxyInterface.h>
+#include <mafVME.h>
 
 #ifdef WIN32
 #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"

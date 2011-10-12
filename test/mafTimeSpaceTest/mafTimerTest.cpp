@@ -3,9 +3,9 @@
  *  mafTimeSpaceTest
  *
  *  Created by Paolo Quadrani on 22/09/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -16,6 +16,7 @@
 #include <mafCoreRegistration.h>
 #include <mafEventBusManager.h>
 #include <mafTimer.h>
+#include <mafObject.h>
 
 using namespace mafCore;
 using namespace mafEventBus;

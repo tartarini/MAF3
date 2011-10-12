@@ -5,7 +5,7 @@
  *  Created by Roberto Mucci on 12/07/11.
  *  Copyright 2011 B3C.s All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -13,6 +13,7 @@
 #include "mafVTKParametricSurfaceSphere.h"
 #include "mafInteractorVTKPicker.h"
 #include <mafVME.h>
+#include <mafDataSet.h>
 
 #include <vtkAlgorithmOutput.h>
 #include <vtkSmartPointer.h>
@@ -30,7 +31,7 @@ using namespace mafEventBus;
 using namespace mafCore;
 
 mafOperationVTKAddLandmark::mafOperationVTKAddLandmark(const QString code_location) : mafOperation(code_location), m_Center(NULL), m_LandmarkRadius(0.5), m_ParametricSphere(NULL) {
-    //set multithreaded to off
+    //set multi-threaded to off
     m_MultiThreaded = false;
 
     m_UIFilename = "mafOperationAddLandmark.ui";

@@ -1,44 +1,44 @@
 /*
- *  mafLoggerFile.h
+ *  mafLoggerSQLITE.h
  *  mafCore
  *
- *  Created by Paolo Quadrani on 17/09/09.
+ *  Created by Paolo Quadrani on 07/10/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#ifndef MAFLOGGERFILE_H
-#define MAFLOGGERFILE_H
+#ifndef MAFLOGGERSQLITE_H
+#define MAFLOGGERSQLITE_H
 
 // Includes list
 #include "mafLogger.h"
-#include <QTemporaryFile>
 
 namespace mafCore {
 
 // Class forwarding list
+class mafSQLITE;
 
 /**
- Class name: mafLoggerFile
- This class defines the MAF3 logging class that will store messages into a file on file system.
- @sa maf Logger mafLoggerConsole mafLoggerBuffer mafMessageHandler
+ Class name: mafLoggerSQLITE
+ This class defines the MAF3 logging class that will store messages into a SQLITE DB.
+ @sa mafLogger mafLoggerConsole mafLoggerBuffer mafLoggerFile mafMessageHandler
  */
-class MAFCORESHARED_EXPORT mafLoggerFile : public mafLogger {
+class MAFCORESHARED_EXPORT mafLoggerSQLITE : public mafLogger {
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafLogger);
 
 public:
     /// Object constructor.
-    mafLoggerFile(const QString code_location = "");
+    mafLoggerSQLITE(const QString code_location = "");
 
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
 
     /// Clear all the logged messages until now.
-    /** This methods close the connection with the last temporary file and remove it, then open a new log file.
+    /** This methods close the connection with the last DB file and remove it, then open a new log DB file.
     This will update also the m_LastLogFile member variable.*/
     /*virtual*/ void clearLogHistory();
 
@@ -47,34 +47,35 @@ public:
 
 protected:
     /// Object destructor.
-    /* virtual */~mafLoggerFile();
+    /* virtual */~mafLoggerSQLITE();
 
-    /// Method used to log the given message to the file system.
+    /// Method used to log the given message to the DB.
     /*virtual*/ void loggedMessage(const QtMsgType type, const QString &msg);
 
-    /// Clear history logs from the last temporary file.
-    /** This method is used to close the connection with the last opened temporary file.
+    /// Clear history logs from the last temporary DB file.
+    /** This method is used to close the connection with the last opened temporary DB file.
     It is invoked by the destructor and cleanLogHistory methods.*/
     void closeLastTempFile();
 
     /// Create a new temporary file reference.
     /** This method is called by the constructor and by the clearLogHistory methods
-    to initialize a new temporary file.*/
-    void initializeNewTemporaryFile();
+    to initialize a new log file.*/
+    void initializeNewLogFile();
 
 private:
-    QTemporaryFile *m_TempFileLog; ///< Temporary File containing all the logged messages for a specific session.
+    mafSQLITE *m_SQLITE; ///< Pointer to the SQLITE db manager.
     QString m_LastLogFile; ///< Filename of last logged file. Useful to retrieve information of file log when application cresh.
+    static int m_PrimaryLogKey; ///< Primary key.
 };
 
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline const QString mafLoggerFile::lastLogFile() const {
-    return m_LastLogFile;
+inline const QString mafLoggerSQLITE::lastLogFile() const {
+	return m_LastLogFile;
 }
 
 } // namespace mafCore
 
-#endif // MAFLOGGERFILE_H
+#endif // MAFLOGGERSQLITE_H

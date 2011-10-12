@@ -5,12 +5,14 @@
  *  Created by Paolo Quadrani on 13/07/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
 #include "mafPipeVisualVTKBox.h"
 #include "mafVTKWidget.h"
+#include <mafVME.h>
+#include <mafDataSet.h>
 
 #include <vtkSmartPointer.h>
 #include <vtkAlgorithmOutput.h>

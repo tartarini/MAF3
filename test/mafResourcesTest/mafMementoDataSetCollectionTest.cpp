@@ -3,9 +3,9 @@
  *  mafResourcesTest
  *
  *  Created by Roberto Mucci on 24/05/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -16,7 +16,9 @@
 #include <mafProxy.h>
 #include <mafExternalDataCodec.h>
 #include <mafProxy.h>
-#include <mafProxyInterface.h>
+#include <mafVME.h>
+#include <mafDataSet.h>
+#include <mafMemento.h>
 
 #ifdef WIN32
 #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
@@ -39,7 +41,7 @@ using namespace mafEventBus;
 //! <description>
 //mafMementoDataSetCollection aims to store a mafDataSetCollection state implementing a sort
 //of undo mechanism for the object's state. This is used to restore
-// a previous stored DataSet state (undo mechanism or serialization porpouses).
+// a previous stored DataSet state (undo mechanism or serialization purposes).
 //! </description>
 
 

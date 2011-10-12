@@ -3,9 +3,9 @@
  *  mafResourcesTest
  *
  *  Created by Daniele Giunchi on 11/05/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -18,6 +18,7 @@
 #include <mafOperationManager.h>
 #include <mafOperation.h>
 #include <mafOperationWorker.h>
+#include <mafVME.h>
 
 #define kMAX_COUNT 50000
 
@@ -31,7 +32,7 @@ using namespace mafResources;
 
 /**
  Class name: testEndlessOperation
- This is an example of endless operation that needs to be aborted to tesrminate the test suite.
+ This is an example of endless operation that needs to be aborted to terminate the test suite.
  */
 class testEndlessOperation : public mafResources::mafOperation {
     Q_OBJECT

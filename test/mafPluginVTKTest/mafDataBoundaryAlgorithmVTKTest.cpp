@@ -3,9 +3,9 @@
  *  mafPluginVTK
  *
  *  Created by Roberto Mucci on 10/11/10.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -13,6 +13,10 @@
 #include <mafCoreSingletons.h>
 #include <mafDataBoundaryAlgorithmVTK.h>
 #include <mafProxy.h>
+#include <mafDataSet.h>
+#include <mafPluginManager.h>
+#include <mafPlugin.h>
+
 #include <vtkPolyData.h>
 #include <vtkActor.h>
 #include <vtkPoints.h>
@@ -20,8 +24,6 @@
 #include <vtkCellArray.h>
 #include <vtkPointData.h>
 #include <vtkAlgorithmOutput.h>
-#include <mafPluginManager.h>
-#include <mafPlugin.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkSmartPointer.h>
 

@@ -3,9 +3,9 @@
  *  mafCore
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -22,8 +22,8 @@ class mafLogger;
 
 /**
  Class name: mafMessageHandler
- This singletone provides the dispatching of logging messages.
- The message if forwarded to the current active logger only if it is enabled and the message type has not ben filtered.
+ This singleton provides the dispatching of logging messages.
+ The message if forwarded to the current active logger only if it is enabled and the message type has not been filtered.
  For example: if the logger is in the mode of enable logging only for Critical messages, a message is forwarded to it only if
  it is critical and so on.
  @sa mafLogger, mafLoggerConsole, mafLoggerBuffer, mafLoggerFile
@@ -36,14 +36,20 @@ public:
     /// Destroy the singleton instance. To be called at the end of the application lifetime.
     void shutdown();
 
-    /// Allows to reinstall the mssage handler
+    /// Allows to reinstall the message handler
     void installMessageHandler();
 
-    /// Set the active logging syatem to manage logging messages.
+    /// Set the active logging system to manage logging messages.
     void setActiveLogger(mafLogger *logger);
 
     /// Return the current active logging system.
     mafLogger *activeLogger();
+
+    /// Allows to assign a secondary logger in which redirect the logs (NULL argument will remove the previously assigned logger).
+    void setSecondaryLogger(mafLogger *logger);
+
+    /// Return the secondary logger (if any).
+    mafLogger *secondaryLogger();
 
     // Allow to turn On/Off the TestSuite Debug logging modality which puts as prefix a fixed string defined in mafCoreDefinitions.h
     void testSuiteLogMode(bool on = true);
@@ -63,8 +69,17 @@ private:
     QStack<mafMsgHandlingFunction> m_OldMsgHandlerStack; ///< Stack of Message handler callback pointers.
     mafLogger *m_ActiveLogger; ///< Current active logging system to which will be forwarded all the incoming messages.
     mafLogger *m_DefaultLogger; ///< mafLoggerConsole is the default logger.
+    mafLogger *m_SecondaryLogger; ///< Secondary logger to which forward log messages.
 };
 
+/////////////////////////////////////////////////////////////
+// Inline methods
+/////////////////////////////////////////////////////////////
+
+inline mafLogger *mafMessageHandler::secondaryLogger() {
+    return m_SecondaryLogger;
 }
+
+} // namespace mafCore
 
 #endif // MAFMESSAGEHANDLER_H

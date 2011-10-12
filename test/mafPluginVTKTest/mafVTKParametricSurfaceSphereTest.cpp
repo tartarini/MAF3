@@ -5,7 +5,7 @@
  *  Created by Roberto Mucci on 20/01/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -15,7 +15,10 @@
 #include <mafPipeVisualVTKSurface.h>
 #include <mafVTKParametricSurfaceSphere.h>
 #include <mafVTKWidget.h>
+#include <mafVME.h>
 #include <mafDataBoundaryAlgorithmVTK.h>
+#include <mafDataSet.h>
+
 #include <vtkRenderWindowInteractor.h>
 #include <vtkAlgorithmOutput.h>
 #include <mafProxy.h>

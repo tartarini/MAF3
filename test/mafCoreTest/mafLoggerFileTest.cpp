@@ -42,7 +42,7 @@ private Q_SLOTS:
         //! </snippet>
     }
 
-    /// Cleanup tes variables memory allocation.
+    /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_Logger);
     }

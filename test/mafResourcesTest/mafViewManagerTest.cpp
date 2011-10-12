@@ -3,9 +3,9 @@
  *  mafResourcesTest
  *
  *  Created by Paolo Quadrani on 22/09/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -14,6 +14,7 @@
 #include <mafResourcesRegistration.h>
 #include <mafEventBusManager.h>
 #include <mafViewManager.h>
+#include <mafMemento.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -27,7 +28,7 @@ class testViewManagerObserver : public QObject {
     Q_OBJECT
 
 public:
-    /// Cobject constructor
+    /// object constructor
     testViewManagerObserver();
 
     /// Return the current value of m_View
@@ -65,7 +66,7 @@ private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
-        // Register all the creatable objects for the mafResources module.
+        // Register all the objects that can be instantiated for the mafResources module.
         mafResourcesRegistration::registerResourcesObjects();
 
         m_Observer = new testViewManagerObserver();
@@ -80,7 +81,7 @@ private Q_SLOTS:
 
         delete m_Observer;
 
-        // Shutdown eventbus singleton and core singletons.
+        // Shutdown event-bus singleton and core singletons.
         m_EventBus->shutdown();
         mafMessageHandler::instance()->shutdown();
     }
@@ -91,7 +92,7 @@ private Q_SLOTS:
     void createViewTest();
     /// Test select View method
     void selectViewTest();
-    /// Test memento (for store and retriev settings)
+    /// Test memento (for store and retrieve settings)
     void mementoViewTest();
     /// Test the view remove and destruction
     void removeAndDestructionTest();

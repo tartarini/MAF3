@@ -5,7 +5,7 @@
  *  Created by Daniele Giunchi - Paolo Quadrani on 7/7/11.
  *  Copyright 2011 B3C.s All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -14,6 +14,7 @@
 
 // Includes list
 #include "mafPluginVTKDefinitions.h"
+#include <mafInteractor.h>
 
 // Foundation Class forwarding list
 class vtkRenderer;

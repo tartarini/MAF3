@@ -5,7 +5,7 @@
  *  Created by Paolo Quadrani - Daniele Giunchi on 20/06/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -14,6 +14,8 @@
 #include <mafResourcesRegistration.h>
 #include <mafOperationTransform.h>
 #include <mafVMEManager.h>
+#include <mafVME.h>
+#include <mafDataSet.h>
 #include <QDebug>
 
 using namespace mafResources;

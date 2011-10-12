@@ -9,6 +9,7 @@
  *
  */
 
+#include "mafTestConfig.h"
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafEventBusManager.h>
@@ -19,6 +20,8 @@
 #include <mafProxy.h>
 #include <mafPluginManager.h>
 #include <mafPlugin.h>
+#include <mafVME.h>
+#include <mafDataSet.h>
 
 #include <mafVTKWidget.h>
 
@@ -79,13 +82,14 @@ private Q_SLOTS:
         mafResourcesRegistration::registerResourcesObjects();
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKIsoSurface)
         
-        //TODO: set path of test data
-        m_VTKFile = "D:\\TEMPO\\TestData\\Copy (2) of TESTDELETE\\TESTDELETE.75.vtk";
+        QString fname(MAF_DATA_DIR);
+        fname.append("/VTK/mafPipeVisualVTKIsoSurfaceTestData.vtk");
         
         // Import a vtk volume.
         m_Reader = vtkDataSetReader::New();
-        QByteArray ba = m_VTKFile.toAscii();
-        m_Reader->SetFileName(ba.constData());
+        fname = QDir::toNativeSeparators(fname);
+        QByteArray ba = fname.toAscii();
+        m_Reader->SetFileName(ba.data());
         m_Reader->Update();
         
         //! <snippet>

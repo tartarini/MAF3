@@ -11,6 +11,9 @@
 
 #include "mafOperationParametricSurface.h"
 #include <mafProxy.h>
+#include <mafVME.h>
+#include <mafDataSet.h>
+
 #include <vtkAlgorithmOutput.h>
 
 using namespace mafPluginVTK;

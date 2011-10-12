@@ -3,15 +3,16 @@
  *  mafResourcesTest
  *
  *  Created by Paolo Quadrani on 22/09/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafResourcesRegistration.h>
+#include <mafMementoResource.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -22,7 +23,7 @@ using namespace mafResources;
 //! <description>
 //mafMementoResource defines the MAF3 base resource for storing
 //a mafResource state. This can be used to restore a previous
-//stored resource state (undo mechanism or serialization porpouses).
+//stored resource state (undo mechanism or serialization purposes).
 //! </description>
 
 /**

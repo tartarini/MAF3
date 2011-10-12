@@ -3,9 +3,9 @@
  *  mafResourcesTest
  *
  *  Created by Paolo Quadrani on 22/09/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -13,6 +13,7 @@
 #include <mafResourcesRegistration.h>
 #include <mafCoreSingletons.h>
 #include <mafInterpolatorBefore.h>
+#include <mafDataSet.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -27,7 +28,7 @@ using namespace mafResources;
 //! </title>
 //! <description>
 //mafInterpolatorBefore provides the mechanism to return the element suddenly before the
-//given timestamp. If no elements are defined befor the given timestamp, NULL is returned.
+//given timestamp. If no elements are defined before the given timestamp, NULL is returned.
 //! </description>
 class mafInterpolatorBeforeTest: public QObject {
     Q_OBJECT
@@ -78,7 +79,7 @@ void mafInterpolatorBeforeTest::mafInterpolationBeforeStrategyTest() {
     item = m_Interpolator->itemAt(&m_ItemMap, 0.0);
     QVERIFY(item == NULL);
 
-    // Retrieve the first elemnt.
+    // Retrieve the first element.
     //! <snippet>
     item = m_Interpolator->itemAt(&m_ItemMap, 0.5);
     //! </snippet>
