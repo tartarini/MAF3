@@ -177,6 +177,9 @@ public Q_SLOTS:
     /// Return name of working file.
     QString fileName();
 
+    /// Show the application's settings dialog.
+    void showSettingsDialog();
+
 private Q_SLOTS:
     /// Start the operation associated with the operation's action activated.
     void startOperation();
@@ -201,9 +204,6 @@ private Q_SLOTS:
 
     /// Allows to ask to open the selected recent file.
     void openRecentFile();
-
-    /// Show the application's settings dialog.
-    void showSettingsDialog();
 
     /// Called when a VME has been selected.
     /** This method will update all the operation's menu items according to the new selected VME.*/
