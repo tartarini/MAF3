@@ -17,9 +17,7 @@
 
 using namespace mafCore;
 
-int mafLoggerSQLITE::m_PrimaryLogKey = 0;
-
-mafLoggerSQLITE::mafLoggerSQLITE(const QString code_location) : mafLogger(code_location), m_SQLITE(NULL), m_LastLogFile("") {
+mafLoggerSQLITE::mafLoggerSQLITE(const QString code_location) : mafLogger(code_location), m_SQLITE(NULL), m_PrimaryLogKey(0), m_LastLogFile("") {
     initializeNewLogFile();
 }
 
@@ -87,9 +85,11 @@ void mafLoggerSQLITE::initializeNewLogFile() {
 
     m_LastLogFile = dbLogFilename;
 
-    QString logTableCreationString("create table logTable (id int primary key, logtime varchar(10), logtype varchar(30), logtext text)");
+    QString logTableCreationString("create table logTable (id INTEGER PRIMARY KEY, logtime DATE, logtype VARCHAR(30), logtext TEXT)");
+    QString triggerDateCreationString("CREATE TRIGGER insert_logTable_logtime AFTER  INSERT ON logTable BEGIN  UPDATE logTable SET logtime = DATETIME('NOW')  WHERE rowid = new.rowid; END;");
+    
     m_SQLITE = new mafSQLITE(m_LastLogFile, "", mafCodeLocation);
-    m_SQLITE->setQueryDb(logTableCreationString);
+    m_SQLITE->executeQuery(logTableCreationString);
     m_SQLITE->setTableName("logTable");
 }
 
