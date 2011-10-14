@@ -54,7 +54,7 @@ void mafEventDispatcher::initializeGlobalEvents() {
     QVariant var;
     var.setValue((QObject*)this);
     (*remote_done)[OBJECT] = var;
-    (*remote_done)[SIGNATURE] = "remoteCommunicationDone()";
+    (*remote_done)[SIGNATURE] = "remoteCommunicationDone(QVariant)";
     this->registerSignal(*remote_done);
 
     mafEvent *remote_failed = new mafEvent();
