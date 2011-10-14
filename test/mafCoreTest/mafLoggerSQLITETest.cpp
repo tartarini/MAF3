@@ -76,9 +76,11 @@ void mafLoggerSQLITETest::logMessageTest() {
 
 void mafLoggerSQLITETest::clearLogHistoryTest() {
     QString oldLog = m_Logger->lastLogFile();
+    qDebug() << "Old Log: " << oldLog;
+    QTest::qSleep(2000);
     m_Logger->clearLogHistory();
     QString res = m_Logger->lastLogFile();
-
+    qDebug() << "New Log: " << res;
     QVERIFY(res != oldLog);
 }
 

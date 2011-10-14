@@ -130,7 +130,7 @@ namespace mafCore
   template<typename T, typename TRef, typename TPtr>
   bool mafTreeIterator<T,TRef,TPtr>::operator == (const TYPENAME mafTreeIterator<T,TRef,TPtr>::this_iterator& r) const
   {
-    return equal(r);
+    return this->equal(r);
   }
 
   template<typename T, typename TRef, typename TPtr>
