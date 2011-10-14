@@ -67,10 +67,10 @@ Q_SIGNALS:
     void notifyDefaultEvent();
 
     /// Signal used to notify to observers that the remote communication has been terminated with success.
-    void remoteCommunicationDone(QVariant);
+    void remoteCommunicationDone(QVariant response);
 
     /// Signal used to notify to observers that the remote communication failed.
-    void remoteCommunicationFailed();
+    void remoteCommunicationFailed(QVariant response);
 
 protected:
     /// Register MAF global events

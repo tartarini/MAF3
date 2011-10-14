@@ -227,7 +227,16 @@ void mafNetworkConnectorQXMLRPC::processFault( int requestId, int errorCode, QSt
     // Log the error.
     QByteArray ba = mafTr("Process Fault for requestID %1 with error %2 - %3").arg(QString::number(requestId), QString::number(errorCode), errorString).toAscii();
     qDebug("%s", ba.data());
-    mafEventBusManager::instance()->notifyEvent("maf.local.eventBus.remoteCommunicationFailed", mafEventTypeLocal);
+    QVariant value;
+    QVariantMap errorMap;
+    errorMap.insert("errorCode", (QVariant)errorCode);
+    errorMap.insert("errorString", (QVariant)errorString);
+
+    value.setValue(errorMap);
+
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(QVariant, value));
+    mafEventBusManager::instance()->notifyEvent("maf.local.eventBus.remoteCommunicationFailed", mafEventTypeLocal, &argList);
 }
 
 void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodName, QList<xmlrpc::Variant> parameters ) {
