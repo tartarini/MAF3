@@ -43,8 +43,10 @@ void mafNetworkConnectorREST::createServer(const unsigned int port) {
 void mafNetworkConnectorREST::startListen() {
 }
 
-void mafNetworkConnectorREST::send(const QString event_id, mafEventArgumentsList *argList) {
-/*    QList<xmlrpc::Variant> *vl = NULL;
+void mafNetworkConnectorREST::send(const QString event_id, mafEventArgumentsList *argList, bool externalSend) {
+/*
+    Q_UNUSED(externalSend);
+    QList<xmlrpc::Variant> *vl = NULL;
     if(argList != NULL) {
         vl = new QList<xmlrpc::Variant>();
 

@@ -36,7 +36,7 @@ Q_SIGNALS:
 public Q_SLOTS:
     /// Allow to send a network request.
     /** Contains the conversion between maf datatypes and qxmlrpc datatype based both on QVariant. */
-    /*virtual*/ void send(const QString event_id, mafEventArgumentsList *argList);
+    /*virtual*/ void send(const QString event_id, mafEventArgumentsList *argList, bool externalSend = false);
 
 private Q_SLOTS:
 

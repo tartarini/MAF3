@@ -40,7 +40,7 @@ public:
     virtual void startListen() = 0;
 
     /// Allow to send a network request.
-    virtual void send(const QString event_id, mafEventArgumentsList *argList) = 0;
+    virtual void send(const QString event_id, mafEventArgumentsList *argList, bool externalSend = false) = 0;
 
     /// retrieve an instance of the object
     virtual mafNetworkConnector *clone() = 0;
