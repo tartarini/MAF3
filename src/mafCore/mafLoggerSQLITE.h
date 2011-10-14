@@ -57,15 +57,18 @@ protected:
     It is invoked by the destructor and cleanLogHistory methods.*/
     void closeLastTempFile();
 
+    /// Suggest a name to the database of the log via argument.
+    /** This method is used in combination with initialize new log file in which the table has been created.*/
+    void generateLogFileName(const QString &fileName);
+    
     /// Create a new temporary file reference.
     /** This method is called by the constructor and by the clearLogHistory methods
     to initialize a new log file.*/
-    void initializeNewLogFile();
+    virtual void initializeNewLogFile();
 
-private:
     mafSQLITE *m_SQLITE; ///< Pointer to the SQLITE db manager.
+    unsigned int m_PrimaryLogKey; ///< Primary key.
     QString m_LastLogFile; ///< Filename of last logged file. Useful to retrieve information of file log when application cresh.
-    static int m_PrimaryLogKey; ///< Primary key.
 };
 
 /////////////////////////////////////////////////////////////

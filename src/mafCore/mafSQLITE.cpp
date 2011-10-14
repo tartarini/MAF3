@@ -17,10 +17,10 @@
 
 using namespace mafCore;
 
-mafSQLITE::mafSQLITE(const QString code_location) : mafObjectBase(code_location), m_TableModel(NULL), m_DBConnected(false) {
+mafSQLITE::mafSQLITE(const QString code_location) : mafObjectBase(code_location), m_TableModel(NULL), m_DBConnected(false), m_Query(NULL) {
 }
 
-mafSQLITE::mafSQLITE(const QString dbName, const QString tableName, const QString code_location) : mafObjectBase(code_location), m_TableModel(NULL), m_DBConnected(false) {
+mafSQLITE::mafSQLITE(const QString dbName, const QString tableName, const QString code_location) : mafObjectBase(code_location), m_TableModel(NULL), m_DBConnected(false), m_Query(NULL) {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(dbName);
 
@@ -44,6 +44,11 @@ mafSQLITE::~mafSQLITE() {
         submitAllChanges();
         m_TableModel->database().close();
     }
+    
+    if(m_Query) {
+        delete m_Query;
+        m_Query = NULL;
+    }
 }
 
 void mafSQLITE::setTableName(const QString name) {
@@ -53,16 +58,13 @@ void mafSQLITE::setTableName(const QString name) {
     m_TableModel->select();
 }
 
-void mafSQLITE::setQueryTable(const QString &queryString) {
-    REQUIRE(m_TableModel != NULL && isConnected());
-
-    ((QSqlQueryModel *)m_TableModel)->setQuery(queryString, m_TableModel->database());
-}
-
-void mafSQLITE::setQueryDb(const QString &queryString) {
+QSqlQuery *mafSQLITE::executeQuery(const QString &queryString) {
     QSqlDatabase db = m_TableModel->database();
-    QSqlQuery query(db);
-    query.exec(queryString);
+    if(m_Query == NULL) {
+        m_Query = new QSqlQuery(db);
+    }
+    bool res(m_Query->exec(queryString));
+    return res ? m_Query : NULL;
 }
 
 QSqlRecord mafSQLITE::record(int idx) {
@@ -86,9 +88,13 @@ bool mafSQLITE::insertRecord(QHash<QString, QVariant> *recordHash) {
         record.setValue(iter.key(), iter.value());
     }
     
+    return this->insertRecord(record);
+}
+
+bool mafSQLITE::insertRecord(const QSqlRecord &record) {
     // Insert the record into the table
     bool result = m_TableModel->insertRecord(-1, record);
-
+    
     // Set the object as modified and emit the related signal to notify the observer.
     if (result) {
         setModified();
@@ -107,6 +113,6 @@ void mafSQLITE::submitAllChanges() {
 }
 
 void mafSQLITE::optimizeDB() {
-    setQueryDb("VACUUM");
-    setQueryDb("PRAGMA temp_store = MEMORY;");
+    executeQuery("VACUUM");
+    executeQuery("PRAGMA temp_store = MEMORY;");
 }

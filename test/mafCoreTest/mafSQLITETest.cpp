@@ -100,19 +100,21 @@ void mafSQLITETest::fillTableTest() {
     hashRecord.insert("lastname", QVariant("Mucci"));
     result = m_SQLITE->insertRecord(&hashRecord);
     QVERIFY(result);
+    
+    m_SQLITE->submitAllChanges();
 
     // Dump the table on console
     QString queryString("SELECT * FROM maf3Team");
-    m_SQLITE->setQueryTable(queryString);
+    QSqlQuery *q = m_SQLITE->executeQuery(queryString);
 
-    int r = 0;
-    QSqlRecord record = m_SQLITE->record(r);
+    QVERIFY(q);
+    
     qDebug() << QString("*** maf3Team table dump ***");
-    while(!record.isEmpty()) {
+    while(q->next()) {
+        QSqlRecord record = q->record();
         qDebug() << QString("First Name: %1 - Last Name: %2").arg(record.value("firstname").toString(), record.value("lastname").toString());
-        ++r;
-        record = m_SQLITE->record(r);
     }
+    
 }
 
 MAF_REGISTER_TEST(mafSQLITETest);
