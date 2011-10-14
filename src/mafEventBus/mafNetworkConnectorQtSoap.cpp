@@ -211,9 +211,10 @@ QtSoapType *mafNetworkConnectorQtSoap::marshall(const QString name, const QVaria
     return returnValue;
 }
 
-void mafNetworkConnectorQtSoap::send(const QString methodName, mafEventArgumentsList *argList) {
+void mafNetworkConnectorQtSoap::send(const QString methodName, mafEventArgumentsList *argList, bool externalSend) {
     //REQUIRE(!params->at(0).isNull());
     //REQUIRE(params->at(0).canConvert(QVariant::Hash) == true);
+    Q_UNUSED(externalSend);
 
     QString type = argList->at(0).name();
     if(argList == NULL || type != "QVariantMap") {

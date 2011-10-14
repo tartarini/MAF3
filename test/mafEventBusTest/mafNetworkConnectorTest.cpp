@@ -33,7 +33,7 @@ public:
     /*virtual*/ void createServer(const unsigned int port);
 
     /// Allow to send a network request.
-    /*virtual*/ void send(const QString event_id, mafEventArgumentsList *params);
+    /*virtual*/ void send(const QString event_id, mafEventArgumentsList *params, bool externalSend = false);
 
     /// Start the server.
     /*virtual*/ void startListen();
@@ -78,8 +78,9 @@ void testNetworkConnectorCustom::createClient(const QString hostName, const unsi
     m_ConnectorStatus.append(QString::number(port));
 }
 
-void testNetworkConnectorCustom::send(const QString event_id, mafEventArgumentsList *params) {
+void testNetworkConnectorCustom::send(const QString event_id, mafEventArgumentsList *params, bool externalSend) {
     Q_UNUSED(params);
+    Q_UNUSED(externalSend);
     m_ConnectorStatus = "Event sent with ID: ";
     m_ConnectorStatus.append(event_id);
 }

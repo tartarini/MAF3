@@ -152,8 +152,9 @@ void mafNetworkConnectorQXMLRPC::startListen() {
     }
 }
 
-void mafNetworkConnectorQXMLRPC::send(const QString event_id, mafEventArgumentsList *argList) {
+void mafNetworkConnectorQXMLRPC::send(const QString event_id, mafEventArgumentsList *argList, bool externalSend) {
     QList<xmlrpc::Variant> *vl = NULL;
+    xmlrpc::Variant var;
     QByteArray ba;
     if(argList != NULL) {
         vl = new QList<xmlrpc::Variant>();
@@ -162,19 +163,23 @@ void mafNetworkConnectorQXMLRPC::send(const QString event_id, mafEventArgumentsL
         for(;i<size;++i) {
             QString typeArgument;
             typeArgument = argList->at(i).name();
-            if(typeArgument != "QVariantList") {
-                ba = mafTr("Remote Dispatcher need to have arguments that are QVariantList").toAscii();
-                qWarning("%s", ba.data());
-                delete vl;
-                return;
+            if (!externalSend) {
+                if(typeArgument != "QVariantList") {
+                    ba = mafTr("Remote Dispatcher need to have arguments that are QVariantList").toAscii();
+                    qWarning("%s", ba.data());
+                    delete vl;
+                    return;
+                }
+                void *vp = argList->at(i).data();
+                QVariantList *l;
+                l = (QVariantList *)vp;
+                var.setValue(*l);
+            } else {
+                void *vp = argList->at(i).data();
+                QString v;
+                v = *((QString*)vp);
+                var.setValue(v);
             }
-
-            void *vp = argList->at(i).data();
-            QVariantList *l;
-            l = (QVariantList *)vp;
-            xmlrpc::Variant var;
-            var.setValue(*l);
-
             vl->push_back(var); //only the first parameter represent the whole list of arguments
         }
         if(size == 0) {
@@ -210,10 +215,12 @@ void mafNetworkConnectorQXMLRPC::xmlrpcSend(const QString &methodName, QList<xml
 
 void mafNetworkConnectorQXMLRPC::processReturnValue( int requestId, QVariant value ) {
     Q_UNUSED( requestId );
-    Q_ASSERT( value.canConvert( QVariant::Map ) );
-    QByteArray ba = value.toMap().value("returnValue").toString().toAscii();
-    qDebug("%s", ba.data());
-    mafEventBusManager::instance()->notifyEvent("maf.local.eventBus.remoteCommunicationDone", mafEventTypeLocal);
+    //Q_ASSERT( value.canConvert( QVariant::Map ) );
+    //QByteArray ba = value.toMap().value("returnValue").toString().toAscii();
+    //qDebug("%s", ba.data());
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(QVariant, value));
+    mafEventBusManager::instance()->notifyEvent("maf.local.eventBus.remoteCommunicationDone", mafEventTypeLocal, &argList);
 }
 
 void mafNetworkConnectorQXMLRPC::processFault( int requestId, int errorCode, QString errorString ) {
