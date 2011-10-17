@@ -139,9 +139,12 @@ void mafOperationManager::executeWithParameters(QVariantList op_with_parameters)
     REQUIRE(!op_to_run.isEmpty());
 
     this->startOperation(op_to_run);
-    //parameters contains as second argument a list of QVariant which are passed to the operation
-    m_CurrentOperation->setParameters(op_with_parameters.at(1).toMap()); 
-    this->executeOperation();
+    
+    if(m_CurrentOperation) {
+        //parameters contains as second argument a list of QVariant which are passed to the operation
+        m_CurrentOperation->setParameters(op_with_parameters.at(1).toMap()); 
+        this->executeOperation();
+    }
 }
 
 void mafOperationManager::setOperationParameters(const QVariantMap &parameters) {
