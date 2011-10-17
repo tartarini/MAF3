@@ -74,6 +74,15 @@ public Q_SLOTS:
 protected:
     /// Object destructor.
     /*virtual*/ ~mafSQLITE();
+    
+    /// Method used to log the given message to the DB.
+    /*virtual*/ void loggedMessage(const QtMsgType type, const QString &msg);
+
+    
+    /// Clear history logs from the last temporary DB file.
+    /** This method is used to close the connection with the last opened temporary DB file.
+     It is invoked by the destructor and cleanLogHistory methods.*/
+    void closeLastTempFile();
 
 private:
     QSqlTableModel *m_TableModel; ///< Model associated to the DB table.

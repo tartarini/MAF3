@@ -14,6 +14,7 @@
 #include <QSqlDatabase>
 #include <QSqlTableModel>
 #include <QSqlQuery>
+#include <QSqlError>
 
 using namespace mafCore;
 
@@ -21,9 +22,18 @@ mafSQLITE::mafSQLITE(const QString code_location) : mafObjectBase(code_location)
 }
 
 mafSQLITE::mafSQLITE(const QString dbName, const QString tableName, const QString code_location) : mafObjectBase(code_location), m_TableModel(NULL), m_DBConnected(false), m_Query(NULL) {
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(dbName);
-
+    
+    QStringList connectionNames = QSqlDatabase::connectionNames();
+    QSqlDatabase db;
+    QString driverName("QSQLITE");
+    
+    if(!connectionNames.contains(dbName)) {
+        db= QSqlDatabase::addDatabase(driverName, dbName);
+        db.setDatabaseName(dbName);
+    } else {
+        db = QSqlDatabase::database(dbName);
+    }
+    
     if (!db.open()) {
         qCritical() << mafTr("Unable to establish a database connection with db ") << dbName;
         return;
@@ -63,7 +73,9 @@ QSqlQuery *mafSQLITE::executeQuery(const QString &queryString) {
     if(m_Query == NULL) {
         m_Query = new QSqlQuery(db);
     }
+    //qDebug() << queryString << " " << db.tables();
     bool res(m_Query->exec(queryString));
+    //qDebug() << m_Query->lastError().text();
     return res ? m_Query : NULL;
 }
 
