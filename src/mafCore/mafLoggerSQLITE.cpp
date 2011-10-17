@@ -17,7 +17,7 @@
 
 using namespace mafCore;
 
-mafLoggerSQLITE::mafLoggerSQLITE(const QString code_location) : mafLogger(code_location), m_SQLITE(NULL), m_PrimaryLogKey(0), m_LastLogFile("") {
+mafLoggerSQLITE::mafLoggerSQLITE(const QString code_location) : mafLogger(code_location), m_SQLITE(NULL), m_LastLogFile("") {
     initializeNewLogFile();
 }
 
@@ -28,9 +28,8 @@ mafLoggerSQLITE::~mafLoggerSQLITE() {
 void mafLoggerSQLITE::loggedMessage(const QtMsgType type, const QString &msg) {
     QHash<QString, QVariant> recordHash;
 
-    QString logtime(QDateTime::currentDateTime().toString("hh:mm:ss"));
     QString logtype("");
-    
+
     switch (type) {
         case QtDebugMsg:
             if(logMode() == mafLogModeTestSuite) {
@@ -54,12 +53,8 @@ void mafLoggerSQLITE::loggedMessage(const QtMsgType type, const QString &msg) {
         break;
     }
 
-    recordHash.insert("id", QVariant(m_PrimaryLogKey));
-    recordHash.insert("logtime", QVariant(logtime));
     recordHash.insert("logtype", QVariant(logtype));
     recordHash.insert("logtext", QVariant(msg));
-    
-    ++m_PrimaryLogKey;
 
     m_SQLITE->insertRecord(&recordHash);
 }
@@ -85,8 +80,7 @@ void mafLoggerSQLITE::initializeNewLogFile() {
 
     m_LastLogFile = dbLogFilename;
 
-    QString logTableCreationString("create table logTable (id INTEGER PRIMARY KEY, logtime DATE, logtype VARCHAR(30), logtext TEXT)");
-    QString triggerDateCreationString("CREATE TRIGGER insert_logTable_logtime AFTER  INSERT ON logTable BEGIN  UPDATE logTable SET logtime = DATETIME('NOW')  WHERE rowid = new.rowid; END;");
+    QString logTableCreationString("create table logTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, logtime TIMESTAMP                                    DEFAULT CURRENT_TIMESTAMP, logtype VARCHAR(30), logtext TEXT)");
     
     m_SQLITE = new mafSQLITE(m_LastLogFile, "", mafCodeLocation);
     m_SQLITE->executeQuery(logTableCreationString);
