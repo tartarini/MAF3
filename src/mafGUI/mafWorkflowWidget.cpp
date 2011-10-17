@@ -35,7 +35,7 @@ mafWorkflowWidget::mafWorkflowWidget(QWidget *parent) : QWidget(parent), m_OpenW
     m_SubmitButton = new QPushButton("Submit workflow", this);
     m_RemoveButton = new QPushButton("Remove", this);
 
-    vbox->setSpacing(3);
+    vbox->setSpacing(1);
     vbox->addStretch(1);
     vbox->addWidget(m_OpenWorkbenchButton);
     vbox->addWidget(m_SubmitButton);
@@ -47,7 +47,7 @@ mafWorkflowWidget::mafWorkflowWidget(QWidget *parent) : QWidget(parent), m_OpenW
     vListbox->addWidget(parametersLabel);
     vListbox->addWidget(m_ParametersList);
 
-    hbox->addSpacing(15);
+    hbox->addSpacing(5);
     hbox->addLayout(vListbox);
     hbox->addLayout(vbox);
 

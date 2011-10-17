@@ -63,7 +63,7 @@ void mafEventDispatcher::initializeGlobalEvents() {
     (*remote_failed)[SIGTYPE] = mafSignatureTypeSignal;
     var.setValue((QObject*)this);
     (*remote_failed)[OBJECT] = var;
-    (*remote_failed)[SIGNATURE] = "remoteCommunicationFailed()";
+    (*remote_failed)[SIGNATURE] = "remoteCommunicationFailed(QVariant)";
     this->registerSignal(*remote_failed);
 }
 

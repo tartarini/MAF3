@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef MAFFINDWIDGET_H
-#define MAFFINDWIDGET_H
+#ifndef MAFWORKFLOWWIDGET_H
+#define MAFWORKFLOWWIDGET_H
 
 // Includes list
 #include "mafGUIDefinitions.h"
@@ -33,13 +33,8 @@ public:
     QPushButton *m_RemoveButton; ///< Remove workflow.
     QListWidget *m_WorkflowList; ///< List of available workflow.
     QListWidget *m_ParametersList; ///< List of parameters file.
-
-
-    QAction *m_ActionCase; ///< Match case menu.
-    QAction *m_ActionWhole; ///< Match whole word menu.
-
 };
 
 } //end namespace
 
-#endif // MAFFINDWIDGET_H
+#endif // MAFWORKFLOWWIDGET_H
