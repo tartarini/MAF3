@@ -17,9 +17,8 @@
 namespace mafScriptInterpreter {
 
 /**
- Class name: mafScriptEditorSynchronizer
- Class with the capability of synchronizing editors when using multiple threads.
- It is a singleton.
+ Class name: mafViewScriptInterpreter
+ Base class for mafView representing a script console.
 */
 class MAFSCRIPTINTERPRETERSHARED_EXPORT mafViewScriptInterpreter : public mafResources::mafView {
     Q_OBJECT

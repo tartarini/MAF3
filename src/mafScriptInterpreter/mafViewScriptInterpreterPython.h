@@ -18,8 +18,7 @@ namespace mafScriptInterpreter {
 
 /**
  Class name: mafViewScriptInterpreterPython
- Class with the capability of synchronizing editors when using multiple threads.
- It is a singleton.
+ mafView representing the Python console.
 */
 class MAFSCRIPTINTERPRETERSHARED_EXPORT mafViewScriptInterpreterPython : public mafViewScriptInterpreter {
     Q_OBJECT
