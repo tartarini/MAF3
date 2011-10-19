@@ -21,7 +21,7 @@
 namespace mafGUI {
 /**
 Class Name: mafWorkflowWidget
-It represents a widget to search words inside a text.
+It represents a widget to manage an external workflow workbench.
 */
 class MAFGUISHARED_EXPORT mafWorkflowWidget : public QWidget {
     Q_OBJECT
