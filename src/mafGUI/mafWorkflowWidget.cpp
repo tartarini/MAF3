@@ -34,6 +34,7 @@ mafWorkflowWidget::mafWorkflowWidget(QWidget *parent) : QWidget(parent), m_OpenW
     m_OpenWorkbenchButton = new QPushButton("Open Taverna Workbench", this);
     m_SubmitButton = new QPushButton("Submit workflow", this);
     m_RemoveButton = new QPushButton("Remove", this);
+    m_RemoveButton->setDisabled(true);
 
     vbox->setSpacing(1);
     vbox->addStretch(1);
