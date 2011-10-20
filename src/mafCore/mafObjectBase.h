@@ -30,6 +30,30 @@ class MAFCORESHARED_EXPORT mafObjectBase : public QObject {
     Q_PROPERTY(QString uiFile READ uiFilename)
     /// typedef macro.
     mafSuperclassMacro(QObject);
+    
+Q_SIGNALS:
+    /// Signal emitted to alert all receivers that the object has been modified.
+    void modifiedObject();
+    
+    /// Allows to increment the reference count.
+    void incrementReference();
+    
+    /// Allows to decrement the reference count.
+    void decreaseReference();
+
+    /// Signal emitted to update gui.
+    void updateGuiSignal(QObject *selfUI);
+
+public Q_SLOTS:
+    /// update ui widgets with properties, using USER flag in Q_PROPERTY.
+    void updateUI(QObject *selfUI = NULL);
+
+private Q_SLOTS:
+    /// increment of 1 unit the reference count.
+    void ref();
+
+    /// delete the object.
+    void deleteObject();
 
 public:
     /// Object constructor.
@@ -83,17 +107,6 @@ public:
     /// dump the description of the object (information, attributes, variables...)
     virtual void description() const;
 
-public Q_SLOTS:
-    /// update ui widgets with properties, using USER flag in Q_PROPERTY.
-    void updateUI(QObject *selfUI = NULL);
-
-private Q_SLOTS:
-    /// increment of 1 unit the reference count.
-    void ref();
-
-    /// delete the object.
-    void deleteObject();
-
 protected:
     /// set the hash code for the current object.
     /** This method is used from the undo mechanism like memento pattern
@@ -104,19 +117,6 @@ protected:
 
     /// Object destructor.
     virtual ~mafObjectBase();
-
-Q_SIGNALS:
-    /// Signal emitted to alert all receivers that the object has been modified.
-    void modifiedObject();
-    
-    /// Allows to increment the reference count.
-    void incrementReference();
-    
-    /// Allows to decrement the reference count.
-    void decreaseReference();
-
-    /// Signal emitted to update gui.
-    void updateGuiSignal(QObject *selfUI);
 
 private:
     mafId m_ObjectId; ///< Unique ID which identifies the object.

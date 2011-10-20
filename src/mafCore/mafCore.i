@@ -66,7 +66,7 @@
 %ignore incrementReference();
 %ignore decreaseReference();
 %ignore deleteObject();
-%ignore updateGuiSignal();
+%ignore updateGuiSignal(QObject *);
 
 
 #ifdef SWIGPYTHON
