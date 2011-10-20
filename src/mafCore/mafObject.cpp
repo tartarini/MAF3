@@ -5,7 +5,7 @@
  *  Created by Paolo Quadrani on 27/03/09.
  *  Copyright 2011 B3C. All rights reserved.
  *  
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *  
  */
 
@@ -19,7 +19,7 @@ using namespace mafCore;
 mafObject::mafObject(const QString code_location) : mafObjectBase(code_location), m_IconFile(""), m_LockStatus(mafObjectLockNone), m_ProgressStatus(0),  m_TagList(NULL), m_Dictionary(NULL) {
     m_TagList = new QVariantList();
     m_ScriptList = new QVariantList();
-    m_Dictionary = new mafDictionary;
+    m_Dictionary = new QVariantHash;
 }
 
 mafObject::~mafObject() {
@@ -92,16 +92,16 @@ void mafObject::filterTags(QString tag_pattern, QVariantList *filtered_list) {
     }
 }
 
-bool mafObject::addScript(QString script) {
-    if(!m_ScriptList->contains(script)) {
-        m_ScriptList->append(script);
+bool mafObject::addScript(QVariantHash *script) {
+    if(!m_ScriptList->contains(*script)) {
+        m_ScriptList->append(*script);
         return true;
     }
     return false;
 }
 
-bool mafObject::removeScript(QString script) {
-    return m_ScriptList->removeOne(script);
+bool mafObject::removeScript(QVariantHash *script) {
+    return m_ScriptList->removeOne(*script);
 }
 
 bool mafObject::removeScript(int scriptIndex) {

@@ -85,11 +85,22 @@ public:
     /// Return the list of all tag inserted.
     const QVariantList *tagList() const;
 
+    /// Return an instance of the dictionary containing keys needed for script information.
+    /** This method create the dictionary needed for the script list and contains the following keys:
+    - script: indicate the script as file path or as script string.
+    - type:   indicate the type of script (mafScriptTypeFilePath or mafScriptTypeStringScript)
+    - interpreter: indicate the interpreter needed to execute the script (Python, Tcl, ...)
+    The standard work-flow usage is to ask the object generate a new script information 
+    dictionary (by calling this method), customize its information and add it to the list 
+    by calling the addScript method.
+    */
+    QVariantHash *scriptDictionary();
+
     /// Add a script to the scriptList.
-    bool addScript(QString script);
+    bool addScript(QVariantHash *script);
 
     /// Remove from the script list the given script.
-    bool removeScript(QString script);
+    bool removeScript(QVariantHash *script);
 
     /// Remove from the script list the script at given index.
     bool removeScript(int scriptIndex);
@@ -98,7 +109,7 @@ public:
     const QVariantList *scriptList() const;
 
     /// Return the dictionary associated to the object.
-    mafDictionary *dictionary() const;
+    QVariantHash *dictionary() const;
 
     /// Return the lock status of the object.
     int lockStatus() const;
@@ -127,7 +138,7 @@ protected:
 private:
     QVariantList *m_TagList; ///< Tag list that categorize the object.
     QVariantList *m_ScriptList; ///< List containing scripts associated to the object.
-    mafDictionary* m_Dictionary; ///< Dictionary associated to the object.
+    QVariantHash* m_Dictionary; ///< Dictionary associated to the object.
 };
 
 /////////////////////////////////////////////////////////////
@@ -146,7 +157,7 @@ inline const QVariantList *mafObject::scriptList() const {
     return m_ScriptList;
 }
 
-inline mafDictionary *mafObject::dictionary() const {
+inline QVariantHash *mafObject::dictionary() const {
     return m_Dictionary;
 }
 
@@ -156,6 +167,14 @@ inline int mafObject::lockStatus() const {
 
 inline int mafObject::progressStatus() const {
     return m_ProgressStatus;
+}
+
+inline QVariantHash *mafObject::scriptDictionary() {
+    QVariantHash *dic = new QVariantHash();
+    dic->insert(mafScriptKey, QVariant(""));
+    dic->insert(mafScriptTypeKey, QVariant(mafScriptTypeStringScript));
+    dic->insert(mafScriptInterpreterKey, QVariant("python"));
+    return dic;
 }
 
 } // mafCore namespace
