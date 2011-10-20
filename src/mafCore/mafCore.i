@@ -26,12 +26,12 @@
 #pragma SWIG nowarn=389, 401, 509, 801, 472
 
 #undef Q_OBJECT
-#undef signals
-#undef slots
+#undef Q_SIGNALS
+#undef Q_SLOTS
 
 #define Q_OBJECT
-#define signals public
-#define slots
+#define Q_SIGNALS public
+#define Q_SLOTS
 
 #undef  Q_PROPERTY(Type type MODE mode)
 #define Q_PROPERTY(Type type MODE mode)
