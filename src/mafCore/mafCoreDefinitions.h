@@ -3,9 +3,9 @@
  *  mafCore
  *
  *  Created by Paolo Quadrani on 17/09/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -38,11 +38,6 @@ typedef QtMsgHandler mafMsgHandlingFunction;
 #define mafProxyPointerTypeCast(dataType, proxyInterfacePointer) \
     static_cast<mafCore::mafProxy<dataType> *>(proxyInterfacePointer)
     
-/// typedef that represents dictionary entries ( key  , value )
-typedef QVariantHash mafDictionary;
-typedef mafDictionary * mafDictionaryPointer;
-
-
 ///< Enum that identify the mafLogMode's type.
 typedef enum {
     mafLogModeAllMessages = 0,
@@ -88,10 +83,20 @@ typedef enum {
   mafSerializationPatternComposition,
 } mafSerializationPattern;
 
+///< Enum that define the script type contained into the QVariantHash passed to the mafObject.
+typedef enum {
+    mafScriptTypeFilePath = 0,
+    mafScriptTypeStringScript
+} mafScriptType;
+
+#define mafScriptKey "script"
+#define mafScriptTypeKey "type"
+#define mafScriptInterpreterKey "interpreter"
+
 /// Typedef that defines the list of information related to the same extended base MAF class type. It is used through the mafPluggedObjectsHash defined in mafPluginManager.
 typedef QList<mafPluggedObjectInformation> mafPluggedObjectInformationList;
 
-/// Hash of plugged objects coming from pluig-ins.
+/// Hash of plugged objects coming from plug-ins.
 typedef QHash<QString, mafPluggedObjectInformation> mafPluggedObjectsHash;
 
 /// Define the property list vector that hold properties to be serialized through mafCodec.
@@ -102,8 +107,6 @@ class mafObjectBase;
 typedef QList<mafObjectBase *> mafObjectsList;
 
 }  // mafCore
-
-Q_DECLARE_METATYPE(mafCore::mafDictionaryPointer)
 
 #endif // MAFDEFINITIONS_H
 
