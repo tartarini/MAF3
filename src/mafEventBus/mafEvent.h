@@ -18,9 +18,8 @@ namespace mafEventBus {
 
  /**
 Class name: mafEvent
-This class defines the MAF3 Event which inherit from mafDictionary, and contains
+This class defines the MAF3 Event which inherit from QVariantHash, and contains
 constructor for rapid dictionary creation.
-@sa mafDictionary
 */
 class MAFEVENTBUSSHARED_EXPORT mafEvent : public QObject {
 
@@ -58,7 +57,7 @@ public:
     /// Redefined operator to have access to the entries owned.
     QVariantHash *entries() const;
 
-    /// Overload operator for rapid access to mafDictionaryEntries
+    /// Overload operator for rapid access to QVariantHash Entries
     QVariant &operator[](QString key) const;
 
 private:
