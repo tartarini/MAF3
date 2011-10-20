@@ -77,7 +77,7 @@ QString mafScriptEditor::help(void) const
     return message;
 }
 
-void mafScriptEditor::load(const QString& file)
+bool mafScriptEditor::load(const QString& file)
 {
     int stat;
     QFile script(file);
@@ -88,6 +88,7 @@ void mafScriptEditor::load(const QString& file)
     script.close() ;
     
     interpret(commands, &stat);
+    return stat == Status_Ok;
 }
 
 void mafScriptEditor::save(const QString& file)

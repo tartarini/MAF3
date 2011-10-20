@@ -31,7 +31,7 @@ class MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditor : public QObject {
     
 public Q_SLOTS:
     /// Slot for load script.
-    void load(const QString& file);
+    bool load(const QString& file);
     /// Slot for save script.
     void save(const QString& file);
 
