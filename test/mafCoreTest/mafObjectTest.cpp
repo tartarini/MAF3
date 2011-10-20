@@ -97,7 +97,7 @@ void mafObjectTest::mafObjectConstructorTest() {
     //! </snippet>
     QVERIFY(obj != NULL);
 
-    mafDictionary *dic = obj->dictionary();
+    QVariantHash *dic = obj->dictionary();
     QVERIFY(dic != NULL);
 
     mafDEL(obj);
@@ -190,25 +190,34 @@ void mafObjectTest::filterTagTest() {
 
 void mafObjectTest::addScriptTest() {
     // Add a new script -> return true.
-    QVERIFY(m_ObjTestVar->addScript("#import system;"));
+    QVariantHash *dic = m_ObjTestVar->scriptDictionary();
+    dic->insert(mafScriptKey, QVariant("#import system;"));
+    QVERIFY(m_ObjTestVar->addScript(dic));
 
     // Add an existing script -> return false (not added to the list).
-    QVERIFY(m_ObjTestVar->addScript("#import system;") == false);
+    QVERIFY(m_ObjTestVar->addScript(dic) == false);
 
-    QVERIFY(m_ObjTestVar->addScript("print 2+3;"));
+    dic->insert(mafScriptKey, QVariant("print 2+3;"));
+    QVERIFY(m_ObjTestVar->addScript(dic));
 
     int s = m_ObjTestVar->scriptList()->size();
     QVERIFY(s == 2);
+    delete dic;
 }
 
 void mafObjectTest::removeScriptTest() {
-    QVERIFY(m_ObjTestVar->removeScript("#import system;"));
-    QVERIFY(!m_ObjTestVar->removeScript("not existing script"));
+    QVariantHash *dic = m_ObjTestVar->scriptDictionary();
+    dic->insert(mafScriptKey, QVariant("#import system;"));
+
+    QVERIFY(m_ObjTestVar->removeScript(dic));
+    dic->insert(mafScriptKey, QVariant("not existing script"));
+    QVERIFY(!m_ObjTestVar->removeScript(dic));
 
     int s = m_ObjTestVar->scriptList()->size();
     QVERIFY(s == 1);
 
     QVERIFY(m_ObjTestVar->removeScript(0));
+    delete dic;
 }
 
 void mafObjectTest::isEqualTest() {
