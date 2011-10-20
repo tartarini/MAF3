@@ -71,6 +71,9 @@ private:
 
     QList<mafCore::mafObject *> m_ObjectsWithScript; ///< List of objects that have a script attached.
     mafScriptEditor *m_Interpreter; ///< Script interpreter that will execute the script.
+
+    /// Execute the script associated with the given object.
+    bool executeScriptOnObject(mafCore::mafObject *objectWithScript);
 };
 
 /////////////////////////////////////////////////////////////

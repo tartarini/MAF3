@@ -89,30 +89,43 @@ void mafScriptEngine::unregisterObjectFromManager(mafCore::mafObject *objectWith
         objectWithScript->release();
     }
 }
-	
-bool mafScriptEngine::executeScript(mafCore::mafObject *objectWithScript) {
+
+bool mafScriptEngine::executeScriptOnObject(mafCore::mafObject *objectWithScript) {
     int stat = 0;
     const QVariantList *scriptsToExecute;
-    if (objectWithScript) {
-        // Execute the particular script associated with the given object.
-        scriptsToExecute = objectWithScript->scriptList();
-        Q_FOREACH(QVariant script, *scriptsToExecute) {
-            m_Interpreter->interpret(script.toString(), &stat);
-            if (stat) {
-                break;
-            }
+    // Execute the particular script associated with the given object.
+    scriptsToExecute = objectWithScript->scriptList();
+    Q_FOREACH(QVariant script, *scriptsToExecute) {
+        // m_Interpreter should be a local variable and ask the interpreterPool the
+        // type of interpreter to use according to the interpreter type written inside 
+        // the dictionary
+        const QVariantHash dic = script.toHash();
+        int scriptType = dic.value(mafScriptTypeKey).toInt();
+        if (scriptType == mafScriptTypeStringScript) {
+            m_Interpreter->interpret(dic.value(mafScriptKey).toString(), &stat);
+        } else {
+            stat = m_Interpreter->load(dic.value(mafScriptKey).toString()) ? 0 : 1;
         }
-    } else {
-        // execute the script associated to all the registered objects.
-        Q_FOREACH(mafObject *obj, m_ObjectsWithScript) {
-            scriptsToExecute = obj->scriptList();
-            Q_FOREACH(QVariant script, *scriptsToExecute) {
-                m_Interpreter->interpret(script.toString(), &stat);
-                if (stat) {
-                    break;
-                }
-            }
+        if (stat) {
+            break;
         }
     }
     return stat == 0;
+}
+
+bool mafScriptEngine::executeScript(mafCore::mafObject *objectWithScript) {
+    bool resultOk(false);
+    
+    if (objectWithScript) {
+        resultOk = executeScriptOnObject(objectWithScript);
+    } else {
+        // execute the script associated to all the registered objects.
+        Q_FOREACH(mafObject *obj, m_ObjectsWithScript) {
+            resultOk = executeScriptOnObject(obj);
+            if (!resultOk) {
+                break;
+            }
+        }
+    }
+    return resultOk;
 }

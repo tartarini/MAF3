@@ -42,10 +42,12 @@ private Q_SLOTS:
         objWithoutScript = mafNEW(mafCore::mafObject);
         objNotRegistered = mafNEW(mafCore::mafObject);
 
-        QString script("print \"Test python script\"");
-        objWithScript->addScript(script);
-        QString script2("print \"Test script for not registered object\"");
-        objNotRegistered->addScript(script2);
+        QVariantHash *dic = objWithScript->scriptDictionary();
+        dic->insert(mafScriptKey, QVariant("print \"Test python script\""));
+        objWithScript->addScript(dic);
+        dic->insert(mafScriptKey, QVariant("print \"Test script for not registered object\""));
+        objNotRegistered->addScript(dic);
+        delete dic;
         
         //! <snippet>
         m_ScriptEngine = mafScriptEngine::instance();
