@@ -53,7 +53,7 @@ Q_SIGNALS:
     /// signal used when insert an input
     void   input(const QString& command, int *stat);
     /// signal used when load a file
-    void    load(const QString& path);
+    bool    load(const QString& path);
     /// signal used when save a file
     void    save(const QString& path);
     /// signal used when request help
