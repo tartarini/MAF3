@@ -27,7 +27,7 @@ public:
     PyThreadState* thread_state; ///< thread state for Python interpreter
 };
 
-mafScriptEditorPython::mafScriptEditorPython(QObject *parent) : mafScriptEditor(parent), m_PrivateClassPointer(new mafScriptEditorPythonPrivate) {
+mafScriptEditorPython::mafScriptEditorPython(const QString code_location) : mafScriptEditor(code_location), m_PrivateClassPointer(new mafScriptEditorPythonPrivate) {
     m_PrivateClassPointer->thread_level = 0;
     m_PrivateClassPointer->thread_state = 0;
 

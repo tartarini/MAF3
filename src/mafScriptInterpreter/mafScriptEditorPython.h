@@ -41,12 +41,12 @@ class mafScriptEditorPythonPrivate;
 class MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditorPython : public mafScriptEditor
 {
     Q_OBJECT
+    /// typedef macro.
+    mafSuperclassMacro(mafScriptInterpreter::mafScriptEditor);
 
 public:
     /// Object Constructor.
-     mafScriptEditorPython(QObject *parent = 0);
-    /// Object Destructor.
-    ~mafScriptEditorPython(void);
+     mafScriptEditorPython(const QString code_location = "");
 
     /// Register a boolean type variable with value, name and a description.
     /*virtual*/ void registerVariable(bool   &var, QString name, QString description = "");
@@ -72,6 +72,9 @@ public Q_SLOTS:
     virtual QString interpret(const QString& command, const QStringList& args, int *stat);
     
 protected:
+    /// Object Destructor.
+    ~mafScriptEditorPython(void);
+
     /// Return prompt string.
     static char *prompt(void);
 
