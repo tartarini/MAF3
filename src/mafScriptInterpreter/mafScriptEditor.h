@@ -13,6 +13,7 @@
 #define MAFSCRIPTEDITOR_H
 
 #include "mafScriptInterpreter_global.h"
+#include <mafObjectBase.h>
 
 class mafAbstractData;
 class mafAbstractProcess;
@@ -26,9 +27,11 @@ class mafScriptEditorPrivate;
 Class name: mafScriptEditor
 Base class for script editor in a specific language.
 */
-class MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditor : public QObject {
+class MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditor : public mafCore::mafObjectBase {
     Q_OBJECT
-    
+    /// typedef macro.
+    mafSuperclassMacro(mafCore::mafObjectBase);
+
 public Q_SLOTS:
     /// Slot for load script.
     bool load(const QString& file);
@@ -54,9 +57,7 @@ Q_SIGNALS:
     
 public:
     /// Object constructor.
-    mafScriptEditor(QObject *parent = 0);
-    /// Object destructor.
-    virtual ~mafScriptEditor(void);
+    mafScriptEditor(const QString code_location = "");
 
     /** Status representation after each interpretation. */
     enum Status {
@@ -66,12 +67,6 @@ public:
         Status_Break,
         Status_Continue
     };
-
-    /// Increment reference count.
-    void retain(void);
-    
-    /// Decrement reference count.
-    void release(void);
 
     /// Enable prompt of the console.
     void registerPrompt(char *(*prompt)(void));
@@ -95,6 +90,9 @@ public:
     QString prompt(void) const;
 
 protected:
+    /// Object destructor.
+    /*virtual*/ ~mafScriptEditor(void);
+
     /// Register a variable using a name and a description.
     void registerVariableDescription(QString name, QString description);
     /// Register a function using a name and a description.
