@@ -54,8 +54,6 @@ mafScriptEngine::mafScriptEngine(const QString code_location) : mafObjectBase(co
         mafRegisterLocalSignal("maf.local.script.execute", this, "executeScriptSignal(mafCore::mafObject *)");
         mafRegisterLocalCallback("maf.local.script.execute", this, "executeScript(mafCore::mafObject *)");
     }
-
-    m_Interpreter = mafScriptEditorPool::instance()->python();
 }
 
 mafScriptEngine::~mafScriptEngine() {
@@ -95,16 +93,19 @@ bool mafScriptEngine::executeScriptOnObject(mafCore::mafObject *objectWithScript
     const QVariantList *scriptsToExecute;
     // Execute the particular script associated with the given object.
     scriptsToExecute = objectWithScript->scriptList();
+    mafScriptEditor *scriptInterpreter;
     Q_FOREACH(QVariant script, *scriptsToExecute) {
         // m_Interpreter should be a local variable and ask the interpreterPool the
         // type of interpreter to use according to the interpreter type written inside 
         // the dictionary
         const QVariantHash dic = script.toHash();
         int scriptType = dic.value(mafScriptTypeKey).toInt();
+        QString interpreterType = dic.value(mafScriptInterpreterKey).toString();
+        scriptInterpreter = mafScriptEditorPool::instance()->console(interpreterType);
         if (scriptType == mafScriptTypeStringScript) {
-            m_Interpreter->interpret(dic.value(mafScriptKey).toString(), &stat);
+            scriptInterpreter->interpret(dic.value(mafScriptKey).toString(), &stat);
         } else {
-            stat = m_Interpreter->load(dic.value(mafScriptKey).toString()) ? 0 : 1;
+            stat = scriptInterpreter->load(dic.value(mafScriptKey).toString()) ? 0 : 1;
         }
         if (stat) {
             break;
