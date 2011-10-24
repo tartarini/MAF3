@@ -80,11 +80,11 @@ void mafMainWindow::initializeMainWindow() {
     ui->dataPipeTab->setLayout(ui->dataPipeLayout);
 
     //tree widget in sidebar
-     m_Model = new mafDragDropModel();
+    m_Model = new mafDragDropModel();
 
     if(m_Logic) {
         m_Model->setHierarchy(m_Logic->hierarchy());
-     }
+    }
 
     // **** SideBar ****
     m_Tree = m_GUIManager->createTreeWidget(m_Model, ui->hierarchyWidget);
