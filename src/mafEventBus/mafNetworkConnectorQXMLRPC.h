@@ -54,6 +54,9 @@ public:
     /// register all the signals and slots
     /*virtual*/ void initializeForEventBus();
 
+    /// Set authentication header map.
+    void setAuthenticationHeader(QMap<QString, QString> *headerMap);
+
 Q_SIGNALS:
     /// signal for the registration of the functions with parameters
     void registerMethodsServer(mafRegisterMethodsMap registerMethodsList);
@@ -88,6 +91,8 @@ private:
     void stopServer();
 
     int m_RequestId; ///< id test for a specific (experimental) request
+
+    QMap<QString, QString> *m_HeaderMap; ///< Map with header authentication (like cookie).
 };
 
 } //namespace mafEventBus

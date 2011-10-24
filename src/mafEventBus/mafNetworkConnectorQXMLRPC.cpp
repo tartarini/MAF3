@@ -16,7 +16,7 @@
 
 using namespace mafEventBus;
 
-mafNetworkConnectorQXMLRPC::mafNetworkConnectorQXMLRPC() : mafNetworkConnector(), m_Client(NULL), m_Server(NULL), m_RequestId(0) {
+mafNetworkConnectorQXMLRPC::mafNetworkConnectorQXMLRPC() : mafNetworkConnector(), m_Client(NULL), m_Server(NULL), m_RequestId(0), m_HeaderMap(NULL) {
     //generate remote signal, this signal must map in the
     //possible connection with the remote server.
     //Server, in this case XMLRPC, will register a method with id REMOTE_COMMUNICATION
@@ -194,23 +194,7 @@ void mafNetworkConnectorQXMLRPC::send(const QString event_id, mafEventArgumentsL
 }
 
 void mafNetworkConnectorQXMLRPC::xmlrpcSend(const QString &methodName, QList<xmlrpc::Variant> parameters) {
-    const unsigned int parametersNumber = parameters.count();
-    switch(parametersNumber) {
-    case 1:
-        m_RequestId = m_Client->request(methodName, parameters.at(0) );
-        break;
-    case 2:
-        m_RequestId = m_Client->request(methodName, parameters.at(0), parameters.at(1));
-        break;
-    case 3:
-        m_RequestId = m_Client->request(methodName, parameters.at(0), parameters.at(1), parameters.at(2));
-        break;
-    case 4:
-        m_RequestId = m_Client->request(methodName, parameters.at(0), parameters.at(1), parameters.at(2), parameters.at(3));
-        break;
-    default:
-        break;
-    }
+    m_Client->request(parameters, methodName, m_HeaderMap); 
 }
 
 void mafNetworkConnectorQXMLRPC::processReturnValue( int requestId, QVariant value ) {
@@ -293,4 +277,8 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
         delete argList;
         argList = NULL;
     }
+}
+
+void mafEventBus::mafNetworkConnectorQXMLRPC::setAuthenticationHeader(QMap<QString, QString> *headerMap){
+    m_HeaderMap = headerMap;
 }
