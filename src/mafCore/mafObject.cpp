@@ -19,7 +19,7 @@ using namespace mafCore;
 mafObject::mafObject(const QString code_location) : mafObjectBase(code_location), m_IconFile(""), m_LockStatus(mafObjectLockNone), m_ProgressStatus(0),  m_TagList(NULL), m_Dictionary(NULL) {
     m_TagList = new QVariantList();
     m_ScriptList = new QVariantList();
-    m_Dictionary = new QVariantHash;
+    m_Dictionary = new QVariantMap;
 }
 
 mafObject::~mafObject() {
@@ -49,7 +49,7 @@ void mafObject::setMemento(mafMemento *memento, bool deep_memento) {
                 setTagList(item.m_Value.toList());
             } else if ( name.compare("dictionary") == 0 ) {
                 dictionary()->clear();
-                dictionary()->unite(item.m_Value.toHash());
+                dictionary()->unite(item.m_Value.toMap());
             } else if (name.compare("ScriptList") == 0) {
                 setScriptList(item.m_Value.toList());
             } else {
@@ -147,4 +147,8 @@ void mafObject::setScriptList(const QVariantList &list) {
 
 void mafObject::setProgressStatus(int status) {
     m_ProgressStatus = status;
+}
+
+void mafObject::fillDictionary() {
+    m_Dictionary->insert("hash", this->objectHash());
 }

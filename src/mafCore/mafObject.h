@@ -109,7 +109,7 @@ public:
     const QVariantList *scriptList() const;
 
     /// Return the dictionary associated to the object.
-    QVariantHash *dictionary() const;
+    QVariantMap *dictionary() const;
 
     /// Return the lock status of the object.
     int lockStatus() const;
@@ -127,6 +127,10 @@ public Q_SLOTS:
     /// Method used to initialize the object's tag list.
     void setTagList(const QVariantList &list);
 
+protected Q_SLOTS:
+    /// fill the dictionary with object hash.
+    virtual void fillDictionary();
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafObject();
@@ -138,7 +142,7 @@ protected:
 private:
     QVariantList *m_TagList; ///< Tag list that categorize the object.
     QVariantList *m_ScriptList; ///< List containing scripts associated to the object.
-    QVariantHash* m_Dictionary; ///< Dictionary associated to the object.
+    QVariantMap* m_Dictionary; ///< Dictionary associated to the object.
 };
 
 /////////////////////////////////////////////////////////////
@@ -157,7 +161,7 @@ inline const QVariantList *mafObject::scriptList() const {
     return m_ScriptList;
 }
 
-inline QVariantHash *mafObject::dictionary() const {
+inline QVariantMap *mafObject::dictionary() const {
     return m_Dictionary;
 }
 
