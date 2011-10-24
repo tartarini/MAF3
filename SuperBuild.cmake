@@ -87,9 +87,6 @@ if(MAF_EVENT_BUS)
   
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} QtSOAP)
   include(CMakeExternals/External_QtSOAP.cmake)
-  
-  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} nanogear)
-  include(CMakeExternals/External_nanogear.cmake)
 endif(MAF_EVENT_BUS)
 
 if(MAF_RESOURCES)
@@ -231,8 +228,6 @@ ExternalProject_Add(${proj}
     -Dqxmlrpc_DIR:PATH=${qxmlrpc_DIR} # Findqxmlrpc expects qxmlrpc_DIR variable to be defined
     # QtSOAP
     -DQtSOAP_DIR:PATH=${QtSOAP_DIR} # FindQtSOAP expects QtSOAP_DIR variable to be defined
-    # nanogear
-    -Dnanogear_DIR:PATH=${qxmlrpc_DIR} # Findnanogear expects nanogear_DIR variable to be defined
     # OpenCV
     -DOpenCV_DIR:PATH=${OpenCV_DIR} # FindOpenCV expects OpenCV_DIR variable to be defined
     # CTK
