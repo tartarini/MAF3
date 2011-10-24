@@ -98,6 +98,9 @@ private Q_SLOTS:
     /// Check the existence of the mafNetworkConnectorQXMLRPCe singletone creation.
     void mafNetworkConnectorQXMLRPCCommunictionTest();
 
+    /// Check the communication of the mafNetworkConnectorQXMLRPCe with an header QMap as third parameter.
+    void mafNetworkConnectorQXMLRPCCommunictionWithHeaderMapTest();
+
 private:
     mafEventBusManager *m_EventBus; ///< event bus instance
     mafNetworkConnectorQXMLRPC *m_NetWorkConnectorQXMLRPC; ///< EventBus test variable instance.
@@ -142,6 +145,47 @@ void mafNetworkConnectorQXMLRPCTest::mafNetworkConnectorQXMLRPCCommunictionTest(
     QTime dieTime = QTime::currentTime().addSecs(3);
     while(QTime::currentTime() < dieTime) {
        QCoreApplication::processEvents(QEventLoop::AllEvents, 3);
+    }
+}
+
+void mafNetworkConnectorQXMLRPCTest::mafNetworkConnectorQXMLRPCCommunictionWithHeaderMapTest() {
+    m_NetWorkConnectorQXMLRPC->createServer(8000);
+    m_NetWorkConnectorQXMLRPC->startListen();
+
+
+    // Register callback (done by the remote object).
+    mafRegisterLocalCallback("maf.local.eventBus.globalUpdate", m_ObjectTest, "updateObject()");
+
+    //m_EventBus->createClient("XMLRPC", "localhost", 8000);
+    m_NetWorkConnectorQXMLRPC->createClient("localhost", 8000);
+
+    //Add authentication map
+    QMap<QString, QString> authenticationMap;
+    authenticationMap.insert("coockie", "testCookie");
+
+    m_NetWorkConnectorQXMLRPC->setAuthenticationHeader(&authenticationMap);
+
+
+    //create list to send from the client
+    //first parameter is a list which contains event properties
+    QVariantList eventParameters;
+    eventParameters.append("maf.local.eventBus.globalUpdate");
+    eventParameters.append(mafEventTypeLocal);
+    eventParameters.append(mafSignatureTypeCallback);
+    eventParameters.append("updateObject()");
+
+    QVariantList dataParameters;
+
+    mafEventArgumentsList listToSend;
+    listToSend.append(mafEventArgument(QVariantList, eventParameters));
+    listToSend.append(mafEventArgument(QVariantList, dataParameters));
+
+    m_NetWorkConnectorQXMLRPC->send("maf.remote.eventBus.communication.send.xmlrpc", &listToSend);
+
+
+    QTime dieTime = QTime::currentTime().addSecs(3);
+    while(QTime::currentTime() < dieTime) {
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 3);
     }
 }
 
