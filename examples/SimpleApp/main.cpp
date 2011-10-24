@@ -26,16 +26,18 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    // Plug into the factory the new operation. This operation has also
-    // an acceptObject method defined, so call macro below.
+    // Plug into the factory the custom objects (Operations, Views, ...).
+    // If the object has also an acceptObject method defined, call macro:
+    // mafRegisterObjectAndAcceptBind(myNamespace::myClassCustom);
+    //
     // If the plugged object hasn't the acceptObject defined, the registration
     // to the mafObjectFactory can be done using the following macro:
-    // mafRegisterObject(myClassCustom);
+    // mafRegisterObject(myNamespace::myClassCustom);
     mafRegisterObjectAndAcceptBind(mafOperationSimpleApp);
     mafRegisterObject(mafScriptInterpreter::mafViewScriptInterpreterPython);
     // Plug the object's information into the framework
-    //logic->plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
-    //logic->plugObject("mafResources::mafOperation", "mafResources::mafOperationTransform", "Transform");
+//    logic->plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
+//    logic->plugObject("mafResources::mafOperation", "mafResources::mafOperationTransform", "Transform");
 
     logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View MIP");
     logic->customizeVisualization("View MIP", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
@@ -62,7 +64,7 @@ int main(int argc, char *argv[]) {
 
     // Eventually call the loadPlugins method with custom directory to allow the application
     // load custom plugins located in custom directories.
-    //logic->loadPlugins(cusom_plugin_path);
+//    logic->loadPlugins(cusom_plugin_path);
 
     w.setupMainWindow();
     int result = a.exec();
