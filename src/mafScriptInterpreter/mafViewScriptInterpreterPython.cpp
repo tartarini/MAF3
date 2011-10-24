@@ -23,7 +23,7 @@ mafViewScriptInterpreterPython::~mafViewScriptInterpreterPython() {
 }
 
 void mafViewScriptInterpreterPython::create() {
-    mafScriptEditor *interpreter = mafScriptEditorPool::instance()->python();
+    mafScriptEditor *interpreter = mafScriptEditorPool::instance()->console("python");
 
     ((mafInterpreterConsole*)m_RenderWidget)->registerInterpreter(interpreter);
 }

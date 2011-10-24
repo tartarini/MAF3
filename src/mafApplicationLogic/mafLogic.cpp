@@ -51,58 +51,60 @@ mafLogic::~mafLogic() {
 }
 
 bool mafLogic::initialize() {
+    bool result(Superclass::initialize());
+
     // Call the initialization of the superclass.
-    Superclass::initialize();
+    if (result) {
+        mafIdProvider *provider = mafIdProvider::instance();
+        provider->createNewId("maf.local.logic.openFile");
+        provider->createNewId("maf.local.logic.status.viewmanager.store");
+        provider->createNewId("maf.local.logic.status.viewmanager.restore");
+        provider->createNewId("maf.local.logic.status.vmemanager.store");
+        provider->createNewId("maf.local.logic.status.vmemanager.restore");
+        provider->createNewId("maf.local.logic.settings.store");
+        provider->createNewId("maf.local.logic.settings.restore");
 
-    mafIdProvider *provider = mafIdProvider::instance();
-    provider->createNewId("maf.local.logic.openFile");
-    provider->createNewId("maf.local.logic.status.viewmanager.store");
-    provider->createNewId("maf.local.logic.status.viewmanager.restore");
-    provider->createNewId("maf.local.logic.status.vmemanager.store");
-    provider->createNewId("maf.local.logic.status.vmemanager.restore");
-    provider->createNewId("maf.local.logic.settings.store");
-    provider->createNewId("maf.local.logic.settings.restore");
+        // Signal registration.
+        mafRegisterLocalSignal("maf.local.logic.openFile", this, "openFile(const QString)");
+        mafRegisterLocalSignal("maf.local.logic.status.viewmanager.store", this, "statusViewManagerStore()");
+        mafRegisterLocalSignal("maf.local.logic.status.viewmanager.restore", this, "statusViewManagerRestore(mafCore::mafMemento *, bool)");
+        mafRegisterLocalSignal("maf.local.logic.status.vmemanager.store", this, "statusVmeManagerStore()");
+        mafRegisterLocalSignal("maf.local.logic.status.vmemanager.restore", this, "statusVmeManagerRestore(mafCore::mafMemento *, bool)");
+        mafRegisterLocalSignal("maf.local.logic.settings.store", this, "writeSettings()");
+        mafRegisterLocalSignal("maf.local.logic.settings.restore", this, "readSettings()");
 
-    // Signal registration.
-    mafRegisterLocalSignal("maf.local.logic.openFile", this, "openFile(const QString)");
-    mafRegisterLocalSignal("maf.local.logic.status.viewmanager.store", this, "statusViewManagerStore()");
-    mafRegisterLocalSignal("maf.local.logic.status.viewmanager.restore", this, "statusViewManagerRestore(mafCore::mafMemento *, bool)");
-    mafRegisterLocalSignal("maf.local.logic.status.vmemanager.store", this, "statusVmeManagerStore()");
-    mafRegisterLocalSignal("maf.local.logic.status.vmemanager.restore", this, "statusVmeManagerRestore(mafCore::mafMemento *, bool)");
-    mafRegisterLocalSignal("maf.local.logic.settings.store", this, "writeSettings()");
-    mafRegisterLocalSignal("maf.local.logic.settings.restore", this, "readSettings()");
+        // Slot registration.
+        mafRegisterLocalCallback("maf.local.logic.settings.store", this, "storeSettings()");
+        mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "restoreSettings()");
+        mafRegisterLocalCallback("maf.local.logic.openFile", this, "restoreHierarchy(QString)");
 
-    // Slot registration.
-    mafRegisterLocalCallback("maf.local.logic.settings.store", this, "storeSettings()");
-    mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "restoreSettings()");
-    mafRegisterLocalCallback("maf.local.logic.openFile", this, "restoreHierarchy(QString)");
+        m_CustomPluggedObjectsHash.clear();
 
-    m_CustomPluggedObjectsHash.clear();
+        // Load the module related to the resources and managers and initialize it.
+        QStringList sharedObjects;
+        QString so;
+        so.append(SHARED_OBJECT_PREFIX);
+        so.append("mafResources");
+        so.append(SHARED_OBJECT_SUFFIX);
+        sharedObjects << so;
+        so.clear();
+        so.append(SHARED_OBJECT_PREFIX);
+        so.append("mafSerialization");
+        so.append(SHARED_OBJECT_SUFFIX);
+        sharedObjects << so;
 
-    // Load the module related to the resources and managers and initialize it.
-    QStringList sharedObjects;
-    QString so;
-    so.append(SHARED_OBJECT_PREFIX);
-    so.append("mafResources");
-    so.append(SHARED_OBJECT_SUFFIX);
-    sharedObjects << so;
-    so.clear();
-    so.append(SHARED_OBJECT_PREFIX);
-    so.append("mafSerialization");
-    so.append(SHARED_OBJECT_SUFFIX);
-    sharedObjects << so;
-    
-    QLibrary *handler(NULL);
-    bool result(true);
-    Q_FOREACH(so, sharedObjects) {
-        handler = mafInitializeModule(so);
-        if(handler) {
-            m_LibraryHandlersHash.insert(so, handler);
+        QLibrary *handler(NULL);
+        
+        Q_FOREACH(so, sharedObjects) {
+            handler = mafInitializeModule(so);
+            if(handler) {
+                m_LibraryHandlersHash.insert(so, handler);
+            }
+            result = result && (handler != NULL);
         }
-        result = result && (handler != NULL);
+
+        requestNewHierarchy();
     }
-    
-    requestNewHierarchy();
 
     // Perform design by contract check.
     ENSURE(result);

@@ -40,12 +40,12 @@ int main(int argc, char *argv[]) {
 
     //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
     QVariantList dataParameters;
-    dataParameters.append("mafAlgorithm");
+    dataParameters.append("mafOperationLogger");
 
     QVariantMap operationParameters;
-    operationParameters.insert("inputFileName", "input");
-    operationParameters.insert("outputFileName", "output");
-    operationParameters.insert("iterations", 3);
+    operationParameters.insert("dataBaseName", "StiCazziDiDB.db");
+    operationParameters.insert("tableName", "logTable");
+    operationParameters.insert("workflowID", "GUQFEFQUYWJGQJWQBHWGJHWBQHBW");
     dataParameters.push_back(operationParameters);
 
     listToSend.append(Q_ARG(QVariantList, dataParameters));

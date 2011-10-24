@@ -17,8 +17,6 @@
 
 namespace mafScriptInterpreter {
 
-class mafScriptEditor;
-
 /**
  Class name: mafScriptEngine
  Singleton Class that will manage the execution of the scripts associated with the MAF object passed during its registration.
@@ -70,7 +68,6 @@ private:
     mafScriptEngine(const QString code_location = "");
 
     QList<mafCore::mafObject *> m_ObjectsWithScript; ///< List of objects that have a script attached.
-    mafScriptEditor *m_Interpreter; ///< Script interpreter that will execute the script.
 
     /// Execute the script associated with the given object.
     bool executeScriptOnObject(mafCore::mafObject *objectWithScript);

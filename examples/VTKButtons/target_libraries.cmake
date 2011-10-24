@@ -5,12 +5,15 @@
 # 
 
 SET(foundation_libraries 
-  qxmlrpc
-  QtSOAP
+  ${QXMLRPC_LIBRARY} 
+  ${QTSOAP_LIBRARY}
 )
-
 
 SET(target_libraries
   ${MAF_BASE_LIBRARIES}
   ${foundation_libraries}
+  mafCore
+  mafEventBus
+  mafApplicationLogic
+  mafGUI
   )

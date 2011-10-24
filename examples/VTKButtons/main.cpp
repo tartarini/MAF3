@@ -1,21 +1,17 @@
 #include <QtGui/QApplication>
 
-#include "mafOperationSimpleApp.h"
-#include <mafViewScriptInterpreterPython.h>
-#include "mafApplicationSettingsPageConfigurations.h"
-
 #include <mafMainWindow.h>
 #include <mafLogic.h>
 
-
-#include <mafInterpreterPreferencesWidget.h>
+//#include <mafViewScriptInterpreterPython.h>
+//#include <mafInterpreterPreferencesWidget.h>
 
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     a.setOrganizationName("SCS");
     a.setOrganizationDomain("scsolutions.org");
-    a.setApplicationName("SimpleApp");
+    a.setApplicationName("VTKButtons");
     a.setApplicationVersion("1.0");
 
     // Create the application's logic instance
@@ -33,34 +29,26 @@ int main(int argc, char *argv[]) {
     // If the plugged object hasn't the acceptObject defined, the registration
     // to the mafObjectFactory can be done using the following macro:
     // mafRegisterObject(myNamespace::myClassCustom);
-    mafRegisterObjectAndAcceptBind(mafOperationSimpleApp);
-    mafRegisterObject(mafScriptInterpreter::mafViewScriptInterpreterPython);
+//    mafRegisterObject(mafScriptInterpreter::mafViewScriptInterpreterPython);
+
     // Plug the object's information into the framework
-//    logic->plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
 //    logic->plugObject("mafResources::mafOperation", "mafResources::mafOperationTransform", "Transform");
 
-    logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View MIP");
-    logic->customizeVisualization("View MIP", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
-    logic->customizeVisualization("View MIP", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKMIPVolume");
+    // Plug a View into the application
+//    logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View 3D");
+    // ... and customize it telling to use mafPipeVisualVTKSurface visual pipe to render vtkPolyData data type.
+//    logic->customizeVisualization("View 3D", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
 
-    logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View Iso");
-    logic->customizeVisualization("View Iso", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
-    logic->customizeVisualization("View Iso", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKIsoSurface");
+//    logic->plugObject("mafResources::mafView", "mafScriptInterpreter::mafViewScriptInterpreterPython", "Python Console");
 
-    logic->customizeVisualization("VTK view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
-
-    logic->plugObject("mafResources::mafView", "mafScriptInterpreter::mafViewScriptInterpreterPython", "Python Console");
     // Create the instance of the main window and pass to it the application's logic.
     // In this way the mafMainWondow class will also load the plug-ins present
     // in the default 'plugins' directory.
     mafMainWindow w(logic);
 
     // plug custom application's setting page
-    mafApplicationSettingsPageConfigurations *page = new mafApplicationSettingsPageConfigurations();
-    w.plugApplicationSettingsPage(page);
-
-    mafScriptInterpreter::mafInterpreterPreferencesWidget *interpreterPrefs = new mafScriptInterpreter::mafInterpreterPreferencesWidget();
-    w.plugApplicationSettingsPage(interpreterPrefs);
+//    mafScriptInterpreter::mafInterpreterPreferencesWidget *interpreterPrefs = new mafScriptInterpreter::mafInterpreterPreferencesWidget();
+//    w.plugApplicationSettingsPage(interpreterPrefs);
 
     // Eventually call the loadPlugins method with custom directory to allow the application
     // load custom plugins located in custom directories.

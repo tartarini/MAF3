@@ -36,7 +36,7 @@ public:
     int count; ///< reference count
 };
 
-mafScriptEditor::mafScriptEditor(QObject *parent) : QObject(parent), m_PrivateClassPointer(new mafScriptEditorPrivate)
+mafScriptEditor::mafScriptEditor(const QString code_location) : mafCore::mafObjectBase(code_location), m_PrivateClassPointer(new mafScriptEditorPrivate)
 {
     m_PrivateClassPointer->count = 1;
 
@@ -49,17 +49,6 @@ mafScriptEditor::mafScriptEditor(QObject *parent) : QObject(parent), m_PrivateCl
     connect(m_PrivateClassPointer->m_Console, SIGNAL( save(const QString&)),        this,    SLOT(     save(const QString&)));
     connect(m_PrivateClassPointer->m_Console, SIGNAL(stopped(void)),                this,  SIGNAL(  stopped(void)));
 #endif
-}
-
-void mafScriptEditor::retain(void)
-{
-    m_PrivateClassPointer->count++;
-}
-
-void mafScriptEditor::release(void)
-{
-    if(!(--(m_PrivateClassPointer->count)))
-	delete this;
 }
 
 QString mafScriptEditor::help(void) const

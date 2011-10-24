@@ -31,10 +31,14 @@ public:
     /// Return singleton instance
     static mafScriptEditorPool *instance(void);
 
+    /// Cleanup the objects managed by the singleton
+    void shutdown();
+
     /// Return console according to the name type.
     mafScriptEditor *console(QString type = "");
-    /// Return python console.
-    mafScriptEditor *python(void);
+
+    /// Allow to register a type of interpreter and the class that implement it.
+    void registerEditor(QString type, QString classType);
 
 private:
     ///Object Constructor.
