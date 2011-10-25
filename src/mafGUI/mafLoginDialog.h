@@ -18,7 +18,7 @@
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QLineEdit>
-#include <QComboBox.h>
+#include <QComboBox>
 #include <QGridLayout>
 #include <QStringList>
 #include <QDebug>
