@@ -86,19 +86,7 @@ void mafLoginDialog::slotAcceptLogin(){
     QString username = m_EditUsername->text();
     QString password = m_EditPassword->text();
     bool remember = m_Checkbox->isChecked();
-
-    QProgressDialog progress("Copying files...", "Abort Copy", 0, numFiles, this);
-    progress.setWindowModality(Qt::WindowModal);
-
-    for (int i = 0; i < numFiles; i++) {
-        progress.setValue(i);
-
-        if (progress.wasCanceled())
-            break;
-        //... copy one file
-    }
-    progress.setValue(numFiles);
-
+   
     Q_EMIT acceptLoginSignal( username, password, remember );
 }
 
