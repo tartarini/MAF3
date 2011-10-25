@@ -11,6 +11,7 @@
 
 
 #include "mafLoginDialog.h"
+#include <QLabel>
 
 using namespace mafCore;
 using namespace mafGUI;
@@ -28,20 +29,23 @@ void mafLoginDialog::setUpGUI(){
     QGridLayout* formGridLayout = new QGridLayout( this );
 
     // initialize the username combo box so that it is editable
-    m_ComboUsername = new QComboBox( this );
-    m_ComboUsername->setEditable( true );
+    m_EditUsername = new QLineEdit( this );
     // initialize the password field so that it does not echo
     // characters
     m_EditPassword = new QLineEdit( this );
     m_EditPassword->setEchoMode( QLineEdit::Password );
 
     // initialize the labels
-    m_LabelUsername = new QLabel( this );
-    m_LabelPassword = new QLabel( this );
-    m_LabelUsername->setText( tr( "Username" ) );
-    m_LabelUsername->setBuddy( m_ComboUsername );
+    QLabel *labelUsername = new QLabel( this );
+    QLabel *m_LabelPassword = new QLabel( this );
+    labelUsername->setText( tr( "Username" ) );
+    labelUsername->setBuddy( m_EditUsername );
     m_LabelPassword->setText( tr( "Password" ) );
     m_LabelPassword->setBuddy( m_EditPassword );
+
+    QLabel *rememberLabel = new QLabel( this );
+    rememberLabel->setText(tr("remember me"));
+    m_Checkbox = new QCheckBox();
 
     // initialize m_Buttons
     m_Buttons = new QDialogButtonBox( this );
@@ -55,51 +59,47 @@ void mafLoginDialog::setUpGUI(){
     connect(m_Buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(slotAcceptLogin()));
 
     // place components into the dialog
-    formGridLayout->addWidget( m_LabelUsername, 0, 0 );
-    formGridLayout->addWidget( m_ComboUsername, 0, 1 );
+    formGridLayout->addWidget( labelUsername, 0, 0 );
+    formGridLayout->addWidget( m_EditUsername, 0, 1 );
     formGridLayout->addWidget( m_LabelPassword, 1, 0 );
     formGridLayout->addWidget( m_EditPassword, 1, 1 );
-    formGridLayout->addWidget( m_Buttons, 2, 0, 1, 2 );
+    formGridLayout->addWidget( rememberLabel, 2, 0 );
+    formGridLayout->addWidget( m_Checkbox, 2, 1 );
+    formGridLayout->addWidget( m_Buttons, 3, 0, 1, 2 );
 
     setLayout( formGridLayout );
 }
 
 void mafLoginDialog::setUsername(QString &username){
-    bool found = false;
-    for( int i = 0; i < m_ComboUsername->count() && ! found ; i++ )
-        if( m_ComboUsername->itemText( i ) == username  ){
-            m_ComboUsername->setCurrentIndex( i );
-            found = true;
-        }
-
-        if( ! found ){
-            int index = m_ComboUsername->count();
-            qDebug() << "Select username " << index;
-            m_ComboUsername->addItem( username );
-            m_ComboUsername->setCurrentIndex( index );
-        }
-
-        // place the focus on the password field
-        m_EditPassword->setFocus();
+    m_EditUsername->setText( username );
 }
-
 
 void mafLoginDialog::setPassword(QString &password){
     m_EditPassword->setText( password );
 }
 
+void mafLoginDialog::setRemember(bool rememberFalg){
+    m_Checkbox->setChecked(rememberFalg);
+}
+
 void mafLoginDialog::slotAcceptLogin(){
-    QString username = m_ComboUsername->currentText();
+    QString username = m_EditUsername->text();
     QString password = m_EditPassword->text();
-    int     index    = m_ComboUsername->currentIndex();
+    bool remember = m_Checkbox->isChecked();
 
-    Q_EMIT acceptLoginSignal( username,  // current username
-        password,  // current password
-        index      // index in the username list
-        );
+    QProgressDialog progress("Copying files...", "Abort Copy", 0, numFiles, this);
+    progress.setWindowModality(Qt::WindowModal);
 
-    // close this dialog
-    close();
+    for (int i = 0; i < numFiles; i++) {
+        progress.setValue(i);
+
+        if (progress.wasCanceled())
+            break;
+        //... copy one file
+    }
+    progress.setValue(numFiles);
+
+    Q_EMIT acceptLoginSignal( username, password, remember );
 }
 
 void mafGUI::mafLoginDialog::slotAbortLogin(){

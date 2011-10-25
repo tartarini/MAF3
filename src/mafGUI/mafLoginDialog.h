@@ -14,13 +14,11 @@
 
 #include "mafGUIDefinitions.h"
 #include <QDialog>
-#include <QLabel>
 #include <QPushButton>
+#include <QCheckBox>
 #include <QDialogButtonBox>
 #include <QLineEdit>
-#include <QComboBox>
 #include <QGridLayout>
-#include <QStringList>
 #include <QDebug>
 
 namespace mafGUI {
@@ -46,13 +44,13 @@ public:
  
     /// Sets the password.
     void setPassword( QString& password );
- 
-    /// Sets a list of allowed usernames from which the user can pick one if he does not want to directly edit it.
-    void setUsernamesList( const QStringList& usernames );
+
+    ///Sets the checkbox status.
+    void setRemember(bool rememberFalg);
  
     Q_SIGNALS:
      /// Signal emitted when the login is performed.
-    void acceptLoginSignal( QString& username, QString& password, int& indexNumber );
+    void acceptLoginSignal( QString& username, QString& password, bool rememebr);
 
     void abortLoginSignal();
  
@@ -67,10 +65,9 @@ protected Q_SLOTS:
     void setUpGUI();
 
     private:
-    QLabel* m_LabelUsername; ///< A label for the username component.
-    QLabel* m_LabelPassword; ///< A label for the password.
-    QComboBox* m_ComboUsername; ///< * Eeditable combo box.
+    QLineEdit* m_EditUsername; ///< Field to let the user enters his userName.
     QLineEdit* m_EditPassword; ///< Field to let the user enters his password.
+    QCheckBox *m_Checkbox; ///< Checkbox to remember userName and password.
     QDialogButtonBox* m_Buttons; ///< The standard dialog button box.
 };
 
