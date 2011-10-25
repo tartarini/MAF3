@@ -97,7 +97,7 @@ void mafObjectTest::mafObjectConstructorTest() {
     //! </snippet>
     QVERIFY(obj != NULL);
 
-    QVariantHash *dic = obj->dictionary();
+    QVariantMap *dic = obj->dictionary();
     QVERIFY(dic != NULL);
 
     mafDEL(obj);

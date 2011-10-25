@@ -58,3 +58,10 @@ void mafOperation::reDo() {
 
 }
 
+void mafOperation::fillDictionary() {
+    Superclass::fillDictionary();
+    
+    //here insert custom parameters
+    dictionary()->insert("Multithread", isMultiThreaded());
+}
+

@@ -58,6 +58,10 @@ private Q_SLOTS:
     /// Terminate the execution.
     void abort();
     
+protected Q_SLOTS:
+    /// fill the dictionary (inherited from mafObject) with output information.
+    /*virtual*/ void fillDictionary();
+    
 public:
     /// Object constructor.
     mafOperation(const QString code_location = "");
@@ -89,7 +93,7 @@ protected:
     
     /// Object destructor.
     /* virtual */ ~mafOperation();
-
+    
     volatile mafOperationStatus m_Status; ///< Operation status flag.
     bool m_CanUnDo; ///< Flag that store the unDo capability of the operation.
     bool m_CanAbort;         ///< Flag indicating that the operation can abort its execution or no (default true).

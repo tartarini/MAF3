@@ -33,7 +33,7 @@ The manager defines these Topics:
 - maf.local.resources.operation.started notify all the observer that the operation has started.
 - maf.local.resources.operation.setParameters asign the parameters to the current started operation.
 - maf.local.resources.operation.execute start the execution of operation.
-- maf.local.resources.operation.executed notify that the operation terminated its execution and the thread has been removed.
+- maf.local.resources.operation.executed notify that the operation terminated its execution and return an output as VariantHash.
 - maf.local.resources.operation.executeWithParameters start the execution of operation.
 - maf.local.resources.operation.stop terminate the execution of the operation.
 - maf.local.resources.operation.undo allow to navigate in undo stack in order to restore data before current operation.
@@ -75,7 +75,7 @@ Q_SIGNALS:
     void executeOperationSignal();
 
     /// Signal emitted to notify that the operation ended its execution and the associated thread has been deleted.
-    void executedOperationSignal();
+    void executedOperationSignal(QVariantHash outputHash);
 
     /// Signal connected with executeWithParameters slot.
     void executeWithParametersSignal(QVariantList parameters);

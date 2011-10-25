@@ -107,7 +107,7 @@ void mafOperationManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(const QVariantMap)")
     mafRegisterLocalSignal("maf.local.resources.operation.execute", this, "executeOperationSignal()")
-    mafRegisterLocalSignal("maf.local.resources.operation.executed", this, "executedOperationSignal()")
+    mafRegisterLocalSignal("maf.local.resources.operation.executed", this, "executedOperationSignal(QVariantHash )")
     mafRegisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(QVariantList)")
     mafRegisterLocalSignal("maf.local.resources.operation.stop", this, "stopOperationSignal()")
     mafRegisterLocalSignal("maf.local.resources.operation.undo", this, "undoOperationSignal()")
@@ -244,9 +244,10 @@ void mafOperationManager::executionEnded() {
     
     mafOperation *op = (worker!=NULL) ? worker->operation() : m_CurrentOperation;
     REQUIRE(op != NULL);
-
-    QString name = op->objectName();
-
+    
+    /// @@TODO create list of argument and autocomplete some keys (like op hash)
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.executed");
+    
     if ( !op->canUnDo() ) {
         mafDEL(op);
     } else {
@@ -259,9 +260,6 @@ void mafOperationManager::executionEnded() {
     if(worker) {
         delete worker;
     }
-
-    qDebug() << "Sending operation.executed for operation " << name;
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.executed");
 }
 
 void mafOperationManager::stopOperation() {
@@ -284,6 +282,10 @@ void mafOperationManager::stopOperation() {
     if ( idx != -1 ) {
         m_UndoStack.removeAt(idx);
     }
+    
+    
+    /// @@TODO create list of argument and autocomplete some keys (like op hash)
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.executed");
 
     mafDEL(op);
 
