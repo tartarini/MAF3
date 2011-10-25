@@ -25,6 +25,11 @@ QDialog(parent)
 }
 
 void mafLoginDialog::setUpGUI(){
+    //Set progress bar
+    m_Progress = new QProgressDialog("Waiting for authentication...", "Cancel", 0, 0, this);
+    m_Progress->setWindowModality(Qt::WindowModal);
+    m_Progress->setWindowTitle(tr("Login"));
+
     // set up the layout
     QGridLayout* formGridLayout = new QGridLayout( this );
 
@@ -68,6 +73,7 @@ void mafLoginDialog::setUpGUI(){
     formGridLayout->addWidget( m_Buttons, 3, 0, 1, 2 );
 
     setLayout( formGridLayout );
+    readSettings();
 }
 
 void mafLoginDialog::setUsername(QString &username){
@@ -83,15 +89,50 @@ void mafLoginDialog::setRemember(bool rememberFalg){
 }
 
 void mafLoginDialog::slotAcceptLogin(){
+    writeSettings();
     QString username = m_EditUsername->text();
     QString password = m_EditPassword->text();
     bool remember = m_Checkbox->isChecked();
-   
     Q_EMIT acceptLoginSignal( username, password, remember );
 }
 
-void mafGUI::mafLoginDialog::slotAbortLogin(){
+void mafLoginDialog::slotAbortLogin(){
     Q_EMIT abortLoginSignal();
-    // close this dialog
-    close();
+}
+
+void mafLoginDialog::writeSettings(void) {
+    QSettings settings;
+    if (m_Checkbox->isChecked()) {
+        //write user credential
+        QSettings settings;
+        settings.setValue("username", m_EditUsername->text());
+        settings.setValue("password", m_EditPassword->text());
+        settings.setValue("remember", m_Checkbox->isChecked());
+    } else {
+        //reset user credential
+        QSettings settings;
+        settings.setValue("username", "");
+        settings.setValue("password", "");
+        settings.setValue("remember", m_Checkbox->isChecked());
+    }
+    settings.sync();
+}
+
+void mafLoginDialog::readSettings(void) {
+    QSettings settings;
+    bool remember = settings.value("remember").toBool();
+    QString user = settings.value("username").toString();
+    if (remember) {
+        m_EditUsername->setText(settings.value("username").toString());
+        m_EditPassword->setText(settings.value("password").toString());
+        m_Checkbox->setChecked(remember);
+    }
+}
+
+void mafGUI::mafLoginDialog::showProgressBar(){
+    m_Progress->show();
+}
+
+void mafGUI::mafLoginDialog::closeProgressBar(){
+    m_Progress->close();
 }

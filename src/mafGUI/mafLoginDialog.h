@@ -18,6 +18,7 @@
 #include <QCheckBox>
 #include <QDialogButtonBox>
 #include <QLineEdit>
+#include <QProgressDialog>
 #include <QGridLayout>
 #include <QDebug>
 
@@ -47,6 +48,12 @@ public:
 
     ///Sets the checkbox status.
     void setRemember(bool rememberFalg);
+
+    ///Show progress bar.
+    void showProgressBar();
+
+    ///Close progress bar.
+    void closeProgressBar();
  
     Q_SIGNALS:
      /// Signal emitted when the login is performed.
@@ -64,11 +71,18 @@ protected Q_SLOTS:
     /// Method to set up all dialog components and initialize them.
     void setUpGUI();
 
-    private:
-    QLineEdit* m_EditUsername; ///< Field to let the user enters his userName.
-    QLineEdit* m_EditPassword; ///< Field to let the user enters his password.
+private:
+    /// Allows to write the updated preferences.
+    void writeSettings(void);
+
+    /// Allows to read the saved preferences.
+    void readSettings(void);
+
+    QLineEdit *m_EditUsername; ///< Field to let the user enters his userName.
+    QLineEdit *m_EditPassword; ///< Field to let the user enters his password.
     QCheckBox *m_Checkbox; ///< Checkbox to remember userName and password.
-    QDialogButtonBox* m_Buttons; ///< The standard dialog button box.
+    QDialogButtonBox *m_Buttons; ///< The standard dialog button box.
+    QProgressDialog *m_Progress; ///< Progress bar.
 };
 
 } // end namespace
