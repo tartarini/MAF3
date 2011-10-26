@@ -169,6 +169,7 @@ void mafOperationManager::startOperation(const QString operation) {
         return;
     }
 
+    m_CurrentOperation->setObjectName(m_CurrentOperation->metaObject()->className());
     // Assign as input the current selected VME.
     m_CurrentOperation->setInput(resource);
 

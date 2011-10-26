@@ -11,6 +11,7 @@
 
 
 #include "mafLoginDialog.h"
+#include <QLabel>
 
 using namespace mafCore;
 using namespace mafGUI;
@@ -24,24 +25,32 @@ QDialog(parent)
 }
 
 void mafLoginDialog::setUpGUI(){
+    //Set progress bar
+    m_Progress = new QProgressDialog("Waiting for authentication...", "Cancel", 0, 0, this);
+    m_Progress->setWindowModality(Qt::WindowModal);
+    m_Progress->setWindowTitle(tr("Login"));
+
     // set up the layout
     QGridLayout* formGridLayout = new QGridLayout( this );
 
     // initialize the username combo box so that it is editable
-    m_ComboUsername = new QComboBox( this );
-    m_ComboUsername->setEditable( true );
+    m_EditUsername = new QLineEdit( this );
     // initialize the password field so that it does not echo
     // characters
     m_EditPassword = new QLineEdit( this );
     m_EditPassword->setEchoMode( QLineEdit::Password );
 
     // initialize the labels
-    m_LabelUsername = new QLabel( this );
-    m_LabelPassword = new QLabel( this );
-    m_LabelUsername->setText( tr( "Username" ) );
-    m_LabelUsername->setBuddy( m_ComboUsername );
+    QLabel *labelUsername = new QLabel( this );
+    QLabel *m_LabelPassword = new QLabel( this );
+    labelUsername->setText( tr( "Username" ) );
+    labelUsername->setBuddy( m_EditUsername );
     m_LabelPassword->setText( tr( "Password" ) );
     m_LabelPassword->setBuddy( m_EditPassword );
+
+    QLabel *rememberLabel = new QLabel( this );
+    rememberLabel->setText(tr("remember me"));
+    m_Checkbox = new QCheckBox();
 
     // initialize m_Buttons
     m_Buttons = new QDialogButtonBox( this );
@@ -55,55 +64,75 @@ void mafLoginDialog::setUpGUI(){
     connect(m_Buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(slotAcceptLogin()));
 
     // place components into the dialog
-    formGridLayout->addWidget( m_LabelUsername, 0, 0 );
-    formGridLayout->addWidget( m_ComboUsername, 0, 1 );
+    formGridLayout->addWidget( labelUsername, 0, 0 );
+    formGridLayout->addWidget( m_EditUsername, 0, 1 );
     formGridLayout->addWidget( m_LabelPassword, 1, 0 );
     formGridLayout->addWidget( m_EditPassword, 1, 1 );
-    formGridLayout->addWidget( m_Buttons, 2, 0, 1, 2 );
+    formGridLayout->addWidget( rememberLabel, 2, 0 );
+    formGridLayout->addWidget( m_Checkbox, 2, 1 );
+    formGridLayout->addWidget( m_Buttons, 3, 0, 1, 2 );
 
     setLayout( formGridLayout );
+    readSettings();
 }
 
 void mafLoginDialog::setUsername(QString &username){
-    bool found = false;
-    for( int i = 0; i < m_ComboUsername->count() && ! found ; i++ )
-        if( m_ComboUsername->itemText( i ) == username  ){
-            m_ComboUsername->setCurrentIndex( i );
-            found = true;
-        }
-
-        if( ! found ){
-            int index = m_ComboUsername->count();
-            qDebug() << "Select username " << index;
-            m_ComboUsername->addItem( username );
-            m_ComboUsername->setCurrentIndex( index );
-        }
-
-        // place the focus on the password field
-        m_EditPassword->setFocus();
+    m_EditUsername->setText( username );
 }
-
 
 void mafLoginDialog::setPassword(QString &password){
     m_EditPassword->setText( password );
 }
 
-void mafLoginDialog::slotAcceptLogin(){
-    QString username = m_ComboUsername->currentText();
-    QString password = m_EditPassword->text();
-    int     index    = m_ComboUsername->currentIndex();
-
-    Q_EMIT acceptLoginSignal( username,  // current username
-        password,  // current password
-        index      // index in the username list
-        );
-
-    // close this dialog
-    close();
+void mafLoginDialog::setRemember(bool rememberFalg){
+    m_Checkbox->setChecked(rememberFalg);
 }
 
-void mafGUI::mafLoginDialog::slotAbortLogin(){
+void mafLoginDialog::slotAcceptLogin(){
+    writeSettings();
+    QString username = m_EditUsername->text();
+    QString password = m_EditPassword->text();
+    bool remember = m_Checkbox->isChecked();
+    Q_EMIT acceptLoginSignal( username, password, remember );
+}
+
+void mafLoginDialog::slotAbortLogin(){
     Q_EMIT abortLoginSignal();
-    // close this dialog
-    close();
+}
+
+void mafLoginDialog::writeSettings(void) {
+    QSettings settings;
+    if (m_Checkbox->isChecked()) {
+        //write user credential
+        QSettings settings;
+        settings.setValue("username", m_EditUsername->text());
+        settings.setValue("password", m_EditPassword->text());
+        settings.setValue("remember", m_Checkbox->isChecked());
+    } else {
+        //reset user credential
+        QSettings settings;
+        settings.setValue("username", "");
+        settings.setValue("password", "");
+        settings.setValue("remember", m_Checkbox->isChecked());
+    }
+    settings.sync();
+}
+
+void mafLoginDialog::readSettings(void) {
+    QSettings settings;
+    bool remember = settings.value("remember").toBool();
+    QString user = settings.value("username").toString();
+    if (remember) {
+        m_EditUsername->setText(settings.value("username").toString());
+        m_EditPassword->setText(settings.value("password").toString());
+        m_Checkbox->setChecked(remember);
+    }
+}
+
+void mafGUI::mafLoginDialog::showProgressBar(){
+    m_Progress->show();
+}
+
+void mafGUI::mafLoginDialog::closeProgressBar(){
+    m_Progress->close();
 }

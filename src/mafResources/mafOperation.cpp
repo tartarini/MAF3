@@ -15,7 +15,6 @@ using namespace mafCore;
 using namespace mafResources;
 
 mafOperation::mafOperation(const QString code_location) : mafResource(code_location), m_Status(mafOperationStatusIdle), m_CanUnDo(true), m_CanAbort(true), m_InputPreserve(true), m_MultiThreaded(true) {
-    setObjectName(this->metaObject()->className());
     connect(this, SIGNAL(executionEnded()), this, SLOT(fillDictionary()));
     connect(this, SIGNAL(executionEnded()), this, SLOT(terminate()));
 }
