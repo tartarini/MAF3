@@ -46,6 +46,51 @@ class MAFAPPLICATIONLOGICSHARED_EXPORT mafLogic : public mafLogicLight {
     /// typedef macro.
     mafSuperclassMacro(mafLogic::mafLogicLight);
 
+public Q_SLOTS:
+    /// Allows to assign the application's working directory.
+    void setWorkingDirectory(const QString wd);
+
+    /// Orchestrate the requests for the store the application's settings.
+    void storeSettings();
+
+    /// Orchestrate the requests for restoring the application's settings.
+    void restoreSettings();
+
+    /// Create a new VME Hierarchy.
+    mafCore::mafHierarchy *requestNewHierarchy();
+
+    /// Save hierarchy in a memento
+    void storeHierarchy(QString fileName, bool enableSaveAs = false);
+
+    /// Load hierarchy from a memento.
+    void restoreHierarchy(QString fileName);
+
+private Q_SLOTS:
+    /// manage the response of an operation, after its execution.
+    void executedOperation(QVariantMap response);
+    
+Q_SIGNALS:
+    /// Signal emitted when a recent file is asked to be opened. The argument of the signal contains the filename.
+    void openFile(const QString filename);
+
+    /// Signal used to alert all observers to write the owned settings.
+    void writeSettings();
+
+    /// Signal used to alert all observer to read back saved settings.
+    void readSettings();
+
+    /// Signal used to ask the view manager to store its status.
+    void statusViewManagerStore();
+
+    /// Signal used to ask the view manager to restore its status.
+    void statusViewManagerRestore(mafCore::mafMemento *memento, bool deep);
+
+    /// Signal used to ask the vme manager to store its status.
+    void statusVmeManagerStore();
+
+    /// Signal used to ask the vme manager to restore its status.
+    void statusVmeManagerRestore(mafCore::mafMemento *memento, bool deep);
+                  
 public:
     /// Object constructor.
     mafLogic(const QString code_location = "");
@@ -73,48 +118,7 @@ public:
 
     /// Plug the information to customize the visualization for a VME shown into the given view with the associated pipe visual.
     void customizeVisualization(const QString view_name, const QString data_type, const QString pipe_visual_type);
-
-public Q_SLOTS:
-    /// Allows to assign the application's working directory.
-    void setWorkingDirectory(const QString wd);
-
-    /// Orchestrate the requests for the store the application's settings.
-    void storeSettings();
-
-    /// Orchestrate the requests for restoring the application's settings.
-    void restoreSettings();
-
-    /// Create a new VME Hierarchy.
-    mafCore::mafHierarchy *requestNewHierarchy();
-
-    /// Save hierarchy in a memento
-    void storeHierarchy(QString fileName, bool enableSaveAs = false);
-
-    /// Load hierarchy from a memento.
-    void restoreHierarchy(QString fileName);
-
-Q_SIGNALS:
-    /// Signal emitted when a recent file is asked to be opened. The argument of the signal contains the filename.
-    void openFile(const QString filename);
-
-    /// Signal used to alert all observers to write the owned settings.
-    void writeSettings();
-
-    /// Signal used to alert all observer to read back saved settings.
-    void readSettings();
-
-    /// Signal used to ask the view manager to store its status.
-    void statusViewManagerStore();
-
-    /// Signal used to ask the view manager to restore its status.
-    void statusViewManagerRestore(mafCore::mafMemento *memento, bool deep);
-
-    /// Signal used to ask the vme manager to store its status.
-    void statusVmeManagerStore();
-
-    /// Signal used to ask the vme manager to restore its status.
-    void statusVmeManagerRestore(mafCore::mafMemento *memento, bool deep);
-
+                  
 protected:
     /// Object destructor.
     /*virtual*/ ~mafLogic();

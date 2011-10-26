@@ -75,7 +75,7 @@ Q_SIGNALS:
     void executeOperationSignal();
 
     /// Signal emitted to notify that the operation ended its execution and the associated thread has been deleted.
-    void executedOperationSignal(QVariantHash outputHash);
+    void executedOperationSignal(QVariantMap outputMap);
 
     /// Signal connected with executeWithParameters slot.
     void executeWithParametersSignal(QVariantList parameters);

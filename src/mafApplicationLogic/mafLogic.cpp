@@ -78,6 +78,8 @@ bool mafLogic::initialize() {
         mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "restoreSettings()");
         mafRegisterLocalCallback("maf.local.logic.openFile", this, "restoreHierarchy(QString)");
 
+        mafRegisterLocalCallback("maf.local.resources.operation.executed", this, "executedOperation(QVariantMap )");
+        
         m_CustomPluggedObjectsHash.clear();
 
         // Load the module related to the resources and managers and initialize it.
@@ -260,4 +262,14 @@ void mafLogic::restoreHierarchy(QString fileName) {
     argList.append(mafEventArgument(mafCore::mafObjectBase *, root));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 
+}
+
+void mafLogic::executedOperation(QVariantMap response) {
+    mafEventArgumentsList argList;
+    argList.push_back(Q_ARG(QVariantMap, response));
+        
+    mafEvent dictionary;
+    dictionary.setEventTopic("maf.local.eventBus.setResponseToNetwork");
+    dictionary.setEventType(mafEventTypeLocal);
+    mafEventBusManager::instance()->notifyEvent(dictionary, &argList);
 }

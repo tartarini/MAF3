@@ -23,6 +23,29 @@ namespace mafEventBus {
 class MAFEVENTBUSSHARED_EXPORT mafEventDispatcher : public QObject {
     Q_OBJECT
 
+Q_SIGNALS:
+    /// Default notification signals for default events.
+    void notifyDefaultEvent();
+    
+    /// Signal used to notify to observers that the remote communication has been terminated with success.
+    void remoteCommunicationDone(QVariant response);
+    
+    /// Signal used to notify to observers that the remote communication failed.
+    void remoteCommunicationFailed(QVariant response);
+
+    /// set the response generated locally.
+    void setResponseToNetworkSignal(QVariantMap value);
+
+    /// signal for retrieving the local response in order to send it to network.
+    QVariantMap getResponseToNetworkSignal();
+
+protected Q_SLOTS:
+    /// set the response generated locally.
+    void setResponseToNetwork(QVariantMap value);
+    
+    /// signal for retrieving the local response in order to send it to network.
+    QVariantMap getResponseToNetwork();
+    
 public:
     /// object constructor.
     mafEventDispatcher();
@@ -62,15 +85,6 @@ public:
     /// clean the signal and callback hashes.
     /** This method is used when the destructor is called. The destructor of the dispatcher is called by the mafEventBusManager destructor.*/
     void resetHashes();
-Q_SIGNALS:
-    /// Default notification signals for default events.
-    void notifyDefaultEvent();
-
-    /// Signal used to notify to observers that the remote communication has been terminated with success.
-    void remoteCommunicationDone(QVariant response);
-
-    /// Signal used to notify to observers that the remote communication failed.
-    void remoteCommunicationFailed(QVariant response);
 
 protected:
     /// Register MAF global events
@@ -98,6 +112,8 @@ private:
 
     mafEventsHashType m_CallbacksHash; ///< Callbacks' hash for receiving events like updates or refreshes.
     mafEventsHashType m_SignalsHash; ///< Signals' hash for sending events.
+    
+    QVariantMap m_Response; ///< this represent the response which will be forwarded to remote requester.
 };
 
 /////////////////////////////////////////////////////////////
@@ -106,6 +122,14 @@ private:
 
 inline mafEventItemListType mafEventDispatcher::signalItemProperty(const QString topic) const {
     return m_SignalsHash.values(topic);
+}
+    
+inline void mafEventDispatcher::setResponseToNetwork(QVariantMap value) {
+    m_Response = value;
+}
+    
+inline QVariantMap mafEventDispatcher::getResponseToNetwork() {
+    return m_Response;
 }
 
 } // namespace mafEventBus

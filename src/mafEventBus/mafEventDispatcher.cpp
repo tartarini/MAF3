@@ -65,6 +65,52 @@ void mafEventDispatcher::initializeGlobalEvents() {
     (*remote_failed)[OBJECT] = var;
     (*remote_failed)[SIGNATURE] = "remoteCommunicationFailed(QVariant)";
     this->registerSignal(*remote_failed);
+    
+    
+    ///signal  response to dispatch in remote
+    mafEvent *setResponseToNetworkSignal = new mafEvent();
+    eventId = "maf.local.eventBus.setResponseToNetwork";
+    (*setResponseToNetworkSignal)[TOPIC] = eventId;
+    (*setResponseToNetworkSignal)[TYPE] = mafEventTypeLocal;
+    (*setResponseToNetworkSignal)[SIGTYPE] = mafSignatureTypeSignal;
+    var.setValue((QObject*)this);
+    (*setResponseToNetworkSignal)[OBJECT] = var;
+    (*setResponseToNetworkSignal)[SIGNATURE] = "setResponseToNetworkSignal(QVariantMap)";
+    this->registerSignal(*setResponseToNetworkSignal);
+    
+    
+    mafEvent *setResponseToNetworkCallback = new mafEvent();
+    eventId = "maf.local.eventBus.setResponseToNetwork";
+    (*setResponseToNetworkCallback)[TOPIC] = eventId;
+    (*setResponseToNetworkCallback)[TYPE] = mafEventTypeLocal;
+    (*setResponseToNetworkCallback)[SIGTYPE] = mafSignatureTypeCallback;
+    var.setValue((QObject*)this);
+    (*setResponseToNetworkCallback)[OBJECT] = var;
+    (*setResponseToNetworkCallback)[SIGNATURE] = "setResponseToNetwork(QVariantMap)";
+    this->addObserver(*setResponseToNetworkCallback);
+
+    ///signal response to dispatch in remote
+    mafEvent *getResponseToNetworkSignal = new mafEvent();
+    eventId = "maf.local.eventBus.getResponseToNetwork";
+    (*getResponseToNetworkSignal)[TOPIC] = eventId;
+    (*getResponseToNetworkSignal)[TYPE] = mafEventTypeLocal;
+    (*getResponseToNetworkSignal)[SIGTYPE] = mafSignatureTypeSignal;
+    var.setValue((QObject*)this);
+    (*getResponseToNetworkSignal)[OBJECT] = var;
+    (*getResponseToNetworkSignal)[SIGNATURE] = "getResponseToNetworkSignal()";
+    this->registerSignal(*getResponseToNetworkSignal);
+
+    
+    mafEvent *getResponseToNetworkCallback = new mafEvent();
+    eventId = "maf.local.eventBus.getResponseToNetwork";
+    (*getResponseToNetworkCallback)[TOPIC] = eventId;
+    (*getResponseToNetworkCallback)[TYPE] = mafEventTypeLocal;
+    (*getResponseToNetworkCallback)[SIGTYPE] = mafSignatureTypeCallback;
+    var.setValue((QObject*)this);
+    (*getResponseToNetworkCallback)[OBJECT] = var;
+    (*getResponseToNetworkCallback)[SIGNATURE] = "getResponseToNetwork()";
+    this->addObserver(*getResponseToNetworkCallback);
+
 }
 
 bool mafEventDispatcher::isSignaturePresent(const mafEvent &props) const {

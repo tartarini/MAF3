@@ -267,7 +267,22 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
         dictionary.setEventTopic(id_name);
         dictionary.setEventType(mafEventTypeLocal);
         mafEventBusManager::instance()->notifyEvent(dictionary, argList);
+
+        mafEvent getResponse;
+        dictionary.setEventTopic("maf.local.eventBus.getResponseToNetwork");
+        dictionary.setEventType(mafEventTypeLocal);
+        QVariantMap m;
+        QGenericReturnArgument ret_val = mafEventReturnArgument(QVariantMap, m);
+        mafEventBusManager::instance()->notifyEvent(dictionary, NULL, &ret_val);
+        
+        QMapIterator<QString, QVariant> i(m);
+        while (i.hasNext()) {
+            i.next();
+            qDebug() << i.key() << ": " << i.value() << endl;
+        }
+        
         returnMap.insert("returnValue", "OK");
+        //unite
     } else {
         returnMap.insert("returnValue", "FAIL");
     }

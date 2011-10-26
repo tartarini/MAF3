@@ -16,6 +16,7 @@ using namespace mafResources;
 
 mafOperation::mafOperation(const QString code_location) : mafResource(code_location), m_Status(mafOperationStatusIdle), m_CanUnDo(true), m_CanAbort(true), m_InputPreserve(true), m_MultiThreaded(true) {
     setObjectName(this->metaObject()->className());
+    connect(this, SIGNAL(executionEnded()), this, SLOT(fillDictionary()));
     connect(this, SIGNAL(executionEnded()), this, SLOT(terminate()));
 }
 
@@ -34,7 +35,7 @@ void mafOperation::setParameters(const QVariantMap &parameters) {
         i.next();
         ba = i.key().toAscii();
         this->setProperty(ba.constData(), i.value()); 
-    } 
+    }
 }
 
 void mafOperation::terminate() {
@@ -61,7 +62,14 @@ void mafOperation::reDo() {
 void mafOperation::fillDictionary() {
     Superclass::fillDictionary();
     
-    //here insert custom parameters
-    dictionary()->insert("Multithread", isMultiThreaded());
+    int i = 0;
+    const QMetaObject *meta = this->metaObject();
+    int num = meta->propertyCount();
+    for ( ; i < num; ++i) {
+        const QMetaProperty qmp = meta->property(i);
+        QString propName = qmp.name();
+        QVariant value = this->property(propName.toAscii());
+        dictionary()->insert(propName, value);   
+    }
 }
 

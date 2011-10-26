@@ -59,7 +59,7 @@ mafOperationManager::~mafOperationManager() {
     mafUnregisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)")
     mafUnregisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(const QVariantMap )")
     mafUnregisterLocalSignal("maf.local.resources.operation.execute", this, "executeOperationSignal()")
-    mafUnregisterLocalSignal("maf.local.resources.operation.executed", this, "executedOperationSignal()")
+    mafUnregisterLocalSignal("maf.local.resources.operation.executed", this, "executedOperationSignal(QVariantMap)")
     mafUnregisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(QVariantList)")
     mafUnregisterLocalSignal("maf.local.resources.operation.stop", this, "stopOperationSignal()")
     mafUnregisterLocalSignal("maf.local.resources.operation.undo", this, "undoOperationSignal()")
@@ -107,7 +107,7 @@ void mafOperationManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(const QVariantMap)")
     mafRegisterLocalSignal("maf.local.resources.operation.execute", this, "executeOperationSignal()")
-    mafRegisterLocalSignal("maf.local.resources.operation.executed", this, "executedOperationSignal(QVariantHash )")
+    mafRegisterLocalSignal("maf.local.resources.operation.executed", this, "executedOperationSignal(QVariantMap)")
     mafRegisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(QVariantList)")
     mafRegisterLocalSignal("maf.local.resources.operation.stop", this, "stopOperationSignal()")
     mafRegisterLocalSignal("maf.local.resources.operation.undo", this, "undoOperationSignal()")
@@ -246,7 +246,11 @@ void mafOperationManager::executionEnded() {
     REQUIRE(op != NULL);
     
     /// @@TODO create list of argument and autocomplete some keys (like op hash)
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.executed");
+    QVariantMap *opResponse = op->dictionary();
+    
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(QVariantMap, *opResponse));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.executed", mafEventTypeLocal, &argList);
     
     if ( !op->canUnDo() ) {
         mafDEL(op);
