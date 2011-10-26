@@ -278,10 +278,16 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
         QMapIterator<QString, QVariant> i(m);
         while (i.hasNext()) {
             i.next();
-            qDebug() << i.key() << ": " << i.value() << endl;
+            returnMap.insert(i.key(), i.value().toString());
         }
         
         returnMap.insert("returnValue", "OK");
+        
+        /*QMapIterator<QString, xmlrpc::Variant> it(returnMap);
+        while (it.hasNext()) {
+            it.next();
+            qDebug() << it.key() << ": " << it.value() << endl;
+        }*/
         //unite
     } else {
         returnMap.insert("returnValue", "FAIL");
