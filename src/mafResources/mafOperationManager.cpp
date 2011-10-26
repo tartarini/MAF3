@@ -206,6 +206,7 @@ void mafOperationManager::executeOperation() {
             // Create a resource worker and pass to it the resource to be execute in a separate thread.
             mafOperationWorker *worker = new mafOperationWorker(m_CurrentOperation);
             // become observer wo be notified when the work is done.
+            connect(m_CurrentOperation, SIGNAL(executionCanceled()), worker, SIGNAL(workAborted()));
             connect(worker, SIGNAL(workDone()), this, SLOT(executionEnded()));
             connect(worker, SIGNAL(workAborted()), this, SLOT(stopOperation()));
             // Put the worker into the pool.
@@ -214,6 +215,7 @@ void mafOperationManager::executeOperation() {
             qDebug() << "Starting worker...";
             worker->start();
         } else {
+            connect(m_CurrentOperation, SIGNAL(executionCanceled()), this, SLOT(stopOperation()));
             connect(m_CurrentOperation, SIGNAL(executionEnded()), this, SLOT(executionEnded()));
             qDebug() << "Execute Operation ...";
             m_CurrentOperation->execute();
