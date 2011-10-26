@@ -70,5 +70,20 @@ void mafOperation::fillDictionary() {
         QVariant value = this->property(propName.toAscii());
         dictionary()->insert(propName, value);   
     }
+    
+    // insert also input(s) hash and, if exists, output(s) hash.
+    QList<mafResource *>::iterator it = inputList()->begin();
+    int count = 0;
+    while(it != inputList()->end()) {
+        QString inputHash((*it)->objectHash());
+        QString key("inputVMEHash_");
+        key.append(QString("%1").arg(count++, 2, 10, QChar('0')));
+        dictionary()->insert(key, inputHash);
+        ++it;
+    }
+    
+    if(output()) {
+        QString outputHash(output()->objectHash());
+        dictionary()->insert("outputVMEHash", outputHash);
+    }
 }
-
