@@ -281,7 +281,7 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
             returnMap.insert(i.key(), i.value().toString());
         }
         
-        returnMap.insert("returnValue", "OK");
+        //returnMap.insert("returnValue", "OK");
         
         /*QMapIterator<QString, xmlrpc::Variant> it(returnMap);
         while (it.hasNext()) {
@@ -290,7 +290,7 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
         }*/
         //unite
     } else {
-        returnMap.insert("returnValue", "FAIL");
+        returnMap.insert("error", "method not exist");
     }
     m_Server->sendReturnValue( requestId, returnMap );
 
