@@ -39,6 +39,9 @@ class MAFRESOURCESSHARED_EXPORT mafOperation : public mafResource {
 Q_SIGNALS:
     /// Trigger the undo execution.
     void undoExecution();
+    
+    /// cancel operation execution.
+    void executionCanceled();
 
 public Q_SLOTS:
     

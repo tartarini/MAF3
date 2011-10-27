@@ -218,6 +218,110 @@ void testUndoOperation::terminated() {
     
 }
 
+/**
+ Class name: testAutoCancelSingleThreadOperation
+ This is an example of endless operation that needs to be aborted to terminate the test suite (SINGLE THREAD)
+ */
+class testAutoCancelSingleThreadOperation : public mafResources::mafOperation {
+    Q_OBJECT
+    mafSuperclassMacro(mafResources::mafOperation);
+    
+public:
+    /// Object constructor.
+    testAutoCancelSingleThreadOperation(const QString code_location = "");
+    ~testAutoCancelSingleThreadOperation();
+protected:
+    /// Terminate the execution.
+    /*virtual*/ void terminated();
+    
+    public Q_SLOTS:
+    /// execution method
+    /*virtual*/ void execute();
+
+private:
+    mafObject *m_TestObjectDestroyInDestructor;
+    mafObject *m_TestObjectDestroyInTerminate;
+    
+};
+
+testAutoCancelSingleThreadOperation::testAutoCancelSingleThreadOperation(const QString code_location) : mafOperation(code_location), m_TestObjectDestroyInDestructor(NULL), m_TestObjectDestroyInTerminate(NULL) {
+    m_CanUnDo = false;
+    m_MultiThreaded = false;
+    setObjectName("testAutoCancelSingleThreadOperation");
+    m_TestObjectDestroyInDestructor = mafNEW(mafCore::mafObject);
+    m_TestObjectDestroyInDestructor->setObjectName("TestObject1");
+}
+
+testAutoCancelSingleThreadOperation::~testAutoCancelSingleThreadOperation() {
+    mafDEL(m_TestObjectDestroyInDestructor);
+}
+
+void testAutoCancelSingleThreadOperation::execute() {
+    m_TestObjectDestroyInTerminate = mafNEW(mafCore::mafObject);
+    m_TestObjectDestroyInTerminate->setObjectName("TestObject2");
+    QTest::qWait(1000);
+        
+    Q_EMIT executionCanceled();
+    return;
+}
+
+void testAutoCancelSingleThreadOperation::terminated() {
+    mafDEL(m_TestObjectDestroyInTerminate);
+}
+
+
+/**
+ Class name: testAutoCancelMultiThreadOperation
+ This is an example of endless operation that needs to be aborted to terminate the test suite (MULTI THREAD)
+ */
+class testAutoCancelMultiThreadOperation : public mafResources::mafOperation {
+    Q_OBJECT
+    mafSuperclassMacro(mafResources::mafOperation);
+    
+public:
+    /// Object constructor.
+    testAutoCancelMultiThreadOperation(const QString code_location = "");
+    ~testAutoCancelMultiThreadOperation();
+protected:
+    /// Terminate the execution.
+    /*virtual*/ void terminated();
+    
+    public Q_SLOTS:
+    /// execution method
+    /*virtual*/ void execute();
+    
+private:
+    mafObject *m_TestObjectDestroyInDestructor;
+    mafObject *m_TestObjectDestroyInTerminate;
+    
+};
+
+testAutoCancelMultiThreadOperation::testAutoCancelMultiThreadOperation(const QString code_location) : mafOperation(code_location), m_TestObjectDestroyInDestructor(NULL), m_TestObjectDestroyInTerminate(NULL) {
+    m_CanUnDo = false;
+    m_MultiThreaded = false;
+    setObjectName("testAutoCancelMultiThreadOperation");
+    m_TestObjectDestroyInDestructor = mafNEW(mafCore::mafObject);
+    m_TestObjectDestroyInDestructor->setObjectName("TestObject1");
+}
+
+testAutoCancelMultiThreadOperation::~testAutoCancelMultiThreadOperation() {
+    mafDEL(m_TestObjectDestroyInDestructor);
+}
+
+void testAutoCancelMultiThreadOperation::execute() {
+    m_TestObjectDestroyInTerminate = mafNEW(mafCore::mafObject);
+    m_TestObjectDestroyInTerminate->setObjectName("TestObject2");
+    QTest::qWait(1000);
+    
+    Q_EMIT executionCanceled();
+    return;
+}
+
+void testAutoCancelMultiThreadOperation::terminated() {
+    mafDEL(m_TestObjectDestroyInTerminate);
+}
+
+
 
 //==========================================================================================
 // Test Suite
@@ -253,6 +357,8 @@ private Q_SLOTS:
         mafRegisterObject(testEndlessOperation);
         mafRegisterObject(testNotUndoOperation);
         mafRegisterObject(testUndoOperation);
+        mafRegisterObject(testAutoCancelSingleThreadOperation);
+        mafRegisterObject(testAutoCancelMultiThreadOperation);
     }
 
     /// Cleanup test variables memory allocation.
@@ -265,6 +371,9 @@ private Q_SLOTS:
         mafUnregisterObject(testEndlessOperation);
         mafUnregisterObject(testNotUndoOperation);
         mafUnregisterObject(testUndoOperation);
+        mafUnregisterObject(testAutoCancelSingleThreadOperation);
+        mafUnregisterObject(testAutoCancelMultiThreadOperation);
+
 
         //restore vme manager status
         m_EventBus->notifyEvent("maf.local.resources.hierarchy.request");
@@ -277,13 +386,16 @@ private Q_SLOTS:
     void mafOperationManagerAllocationTest();
 
     /// Start and cancel test case.
-    void cancelExecutionTest();
+    void cancelStartTest();
 
     /// Abort execution test
     void abortExecutionTest();
 
     /// Undo-Redo functionality test
     void undoRedoExecutionTest();
+    
+    /// Operation which stop its execution, canceling it.
+    void cancelExecutionTest();
 
 public:
     /// Utility method to start operations. Return the operation started.
@@ -338,7 +450,7 @@ void mafOperationManagerTest::mafOperationManagerAllocationTest() {
 }
 
 
-void mafOperationManagerTest::cancelExecutionTest() {
+void mafOperationManagerTest::cancelStartTest() {
     const mafCore::mafObjectBase *op = this->startOperation("testEndlessOperation");
 
     // Cancel the operation's execution
@@ -452,6 +564,20 @@ void mafOperationManagerTest::undoRedoExecutionTest() {
     m_EventBus->notifyEvent("maf.local.resources.operation.sizeUndoStack", mafEventTypeLocal, NULL, &ret_val);
     
     QVERIFY(undoStackSize == 0);
+}
+
+void mafOperationManagerTest::cancelExecutionTest() {
+    const mafCore::mafObjectBase *opst = this->startOperation("testAutoCancelSingleThreadOperation");
+    
+    // Cancel the operation's execution
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
+
+    
+    const mafCore::mafObjectBase *opmt = this->startOperation("testAutoCancelMultiThreadOperation");
+    
+    // Cancel the operation's execution
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.execute", mafEventTypeLocal);
+
 }
 
 

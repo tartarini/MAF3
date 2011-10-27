@@ -150,5 +150,5 @@ void mafObject::setProgressStatus(int status) {
 }
 
 void mafObject::fillDictionary() {
-    m_Dictionary->insert("hash", this->objectHash());
+    
 }

@@ -59,7 +59,7 @@ mafOperationManager::~mafOperationManager() {
     mafUnregisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)")
     mafUnregisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(const QVariantMap )")
     mafUnregisterLocalSignal("maf.local.resources.operation.execute", this, "executeOperationSignal()")
-    mafUnregisterLocalSignal("maf.local.resources.operation.executed", this, "executedOperationSignal()")
+    mafUnregisterLocalSignal("maf.local.resources.operation.executed", this, "executedOperationSignal(QVariantMap)")
     mafUnregisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(QVariantList)")
     mafUnregisterLocalSignal("maf.local.resources.operation.stop", this, "stopOperationSignal()")
     mafUnregisterLocalSignal("maf.local.resources.operation.undo", this, "undoOperationSignal()")
@@ -107,7 +107,7 @@ void mafOperationManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)")
     mafRegisterLocalSignal("maf.local.resources.operation.setParameters", this, "setOperationParametersSignal(const QVariantMap)")
     mafRegisterLocalSignal("maf.local.resources.operation.execute", this, "executeOperationSignal()")
-    mafRegisterLocalSignal("maf.local.resources.operation.executed", this, "executedOperationSignal(QVariantHash )")
+    mafRegisterLocalSignal("maf.local.resources.operation.executed", this, "executedOperationSignal(QVariantMap)")
     mafRegisterLocalSignal("maf.local.resources.operation.executeWithParameters", this, "executeWithParametersSignal(QVariantList)")
     mafRegisterLocalSignal("maf.local.resources.operation.stop", this, "stopOperationSignal()")
     mafRegisterLocalSignal("maf.local.resources.operation.undo", this, "undoOperationSignal()")
@@ -169,6 +169,7 @@ void mafOperationManager::startOperation(const QString operation) {
         return;
     }
 
+    m_CurrentOperation->setObjectName(m_CurrentOperation->metaObject()->className());
     // Assign as input the current selected VME.
     m_CurrentOperation->setInput(resource);
 
@@ -205,6 +206,7 @@ void mafOperationManager::executeOperation() {
             // Create a resource worker and pass to it the resource to be execute in a separate thread.
             mafOperationWorker *worker = new mafOperationWorker(m_CurrentOperation);
             // become observer wo be notified when the work is done.
+            connect(m_CurrentOperation, SIGNAL(executionCanceled()), worker, SIGNAL(workAborted()));
             connect(worker, SIGNAL(workDone()), this, SLOT(executionEnded()));
             connect(worker, SIGNAL(workAborted()), this, SLOT(stopOperation()));
             // Put the worker into the pool.
@@ -213,6 +215,7 @@ void mafOperationManager::executeOperation() {
             qDebug() << "Starting worker...";
             worker->start();
         } else {
+            connect(m_CurrentOperation, SIGNAL(executionCanceled()), this, SLOT(stopOperation()));
             connect(m_CurrentOperation, SIGNAL(executionEnded()), this, SLOT(executionEnded()));
             qDebug() << "Execute Operation ...";
             m_CurrentOperation->execute();
@@ -246,7 +249,11 @@ void mafOperationManager::executionEnded() {
     REQUIRE(op != NULL);
     
     /// @@TODO create list of argument and autocomplete some keys (like op hash)
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.executed");
+    QVariantMap *opResponse = op->dictionary();
+    
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(QVariantMap, *opResponse));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.executed", mafEventTypeLocal, &argList);
     
     if ( !op->canUnDo() ) {
         mafDEL(op);
