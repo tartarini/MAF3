@@ -405,7 +405,6 @@ void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
         }
     }
     
-    
     QMenu *impMenu = (QMenu *)this->menuItemByName("Import");
     if (impMenu) {
         QList<QAction *> impActions= impMenu->actions();
@@ -415,7 +414,6 @@ void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
             action->setEnabled(accepted_list.contains(imp));
         }
     }
-    
     
     QMenu *expMenu = (QMenu *)this->menuItemByName("Export");
     if (expMenu) {
