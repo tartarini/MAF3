@@ -278,10 +278,17 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
         QMapIterator<QString, QVariant> i(m);
         while (i.hasNext()) {
             i.next();
-            returnMap.insert(i.key(), i.value().toString());
+            
+            if (i.value().canConvert(QVariant::StringList) || i.value().canConvert(QVariant::List)) {
+                returnMap.insert(i.key(), i.value().toStringList());
+            } else {
+                returnMap.insert(i.key(), i.value().toString());
+            }
+            
+            
         }
         
-        returnMap.insert("returnValue", "OK");
+        //returnMap.insert("returnValue", "OK");
         
         /*QMapIterator<QString, xmlrpc::Variant> it(returnMap);
         while (it.hasNext()) {
@@ -290,7 +297,7 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
         }*/
         //unite
     } else {
-        returnMap.insert("returnValue", "FAIL");
+        returnMap.insert("error", "method not exist");
     }
     m_Server->sendReturnValue( requestId, returnMap );
 
