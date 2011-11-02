@@ -46,7 +46,7 @@ private Q_SLOTS:
         mafResourcesRegistration::registerResourcesObjects();
         m_BindingHash.insert("vtkPolyData","mafPipesLibrary::mafPipeVisualVTKSurface");
         m_View = mafNEW(mafResources::mafView);
-        m_View->create();
+        m_View->initialize();
     }
 
     /// Cleanup test variables memory allocation.
