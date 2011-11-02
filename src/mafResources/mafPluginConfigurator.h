@@ -5,7 +5,7 @@
  *  Created by Paolo Quadrani on 06/06/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -35,8 +35,8 @@ public:
     bool parseConfigurationFile(QString configFile);
 
 private:
-    /// Allow to parse the XML configuration file.
-    void parseConfigurationFile(QDomNode current);
+    /// Allow to parse the XML configuration file document.
+    void parseDocument(QDomNode current);
 };
 
 } // namespace mafResources

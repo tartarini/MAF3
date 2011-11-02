@@ -1,6 +1,6 @@
 /*
  *  mafPluginConfigurator.cpp
- *  mafPluginVTK
+ *  mafResources
  *
  *  Created by Paolo Quadrani on 06/06/11.
  *  Copyright 2011 B3C. All rights reserved.
@@ -14,7 +14,7 @@
 using namespace mafEventBus;
 using namespace mafResources;
 
-void mafPluginConfigurator::parseConfigurationFile(QDomNode current) {
+void mafPluginConfigurator::parseDocument(QDomNode current) {
     mafEventBus::mafEventArgumentsList argList;
     mafCore::mafPluggedObjectsHash pluginHash;
     QByteArray ba = current.nodeName().toAscii();
@@ -80,6 +80,6 @@ bool mafPluginConfigurator::parseConfigurationFile(QString configFile) {
     }
 
     QDomNode currentNode = document.firstChild();
-    parseConfigurationFile(currentNode);
+    parseDocument(currentNode);
 	return true;
 }

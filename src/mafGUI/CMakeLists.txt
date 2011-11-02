@@ -40,6 +40,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 ## #################################################################
 
 mafCopyFilesFromExtension("mnu" ${PROJECT_NAME})
+mafCopyFilesFromExtension("xml" ${PROJECT_NAME})
 
 ## #################################################################
 ## Wrapping Build rules

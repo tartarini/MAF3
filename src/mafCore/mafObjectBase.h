@@ -3,9 +3,9 @@
  *  mafCore
  *  
  *  Created by Paolo Quadrani on 17/09/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *  
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *  
  */
 
@@ -58,6 +58,9 @@ private Q_SLOTS:
 public:
     /// Object constructor.
     mafObjectBase(const QString code_location = "");
+
+    /// Initialize the object.
+    virtual bool initialize();
 
     /// Return the object's ID.
     mafId objectId() const;

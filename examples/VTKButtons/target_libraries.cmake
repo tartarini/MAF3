@@ -16,4 +16,5 @@ SET(target_libraries
   mafEventBus
   mafApplicationLogic
   mafGUI
+  mafResources
   )

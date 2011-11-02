@@ -46,7 +46,8 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 ## copy ui files
 ## #################################################################
 
-mafCopyFilesFromExtension("ui" "VTKButtons")
+mafCopyFilesFromExtension("ui" ${PROJECT_NAME})
+mafCopyFilesFromExtension("xml" ${PROJECT_NAME})
 
 ## #################################################################
 ## Installation

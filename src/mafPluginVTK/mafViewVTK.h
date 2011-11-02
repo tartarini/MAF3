@@ -37,7 +37,7 @@ public:
     mafViewVTK(const QString code_location = "");
 
     /// Crete view.
-    /*virtual*/ void create();
+    /*virtual*/ bool initialize();
 
     /// Remove scene node passed as argument.
     /*virtual*/ void removeSceneNode(mafResources::mafSceneNode *node);

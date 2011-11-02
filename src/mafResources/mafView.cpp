@@ -2,7 +2,7 @@
  *  mafView.cpp
  *  mafResources
  *
- *  Created by Roberto Mucci on 30/03/10.
+ *  Created by Roberto Mucci - Paolo Quadrani on 30/03/10.
  *  Copyright 2011 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
@@ -24,7 +24,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-mafView::mafView(const QString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL), m_VisualPipeHash(NULL), m_SelectedNode(NULL),m_PipeVisualSelection(NULL), m_VisibleObjects(0) {
+mafView::mafView(const QString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL), m_VisualPipeHash(NULL), m_SelectedNode(NULL),m_PipeVisualSelection(NULL), m_VisibleObjects(0), m_LayoutConfigurationFile("") {
     m_SceneNodeList.clear();
 
     // Callbacks related to the VME creation
@@ -36,10 +36,27 @@ mafView::mafView(const QString code_location) : mafResource(code_location), m_Re
 
 mafView::~mafView() {
     clearScene();
-    // Q_EMIT signal to detach visual pipe gui
+    // Q_EMIT signal to detach visual pipe GUI
     Q_EMIT pipeVisualSelectedSignal(NULL);
 }
 
+void mafView::fillSceneGraph(mafCore::mafHierarchy *hierarchy) {
+    int i = 0, size = hierarchy->currentNumberOfChildren();
+    for(i; i < size; i++) {
+        hierarchy->moveTreeIteratorToNthChild(i);
+        QObject *vme = hierarchy->currentData();
+        hierarchy->moveTreeIteratorToParent();
+        QObject *vmeParent = hierarchy->currentData();
+        mafSceneNode *parentNode = this->sceneNodeFromVme(qobject_cast<mafCore::mafObjectBase *>(vmeParent));
+        this->selectSceneNode(parentNode, parentNode->property("visibility").toBool());
+        this->vmeAdd(qobject_cast<mafCore::mafObjectBase *>(vme));
+        hierarchy->moveTreeIteratorToNthChild(i);
+        fillSceneGraph(hierarchy);
+        hierarchy->moveTreeIteratorToParent();
+    }
+
+    this->updateSceneNodesInformation();
+}
 
 void mafView::clearScene() {
     mafDEL(m_Scenegraph);
@@ -52,12 +69,30 @@ void mafView::clearScene() {
     }
 }
 
-void mafView::create() {
-}
-
-
 mafSceneNode *mafView::createSceneNode(mafVME *vme) {
     return new mafSceneNode(vme, m_RenderWidget, "", mafCodeLocation);
+}
+
+void mafView::setupSceneGraph() {
+    // create sceneNode hierarchy equal to vme hierarchy
+    mafCore::mafHierarchyPointer hierarchy;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+
+    //Create root scenenode
+    this->selectSceneNode(NULL, false);
+    hierarchy->moveTreeIteratorToRootNode();
+    QObject* rootNode = hierarchy->currentData();
+    this->vmeAdd(qobject_cast<mafCore::mafObjectBase *>(rootNode));
+    //Fill the new scene graph, with all the created VME wrapped into the mafSceneNode each one.
+    this->fillSceneGraph(hierarchy);
+
+    //Set VME hierarchy iterator to the original position.
+    mafCore::mafObjectBase *selectedVME;
+    ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, selectedVME);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
+    mafSceneNode *selectedNode = this->sceneNodeFromVme(qobject_cast<mafCore::mafObjectBase *>(selectedVME));
+    this->selectSceneNode(selectedNode, selectedNode->property("visualizationStatus").toUInt() == mafVisualizationStatusVisible);
 }
 
 void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
@@ -164,7 +199,7 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
         vp = m_VisualPipeHash->value(dataType);
     }
 
-    if (vp == "") {
+    if (vp.isEmpty()) {
         //if originally in visual pipe hash, is not present that binding data-pipe visual,
         // request to the PluginManager possible visual pipe accepting vme object.
         mafPluggedObjectInformationList *vpsHash = mafPluginManager::instance()->queryPluggedObjects("mafResources::mafPipeVisual");
@@ -222,6 +257,4 @@ void mafView::updateSceneNodesInformation() {
         sn->setObjectName(sn->vme()->objectName());
         sn->setProperty("iconFile", sn->vme()->property("iconFile"));
     }
-    
 }
-

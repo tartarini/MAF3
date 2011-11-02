@@ -24,7 +24,7 @@ mafOperation::~mafOperation() {
 
 bool mafOperation::initialize() {
     m_Status = mafOperationStatusStarted;
-    return true;
+    return Superclass::initialize();
 }
 
 void mafOperation::setParameters(const QVariantMap &parameters) {

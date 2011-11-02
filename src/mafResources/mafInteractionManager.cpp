@@ -27,13 +27,13 @@ void mafInteractionManager::shutdown() {
 }
 
 mafInteractionManager::mafInteractionManager(const QString code_location) : mafObjectBase(code_location), m_VME(NULL), m_DefaultInteractor(NULL) {
-    initialize();
+    initializeConnection();
 }
 
 mafInteractionManager::~mafInteractionManager() {
 }
 
-void mafInteractionManager::initialize() {
+void mafInteractionManager::initializeConnection() {
     mafRegisterLocalCallback("maf.local.resources.view.select", this, "setActiveView(mafCore::mafObjectBase *)")
     // VME selection callback.
     // Callback related to the VME selection

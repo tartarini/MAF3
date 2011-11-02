@@ -90,7 +90,7 @@ private:
     /*virtual*/ ~mafInteractionManager();
 
     /// initialize the manager.
-    void initialize();
+    void initializeConnection();
 
     mafVME *m_VME; ///< used for retrieve current interactor.
     mafInteractor *m_DefaultInteractor; ///< represents the used interactor by default, without considering vme interaction.

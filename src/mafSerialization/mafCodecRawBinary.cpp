@@ -98,6 +98,7 @@ mafMemento *mafCodecRawBinary::decode() {
 
     while(!m_DataStreamRead.atEnd()) {
         m_DataStreamRead >> mementoTagSeparator;
+        qDebug() << "*****" << mementoTagSeparator << "*****"; 
         if(mementoTagSeparator != "MementoType") {
             item.m_Name = mementoTagSeparator;
             if (mementoTagSeparator.isEmpty()) {
@@ -108,6 +109,9 @@ mafMemento *mafCodecRawBinary::decode() {
             QString typeName;
             m_DataStreamRead >> typeName;
             item.m_Value = demarshall(typeName, item.m_Multiplicity);
+            //  qDebug() << item.m_Name;
+            //  qDebug() << typeName; 
+            //  qDebug() << item.m_Multiplicity;
             memento->decodeItem(&item);
              
             propList->append(item);
@@ -263,8 +267,7 @@ QVariant mafCodecRawBinary::demarshall( QString typeName, int multiplicity ) {
             int multi = 0;
             m_DataStreamRead >> type;
             QString nodeName = demarshall( type, multi ).toString();
-            m_DataStreamRead >> type;
-            m_DataStreamRead >> multi;
+            m_DataStreamRead >> type;                        
             stct[ nodeName ] = QVariant(demarshall( type, multi ));
         }
         return QVariant(stct);

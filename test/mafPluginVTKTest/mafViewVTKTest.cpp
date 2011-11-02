@@ -171,7 +171,7 @@ void mafViewVTKTest::mafViewVTKAllocationTest() {
 
 void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     //! <snippet>
-    m_View->create();
+    m_View->initialize();
 
     // Ask for the inner widget.
     QObject *widgetObj = m_View->property("renderWidget").value<QObject*>();

@@ -62,7 +62,7 @@ public:
         void setTextCodec(const char* codecName);
 private:
         /// reset position,regular expression and use the default QtextCode.
-        void initialize();
+        void initializeReader();
 
         QIODevice *m_Device; ///< device which represents the source of csv input.
         QTextCodec *m_Codec; ///< provides conversions between text encodings.

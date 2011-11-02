@@ -16,18 +16,18 @@ using namespace mafCore;
 using namespace mafSerialization;
 
 mafCSVReader::mafCSVReader(const QString code_location): mafObjectBase(code_location) {
-    initialize();
+    initializeReader();
 }
 
 mafCSVReader::mafCSVReader(QIODevice *device, const QString code_location): mafObjectBase(code_location), m_Device(device), m_String("") {
-    initialize();
+    initializeReader();
 }
 
 mafCSVReader::mafCSVReader(QString &string, const QString code_location): mafObjectBase(code_location),  m_Device(NULL), m_String(string) {
-    initialize();
+    initializeReader();
 }
 
-void mafCSVReader::initialize() {
+void mafCSVReader::initializeReader() {
     m_Codec = QTextCodec::codecForLocale();
     m_Position = 0;
     m_RegularExpression = QRegExp("((?:(?:[^,\\n]*,?)|(?:\"[^\"]*\",?))*)\\n");
@@ -39,13 +39,13 @@ mafCSVReader::~mafCSVReader()
 }
 
 void mafCSVReader::setString(QString &string) {
-    initialize();
+    initializeReader();
     m_Device = NULL;
     m_String = string;
 }
 
 void mafCSVReader::setDevice(QIODevice *device) {
-    initialize();
+    initializeReader();
     m_String.clear();
     m_Device = device;
 }

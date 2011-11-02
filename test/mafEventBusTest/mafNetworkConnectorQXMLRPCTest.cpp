@@ -149,15 +149,10 @@ void mafNetworkConnectorQXMLRPCTest::mafNetworkConnectorQXMLRPCCommunictionTest(
 }
 
 void mafNetworkConnectorQXMLRPCTest::mafNetworkConnectorQXMLRPCCommunictionWithHeaderMapTest() {
-    m_NetWorkConnectorQXMLRPC->createServer(8000);
-    m_NetWorkConnectorQXMLRPC->startListen();
-
-
+    //use the same client server of the previous test
+    
     // Register callback (done by the remote object).
     mafRegisterLocalCallback("maf.local.eventBus.globalUpdate", m_ObjectTest, "updateObject()");
-
-    //m_EventBus->createClient("XMLRPC", "localhost", 8000);
-    m_NetWorkConnectorQXMLRPC->createClient("localhost", 8000);
 
     //Add authentication map
     QMap<QString, QString> authenticationMap;
