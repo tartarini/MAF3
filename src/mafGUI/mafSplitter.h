@@ -26,8 +26,8 @@ class MAFGUISHARED_EXPORT mafSplitter : public QSplitter {
 	Q_OBJECT
     
 public:
-    /// Object constructor
-    mafSplitter(QWidget * parent = 0);
+    ///Object constructor
+    mafSplitter(Qt::Orientation orientation = Qt::Horizontal, QWidget * parent = 0);
 
     /// Allows to adjust position of the split panel
     void adjustPosition(int p);
@@ -43,6 +43,7 @@ Q_SIGNALS:
     void synchronizeSplitterSignal(QObject *splitter);
 
 protected:
+
     /// Redefine the paint event to allow sending the synchronize event.
     void paintEvent ( QPaintEvent * pe );
 

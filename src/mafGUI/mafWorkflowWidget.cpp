@@ -19,11 +19,11 @@
 
 using namespace mafGUI;
 
-mafWorkflowWidget::mafWorkflowWidget(QWidget *parent) : QWidget(parent), m_OpenWorkbenchButton(NULL), m_SubmitButton(NULL), m_RemoveButton(NULL), m_WorkflowList(NULL), m_ParametersList(NULL) {
+mafWorkflowWidget::mafWorkflowWidget(QWidget *parent) : QWidget(parent), m_OpenWorkbenchButton(NULL), m_SubmitButton(NULL), m_WorkflowList(NULL), m_ParametersList(NULL) {
 
-    QVBoxLayout *vbox = new QVBoxLayout();
+    QVBoxLayout *hbox = new QVBoxLayout(this);
     QVBoxLayout *vListbox = new QVBoxLayout();
-    QHBoxLayout *hbox = new QHBoxLayout(this);
+    QHBoxLayout *hButtonbox = new QHBoxLayout(this);
 
     QLabel *workflowLabel = new QLabel(tr("Workflows:"));
     QLabel *parametersLabel = new QLabel(tr("Parameters:"));
@@ -33,15 +33,12 @@ mafWorkflowWidget::mafWorkflowWidget(QWidget *parent) : QWidget(parent), m_OpenW
  
     m_OpenWorkbenchButton = new QPushButton("Open Taverna Workbench", this);
     m_SubmitButton = new QPushButton("Submit workflow", this);
-    m_RemoveButton = new QPushButton("Remove", this);
-    m_RemoveButton->setDisabled(true);
 
-    vbox->setSpacing(1);
-    vbox->addStretch(1);
-    vbox->addWidget(m_OpenWorkbenchButton);
-    vbox->addWidget(m_SubmitButton);
-    vbox->addWidget(m_RemoveButton);
-    vbox->addStretch(1);
+    hButtonbox->setSpacing(1);
+    hButtonbox->addStretch(1);
+    hButtonbox->addWidget(m_OpenWorkbenchButton);
+    hButtonbox->addWidget(m_SubmitButton);
+    hButtonbox->addStretch(1);
 
     vListbox->addWidget(workflowLabel);
     vListbox->addWidget(m_WorkflowList);
@@ -50,7 +47,7 @@ mafWorkflowWidget::mafWorkflowWidget(QWidget *parent) : QWidget(parent), m_OpenW
 
     hbox->addSpacing(5);
     hbox->addLayout(vListbox);
-    hbox->addLayout(vbox);
+    hbox->addLayout(hButtonbox);
 
     setLayout(hbox);
 }

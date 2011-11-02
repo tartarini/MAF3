@@ -407,27 +407,33 @@ void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
     accepted_list = mafCoreRegistration::acceptObject(vme);
 
     QMenu *opMenu = (QMenu *)this->menuItemByName("Operations");
-    QList<QAction *> opActions = opMenu->actions();
-    QString op;
-    Q_FOREACH(QAction *action, opActions) {
-        op = action->data().toString();
-        action->setEnabled(accepted_list.contains(op));
+    if (opMenu) {
+        QList<QAction *> opActions = opMenu->actions();
+        QString op;
+        Q_FOREACH(QAction *action, opActions) {
+            op = action->data().toString();
+            action->setEnabled(accepted_list.contains(op));
+        }
     }
     
     QMenu *impMenu = (QMenu *)this->menuItemByName("Import");
-    QList<QAction *> impActions= impMenu->actions();
-    QString imp;
-    Q_FOREACH(QAction *action, impActions) {
-        imp = action->data().toString();
-        action->setEnabled(accepted_list.contains(imp));
+    if (impMenu) {
+        QList<QAction *> impActions= impMenu->actions();
+        QString imp;
+        Q_FOREACH(QAction *action, impActions) {
+            imp = action->data().toString();
+            action->setEnabled(accepted_list.contains(imp));
+        }
     }
     
     QMenu *expMenu = (QMenu *)this->menuItemByName("Export");
-    QList<QAction *> expActions= expMenu->actions();
-    QString exp;
-    Q_FOREACH(QAction *action, expActions) {
-        exp = action->data().toString();
-        action->setEnabled(accepted_list.contains(exp));
+    if (expMenu) {
+        QList<QAction *> expActions= expMenu->actions();
+        QString exp;
+        Q_FOREACH(QAction *action, expActions) {
+            exp = action->data().toString();
+            action->setEnabled(accepted_list.contains(exp));
+        }
     }
 }
 

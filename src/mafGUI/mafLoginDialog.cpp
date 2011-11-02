@@ -27,7 +27,6 @@ QDialog(parent)
 void mafLoginDialog::setUpGUI(){
     //Set progress bar
     m_Progress = new QProgressDialog("Waiting for authentication...", "Cancel", 0, 0, this);
-    m_Progress->setWindowModality(Qt::WindowModal);
     m_Progress->setWindowTitle(tr("Login"));
 
     // set up the layout

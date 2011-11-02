@@ -29,7 +29,7 @@ void mafViewCompoundConfigurator::parseDocument(QDomNode current, mafSplitter *p
             QDomNamedNodeMap attributes = ce.attributes();
             QString elem_name = ce.tagName();
             if (elem_name == "splitter") {
-                mafSplitter *splitter = new mafSplitter(parent);
+                mafSplitter *splitter = new mafSplitter(Qt::Horizontal, parent);
                 if (parent == NULL) {
                     // parent is the root object, this is the first splitter created
                     m_RootObject = splitter;

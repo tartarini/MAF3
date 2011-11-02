@@ -11,7 +11,7 @@
 
 #include "mafSplitter.h"
 
-mafSplitter::mafSplitter(QWidget * parent) : QSplitter( parent ) {
+mafSplitter::mafSplitter(Qt::Orientation orientation, QWidget * parent) : QSplitter(orientation, parent ) {
     setOpaqueResize(true);
 }
 
