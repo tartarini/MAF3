@@ -30,11 +30,15 @@ mafObjectBase::mafObjectBase(const QString code_location) : QObject(), m_UIFilen
 
 mafObjectBase::~mafObjectBase() {
     // need to anticipate the 'destroyed()' signal from QObject
-    // to allws mafObjectRegitry to remove it from the hash, otherwise
-    // if the signal is sent from the parent QObject, this subclas has
+    // to allows mafObjectRegitry to remove it from the hash, otherwise
+    // if the signal is sent from the parent QObject, this subclass has
     // been already destroyed and its m_ObjectId is not more valid.
     mafObjectRegistry::instance()->removeObject(m_ObjectId);
     m_ObjectId = -1;
+}
+
+bool mafObjectBase::initialize() {
+    return true;
 }
 
 void mafObjectBase::retain() {
