@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -34,7 +34,6 @@ mafInteractionManager::~mafInteractionManager() {
 }
 
 void mafInteractionManager::initializeConnection() {
-    mafRegisterLocalCallback("maf.local.resources.view.select", this, "setActiveView(mafCore::mafObjectBase *)")
     // VME selection callback.
     // Callback related to the VME selection
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)")
@@ -46,14 +45,27 @@ void mafInteractionManager::mousePress(double *pos, unsigned long modifiers, maf
     // Ask the visual pipes to pick a VME
     Q_EMIT vmePickSignal(pos, modifiers, proxy, e);
 
+    mafView *activeView(NULL);
+    QObject *renderWidget = QObject::sender();
+    if (renderWidget) {
+        QObject *view = renderWidget->property("viewObject").value<QObject *>();
+        if (view) {
+            activeView = qobject_cast<mafView *>(view);
+        }
+    }
+
     // m_VME is initialized with the picked VME if any otherwise it remains NULL
     if(m_VME && m_VME->activeInteractor()) {
         m_VME->activeInteractor()->mousePress(pos, modifiers, m_VME, e);
         if(!m_VME->activeInteractor()->isBlocking() && m_DefaultInteractor) {
             m_DefaultInteractor->mousePress(pos, modifiers, m_VME, e);
         }
-    } else if (m_DefaultInteractor) {
-        m_DefaultInteractor->mousePress(pos, modifiers, m_VME, e);
+    } else if (activeView) {
+        // Initialize the default interactor for the picked view.
+        m_DefaultInteractor = activeView->activeInteractor();
+        if (m_DefaultInteractor) {
+            m_DefaultInteractor->mousePress(pos, modifiers, m_VME, e);
+        }
     }
 }
 
@@ -149,11 +161,6 @@ void mafInteractionManager::mouseWheelBackward(unsigned long modifiers, QEvent *
 
 void mafInteractionManager::vmePicked(double *pos, unsigned long modifiers, mafVME *vme, QEvent *e) {
     m_VME = vme;
-}
-
-void mafInteractionManager::setActiveView(mafObjectBase *obj) {
-    mafView *v = qobject_cast<mafView *>(obj);
-    m_DefaultInteractor = v->activeInteractor();
 }
 
 void mafInteractionManager::vmeSelect(mafObjectBase *node) {

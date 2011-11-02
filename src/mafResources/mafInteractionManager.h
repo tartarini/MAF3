@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -69,9 +69,6 @@ private Q_SLOTS:
     /// called when a vme has been picked
     void vmePicked(double *pos, unsigned long modifiers, mafVME *vme, QEvent *e);
     
-    /// called when a view is selected, used for initializing the default interactor.
-    void setActiveView(mafCore::mafObjectBase *obj);
-
     /// called when select a vme
     void vmeSelect(mafCore::mafObjectBase *obj);
     
@@ -94,7 +91,6 @@ private:
 
     mafVME *m_VME; ///< used for retrieve current interactor.
     mafInteractor *m_DefaultInteractor; ///< represents the used interactor by default, without considering vme interaction.
-    
 };
 
 } // namespace mafResources
