@@ -1,7 +1,20 @@
+/*
+ *  main.cpp
+ *  VTKButtons
+ *
+ *  Created by Paolo Quadrani on 27/10/11.
+ *  Copyright 2011 B3C. All rights reserved.
+ *
+ *  See License at: http://tiny.cc/QXJ4D
+ *
+ */
+
 #include <QtGui/QApplication>
 
 #include <mafMainWindow.h>
 #include <mafLogic.h>
+
+#include "mafViewOrthoSlice.h"
 
 //#include <mafViewScriptInterpreterPython.h>
 //#include <mafInterpreterPreferencesWidget.h>
@@ -30,12 +43,13 @@ int main(int argc, char *argv[]) {
     // to the mafObjectFactory can be done using the following macro:
     // mafRegisterObject(myNamespace::myClassCustom);
 //    mafRegisterObject(mafScriptInterpreter::mafViewScriptInterpreterPython);
+    mafRegisterObject(mafViewOrthoSlice);
 
     // Plug the object's information into the framework
 //    logic->plugObject("mafResources::mafOperation", "mafResources::mafOperationTransform", "Transform");
 
     // Plug a View into the application
-//    logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View 3D");
+    logic->plugObject("mafResources::mafView", "mafViewOrthoSlice", "OrthoSlice");
     // ... and customize it telling to use mafPipeVisualVTKSurface visual pipe to render vtkPolyData data type.
 //    logic->customizeVisualization("View 3D", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
 
