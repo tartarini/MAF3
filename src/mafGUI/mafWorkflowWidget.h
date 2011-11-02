@@ -30,7 +30,6 @@ public:
     mafWorkflowWidget(QWidget *parent = 0);
     QPushButton *m_OpenWorkbenchButton; ///< Open external workbench (Taverna).
     QPushButton *m_SubmitButton; ///< Submit workflow.
-    QPushButton *m_RemoveButton; ///< Remove workflow.
     QListWidget *m_WorkflowList; ///< List of available workflow.
     QListWidget *m_ParametersList; ///< List of parameters file.
 };
