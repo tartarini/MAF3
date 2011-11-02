@@ -173,10 +173,6 @@ void mafResource::setMemento(mafMemento *memento, bool deep_memento) {
     }
 }
 
-bool mafResource::initialize() {
-    return true;
-}
-
 void mafResource::terminate() {
 }
 
