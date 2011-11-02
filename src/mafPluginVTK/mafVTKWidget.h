@@ -28,6 +28,8 @@ This class overloads VKT mouse events and forward them to EventBus.
 */
 class MAFPLUGINVTKSHARED_EXPORT mafVTKWidget : public QVTKWidget {
     Q_OBJECT
+    Q_PROPERTY(QVariant viewObject READ viewObject WRITE setViewObject)
+
     /// typedef macro.
     mafSuperclassMacro(QVTKWidget);
 public:
@@ -48,6 +50,12 @@ public:
 
     /// Allows to show the axes representing the global reference system. This method has to be called after that the renderer has been added to the renderwindow.
     void showAxes(bool show = true);
+
+    /// Allows to assign the mafView associated to the widget.
+    void setViewObject(const QVariant view);
+
+    /// Allows to retrieve the mafView associated to th widget.
+    QVariant viewObject() const;
 
     //////////////////////////////////////////////// Layers API
 
@@ -118,6 +126,7 @@ private:
     QHash<QString, vtkRenderer *> m_LayerHash; ///< Hash table that store the renderers associated with specific layer.
     vtkRenderer *m_RendererTool; ///< Renderer associated to the tool layer.
     vtkRenderer *m_RendererBase; ///< Renderer associated to the base layer.
+    QObject *m_View; ///< Link to the corresponding mafView
 };
 
 /////////////////////////////////////////////////////////////
@@ -126,6 +135,16 @@ private:
 
 inline QList<QString> mafVTKWidget::layersList() const {
     return m_LayerHash.keys();
+}
+
+inline void mafVTKWidget::setViewObject(const QVariant view) {
+    m_View = view.value<QObject *>();
+}
+
+inline QVariant mafVTKWidget::viewObject() const {
+    QVariant v;
+    v.setValue<QObject *>(m_View);
+    return v;
 }
 
 } // namespace mafPluginVTK
