@@ -21,7 +21,7 @@
 #include <mafHierarchy.h>
 #include <mafVisitorFindSceneNodeByVMEHash.h>
 
-// vtk
+// VTK
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindowInteractor.h>
@@ -44,6 +44,9 @@ bool mafViewVTK::initialize() {
         // Create the instance of the VTK Widget
         m_RenderWidget = new mafVTKWidget();
         m_RenderWidget->setObjectName("VTKWidget");
+        QVariant v;
+        v.setValue<QObject*>(this);
+        ((mafVTKWidget*)m_RenderWidget)->setViewObject(v);
         m_Renderer = ((mafVTKWidget*)m_RenderWidget)->renderer();
         ((mafVTKWidget*)m_RenderWidget)->showAxes(true);
     
