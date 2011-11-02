@@ -78,6 +78,7 @@ testViewCustom::testViewCustom(const QString code_location) : mafView(code_locat
 
 bool testViewCustom::initialize() {
     Superclass::setupSceneGraph();
+    return true;
 }
 
 
