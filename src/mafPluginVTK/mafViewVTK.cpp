@@ -37,38 +37,39 @@ mafViewVTK::mafViewVTK(const QString code_location) : mafView(code_location), m_
 
 mafViewVTK::~mafViewVTK() {
     mafDEL(m_PipeVisualSelection);
-/*    if(m_Renderer) {
-        m_Renderer->Delete();
-        m_Renderer = NULL;
-    }*/
 }
 
-void mafViewVTK::create() {
-    Superclass::create();
-       
-    // Create the instance of the VTK Widget
-    m_RenderWidget = new mafVTKWidget();
-    m_RenderWidget->setObjectName("VTKWidget");
-    m_Renderer = ((mafVTKWidget*)m_RenderWidget)->renderer();
-    ((mafVTKWidget*)m_RenderWidget)->showAxes(true);
+bool mafViewVTK::initialize() {
+    if (Superclass::initialize()) {
+        // Create the instance of the VTK Widget
+        m_RenderWidget = new mafVTKWidget();
+        m_RenderWidget->setObjectName("VTKWidget");
+        m_Renderer = ((mafVTKWidget*)m_RenderWidget)->renderer();
+        ((mafVTKWidget*)m_RenderWidget)->showAxes(true);
     
-    //create the instance for selection pipe.
-    m_PipeVisualSelection = mafNEW(mafPluginVTK::mafPipeVisualVTKSelection);
-    m_PipeVisualSelection->setGraphicObject(m_RenderWidget);
+        //create the instance for selection pipe.
+        m_PipeVisualSelection = mafNEW(mafPluginVTK::mafPipeVisualVTKSelection);
+        m_PipeVisualSelection->setGraphicObject(m_RenderWidget);
     
-    // push camera interactor
-    mafInteractorVTKCamera *interactor = mafNEW(mafPluginVTK::mafInteractorVTKCamera);
-    vtkRenderWindowInteractor *iren = ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->GetInteractor();
-    interactor->setInteractorVTK(iren);
-    pushInteractor(interactor);
-    mafDEL(interactor);
+        // push camera interactor
+        mafInteractorVTKCamera *interactor = mafNEW(mafPluginVTK::mafInteractorVTKCamera);
+        vtkRenderWindowInteractor *iren = ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->GetInteractor();
+        interactor->setInteractorVTK(iren);
+        pushInteractor(interactor);
+        mafDEL(interactor);
+
+        // Call always at the end of the initialization process to say the mafView to fill the SceneGraph
+        // with the actual hierarchy present in the VME tree.
+        setupSceneGraph();
+        return true;
+    }
+    return false;
 }
 
 mafSceneNode *mafViewVTK::createSceneNode(mafVME *vme) {
-    mafSceneNode *sceneNode = new mafSceneNodeVTK(vme, m_RenderWidget, "", mafCodeLocation); 
+    mafSceneNode *sceneNode = new mafSceneNodeVTK(vme, m_RenderWidget, "", mafCodeLocation);
     return sceneNode;
 }
-
 
 void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
     if (node != NULL && node->visualPipe()) {
