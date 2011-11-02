@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Paolo Quadrani on 30/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -76,7 +76,7 @@ Q_SIGNALS:
     /// Notify the clear of all the scene-graphs.
     void clearViewsSignal();
     
-    /// Notify the fill of all the scenegraphs.
+    /// Notify the fill of all the SceneGraphs.
     void fillViewsSignal();
 
     /// Notify the destruction on all views
@@ -123,7 +123,7 @@ private Q_SLOTS:
     /// Clear the scene-graphs of each view. 
     void clearViews();
 
-    /// fill the scenegraphs of each view. 
+    /// fill the SceneGraphs of each view. 
     void fillViews();
 
     /// Allows to register the information of bindings between data type and visual pipe for the given view type.
@@ -151,9 +151,6 @@ private:
 
     /// Delete all created views
     void destroyAllViews();
-
-    /// Fill sceneGraph with sceneNodes.
-    void fillSceneGraph(mafView *v, mafCore::mafHierarchy *hierarchy);
     
     /// Clear the scene-graph for view in the argument.
     void clearView(mafCore::mafObjectBase *view);
