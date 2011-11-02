@@ -18,6 +18,7 @@
 #include "mafGUIApplicationSettingsDialog.h"
 #include "mafTreeItemSceneNodeDelegate.h"
 #include "mafOperationWidget.h"
+#include "mafViewCompoundConfigurator.h"
 
 #include <mafObjectBase.h>
 
@@ -41,7 +42,10 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     mafRegisterLocalCallback("maf.local.gui.new", this, "newWorkingSession()");
 
     mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)")
-    
+
+    mafRegisterLocalSignal("maf.local.gui.compoundWidgetConfigure", this, "parseCompoundLayoutFileSignal(QString)");
+    mafRegisterLocalCallback("maf.local.gui.compoundWidgetConfigure", this, "parseCompoundLayoutFile(QString)")
+
     // VME selection callbacks.
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateMenuForSelectedVme(mafCore::mafObjectBase *)")
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateTreeForSelectedVme(mafCore::mafObjectBase *)")
@@ -53,7 +57,6 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     mafRegisterLocalCallback("maf.local.resources.view.select", this, "viewSelected(mafCore::mafObjectBase *)");
     mafRegisterLocalCallback("maf.local.resources.view.noneViews", this, "viewDestroyed()");
     mafRegisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "setVMECheckState(mafCore::mafObjectBase *, bool)");
-
 
     m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
     connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*)), this, SLOT(showGui(mafCore::mafProxyInterface*)));
@@ -207,6 +210,14 @@ QDomNode mafGUIManager::parseMenuTree(QDomNode current) {
     }
     
     return current;
+}
+
+QObject *mafGUIManager::parseCompoundLayoutFile(QString layoutFile) {
+    mafViewCompoundConfigurator *configurator = new mafViewCompoundConfigurator();
+    configurator->parseConfigurationFile(layoutFile);
+    QObject *obj = configurator->rootObject();
+    delete configurator;
+    return obj;
 }
 
 void mafGUIManager::createActions() {

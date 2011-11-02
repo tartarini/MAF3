@@ -48,6 +48,7 @@ class mafGUIApplicationSettingsPage;
  - maf.local.gui.action.copy
  - maf.local.gui.action.paste
  - maf.local.gui.action.about
+ - maf.local.gui.compoundWidgetConfigure
  */
 class MAFGUISHARED_EXPORT mafGUIManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -115,7 +116,7 @@ private:
     /// Create the toolbar associated to the Dom node parsed.
     void createToolbar(QDomElement node);
 
-    /// Create the default menu for the application in case that the mnu file has not been found.
+    /// Create the default menu for the application in case that the .mnu file has not been found.
     void createDefaultMenus();
 
     /// Manage the filename of the recent file.
@@ -160,6 +161,9 @@ Q_SIGNALS:
 
     /// Signal used to ask for updating of application name.
     void updateApplicationName();
+
+    /// Signal that allows to trigger the parse of compound widget's layout and return the root object
+    QObject *parseCompoundLayoutFileSignal(QString layoutFile);
 
 public Q_SLOTS:
     /// Fill the operation and view menu with the plugged objects.
@@ -214,7 +218,7 @@ private Q_SLOTS:
     void updateTreeForSelectedVme(mafCore::mafObjectBase *vme);
 
     /// Called when a scene node has been selected.
-    /** This method will update gui for the selected scene node */
+    /** This method will update GUI for the selected scene node */
     void updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeVisual);
     
     /// Slot needed to intercept the started operation and ask it for the GUI filename.
@@ -231,6 +235,9 @@ private Q_SLOTS:
     
     /// open a working session
     void open();
+
+    /// Allows to parse the compound widget's layout and return the root object
+    QObject *parseCompoundLayoutFile(QString layoutFile);
 
 private:
     /// return the data object inside an item in order to retrieve the data object and not the visual one (for example scene-node).
