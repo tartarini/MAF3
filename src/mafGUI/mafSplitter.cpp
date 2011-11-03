@@ -26,7 +26,7 @@ void mafSplitter::adjustPosition(int p) {
 
 void mafSplitter::setViews(QList<mafCore::mafObjectBase*> &vlist) {
     if (m_Views.count() != 0) {
-        // remove the old render widget from the slitter
+        // remove the old render widget from the splitter
         QObjectList c = this->children();
         Q_FOREACH(QObject *obj, c) {
             if (obj) {
