@@ -34,6 +34,9 @@ void mafViewCompoundConfigurator::parseDocument(QDomNode current, mafSplitter *p
                     // parent is the root object, this is the first splitter created
                     m_RootObject = splitter;
                 }
+                QString sepThikness = attributes.namedItem("separatorThikness").nodeValue();
+                QString sepEnabled = attributes.namedItem("enableSeparator").nodeValue();
+                splitter->setHandleWidth(sepThikness.toInt());
                 QString orientation = attributes.namedItem("orientation").nodeValue();
                 if (orientation == "vertical") {
                     // Check only for vertical, horizontal is the default.
@@ -49,6 +52,8 @@ void mafViewCompoundConfigurator::parseDocument(QDomNode current, mafSplitter *p
                 if (splitter_dnl.count() > 0) {
                     parseDocument(node, splitter);
                 }
+                QSplitterHandle *handler = splitter->handle(1);
+                handler->setEnabled(sepEnabled.toInt() != 0);
             } else if (elem_name == "view") {
                 // We are at the leaf of the hierarchy tree: view objects are added at the parent splitter.
                 QString viewClassType = attributes.namedItem("classtype").nodeValue();
