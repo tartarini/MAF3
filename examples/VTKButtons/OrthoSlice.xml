@@ -1,10 +1,10 @@
 <compoundView>
-	<splitter orientation="vertical" sizes="100, 100">
-		<splitter orientation="orizontal" sizes="100, 100">
+	<splitter orientation="vertical" sizes="100, 100" separatorThikness="1" enableSeparator="1">
+		<splitter orientation="orizontal" sizes="100, 100" separatorThikness="1" enableSeparator="1">
 			<view classtype="mafPluginVTK::mafViewVTK"></view>
 			<view classtype="mafPluginVTK::mafViewVTK"></view>
 		</splitter>
-		<splitter orientation="orizontal" sizes="100, 100">
+		<splitter orientation="orizontal" sizes="100, 100" separatorThikness="1" enableSeparator="1">
 			<view classtype="mafPluginVTK::mafViewVTK"></view>
 			<view classtype="mafPluginVTK::mafViewVTK"></view>
 		</splitter>
