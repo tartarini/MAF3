@@ -29,7 +29,7 @@ class mafPipeVisual;
  */
 class MAFRESOURCESSHARED_EXPORT mafView : public mafResource {
     Q_OBJECT
-    Q_PROPERTY(QVariant renderWidget READ renderWidget WRITE setRenderingWidget)
+    Q_PROPERTY(QVariant renderWidget READ renderWidget WRITE setRenderingWidget STORED false)
     Q_PROPERTY(QString configurationFile READ configurationFile WRITE setConfigurationFile)
     Q_PROPERTY(QVariant hierarchy READ hierarchy STORED false)
 
@@ -85,9 +85,6 @@ public:
     ///Get the selected SceneNode.
     mafSceneNode *selectedSceneNode();
 
-    /// Set name of the view (usually is the name that appears on the menu.
-    void setViewName(QString view_name);
-    
     /// update scene nodes information from VMEs.
     void updateSceneNodesInformation();
     
@@ -108,7 +105,6 @@ protected:
     /// Emit signal to inform about visual pipe of the current node.
     void notityVisualPipeSelected();
     
-    QString m_ViewName; ///< Name associated to the specific view (usually name that appears in the view menu).
     QObject *m_RenderWidget; ///< Rendering widget for the view.
     mafCore::mafHierarchyPointer m_Scenegraph; ///< SceneGraph
     QHash<QString, QString> *m_VisualPipeHash; ///< Bind between dataType and Visual pipe.
@@ -134,9 +130,6 @@ public Q_SLOTS:
 
     /// Update view.
     virtual void updateView();
-
-    /// Get name of the view.
-    QString viewName() const;
 
 private Q_SLOTS:
 
@@ -181,14 +174,6 @@ inline QVariant mafView::hierarchy() const {
 
 inline mafSceneNode * mafView::selectedSceneNode(){
     return m_SelectedNode;
-}
-
-inline void  mafView::setViewName(QString view_name){
-    m_ViewName = view_name ;
-}
-
-inline QString mafView::viewName() const{
-    return m_ViewName;
 }
 
 } //namespace mafResources
