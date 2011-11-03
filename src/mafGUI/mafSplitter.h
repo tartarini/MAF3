@@ -29,6 +29,9 @@ public:
     ///Object constructor
     mafSplitter(Qt::Orientation orientation = Qt::Horizontal, QWidget * parent = 0);
 
+    /// Object destructor
+    ~mafSplitter();
+
     /// Allows to adjust position of the split panel
     void adjustPosition(int p);
 

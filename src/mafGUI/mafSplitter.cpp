@@ -15,6 +15,13 @@ mafSplitter::mafSplitter(Qt::Orientation orientation, QWidget * parent) : QSplit
     setOpaqueResize(true);
 }
 
+mafSplitter::~mafSplitter() {
+    int v = 0;
+    for (; v < m_Views.count(); ++v) {
+        mafDEL(m_Views[v]);
+    }
+}
+
 void mafSplitter::paintEvent (QPaintEvent *) {
     Q_EMIT synchronizeSplitterSignal(this);
 }
