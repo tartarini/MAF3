@@ -31,7 +31,7 @@ mafWorkflowWidget::mafWorkflowWidget(QWidget *parent) : QWidget(parent), m_OpenW
     m_WorkflowList = new QListWidget(this);
     m_ParametersList = new QListWidget(this);
  
-    m_OpenWorkbenchButton = new QPushButton("Open Taverna Workbench", this);
+    m_OpenWorkbenchButton = new QPushButton("Open Taverna", this);
     m_SubmitButton = new QPushButton("Submit workflow", this);
 
     hButtonbox->setSpacing(1);
