@@ -17,7 +17,8 @@ mafSplitter::mafSplitter(Qt::Orientation orientation, QWidget * parent) : QSplit
 
 mafSplitter::~mafSplitter() {
     int v = 0;
-    for (; v < m_Views.count(); ++v) {
+    int n = m_Views.count();
+    for (; v < n; ++v) {
         mafDEL(m_Views[v]);
     }
 }
@@ -33,6 +34,8 @@ void mafSplitter::adjustPosition(int p) {
 
 void mafSplitter::setViews(QList<mafCore::mafObjectBase*> &vlist) {
     int v = 0;
+    int n = m_Views.count();
+
     if (m_Views.count() != 0) {
         // remove the old render widget from the splitter
         QObjectList c = this->children();
@@ -42,13 +45,14 @@ void mafSplitter::setViews(QList<mafCore::mafObjectBase*> &vlist) {
                 delete obj;
             }
         }
-        for (; v < m_Views.count(); ++v) {
+        for (; v < n; ++v) {
             mafDEL(m_Views[v]);
         }
     }
     // Add the view list to the m_Views
     v = 0;
-    for (; v < m_Views.count(); ++v) {
+    n = vlist.count();
+    for (; v < n; ++v) {
         addView(vlist[v]);
     }
 }
