@@ -44,8 +44,9 @@ void mafViewCompoundConfigurator::parseDocument(QDomNode current, mafSplitter *p
                 }
                 QStringList sizesString = attributes.namedItem("sizes").nodeValue().split(",", QString::SkipEmptyParts);
                 QList<int> sizes;
-                sizes.append(sizesString[0].toInt());
-                sizes.append(sizesString[1].toInt());
+                for (int s = 0; s < sizesString.count(); ++s) {
+                    sizes.append(sizesString[s].toInt());
+                }
                 splitter->setSizes(sizes);
                 // Check if there are children and parse them...
                 QDomNodeList splitter_dnl = node.childNodes();
