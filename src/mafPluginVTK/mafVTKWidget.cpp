@@ -2,10 +2,10 @@
  *  mafVTKWidget.cpp
  *  mafPluginVTK
  *
- *  Created by Roberto Mucci on 12/10/10.
- *  Copyright 2009 B3C.s All rights reserved.
+ *  Created by Roberto Mucci - Paolo Quadrani on 12/10/10.
+ *  Copyright 2011 B3C.s All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -29,7 +29,7 @@ using namespace mafEventBus;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f), m_Axes(NULL), m_RendererBase(NULL), m_RendererTool(NULL), m_View(NULL) {
+mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f), m_Axes(NULL), m_InteractionStarted(false), m_RendererBase(NULL), m_RendererTool(NULL), m_View(NULL) {
     initializeConnections();
 }
 
@@ -143,6 +143,8 @@ void mafVTKWidget::mousePressEvent(QMouseEvent* e) {
         return;
     }
 
+    m_InteractionStarted = true;
+
     // give interactor the event information
     iren->SetEventInformationFlipY(e->x(), e->y(),
                                    (e->modifiers() & Qt::ControlModifier) > 0 ? 1 : 0,
@@ -167,7 +169,9 @@ void mafVTKWidget::mouseReleaseEvent(QMouseEvent* e) {
         return;
     }
 
-    // give vtk event information
+    m_InteractionStarted = false;
+
+    // give VTK event information
     iren->SetEventInformationFlipY(e->x(), e->y(),
                                    (e->modifiers() & Qt::ControlModifier) > 0 ? 1 : 0,
                                    (e->modifiers() & Qt::ShiftModifier ) > 0 ? 1 : 0);
@@ -189,6 +193,10 @@ void mafVTKWidget::mouseMoveEvent(QMouseEvent* e) {
         return;
     }
     
+    if (!m_InteractionStarted) {
+        return;
+    }
+
     // give interactor the event information
     iren->SetEventInformationFlipY(e->x(), e->y(),
                                    (e->modifiers() & Qt::ControlModifier) > 0 ? 1 : 0,

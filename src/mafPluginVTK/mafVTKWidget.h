@@ -2,10 +2,10 @@
  *  mafVTKWidget.h
  *  mafPluginVTK
  *
- *  Created by Roberto Mucci on 12/10/10.
- *  Copyright 2009 B3C.s All rights reserved.
+ *  Created by Roberto Mucci - Paolo Quadrani on 12/10/10.
+ *  Copyright 2011 B3C.s All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -122,6 +122,7 @@ private:
     unsigned long m_Modifiers;  ///< Optional modifiers for the button.
 
     mafAxes *m_Axes; ///< Tool representing a global reference system.
+    bool m_InteractionStarted; ///< Monitor the mouse event so to send them to the mafInteractionManager only if the mousepress has been appened.
     
     QHash<QString, vtkRenderer *> m_LayerHash; ///< Hash table that store the renderers associated with specific layer.
     vtkRenderer *m_RendererTool; ///< Renderer associated to the tool layer.
