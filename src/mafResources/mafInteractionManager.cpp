@@ -39,6 +39,10 @@ void mafInteractionManager::initializeConnection() {
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)")
 }
 
+void mafInteractionManager::resetDefaultInteractor(QObject *obj) {
+    m_DefaultInteractor = NULL;
+}
+
 void mafInteractionManager::mousePress(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e) {
     // Reset the VME picked.
     m_VME = NULL;
@@ -64,6 +68,7 @@ void mafInteractionManager::mousePress(double *pos, unsigned long modifiers, maf
         // Initialize the default interactor for the picked view.
         m_DefaultInteractor = activeView->activeInteractor();
         if (m_DefaultInteractor) {
+            connect(m_DefaultInteractor, SIGNAL(destroyed()), this, SLOT(resetDefaultInteractor()));
             m_DefaultInteractor->mousePress(pos, modifiers, m_VME, e);
         }
     }

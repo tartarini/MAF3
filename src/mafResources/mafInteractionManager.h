@@ -71,6 +71,9 @@ private Q_SLOTS:
     
     /// called when select a vme
     void vmeSelect(mafCore::mafObjectBase *obj);
+
+    /// Reset the default interactor when the corresponding reference has been destroyed.
+    void resetDefaultInteractor(QObject *obj = 0);
     
 public:
     /// Return an instance of the Manager
