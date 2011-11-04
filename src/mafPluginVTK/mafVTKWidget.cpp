@@ -29,7 +29,7 @@ using namespace mafEventBus;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f), m_Axes(NULL), m_RendererBase(NULL), m_RendererTool(NULL) {
+mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f), m_Axes(NULL), m_RendererBase(NULL), m_RendererTool(NULL), m_View(NULL) {
     initializeConnections();
 }
 

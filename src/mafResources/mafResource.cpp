@@ -194,5 +194,3 @@ mafInteractor *mafResource::popInteractor() {
     mafDEL(interactor);
     return interactor;
 }
-
-

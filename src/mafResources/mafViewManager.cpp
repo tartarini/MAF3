@@ -204,7 +204,7 @@ void mafViewManager::createView(QString view_type, QString view_name) {
     mafObjectBase *obj = mafNEWFromString(view_type);
     mafView *v = qobject_cast<mafResources::mafView *>(obj);
     if(v != NULL) {
-        v->setViewName(view_name);
+        v->setObjectName(view_name);
         if (m_VisualizationBindHash.contains(view_name)) {
             v->plugVisualPipeBindingHash(m_VisualizationBindHash.value(view_name));
         }

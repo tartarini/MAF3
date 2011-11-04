@@ -15,6 +15,13 @@ mafSplitter::mafSplitter(Qt::Orientation orientation, QWidget * parent) : QSplit
     setOpaqueResize(true);
 }
 
+mafSplitter::~mafSplitter() {
+    int v = 0;
+    for (; v < m_Views.count(); ++v) {
+        mafDEL(m_Views[v]);
+    }
+}
+
 void mafSplitter::paintEvent (QPaintEvent *) {
     Q_EMIT synchronizeSplitterSignal(this);
 }
@@ -26,7 +33,7 @@ void mafSplitter::adjustPosition(int p) {
 
 void mafSplitter::setViews(QList<mafCore::mafObjectBase*> &vlist) {
     if (m_Views.count() != 0) {
-        // remove the old render widget from the slitter
+        // remove the old render widget from the splitter
         QObjectList c = this->children();
         Q_FOREACH(QObject *obj, c) {
             if (obj) {

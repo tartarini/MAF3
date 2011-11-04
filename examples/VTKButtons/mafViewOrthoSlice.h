@@ -29,4 +29,8 @@ public:
 protected:
     /// Object destructor.
     /* virtual */ ~mafViewOrthoSlice();
+
+Q_SIGNALS:
+    /// Signal used to propagate the mafSceneNode visibility.
+    void propagateSceneNodeShowSignale();
 };

@@ -14,6 +14,7 @@
 #include <mafResourcesRegistration.h>
 #include <mafEventBusManager.h>
 #include <mafViewManager.h>
+#include <mafView.h>
 #include <mafMemento.h>
 
 using namespace mafCore;
@@ -54,6 +55,32 @@ void testViewManagerObserver::viewCreatedSlot(mafCore::mafObjectBase *view) {
     m_View = view;
 }
 
+/**
+ Class name: testViewManagerObserver
+ This class implements the observer for the signals emitted by the mafViewManager.
+ */
+class testViewCustom : public mafView {
+    Q_OBJECT
+    /// typedef macro.
+    mafSuperclassMacro(mafResources::mafView);
+    
+public:
+    /// Object constructor.
+    testViewCustom(const QString code_location = "");
+    
+    /// Crete view.
+    /*virtual*/ bool initialize();
+};
+
+testViewCustom::testViewCustom(const QString code_location) : mafView(code_location) {
+    
+}
+
+bool testViewCustom::initialize() {
+    Superclass::setupSceneGraph();
+    return true;
+}
+
 
 /**
  Class name: mafViewManagerTest
@@ -73,10 +100,13 @@ private Q_SLOTS:
 
         m_EventBus = mafEventBusManager::instance();
         m_ViewManager = mafViewManager::instance();
+        
+        mafRegisterObject(testViewCustom);
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
+        mafUnregisterObject(testViewCustom);
         m_ViewManager->shutdown();
 
         delete m_Observer;
@@ -111,7 +141,7 @@ void mafViewManagerTest::mafViewManagerAllocationTest() {
 
 void mafViewManagerTest::createViewTest() {
     // Create a new view from its string type name.
-    QString vt("mafResources::mafView");
+    QString vt("testViewCustom");
     QString vn("View test");
 
     // Send the message through the vent bus to create it.

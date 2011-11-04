@@ -36,7 +36,7 @@ mafMementoViewManager::mafMementoViewManager(const mafObjectBase *obj, const maf
         if(view != NULL) {
             item.m_Name = "ViewName";
             item.m_Multiplicity = 1;
-            item.m_Value = QVariant(view->viewName());
+            item.m_Value = QVariant(view->objectName());
             list->append(item);
         }
     }
