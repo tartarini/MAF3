@@ -39,7 +39,7 @@ public:
     /// object destructor.
     /*virtual*/ ~mafNetworkConnectorQXMLRPC();
 
-    /// create the unique instance of the client.
+    /// create the unique instance of the client, proxyHost and proxyPort are optional.
     /*virtual*/ void createClient(const QString hostName, const unsigned int port);
 
     /// create the unique instance of the server.
@@ -56,6 +56,9 @@ public:
 
     /// Set authentication header map.
     void setAuthenticationHeader(QMap<QString, QString> *headerMap);
+
+    /// Set proxy values.
+    void setProxy(const QString & host, int port);
 
 Q_SIGNALS:
     /// signal for the registration of the functions with parameters
@@ -93,6 +96,8 @@ private:
     int m_RequestId; ///< id test for a specific (experimental) request
 
     QMap<QString, QString> *m_HeaderMap; ///< Map with header authentication (like cookie).
+    QString m_ProxyHostName; ///< Proxy host
+    int m_ProxyPort; ///< Proxy port
 };
 
 } //namespace mafEventBus

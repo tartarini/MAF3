@@ -54,7 +54,16 @@ void mafNetworkConnectorQXMLRPC::createClient(const QString hostName, const unsi
         result = connect( m_Client, SIGNAL(failed( int, int, QString )),
                  this, SLOT(processFault( int, int, QString )) );
     }
+    if (!m_ProxyHostName.isEmpty()) {
+        m_Client->setProxy(m_ProxyHostName, m_ProxyPort);
+    }
+
     m_Client->setHost( hostName, port );
+}
+
+void mafNetworkConnectorQXMLRPC::setProxy(const QString & host, int port) {
+    m_ProxyHostName = host;
+    m_ProxyPort = port;
 }
 
 void mafNetworkConnectorQXMLRPC::createServer(const unsigned int port) {
