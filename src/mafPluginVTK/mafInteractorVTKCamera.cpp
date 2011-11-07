@@ -5,7 +5,7 @@
  *  Created by Daniele Giunchi - Paolo Quadrani on 7/7/11.
  *  Copyright 2011 B3C.s All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -15,6 +15,7 @@
 
 #include <vtkCommand.h>
 #include <vtkRenderWindowInteractor.h>
+#include <vtkMAFInteractorStyleTrackballActor.h>
 
 using namespace mafPluginVTK;
 
@@ -26,7 +27,7 @@ mafInteractorVTKCamera::~mafInteractorVTKCamera() {
 
 void mafInteractorVTKCamera::mousePress(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
     switch(((QMouseEvent *)e)->button()) {
-        m_RenderWindowInteractor->FindPokedRenderer(((QMouseEvent *)e)->x(), ((QMouseEvent *)e)->y());
+        //m_RenderWindowInteractor->FindPokedRenderer(((QMouseEvent *)e)->x(), ((QMouseEvent *)e)->y());
         case Qt::LeftButton:
             m_RenderWindowInteractor->InvokeEvent(vtkCommand::LeftButtonPressEvent, e);
             break;
