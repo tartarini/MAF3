@@ -32,6 +32,7 @@ class MAFPLUGINVTKSHARED_EXPORT mafVTKWidget : public QVTKWidget {
 
     /// typedef macro.
     mafSuperclassMacro(QVTKWidget);
+
 public:
     /// Object constructor.
     mafVTKWidget(QWidget* parent = NULL, Qt::WFlags f = 0);
@@ -56,6 +57,12 @@ public:
 
     /// Allows to retrieve the mafView associated to th widget.
     QVariant viewObject() const;
+
+    /// Allows to retrieve the bounds of visible objects for the given rendering layer.
+    double *visibleBounds(QString layerName = "base");
+
+    /// Allows to retrieve the bounds for visible objects in all the created layers.
+    double *visibleBoundsOnAllLayers();
 
     //////////////////////////////////////////////// Layers API
 

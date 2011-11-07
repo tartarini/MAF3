@@ -319,3 +319,32 @@ vtkRenderer *mafVTKWidget::renderer(const QString layerName) {
     }
     return m_LayerHash.value(layerName, NULL);
 }
+
+double *mafVTKWidget::visibleBounds(QString layerName) {
+    vtkRenderer *ren = renderer(layerName);
+    if (ren) {
+        return ren->ComputeVisiblePropBounds();
+    }
+    return NULL;
+}
+
+double *mafVTKWidget::visibleBoundsOnAllLayers() {
+    double bounds[6] = {0,1,0,1,0,1};
+    double *b(NULL);
+    vtkRenderer *ren(NULL);
+    int min_idx, max_idx;
+    
+    QHash<QString, vtkRenderer*>::iterator iter;
+    for (iter = m_LayerHash.begin(); iter != m_LayerHash.end(); iter++) {
+        b = visibleBounds(iter.key());
+        if (b) {
+            for (int i = 0; i < 3; ++i) {
+                min_idx = 2*i;
+                max_idx = 2*i+1;
+                bounds[min_idx] = qMin(bounds[min_idx], b[min_idx]);
+                bounds[max_idx] = qMax(bounds[max_idx], b[max_idx]);
+            }
+        }
+    }
+    return bounds;
+}
