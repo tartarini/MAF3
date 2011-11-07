@@ -22,6 +22,7 @@
 #include <mafVisitorFindSceneNodeByVMEHash.h>
 
 // VTK
+#include <vtkMAFInteractorStyleTrackballCamera.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindowInteractor.h>
@@ -57,6 +58,11 @@ bool mafViewVTK::initialize() {
         // push camera interactor
         mafInteractorVTKCamera *interactor = mafNEW(mafPluginVTK::mafInteractorVTKCamera);
         vtkRenderWindowInteractor *iren = ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->GetInteractor();
+        vtkMAFInteractorStyleTrackballCamera *interactorStyle = vtkMAFInteractorStyleTrackballCamera::New();
+        interactorStyle->UseDefaultRendererOn();
+        interactorStyle->SetDefaultRenderer(((mafVTKWidget*)m_RenderWidget)->renderer());
+        iren->SetInteractorStyle(interactorStyle);
+        interactorStyle->Delete();
         interactor->setInteractorVTK(iren);
         pushInteractor(interactor);
         mafDEL(interactor);
@@ -92,16 +98,27 @@ void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show) {
     Superclass::showSceneNode(node, show);
     
     if(m_VisibleObjects == 1) {
-        m_Renderer->ResetCamera();
+        resetVisualization();
     }
 
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
 }
 
 void mafViewVTK::updateView() {
-  if (((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()) {
-    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
-  }
+    if (((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()) {
+        ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
+    }
+}
+
+void mafViewVTK::resetVisualization(double *bounds) {
+    if (bounds) {
+        m_Renderer->ResetCamera(bounds);
+    } else {
+        double *b = ((mafVTKWidget*)m_RenderWidget)->visibleBounds();
+        if (b) {
+            m_Renderer->ResetCameraClippingRange(b);
+        }
+    }
 }
 
 void mafViewVTK::selectSceneNode(mafResources::mafSceneNode *node, bool select) {
@@ -116,7 +133,7 @@ void mafViewVTK::selectSceneNode(mafResources::mafSceneNode *node, bool select) 
     if(selected) {
         selected->nodeAssembly()->RemovePart(*prop);
     }
-    //select new scenenode
+    //select new SceneNode
     mafView::selectSceneNode(node,select);
     
     if(node && node->property("visibility").toBool()) {
