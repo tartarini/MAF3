@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     // Plug a View into the application
     logic->plugObject("mafResources::mafView", "mafViewOrthoSlice", "OrthoSlice");
     // ... and customize it telling to use mafPipeVisualVTKSurface visual pipe to render vtkPolyData data type.
-//    logic->customizeVisualization("View 3D", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
+    logic->customizeVisualization("VTK view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
 
 //    logic->plugObject("mafResources::mafView", "mafScriptInterpreter::mafViewScriptInterpreterPython", "Python Console");
 
