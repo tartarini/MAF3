@@ -41,7 +41,7 @@ public:
 
 private:
     /// Allow to parse the XML configuration file document.
-    void parseDocument(QDomNode current, mafSplitter *parent);
+    void parseDocument(QDomNode current, QObject *parent);
 
     mafSplitter *m_RootObject; ///< Root splitter of the compound widget.
 };
