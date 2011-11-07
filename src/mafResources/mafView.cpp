@@ -25,7 +25,7 @@ using namespace mafResources;
 using namespace mafEventBus;
 
 mafView::mafView(const QString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL), m_VisualPipeHash(NULL), m_SelectedNode(NULL),m_PipeVisualSelection(NULL), m_VisibleObjects(0), m_LayoutConfigurationFile("") {
-    m_SceneNodeList.clear();
+    m_SceneNodeHash.clear();
 
     // Callbacks related to the VME creation
     mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)")
@@ -62,7 +62,7 @@ void mafView::clearScene() {
     mafDEL(m_Scenegraph);
     m_SelectedNode = NULL;
     
-    m_SceneNodeList.clear();
+    m_SceneNodeHash.clear();
     Q_EMIT pipeVisualSelectedSignal(NULL);
     if(m_PipeVisualSelection) {
         m_PipeVisualSelection->setInput(NULL);
@@ -79,7 +79,7 @@ void mafView::setupSceneGraph() {
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
 
-    //Create root scenenode
+    //Create root SceneNode
     this->selectSceneNode(NULL, false);
     hierarchy->moveTreeIteratorToRootNode();
     QObject* rootNode = hierarchy->currentData();
@@ -115,7 +115,7 @@ void mafView::vmeAdd(mafCore::mafObjectBase *vme) {
         
         node->setParentNode(m_SelectedNode);
         m_Scenegraph->addHierarchyNode(node, m_SelectedNode);
-        m_SceneNodeList.push_back(node);
+        m_SceneNodeHash.insert(vme_to_add, node);
         
         if(m_SelectedNode == NULL) {
             vmeSelect(node);
@@ -154,7 +154,7 @@ void mafView::removeSceneNode(mafSceneNode *node) {
     disconnect(node, SIGNAL(destroyNode()),this, SLOT(sceneNodeDestroyed()));
     if(m_Scenegraph != NULL) {
         m_Scenegraph->removeHierarchyNode(node);
-        m_SceneNodeList.removeOne(node);
+        m_SceneNodeHash.remove(node->vme());
     }
 }
 
@@ -227,15 +227,40 @@ void mafView::plugVisualPipeBindingHash(QHash<QString , QString> *hash) {
     m_VisualPipeHash = hash;
 }
 
+QVariantHash mafView::visualPipeHash() const {
+    QVariantHash h;
+    QHash<QString, QString>::iterator iter = m_VisualPipeHash->begin();
+    while (iter != m_VisualPipeHash->end()) {
+        QVariant v(iter.value());
+        h.insert(iter.key(), v);
+        ++iter;
+    }
+    return h;
+}
+
+void mafView::setVisualPipeHash(const QVariantHash hash) {
+    if (m_VisualPipeHash == NULL) {
+        m_VisualPipeHash = new QHash<QString, QString>();
+    }
+    QVariantHash::const_iterator iter = hash.constBegin();
+    while (iter != hash.constEnd()) {
+        m_VisualPipeHash->insert(iter.key(), iter.value().toString());
+        ++iter;
+    }
+}
+
 mafSceneNode *mafView::sceneNodeFromVme(mafObjectBase *vme) {
-    QListIterator<mafSceneNode *> list(m_SceneNodeList);
+    /*QListIterator<mafSceneNode *> list(m_SceneNodeList);
     while (list.hasNext()) {
         mafSceneNode *sn = list.next();
         if (sn->vme()->isEqual(vme)) {
             return sn;
         }
      }
-     return NULL;
+     return NULL;*/
+    REQUIRE(vme);
+    mafVME *asked_vme = qobject_cast<mafResources::mafVME *>(vme);
+    return m_SceneNodeHash.value(asked_vme, NULL);
 }
 
 void mafView::select(bool select) {
@@ -248,13 +273,18 @@ void mafView::select(bool select) {
 void mafView::updateView() {
 }
 
+void mafView::resetVisualization(double *bounds) {
+
+}
+
 void mafView::updateSceneNodesInformation() {
-    QListIterator<mafSceneNode *> list(m_SceneNodeList);
-    while (list.hasNext()) {
-        mafSceneNode *sn = list.next();
+    QHash<mafVME *, mafSceneNode *>::iterator iter = m_SceneNodeHash.begin();
+    while (iter != m_SceneNodeHash.end()) {
+        mafSceneNode *sn = iter.value();
         
-        /// @@TODO refactor memento vme for handling Properties before adding vme. (can be a new signal for example load)
+        /// @@TODO re-factor memento vme for handling Properties before adding vme. (can be a new signal for example load)
         sn->setObjectName(sn->vme()->objectName());
         sn->setProperty("iconFile", sn->vme()->property("iconFile"));
+        ++iter;
     }
 }

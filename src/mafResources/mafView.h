@@ -31,6 +31,7 @@ class MAFRESOURCESSHARED_EXPORT mafView : public mafResource {
     Q_OBJECT
     Q_PROPERTY(QVariant renderWidget READ renderWidget WRITE setRenderingWidget STORED false)
     Q_PROPERTY(QString configurationFile READ configurationFile WRITE setConfigurationFile)
+    Q_PROPERTY(QVariantHash visualPipeHash READ visualPipeHash WRITE setVisualPipeHash)
     Q_PROPERTY(QVariant hierarchy READ hierarchy STORED false)
 
     /// typedef macro.
@@ -85,15 +86,19 @@ public:
     ///Get the selected SceneNode.
     mafSceneNode *selectedSceneNode();
 
+    /// factory method for creating SceneNode.
+    virtual mafSceneNode *createSceneNode(mafVME *vme);
+
     /// update scene nodes information from VMEs.
     void updateSceneNodesInformation();
+
+    QVariantHash visualPipeHash() const;
+    
+    void setVisualPipeHash(const QVariantHash hash);
     
 protected:
     /// Object destructor.
     /* virtual */ ~mafView();
-    
-    /// factory method for creating SceneNode.
-    virtual mafSceneNode *createSceneNode(mafVME *vme);
 
     /// Initialize the SceneGraph and fill it with the VME hierarchy.
     /**
@@ -110,7 +115,7 @@ protected:
     QHash<QString, QString> *m_VisualPipeHash; ///< Bind between dataType and Visual pipe.
     bool m_Selected; ///< Flag for active view.
     mafSceneNode *m_SelectedNode; ///< Keep track of the selected SceneNode.
-    QList<mafSceneNode *> m_SceneNodeList; ///< variable useful for rapid iteration between mafTreeItem
+    QHash<mafVME *, mafSceneNode *> m_SceneNodeHash; ///< variable useful for rapid iteration between mafTreeItem
     
     mafResources::mafPipeVisual *m_PipeVisualSelection; ///< variable with the pipe for vme selection
     
@@ -130,6 +135,9 @@ public Q_SLOTS:
 
     /// Update view.
     virtual void updateView();
+
+    /// Reset the visualization to show visible objects
+    virtual void resetVisualization(double *bounds = NULL);
 
 private Q_SLOTS:
 
