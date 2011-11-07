@@ -32,6 +32,13 @@ class MAFPLUGINVTKSHARED_EXPORT mafViewVTK : public mafResources::mafView {
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafView);
 
+public Q_SLOTS:
+    /// Update view.
+    /*virtual*/ void updateView();
+
+    /// Reset the visualization to show visible objects
+    /*virtual*/ void resetVisualization(double *bounds = NULL);
+
 public:
     /// Object constructor.
     mafViewVTK(const QString code_location = "");
@@ -45,18 +52,15 @@ public:
     /// Show scene node passed as argument.
     /*virtual*/ void showSceneNode(mafResources::mafSceneNode *node, bool show = true);
 
-    /// Update view.
-    /*virtual*/ void updateView();
-    
     /// Select a scene node.
     /*virtual*/ void selectSceneNode(mafResources::mafSceneNode *node, bool select);
+
+    /// factory method for creating SceneNode VTK.
+    /*virtual*/ mafResources::mafSceneNode *createSceneNode(mafResources::mafVME *vme);
 
 protected:
     /// Object destructor.
     /* virtual */ ~mafViewVTK();
-    
-    /// factory method for creating scenenode VTK.
-    /*virtual*/ mafResources::mafSceneNode *createSceneNode(mafResources::mafVME *vme);
 
 private:
     vtkRenderer *m_Renderer; ///< VTK render.
