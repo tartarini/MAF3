@@ -1,12 +1,20 @@
 <compoundView>
 	<splitter orientation="vertical" sizes="100, 100" separatorThikness="1" enableSeparator="1">
 		<splitter orientation="orizontal" sizes="100, 100" separatorThikness="1" enableSeparator="1">
-			<view classtype="mafPluginVTK::mafViewVTK"></view>
-			<view classtype="mafPluginVTK::mafViewVTK"></view>
+			<view classtype="mafPluginVTK::mafViewVTK" viewName="Perspective">
+				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSurface" datatype="vtkPolyData"></visualpipe>
+			</view>
+			<view classtype="mafPluginVTK::mafViewVTK" viewName="ParallelLeft">
+				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSurface" datatype="vtkPolyData"></visualpipe>
+			</view>
 		</splitter>
 		<splitter orientation="orizontal" sizes="100, 100" separatorThikness="1" enableSeparator="1">
-			<view classtype="mafPluginVTK::mafViewVTK"></view>
-			<view classtype="mafPluginVTK::mafViewVTK"></view>
+			<view classtype="mafPluginVTK::mafViewVTK" viewName="ParallelTop">
+				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSurface" datatype="vtkPolyData"></visualpipe>
+			</view>
+			<view classtype="mafPluginVTK::mafViewVTK" viewName="ParallelRight">
+				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSurface" datatype="vtkPolyData"></visualpipe>
+			</view>
 		</splitter>
 	</splitter>
 </compoundView>
