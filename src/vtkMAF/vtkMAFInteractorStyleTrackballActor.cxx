@@ -29,6 +29,7 @@
 #include <vtkRenderWindow.h>
 #include <vtkTransform.h>
 #include <vtkProp3DCollection.h>
+#include <vtkProperty.h>
 
 vtkStandardNewMacro(vtkMAFInteractorStyleTrackballActor);
 
@@ -620,7 +621,7 @@ void vtkMAFInteractorStyleTrackballActor::Prop3DTransform(vtkProp3D *prop3D,
   
   newTransform->Translate(boxCenter[0], boxCenter[1], boxCenter[2]);
   
-  // now try to get the composit of translate, rotate, and scale
+  // now try to get the composite of translate, rotate, and scale
   newTransform->Translate(-(orig[0]), -(orig[1]), -(orig[2]));
   newTransform->PreMultiply();
   newTransform->Translate(orig[0], orig[1], orig[2]);
@@ -641,4 +642,177 @@ void vtkMAFInteractorStyleTrackballActor::Prop3DTransform(vtkProp3D *prop3D,
 
 vtkAssembly *vtkMAFInteractorStyleTrackballActor::GetInteractionAssembly() {
     return InteractionAssembly;
+}
+
+void vtkMAFInteractorStyleTrackballActor::OnChar() 
+{
+    vtkRenderWindowInteractor *rwi = this->Interactor;
+
+    switch (rwi->GetKeyCode()) 
+    {
+    case 'm' :
+    case 'M' :
+        if (this->AnimState == VTKIS_ANIM_OFF) 
+        {
+            this->StartAnimate();
+        }
+        else 
+        {
+            this->StopAnimate();
+        }
+        break;
+
+    case 'Q' :
+    case 'q' :
+    case 'e' :
+    case 'E' :
+        break;
+
+    case 'f' :      
+    case 'F' :
+        {
+            if(this->CurrentRenderer!=0)
+            {
+                this->AnimState = VTKIS_ANIM_ON;
+                vtkAssemblyPath *path = NULL;
+                this->FindInteractiveRenderer(rwi->GetEventPosition()[0],
+                    rwi->GetEventPosition()[1]);
+                rwi->GetPicker()->Pick(rwi->GetEventPosition()[0],
+                    rwi->GetEventPosition()[1],
+                    0.0,
+                    this->CurrentRenderer);
+                vtkAbstractPropPicker *picker;
+                if ((picker=vtkAbstractPropPicker::SafeDownCast(rwi->GetPicker())))
+                {
+                    path = picker->GetPath();
+                }
+                if (path != NULL)
+                {
+                    rwi->FlyTo(this->CurrentRenderer, picker->GetPickPosition());
+                }
+                this->AnimState = VTKIS_ANIM_OFF;
+            }
+            else
+            {
+                vtkWarningMacro(<<"no current renderer on the interactor style.");
+            }
+        }
+        break;
+
+    case 'u' :
+    case 'U' :
+        rwi->UserCallback();
+        break;
+
+    case 'r' :
+    case 'R' :
+        break;
+
+    case 'w' :
+    case 'W' :
+        {
+            vtkActorCollection *ac;
+            vtkActor *anActor, *aPart;
+            vtkAssemblyPath *path;
+            this->FindInteractiveRenderer(rwi->GetEventPosition()[0],
+                rwi->GetEventPosition()[1]);
+            if(this->CurrentRenderer!=0)
+            {
+                ac = this->CurrentRenderer->GetActors();
+                vtkCollectionSimpleIterator ait;
+                for (ac->InitTraversal(ait); (anActor = ac->GetNextActor(ait)); )
+                {
+                    for (anActor->InitPathTraversal(); (path=anActor->GetNextPath()); )
+                    {
+                        aPart=static_cast<vtkActor *>(path->GetLastNode()->GetViewProp());
+                        aPart->GetProperty()->SetRepresentationToWireframe();
+                    }
+                }
+            }
+            else
+            {
+                vtkWarningMacro(<<"no current renderer on the interactor style.");
+            }
+            rwi->Render();
+        }
+        break;
+
+    case 's' :
+    case 'S' :
+        {
+            vtkActorCollection *ac;
+            vtkActor *anActor, *aPart;
+            vtkAssemblyPath *path;
+            this->FindInteractiveRenderer(rwi->GetEventPosition()[0],
+                rwi->GetEventPosition()[1]);
+            if(this->CurrentRenderer!=0)
+            {
+                ac = this->CurrentRenderer->GetActors();
+                vtkCollectionSimpleIterator ait;
+                for (ac->InitTraversal(ait); (anActor = ac->GetNextActor(ait)); )
+                {
+                    for (anActor->InitPathTraversal(); (path=anActor->GetNextPath()); )
+                    {
+                        aPart=static_cast<vtkActor *>(path->GetLastNode()->GetViewProp());
+                        aPart->GetProperty()->SetRepresentationToSurface();
+                    }
+                }
+            }
+            else
+            {
+                vtkWarningMacro(<<"no current renderer on the interactor style.");
+            }
+            rwi->Render();
+        }
+        break;
+
+    case '3' :
+        if (rwi->GetRenderWindow()->GetStereoRender()) 
+        {
+            rwi->GetRenderWindow()->StereoRenderOff();
+        }
+        else 
+        {
+            rwi->GetRenderWindow()->StereoRenderOn();
+        }
+        rwi->Render();
+        break;
+
+    case 'p' :
+    case 'P' :
+        if(this->CurrentRenderer!=0)
+        {
+            if (this->State == VTKIS_NONE)
+            {
+                vtkAssemblyPath *path = NULL;
+                int *eventPos = rwi->GetEventPosition();
+                this->FindInteractiveRenderer(eventPos[0], eventPos[1]);
+                rwi->StartPickCallback();
+                vtkAbstractPropPicker *picker =
+                    vtkAbstractPropPicker::SafeDownCast(rwi->GetPicker());
+                if ( picker != NULL )
+                {
+                    picker->Pick(eventPos[0], eventPos[1],
+                        0.0, this->CurrentRenderer);
+                    path = picker->GetPath();
+                }
+                if ( path == NULL )
+                {
+                    this->HighlightProp(NULL);
+                    this->PropPicked = 0;
+                }
+                else
+                {
+                    this->HighlightProp(path->GetFirstNode()->GetViewProp());
+                    this->PropPicked = 1;
+                }
+                rwi->EndPickCallback();
+            }
+        }
+        else
+        {
+            vtkWarningMacro(<<"no current renderer on the interactor style.");
+        }
+        break;
+    }
 }
