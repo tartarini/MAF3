@@ -20,7 +20,7 @@ using namespace mafGUI;
 mafViewCompoundConfigurator::mafViewCompoundConfigurator() : m_RootObject(NULL) {
 }
 
-void mafViewCompoundConfigurator::parseDocument(QDomNode current, mafSplitter *parent) {
+void mafViewCompoundConfigurator::parseDocument(QDomNode current, QObject *parent) {
     QDomNodeList dnl = current.childNodes();
     for (int n=0; n < dnl.count(); ++n) {
         QDomNode node = dnl.item(n);
@@ -29,7 +29,7 @@ void mafViewCompoundConfigurator::parseDocument(QDomNode current, mafSplitter *p
             QDomNamedNodeMap attributes = ce.attributes();
             QString elem_name = ce.tagName();
             if (elem_name == "splitter") {
-                mafSplitter *splitter = new mafSplitter(Qt::Horizontal, parent);
+                mafSplitter *splitter = new mafSplitter(Qt::Horizontal, (QWidget *)parent);
                 if (parent == NULL) {
                     // parent is the root object, this is the first splitter created
                     m_RootObject = splitter;
@@ -58,10 +58,30 @@ void mafViewCompoundConfigurator::parseDocument(QDomNode current, mafSplitter *p
             } else if (elem_name == "view") {
                 // We are at the leaf of the hierarchy tree: view objects are added at the parent splitter.
                 QString viewClassType = attributes.namedItem("classtype").nodeValue();
+                QString viewName = attributes.namedItem("viewName").nodeValue();
                 mafCore::mafObjectBase *obj = mafNEWFromString(viewClassType);
-                parent->addView(obj);
+                obj->setObjectName(viewName);
+                mafSplitter *parentSplitter = qobject_cast<mafSplitter *>(parent);
+                if (parentSplitter) {
+                    parentSplitter->addView(obj);
+                }
+                // Check if there are children and parse them...
+                QDomNodeList view_dnl = node.childNodes();
+                if (view_dnl.count() > 0) {
+                    parseDocument(node, obj);
+                }
                 // The splitter retain the view object, so we can release the instance.
                 mafDEL(obj);
+            } else if (elem_name == "visualpipe") {
+                // Visual pipe to plug into the previous created view...
+                QVariant viewClassType(attributes.namedItem("classtype").nodeValue());
+                QString dataType(attributes.namedItem("datatype").nodeValue());
+                QVariantHash h;
+                h.insert(dataType, viewClassType);
+                mafCore::mafObjectBase *viewObj = dynamic_cast<mafCore::mafObjectBase *>(parent);
+                if (viewObj) {
+                    viewObj->setProperty("visualPipeHash", h);
+                }
             } else {
                 qWarning() << mafTr("Unrecognized element named: ") << elem_name;
             }
