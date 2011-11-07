@@ -62,6 +62,7 @@ void mafSplitter::addView(mafCore::mafObjectBase *view) {
 
     view->retain();
     view->initialize();
+    view->setParent(this);
     m_Views.append(view);
     QVariant r = view->property("renderWidget");
     QObject *obj = r.value<QObject *>();
