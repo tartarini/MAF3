@@ -211,9 +211,9 @@ void mafInterpreterConsole::onKeyEnterPressed(void) {
         this->appendPlainText(filter(m_Interpreter->prompt()));
     } else {
         QString result = Q_EMIT input(line, &stat);
-        if(!result.isEmpty()) {
+        //if(!result.isEmpty()) {
             output(result, &stat);
-        }
+        //}
     }
 }
 
