@@ -113,13 +113,15 @@ void mafTreeModel::setHierarchy(mafHierarchy *hierarchy) {
     }
     
     m_Hierarchy = hierarchy;
-    connect(m_Hierarchy, SIGNAL(itemAttached(QObject*,QObject*)), this, SLOT(itemAttached(QObject*,QObject*)));
-    connect(m_Hierarchy, SIGNAL(itemDetached(QObject*)), this, SLOT(itemDetached(QObject*)));
-    connect(m_Hierarchy, SIGNAL(itemReparent(QObject*,QObject*)), this, SLOT(itemReparent(QObject*,QObject*)));
-    connect(m_Hierarchy, SIGNAL(clearTree()), this, SLOT(clearModel()));
-    connect(m_Hierarchy, SIGNAL(destroyed()), this, SLOT(hierarchyDestroyed()));
-    
-    initialize();
+    if (m_Hierarchy) {
+        connect(m_Hierarchy, SIGNAL(itemAttached(QObject*,QObject*)), this, SLOT(itemAttached(QObject*,QObject*)));
+        connect(m_Hierarchy, SIGNAL(itemDetached(QObject*)), this, SLOT(itemDetached(QObject*)));
+        connect(m_Hierarchy, SIGNAL(itemReparent(QObject*,QObject*)), this, SLOT(itemReparent(QObject*,QObject*)));
+        connect(m_Hierarchy, SIGNAL(clearTree()), this, SLOT(clearModel()));
+        connect(m_Hierarchy, SIGNAL(destroyed()), this, SLOT(hierarchyDestroyed()));
+
+        initialize();
+    }
 }
 
 void mafTreeModel::clearModel() {
