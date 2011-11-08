@@ -86,9 +86,6 @@ public:
     ///Get the selected SceneNode.
     mafSceneNode *selectedSceneNode();
 
-    /// factory method for creating SceneNode.
-    virtual mafSceneNode *createSceneNode(mafVME *vme);
-
     /// update scene nodes information from VMEs.
     void updateSceneNodesInformation();
 
@@ -109,7 +106,10 @@ protected:
 
     /// Emit signal to inform about visual pipe of the current node.
     void notityVisualPipeSelected();
-    
+
+    /// factory method for creating SceneNode.
+    virtual mafSceneNode *createSceneNode(mafVME *vme);
+
     QObject *m_RenderWidget; ///< Rendering widget for the view.
     mafCore::mafHierarchyPointer m_Scenegraph; ///< SceneGraph
     QHash<QString, QString> *m_VisualPipeHash; ///< Bind between dataType and Visual pipe.

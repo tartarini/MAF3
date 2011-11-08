@@ -55,12 +55,12 @@ public:
     /// Select a scene node.
     /*virtual*/ void selectSceneNode(mafResources::mafSceneNode *node, bool select);
 
-    /// factory method for creating SceneNode VTK.
-    /*virtual*/ mafResources::mafSceneNode *createSceneNode(mafResources::mafVME *vme);
-
 protected:
     /// Object destructor.
     /* virtual */ ~mafViewVTK();
+
+    /// factory method for creating SceneNode VTK.
+    /*virtual*/ mafResources::mafSceneNode *createSceneNode(mafResources::mafVME *vme);
 
 private:
     vtkRenderer *m_Renderer; ///< VTK render.
