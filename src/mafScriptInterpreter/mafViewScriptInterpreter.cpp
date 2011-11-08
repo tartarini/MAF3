@@ -16,9 +16,17 @@ using namespace mafResources;
 using namespace mafScriptInterpreter;
 
 mafViewScriptInterpreter::mafViewScriptInterpreter(const QString code_location) : mafView(code_location) {
-    m_RenderWidget = new mafInterpreterConsole();
-    m_RenderWidget->setObjectName("ScriptInterpreter");
-    ((mafInterpreterConsole*)m_RenderWidget)->readSettings();
+}
+
+bool mafViewScriptInterpreter::initialize() {
+    if(Superclass::initialize()) {
+        m_RenderWidget = new mafInterpreterConsole();
+        m_RenderWidget->setObjectName("ScriptInterpreter");
+        ((mafInterpreterConsole*)m_RenderWidget)->readSettings();
+        setupSceneGraph();
+        return true;
+    }
+    return false;
 }
 
 mafViewScriptInterpreter::~mafViewScriptInterpreter() {

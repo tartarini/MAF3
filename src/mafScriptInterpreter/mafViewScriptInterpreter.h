@@ -28,6 +28,9 @@ public:
     /// Object constructor.
     mafViewScriptInterpreter(const QString code_location = "");
     
+    /// initialize components for the view.
+    /*virtual*/ bool initialize();
+    
 protected:
     /// Object destructor.
     /* virtual */ ~mafViewScriptInterpreter();

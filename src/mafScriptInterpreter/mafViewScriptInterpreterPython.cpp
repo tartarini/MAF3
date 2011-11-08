@@ -22,8 +22,13 @@ mafViewScriptInterpreterPython::mafViewScriptInterpreterPython(const QString cod
 mafViewScriptInterpreterPython::~mafViewScriptInterpreterPython() {
 }
 
-void mafViewScriptInterpreterPython::create() {
-    mafScriptEditor *interpreter = mafScriptEditorPool::instance()->console("python");
-
-    ((mafInterpreterConsole*)m_RenderWidget)->registerInterpreter(interpreter);
+bool mafViewScriptInterpreterPython::initialize() {
+    if(Superclass::initialize()) {
+        mafScriptEditor *interpreter = mafScriptEditorPool::instance()->console("python");
+        ((mafInterpreterConsole*)m_RenderWidget)->registerInterpreter(interpreter);
+    
+        return interpreter!=NULL;
+    }
+    
+    return false;
 }

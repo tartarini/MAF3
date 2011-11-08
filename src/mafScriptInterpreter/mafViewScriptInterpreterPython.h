@@ -28,8 +28,8 @@ public:
     /// Object constructor.
     mafViewScriptInterpreterPython(const QString code_location = "");
     
-    /// create components for the view.
-    /*virtual*/ void create();
+    /// initialize components for the view.
+    /*virtual*/ bool initialize();
     
 protected:
     /// Object destructor.
