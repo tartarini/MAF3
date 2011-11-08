@@ -28,6 +28,7 @@
 #include "mafInteractor.h"
 #include "mafVisitorFindSceneNodeByVMEHash.h"
 #include "mafOperationTransform.h"
+#include "mafPipeVisualCompound.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -48,6 +49,7 @@ void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObject(mafResources::mafSceneNode);
     mafRegisterObject(mafResources::mafInteractor);
     mafRegisterObject(mafResources::mafVisitorFindSceneNodeByVMEHash);
+    mafRegisterObject(mafResources::mafPipeVisualCompound);
     mafRegisterObjectAndAcceptBind(mafResources::mafOperationTransform);
 }
 
@@ -67,5 +69,6 @@ void mafResourcesRegistration::unregisterResourcesObjects() {
     mafUnregisterObject(mafResources::mafSceneNode);
     mafUnregisterObject(mafResources::mafInteractor);
     mafUnregisterObject(mafResources::mafVisitorFindSceneNodeByVMEHash);
+    mafUnregisterObject(mafResources::mafPipeVisualCompound);
     mafUnregisterObjectAndAcceptUnbind(mafResources::mafOperationTransform);
 }
