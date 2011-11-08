@@ -19,6 +19,7 @@
 #include "mafDataSet.h"
 #include "mafDataSetCollection.h"
 #include "mafView.h"
+#include "mafViewCompound.h"
 #include "mafSceneNode.h"
 #include "mafHierarchy.h"
 #include "mafMementoResource.h"
@@ -28,6 +29,7 @@
 #include "mafInteractor.h"
 #include "mafVisitorFindSceneNodeByVMEHash.h"
 #include "mafOperationTransform.h"
+#include "mafPipeVisualCompound.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -41,6 +43,7 @@ void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObject(mafResources::mafDataSet);
     mafRegisterObject(mafResources::mafDataSetCollection);
     mafRegisterObject(mafResources::mafView);
+    mafRegisterObject(mafResources::mafViewCompound);
     mafRegisterObject(mafResources::mafMementoResource);
     mafRegisterObject(mafResources::mafMementoDataSet);
     mafRegisterObject(mafResources::mafMementoDataSetCollection);
@@ -48,6 +51,7 @@ void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObject(mafResources::mafSceneNode);
     mafRegisterObject(mafResources::mafInteractor);
     mafRegisterObject(mafResources::mafVisitorFindSceneNodeByVMEHash);
+    mafRegisterObject(mafResources::mafPipeVisualCompound);
     mafRegisterObjectAndAcceptBind(mafResources::mafOperationTransform);
 }
 
@@ -60,6 +64,7 @@ void mafResourcesRegistration::unregisterResourcesObjects() {
     mafUnregisterObject(mafResources::mafDataSet);
     mafUnregisterObject(mafResources::mafDataSetCollection);
     mafUnregisterObject(mafResources::mafView);
+    mafUnregisterObject(mafResources::mafViewCompound);
     mafUnregisterObject(mafResources::mafMementoResource);
     mafUnregisterObject(mafResources::mafMementoDataSet);
     mafUnregisterObject(mafResources::mafMementoDataSetCollection);
@@ -67,5 +72,6 @@ void mafResourcesRegistration::unregisterResourcesObjects() {
     mafUnregisterObject(mafResources::mafSceneNode);
     mafUnregisterObject(mafResources::mafInteractor);
     mafUnregisterObject(mafResources::mafVisitorFindSceneNodeByVMEHash);
+    mafUnregisterObject(mafResources::mafPipeVisualCompound);
     mafUnregisterObjectAndAcceptUnbind(mafResources::mafOperationTransform);
 }

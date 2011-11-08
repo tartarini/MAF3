@@ -250,14 +250,6 @@ void mafView::setVisualPipeHash(const QVariantHash hash) {
 }
 
 mafSceneNode *mafView::sceneNodeFromVme(mafObjectBase *vme) {
-    /*QListIterator<mafSceneNode *> list(m_SceneNodeList);
-    while (list.hasNext()) {
-        mafSceneNode *sn = list.next();
-        if (sn->vme()->isEqual(vme)) {
-            return sn;
-        }
-     }
-     return NULL;*/
     REQUIRE(vme);
     mafVME *asked_vme = qobject_cast<mafResources::mafVME *>(vme);
     return m_SceneNodeHash.value(asked_vme, NULL);
