@@ -54,39 +54,21 @@ void mafViewOrthoSlice::extractViews(QObject *root) {
 }
 
 void mafViewOrthoSlice::showSceneNode(mafResources::mafSceneNode *node, bool show) {
+    // ask the sub-views to visualize the corresponding node
     mafResources::mafView *subView;
     Q_FOREACH(subView, m_ViewList) {
         subView->showSceneNode(subView->sceneNodeFromVme((mafCore::mafObjectBase *)node->vme()), show);
     }
-}
-
-mafResources::mafSceneNode *mafViewOrthoSlice::createSceneNode(mafResources::mafVME *vme) {
-    mafResources::mafView *subView;
-    Q_FOREACH(subView, m_ViewList) {
-        subView->createSceneNode(vme);
-    }
-    return Superclass::createSceneNode(vme);
-}
-
-void mafViewOrthoSlice::selectSceneNode(mafResources::mafSceneNode *node, bool select) {
-    mafResources::mafView *subView;
-    Q_FOREACH(subView, m_ViewList) {
-        if (node) {
-            subView->selectSceneNode(subView->sceneNodeFromVme((mafCore::mafObjectBase *)node->vme()), select);
+    // Create the compound visual pipe and update the visibility flag of the node.
+    if(m_Scenegraph != NULL) {
+        if (show) {
+            ++m_VisibleObjects;
+            node->setVisualPipe("mafResources::mafPipeVisualCompound");
         } else {
-            // reset the selected node for the sub-view.
-            subView->selectSceneNode(NULL, select);
+            --m_VisibleObjects;
         }
+        node->setVisibility(show);
     }
-    Superclass::selectSceneNode(node, select);
-}
-
-void mafViewOrthoSlice::removeSceneNode(mafResources::mafSceneNode *node) {
-    mafResources::mafView *subView;
-    Q_FOREACH(subView, m_ViewList) {
-        subView->removeSceneNode(subView->sceneNodeFromVme((mafCore::mafObjectBase *)node->vme()));
-    }
-    Superclass::removeSceneNode(node);
 }
 
 void mafViewOrthoSlice::updateView() {
