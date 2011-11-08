@@ -9,37 +9,26 @@
  *
  */
 
-#include <mafView.h>
+#ifndef MAFVIEWORTHOSLICE_H
+#define MAFVIEWORTHOSLICE_H
+
+#include <mafViewCompound.h>
  
 /**
  Class name: mafViewOrthoSlice
  mafView compound with 4 panels containing 4 rendering windows.
 */
-class mafViewOrthoSlice : public mafResources::mafView {
+class mafViewOrthoSlice : public mafResources::mafViewCompound {
     Q_OBJECT
-    mafSuperclassMacro(mafResources::mafView);
+    mafSuperclassMacro(mafResources::mafViewCompound);
     
 public:
     /// Object constructor.
     mafViewOrthoSlice(const QString code_location = "");
-    
-    /// Create the view
-    /*virtual*/ bool initialize();
-
-    /// Show scene node passed as argument.
-    /*virtual*/ void showSceneNode(mafResources::mafSceneNode *node, bool show = true);
 
 protected:
     /// Object destructor.
     /* virtual */ ~mafViewOrthoSlice();
-
-private:
-    /// Extract all the mafView present in the widget's hierarchy.
-    void extractViews(QObject *root);
-
-    QList<mafResources::mafView *> m_ViewList; ///< List of child views.
-
-public Q_SLOTS:
-    /// Update sub-views.
-    /*virtual*/ void updateView();
 };
+
+#endif // MAFVIEWORTHOSLICE_H
