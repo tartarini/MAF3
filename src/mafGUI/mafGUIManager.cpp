@@ -723,7 +723,13 @@ mafTreeWidget *mafGUIManager::createTreeWidget(mafTreeModel *model, QWidget *par
 }
 
 mafTextEditWidget *mafGUIManager::createLogWidget(QWidget *parent) {
-    mafTextEditWidget *w = m_Logger->textWidgetLog();
+    mafCore::mafLogger *logger = mafCore::mafMessageHandler::instance()->activeLogger();
+    mafLoggerWidget *loggerWidget = dynamic_cast<mafLoggerWidget *>(logger);
+    if (loggerWidget == NULL) {
+        qCritical() << mafTr("Cannot create widget for logger. It should be a subclass of mafLoggerWidget!!");
+        return NULL;
+    }
+    mafTextEditWidget *w = loggerWidget->textWidgetLog();
     w->setParent(parent);
     w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     w->enableEditing(false);
@@ -846,7 +852,7 @@ void mafGUIManager::viewDestroyed() { //ALL THE VIEWS ARE DESTROYED
     m_CurrentView = NULL;
     m_CurrentPipeVisual = NULL;
     // Get hierarchy from mafVMEManager
-    mafCore::mafHierarchyPointer vmeHierarchy;
+    mafCore::mafHierarchyPointer vmeHierarchy = NULL;
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, vmeHierarchy);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
     if (m_Model) {
