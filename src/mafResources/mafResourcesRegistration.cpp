@@ -19,6 +19,7 @@
 #include "mafDataSet.h"
 #include "mafDataSetCollection.h"
 #include "mafView.h"
+#include "mafViewCompound.h"
 #include "mafSceneNode.h"
 #include "mafHierarchy.h"
 #include "mafMementoResource.h"
@@ -42,6 +43,7 @@ void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObject(mafResources::mafDataSet);
     mafRegisterObject(mafResources::mafDataSetCollection);
     mafRegisterObject(mafResources::mafView);
+    mafRegisterObject(mafResources::mafViewCompound);
     mafRegisterObject(mafResources::mafMementoResource);
     mafRegisterObject(mafResources::mafMementoDataSet);
     mafRegisterObject(mafResources::mafMementoDataSetCollection);
@@ -62,6 +64,7 @@ void mafResourcesRegistration::unregisterResourcesObjects() {
     mafUnregisterObject(mafResources::mafDataSet);
     mafUnregisterObject(mafResources::mafDataSetCollection);
     mafUnregisterObject(mafResources::mafView);
+    mafUnregisterObject(mafResources::mafViewCompound);
     mafUnregisterObject(mafResources::mafMementoResource);
     mafUnregisterObject(mafResources::mafMementoDataSet);
     mafUnregisterObject(mafResources::mafMementoDataSetCollection);
