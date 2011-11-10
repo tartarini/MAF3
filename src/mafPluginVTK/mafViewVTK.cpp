@@ -34,6 +34,7 @@ using namespace mafPluginVTK;
 using namespace mafEventBus;
 
 mafViewVTK::mafViewVTK(const QString code_location) : mafView(code_location), m_Renderer(NULL) {
+    m_SceneNodeType = "mafPluginVTK::mafSceneNodeVTK";
 }
 
 mafViewVTK::~mafViewVTK() {
@@ -73,11 +74,6 @@ bool mafViewVTK::initialize() {
         return true;
     }
     return false;
-}
-
-mafSceneNode *mafViewVTK::createSceneNode(mafVME *vme) {
-    mafSceneNode *sceneNode = new mafSceneNodeVTK(vme, m_RenderWidget, "", mafCodeLocation);
-    return sceneNode;
 }
 
 void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {

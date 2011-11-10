@@ -56,9 +56,6 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafViewVTK();
 
-    /// factory method for creating SceneNode VTK.
-    /*virtual*/ mafResources::mafSceneNode *createSceneNode(mafResources::mafVME *vme);
-
 private:
     vtkRenderer *m_Renderer; ///< VTK render.
 };
