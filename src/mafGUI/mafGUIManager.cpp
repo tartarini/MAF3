@@ -855,9 +855,7 @@ void mafGUIManager::viewDestroyed() { //ALL THE VIEWS ARE DESTROYED
     mafCore::mafHierarchyPointer vmeHierarchy = NULL;
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, vmeHierarchy);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
-    if (m_Model) {
-        // Set VME hierarchy
-        //m_Model->clear();
+    if (m_Model && vmeHierarchy) {
         // TODO: select previous index
         mafTreeItemDelegate *itemDelegate = new mafTreeItemDelegate(this);
         m_TreeWidget->setItemDelegate(itemDelegate);

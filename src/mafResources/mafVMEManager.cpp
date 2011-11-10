@@ -182,7 +182,7 @@ void mafVMEManager::vmeDestroyed() {
 //}
 
 mafCore::mafHierarchyPointer mafVMEManager::requestVMEHierarchy() {
-     if ( m_VMEHierarchy == NULL ) {
+    if ( m_VMEHierarchy == NULL ) {
          m_VMEHierarchy = mafNEW(mafCore::mafHierarchy);
     }
 
