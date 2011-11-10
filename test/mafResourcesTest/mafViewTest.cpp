@@ -97,6 +97,7 @@ void mafViewTest::mafViewAddRemoveSceneNodeTest() {
 void mafViewTest::mafViewShowSceneNodeTest() {
     mafVME *vme = mafNEW(mafResources::mafVME);
     mafSceneNode *node = new mafSceneNode(vme, NULL, mafCodeLocation);
+    node->initialize();
 
     //try to show a node not added with a fake visual pipe.
     m_View->showSceneNode(node, true);
