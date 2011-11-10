@@ -49,9 +49,6 @@ public:
     /// Remove scene node passed as argument.
     /*virtual*/ void removeSceneNode(mafResources::mafSceneNode *node);
 
-    /// Show scene node passed as argument.
-    /*virtual*/ void showSceneNode(mafResources::mafSceneNode *node, bool show = true);
-
     /// Select a scene node.
     /*virtual*/ void selectSceneNode(mafResources::mafSceneNode *node, bool select);
 

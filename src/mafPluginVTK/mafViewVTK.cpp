@@ -94,17 +94,11 @@ void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
     Superclass::removeSceneNode(node);
 }
 
-void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show) {
-    Superclass::showSceneNode(node, show);
-    
+void mafViewVTK::updateView() {
     if(m_VisibleObjects == 1) {
         resetVisualization();
     }
 
-    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
-}
-
-void mafViewVTK::updateView() {
     if (((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()) {
         ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
     }
