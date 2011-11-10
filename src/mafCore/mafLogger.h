@@ -53,7 +53,7 @@ public:
     bool enabled() const;
 
     /// Method used to log the given message into the specific output stream.
-    void logMessage(const QtMsgType type, QString &msg);
+    virtual void logMessage(const QtMsgType type, QString &msg);
 
     /// Clear all the logged messages until now.
     virtual void clearLogHistory() = 0;
