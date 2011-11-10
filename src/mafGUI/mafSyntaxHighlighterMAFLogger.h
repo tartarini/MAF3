@@ -8,7 +8,7 @@ namespace mafGUI {
 // forward declaration
 class mafTextDocument;
 
-class mafSyntaxHighlighterMAFLogger : public mafSyntaxHighlighter {
+class MAFGUISHARED_EXPORT mafSyntaxHighlighterMAFLogger : public mafSyntaxHighlighter {
 public:
      mafSyntaxHighlighterMAFLogger(QTextDocument *parent = 0);
 };
