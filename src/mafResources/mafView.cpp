@@ -24,7 +24,15 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-mafView::mafView(const QString code_location) : mafResource(code_location), m_RenderWidget(NULL), m_Scenegraph(NULL), m_VisualPipeHash(NULL), m_SelectedNode(NULL),m_PipeVisualSelection(NULL), m_VisibleObjects(0), m_LayoutConfigurationFile("") {
+mafView::mafView(const QString code_location) : mafResource(code_location), 
+                                                m_RenderWidget(NULL), 
+                                                m_Scenegraph(NULL), 
+                                                m_VisualPipeHash(NULL), 
+                                                m_SelectedNode(NULL),
+                                                m_PipeVisualSelection(NULL), 
+                                                m_VisibleObjects(0), 
+                                                m_SceneNodeType("mafResources::mafSceneNode"),
+                                                m_LayoutConfigurationFile("") {
     m_SceneNodeHash.clear();
 
     // Callbacks related to the VME creation
@@ -32,7 +40,6 @@ mafView::mafView(const QString code_location) : mafResource(code_location), m_Re
     // Callback related to the VME selection
     mafRegisterLocalCallback("maf.local.resources.vme.select", this, "vmeSelect(mafCore::mafObjectBase *)")
 }
-
 
 mafView::~mafView() {
     clearScene();
@@ -70,7 +77,16 @@ void mafView::clearScene() {
 }
 
 mafSceneNode *mafView::createSceneNode(mafVME *vme) {
-    return new mafSceneNode(vme, m_RenderWidget, "", mafCodeLocation);
+    mafObjectBase *obj = mafNEWFromString(m_SceneNodeType);
+    mafSceneNode *n = qobject_cast<mafResources::mafSceneNode *>(obj);
+    if (n == NULL) {
+        qCritical() << mafTr("Problem creating node of type %1").arg(m_SceneNodeType);
+        return NULL;
+    }
+    n->m_VME = vme;
+    n->m_GraphicObject = m_RenderWidget;
+    n->initialize();
+    return n;
 }
 
 void mafView::setupSceneGraph() {
@@ -220,6 +236,7 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
             m_PipeVisualSelection->setVisibility(show);
         }
     }
+    updateView();
 }
 
 
