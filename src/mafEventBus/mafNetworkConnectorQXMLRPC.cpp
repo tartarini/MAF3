@@ -11,7 +11,7 @@
 
 #include "mafNetworkConnectorQXMLRPC.h"
 #include "mafEventBusManager.h"
-
+#include <iostream>
 #include "mafEvent.h"
 
 using namespace mafEventBus;
@@ -185,9 +185,25 @@ void mafNetworkConnectorQXMLRPC::send(const QString event_id, mafEventArgumentsL
                 var.setValue(*l);
             } else {
                 void *vp = argList->at(i).data();
-                QString v;
-                v = *((QString*)vp);
-                var.setValue(v);
+                if(typeArgument == "QString"){
+                    QString v;
+                    v = *((QString*)vp);
+                    var.setValue(v);
+                } else if(typeArgument == "double"){
+                    double *v = (double*)vp;
+                    var.setValue(*v);
+                } else if (typeArgument == "int") {
+                    int *v = (int*)vp;
+                    var.setValue(*v);
+                } else if (typeArgument == "QVariantMap") {
+                    QVariantMap *v;
+                    v = (QVariantMap *)vp;
+                    var.setValue(*v);
+                } else if (typeArgument == "QVariantList") {
+                    QVariantList *v;
+                    v = (QVariantList *)vp;
+                    var.setValue(*v);
+                }
             }
             vl->push_back(var); //only the first parameter represent the whole list of arguments
         }
