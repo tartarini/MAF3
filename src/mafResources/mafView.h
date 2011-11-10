@@ -119,7 +119,8 @@ protected:
     
     mafResources::mafPipeVisual *m_PipeVisualSelection; ///< variable with the pipe for vme selection
     
-    unsigned int m_VisibleObjects;
+    unsigned int m_VisibleObjects; ///< Number of visible objects in view.
+    QString m_SceneNodeType; ///< Type of SceneNode to instantiate for the current view.
 
 private:
     QString m_LayoutConfigurationFile; ///< XML filename that represents the layout configuration file for compound view
