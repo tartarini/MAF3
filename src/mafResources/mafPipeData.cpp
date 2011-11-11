@@ -47,7 +47,7 @@ void mafPipeData::updatePipe(double t) {
 }
 
 mafVME *mafPipeData::output(double t) {
-    REQUIRE(inputList()->count() > 0);
+    REQUIRE(inputList()->count() != 0);
 
     if(m_Output == NULL) {
         if (m_InPlace) {
@@ -62,7 +62,6 @@ mafVME *mafPipeData::output(double t) {
     mafVME *out_vme = m_Output;
 
     if(modified()) {
-        updatePipe(t);
         Q_EMIT(modifiedObject());
     }
 
