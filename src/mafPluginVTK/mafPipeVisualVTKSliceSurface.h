@@ -31,6 +31,9 @@ class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSliceSurface : public mafPipeVis
     Q_PROPERTY(QString originX READ originX WRITE setOriginX)
     Q_PROPERTY(QString originY READ originY WRITE setOriginY)
     Q_PROPERTY(QString originZ READ originZ WRITE setOriginZ)
+    Q_PROPERTY(QString normalX READ normalX WRITE setNormalX)
+    Q_PROPERTY(QString normalY READ normalY WRITE setNormalY)
+    Q_PROPERTY(QString normalZ READ normalZ WRITE setNormalZ)
     Q_PROPERTY(QString thickness READ thickness WRITE setThickness)
 
     /// typedef macro.
@@ -62,32 +65,59 @@ public Q_SLOTS:
     /// Set originZ value from text box.
     void on_originZ_textEdited(QString stringValue);
 
-    /// Set thickness value from text box.
-    void on_thickness_textEdited(QString stringValue);
-
     /// Get originX value;
     QString originX();
 
     /// Set originX value;
-    void setOriginX(QString value);
+    void setOriginX(QString stringValue);
 
     /// Get originY value;
     QString originY();
 
     /// Set originY value;
-    void setOriginY(QString value);
+    void setOriginY(QString stringValue);
 
     /// Get originZ value;
     QString originZ();
 
     /// Set originZ value;
-    void setOriginZ(QString value);
+    void setOriginZ(QString stringValue);
+
+    /// Set normalX value from text box.
+    void on_normalX_textEdited(QString stringValue);
+
+    /// Set normalY value from text box.
+    void on_normalY_textEdited(QString stringValue);
+
+    /// Set normalZ value from text box.
+    void on_normalZ_textEdited(QString stringValue);
+
+    /// Get normalX value;
+    QString normalX();
+
+    /// Set normalX value;
+    void setNormalX(QString value);
+
+    /// Get normalY value;
+    QString normalY();
+
+    /// Set normalY value;
+    void setNormalY(QString value);
+
+    /// Get normalZ value;
+    QString normalZ();
+
+    /// Set normalZ value;
+    void setNormalZ(QString value);
 
     /// Get thickness value;
     QString thickness();
 
     /// Set thickness value;
     void setThickness(QString value);
+
+    /// Set thickness value from text box.
+    void on_thickness_textEdited(QString stringValue);
 
 protected:
     /// Object destructor.
@@ -152,6 +182,42 @@ inline void mafPipeVisualVTKSliceSurface::setThickness(QString stringValue) {
 
 inline void mafPipeVisualVTKSliceSurface::on_thickness_textEdited(QString stringValue) {
     m_Thickness = stringValue.toDouble();
+}
+
+inline void mafPipeVisualVTKSliceSurface::on_normalX_textEdited(QString stringValue) {
+    m_Normal[0] = stringValue.toDouble();
+}
+
+inline void mafPipeVisualVTKSliceSurface::on_normalY_textEdited(QString stringValue) {
+    m_Normal[1] = stringValue.toDouble();
+}
+
+inline void mafPipeVisualVTKSliceSurface::on_normalZ_textEdited(QString stringValue) {
+    m_Normal[2] = stringValue.toDouble();
+}
+
+inline QString mafPipeVisualVTKSliceSurface::normalX() {
+    return QString::number(m_Normal[0]);
+}
+
+inline void mafPipeVisualVTKSliceSurface::setNormalX(QString stringValue) {
+    m_Normal[0] = stringValue.toDouble();
+}
+
+inline QString mafPipeVisualVTKSliceSurface::normalY() {
+    return QString::number(m_Normal[1]);
+}
+
+inline void mafPipeVisualVTKSliceSurface::setNormalY(QString stringValue) {
+    m_Normal[1] = stringValue.toDouble();
+}
+
+inline QString mafPipeVisualVTKSliceSurface::normalZ() {
+    return QString::number(m_Normal[2]);
+}
+
+inline void mafPipeVisualVTKSliceSurface::setNormalZ(QString stringValue) {
+    m_Normal[2] = stringValue.toDouble();
 }
 
 } // namespace mafPluginVTK
