@@ -5,7 +5,7 @@
  *  Created by Daniele Giunchi - Paolo Quadrani on 24/03/10.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -19,6 +19,7 @@ namespace mafResources {
 // Class forwarding list
 class mafPipeVisual;
 class mafVME;
+class mafView;
 
 /**
 Class name: mafSceneNode
@@ -35,11 +36,14 @@ class MAFRESOURCESSHARED_EXPORT mafSceneNode : public mafCore::mafObject {
     mafSuperclassMacro(mafCore::mafObject);
 
 public:
-    /// Object constructor. USE THE CONSTRUCTOR WITH VME AS PARAMETER.
+    /// Object constructor.
     mafSceneNode(const QString code_location = "");
 
-    /// Object constructor.
+    /// Object constructor (Used in test suite)
     mafSceneNode(mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location = "");
+    
+    /// Create the view
+    /*virtual*/ bool initialize();
 
     /// Set the parent of the current node.
     virtual void setParentNode(const mafSceneNode *parent);
@@ -97,6 +101,8 @@ private:
     mafVisualizationStatus m_VisualizationStatus; ///< contains the visibility status for that scene node.
     mafVisibilityPolicy m_VisibilityPolicy; ///< Visibility policy determines in which way, on show/hide , the visual pipe will be treated.
     mafSceneNode *m_ParentNode; ///< Parent node.
+
+    friend class mafView;
 
 Q_SIGNALS:
     /// Alert the view that the node can be deleted because its inner VME has been destroyed.

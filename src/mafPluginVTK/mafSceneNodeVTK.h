@@ -36,6 +36,9 @@ public:
     /// Object constructor.
     mafSceneNodeVTK(mafResources::mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location = "");
 
+    /// Create the view
+    /*virtual*/ bool initialize();
+
     /// Set the parent of the current node.
     /*virtual*/ void setParentNode(const mafResources::mafSceneNode *parent);
 

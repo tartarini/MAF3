@@ -126,6 +126,7 @@ void mafHierarchyTest::mafScenegraphRootTest() {
     QString pipeName = "testVisualPipeCustom";
     
     mafSceneNode *sceneNodeRoot = new mafSceneNode(vmeRoot, NULL,"", mafCodeLocation);
+    sceneNodeRoot->initialize();
     sceneNodeRoot->setObjectName("sceneNodeRoot");
     m_HierarchyToManage->addHierarchyNode(sceneNodeRoot);
     
@@ -134,6 +135,7 @@ void mafHierarchyTest::mafScenegraphRootTest() {
     vmeChild0->setObjectName("vmeChild0");
     
     mafSceneNode *sceneNodeChild0 = new mafSceneNode(vmeChild0, NULL, "", mafCodeLocation);
+    sceneNodeChild0->initialize();
     sceneNodeChild0->setObjectName("sceneNodeChild0");
     m_HierarchyToManage->addHierarchyNode(sceneNodeChild0);
 
@@ -163,6 +165,7 @@ void mafHierarchyTest::mafSceneGraphManageTest() {
     QString pipeName = "testVisualPipeCustom";
 
     mafSceneNode *sceneNodeRoot = new mafSceneNode(vmeRoot, NULL,pipeName, mafCodeLocation);
+    sceneNodeRoot->initialize();
     sceneNodeRoot->setObjectName("sceneNodeRoot");
     m_HierarchyToManage->addHierarchyNode(sceneNodeRoot);
 
@@ -170,6 +173,7 @@ void mafHierarchyTest::mafSceneGraphManageTest() {
     vmeChild0->setObjectName("vmeChild0");
 
     mafSceneNode *sceneNodeChild0 = new mafSceneNode(vmeChild0, NULL, pipeName, mafCodeLocation);
+    sceneNodeChild0->initialize();
     sceneNodeChild0->setObjectName("sceneNodeChild0");
     m_HierarchyToManage->addHierarchyNode(sceneNodeChild0);
 
@@ -177,6 +181,7 @@ void mafHierarchyTest::mafSceneGraphManageTest() {
     vmeChild0Child0->setObjectName("vmeChild0Child0");
 
     mafSceneNode *sceneNodeChild0Child0 = new mafSceneNode(vmeChild0Child0, NULL, pipeName, mafCodeLocation);
+    sceneNodeChild0Child0->initialize();
     sceneNodeChild0Child0->setObjectName("sceneNodeChild0Child0");
     m_HierarchyToManage->addHierarchyNode(sceneNodeChild0Child0);
 
@@ -256,12 +261,14 @@ void mafHierarchyTest::unbalancedTreeRandomCreation(unsigned int numberOfElement
     vmeRoot->setObjectName("root");
     QString pipeName = "testVisualPipeCustom";
     mafSceneNode *sceneNodeRoot = new mafSceneNode(vmeRoot, NULL, pipeName, mafCodeLocation);
+    sceneNodeRoot->initialize();
     m_Hierarchy->addHierarchyNode(sceneNodeRoot);
     m_VMEList.push_back((mafResources::mafVME *)sceneNodeRoot->vme());
 
     mafVME* vmeChild0 = mafNEW(mafResources::mafVME);
     vmeChild0->setObjectName("vmeChild0");
     mafSceneNode *sceneNodeChild0 = new mafSceneNode(vmeChild0, NULL, pipeName, mafCodeLocation);
+    sceneNodeChild0->initialize();
     m_Hierarchy->addHierarchyNode(sceneNodeChild0);
     m_VMEList.push_back((mafResources::mafVME *)sceneNodeChild0->vme());
 
@@ -286,6 +293,7 @@ void mafHierarchyTest::unbalancedTreeRandomCreation(unsigned int numberOfElement
         name.append(QString::number(count));
         vmeChild->setObjectName(name);
         mafSceneNode *sceneNode = new mafSceneNode(vmeChild, NULL, pipeName);
+        sceneNode->initialize();
 
         m_VMEList.push_back((mafResources::mafVME *)sceneNode->vme());
 

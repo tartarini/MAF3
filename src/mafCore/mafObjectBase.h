@@ -27,6 +27,7 @@ class mafVisitor;
 class MAFCORESHARED_EXPORT mafObjectBase : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString objectHash READ objectHash WRITE setObjectHash)
+    Q_PROPERTY(QObject *uiRootWidget READ uiRootWidget WRITE setUiRootWidget STORED false)
     Q_PROPERTY(QString uiFile READ uiFilename)
     /// typedef macro.
     mafSuperclassMacro(QObject);
@@ -41,7 +42,7 @@ Q_SIGNALS:
     /// Allows to decrement the reference count.
     void decreaseReference();
 
-    /// Signal emitted to update gui.
+    /// Signal emitted to update GUI.
     void updateGuiSignal(QObject *selfUI);
 
 public Q_SLOTS:
@@ -92,6 +93,12 @@ public:
     /// Return the filename associated to the object's UI.
     const QString uiFilename() const;
 
+    /// Return the pointer to the root widget associated with the object.
+    QObject *uiRootWidget() const;
+
+    /// Allows to assign the root widget to associate to the object.
+    void setUiRootWidget(QObject *w);
+
     /// Allows to accept a mafVisitor which will visit the object and will be executed the mafVisitor algorithm.
     virtual void acceptVisitor(mafVisitor *v);
 
@@ -116,7 +123,8 @@ protected:
     and by the serialization mechanism to restore the previous saved object's hash.*/
     void setObjectHash(const QString obj_hash);
    
-    QString m_UIFilename; ///< Filename that define the object's UI written into a XML file.
+    QString m_UIFilename; ///< Filename that define the object's UI written into a .ui XML file. m_UIFilename and m_UIRootWidget are mutually exclusive.
+    QObject *m_UIRootWidget; ///< Root widget of the UI class allocated and given to the mafObjectBase instead of assigning the m_UIFilename of the ".ui" file to load. m_UIFilename and m_UIRootWidget are mutually exclusive.
 
     /// Object destructor.
     virtual ~mafObjectBase();
@@ -154,6 +162,15 @@ inline void mafObjectBase::setObjectHash(const QString obj_hash) {
 
 inline const QString mafObjectBase::uiFilename() const {
     return m_UIFilename;
+}
+
+inline void mafObjectBase::setUiRootWidget(QObject *w) {
+    m_UIRootWidget = w;
+    m_UIFilename = "";
+}
+
+inline QObject *mafObjectBase::uiRootWidget() const {
+    return m_UIRootWidget;
 }
 
 inline bool mafObjectBase::operator ==(const mafObjectBase& obj) const {

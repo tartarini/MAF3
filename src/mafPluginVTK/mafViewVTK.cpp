@@ -34,6 +34,7 @@ using namespace mafPluginVTK;
 using namespace mafEventBus;
 
 mafViewVTK::mafViewVTK(const QString code_location) : mafView(code_location), m_Renderer(NULL) {
+    m_SceneNodeType = "mafPluginVTK::mafSceneNodeVTK";
 }
 
 mafViewVTK::~mafViewVTK() {
@@ -75,11 +76,6 @@ bool mafViewVTK::initialize() {
     return false;
 }
 
-mafSceneNode *mafViewVTK::createSceneNode(mafVME *vme) {
-    mafSceneNode *sceneNode = new mafSceneNodeVTK(vme, m_RenderWidget, "", mafCodeLocation);
-    return sceneNode;
-}
-
 void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
     if (node != NULL && node->visualPipe()) {
         mafSceneNodeVTK *n = qobject_cast<mafSceneNodeVTK *>(node);
@@ -94,17 +90,11 @@ void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
     Superclass::removeSceneNode(node);
 }
 
-void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show) {
-    Superclass::showSceneNode(node, show);
-    
+void mafViewVTK::updateView() {
     if(m_VisibleObjects == 1) {
         resetVisualization();
     }
 
-    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
-}
-
-void mafViewVTK::updateView() {
     if (((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()) {
         ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
     }

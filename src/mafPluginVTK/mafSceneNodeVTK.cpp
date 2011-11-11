@@ -30,17 +30,29 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 
 
-mafSceneNodeVTK::mafSceneNodeVTK(const QString code_location) : mafSceneNode(code_location) {
+mafSceneNodeVTK::mafSceneNodeVTK(const QString code_location) : mafSceneNode(code_location),
+                                                                m_Assembly(NULL), 
+                                                                m_AxesTool(NULL) {
 }
 
-mafSceneNodeVTK::mafSceneNodeVTK(mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location): mafSceneNode(vme, graphicObject, visualPipeType, code_location)  {
-    m_Assembly = vtkAssembly::New();
-    m_Assembly->SetPickable(1);
+mafSceneNodeVTK::mafSceneNodeVTK(mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location) : 
+                                                                mafSceneNode(vme, graphicObject, visualPipeType, code_location), 
+                                                                m_Assembly(NULL), 
+                                                                m_AxesTool(NULL) {
+}
 
-    m_AxesTool = mafNEW(mafPluginVTK::mafToolVTKAxes);
-    update();
-    
-    connect(vme->dataSetCollection(), SIGNAL(modifiedObject()), this, SLOT(update()), Qt::DirectConnection);
+bool mafSceneNodeVTK::initialize() {
+    if (Superclass::initialize()) {
+        m_Assembly = vtkAssembly::New();
+        m_Assembly->SetPickable(1);
+
+        m_AxesTool = mafNEW(mafPluginVTK::mafToolVTKAxes);
+        update();
+
+        connect(vme()->dataSetCollection(), SIGNAL(modifiedObject()), this, SLOT(update()), Qt::DirectConnection);
+        return true;
+    }
+    return false;
 }
 
 mafSceneNodeVTK::~mafSceneNodeVTK() {
