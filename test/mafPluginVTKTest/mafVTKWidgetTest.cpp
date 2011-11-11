@@ -171,6 +171,7 @@ private:
 void mafVTKWidgetTest::initializeGraphicResources() {
     w = new QMainWindow();
     w->setMinimumSize(640,480);
+    w->setWindowTitle("mafVTKWidget Test");
 
     m_VTKWidget = new mafVTKWidget();
     m_VTKWidget->setParent(w);
@@ -205,6 +206,7 @@ void mafVTKWidgetTest::mafVTKWidgetConnectionTest() {
     sphereActor->SetMapper(sphereMapper);
     m_Renderer->AddActor(sphereActor);
 
+    m_Renderer->ResetCamera();
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(2000);
 
@@ -229,6 +231,7 @@ void mafVTKWidgetTest::mafVTKWidgetConnectionTest() {
     pickSphere->SetRadius(0.1);
     pickSphere->Update();
     m_Renderer->AddActor(pickSphereActor);
+    m_Renderer->ResetCamera();
     m_VTKWidget->GetRenderWindow()->Render();
     QTest::qSleep(2000);
 }
