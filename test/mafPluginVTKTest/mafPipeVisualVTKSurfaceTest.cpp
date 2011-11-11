@@ -248,5 +248,5 @@ void mafPipeVisualVTKSurfaceTest::updatePipeTestFromPlugIn() {
     pluginManager->shutdown();
 }
 
-//MAF_REGISTER_TEST(mafPipeVisualVTKSurfaceTest);
+MAF_REGISTER_TEST(mafPipeVisualVTKSurfaceTest);
 #include "mafPipeVisualVTKSurfaceTest.moc"
