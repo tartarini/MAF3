@@ -141,6 +141,7 @@ private:
 void mafPipeVisualVTKMIPVolumeTest::initializeGraphicResources() {
     w = new QMainWindow();
     w->setMinimumSize(640,480);
+    w->setWindowTitle("mafPipeVisualVTKMIPVolume Test");
 
     m_RenderWidget = new mafVTKWidget();
     ((mafVTKWidget*)m_RenderWidget)->setParent(w);

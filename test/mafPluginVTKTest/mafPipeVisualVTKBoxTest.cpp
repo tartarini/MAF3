@@ -130,6 +130,7 @@ private:
 void mafPipeVisualVTKBoxTest::initializeGraphicResources() {
     w = new QMainWindow();
     w->setMinimumSize(640,480);
+    w->setWindowTitle("mafPipeVisualVTKBox Test");
 
     m_RenderWidget = new mafVTKWidget();
     ((mafVTKWidget*)m_RenderWidget)->setParent(w);

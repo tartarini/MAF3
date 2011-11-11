@@ -137,6 +137,7 @@ private:
 void mafPipeVisualVTKSelectionTest::initializeGraphicResources() {
     w = new QMainWindow();
     w->setMinimumSize(640,480);
+    w->setWindowTitle("mafPipeVisualVTKSelection Test");
 
     m_RenderWidget = new mafVTKWidget();
     ((mafVTKWidget*)m_RenderWidget)->setParent(w);
