@@ -151,7 +151,8 @@ private:
 
 void mafPipeVisualVTKSurfaceTest::initializeGraphicResources() {
     w = new QMainWindow();
-    //w->setMinimumSize(640,480);
+    w->setMinimumSize(640,480);
+    w->setWindowTitle("mafPipeVisualVTKSurface Test");
 
     m_RenderWidget = new mafVTKWidget();
     ((mafVTKWidget*)m_RenderWidget)->setParent(w);
@@ -185,6 +186,7 @@ void mafPipeVisualVTKSurfaceTest::updatePipeTest() {
     m_Renderer->AddActor(*actor);
 
     ((mafVTKWidget*)m_RenderWidget)->update();
+    m_Renderer->ResetCamera();
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
     QTest::qSleep(2000);
 
@@ -234,6 +236,7 @@ void mafPipeVisualVTKSurfaceTest::updatePipeTestFromPlugIn() {
 
     m_Renderer->AddActor(*actor);
     ((mafVTKWidget*)m_RenderWidget)->update();
+    m_Renderer->ResetCamera();
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
 
     QTest::qSleep(2000);
@@ -242,6 +245,7 @@ void mafPipeVisualVTKSurfaceTest::updatePipeTestFromPlugIn() {
     visualPipe->setProperty("scalarVisibility", 0);
     visualPipe->updatePipe();
     ((mafVTKWidget*)m_RenderWidget)->update();
+    m_Renderer->ResetCamera();
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
     QTest::qSleep(2000);
     mafDEL(visualPipe);
