@@ -104,10 +104,7 @@ void mafViewVTK::resetVisualization(double *bounds) {
     if (bounds) {
         m_Renderer->ResetCamera(bounds);
     } else {
-        double *b = ((mafVTKWidget*)m_RenderWidget)->visibleBounds();
-        if (b) {
-            m_Renderer->ResetCameraClippingRange(b);
-        }
+        m_Renderer->ResetCamera();
     }
 }
 
