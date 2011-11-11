@@ -104,6 +104,7 @@ void mafPipeDataImageThresholdTest::updatePipeTest() {
     mafVME *output = datapipe->output();
     QVERIFY(output != NULL);
 
+    datapipe->updatePipe();
     mafDataSetCollection *collection = output->dataSetCollection();
     mafDataSet *dataSet = collection->itemAtCurrentTime();
     QString dt(dataSet->dataValue()->externalDataType());
