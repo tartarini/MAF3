@@ -58,7 +58,7 @@ public:
     void setAuthenticationHeader(QMap<QString, QString> *headerMap);
 
     /// Set proxy values.
-    void setProxy(const QString & host, int port);
+    void setProxy(const QString & host, int port, const QString & userName, const QString & password);
 
 Q_SIGNALS:
     /// signal for the registration of the functions with parameters
@@ -98,6 +98,8 @@ private:
     QMap<QString, QString> *m_HeaderMap; ///< Map with header authentication (like cookie).
     QString m_ProxyHostName; ///< Proxy host
     int m_ProxyPort; ///< Proxy port
+    QString m_ProxyUserName; ///< Proxy user name
+    QString m_ProxyPassword; ///< Proxy password
 };
 
 } //namespace mafEventBus

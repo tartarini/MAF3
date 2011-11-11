@@ -44,6 +44,8 @@ private:
 
     QLineEdit *m_ProxyHostLineEdit; ///< Proxy host.
     QLineEdit *m_ProxyPortLineEdit; ///< Proxy port.
+    QLineEdit *m_ProxyUserNameLineEdit; ///< Proxy user name.
+    QLineEdit *m_ProxyPasswordLineEdit; ///< Proxy password.
     QCheckBox *m_Checkbox; ///< Checkbox to enable proxy
 };
 
