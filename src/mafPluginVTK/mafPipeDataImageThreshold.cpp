@@ -43,9 +43,8 @@ void mafPipeDataImageThreshold::updatePipe(double t) {
     if (inputList()->size() == 0) {
         return;
     }
-    mafVME *inputVME = this->inputList()->at(0);
 
-    mafDataSet *inputDataSet = inputVME->dataSetCollection()->itemAt(t);
+    mafDataSet *inputDataSet = dataSetForInput(0, t);
     if(inputDataSet == NULL) {
         return;
     }
@@ -71,7 +70,7 @@ void mafPipeDataImageThreshold::updatePipe(double t) {
         m_OutputValue = m_ThresholdFilter->GetOutput();
     }
 
-    m_Output->dataSetCollection()->itemAt(t)->setDataValue(&m_OutputValue);
+    output(t)->dataSetCollection()->itemAt(t)->setDataValue(&m_OutputValue);
 
     Superclass::updatePipe(t);
 }
