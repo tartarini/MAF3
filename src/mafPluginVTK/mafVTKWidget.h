@@ -29,6 +29,7 @@ This class overloads VKT mouse events and forward them to EventBus.
 class MAFPLUGINVTKSHARED_EXPORT mafVTKWidget : public QVTKWidget {
     Q_OBJECT
     Q_PROPERTY(QVariant viewObject READ viewObject WRITE setViewObject)
+    Q_PROPERTY(bool parallelCameraMode READ parallelCameraMode WRITE setParallelCameraMode)
 
     /// typedef macro.
     mafSuperclassMacro(QVTKWidget);
@@ -48,6 +49,12 @@ public:
 
     /// Overloaded mouse move handler
     /*virtual*/ void mouseMoveEvent(QMouseEvent* event);
+
+    /// Return the parallel camera flag.
+    bool parallelCameraMode() const;
+
+    /// Allows to set the parallel camera mode on all layers.
+    void setParallelCameraMode(bool on = true);
 
     /// Allows to show the axes representing the global reference system. This method has to be called after that the renderer has been added to the renderwindow.
     void showAxes(bool show = true);

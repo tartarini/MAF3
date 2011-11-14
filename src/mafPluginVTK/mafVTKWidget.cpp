@@ -23,6 +23,8 @@
 #include <vtkCellPicker.h>
 #include <vtkSmartPointer.h>
 #include <vtkProp.h>
+#include <vtkCamera.h>
+
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -49,6 +51,14 @@ void mafVTKWidget::initializeConnections() {
     result = connect(this, SIGNAL(mousePressSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mousePress(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
     result = connect(this, SIGNAL(mouseReleaseSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mouseRelease(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
     result= connect(this, SIGNAL(mouseMoveSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mouseMove(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
+}
+
+bool mafVTKWidget::parallelCameraMode() const {
+    return m_RendererBase->GetActiveCamera()->GetParallelProjection() != 0;
+}
+
+void mafVTKWidget::setParallelCameraMode(bool on /* = true */) {
+    m_RendererBase->GetActiveCamera()->SetParallelProjection(on ? 1 : 0);
 }
 
 void mafPluginVTK::mafVTKWidget::initializeLayers() {
