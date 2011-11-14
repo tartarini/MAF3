@@ -17,7 +17,7 @@
 #include <mafPipeData.h>
 #include <mafProxy.h>
 #include <vtkSmartPointer.h>
-#include <vtkPolyData.h>
+#include <vtkAlgorithmOutput.h>
 
 // Foundation Class forwarding list
 class vtkPlane;
@@ -70,7 +70,7 @@ private:
 
 	vtkSmartPointer<vtkPlane>  m_Plane;  ///< Cutting plane implicit function.
     vtkSmartPointer<vtkCutter> m_Cutter; ///< Cutter fo the input vtkPolyData.
-    mafCore::mafProxy<vtkPolyData> m_OutputValue; ///< Output value coming from the elaboration data pipe.
+    mafCore::mafProxy<vtkAlgorithmOutput> m_OutputValue; ///< Output value coming from the elaboration data pipe.
 };
 
 /////////////////////////////////////////////////////////////

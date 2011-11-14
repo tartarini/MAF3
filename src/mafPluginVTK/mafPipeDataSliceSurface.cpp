@@ -32,6 +32,7 @@ mafPipeDataSliceSurface::mafPipeDataSliceSurface(const QString code_location) : 
     m_Cutter = vtkSmartPointer<vtkCutter>::New();
     m_Cutter->SetCutFunction(m_Plane);
 
+    m_OutputValue = m_Cutter->GetOutputPort();
 }
 
 mafPipeDataSliceSurface::~mafPipeDataSliceSurface() {
@@ -64,12 +65,8 @@ void mafPipeDataSliceSurface::updatePipe(double t) {
     //Get data contained in the mafProxy
     mafProxy<vtkAlgorithmOutput> *surface = mafProxyPointerTypeCast(vtkAlgorithmOutput, inputDataSet->dataValue());
 
-    m_Cutter->SetInputConnection((*surface));
+    m_Cutter->SetInputConnection(*surface);
     m_Cutter->Update();
-
-    if(m_OutputValue == NULL) {
-        m_OutputValue = m_Cutter->GetOutput();
-    }
 
     output(t)->dataSetCollection()->itemAt(t)->setDataValue(&m_OutputValue);
     Superclass::updatePipe(t);
