@@ -1,5 +1,6 @@
 <plugin>
 	<plug classtype="mafPluginVTK::mafPipeDataImageThreshold" baseclass="mafResources::mafPipeData" label="Data pipe Image Threshold"></plug>
+	<plug classtype="mafPluginVTK::mafPipeDataSliceSurface" baseclass="mafResources::mafPipeData" label="Data pipe surface slice"></plug>
 	<plug classtype="mafPluginVTK::mafPipeVisualVTKMIPVolume" baseclass="mafResources::mafPipeVisual" label="MIP Volume Rendering"></plug>
 	<plug classtype="mafPluginVTK::mafPipeVisualVTKSurface" baseclass="mafResources::mafPipeVisual" label="Visual pipe VTK Surface"></plug>
 	<plug classtype="mafPluginVTK::mafPipeVisualVTKSelection" baseclass="mafResources::mafPipeVisual" label="Visual pipe used to represent selection of data"></plug>
