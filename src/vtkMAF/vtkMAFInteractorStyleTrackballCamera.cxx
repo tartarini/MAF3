@@ -65,34 +65,31 @@ void vtkMAFInteractorStyleTrackballCamera::SetDefaultRenderer(vtkRenderer *ren) 
 //----------------------------------------------------------------------------
 void vtkMAFInteractorStyleTrackballCamera::OnMouseMove() 
 {
-//  int x = this->Interactor->GetEventPosition()[0];
-//  int y = this->Interactor->GetEventPosition()[1];
-
-  switch (this->State) 
+    switch (this->State) 
     {
-    case VTKIS_ROTATE:
-//      this->FindInteractiveRenderer(x, y);
-      this->Rotate();
-      this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
-      break;
+        case VTKIS_ROTATE:
+            if (CurrentRenderer->GetActiveCamera()->GetParallelProjection() == 1)
+            {
+                return;
+            }
+            this->Rotate();
+            this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
+        break;
 
-    case VTKIS_PAN:
-//      this->FindInteractiveRenderer(x, y);
-      this->Pan();
-      this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
-      break;
+        case VTKIS_PAN:
+            this->Pan();
+            this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
+        break;
 
-    case VTKIS_DOLLY:
-//      this->FindInteractiveRenderer(x, y);
-      this->Dolly();
-      this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
-      break;
+        case VTKIS_DOLLY:
+            this->Dolly();
+            this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
+        break;
 
-    case VTKIS_SPIN:
-//      this->FindInteractiveRenderer(x, y);
-      this->Spin();
-      this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
-      break;
+        case VTKIS_SPIN:
+            this->Spin();
+            this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
+        break;
     }
 }
 
