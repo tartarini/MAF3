@@ -31,7 +31,7 @@ mafPipeVisualVTKBox::mafPipeVisualVTKBox(const QString code_location) : mafPipeV
     m_OutlineFilter = vtkOutlineFilter::New();
 
     vtkPolyDataMapper *mapper = vtkPolyDataMapper::New();
-    mapper->SetInputConnection(0, m_OutlineFilter->GetOutputPort(0));
+    mapper->SetInputConnection(0, m_OutlineFilter->GetOutputPort());
     m_Prop3D = vtkActor::New();
     m_Prop3D.setDestructionFunction(&vtkActor::Delete);
     vtkActor::SafeDownCast(m_Prop3D)->SetMapper(mapper);
@@ -64,7 +64,7 @@ void mafPipeVisualVTKBox::updatePipe(double t) {
     if (dataSet == NULL) {
         m_OutlineFilter->RemoveAllInputs();
     } else {
-        m_OutlineFilter->SetInputConnection((*dataSet));
+        m_OutlineFilter->SetInputConnection(*dataSet);
         m_OutlineFilter->Update();
     }
 }
