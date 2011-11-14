@@ -34,32 +34,22 @@ using namespace mafPluginVTK;
 mafPipeVisualVTKSliceSurface::mafPipeVisualVTKSliceSurface(const QString code_location) : mafPipeVisualVTK(code_location) {
 //    m_UIFilename = "mafPipeVisualVTKSliceSurface.ui";
 
-    m_SliceOrigin[0] = m_SliceOrigin[1] = m_SliceOrigin[2] = 0.;
-    
-    m_Normal[0] = m_Normal[1] = 0.;
-    m_Normal[2] = 1.;
-
     m_Thickness = 3.;
 
-    m_Plane = vtkPlane::New();
+    m_CutterPipe = mafNEW(mafPluginVTK::mafPipeDataSliceSurface);
+    m_CutterPipe->setParent(this);
 
-    m_Cutter = vtkCutter::New();
-    m_Cutter->SetCutFunction(m_Plane);
-    
-    vtkPolyDataMapper *mapper = vtkPolyDataMapper::New();
-    mapper->SetInputConnection( m_Cutter->GetOutputPort());
-    mapper->ScalarVisibilityOff();
+    m_Mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+    m_Mapper->ScalarVisibilityOff();
 
     m_Prop3D = vtkActor::New();
     m_Prop3D.setDestructionFunction(&vtkActor::Delete);
-    vtkActor::SafeDownCast(m_Prop3D)->SetMapper(mapper);
+    vtkActor::SafeDownCast(m_Prop3D)->SetMapper(m_Mapper);
     m_Output = &m_Prop3D;
-    mapper->Delete();
 }
 
 mafPipeVisualVTKSliceSurface::~mafPipeVisualVTKSliceSurface() {
-    m_Plane->Delete();
-    m_Cutter->Delete();
+    mafDEL(m_CutterPipe);
 }
 
 bool mafPipeVisualVTKSliceSurface::acceptObject(mafCore::mafObjectBase *obj) {
@@ -76,27 +66,23 @@ bool mafPipeVisualVTKSliceSurface::acceptObject(mafCore::mafObjectBase *obj) {
 void mafPipeVisualVTKSliceSurface::updatePipe(double t) {
     Superclass::updatePipe(t);
 
-    mafDataSet *data = dataSetForInput(0, t);
-    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
+    m_CutterPipe->setInput(input());
+    m_CutterPipe->updatePipe(t);
 
-    m_Plane->SetOrigin(m_SliceOrigin);
-    m_Plane->SetNormal(m_Normal);
-
-    m_Cutter->SetInputConnection(*dataSet);
-    m_Cutter->Update();
+    mafVME *output = m_CutterPipe->output();
+    mafDataSetCollection *collection = output->dataSetCollection();
+    mafDataSet *dataSet = collection->itemAt(t);
+    mafProxy<vtkAlgorithmOutput> *data = mafProxyPointerTypeCast(vtkAlgorithmOutput, dataSet->dataValue());
+    m_Mapper->SetInputConnection(*data);
 
     vtkActor *actor = vtkActor::SafeDownCast(m_Prop3D);
     actor->GetProperty()->SetLineWidth(m_Thickness);
 }
 
-void mafPipeVisualVTKSliceSurface::SetSlice(double *origin) {
-    m_SliceOrigin[0] = origin[0];
-    m_SliceOrigin[1] = origin[1];
-    m_SliceOrigin[2] = origin[2];
+void mafPipeVisualVTKSliceSurface::setSlice(double *origin) {
+    m_CutterPipe->setSliceOrigin(origin);
 }
 
-void mafPipeVisualVTKSliceSurface::SetNormal(double *normal) {
-    m_Normal[0] = normal[0];
-    m_Normal[1] = normal[1];
-    m_Normal[2] = normal[2];
+void mafPipeVisualVTKSliceSurface::setNormal(double *normal) {
+    m_CutterPipe->setNormal(normal);
 }
