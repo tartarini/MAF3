@@ -3,9 +3,9 @@
  *  mafPluginVTK
  *
  *  Created by Paolo Quadrani on 16/04/10.
- *  Copyright 2010 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -20,7 +20,7 @@
 
 // Foundation Class forwarding list
 class vtkImageThreshold;
-class vtkImageData;
+class vtkAlgorithmOutput;
 
 namespace mafPluginVTK {
 
@@ -28,7 +28,7 @@ namespace mafPluginVTK {
 
 /**
  Class name: mafPipeDataImageThreshold
- This class allows you to make a threshoding on input image data.
+ This class allows you to make a thresholding on input image data.
  */
 class MAFPLUGINVTKSHARED_EXPORT mafPipeDataImageThreshold : public mafResources::mafPipeData {
     Q_OBJECT
@@ -84,7 +84,7 @@ private:
     unsigned int m_ThresholdMode; ///< Threshold mode: LOWER, UPPER, BETWEEN.
 
     vtkSmartPointer<vtkImageThreshold> m_ThresholdFilter; ///< VTK threshold filter used to thresholding input image data.
-    mafCore::mafProxy<vtkImageData> m_OutputValue; ///< Output value coming from the elaboration data pipe.
+    mafCore::mafProxy<vtkAlgorithmOutput> m_OutputValue; ///< Output value coming from the elaboration data pipe.
 };
 
 /////////////////////////////////////////////////////////////

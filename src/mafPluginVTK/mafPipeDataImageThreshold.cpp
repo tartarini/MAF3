@@ -23,6 +23,7 @@ using namespace mafPluginVTK;
 
 mafPipeDataImageThreshold::mafPipeDataImageThreshold(const QString code_location) : mafPipeData(code_location), m_LowerThreshold(0.0), m_UpperThreshold(1.0), m_ThresholdMode(mafThresholdModeBetween) {
     m_ThresholdFilter = vtkSmartPointer<vtkImageThreshold>::New();
+    m_OutputValue = m_ThresholdFilter->GetOutputPort();
 }
 
 mafPipeDataImageThreshold::~mafPipeDataImageThreshold() {
@@ -65,10 +66,6 @@ void mafPipeDataImageThreshold::updatePipe(double t) {
             break;
     }
     m_ThresholdFilter->Update();
-
-    if(m_OutputValue == NULL) {
-        m_OutputValue = m_ThresholdFilter->GetOutput();
-    }
 
     output(t)->dataSetCollection()->itemAt(t)->setDataValue(&m_OutputValue);
 
