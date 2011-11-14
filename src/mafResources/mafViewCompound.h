@@ -34,6 +34,9 @@ public:
     /// Show scene node passed as argument.
     /*virtual*/ void showSceneNode(mafSceneNode *node, bool show = true);
 
+    /// Return the list of subviews.
+    QList<mafView *> *viewList();
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafViewCompound();
@@ -48,6 +51,14 @@ public Q_SLOTS:
     /// Update sub-views.
     /*virtual*/ void updateView();
 };
+
+/////////////////////////////////////////////////////////////
+// Inline methods
+/////////////////////////////////////////////////////////////
+
+inline QList<mafView *> *mafViewCompound::viewList() {
+    return &m_ViewList;
+}
 
 } // namespace mafResources
 
