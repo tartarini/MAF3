@@ -16,7 +16,7 @@
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
     QByteArray ba;
-    if(argc != 3) {
+    if(argc != 4) {
         ba = mafTr("Usage: \nclientXMLRPC port server_address").toAscii();
         qDebug("%s", ba.data());
         exit(0);
@@ -40,12 +40,32 @@ int main(int argc, char *argv[]) {
 
     //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
     QVariantList dataParameters;
+    //dataParameters.append("mafAlgorithm");
+    
+    //log parameters
     dataParameters.append("mafOperationLogger");
-
+        
     QVariantMap operationParameters;
-    operationParameters.insert("dataBaseName", "StiCazziDiDB.db");
-    operationParameters.insert("tableName", "logTable");
-    operationParameters.insert("workflowID", "GUQFEFQUYWJGQJWQBHWGJHWBQHBW");
+    
+     //log parameters
+     operationParameters.insert("dataBaseName", argv[3]);
+     operationParameters.insert("tableName", "logTable");
+     operationParameters.insert("workflowId", "123");
+     
+    /*
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    operationParameters.insert("workflowId", "GUQFEFQUYWJGQJWQBHWGJHWBQHBW");
+    */
+    
+    //QStringList inputFiles;
+    //inputFiles << "input_01" << "input_02" << "input_03";
+    //operationParameters.insert("inputFileList", inputFiles);
+    //QStringList outputFiles;
+    //outputFiles << "output_01" << "output_02" << "output_03"; 
+    //operationParameters.insert("outputFileList", outputFiles);
+    
     dataParameters.push_back(operationParameters);
 
     listToSend.append(Q_ARG(QVariantList, dataParameters));
