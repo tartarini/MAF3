@@ -29,6 +29,8 @@ class mafVTKWidget;
  */
 class MAFPLUGINVTKSHARED_EXPORT mafViewVTK : public mafResources::mafView {
     Q_OBJECT
+    Q_PROPERTY(bool cameraParallel READ cameraParallel WRITE setCameraParallel)
+
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafView);
 
@@ -52,13 +54,32 @@ public:
     /// Select a scene node.
     /*virtual*/ void selectSceneNode(mafResources::mafSceneNode *node, bool select);
 
+    /// Return the camera parallel flag.
+    bool cameraParallel() const;
+
+    /// Allows to assign the camera parallel flag.
+    void setCameraParallel(bool parallel = true);
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafViewVTK();
 
 private:
     vtkRenderer *m_Renderer; ///< VTK render.
+    bool m_CameraParallel; ///< Flag that store the information on camera type: true means Parallel otherwise Perspective.
 };
+
+/////////////////////////////////////////////////////////////
+// Inline methods
+/////////////////////////////////////////////////////////////
+
+inline bool mafViewVTK::cameraParallel() const {
+    return m_CameraParallel;
+}
+
+inline void mafViewVTK::setCameraParallel(bool parallel /* = true */) {
+    m_CameraParallel = parallel;
+}
 
 } //namespace mafPluginVTK
 

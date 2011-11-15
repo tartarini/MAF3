@@ -33,7 +33,7 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace mafEventBus;
 
-mafViewVTK::mafViewVTK(const QString code_location) : mafView(code_location), m_Renderer(NULL) {
+mafViewVTK::mafViewVTK(const QString code_location) : mafView(code_location), m_Renderer(NULL), m_CameraParallel(false) {
     m_SceneNodeType = "mafPluginVTK::mafSceneNodeVTK";
 }
 
@@ -51,6 +51,7 @@ bool mafViewVTK::initialize() {
         ((mafVTKWidget*)m_RenderWidget)->setViewObject(v);
         m_Renderer = ((mafVTKWidget*)m_RenderWidget)->renderer();
         ((mafVTKWidget*)m_RenderWidget)->showAxes(true);
+        ((mafVTKWidget*)m_RenderWidget)->setParallelCameraMode(m_CameraParallel);
     
         //create the instance for selection pipe.
         m_PipeVisualSelection = mafNEW(mafPluginVTK::mafPipeVisualVTKSelection);
