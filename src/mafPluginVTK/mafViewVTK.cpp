@@ -50,6 +50,7 @@ bool mafViewVTK::initialize() {
         v.setValue<QObject*>(this);
         ((mafVTKWidget*)m_RenderWidget)->setViewObject(v);
         m_Renderer = ((mafVTKWidget*)m_RenderWidget)->renderer();
+        m_Renderer->SetBackground(0.1, 0.1, 0.1);
         ((mafVTKWidget*)m_RenderWidget)->showAxes(true);
         ((mafVTKWidget*)m_RenderWidget)->setParallelCameraMode(m_CameraParallel);
     
@@ -102,6 +103,7 @@ void mafViewVTK::updateView() {
 }
 
 void mafViewVTK::resetVisualization(double *bounds) {
+    ((mafVTKWidget*)m_RenderWidget)->update();
     if (bounds) {
         m_Renderer->ResetCamera(bounds);
     } else {
