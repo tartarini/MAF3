@@ -2,7 +2,7 @@
  *  mafPipeVisualVTKSliceSurfaceTest.cpp
  *  mafPluginVTK
  *
- *  Created by Roberto Mucci on 01/03/10.
+ *  Created by Paolo Quadrani on 12/11/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
@@ -24,7 +24,6 @@
 
 #include <mafVTKWidget.h>
 
-#include <vtkAppendPolyData.h>
 #include <vtkSmartPointer.h>
 
 #include <vtkPolyData.h>
@@ -82,22 +81,18 @@ private Q_SLOTS:
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSliceSurface)
 
         // Create a sphere.
-        vtkSmartPointer<vtkSphereSource> surfSphere = vtkSmartPointer<vtkSphereSource>::New();
-        surfSphere->SetRadius(5);
-        surfSphere->SetPhiResolution(10);
-        surfSphere->SetThetaResolution(10);
-        surfSphere->Update();
-
-        // Append the 2 surfaces in one PolyData
-        m_AppendData = vtkAppendPolyData::New();
-        m_AppendData->AddInputConnection(surfSphere->GetOutputPort());
+        m_SurfSphere = vtkSphereSource::New();
+        m_SurfSphere->SetRadius(5);
+        m_SurfSphere->SetPhiResolution(10);
+        m_SurfSphere->SetThetaResolution(10);
+        m_SurfSphere->Update();
 
         //! <snippet>
         //// Create a container with the outputPort of a vtkCubeSource
         //// m_DataSourceContainer is the container of type vtkAlgorithmOutput
         //// to "wrap" the 'vtkCubeSource' of type vtkPolyData just simply use the code below.
         m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
-        m_DataSourceContainer = m_AppendData->GetOutputPort(0);
+        m_DataSourceContainer = m_SurfSphere->GetOutputPort(0);
 
         //Insert data into VME
         m_VME = mafNEW(mafResources::mafVME);
@@ -115,7 +110,6 @@ private Q_SLOTS:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_DataSet);
-        m_AppendData->Delete();
         mafDEL(m_VME);
         mafMessageHandler::instance()->shutdown();
         m_RenderWidget = new mafVTKWidget();
@@ -133,7 +127,7 @@ private:
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a surface.
     mafResources::mafDataSet *m_DataSet;
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
-    vtkAppendPolyData *m_AppendData; /// Bunch of surfaces.
+    vtkSphereSource *m_SurfSphere;
     QObject *m_RenderWidget; /// renderer widget
     vtkRenderer *m_Renderer; ///< Accessory renderer
     QMainWindow *w;
