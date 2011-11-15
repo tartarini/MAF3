@@ -56,13 +56,26 @@ void mafViewCompoundConfigurator::parseDocument(QDomNode current, QObject *paren
                 QSplitterHandle *handler = splitter->handle(1);
                 handler->setEnabled(sepEnabled.toInt() != 0);
             } else if (elem_name == "view") {
-                // We are at the leaf of the hierarchy tree: view objects are added at the parent splitter.
+                // view objects are added at the parent splitter.
                 QString viewClassType = attributes.namedItem("classtype").nodeValue();
-                QString viewName = attributes.namedItem("viewName").nodeValue();
+                // Instantiate the class type
                 mafCore::mafObjectBase *obj = mafNEWFromString(viewClassType);
-                obj->setObjectName(viewName);
+                // Then extract all the attributes representing the object's properties.
+                int s = attributes.size();
+                int i = 0;
+                for (; i < s; ++i) {
+                    QDomNode n(attributes.item(i));
+                    if (n.nodeName() != "classtype") {
+                        QByteArray ba(n.nodeName().toAscii());
+                        bool isOk(obj->setProperty(ba.constData(), n.nodeValue()));
+                        if (!isOk) {
+                            qWarning() << mafTr("Problem assigning property named: %1 to view of type: %2").arg(n.nodeName(), viewClassType);
+                        }
+                    }
+                }
                 mafSplitter *parentSplitter = qobject_cast<mafSplitter *>(parent);
                 if (parentSplitter) {
+                    // and add it to the splitter.
                     parentSplitter->addView(obj);
                 }
                 // Check if there are children and parse them...
