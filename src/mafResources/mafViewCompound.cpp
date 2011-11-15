@@ -31,11 +31,12 @@ bool mafViewCompound::initialize() {
 			argList.append(mafEventArgument(QString, cf));
 			QGenericReturnArgument ret_val = mafEventReturnArgument(QObject *, m_RenderWidget);
 			mafEventBusManager::instance()->notifyEvent("maf.local.gui.compoundWidgetConfigure", mafEventTypeLocal, &argList, &ret_val);
-			if (m_RenderWidget == NULL) {
-				qCritical() << mafTr("Problem loading layout configuration file %1").arg(cf);
-			}
-			extractViews(m_RenderWidget);
-			setupSceneGraph();
+			if (m_RenderWidget != NULL) {
+                extractViews(m_RenderWidget);
+                setupSceneGraph();
+            } else {
+                qCritical() << mafTr("Problem loading layout configuration file %1").arg(cf);
+            }
 			return m_RenderWidget != NULL;
 		}
 		return true;
