@@ -17,10 +17,10 @@
 #include <mafPipeData.h>
 #include <mafProxy.h>
 #include <vtkSmartPointer.h>
+#include <vtkAlgorithmOutput.h>
 
 // Foundation Class forwarding list
 class vtkImageThreshold;
-class vtkAlgorithmOutput;
 
 namespace mafPluginVTK {
 
