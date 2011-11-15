@@ -26,9 +26,6 @@ public:
     /// Object constructor.
     mafViewOrthoSlice(const QString code_location = "");
 
-    /// Create the view
-    /*virtual*/ bool initialize();
-
 protected:
     /// Object destructor.
     /* virtual */ ~mafViewOrthoSlice();
