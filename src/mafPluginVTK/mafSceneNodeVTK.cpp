@@ -101,7 +101,6 @@ void mafSceneNodeVTK::setVisibility(bool visible) {
         mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(m_GraphicObject);
         if (widget != NULL) {
             m_AxesTool->setGraphicObject(m_GraphicObject);
-//            widget->GetRenderWindow()->Render();
         }
         update();
     }
