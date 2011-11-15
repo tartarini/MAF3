@@ -83,6 +83,7 @@ vtkRenderer *mafVTKWidget::createLayer(const QString layerName) {
         renderer = vtkRenderer::New();
         renderer->SetLayer(numLayers);
         renderer->SetInteractive(1);
+        renderer->TwoSidedLightingOn();
         // Link the camera to that one present into the base renderer (if available)
         if (m_RendererBase != NULL) {
             renderer->SetActiveCamera(m_RendererBase->GetActiveCamera());
