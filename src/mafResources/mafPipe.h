@@ -60,6 +60,7 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafPipe();
 
+private:
     mafVMEList *m_InputList; ///< VME input List
 };
 
