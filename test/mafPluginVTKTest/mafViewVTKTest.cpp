@@ -162,7 +162,7 @@ private:
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainerMoved; ///< Container of the Data S
     mafResources::mafDataSet *m_DataSetCube;
     mafResources::mafDataSet *m_DataSetCubeMoved;
-    QHash<QString, QString> m_BindingHash;
+    QVariantHash m_BindingHash;
 };
 
 void mafViewVTKTest::mafViewVTKAllocationTest() {
@@ -193,7 +193,7 @@ void mafViewVTKTest::mafViewVTKCreateView2VMETest() {
     argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VmeCube));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 
-    m_View->plugVisualPipeBindingHash(&m_BindingHash);
+    m_View->setVisualPipeHash(m_BindingHash);
     //! </snippet>
 
     // Visualize first cube

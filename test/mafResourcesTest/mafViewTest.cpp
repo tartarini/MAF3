@@ -74,7 +74,7 @@ private Q_SLOTS:
 
 private:
     mafView *m_View; ///< Test var.
-    QHash<QString, QString> m_BindingHash; ///< Test var.
+    QVariantHash m_BindingHash; ///< Test var.
 };
 
 void mafViewTest::mafViewAllocationTest() {
@@ -123,7 +123,7 @@ void mafViewTest::mafViewShowSceneNodeTest() {
 }
 
 void mafViewTest::mafViewPlugVisualPipeTest() {
-    m_View->plugVisualPipeBindingHash(&m_BindingHash);
+    m_View->setVisualPipeHash(m_BindingHash);
 }
 
 void mafViewTest::mafViewRenderingWidgetTest() {
