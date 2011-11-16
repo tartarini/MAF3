@@ -13,7 +13,17 @@ SET(QtSOAP_DEPENDS)
   execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/SCS-B3C/QtSOAP.git"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   RESULT_VARIABLE RESULT)
-                  
+   
+  SET(ep_base "${MAF_EXTERNAL_BUILD_DIR}")
+  SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${ep_base})
+  
+  SET(ep_install_dir ${ep_base}/Install)
+  SET(ep_build_dir ${ep_base}/Build)
+  SET(ep_source_dir ${ep_base}/Source)
+  #SET(ep_parallelism_level)
+  SET(ep_build_shared_libs ON)
+  SET(ep_build_testing OFF)
+                
   IF(RESULT)
       IF(NOT DEFINED QtSOAP_DIR)
       

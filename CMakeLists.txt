@@ -74,6 +74,7 @@ option(VTK_MAF "Build vtkMAF VTK extension library."                            
 option(MAF_APPLICATION_LOGIC "Build mafApplicationLogic module. mafCore and mafEventBus will be built anyway." ON)
 option(MAF_QTGUI "Build mafGUI module. mafCore and mafEventBus will be built anyway."                         ON)
 option(MAF_SCRIPT_INTERPRETER "Build mafScriptInterpreter module. mafCore, mafEventBus and mafGUI will be built anyway." OFF)
+option(MAF_PLUGINCTK "Build mafPluginCTK module. mafCore and mafEventBus will be built anyway."               ON)
 
 set(MAF_DATA_DIR)
 find_path(MAF_DATA_DIR "README.txt" PATHS "${MAF_SOURCE_DIR}/../maf3data")
@@ -91,6 +92,15 @@ if(MAF_PLUGINVTK)
   mafDependentOption(MAF_RESOURCES "Build mafResources module." ON MAF_PLUGINVTK ON)
   mafDependentOption(VTK_MAF "Build vtkMAF module." ON MAF_PLUGINVTK ON)
 endif(MAF_PLUGINVTK)
+
+### set modules interdependencies
+include(CMake/mafUtilities.cmake)
+if(MAF_PLUGINCTK)
+  SET( MAF_RESOURCES ON ) 
+  SET( MAF_QTGUI ON ) 
+  mafDependentOption(MAF_RESOURCES "Build mafResources module." ON MAF_PLUGINCTK ON)
+  mafDependentOption(MAF_QTGUI "Build vtkMAF module." ON MAF_PLUGINCTK ON)
+endif(MAF_PLUGINCTK)
 
 if(MAF_SCRIPT_INTERPRETER)
   SET( MAF_QTGUI ON )
@@ -127,6 +137,9 @@ if(BUILD_EXAMPLES)
 	
 	set( MAF_SCRIPT_INTERPRETER ON ) 
     mafDependentOption(MAF_SCRIPT_INTERPRETER "Build Test module for mafGUI." ON BUILD_EXAMPLES ON)
+    
+    set( MAF_PLUGINCTK ON ) 
+    mafDependentOption(MAF_PLUGINCTK "Build Test module for mafGUI." ON BUILD_EXAMPLES ON)
 endif(BUILD_EXAMPLES)
 
 ### examples dependencies 

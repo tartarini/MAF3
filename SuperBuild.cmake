@@ -99,8 +99,14 @@ if(VTK_MAF)
   include(CMakeExternals/External_VTK.cmake)
 endif(VTK_MAF)
 
+if(MAF_PLUGINCTK)
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} CTK)
+  include(CMakeExternals/External_CTK.cmake)
+endif(MAF_PLUGINCTK)
+
 #remove duplicates
 list(REMOVE_DUPLICATES MAF_DEPENDENCIES)
+
 
 #############################################################################################
 ### Conditionnaly include ExternalProject Target
@@ -231,10 +237,7 @@ ExternalProject_Add(${proj}
     # OpenCV
     -DOpenCV_DIR:PATH=${OpenCV_DIR} # FindOpenCV expects OpenCV_DIR variable to be defined
     # CTK
-    #-DCTK_DIR:PATH=${CTK_DIR}
-    # CTKAppLauncher
-    #-DCTKAPPLAUNCHER_DIR:PATH=${CTKAPPLAUNCHER_DIR}
-    # Deprecated - KWWidgets
+    -DCTK_DIR:PATH=${CTK_DIR}
   INSTALL_COMMAND ""
   )
   

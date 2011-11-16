@@ -13,8 +13,18 @@ SET(OpenCV_DEPENDS)
   execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/SCS-B3C/OpenCV.git"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   RESULT_VARIABLE RESULT)
-                  
-  IF(RESULT)
+  
+  SET(ep_base "${MAF_EXTERNAL_BUILD_DIR}")
+  SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${ep_base})
+  
+  SET(ep_install_dir ${ep_base}/Install)
+  SET(ep_build_dir ${ep_base}/Build)
+  SET(ep_source_dir ${ep_base}/Source)
+  #SET(ep_parallelism_level)
+  SET(ep_build_shared_libs ON)
+  SET(ep_build_testing OFF)
+                
+IF(RESULT)
   IF(NOT DEFINED OpenCV_DIR)
     #MESSAGE("Adding project:${proj}")
     
@@ -40,7 +50,7 @@ SET(OpenCV_DEPENDS)
     mafMacroEmptyExternalProject(${proj} "${proj_DEPENDENCIES}")
   ENDIF()
 
-  ELSE(RESULT)
+ELSE(RESULT)
   IF(NOT DEFINED OpenCV_DIR)
     #MESSAGE("Adding project:${proj}")
     
@@ -67,7 +77,7 @@ SET(OpenCV_DEPENDS)
     mafMacroEmptyExternalProject(${proj} "${proj_DEPENDENCIES}")
   ENDIF()
 
-  ENDIF(RESULT)
+ENDIF(RESULT)
   SET(${OpenCV_enabling_variable}_INCLUDE_DIRS OpenCV_INCLUDE_DIRS)
   SET(${OpenCV_enabling_variable}_FIND_PACKAGE_CMD OpenCV)
     
