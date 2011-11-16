@@ -212,7 +212,7 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
         dataType = data->externalDataType();
     }
     if (m_VisualPipeHash && m_VisualPipeHash->contains(dataType)) {
-        vp = m_VisualPipeHash->value(dataType);
+        vp = m_VisualPipeHash->value(dataType).toString();
     }
 
     if (vp.isEmpty()) {
@@ -240,30 +240,15 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
 }
 
 
-void mafView::plugVisualPipeBindingHash(QHash<QString , QString> *hash) {
-    m_VisualPipeHash = hash;
-}
-
 QVariantHash mafView::visualPipeHash() const {
-    QVariantHash h;
-    QHash<QString, QString>::iterator iter = m_VisualPipeHash->begin();
-    while (iter != m_VisualPipeHash->end()) {
-        QVariant v(iter.value());
-        h.insert(iter.key(), v);
-        ++iter;
-    }
-    return h;
+    return *m_VisualPipeHash;
 }
 
 void mafView::setVisualPipeHash(const QVariantHash hash) {
     if (m_VisualPipeHash == NULL) {
-        m_VisualPipeHash = new QHash<QString, QString>();
+        m_VisualPipeHash = new QVariantHash();
     }
-    QVariantHash::const_iterator iter = hash.constBegin();
-    while (iter != hash.constEnd()) {
-        m_VisualPipeHash->insert(iter.key(), iter.value().toString());
-        ++iter;
-    }
+    m_VisualPipeHash->unite(hash);
 }
 
 mafSceneNode *mafView::sceneNodeFromVme(mafObjectBase *vme) {

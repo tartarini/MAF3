@@ -65,9 +65,6 @@ public:
     /// Return true if view is selected.
     bool isSelected();
 
-    /// Set default visual pipe for a type of data.
-    void plugVisualPipeBindingHash(QHash<QString , QString> *hash);
-
     /// Set rendering window used by the view.
     void setRenderingWidget(QVariant renWidget);
 
@@ -89,8 +86,10 @@ public:
     /// update scene nodes information from VMEs.
     void updateSceneNodesInformation();
 
+    /// Return the hash that contains the association between data type and related visual pipe to use for render it.
     QVariantHash visualPipeHash() const;
     
+    /// Assign the hash that will contains the association between data type and related visual pipe to use for render it.
     void setVisualPipeHash(const QVariantHash hash);
     
 protected:
@@ -112,7 +111,7 @@ protected:
 
     QObject *m_RenderWidget; ///< Rendering widget for the view.
     mafCore::mafHierarchyPointer m_Scenegraph; ///< SceneGraph
-    QHash<QString, QString> *m_VisualPipeHash; ///< Bind between dataType and Visual pipe.
+    QVariantHash *m_VisualPipeHash; ///< Bind between dataType and Visual pipe.
     bool m_Selected; ///< Flag for active view.
     mafSceneNode *m_SelectedNode; ///< Keep track of the selected SceneNode.
     QHash<mafVME *, mafSceneNode *> m_SceneNodeHash; ///< variable useful for rapid iteration between mafTreeItem
