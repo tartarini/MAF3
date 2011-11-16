@@ -157,7 +157,7 @@ private:
 
     mafResourceList m_CreatedViewList; ///< List of created views.
     mafView *m_SelectedView; ///< Keep trak of the current selected view.
-    QHash<QString, QHash<QString, QString>* > m_VisualizationBindHash; ///< Hash containing the view type as key and the hash of binds between data type and visual pipe to use for rendering.
+    QHash<QString, QVariantHash* > m_VisualizationBindHash; ///< Hash containing the view type as key and the hash of binds between data type and visual pipe to use for rendering.
 };
 
 } // namespace mafResources
