@@ -21,12 +21,12 @@ using namespace mafResources;
 
 mafPluginRegistrator::mafPluginRegistrator() {
     // Register to the mafObjectFactory the plug-in object's types.
-    mafRegisterObject(mafPluginCTK::mafImporterCTKDICOM);
+    mafRegisterObjectAndAcceptBind(mafPluginCTK::mafImporterCTKDICOM);
 }
 
 mafPluginRegistrator::~mafPluginRegistrator() {
     // When the library is Un-Loaded it has to remove from the mafObjectFactory its object's types.
-    mafUnregisterObject(mafPluginCTK::mafImporterCTKDICOM);
+    mafUnregisterObjectAndAcceptUnbind(mafPluginCTK::mafImporterCTKDICOM);
 }
 
 void mafPluginRegistrator::registerAllObjects() {

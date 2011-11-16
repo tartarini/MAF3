@@ -15,7 +15,7 @@
 using namespace mafPluginCTK;
 using namespace mafResources;
 
-mafImporterCTKDICOM::mafImporterCTKDICOM(const QString code_location) : mafImporter(code_location) {
+mafImporterCTKDICOM::mafImporterCTKDICOM(const QString code_location) : mafImporter(code_location), m_AppWidget(NULL) {
 	setProperty("wildcard", mafTr("All Files (*.*)"));
 }
 
@@ -23,14 +23,17 @@ mafImporterCTKDICOM::~mafImporterCTKDICOM() {
 }
 
 bool mafImporterCTKDICOM::initialize() {
-	ctkDICOMAppWidget appWidget;
- 	appWidget.setDatabaseDirectory(QDir::currentPath());
-	appWidget.onAddToDatabase();
-	appWidget.openImportDialog();
-	appWidget.openExportDialog();
-	appWidget.openQueryDialog();
+	m_AppWidget = new ctkDICOMAppWidget();
+	
+ 	m_AppWidget->setDatabaseDirectory(QDir::currentPath());
+	m_AppWidget->onAddToDatabase();
+	m_AppWidget->openImportDialog();
+	m_AppWidget->openExportDialog();
+	m_AppWidget->openQueryDialog();
  
-	appWidget.show();
+	m_AppWidget->show();
+	
+	
 }
 
 void mafImporterCTKDICOM::execute() {
