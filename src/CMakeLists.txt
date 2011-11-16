@@ -38,6 +38,10 @@ if(${MAF_SCRIPT_INTERPRETER})
   ADD_SUBDIRECTORY(mafScriptInterpreter)
 endif(${MAF_SCRIPT_INTERPRETER})
 
+if(${MAF_PLUGINCTK})
+  ADD_SUBDIRECTORY(mafPluginCTK)
+endif(${MAF_PLUGINCTK})
+
 
 #ADD_SUBDIRECTORY(mafPluginGimias)
 

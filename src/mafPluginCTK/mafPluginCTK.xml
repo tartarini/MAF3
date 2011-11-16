@@ -1,0 +1,3 @@
+<plugin>
+	<plug classtype="mafPluginCTK::mafImporterCTKDICOM" baseclass="mafResources::mafImporter" label="Import DICOM data"></plug>
+</plugin>

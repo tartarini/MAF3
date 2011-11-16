@@ -16,7 +16,7 @@
 #include <vtkDataSet.h>
 #include <vtkImageThreshold.h>
 #include <vtkImageData.h>
-
+#include <vtkAlgorithmOutput.h>
 using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
