@@ -329,6 +329,7 @@ void mafMainWindow::viewCreated(mafCore::mafObjectBase *view) {
         return;
     }
     QMdiSubWindow *sub_win = ui->mdiArea->addSubWindow(widget);
+    sub_win->setWindowTitle(view->objectName());
     sub_win->setAttribute(Qt::WA_DeleteOnClose);
     sub_win->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     connect(sub_win, SIGNAL(aboutToActivate()), this, SLOT(viewWillBeSelected()));
