@@ -23,6 +23,7 @@ mafPipe::mafPipe(const QString code_location) : mafObject(code_location), m_Inpu
 
 mafPipe::~mafPipe() {
     m_InputList->clear();
+    m_ParametersHash.clear();
     
     delete m_InputList;
     m_InputList = NULL;
@@ -87,5 +88,16 @@ void mafPipe::removeInput(const int idx) {
     } else {
         QByteArray ba = mafTr("Index %1 outside input list range.").arg(idx).toAscii();
         qWarning("%s", ba.data());
+    }
+}
+
+void mafPipe::setParametersHash(const QVariantHash hash) {
+    m_ParametersHash.unite(hash);
+    QVariantHash::iterator iter = m_ParametersHash.begin();
+    while (iter != m_ParametersHash.end()) {
+        QByteArray ba = iter.key().toAscii();
+        QVariant val(iter.value());
+        setProperty(ba.constData(), val);
+        ++iter;
     }
 }

@@ -27,6 +27,8 @@ class mafDataSet;
  */
 class MAFRESOURCESSHARED_EXPORT mafPipe : public mafCore::mafObject {
     Q_OBJECT
+    Q_PROPERTY(QVariantHash parametersHash READ parametersHash WRITE setParametersHash)
+
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObject);
 
@@ -52,6 +54,14 @@ public:
     /// Get the input of the pipe.
     mafVMEList *inputList();
 
+    /// Return the hash that contains parameters used to initialize the pipe algorithm.
+    QVariantHash parametersHash() const;
+
+    /// Assign the hash that contains parameters used to initialize the pipe algorithm.
+    /** The hash contains key, value representing the name of the property (key) and the corresponding
+    value of it (the value of the hash).*/
+    void setParametersHash(const QVariantHash hash);
+
 public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change
     virtual void updatePipe(double t = -1) = 0;
@@ -62,6 +72,7 @@ protected:
 
 private:
     mafVMEList *m_InputList; ///< VME input List
+    QVariantHash m_ParametersHash; ///< Hash containing the optional parameters used to initialize the pipe.
 };
 
 /////////////////////////////////////////////////////////////
@@ -70,6 +81,10 @@ private:
 
 inline mafVMEList *mafPipe::inputList() {
     return m_InputList;
+}
+
+inline QVariantHash mafPipe::parametersHash() const {
+    return m_ParametersHash;
 }
 
 } //namespace mafResources
