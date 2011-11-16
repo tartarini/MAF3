@@ -150,9 +150,9 @@ void mafViewManager::initializeConnections() {
 }
 
 void mafViewManager::customPipeVisualForVMEInView(QString view_name, QString data_type, QString pipe_type) {
-    QHash<QString, QString> *hash;
+    QVariantHash *hash;
     if (!m_VisualizationBindHash.contains(view_name)) {
-        hash = new QHash<QString, QString>;
+        hash = new QVariantHash;
         m_VisualizationBindHash.insert(view_name, hash);
     }
     hash = m_VisualizationBindHash.value(view_name);
@@ -206,7 +206,7 @@ void mafViewManager::createView(QString view_type, QString view_name) {
     if(v != NULL) {
         v->setObjectName(view_name);
         if (m_VisualizationBindHash.contains(view_name)) {
-            v->plugVisualPipeBindingHash(m_VisualizationBindHash.value(view_name));
+            v->setVisualPipeHash(*m_VisualizationBindHash.value(view_name));
         }
         addViewToCreatedList(v);
         selectView(obj);
