@@ -26,6 +26,8 @@ using namespace mafResources;
  */
 class  testPipeCustom : public  mafPipe {
     Q_OBJECT
+    Q_PROPERTY(QString param READ param WRITE setParam)
+
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafPipe);
 
@@ -36,12 +38,19 @@ public:
     /// Return the string variable initialized and updated from the data pipe.
     QString pipeline() {return m_PipeLine;}
 
+    /// Return the value of the parameter.
+    QString param() const {return m_Parameter;};
+
+    /// Assign the value to the custom parameter.
+    void setParam(QString s) {m_Parameter = s;};
+
 public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change
     /*virtual*/ void updatePipe(double t = -1);
 
 private:
     QString m_PipeLine; ///< Test Var.
+    QString m_Parameter; ///< Test parameter.
 };
 
 testPipeCustom::testPipeCustom(const QString code_location) : mafPipe(code_location), m_PipeLine("Created") {
@@ -80,6 +89,8 @@ private Q_SLOTS:
     void mafPipeCreationAndUpdateTest();
     /// Test the input management of the mafPipe
     void inputManagementTest();
+    /// Test the parameter initialization through hash
+    void setParameterHashTest();
 
 private:
     testPipeCustom *m_Pipe; ///< Test var.
@@ -144,6 +155,16 @@ void mafPipeTest::inputManagementTest() {
     mafDEL(data2);
     mafDEL(vme1);
     mafDEL(vme2);
+}
+
+void mafPipeTest::setParameterHashTest() {
+    QVariantHash hash;
+    QVariant val("test");
+    hash.insert("param", val);
+    m_Pipe->setParametersHash(hash);
+
+    QString res(m_Pipe->param());
+    QVERIFY(res == val.toString());
 }
 
 MAF_REGISTER_TEST(mafPipeTest);
