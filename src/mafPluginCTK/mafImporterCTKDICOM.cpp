@@ -33,7 +33,7 @@ bool mafImporterCTKDICOM::initialize() {
  
 	m_AppWidget->show();
 	
-	
+	return true;
 }
 
 void mafImporterCTKDICOM::execute() {
