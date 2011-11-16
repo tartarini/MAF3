@@ -16,6 +16,8 @@
 #include "mafPluginCTKDefinitions.h"
 #include <mafImporter.h>
 
+class ctkDICOMAppWidget;
+
 namespace mafPluginCTK {
 
 /**
@@ -43,6 +45,7 @@ protected:
     /* virtual */ ~mafImporterCTKDICOM();
     
 private:
+    ctkDICOMAppWidget *m_AppWidget;
     //mafCore::mafProxy<vtkAlgorithmOutput> m_ImportedData; ///< Container of the Data Source
     //vtkDataSetReader *m_Reader; ///< Reader of the external data.
 };
