@@ -152,6 +152,17 @@ private Q_SLOTS:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
+inline QVariantHash mafView::visualPipeHash() const {
+    return *m_VisualPipeHash;
+}
+
+inline void mafView::setVisualPipeHash(const QVariantHash hash) {
+    if (m_VisualPipeHash == NULL) {
+        m_VisualPipeHash = new QVariantHash();
+    }
+    m_VisualPipeHash->unite(hash);
+}
+
 inline void mafView::setConfigurationFile(const QString configFile) {
     m_LayoutConfigurationFile = configFile;
 }

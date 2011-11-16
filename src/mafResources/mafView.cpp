@@ -239,18 +239,6 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
     updateView();
 }
 
-
-QVariantHash mafView::visualPipeHash() const {
-    return *m_VisualPipeHash;
-}
-
-void mafView::setVisualPipeHash(const QVariantHash hash) {
-    if (m_VisualPipeHash == NULL) {
-        m_VisualPipeHash = new QVariantHash();
-    }
-    m_VisualPipeHash->unite(hash);
-}
-
 mafSceneNode *mafView::sceneNodeFromVme(mafObjectBase *vme) {
     REQUIRE(vme);
     mafVME *asked_vme = qobject_cast<mafResources::mafVME *>(vme);
