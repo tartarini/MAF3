@@ -12,6 +12,7 @@
 	<plug classtype="mafPluginVTK::mafOperationTransformVTK" baseclass="mafResources::mafOperation" label="Transform VTK Data"></plug>
     <plug classtype="mafPluginVTK::mafOperationVTKAddLandmark" baseclass="mafResources::mafOperation" label="Add VTK Landmark"></plug>
 	<plug classtype="mafPluginVTK::mafImporterVTK" baseclass="mafResources::mafImporter" label="Import VTK data"></plug>
+	<plug classtype="mafPluginVTK::mafImporterSTL" baseclass="mafResources::mafImporter" label="Import STL data"></plug>
 	<plug classtype="mafPluginVTK::mafExporterVTK" baseclass="mafResources::mafExporter" label="Export VTK data"></plug>
 	<plug classtype="mafPluginVTK::mafDataBoundaryAlgorithmVTK" baseclass="mafResources::mafDataBoundaryAlgorithm" label="VTK BoundaryAlgorithm"></plug>
 	<codec classtype="mafPluginVTK::mafExternalDataCodecVTK" encodetype="VTK"></codec>

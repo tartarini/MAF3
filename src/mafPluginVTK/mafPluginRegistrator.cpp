@@ -29,6 +29,7 @@
 #include "mafOperationTransformVTK.h"
 #include "mafOperationVTKAddLandmark.h"
 #include "mafImporterVTK.h"
+#include "mafImporterSTL.h"
 #include "mafExporterVTK.h"
 
 
@@ -63,6 +64,7 @@ mafPluginRegistrator::mafPluginRegistrator() {
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafOperationTransformVTK);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafOperationVTKAddLandmark);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafImporterVTK);
+    mafRegisterObjectAndAcceptBind(mafPluginVTK::mafImporterSTL);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafExporterVTK);
 
     mafRegisterObject(mafPluginVTK::mafViewVTK);
@@ -94,6 +96,7 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafOperationTransformVTK);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafOperationVTKAddLandmark);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafImporterVTK);
+    mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafImporterSTL);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafExporterVTK);
 
     mafUnregisterObject(mafPluginVTK::mafViewVTK);
@@ -130,6 +133,7 @@ void mafPluginRegistrator::registerAllObjects() {
     mafPluggedObjectInformation opTransformVTK("Transform VTK Data", "mafPluginVTK::mafOperationTransformVTK");
     mafPluggedObjectInformation opVTKAddLandmark("Add VTK Landmark", "mafPluginVTK::mafOperationVTKAddLandmark");
     mafPluggedObjectInformation importerVTK("Import VTK data", "mafPluginVTK::mafImporterVTK");
+    mafPluggedObjectInformation importerSTL("Import STL data", "mafPluginVTK::mafImporterSTL");
     mafPluggedObjectInformation exporterVTK("Export VTK data", "mafPluginVTK::mafExporterVTK");
     
     mafPluggedObjectInformation externalDataCodecVTK("VTK codec", "mafPluginVTK::mafExternalDataCodecVTK");
@@ -150,6 +154,7 @@ void mafPluginRegistrator::registerAllObjects() {
     pluginHash.insertMulti("mafResources::mafOperation", opTransformVTK);
     pluginHash.insertMulti("mafResources::mafOperation", opVTKAddLandmark);
     pluginHash.insertMulti("mafResources::mafImporter", importerVTK);
+    pluginHash.insertMulti("mafResources::mafImporter", importerSTL);
     pluginHash.insertMulti("mafResources::mafExporter", exporterVTK);
     pluginHash.insertMulti("mafCore::mafExternalDataCodec", externalDataCodecVTK);
     pluginHash.insertMulti("mafResources::mafDataBoundaryAlgorithm", dataBoundaryAlgorithmVTK);
