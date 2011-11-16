@@ -21,7 +21,7 @@
 #include "mafView.h"
 #include "mafViewCompound.h"
 #include "mafSceneNode.h"
-#include "mafHierarchy.h"
+#include "mafImporter.h"
 #include "mafMementoResource.h"
 #include "mafMementoDataSet.h"
 #include "mafMementoDataSetCollection.h"
@@ -53,6 +53,7 @@ void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObject(mafResources::mafVisitorFindSceneNodeByVMEHash);
     mafRegisterObject(mafResources::mafPipeVisualCompound);
     mafRegisterObjectAndAcceptBind(mafResources::mafOperationTransform);
+    mafRegisterObjectAndAcceptBind(mafResources::mafImporter);
 }
 
 void mafResourcesRegistration::unregisterResourcesObjects() {
@@ -74,4 +75,5 @@ void mafResourcesRegistration::unregisterResourcesObjects() {
     mafUnregisterObject(mafResources::mafVisitorFindSceneNodeByVMEHash);
     mafUnregisterObject(mafResources::mafPipeVisualCompound);
     mafUnregisterObjectAndAcceptUnbind(mafResources::mafOperationTransform);
+    mafUnregisterObjectAndAcceptUnbind(mafResources::mafImporter);
 }
