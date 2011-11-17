@@ -114,15 +114,12 @@ bool mafLogic::initialize() {
 }
 
 mafCore::mafHierarchy *mafLogic::requestNewHierarchy() {
-    //clean the scenegraphs of all the views
+    // clean the SceneGraphs of all the views
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.clearViews");
 
     // Initialize data hierarchy
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, m_Hierarchy);
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.new", mafEventTypeLocal, NULL, &ret_val);
-    
-    //fill the scenegraphs of all the views
-    //mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.fillViews");
     
     return m_Hierarchy;
 }
