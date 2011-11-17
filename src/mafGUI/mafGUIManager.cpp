@@ -69,21 +69,24 @@ mafGUIManager::~mafGUIManager() {
 
 void mafGUIManager::newWorkingSession() {
     m_Model->setTreeModelStatus(mafTreeModelStatusGenerate);
+
+    // Clear all the previously created hierarchies and create a new one.
     mafHierarchyPointer h = m_Logic->requestNewHierarchy();
 
-    /// view select
+    /// Ask the view manager for the selected view
     mafCore::mafObjectBase *sel_view;
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_view);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
 
-    QVariant v;
     if (sel_view) {
-        v = sel_view->property("hierarchy");
-        h = v.value<mafCore::mafHierarchyPointer>();
+        // if any, ask it its SceneGraph
+        h = sel_view->property("sceneGraph").value<mafCore::mafHierarchyPointer>();
     }
     
+    // Assign the hierarchy to the tree model
     m_Model->setHierarchy(h);
-        
+    
+    // select the root node.
     QModelIndex index = m_Model->index(0, 0);
     m_TreeWidget->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
     m_CompleteFileName = "";
@@ -818,11 +821,14 @@ void mafGUIManager::createView() {
 
 void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
     REQUIRE(view != NULL);
+    if (m_CurrentView == view) {
+        return;
+    }
     m_CurrentView = view;
     
     // Set current hierarchy
     mafHierarchyPointer sceneGraph;
-    sceneGraph = view->property("hierarchy").value<mafCore::mafHierarchyPointer>();
+    sceneGraph = view->property("sceneGraph").value<mafCore::mafHierarchyPointer>();
     if (m_Model) {
         // Set hierarchy of selected view and set the current index
         //m_Model->clear();
