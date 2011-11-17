@@ -228,7 +228,7 @@ void mafViewManager::sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::maf
 
     for (; i < m_CreatedViewList.count(); i++) {
         mafView *view = (mafView *)m_CreatedViewList.at(i);
-        mafCore::mafHierarchy *sceneGraph = view->hierarchy().value<mafCore::mafHierarchyPointer>();
+        mafCore::mafHierarchy *sceneGraph = view->sceneGraph();
         if (sceneGraph != NULL) {
             //get sceneNodes corresponding to VMEs from each view
             mafSceneNode* sn = view->sceneNodeFromVme(sceneNode->vme());
