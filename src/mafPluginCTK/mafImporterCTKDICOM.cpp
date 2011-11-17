@@ -2,7 +2,7 @@
  *  mafImporterCTKDICOM.cpp
  *  mafPluginCTK
  *
- *  Created by Paolo Quadrani on 04/04/11.
+ *  Created by Roberto Mucci and Daniele Giunchi on 16/11/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
@@ -11,11 +11,13 @@
 
 #include "mafImporterCTKDICOM.h"
 #include <ctkDICOMAppWidget.h>
+#include <QDialog>
+#include <QGridLayout>
 
 using namespace mafPluginCTK;
 using namespace mafResources;
 
-mafImporterCTKDICOM::mafImporterCTKDICOM(const QString code_location) : mafImporter(code_location), m_AppWidget(NULL) {
+mafImporterCTKDICOM::mafImporterCTKDICOM(const QString code_location) : mafImporter(code_location) {
 	setProperty("wildcard", mafTr("All Files (*.*)"));
 }
 
@@ -23,16 +25,21 @@ mafImporterCTKDICOM::~mafImporterCTKDICOM() {
 }
 
 bool mafImporterCTKDICOM::initialize() {
-	m_AppWidget = new ctkDICOMAppWidget();
+	ctkDICOMAppWidget appWidget;
+    QGridLayout* formGridLayout = new QGridLayout();
+    	
+ 	appWidget.setDatabaseDirectory(QDir::currentPath());
+	appWidget.onAddToDatabase();
+// 	appWidget.openImportDialog();
+// 	appWidget.openExportDialog();
+// 	appWidget.openQueryDialog();
 	
- 	m_AppWidget->setDatabaseDirectory(QDir::currentPath());
-	m_AppWidget->onAddToDatabase();
-	m_AppWidget->openImportDialog();
-	m_AppWidget->openExportDialog();
-	m_AppWidget->openQueryDialog();
- 
-	m_AppWidget->show();
-	
+    formGridLayout->addWidget(&appWidget);
+    dicomDialog.setLayout(formGridLayout);
+    appWidget.show();
+    dicomDialog.exec();
+    appWidget.setParent(NULL);
+
 	return true;
 }
 

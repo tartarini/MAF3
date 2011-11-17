@@ -2,7 +2,7 @@
  *  mafImporterCTKDICOM.h
  *  mafPluginCTK
  *
- *  Created by Paolo Quadrani on 04/04/11.
+*  Created by Roberto Mucci and Daniele Giunchi on 16/11/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
@@ -15,14 +15,14 @@
 // Includes list
 #include "mafPluginCTKDefinitions.h"
 #include <mafImporter.h>
+#include <QDialog>
 
-class ctkDICOMAppWidget;
 
 namespace mafPluginCTK {
 
 /**
  Class Name: mafImporterCTKDICOM
- This class allows to import VTK data into a mafVME.
+ This class allows to import Dicom data.
  */
 class MAFPLUGINCTKSHARED_EXPORT mafImporterCTKDICOM : public mafResources::mafImporter {
     Q_OBJECT
@@ -45,9 +45,7 @@ protected:
     /* virtual */ ~mafImporterCTKDICOM();
     
 private:
-    ctkDICOMAppWidget *m_AppWidget;
-    //mafCore::mafProxy<vtkAlgorithmOutput> m_ImportedData; ///< Container of the Data Source
-    //vtkDataSetReader *m_Reader; ///< Reader of the external data.
+    QDialog dicomDialog;
 };
 
 } // namespace mafPluginCTK
