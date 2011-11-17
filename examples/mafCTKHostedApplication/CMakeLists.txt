@@ -17,7 +17,17 @@
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_OpenCV.cmake)
+
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_CTK.cmake)
+## #################################################################
+## Additional Includes
+## #################################################################
+include_directories("${CTK_SOURCE_DIR}/Plugins/org.commontk.dah.core")
+include_directories("${CTK_SOURCE_DIR}/Plugins/org.commontk.dah.hostedapp")
+include_directories("${CTK_BINARY_DIR}/Plugins/org.commontk.dah.core")
+include_directories("${CTK_BINARY_DIR}/Plugins/org.commontk.dah.hostedapp")
+include_directories("${CTK_SOURCE_DIR}/Plugins/org.commontk.dah.app")
+include_directories("${CTK_BINARY_DIR}/Plugins/org.commontk.dah.app")
 
 ## #################################################################
 ## Init Project
@@ -35,7 +45,7 @@ IF(WIN32)
 ENDIF(WIN32)
 # Set some Apple MacOS Specific settings
 IF (APPLE)
-    SET(GUI_TYPE MACOSX_BUNDLE)
+    #SET(GUI_TYPE MACOSX_BUNDLE)
 ENDIF (APPLE)
 
 # Create the executable.

@@ -1,5 +1,7 @@
 # need ${CTK_DIR} that is set by ExternalProject_Add for ctk
 set(CTK_SUPERBUILD_DIR "${MAF_EXTERNAL_BUILD_DIR}/Build/CTK")
+set(CTK_SOURCE_DIR "${MAF_EXTERNAL_BUILD_DIR}/Source/CTK")
+set(CTK_BINARY_DIR "${CTK_SUPERBUILD_DIR}/CTK-build")
 set(CTK_DIR "${CTK_SUPERBUILD_DIR}")
 FIND_PACKAGE(CTK REQUIRED)
 

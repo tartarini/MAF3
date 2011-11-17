@@ -12,6 +12,8 @@ SET(foundation_libraries
 SET(CTK_LIBRARIES
   CTKDICOMCore
   CTKDICOMWidgets
+  CTKPluginFramework
+  org_commontk_dah_app
   )
 
 SET(target_libraries
