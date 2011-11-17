@@ -25,6 +25,12 @@ mafEventBusManager::mafEventBusManager() : m_EnableEventLogging(false), m_LogEve
     // Create the remote event dispatcher.
     m_RemoteDispatcher = new mafEventDispatcherRemote();
     m_RemoteDispatcher->setObjectName("Remote Event Dispatcher");
+
+    qRegisterMetaType<mafEventBus::mafEventPointer>("mafEventBus::mafEventPointer");
+    qRegisterMetaType<mafEventBus::mafEventArgumentsListPointer>("mafEventBus::mafEventArgumentsListPointer");
+    qRegisterMetaType<mafEventBus::mafRegisterMethodsMap>("mafEventBus::mafRegisterMethodsMap");
+    qRegisterMetaType<QVariantList>("QVariantList");
+    qRegisterMetaType<xmlrpc::Variant>("xmlrpc::Variant");
 }
 
 mafEventBusManager::~mafEventBusManager() {
@@ -35,7 +41,7 @@ mafEventBusManager::~mafEventBusManager() {
     }
     m_NetworkConnectorHash.clear();
 
-    //disconnet detachFromEventBus
+    // disconnect detachFromEventBus
     m_SkipDetach = true;
 
     if(m_LocalDispatcher) {
