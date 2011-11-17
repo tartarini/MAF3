@@ -1,7 +1,7 @@
 #
-# See CMake/mafMacroGetTargetLibraries.cmake
+# See CMake/ctkMacroGetTargetLibraries.cmake
 # 
-# This file should list the libraries required to build the current MAF module.
+# This file should list the libraries required to build the current CTK libraries
 # 
 
 SET(foundation_libraries 
@@ -9,15 +9,20 @@ SET(foundation_libraries
   ${QTSOAP_LIBRARY}
 )
 
+SET(CTK_LIBRARIES
+  CTKDICOMCore
+  CTKDICOMWidgets
+  )
+
 SET(target_libraries
   ${MAF_BASE_LIBRARIES}
   ${foundation_libraries}
-  ${CTK_LIBRARIES}
   mafCore
   mafEventBus
   mafApplicationLogic
   mafResources
   mafGUI
   mafScriptInterpreter
-  mafPluginCTK
+  ${CTK_LIBRARIES}
+  
   )

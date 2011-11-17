@@ -12,12 +12,10 @@ SET(foundation_libraries
 SET(target_libraries
   ${MAF_BASE_LIBRARIES}
   ${foundation_libraries}
-  ${CTK_LIBRARIES}
   mafCore
   mafEventBus
   mafApplicationLogic
   mafResources
   mafGUI
   mafScriptInterpreter
-  mafPluginCTK
   )
