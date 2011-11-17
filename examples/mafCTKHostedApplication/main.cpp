@@ -1,73 +1,179 @@
-#include <QtGui/QApplication>
+/*=============================================================================
 
-#include <mafViewScriptInterpreterPython.h>
-#include "mafApplicationSettingsPageConfigurations.h"
+  Library: CTK
 
-#include <mafMainWindow.h>
-#include <mafLogic.h>
+  Copyright (c) German Cancer Research Center,
+    Division of Medical and Biological Informatics
 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-#include <mafInterpreterPreferencesWidget.h>
+    http://www.apache.org/licenses/LICENSE-2.0
 
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 
-int main(int argc, char *argv[]) {
-    QApplication a(argc, argv);
-    a.setOrganizationName("SCS");
-    a.setOrganizationDomain("scsolutions.org");
-    a.setApplicationName("SimpleApp");
-    a.setApplicationVersion("1.0");
+=============================================================================*/
 
-    // Create the application's logic instance
-    mafApplicationLogic::mafLogic *logic = new mafApplicationLogic::mafLogic();
-    // and initialize it. This initialization will load dynamically the mafResources Library.
-    bool ok = logic->initialize();
-    if(!ok) {
-        exit(1);
+// Qt includes
+#include <QApplication>
+#include <QString>
+#include <QStringList>
+#include <QDirIterator>
+#include <QWidget>
+#include <QFileInfo>
+#include <QUrl>
+#include <QDebug>
+
+// CTK includes
+#include <ctkConfig.h>
+#include <ctkCommandLineParser.h>
+#include <ctkPluginFrameworkFactory.h>
+#include <ctkPluginFramework.h>
+#include <ctkPluginException.h>
+#include <ctkPluginContext.h>
+
+// For testing purposes use:
+// --hostURL http://localhost:8081/host --applicationURL http://localhost:8082/app dicomapp
+
+//----------------------------------------------------------------------------
+void print_usage()
+{
+  qCritical() << "Usage:";
+  qCritical() << "  " << QFileInfo(qApp->arguments().at(0)).fileName() << " --hostURL url1 --applicationURL url2 <plugin-name>";
+}
+
+//----------------------------------------------------------------------------
+int main(int argv, char** argc)
+{
+  QApplication app(argv, argc);
+
+  qApp->setOrganizationName("CTK");
+  qApp->setOrganizationDomain("commontk.org");
+  qApp->setApplicationName("ctkExampleHostedApp");
+
+  ctkCommandLineParser parser;
+  parser.setArgumentPrefix("--", "-"); // Use Unix-style argument names
+
+  // Add command line argument names
+  parser.addArgument("hostURL", "", QVariant::String, "Hosting system URL");
+  parser.addArgument("applicationURL", "", QVariant::String, "Hosted Application URL");
+  parser.addArgument("help", "h", QVariant::Bool, "Show this help text");
+
+  bool ok = false;
+  QHash<QString, QVariant> parsedArgs = parser.parseArguments(QCoreApplication::arguments(), &ok);
+  if (!ok)
+    {
+    QTextStream(stderr, QIODevice::WriteOnly) << "Error parsing arguments: "
+                                              << parser.errorString() << "\n";
+    return EXIT_FAILURE;
     }
 
-    // Plug into the factory the custom objects (Operations, Views, ...).
-    // If the object has also an acceptObject method defined, call macro:
-    // mafRegisterObjectAndAcceptBind(myNamespace::myClassCustom);
-    //
-    // If the plugged object hasn't the acceptObject defined, the registration
-    // to the mafObjectFactory can be done using the following macro:
-    // mafRegisterObject(myNamespace::myClassCustom);
-    mafRegisterObject(mafScriptInterpreter::mafViewScriptInterpreterPython);
-    // Plug the object's information into the framework
-//    logic->plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
-//    logic->plugObject("mafResources::mafOperation", "mafResources::mafOperationTransform", "Transform");
+  // Show a help message
+   if (parsedArgs.contains("help"))
+     {
+     print_usage();
+     QTextStream(stdout, QIODevice::WriteOnly) << parser.helpText();
+     return EXIT_SUCCESS;
+     }
 
-    logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View MIP");
-    logic->customizeVisualization("View MIP", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
-    logic->customizeVisualization("View MIP", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKMIPVolume");
+  if(parsedArgs.count() != 2)
+    {
+    qCritical() << "Wrong number of command line arguments.";
+    print_usage();
+    QTextStream(stdout, QIODevice::WriteOnly) << parser.helpText();
+    return EXIT_FAILURE;
+    }
 
-    logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View Iso");
-    logic->customizeVisualization("View Iso", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
-    logic->customizeVisualization("View Iso", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKIsoSurface");
+  QString hostURL = parsedArgs.value("hostURL").toString();
+  QString appURL = parsedArgs.value("applicationURL").toString();
+  qDebug() << "appURL is: " << appURL << " . Extracted port is: " << QUrl(appURL).port();
 
-    logic->customizeVisualization("VTK view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
+  // setup the plugin framework
+  ctkProperties fwProps;
+  fwProps.insert("dah.hostURL", hostURL);
+  fwProps.insert("dah.appURL", appURL);
+  ctkPluginFrameworkFactory fwFactory(fwProps);
+  QSharedPointer<ctkPluginFramework> framework = fwFactory.getFramework();
 
-    logic->plugObject("mafResources::mafView", "mafScriptInterpreter::mafViewScriptInterpreterPython", "Python Console");
-    // Create the instance of the main window and pass to it the application's logic.
-    // In this way the mafMainWondow class will also load the plug-ins present
-    // in the default 'plugins' directory.
-    mafMainWindow w(logic);
+  try
+    {
+    framework->init();
+    }
+  catch (const ctkPluginException& exc)
+    {
+    qCritical() << "Failed to initialize the plug-in framework:" << exc;
+    return EXIT_FAILURE;
+    }
 
-    // plug custom application's setting page
-    mafApplicationSettingsPageConfigurations *page = new mafApplicationSettingsPageConfigurations();
-    w.plugApplicationSettingsPage(page);
+#ifdef CMAKE_INTDIR
+  QString pluginPath = CTK_PLUGIN_DIR CMAKE_INTDIR "/";
+#else
+  QString pluginPath = CTK_PLUGIN_DIR;
+#endif
 
-    mafScriptInterpreter::mafInterpreterPreferencesWidget *interpreterPrefs = new mafScriptInterpreter::mafInterpreterPreferencesWidget();
-    w.plugApplicationSettingsPage(interpreterPrefs);
+  qApp->addLibraryPath(pluginPath);
 
-    // Eventually call the loadPlugins method with custom directory to allow the application
-    // load custom plugins located in custom directories.
-//    logic->loadPlugins(cusom_plugin_path);
+  // Construct the name of the plugin with the business logic
+  // (thus the actual logic of the hosted app)
+  QString pluginName("org_commontk_dah_exampleapp");
+  if(parser.unparsedArguments().count() > 0)
+    {
+    pluginName = parser.unparsedArguments().at(0);
+    }
 
-    w.setupMainWindow();
-    int result = a.exec();
+  // try to find the plugin and install all plugins available in
+  // pluginPath containing the string "org_commontk_dah" (but do not start them)
+  QSharedPointer<ctkPlugin> appPlugin;
+  QStringList libFilter;
+  libFilter << "*.dll" << "*.so" << "*.dylib";
+  QDirIterator dirIter(pluginPath, libFilter, QDir::Files);
+  while(dirIter.hasNext())
+    {
+    try
+      {
+      QString fileLocation = dirIter.next();
+      if (fileLocation.contains("org_commontk_dah"))
+        {
+        QSharedPointer<ctkPlugin> plugin = framework->getPluginContext()->installPlugin(QUrl::fromLocalFile(fileLocation));
+        if (fileLocation.contains(pluginName))
+          {
+          appPlugin = plugin;
+          }
+        //plugin->start(ctkPlugin::START_TRANSIENT);
+        }
+      }
+    catch (const ctkPluginException& e)
+      {
+      qCritical() << e.what();
+      }
+    }
 
-    mafDEL(logic);
+  // if we did not find the business logic: abort
+  if(!appPlugin)
+    {
+    qCritical() << "Could not find plugin.";
+    qCritical() << "  Plugin name: " << pluginName;
+    qCritical() << "  Plugin path: " << pluginPath;
+    return EXIT_FAILURE;
+    }
 
-    return result;
+  // start the plugin framework
+  framework->start();
+
+  // start the plugin with the business logic
+  try
+    {
+    appPlugin->start();
+    }
+  catch (const ctkPluginException& e)
+    {
+    qCritical() << e;
+    }
+
+  return app.exec();
 }
