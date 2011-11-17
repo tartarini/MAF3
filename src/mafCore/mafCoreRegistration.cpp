@@ -22,6 +22,7 @@
 #include "mafMonitorHardDisk.h"
 #include "mafHierarchy.h"
 #include "mafMementoHierarchy.h"
+#include "mafProxyInterface.h"
 
 using namespace mafCore;
 
@@ -58,6 +59,9 @@ void mafCoreRegistration::registerCoreObjects() {
     mafRegisterObject(mafCore::mafMonitorHardDisk);
     mafRegisterObject(mafCore::mafHierarchy);
     mafRegisterObject(mafCore::mafMementoHierarchy);
+    qRegisterMetaType<mafCore::mafHierarchyPointer>("mafCore::mafHierarchyPointer");
+    qRegisterMetaType<mafCore::mafProxyInterfacePointer>("mafCore::mafProxyInterfacePointer");
+    qRegisterMetaType<mafCore::mafProxyInterface>("mafCore::mafProxyInterface");
 }
 
 void mafCoreRegistration::unregisterCoreObjects() {

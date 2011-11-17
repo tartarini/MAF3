@@ -30,6 +30,7 @@
 #include "mafVisitorFindSceneNodeByVMEHash.h"
 #include "mafOperationTransform.h"
 #include "mafPipeVisualCompound.h"
+#include "mafOperationWorker.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -54,6 +55,10 @@ void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObject(mafResources::mafPipeVisualCompound);
     mafRegisterObjectAndAcceptBind(mafResources::mafOperationTransform);
     mafRegisterObjectAndAcceptBind(mafResources::mafImporter);
+    qRegisterMetaType<mafResources::mafMatrixPointer>("mafResources::mafMatrixPointer");
+    qRegisterMetaType<mafResources::mafMatrix>("mafResources::mafMatrix");
+    qRegisterMetaType<mafResources::mafResourceWorkerPointer>("mafResources::mafResourceWorkerPointer");
+    qRegisterMetaType<mafExecutionPoolPointer>("mafExecutionPoolPointer");
 }
 
 void mafResourcesRegistration::unregisterResourcesObjects() {
