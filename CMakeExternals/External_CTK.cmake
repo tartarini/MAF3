@@ -57,7 +57,15 @@ ELSE(RESULT)
         ${ctk_optional_cache_args}
         -DDESIRED_QT_VERSION:STRING=4
         -DQT_QMAKE_EXECUTABLE:FILEPATH=${QT_QMAKE_EXECUTABLE}
+        -DCTK_LIB_DICOM/Core:BOOL=ON
         -DCTK_LIB_DICOM/Widgets:BOOL=ON
+        -DCTK_LIB_PluginFramework:BOOL=ON
+        -DCTK_LIB_Widgets:BOOL=ON
+        -DCTK_PLUGIN_org.commontk.dah.app:BOOL=ON
+        -DCTK_PLUGIN_org.commontk.dah.core:BOOL=ON
+        -DCTK_PLUGIN_org.commontk.dah.exampleapp:BOOL=ON
+        -DCTK_PLUGIN_org.commontk.dah.examplehost:BOOL=ON
+        -DCTK_PLUGIN_org.commontk.dah.host:BOOL=ON
         -DCTK_USE_GIT_PROTOCOL:BOOL=OFF
       DEPENDS ${proj_DEPENDENCIES}
      )
