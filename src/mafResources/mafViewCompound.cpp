@@ -64,7 +64,7 @@ void mafViewCompound::showSceneNode(mafSceneNode *node, bool show) {
         subView->showSceneNode(subView->sceneNodeFromVme((mafCore::mafObjectBase *)node->vme()), show);
     }
     // Create the compound visual pipe and update the visibility flag of the node.
-    if(m_Scenegraph != NULL) {
+    if(sceneGraph() != NULL) {
         if (show) {
             ++m_VisibleObjects;
             node->setVisualPipe("mafResources::mafPipeVisualCompound");
