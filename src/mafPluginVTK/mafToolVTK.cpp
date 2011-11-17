@@ -44,8 +44,8 @@ void mafToolVTK::removeProp(vtkProp3D *prop) {
     }
 }
 
-void mafToolVTK::addWidget(vtkAbstractWidget *w) {
+void mafToolVTK::addWidget(vtkInteractorObserver *w) {
 }
 
-void mafToolVTK::removeWidget(vtkAbstractWidget *w) {
+void mafToolVTK::removeWidget(vtkInteractorObserver *w) {
 }

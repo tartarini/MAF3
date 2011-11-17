@@ -18,7 +18,7 @@
 
 class vtkRenderer;
 class vtkProp3D;
-class vtkAbstractWidget;
+class vtkInteractorObserver;
 
 namespace mafPluginVTK {
 
@@ -51,10 +51,10 @@ protected:
 	virtual void removeProp(vtkProp3D *prop);
 	
 	/// Add a VTK widget to the tool layer.
-	virtual void addWidget(vtkAbstractWidget *w);
+	virtual void addWidget(vtkInteractorObserver *w);
 	
 	/// Remove a VTK widget from the tool layer.
-	virtual void removeWidget(vtkAbstractWidget *w);
+	virtual void removeWidget(vtkInteractorObserver *w);
 
 private:
     vtkRenderer *m_RendererTool; ///< Renderer used to place tools.
