@@ -87,13 +87,33 @@ void mafViewCompoundConfigurator::parseDocument(QDomNode current, QObject *paren
                 mafDEL(obj);
             } else if (elem_name == "visualpipe") {
                 // Visual pipe to plug into the previous created view...
-                QVariant viewClassType(attributes.namedItem("classtype").nodeValue());
+                QVariant visualPipeClassType(attributes.namedItem("classtype").nodeValue());
                 QString dataType(attributes.namedItem("datatype").nodeValue());
                 QVariantHash h;
-                h.insert(dataType, viewClassType);
+                h.insert(dataType, visualPipeClassType);
                 mafCore::mafObjectBase *viewObj = dynamic_cast<mafCore::mafObjectBase *>(parent);
                 if (viewObj) {
                     viewObj->setProperty("visualPipeHash", h);
+
+                    int s = attributes.size();
+                    int i = 0;
+                    QVariantHash propertyHash;
+                    for (; i < s; ++i) {
+                        QDomNode n(attributes.item(i));
+                        if (n.nodeName() != "classtype" && n.nodeName() != "datatype") {
+                            propertyHash.insert(n.nodeName(), n.nodeValue());
+                        }
+                    }
+                    if (propertyHash.size() > 0) {
+                        // Found some custom properties used to initialize the pipe
+                        QString vp(visualPipeClassType.toString());
+                        bool isOk(viewObj->metaObject()->invokeMethod(viewObj, "plugPipeParametersHashItem",
+                                                    Q_ARG(QString, vp),
+                                                    Q_ARG(QVariantHash, propertyHash)));
+                        if (!isOk) {
+                            qWarning() << mafTr("Problem invoking method used to plug the pipe's parameter for pipe: %1").arg(visualPipeClassType.toString());
+                        }
+                    }
                 }
             } else {
                 qWarning() << mafTr("Unrecognized element named: ") << elem_name;
