@@ -32,7 +32,7 @@ class MAFRESOURCESSHARED_EXPORT mafView : public mafResource {
     Q_PROPERTY(QVariant renderWidget READ renderWidget WRITE setRenderingWidget STORED false)
     Q_PROPERTY(QString configurationFile READ configurationFile WRITE setConfigurationFile)
     Q_PROPERTY(QVariantHash visualPipeHash READ visualPipeHash WRITE setVisualPipeHash)
-    Q_PROPERTY(QVariant hierarchy READ hierarchy STORED false)
+    Q_PROPERTY(mafCore::mafHierarchyPointer sceneGraph READ sceneGraph STORED false)
 
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
@@ -49,6 +49,9 @@ public:
 
     /// Fill the SceneGraph with the VMEs present in the hierarchy.
     void fillSceneGraph(mafCore::mafHierarchy *hierarchy);
+
+    /// Return the SceneGraph.
+    mafCore::mafHierarchyPointer sceneGraph() const;
 
     /// Remove a scene node from the ScenGraph.
     virtual void removeSceneNode(mafSceneNode *node);
@@ -71,9 +74,6 @@ public:
     /// Get the rendering widget used by the view to render its scene.
     QVariant renderWidget() const;
 
-    /// Return SceneNode hierarchy.
-    QVariant hierarchy() const;
-
     /// return mafSceneNode containing vme.
     mafSceneNode *sceneNodeFromVme(mafObjectBase *vme);
     
@@ -91,7 +91,7 @@ public:
     
     /// Assign the hash that will contains the association between data type and related visual pipe to use for render it.
     void setVisualPipeHash(const QVariantHash hash);
-    
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafView();
@@ -110,11 +110,8 @@ protected:
     virtual mafSceneNode *createSceneNode(mafVME *vme);
 
     QObject *m_RenderWidget; ///< Rendering widget for the view.
-    mafCore::mafHierarchyPointer m_Scenegraph; ///< SceneGraph
-    QVariantHash *m_VisualPipeHash; ///< Bind between dataType and Visual pipe.
     bool m_Selected; ///< Flag for active view.
     mafSceneNode *m_SelectedNode; ///< Keep track of the selected SceneNode.
-    QHash<mafVME *, mafSceneNode *> m_SceneNodeHash; ///< variable useful for rapid iteration between mafTreeItem
     
     mafResources::mafPipeVisual *m_PipeVisualSelection; ///< variable with the pipe for vme selection
     
@@ -123,9 +120,12 @@ protected:
 
 private:
     QString m_LayoutConfigurationFile; ///< XML filename that represents the layout configuration file for compound view
+    QVariantHash *m_VisualPipeHash; ///< Bind between dataType and Visual pipe.
+    QHash<QString, QVariantHash> m_PipeParametersBindHash; ///< Hash containing the bind between visual pipe and its initialization parameter's hash to be assigned to the pipe when allocated.
+    mafCore::mafHierarchyPointer m_Scenegraph; ///< SceneGraph
+    QHash<mafVME *, mafSceneNode *> m_SceneNodeHash; ///< variable useful for rapid iteration between mafTreeItem
 
 Q_SIGNALS:
-
     /// Notify selection of a sceneNode. 
     void pipeVisualSelectedSignal(mafCore::mafObjectBase *pipeVisual);
         
@@ -138,6 +138,9 @@ public Q_SLOTS:
 
     /// Reset the visualization to show visible objects
     virtual void resetVisualization(double *bounds = NULL);
+
+    /// Allows to bing visual pipe type with parameter's hash used to initialize its pipe algorithm parameters when allocated.
+    void plugPipeParametersHashItem(QString pipe_type, QVariantHash hash);
 
 private Q_SLOTS:
 
@@ -152,6 +155,10 @@ private Q_SLOTS:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
+inline mafCore::mafHierarchyPointer mafView::sceneGraph() const {
+    return m_Scenegraph;
+}
+
 inline QVariantHash mafView::visualPipeHash() const {
     return *m_VisualPipeHash;
 }
@@ -161,6 +168,10 @@ inline void mafView::setVisualPipeHash(const QVariantHash hash) {
         m_VisualPipeHash = new QVariantHash();
     }
     m_VisualPipeHash->unite(hash);
+}
+
+inline void mafView::plugPipeParametersHashItem(QString pipe_type, QVariantHash hash) {
+    m_PipeParametersBindHash.insert(pipe_type, hash);
 }
 
 inline void mafView::setConfigurationFile(const QString configFile) {
@@ -182,12 +193,6 @@ inline void mafView::setRenderingWidget(QVariant renWidget) {
 inline QVariant mafView::renderWidget() const {
     QVariant v;
     v.setValue<QObject*>(m_RenderWidget);
-    return v;
-}
-
-inline QVariant mafView::hierarchy() const {
-    QVariant v;
-    v.setValue<mafCore::mafHierarchyPointer>(m_Scenegraph);
     return v;
 }
 
