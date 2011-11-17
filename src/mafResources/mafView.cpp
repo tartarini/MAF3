@@ -205,17 +205,17 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
     }
 
     // Find visual pipe for this kind of data
-    QString vp;
+    QString visualPipeType;
     QString dataType;
     mafDataSet *data = node->vme()->outputData();
     if  (data != NULL) {
         dataType = data->externalDataType();
     }
     if (m_VisualPipeHash && m_VisualPipeHash->contains(dataType)) {
-        vp = m_VisualPipeHash->value(dataType).toString();
+        visualPipeType = m_VisualPipeHash->value(dataType).toString();
     }
 
-    if (vp.isEmpty()) {
+    if (visualPipeType.isEmpty()) {
         //if originally in visual pipe hash, is not present that binding data-pipe visual,
         // request to the PluginManager possible visual pipe accepting vme object.
         mafPluggedObjectInformationList *vpsHash = mafPluginManager::instance()->queryPluggedObjects("mafResources::mafPipeVisual");
@@ -227,7 +227,7 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
     if(m_Scenegraph != NULL) {
         if (show) {
             ++m_VisibleObjects;
-            node->setVisualPipe(vp);
+            node->setVisualPipe(visualPipeType);
         } else {
             --m_VisibleObjects;
         }
@@ -235,6 +235,9 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
         if(m_PipeVisualSelection) {
             m_PipeVisualSelection->setVisibility(show);
         }
+    }
+    if (node->visualPipe() && m_PipeParametersBindHash.contains(visualPipeType)) {
+        node->visualPipe()->setParametersHash(m_PipeParametersBindHash.value(visualPipeType));
     }
     updateView();
 }
