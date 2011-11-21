@@ -43,7 +43,7 @@ if(${MAF_SCRIPT_INTERPRETER})
 endif(${MAF_SCRIPT_INTERPRETER})
 
 if(${MAF_PLUGINCTK})
-  ADD_SUBDIRECTORY(mafPluginCTKTest)
+  #ADD_SUBDIRECTORY(mafPluginCTKTest)
 endif(${MAF_PLUGINCTK})
 
 #message (".......................... Exiting ${CMAKE_CURRENT_LIST_FILE} ............................")
