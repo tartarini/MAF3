@@ -146,7 +146,7 @@ void mafLogic::loadPlugins(QString plugin_dir) {
     
     //check all plugin dirs
     QDir pdir(pluginsDir);
-    pdir.setFilter(QDir::Dirs | QDir::NoDot | QDir::NoDotDot );
+    pdir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot );
     QStringList plugin_dir_list = pdir.entryList();
 
     mafEventArgumentsList argList;
