@@ -29,6 +29,10 @@
 #include <QUrl>
 #include <QDebug>
 
+//MAF
+#include <mafMainWindow.h>
+#include <mafLogic.h>
+
 // CTK includes
 #include <ctkConfig.h>
 #include <ctkCommandLineParser.h>
@@ -52,7 +56,7 @@ int main(int argv, char** argc)
 {
   QApplication app(argv, argc);
 
-  qApp->setOrganizationName("CTK");
+  qApp->setOrganizationName("MAF");
   qApp->setOrganizationDomain("commontk.org");
   qApp->setApplicationName("ctkExampleHostedApp");
 
@@ -64,7 +68,20 @@ int main(int argv, char** argc)
   parser.addArgument("applicationURL", "", QVariant::String, "Hosted Application URL");
   parser.addArgument("help", "h", QVariant::Bool, "Show this help text");
 
-  bool ok = false;
+  mafApplicationLogic::mafLogic *logic = new mafApplicationLogic::mafLogic();
+    // and initialize it. This initialization will load dynamically the mafResources Library.
+  bool ok = logic->initialize();
+    if(!ok) {
+    	qDebug() << "Problem on Initializing Logic!";
+        exit(1);
+    }
+
+  qDebug() << "Start Application...";
+  
+  //mafMainWindow w(logic);
+  //qDebug() << "Create MainWindow...";
+  
+  ok = false;
   QHash<QString, QVariant> parsedArgs = parser.parseArguments(QCoreApplication::arguments(), &ok);
   if (!ok)
     {
@@ -175,5 +192,9 @@ int main(int argv, char** argc)
     qCritical() << e;
     }
 
-  return app.exec();
+  //w.setupMainWindow();
+  int result = app.exec();
+
+  mafDEL(logic);
+  return result;
 }
