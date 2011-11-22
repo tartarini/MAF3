@@ -52,6 +52,8 @@ bool mafMemento::isEqual(const mafObjectBase *obj) const {
                 return false;
             }
         }
+    } else {
+        return false;
     }
     return true;
 }

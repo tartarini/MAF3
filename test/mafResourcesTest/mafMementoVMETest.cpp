@@ -251,7 +251,8 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
     returnVME->setMemento(memento);
 
     //! </snippet>
-    QVERIFY(dataPipe->isEqual(returnVME->dataPipe()));
+    mafPipeData *check = returnVME->dataPipe();
+    QVERIFY(dataPipe->isEqual(check));
 
     //Check if m_VME memento is equal to returnVME memento
     mafMemento *returnMemento = returnVME->createMemento();

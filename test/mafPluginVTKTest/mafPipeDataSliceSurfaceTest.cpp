@@ -103,7 +103,7 @@ void mafPipeDataSliceSurfaceTest::updatePipeTest() {
     mafDataSetCollection *collection = output->dataSetCollection();
     mafDataSet *dataSet = collection->itemAtCurrentTime();
     QString dt(dataSet->dataValue()->externalDataType());
-    QString res("vtkPolyData");
+    QString res("vtkAlgorithmOutput");
 
     QCOMPARE(dt, res);
 

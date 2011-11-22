@@ -394,7 +394,8 @@ void mafDataSetCollection::setMemento(mafMemento *memento, bool deep_memento) {
       if (objClassType == "mafResources::mafDataSet") {
         mafDataSet *data = qobject_cast<mafDataSet*>(obj);
         //Fill collection with dataSet. Time stamp will be set later, reading the memento property list.
-        m_CollectionMap->insert(timeIndex, data);
+        double timeStamp = timeList[timeIndex];
+        m_CollectionMap->insert(timeStamp, data);
         timeIndex++;
       }
     }

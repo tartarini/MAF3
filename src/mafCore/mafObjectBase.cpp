@@ -69,7 +69,7 @@ bool mafObjectBase::isEqual(const mafObjectBase *obj) const {
         const QMetaProperty obj_qmp = obj_meta->property(i);
         const QMetaProperty my_qmp = my_meta->property(i);
         QString obj_name = obj_qmp.name();
-        if(obj_name == "objectHash") {
+        if(obj_name == "objectHash" || !my_qmp.isStored()) {
             continue;
         }
         QVariant obj_value = obj->property(obj_name.toAscii());
@@ -78,6 +78,8 @@ bool mafObjectBase::isEqual(const mafObjectBase *obj) const {
         QByteArray ba = my_name.toAscii();
         char *n = ba.data();
         if((my_name != obj_name) || (my_value != obj_value)) {
+            qDebug() << my_name; qDebug() << obj_name;
+            qDebug() << my_value; qDebug() << obj_value;
             return false;
         }
     }
