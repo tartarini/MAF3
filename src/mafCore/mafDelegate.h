@@ -13,7 +13,7 @@
 #define MAFDELEGATE_H
 
 // Includes list
-#include "mafObjectBase.h"
+#include "mafCore_global.h"
 
 namespace mafCore {
 
@@ -33,15 +33,14 @@ public:
     /// Object constructor.
     mafDelegate(const QString code_location = "");
     
+    /// Object destructor.
+    ~mafDelegate();
+    
     /// Check if a method has been defined into the delegate class.
     bool isMethodDefined(QString signature);
     
     /// Return true or false depending if the delegate class wants that the caller execute its own code or skip it.
     virtual bool shouldExecuteLocalCode();
-
-protected:
-    /// Object destructor.
-    /*virtual*/ ~mafDelegate();
 };
 
 } //namespace mafCore
