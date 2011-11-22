@@ -14,11 +14,14 @@
 
 // Includes list
 #include "mafCore_global.h"
+#include "mafDelegate.h"
+
 
 namespace mafCore {
 
 // Class forwarding list
 class mafVisitor;
+
 
 /**
  Class name: mafObjectBase
@@ -28,6 +31,7 @@ class MAFCORESHARED_EXPORT mafObjectBase : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString objectHash READ objectHash WRITE setObjectHash)
     Q_PROPERTY(QObject *uiRootWidget READ uiRootWidget WRITE setUiRootWidget STORED false)
+    Q_PROPERTY(mafCore::mafDelegatePointer delegate READ delegate WRITE setDelegate STORED false)
     Q_PROPERTY(QString uiFile READ uiFilename)
     /// typedef macro.
     mafSuperclassMacro(QObject);
@@ -98,6 +102,12 @@ public:
 
     /// Allows to assign the root widget to associate to the object.
     void setUiRootWidget(QObject *w);
+    
+    /// Return the delegate class pointer.
+    mafDelegatePointer delegate() const;
+    
+    /// Assign the delegate class pointer to the object.
+    void setDelegate(mafDelegatePointer d);
 
     /// Allows to accept a mafVisitor which will visit the object and will be executed the mafVisitor algorithm.
     virtual void acceptVisitor(mafVisitor *v);
@@ -135,6 +145,7 @@ private:
     QUuid m_ObjectHash; ///< Hash value for the current object.
     bool m_Modified; ///< Contains the modified state of the VME.
     QObject *m_SelfUI; ///< Ui object;
+    mafDelegatePointer m_Delegate; ///< Delegate class pointer.
 
     volatile int m_ReferenceCount; ///< Index containing the reference count.
 };
@@ -171,6 +182,14 @@ inline void mafObjectBase::setUiRootWidget(QObject *w) {
 
 inline QObject *mafObjectBase::uiRootWidget() const {
     return m_UIRootWidget;
+}
+    
+inline mafDelegatePointer mafObjectBase::delegate() const {
+    return m_Delegate;
+}
+
+inline void mafObjectBase::setDelegate(mafDelegatePointer d) {
+    m_Delegate = d;
 }
 
 inline bool mafObjectBase::operator ==(const mafObjectBase& obj) const {
