@@ -190,7 +190,7 @@ void mafMementoDataSetTest::mafMementoDataSetCustomAllocationTest() {
 
     //Check if m_DataSet memento is equal to returnDataSet memento.
     mafMemento *returnMemento = returnDataSet->createMemento();
-    QVERIFY(memento->isEqual(returnDataSet));
+    QVERIFY(memento->isEqual(returnMemento));
 
     delete matrix;
     mafDEL(returnDataSet);
