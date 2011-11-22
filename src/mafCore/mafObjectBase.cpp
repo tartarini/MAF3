@@ -62,7 +62,8 @@ bool mafObjectBase::isEqual(const mafObjectBase *obj) const {
     const QMetaObject* obj_meta = obj->metaObject();
     int i = 0;
     int num = obj_meta->propertyCount();
-    if(num != my_meta->propertyCount()) {
+    int checkNum = my_meta->propertyCount();
+    if(num != checkNum) {
         return false;
     }
     for ( ; i < num; ++i) {
