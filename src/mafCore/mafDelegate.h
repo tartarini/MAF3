@@ -42,7 +42,11 @@ public:
     /// Return true or false depending if the delegate class wants that the caller execute its own code or skip it.
     virtual bool shouldExecuteLocalCode();
 };
+    
+typedef mafDelegate * mafDelegatePointer;
 
 } //namespace mafCore
+
+Q_DECLARE_METATYPE(mafCore::mafDelegatePointer);
 
 #endif // MAFDELEGATE_H
