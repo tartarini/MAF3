@@ -62,20 +62,8 @@ private:
     int m_DataSizeImported; ///< Size of file to be imported.
     QString m_EncodeType; ///< Encode type used to encode/decode data.
     mafResources::mafDataSet *m_DataSet; ///< Data set to be stored.
-    //double m_TimeStamp; ///< Time stamp referred to this mafDataSet.
 };
 
-/////////////////////////////////////////////////////////////
-// Inline methods
-/////////////////////////////////////////////////////////////
-
-/*inline double mafMementoDataSet::timeStamp() const {
-  return m_TimeStamp;
-}
-
-inline void mafMementoDataSet::setTimeStamp(double time) {
-  m_TimeStamp = time;
-}*/
 
 } // namespace mafResources
 
