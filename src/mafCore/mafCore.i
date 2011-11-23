@@ -93,6 +93,7 @@
 #endif
 
 %include <mafCoreDefinitions.h>
+%include <mafDelegate.h>
 %include <mafObjectBase.h>
 
 #ifdef SWIGPYTHON
