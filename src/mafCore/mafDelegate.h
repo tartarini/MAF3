@@ -5,7 +5,7 @@
  *  Created by Paolo Quadrani on 22/11/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -21,7 +21,7 @@ namespace mafCore {
 
 /**
  Class name: mafDelegate
- This defines the base class for objects used to customize behaviour of high level classes.
+ This defines the base class for objects used to customize behavior of high level classes.
  All methods are implemented as public slots so to be able to call the method from outside the class.
 */
 class MAFCORESHARED_EXPORT mafDelegate : public QObject {
@@ -31,7 +31,7 @@ class MAFCORESHARED_EXPORT mafDelegate : public QObject {
 
 public:
     /// Object constructor.
-    mafDelegate(const QString code_location = "");
+    mafDelegate();
     
     /// Object destructor.
     ~mafDelegate();

@@ -5,7 +5,7 @@
  *  Created by Paolo Quadrani on 22/11/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -13,7 +13,7 @@
 
 using namespace mafCore;
 
-mafDelegate::mafDelegate(const QString code_location) {
+mafDelegate::mafDelegate() {
 }
 
 mafDelegate::~mafDelegate() {
