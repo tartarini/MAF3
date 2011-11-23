@@ -21,7 +21,7 @@
 
 // Foundation Class forwarding list
 class vtkPlane;
-class vtkCutter;
+class vtkMAFVolumeSlicer;
 
 namespace mafPluginVTK {
 
@@ -68,8 +68,8 @@ private:
     double m_SliceOrigin[3]; ///< Origin of the slice.
     double m_Normal[3]; ///< Normal vector of the slice.
 
-	vtkSmartPointer<vtkPlane>  m_Plane;  ///< Cutting plane implicit function.
-    vtkSmartPointer<vtkCutter> m_Cutter; ///< Cutter fo the input vtkPolyData.
+	vtkSmartPointer<vtkPlane>  m_Plane;  ///< Slicing plane implicit function.
+    vtkSmartPointer<vtkMAFVolumeSlicer> m_Slicer; ///< Volume slicer for the input volume data.
     mafCore::mafProxy<vtkAlgorithmOutput> m_OutputValue; ///< Output value coming from the elaboration data pipe.
 };
 

@@ -15,7 +15,7 @@
 
 #include <vtkDataSet.h>
 #include <vtkPlane.h>
-#include <vtkCutter.h>
+#include <vtkMAFVolumeSlicer.h>
 
 
 using namespace mafCore;
@@ -29,10 +29,9 @@ mafPipeDataSliceVolume::mafPipeDataSliceVolume(const QString code_location) : ma
     m_Normal[2] = 1.;
 
     m_Plane = vtkSmartPointer<vtkPlane>::New();
-    m_Cutter = vtkSmartPointer<vtkCutter>::New();
-    m_Cutter->SetCutFunction(m_Plane);
+    m_Slicer = vtkSmartPointer<vtkMAFVolumeSlicer>::New();
 
-    m_OutputValue = m_Cutter->GetOutputPort();
+    m_OutputValue = m_Slicer->GetOutputPort();
 }
 
 mafPipeDataSliceVolume::~mafPipeDataSliceVolume() {
@@ -63,10 +62,10 @@ void mafPipeDataSliceVolume::updatePipe(double t) {
     m_Plane->SetNormal(m_Normal);
 
     //Get data contained in the mafProxy
-    mafProxy<vtkAlgorithmOutput> *surface = mafProxyPointerTypeCast(vtkAlgorithmOutput, inputDataSet->dataValue());
+    mafProxy<vtkAlgorithmOutput> *volume = mafProxyPointerTypeCast(vtkAlgorithmOutput, inputDataSet->dataValue());
 
-    m_Cutter->SetInputConnection(*surface);
-    m_Cutter->Update();
+    m_Slicer->SetInputConnection(*volume);
+    m_Slicer->Update();
 
     output(t)->dataSetCollection()->itemAt(t)->setDataValue(&m_OutputValue);
     Superclass::updatePipe(t);
