@@ -19,6 +19,7 @@
 #include <QtCore>
 
 #include <mafCoreDefinitions.h>
+#include <mafDelegate.h>
 #include <mafObjectBase.h>
 %}
 
