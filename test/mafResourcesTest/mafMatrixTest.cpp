@@ -38,6 +38,7 @@ private Q_SLOTS:
         mafMessageHandler::instance()->installMessageHandler();
         mafEventBusManager::instance();
         m_Matrix = new mafMatrix();
+        m_Matrix->setIdentity();
     }
 
     /// Cleanup test variables memory allocation.
