@@ -51,7 +51,6 @@ protected:
     /// Method used to log the given message to the buffer.
     /*virtual*/ void loggedMessage(const QtMsgType type, const QString &msg);
 
-private:
     mafTextEditWidget *m_TextWidgetLog; ///< String containing all the logged messages for a specific session.
     mafSyntaxHighlighter *m_TextHighlighter;
 };
