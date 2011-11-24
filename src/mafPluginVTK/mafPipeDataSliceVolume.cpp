@@ -2,7 +2,7 @@
  *  mafPipeDataSliceVolume.cpp
  *  mafPluginVTK
  *
- *  Created by Paolo Quadrani on 14/11/11.
+ *  Created by Paolo Quadrani on 24/11/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
@@ -38,7 +38,7 @@ mafPipeDataSliceVolume::mafPipeDataSliceVolume(const QString code_location) : ma
     m_SlicerPolygonal = vtkSmartPointer<vtkMAFVolumeSlicer>::New();
     m_SlicerPolygonal->SetOutput(m_SlicePolydata);
 
-    m_OutputValue = m_SlicerImage->GetOutputPort();
+    m_OutputValue = m_SlicerPolygonal->GetOutputPort();
 }
 
 mafPipeDataSliceVolume::~mafPipeDataSliceVolume() {
@@ -101,6 +101,7 @@ void mafPipeDataSliceVolume::updatePipe(double t) {
     m_SlicerPolygonal->SetPlaneAxisY(m_YVector);
 
     m_SlicerImage->Update();
+    m_SlicerPolygonal->Update();
 
     output(t)->dataSetCollection()->itemAt(t)->setDataValue(&m_OutputValue);
     Superclass::updatePipe(t);
