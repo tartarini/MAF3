@@ -36,7 +36,7 @@ using namespace mafPluginVTK;
 //mafPipeDataSliceSurface
 //! </title>
 //! <description>
-//mafPipeDataSliceSurface allows you to make a threshoding on input image data.
+//mafPipeDataSliceSurface allows you to make a slice on input surface data.
 //! </description>
 
 class mafPipeDataSliceSurfaceTest : public QObject {
@@ -87,8 +87,8 @@ private Q_SLOTS:
     void setNormalTest();
 
 private:
-    mafVME *m_VME; ///< Contain the only item vtkImageData representing the test image.
-    mafProxy<vtkAlgorithmOutput> m_PolyData; ///< Container of the vtkPolyData
+    mafVME *m_VME; ///< Contain the vtkPolyData representing the test surface.
+    mafProxy<vtkAlgorithmOutput> m_PolyData; ///< Container of the vtkPolyData.
     vtkSmartPointer<vtkSphereSource> m_Sphere; ///< Sphere source.
 };
 
