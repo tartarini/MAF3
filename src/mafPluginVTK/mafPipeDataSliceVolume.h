@@ -20,8 +20,9 @@
 #include <vtkAlgorithmOutput.h>
 
 // Foundation Class forwarding list
-class vtkPlane;
 class vtkMAFVolumeSlicer;
+class vtkImageData;
+class vtkPolyData;
 
 namespace mafPluginVTK {
 
@@ -68,8 +69,11 @@ private:
     double m_SliceOrigin[3]; ///< Origin of the slice.
     double m_Normal[3]; ///< Normal vector of the slice.
 
-	vtkSmartPointer<vtkPlane>  m_Plane;  ///< Slicing plane implicit function.
-    vtkSmartPointer<vtkMAFVolumeSlicer> m_Slicer; ///< Volume slicer for the input volume data.
+    vtkSmartPointer<vtkMAFVolumeSlicer> m_SlicerImage; ///< Volume slicer for the input volume data.
+    vtkSmartPointer<vtkMAFVolumeSlicer> m_SlicerPolygonal; ///< Poligonal slicer.
+    vtkImageData					   *m_Image;
+    vtkPolyData						   *m_SlicePolydata;
+
     mafCore::mafProxy<vtkAlgorithmOutput> m_OutputValue; ///< Output value coming from the elaboration data pipe.
 };
 
