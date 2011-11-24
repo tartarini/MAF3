@@ -96,12 +96,13 @@ private Q_SLOTS:
 
         //Insert data into VME
         m_VME = mafNEW(mafResources::mafVME);
-        m_DataSet = mafNEW(mafResources::mafDataSet);
+        mafResources::mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
         mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
         boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
-        m_DataSet->setBoundaryAlgorithm(boundaryAlgorithm);
-        m_DataSet->setDataValue(&m_DataSourceContainer);
-        m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
+        dataSet->setBoundaryAlgorithm(boundaryAlgorithm);
+        dataSet->setDataValue(&m_DataSourceContainer);
+        m_VME->dataSetCollection()->insertItem(dataSet, 0);
+        mafDEL(dataSet);
         //! </snippet>
         m_RenderWidget = new mafVTKWidget();
         initializeGraphicResources();
@@ -109,7 +110,6 @@ private Q_SLOTS:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        mafDEL(m_DataSet);
         mafDEL(m_VME);
         mafMessageHandler::instance()->shutdown();
         m_RenderWidget = new mafVTKWidget();
@@ -125,7 +125,6 @@ private Q_SLOTS:
 
 private:
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a surface.
-    mafResources::mafDataSet *m_DataSet;
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
     vtkSphereSource *m_SurfSphere;
     QObject *m_RenderWidget; /// renderer widget
