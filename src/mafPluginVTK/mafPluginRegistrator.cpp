@@ -13,6 +13,7 @@
 
 #include "mafPipeDataImageThreshold.h"
 #include "mafPipeDataSliceSurface.h"
+#include "mafPipeDataSliceVolume.h"
 #include "mafPipeVisualVTKSurface.h"
 #include "mafPipeVisualVTKIsoSurface.h"
 #include "mafPipeVisualVTKMIPVolume.h"
@@ -53,6 +54,7 @@ mafPluginRegistrator::mafPluginRegistrator() {
     // Register to the mafObjectFactory the plug-in object's types.
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeDataImageThreshold);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeDataSliceSurface);
+    mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeDataSliceVolume);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKMIPVolume);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKIsoSurface);
@@ -85,6 +87,7 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     //mafUnregisterObject(mafPluginVTK::mafPipeDataSurface);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeDataImageThreshold);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeDataSliceSurface);
+    mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeDataSliceVolume);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKSurface);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKIsoSurface);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKMIPVolume);
@@ -117,7 +120,8 @@ void mafPluginRegistrator::registerAllObjects() {
 
     mafPluggedObjectInformation dataPipeImageThreshold("Data pipe Image Threshold", "mafPluginVTK::mafPipeDataImageThreshold");
     mafPluggedObjectInformation dataPipeSliceSurface("Data pipe slice surface", "mafPluginVTK::mafPipeDataSliceSurface");
-    
+    mafPluggedObjectInformation dataPipeSliceVolume("Data pipe slice volume", "mafPluginVTK::mafPipeDataSliceVolume");
+
     mafPluggedObjectInformation visualPipeVTKSurface("Visual pipe VTK Surface", "mafPluginVTK::mafPipeVisualVTKSurface");
     mafPluggedObjectInformation visualPipeVTKIsoSurface("Visual pipe VTK Iso Surface", "mafPluginVTK::mafPipeVisualVTKIsoSurface");
     mafPluggedObjectInformation visualPipeVTKMIPVolume("Visual pipe VTK MIP Volume", "mafPluginVTK::mafPipeVisualVTKMIPVolume");
@@ -142,6 +146,7 @@ void mafPluginRegistrator::registerAllObjects() {
 
     pluginHash.insertMulti("mafResources::mafPipeData", dataPipeImageThreshold);
     pluginHash.insertMulti("mafResources::mafPipeData", dataPipeSliceSurface);
+    pluginHash.insertMulti("mafResources::mafPipeData", dataPipeSliceVolume);
     pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeVTKSurface);
     pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeVTKIsoSurface);
     pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeVTKMIPVolume);
