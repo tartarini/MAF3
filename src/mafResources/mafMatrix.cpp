@@ -63,6 +63,9 @@ bool mafMatrix::isEqual(const mafMatrix &mat) {
     double *other = mat.rawData();
     for (; i < dim; ++i) {
         if (!mafEquals(me[i], other[i])) {
+            qDebug() << "Not equal at index: " << i;
+            qDebug() << "first:  " << me[i];
+            qDebug() << "second: " << other[i];
             return false;
         }
     }

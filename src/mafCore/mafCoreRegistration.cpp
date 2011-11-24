@@ -23,6 +23,8 @@
 #include "mafHierarchy.h"
 #include "mafMementoHierarchy.h"
 #include "mafProxyInterface.h"
+#include "mafDelegate.h"
+
 
 using namespace mafCore;
 
@@ -62,6 +64,7 @@ void mafCoreRegistration::registerCoreObjects() {
     qRegisterMetaType<mafCore::mafHierarchyPointer>("mafCore::mafHierarchyPointer");
     qRegisterMetaType<mafCore::mafProxyInterfacePointer>("mafCore::mafProxyInterfacePointer");
     qRegisterMetaType<mafCore::mafProxyInterface>("mafCore::mafProxyInterface");
+    qRegisterMetaType<mafCore::mafProxyInterface>("mafCore::mafDelegatePointer");
 }
 
 void mafCoreRegistration::unregisterCoreObjects() {
