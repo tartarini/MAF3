@@ -94,7 +94,6 @@ private Q_SLOTS:
 private:
     mafVME *m_VME; ///< Contains the test volume data.
     mafProxy<vtkAlgorithmOutput> m_Volume; ///< Container of VTK volume data.
-    mafResources::mafDataSet *m_DataSet;
     vtkDataSetReader *m_Reader;
 };
 
