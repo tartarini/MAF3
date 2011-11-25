@@ -270,5 +270,5 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTestFromPlugIn() {
     pluginManager->shutdown();
 }
 
-MAF_REGISTER_TEST(mafPipeVisualVTKSliceVolumeTest);
+//MAF_REGISTER_TEST(mafPipeVisualVTKSliceVolumeTest);
 #include "mafPipeVisualVTKSliceVolumeTest.moc"
