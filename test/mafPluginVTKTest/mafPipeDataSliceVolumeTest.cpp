@@ -1,26 +1,26 @@
 /*
- *  mafPipeDataSliceSurfaceTest.cpp
+ *  mafPipeDataSliceVolumeTest.cpp
  *  mafPluginVTK
  *
- *  Created by Paolo Quadrani on 14/11/11.
+ *  Created by Paolo Quadrani on 24/11/11.
  *  Copyright 2011 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
+#include <mafTestConfig.h>
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafEventBusManager.h>
-#include <mafPipeDataSliceSurface.h>
+#include <mafPipeDataSliceVolume.h>
 #include <mafDataBoundaryAlgorithmVTK.h>
 #include <mafResourcesRegistration.h>
 #include <mafProxy.h>
 #include <mafVME.h>
 #include <mafDataSet.h>
 
-#include <vtkPolyData.h>
-#include <vtkSphereSource.h>
+#include <vtkDataSetReader.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -28,18 +28,18 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 
 /**
- Class name: mafPipeDataSliceSurfaceTest
- This class is the test suite for mafPipeDataSliceSurface.
+ Class name: mafPipeDataSliceVolumeTest
+ This class is the test suite for mafPipeDataSliceVolume.
  */
 
  //! <title>
-//mafPipeDataSliceSurface
+//mafPipeDataSliceVolume
 //! </title>
 //! <description>
-//mafPipeDataSliceSurface allows you to make a slice on input surface data.
+//mafPipeDataSliceVolume allows you to make a slice on input volume data.
 //! </description>
 
-class mafPipeDataSliceSurfaceTest : public QObject {
+class mafPipeDataSliceVolumeTest : public QObject {
     Q_OBJECT
 
 private Q_SLOTS:
@@ -48,14 +48,19 @@ private Q_SLOTS:
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
 
-        // Create a surface data.
-        m_Sphere = vtkSmartPointer<vtkSphereSource>::New();
-        m_Sphere->SetRadius(3);
-        m_Sphere->Update();
+        QString fname(MAF_DATA_DIR);
+        fname.append("/VTK/mafPipeVisualVTKIsoSurfaceTestData.vtk");
+
+        // Import a VTK volume.
+        m_Reader = vtkDataSetReader::New();
+        fname = QDir::toNativeSeparators(fname);
+        QByteArray ba = fname.toAscii();
+        m_Reader->SetFileName(ba.data());
+        m_Reader->Update();
 
         // Create a container with a vtkImageData
-        m_PolyData = m_Sphere->GetOutputPort();
-        m_PolyData.setClassTypeNameFunction(vtkClassTypeNameExtract);
+        m_Volume = m_Reader->GetOutputPort();
+        m_Volume.setClassTypeNameFunction(vtkClassTypeNameExtract);
 
         // and give it to the mafDataSet.
         //! <snippet>
@@ -64,7 +69,7 @@ private Q_SLOTS:
         mafDataBoundaryAlgorithmVTK *boundaryAlgorithm;
         boundaryAlgorithm = mafNEW(mafDataBoundaryAlgorithmVTK);
         dataSet->setBoundaryAlgorithm(boundaryAlgorithm);
-        dataSet->setDataValue(&m_PolyData);
+        dataSet->setDataValue(&m_Volume);
         m_VME->dataSetCollection()->insertItem(dataSet);
         mafDEL(dataSet);
         //! </snippet>
@@ -87,13 +92,13 @@ private Q_SLOTS:
     void setNormalTest();
 
 private:
-    mafVME *m_VME; ///< Contain the vtkPolyData representing the test surface.
-    mafProxy<vtkAlgorithmOutput> m_PolyData; ///< Container of the vtkPolyData.
-    vtkSmartPointer<vtkSphereSource> m_Sphere; ///< Sphere source.
+    mafVME *m_VME; ///< Contains the test volume data.
+    mafProxy<vtkAlgorithmOutput> m_Volume; ///< Container of VTK volume data.
+    vtkDataSetReader *m_Reader;
 };
 
-void mafPipeDataSliceSurfaceTest::updatePipeTest() {
-    mafPipeDataSliceSurface *datapipe = mafNEW(mafPluginVTK::mafPipeDataSliceSurface);
+void mafPipeDataSliceVolumeTest::updatePipeTest() {
+    mafPipeDataSliceVolume *datapipe = mafNEW(mafPluginVTK::mafPipeDataSliceVolume);
     datapipe->setInput(m_VME);
     
     mafVME *output = datapipe->output();
@@ -110,8 +115,8 @@ void mafPipeDataSliceSurfaceTest::updatePipeTest() {
     mafDEL(datapipe);
 }
 
-void mafPipeDataSliceSurfaceTest::setSliceTest() {
-    mafPipeDataSliceSurface *datapipe = mafNEW(mafPluginVTK::mafPipeDataSliceSurface);
+void mafPipeDataSliceVolumeTest::setSliceTest() {
+    mafPipeDataSliceVolume *datapipe = mafNEW(mafPluginVTK::mafPipeDataSliceVolume);
 	double s[3] = {10, 35, -1};
     datapipe->setSliceOrigin(s);
     double *sp = datapipe->sliceOrigin();
@@ -122,8 +127,8 @@ void mafPipeDataSliceSurfaceTest::setSliceTest() {
     mafDEL(datapipe);
 }
 
-void mafPipeDataSliceSurfaceTest::setNormalTest() {
-    mafPipeDataSliceSurface *datapipe = mafNEW(mafPluginVTK::mafPipeDataSliceSurface);
+void mafPipeDataSliceVolumeTest::setNormalTest() {
+    mafPipeDataSliceVolume *datapipe = mafNEW(mafPluginVTK::mafPipeDataSliceVolume);
 	double n[3] = {1,0,0};
     datapipe->setNormal(n);
     double *np = datapipe->normal();
@@ -134,6 +139,5 @@ void mafPipeDataSliceSurfaceTest::setNormalTest() {
     mafDEL(datapipe);
 }
 
-
-MAF_REGISTER_TEST(mafPipeDataSliceSurfaceTest);
-#include "mafPipeDataSliceSurfaceTest.moc"
+MAF_REGISTER_TEST(mafPipeDataSliceVolumeTest);
+#include "mafPipeDataSliceVolumeTest.moc"

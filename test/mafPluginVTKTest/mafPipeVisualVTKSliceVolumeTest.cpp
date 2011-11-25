@@ -1,5 +1,5 @@
 /*
- *  mafPipeVisualVTKSliceSurfaceTest.cpp
+ *  mafPipeVisualVTKSliceVolumeTest.cpp
  *  mafPluginVTK
  *
  *  Created by Paolo Quadrani on 12/11/11.
@@ -9,10 +9,11 @@
  *
  */
 
+#include <mafTestConfig.h>
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafEventBusManager.h>
-#include <mafPipeVisualVTKSliceSurface.h>
+#include <mafPipeVisualVTKSliceVolume.h>
 #include <mafDataBoundaryAlgorithmVTK.h>
 #include <mafResourcesRegistration.h>
 #include <mafPipeVisual.h>
@@ -20,6 +21,7 @@
 #include <mafPluginManager.h>
 #include <mafPlugin.h>
 #include <mafVME.h>
+#include <mafDataSetCollection.h>
 #include <mafDataSet.h>
 
 #include <mafVTKWidget.h>
@@ -28,7 +30,7 @@
 
 #include <vtkPolyData.h>
 #include <vtkActor.h>
-#include <vtkSphereSource.h>
+#include <vtkDataSetReader.h>
 #include <vtkAlgorithmOutput.h>
 
 // render window stuff
@@ -53,19 +55,19 @@ using namespace mafPluginVTK;
 
 
 /**
- Class name: mafPipeVisualVTKSliceSurfaceTest
- This class creates a vtkSphereSource and visualizes it trough the mafPipeVisualVTKSliceSurface
+ Class name: mafPipeVisualVTKSliceVolumeTest
+ This class creates a vtkSphereSource and visualizes it trough the mafPipeVisualVTKSliceVolume
  */
 
 //! <title>
-//mafPipeVisualVTKSliceSurface
+//mafPipeVisualVTKSliceVolume
 //! </title>
 //! <description>
-//mafPipeVisualVTKSliceSurface is a visual pipe used to render VTK PolyData sliced through a plain.
+//mafPipeVisualVTKSliceVolume is a visual pipe used to render VTK Volume sliced through a plain.
 //It takes a mafDataSet as input and returns a mafProxy<vtkActor>.
 //! </description>
 
-class mafPipeVisualVTKSliceSurfaceTest : public QObject {
+class mafPipeVisualVTKSliceVolumeTest : public QObject {
     Q_OBJECT
     //initialize all the graphic resources
     void initializeGraphicResources();
@@ -78,21 +80,24 @@ private Q_SLOTS:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
-        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSliceSurface)
+        mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSliceVolume)
 
-        // Create a sphere.
-        m_SurfSphere = vtkSphereSource::New();
-        m_SurfSphere->SetRadius(5);
-        m_SurfSphere->SetPhiResolution(10);
-        m_SurfSphere->SetThetaResolution(10);
-        m_SurfSphere->Update();
+        QString fname(MAF_DATA_DIR);
+        fname.append("/VTK/mafPipeVisualVTKIsoSurfaceTestData.vtk");
+        
+        // Import a VTK volume.
+        m_Reader = vtkDataSetReader::New();
+        fname = QDir::toNativeSeparators(fname);
+        QByteArray ba = fname.toAscii();
+        m_Reader->SetFileName(ba.data());
+        m_Reader->Update();
 
         //! <snippet>
         //// Create a container with the outputPort of a vtkCubeSource
         //// m_DataSourceContainer is the container of type vtkAlgorithmOutput
         //// to "wrap" the 'vtkCubeSource' of type vtkPolyData just simply use the code below.
         m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
-        m_DataSourceContainer = m_SurfSphere->GetOutputPort(0);
+        m_DataSourceContainer = m_Reader->GetOutputPort(0);
 
         //Insert data into VME
         m_VME = mafNEW(mafResources::mafVME);
@@ -124,18 +129,19 @@ private Q_SLOTS:
     void updatePipeTestFromPlugIn();
 
 private:
-    mafVME *m_VME; ///< Contain the only item vtkPolydata representing a surface.
+    mafVME *m_VME; ///< Contain the only item vtkPolydata representing a Volume.
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
-    vtkSphereSource *m_SurfSphere;
+    vtkDataSetReader *m_Reader;
+
     QObject *m_RenderWidget; /// renderer widget
     vtkRenderer *m_Renderer; ///< Accessory renderer
     QMainWindow *w;
 };
 
-void mafPipeVisualVTKSliceSurfaceTest::initializeGraphicResources() {
+void mafPipeVisualVTKSliceVolumeTest::initializeGraphicResources() {
     w = new QMainWindow();
     w->setMinimumSize(640,480);
-    w->setWindowTitle("mafPipeVisualVTKSliceSurface Test");
+    w->setWindowTitle("mafPipeVisualVTKSliceVolume Test");
 
     m_RenderWidget = new mafVTKWidget();
     ((mafVTKWidget*)m_RenderWidget)->setParent(w);
@@ -147,17 +153,22 @@ void mafPipeVisualVTKSliceSurfaceTest::initializeGraphicResources() {
     w->show();
 }
 
-void mafPipeVisualVTKSliceSurfaceTest::shutdownGraphicResources() {
+void mafPipeVisualVTKSliceVolumeTest::shutdownGraphicResources() {
     w->close();
 }
 
-void mafPipeVisualVTKSliceSurfaceTest::updatePipeTest() {
-    mafPipeVisualVTKSliceSurface *pipe;
-    pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSliceSurface);
+void mafPipeVisualVTKSliceVolumeTest::updatePipeTest() {
+    mafPipeVisualVTKSliceVolume *pipe;
+    pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSliceVolume);
     pipe->setInput(m_VME);
-    pipe->setProperty("originX", 0.);
-    pipe->setProperty("originY", 0.);
-    pipe->setProperty("originZ", 2.);
+    QVariantList b = m_VME->dataSetCollection()->itemAtCurrentTime()->bounds();
+    double center[3];
+    center[0] = (b[0].toDouble() + b[1].toDouble()) / 2.;
+    center[1] = (b[2].toDouble() + b[3].toDouble()) / 2.;
+    center[2] = (b[4].toDouble() + b[5].toDouble()) / 2.;
+    pipe->setProperty("originX", center[0]);
+    pipe->setProperty("originY", center[1]);
+    pipe->setProperty("originZ", center[2]);
     pipe->setProperty("normalX", 0.);
     pipe->setProperty("normalY", 0.);
     pipe->setProperty("normalZ", 1.);
@@ -178,20 +189,20 @@ void mafPipeVisualVTKSliceSurfaceTest::updatePipeTest() {
     QTest::qSleep(2000);
 
     //Change slice's normal & origin
-    pipe->setProperty("normalX", 0.);
-    pipe->setProperty("normalY", 1.);
-    pipe->setProperty("normalZ", 0.);
-    pipe->setProperty("originX", 0.);
-    pipe->setProperty("originY", 0.);
-    pipe->setProperty("originZ", 0.);
-    pipe->updatePipe();
-    QTest::qSleep(2000);
+//    pipe->setProperty("normalX", 0.);
+//    pipe->setProperty("normalY", 1.);
+//    pipe->setProperty("normalZ", 0.);
+//    pipe->setProperty("originX", 0.);
+//    pipe->setProperty("originY", 0.);
+//    pipe->setProperty("originZ", 0.);
+//    pipe->updatePipe();
+//    QTest::qSleep(2000);
 
     pipe->setGraphicObject(NULL);
     mafDEL(pipe);
 }
 
-void mafPipeVisualVTKSliceSurfaceTest::updatePipeTestFromPlugIn() {
+void mafPipeVisualVTKSliceVolumeTest::updatePipeTestFromPlugIn() {
     mafPluginManager *pluginManager = mafPluginManager::instance();
     QString pluginName = TEST_LIBRARY_NAME;
 
@@ -211,14 +222,19 @@ void mafPipeVisualVTKSliceSurfaceTest::updatePipeTestFromPlugIn() {
     int num = binding_class_list.count();
     QVERIFY(num != 0);
     
-    QString check("mafPluginVTK::mafPipeVisualVTKSliceSurface");
+    QString check("mafPluginVTK::mafPipeVisualVTKSliceVolume");
     QVERIFY(binding_class_list.contains(check));
     
     //! <snippet>
-    mafPipeVisual *visualPipe = (mafPipeVisual *)mafNEWFromString("mafPluginVTK::mafPipeVisualVTKSliceSurface");
-    visualPipe->setProperty("originX", 0.);
-    visualPipe->setProperty("originY", 0.);
-    visualPipe->setProperty("originZ", 2.);
+    mafPipeVisual *visualPipe = (mafPipeVisual *)mafNEWFromString("mafPluginVTK::mafPipeVisualVTKSliceVolume");
+    QVariantList b = m_VME->dataSetCollection()->itemAtCurrentTime()->bounds();
+    double center[3];
+    center[0] = (b[0].toDouble() + b[1].toDouble()) / 2.;
+    center[1] = (b[2].toDouble() + b[3].toDouble()) / 2.;
+    center[2] = (b[4].toDouble() + b[5].toDouble()) / 2.;
+    visualPipe->setProperty("originX", center[0]);
+    visualPipe->setProperty("originY", center[1]);
+    visualPipe->setProperty("originZ", center[2]);
     visualPipe->setProperty("normalX", 0.);
     visualPipe->setProperty("normalY", 0.);
     visualPipe->setProperty("normalZ", 1.);
@@ -239,20 +255,20 @@ void mafPipeVisualVTKSliceSurfaceTest::updatePipeTestFromPlugIn() {
     QTest::qSleep(2000);
 
     //Change slice's normal & origin
-    visualPipe->setProperty("normalX", 0.);
-    visualPipe->setProperty("normalY", 1.);
-    visualPipe->setProperty("normalZ", 0.);
-    visualPipe->setProperty("originX", 0.);
-    visualPipe->setProperty("originY", 3.);
-    visualPipe->setProperty("originZ", 0.);
-    visualPipe->updatePipe();
-    ((mafVTKWidget*)m_RenderWidget)->update();
-    m_Renderer->ResetCamera();
-    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
-    QTest::qSleep(2000);
+//    visualPipe->setProperty("normalX", 0.);
+//    visualPipe->setProperty("normalY", 1.);
+//    visualPipe->setProperty("normalZ", 0.);
+//    visualPipe->setProperty("originX", 0.);
+//    visualPipe->setProperty("originY", 3.);
+//    visualPipe->setProperty("originZ", 0.);
+//    visualPipe->updatePipe();
+//    ((mafVTKWidget*)m_RenderWidget)->update();
+//    m_Renderer->ResetCamera();
+//    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
+//    QTest::qSleep(2000);
     mafDEL(visualPipe);
     pluginManager->shutdown();
 }
 
-MAF_REGISTER_TEST(mafPipeVisualVTKSliceSurfaceTest);
-#include "mafPipeVisualVTKSliceSurfaceTest.moc"
+MAF_REGISTER_TEST(mafPipeVisualVTKSliceVolumeTest);
+#include "mafPipeVisualVTKSliceVolumeTest.moc"
