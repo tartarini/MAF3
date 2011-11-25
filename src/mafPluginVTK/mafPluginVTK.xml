@@ -6,7 +6,8 @@
 	<plug classtype="mafPluginVTK::mafPipeVisualVTKSurface" baseclass="mafResources::mafPipeVisual" label="Visual pipe VTK Surface"></plug>
 	<plug classtype="mafPluginVTK::mafPipeVisualVTKSelection" baseclass="mafResources::mafPipeVisual" label="Visual pipe used to represent selection of data"></plug>
 	<plug classtype="mafPluginVTK::mafPipeVisualVTKBox" baseclass="mafResources::mafPipeVisual" label="Visual pipe that shows a box according to the input data bounds."></plug>
-	<plug classtype="mafPluginVTK::visualPipeSliceSurface" baseclass="mafResources::mafPipeVisual" label="Visual pipe used to slice a surface"></plug>
+	<plug classtype="mafPluginVTK::mafPipeVisualVTKSliceSurface" baseclass="mafResources::mafPipeVisual" label="Visual pipe used to slice a surface"></plug>
+	<plug classtype="mafPluginVTK::mafPipeVisualVTKSliceVolume" baseclass="mafResources::mafPipeVisual" label="Visual pipe used to slice a volume"></plug>
 	<plug classtype="mafPluginVTK::mafToolVTKAxes" baseclass="mafResources::mafTool" label="Tool used to represent reference system"></plug>
 	<plug classtype="mafPluginVTK::mafViewVTK" baseclass="mafResources::mafView" label="VTK view"></plug>
 	<plug classtype="mafPluginVTK::mafOperationParametricSurface" baseclass="mafResources::mafOperation" label="Create Parametric Surface"></plug>
