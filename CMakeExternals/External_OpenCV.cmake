@@ -23,7 +23,9 @@ SET(OpenCV_DEPENDS)
   #SET(ep_parallelism_level)
   SET(ep_build_shared_libs ON)
   SET(ep_build_testing OFF)
-                
+  
+  SET(revision_tag 0cbd682)
+  
 IF(RESULT)
   IF(NOT DEFINED OpenCV_DIR)
     #MESSAGE("Adding project:${proj}")
@@ -56,7 +58,8 @@ ELSE(RESULT)
     
     ExternalProject_Add(${proj}
       GIT_REPOSITORY "${git_protocol}://github.com/SCS-B3C/OpenCV.git"
-      GIT_TAG "origin/master"
+      #GIT_TAG "origin/master"
+      GIT_TAG ${revision_tag}
       CMAKE_GENERATOR ${gen}
       INSTALL_COMMAND ""
       CMAKE_ARGS

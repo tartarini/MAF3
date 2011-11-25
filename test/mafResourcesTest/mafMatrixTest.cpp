@@ -76,8 +76,10 @@ void mafMatrixTest::mafMatrixAllocationTest() {
 
 void mafMatrixTest::mafMatrixCloneTest() {
     mafMatrix *clonedMat = m_Matrix->clone();
+    clonedMat->description();
     QVERIFY(clonedMat != NULL);
     QVERIFY(m_Matrix->isEqual(*clonedMat));
+    m_Matrix->description();
     delete clonedMat;
 }
 
