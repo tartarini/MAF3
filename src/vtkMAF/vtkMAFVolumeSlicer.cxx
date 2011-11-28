@@ -397,10 +397,8 @@ void vtkMAFVolumeSlicer::SetSliceTransform(vtkLinearTransform *trans)
     Modified();
 }
 
+//----------------------------------------------------------------------------
 void vtkMAFVolumeSlicer::GeneratePolygonalOutput() {
-    vtkDataSet *data = vtkDataSet::SafeDownCast(this->GetInput());
-    this->NumComponents = data->GetPointData()->GetNumberOfComponents();
-    
     this->PrepareVolume();
     
     //polygonal generation
@@ -569,9 +567,6 @@ void vtkMAFVolumeSlicer::GeneratePolygonalOutput() {
 //----------------------------------------------------------------------------
 void vtkMAFVolumeSlicer::GenerateTextureOutput()
 {
-    vtkDataSet *data = vtkDataSet::SafeDownCast(this->GetInput());
-    this->NumComponents = data->GetPointData()->GetNumberOfComponents();
-    
     this->PrepareVolume();
     
     //texture generation
@@ -583,6 +578,7 @@ void vtkMAFVolumeSlicer::GenerateTextureOutput()
     outputObject->SetNumberOfScalarComponents(this->NumComponents);
     outputObject->AllocateScalars();
     
+    vtkDataSet *data = vtkDataSet::SafeDownCast(this->GetInput());
     const void *inputPointer  = data->GetPointData()->GetScalars()->GetVoidPointer(0);
     const void *outputPointer = outputObject->GetPointData()->GetScalars()->GetVoidPointer(0);
     
@@ -844,6 +840,8 @@ int vtkMAFVolumeSlicer::RequestData(
     // get the input and output
     vtkDataSet *input = vtkDataSet::SafeDownCast(inInfo->Get(vtkDataObject::DATA_OBJECT()));
     vtkPolyData *output = vtkPolyData::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT()));
+
+    this->NumComponents = input->GetPointData()->GetNumberOfComponents();
 
     this->GetTexturedOutput()->SetScalarType(input->GetPointData()->GetScalars()->GetDataType());
     double spc[3] = {.33, .33, 1.};
