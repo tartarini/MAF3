@@ -71,6 +71,7 @@ vtkMAFVolumeSlicer::vtkMAFVolumeSlicer()
     this->SetNumberOfOutputPorts(2);
 
     vtkImageData *output2 = vtkImageData::New();
+    output2->SetExtent(0, 511, 0, 511, 0, 0);
     this->GetExecutive()->SetOutputData(1, output2);
     output2->Delete();
 }
@@ -101,7 +102,7 @@ void vtkMAFVolumeSlicer::SetPlaneAxisX(float axis[3])
     this->Modified();
 }
 //----------------------------------------------------------------------------
-void vtkMAFVolumeSlicer::SetPlaneAxisY(float axis[3]) 
+void vtkMAFVolumeSlicer::SetPlaneAxisY(float axis[3])
 //----------------------------------------------------------------------------
 {
     if (vtkMath::Norm(axis) < 1.e-5f)
@@ -167,14 +168,14 @@ unsigned long vtkMAFVolumeSlicer::GetMTime()
     if (this->TransformSlice && this->TransformSlice->GetMTime() > time) {
         time = this->TransformSlice->GetMTime();
     }
-        
+    
     return mTime;
 }
 
 vtkImageData *vtkMAFVolumeSlicer::GetTexturedOutput()
 {
-  return vtkImageData::SafeDownCast(
-    this->GetExecutive()->GetOutputData(1));
+    vtkDataObject *data = this->GetOutputDataObject(1);
+    return vtkImageData::SafeDownCast(data);
 }
 
 //----------------------------------------------------------------------------
@@ -377,8 +378,8 @@ void vtkMAFVolumeSlicer::SetSliceTransform(vtkLinearTransform *trans)
 }
 
 void vtkMAFVolumeSlicer::GeneratePolygonalOutput() {
-    vtkDataSet *pd = vtkDataSet::SafeDownCast(this->GetInput()->GetInformation()->Get(vtkDataObject::DATA_OBJECT()));
-    this->NumComponents = pd->GetPointData()->GetNumberOfComponents();
+    vtkDataSet *data = vtkDataSet::SafeDownCast(this->GetInput()->GetInformation()->Get(vtkDataObject::DATA_OBJECT()));
+    this->NumComponents = data->GetPointData()->GetNumberOfComponents();
     
     this->PrepareVolume();
     
@@ -542,19 +543,18 @@ void vtkMAFVolumeSlicer::GeneratePolygonalOutput() {
     tsObj->Delete();
 
     //end polygonal generation
-    
     output->Modified();
 }
 
-void vtkMAFVolumeSlicer::GenerateTextureOutput() {
-    
-    vtkDataSet *pd = vtkDataSet::SafeDownCast(this->GetInput()->GetInformation()->Get(vtkDataObject::DATA_OBJECT()));
-    this->NumComponents = pd->GetPointData()->GetNumberOfComponents();
+void vtkMAFVolumeSlicer::GenerateTextureOutput()
+{
+    vtkDataSet *data = vtkDataSet::SafeDownCast(this->GetInput()->GetInformation()->Get(vtkDataObject::DATA_OBJECT()));
+    this->NumComponents = data->GetPointData()->GetNumberOfComponents();
     
     this->PrepareVolume();
     
     //texture generation
-    vtkImageData *outputObject = vtkImageData::SafeDownCast(this->GetOutputDataObject(0));
+    vtkImageData *outputObject = this->GetTexturedOutput();
     
     int extent[6];
     outputObject->GetWholeExtent(extent);
@@ -562,10 +562,10 @@ void vtkMAFVolumeSlicer::GenerateTextureOutput() {
     outputObject->SetNumberOfScalarComponents(this->NumComponents);
     outputObject->AllocateScalars();
     
-    const void *inputPointer  = pd->GetPointData()->GetScalars()->GetVoidPointer(0);
+    const void *inputPointer  = data->GetPointData()->GetScalars()->GetVoidPointer(0);
     const void *outputPointer = outputObject->GetPointData()->GetScalars()->GetVoidPointer(0);
     
-    switch (pd->GetPointData()->GetScalars()->GetDataType()) 
+    switch (data->GetPointData()->GetScalars()->GetDataType()) 
     {
         case VTK_CHAR: //---------------------------------------------
             switch (outputObject->GetPointData()->GetScalars()->GetDataType()) 
@@ -713,12 +713,100 @@ void vtkMAFVolumeSlicer::GenerateTextureOutput() {
             return;
     }
 
-    
     //end texture generation
-    
-    this->GetOutputDataObject(0)->Modified();
+    outputObject->Modified();
 }
 
+int vtkMAFVolumeSlicer::RequestInformation(
+    vtkInformation* vtkNotUsed(request),
+    vtkInformationVector** vtkNotUsed(inputVector),
+    vtkInformationVector* vtkNotUsed(outputVector))
+{
+    if (GetInput()==NULL)
+        return 0;
+
+    vtkImageData *output = this->GetTexturedOutput();
+
+    int dims[3];
+    output->GetDimensions(dims);
+    if (dims[2] != 1)
+    {
+        dims[2] = 1;
+        output->SetDimensions(dims);
+    }
+    output->SetWholeExtent(output->GetExtent());
+    output->SetUpdateExtentToWholeExtent();
+
+    if (this->AutoSpacing) 
+    { // select spacing
+        if (TransformSlice)
+        {
+            TransformSlice->TransformPoint(PlaneOrigin, GlobalPlaneOrigin);
+            TransformSlice->TransformNormal(PlaneAxisX, GlobalPlaneAxisX);
+            TransformSlice->TransformNormal(PlaneAxisY, GlobalPlaneAxisY);
+        }
+        else
+        {
+            memcpy(GlobalPlaneOrigin, PlaneOrigin, sizeof(PlaneOrigin));
+            memcpy(GlobalPlaneAxisX, PlaneAxisX, sizeof(PlaneAxisX));
+            memcpy(GlobalPlaneAxisY, PlaneAxisY, sizeof(PlaneAxisY));
+        }
+        this->PrepareVolume();
+        const float d = -(this->GlobalPlaneAxisZ[0] * this->GlobalPlaneOrigin[0] + this->GlobalPlaneAxisZ[1] * this->GlobalPlaneOrigin[1] + this->GlobalPlaneAxisZ[2] * this->GlobalPlaneOrigin[2]);
+
+        // intersect plane with the bounding box
+        double spacing[3] = {1.f, 1.f, 1.f};
+        float t[24][2], minT = VTK_FLOAT_MAX, maxT = VTK_FLOAT_MIN, minS = VTK_FLOAT_MAX, maxS = VTK_FLOAT_MIN;
+        int    numberOfPoints = 0;
+        for (int i = 0; i < 3; i++) 
+        {
+            const int j = (i + 1) % 3, k = (i + 2) % 3;
+
+            for (int jj = 0; jj < 2; jj++) 
+            {
+                for (int kk = 0; kk < 2; kk++) 
+                {
+                    float p[3];
+                    p[j] = this->DataBounds[j][jj];
+                    p[k] = this->DataBounds[k][kk];
+                    p[i] = -(d + this->GlobalPlaneAxisZ[j] * p[j] + this->GlobalPlaneAxisZ[k] * p[k]);
+
+                    if (fabs(this->GlobalPlaneAxisZ[i]) < 1.e-10)
+                        continue;
+                    p[i] /= this->GlobalPlaneAxisZ[i];
+                    if (p[i] >= this->DataBounds[i][0] && p[i] <= this->DataBounds[i][1]) 
+                    {
+                        this->CalculateTextureCoordinates(p, (int*)dims, spacing, t[numberOfPoints]);
+                        if (t[numberOfPoints][0] > maxT)
+                            maxT = t[numberOfPoints][0];
+                        if (t[numberOfPoints][0] < minT)
+                            minT = t[numberOfPoints][0];
+                        if (t[numberOfPoints][1] > maxS)
+                            maxS = t[numberOfPoints][1];
+                        if (t[numberOfPoints][1] < minS)
+                            minS = t[numberOfPoints][1];
+                        numberOfPoints++; // add point
+                    }
+                }
+            }
+        }
+
+        // find spacing now
+        float maxSpacing = max(maxS - minS, maxT - minT);
+        spacing[0] = spacing[1] = max(maxSpacing, 1.e-8f);
+        output->SetSpacing(spacing);
+        if (fabs(minT) > 1.e-3 || fabs(minS) > 1.e-3) 
+        {
+            this->GlobalPlaneOrigin[0] += minT * this->GlobalPlaneAxisX[0] * dims[0] + minS * this->GlobalPlaneAxisY[0] * dims[1];
+            this->GlobalPlaneOrigin[1] += minT * this->GlobalPlaneAxisX[1] * dims[0] + minS * this->GlobalPlaneAxisY[1] * dims[1];
+            this->GlobalPlaneOrigin[2] += minT * this->GlobalPlaneAxisX[2] * dims[0] + minS * this->GlobalPlaneAxisY[2] * dims[1];
+            this->Modified();
+        }
+    }
+    output->SetOrigin(this->GlobalPlaneOrigin);
+
+    return 1;
+}
 
 //----------------------------------------------------------------------------
 //
@@ -734,18 +822,22 @@ int vtkMAFVolumeSlicer::RequestData(
     vtkInformation *outInfo = outputVector->GetInformationObject(0);
 
     // get the input and output
-    vtkPolyData *input = vtkPolyData::SafeDownCast(
-    inInfo->Get(vtkDataObject::DATA_OBJECT()));
-    vtkPolyData *output = vtkPolyData::SafeDownCast(
-    outInfo->Get(vtkDataObject::DATA_OBJECT()));
+    vtkDataSet *input = vtkDataSet::SafeDownCast(inInfo->Get(vtkDataObject::DATA_OBJECT()));
+    vtkPolyData *output = vtkPolyData::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT()));
 
-    /// @TODO INSERT CODE HERE!
+    this->GetTexturedOutput()->SetScalarType(input->GetPointData()->GetScalars()->GetDataType());
+    double spc[3] = {.33, .33, 1.};
+    if(input->IsA("vtkImageData") || input->IsA("vtkStructuredPoints")) {
+        ((vtkImageData *)input)->GetSpacing(spc);
+    }
+    this->GetTexturedOutput()->SetSpacing(spc);
+
     this->GeneratePolygonalOutput();
     this->GenerateTextureOutput();
 
-    output->Squeeze();
+//    output->Squeeze();
 
-  return 1;
+    return 1;
 }
 
 //----------------------------------------------------------------------------
