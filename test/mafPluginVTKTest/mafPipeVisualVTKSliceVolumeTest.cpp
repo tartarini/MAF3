@@ -33,6 +33,8 @@
 #include <vtkDataSetReader.h>
 #include <vtkAlgorithmOutput.h>
 
+#include <vtkMAFVolumeSlicer.h>
+
 // render window stuff
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
@@ -99,6 +101,9 @@ private Q_SLOTS:
         m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainer = m_Reader->GetOutputPort(0);
 
+        m_Slicer = vtkMAFVolumeSlicer::New();
+        m_Slicer->SetInputConnection(m_Reader->GetOutputPort(0));
+
         //Insert data into VME
         m_VME = mafNEW(mafResources::mafVME);
         mafResources::mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
@@ -116,10 +121,10 @@ private Q_SLOTS:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_VME);
+        m_Slicer->Delete();
         mafMessageHandler::instance()->shutdown();
         m_RenderWidget = new mafVTKWidget();
         shutdownGraphicResources();
-
     }
 
     /// Test the creation of the vtkActor
@@ -132,6 +137,8 @@ private:
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a Volume.
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
     vtkDataSetReader *m_Reader;
+
+    vtkMAFVolumeSlicer *m_Slicer;
 
     QObject *m_RenderWidget; /// renderer widget
     vtkRenderer *m_Renderer; ///< Accessory renderer
@@ -174,6 +181,17 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTest() {
     pipe->setProperty("normalZ", 1.);
     pipe->setGraphicObject(m_RenderWidget);
     pipe->updatePipe();
+
+    float xVect[3] = {1., 0., 0.};
+    float yVect[3] = {0., 1., 0.};
+    m_Slicer->SetPlaneOrigin(center);
+    m_Slicer->SetPlaneAxisX(xVect);
+    m_Slicer->SetPlaneAxisY(yVect);
+    m_Slicer->Modified();
+    m_Slicer->Update();
+
+    vtkImageData *image = m_Slicer->GetTexturedOutput();
+    vtkPolyData *poly = vtkPolyData::SafeDownCast(m_Slicer->GetOutputDataObject(0));
 
     // Get the vtkActor from the visual pipe
     // And assign to a mafProxy
@@ -270,5 +288,5 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTestFromPlugIn() {
     pluginManager->shutdown();
 }
 
-//MAF_REGISTER_TEST(mafPipeVisualVTKSliceVolumeTest);
+MAF_REGISTER_TEST(mafPipeVisualVTKSliceVolumeTest);
 #include "mafPipeVisualVTKSliceVolumeTest.moc"
