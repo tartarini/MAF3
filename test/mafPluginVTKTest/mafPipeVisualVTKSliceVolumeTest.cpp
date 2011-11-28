@@ -165,15 +165,15 @@ void mafPipeVisualVTKSliceVolumeTest::shutdownGraphicResources() {
 }
 
 void mafPipeVisualVTKSliceVolumeTest::updatePipeTest() {
-    mafPipeVisualVTKSliceVolume *pipe;
+/*    mafPipeVisualVTKSliceVolume *pipe;
     pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSliceVolume);
-    pipe->setInput(m_VME);
+    pipe->setInput(m_VME);*/
     QVariantList b = m_VME->dataSetCollection()->itemAtCurrentTime()->bounds();
     double center[3];
     center[0] = (b[0].toDouble() + b[1].toDouble()) / 2.;
     center[1] = (b[2].toDouble() + b[3].toDouble()) / 2.;
     center[2] = (b[4].toDouble() + b[5].toDouble()) / 2.;
-    pipe->setProperty("originX", center[0]);
+/*    pipe->setProperty("originX", center[0]);
     pipe->setProperty("originY", center[1]);
     pipe->setProperty("originZ", center[2]);
     pipe->setProperty("normalX", 0.);
@@ -181,7 +181,7 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTest() {
     pipe->setProperty("normalZ", 1.);
     pipe->setGraphicObject(m_RenderWidget);
     pipe->updatePipe();
-
+*/
     float xVect[3] = {1., 0., 0.};
     float yVect[3] = {0., 1., 0.};
     m_Slicer->SetPlaneOrigin(center);
@@ -195,33 +195,23 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTest() {
 
     // Get the vtkActor from the visual pipe
     // And assign to a mafProxy
-    mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, pipe->output());
-    QVERIFY(actor != NULL);
+//    mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, pipe->output());
+//    QVERIFY(actor != NULL);
 
     // Connect the actor (contained into the container) with the renderer.
-    m_Renderer->AddActor(*actor);
+//    m_Renderer->AddActor(*actor);
 
     ((mafVTKWidget*)m_RenderWidget)->update();
     m_Renderer->ResetCamera();
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
     QTest::qSleep(2000);
 
-    //Change slice's normal & origin
-//    pipe->setProperty("normalX", 0.);
-//    pipe->setProperty("normalY", 1.);
-//    pipe->setProperty("normalZ", 0.);
-//    pipe->setProperty("originX", 0.);
-//    pipe->setProperty("originY", 0.);
-//    pipe->setProperty("originZ", 0.);
-//    pipe->updatePipe();
-//    QTest::qSleep(2000);
-
-    pipe->setGraphicObject(NULL);
-    mafDEL(pipe);
+//    pipe->setGraphicObject(NULL);
+//    mafDEL(pipe);
 }
 
 void mafPipeVisualVTKSliceVolumeTest::updatePipeTestFromPlugIn() {
-    mafPluginManager *pluginManager = mafPluginManager::instance();
+/*    mafPluginManager *pluginManager = mafPluginManager::instance();
     QString pluginName = TEST_LIBRARY_NAME;
 
     // Load the library containing the visual pipe that I want to plug-in.
@@ -272,20 +262,8 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTestFromPlugIn() {
 
     QTest::qSleep(2000);
 
-    //Change slice's normal & origin
-//    visualPipe->setProperty("normalX", 0.);
-//    visualPipe->setProperty("normalY", 1.);
-//    visualPipe->setProperty("normalZ", 0.);
-//    visualPipe->setProperty("originX", 0.);
-//    visualPipe->setProperty("originY", 3.);
-//    visualPipe->setProperty("originZ", 0.);
-//    visualPipe->updatePipe();
-//    ((mafVTKWidget*)m_RenderWidget)->update();
-//    m_Renderer->ResetCamera();
-//    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
-//    QTest::qSleep(2000);
     mafDEL(visualPipe);
-    pluginManager->shutdown();
+    pluginManager->shutdown();*/
 }
 
 MAF_REGISTER_TEST(mafPipeVisualVTKSliceVolumeTest);
