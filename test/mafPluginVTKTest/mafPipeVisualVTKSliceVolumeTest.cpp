@@ -101,8 +101,8 @@ private Q_SLOTS:
         m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainer = m_Reader->GetOutputPort(0);
 
-        m_Slicer = vtkMAFVolumeSlicer::New();
-        m_Slicer->SetInputConnection(m_Reader->GetOutputPort(0));
+//        m_Slicer = vtkMAFVolumeSlicer::New();
+//        m_Slicer->SetInputConnection(m_Reader->GetOutputPort(0));
 
         //Insert data into VME
         m_VME = mafNEW(mafResources::mafVME);
@@ -121,7 +121,7 @@ private Q_SLOTS:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_VME);
-        m_Slicer->Delete();
+//        m_Slicer->Delete();
         mafMessageHandler::instance()->shutdown();
         m_RenderWidget = new mafVTKWidget();
         shutdownGraphicResources();
@@ -138,7 +138,7 @@ private:
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
     vtkDataSetReader *m_Reader;
 
-    vtkMAFVolumeSlicer *m_Slicer;
+//    vtkMAFVolumeSlicer *m_Slicer;
 
     QObject *m_RenderWidget; /// renderer widget
     vtkRenderer *m_Renderer; ///< Accessory renderer
@@ -184,14 +184,14 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTest() {
 
     float xVect[3] = {1., 0., 0.};
     float yVect[3] = {0., 1., 0.};
-    m_Slicer->SetPlaneOrigin(center);
-    m_Slicer->SetPlaneAxisX(xVect);
-    m_Slicer->SetPlaneAxisY(yVect);
-    m_Slicer->Modified();
-    m_Slicer->Update();
+//    m_Slicer->SetPlaneOrigin(center);
+//    m_Slicer->SetPlaneAxisX(xVect);
+//    m_Slicer->SetPlaneAxisY(yVect);
+//    m_Slicer->Modified();
+//    m_Slicer->Update();
 
-    vtkImageData *image = m_Slicer->GetTexturedOutput();
-    vtkPolyData *poly = vtkPolyData::SafeDownCast(m_Slicer->GetOutputDataObject(0));
+//    vtkImageData *image = m_Slicer->GetTexturedOutput();
+//    vtkPolyData *poly = vtkPolyData::SafeDownCast(m_Slicer->GetOutputDataObject(0));
 
     // Get the vtkActor from the visual pipe
     // And assign to a mafProxy
@@ -205,16 +205,6 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTest() {
     m_Renderer->ResetCamera();
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
     QTest::qSleep(2000);
-
-    //Change slice's normal & origin
-//    pipe->setProperty("normalX", 0.);
-//    pipe->setProperty("normalY", 1.);
-//    pipe->setProperty("normalZ", 0.);
-//    pipe->setProperty("originX", 0.);
-//    pipe->setProperty("originY", 0.);
-//    pipe->setProperty("originZ", 0.);
-//    pipe->updatePipe();
-//    QTest::qSleep(2000);
 
     pipe->setGraphicObject(NULL);
     mafDEL(pipe);
@@ -272,18 +262,6 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTestFromPlugIn() {
 
     QTest::qSleep(2000);
 
-    //Change slice's normal & origin
-//    visualPipe->setProperty("normalX", 0.);
-//    visualPipe->setProperty("normalY", 1.);
-//    visualPipe->setProperty("normalZ", 0.);
-//    visualPipe->setProperty("originX", 0.);
-//    visualPipe->setProperty("originY", 3.);
-//    visualPipe->setProperty("originZ", 0.);
-//    visualPipe->updatePipe();
-//    ((mafVTKWidget*)m_RenderWidget)->update();
-//    m_Renderer->ResetCamera();
-//    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
-//    QTest::qSleep(2000);
     mafDEL(visualPipe);
     pluginManager->shutdown();
 }

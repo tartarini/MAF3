@@ -15,6 +15,7 @@
 #include "vtkMAFVolumeSlicer.h"
 
 #include <vtkExecutive.h>
+#include <vtkDemandDrivenPipeline.h>
 #include <vtkFloatArray.h>
 //#include <vtkImplicitFunction.h>
 #include <vtkInformation.h>
@@ -68,6 +69,7 @@ vtkMAFVolumeSlicer::vtkMAFVolumeSlicer()
     
     this->VoxelCoordinates[0] = this->VoxelCoordinates[1] = this->VoxelCoordinates[2] = NULL;    
 
+    this->SetNumberOfInputPorts(1);
     this->SetNumberOfOutputPorts(2);
 
     vtkImageData *output2 = vtkImageData::New();
@@ -81,6 +83,24 @@ vtkMAFVolumeSlicer::~vtkMAFVolumeSlicer() {
     delete [] this->VoxelCoordinates[0];
     delete [] this->VoxelCoordinates[1];
     delete [] this->VoxelCoordinates[2];
+}
+
+//----------------------------------------------------------------------------
+int vtkMAFVolumeSlicer::FillInputPortInformation( int /*port*/, vtkInformation* info) {
+    // All input ports consume polygonal data. 
+    info->Set(vtkAlgorithm::INPUT_REQUIRED_DATA_TYPE(), "vtkDataSet");
+    return 1;
+}
+
+//----------------------------------------------------------------------------
+int vtkMAFVolumeSlicer::FillOutputPortInformation( int port, vtkInformation* info) {
+    // All output ports produce polygonal data.
+    if (port == 0) {
+        info->Set(vtkDataObject::DATA_TYPE_NAME(), "vtkPolyData");
+    } else {
+        info->Set(vtkDataObject::DATA_TYPE_NAME(), "vtkImageData");
+    }
+    return 1;
 }
 
 //----------------------------------------------------------------------------
@@ -172,6 +192,7 @@ unsigned long vtkMAFVolumeSlicer::GetMTime()
     return mTime;
 }
 
+//----------------------------------------------------------------------------
 vtkImageData *vtkMAFVolumeSlicer::GetTexturedOutput()
 {
     vtkDataObject *data = this->GetOutputDataObject(1);
@@ -180,7 +201,6 @@ vtkImageData *vtkMAFVolumeSlicer::GetTexturedOutput()
 
 //----------------------------------------------------------------------------
 void vtkMAFVolumeSlicer::PrepareVolume() 
-//----------------------------------------------------------------------------
 {
     assert(fabs(vtkMath::Norm(this->GlobalPlaneAxisX) - 1.f) < 1.e-5);
     assert(fabs(vtkMath::Norm(this->GlobalPlaneAxisY) - 1.f) < 1.e-5);
@@ -377,10 +397,8 @@ void vtkMAFVolumeSlicer::SetSliceTransform(vtkLinearTransform *trans)
     Modified();
 }
 
+//----------------------------------------------------------------------------
 void vtkMAFVolumeSlicer::GeneratePolygonalOutput() {
-    vtkDataSet *data = vtkDataSet::SafeDownCast(this->GetInput()->GetInformation()->Get(vtkDataObject::DATA_OBJECT()));
-    this->NumComponents = data->GetPointData()->GetNumberOfComponents();
-    
     this->PrepareVolume();
     
     //polygonal generation
@@ -546,11 +564,9 @@ void vtkMAFVolumeSlicer::GeneratePolygonalOutput() {
     output->Modified();
 }
 
+//----------------------------------------------------------------------------
 void vtkMAFVolumeSlicer::GenerateTextureOutput()
 {
-    vtkDataSet *data = vtkDataSet::SafeDownCast(this->GetInput()->GetInformation()->Get(vtkDataObject::DATA_OBJECT()));
-    this->NumComponents = data->GetPointData()->GetNumberOfComponents();
-    
     this->PrepareVolume();
     
     //texture generation
@@ -562,6 +578,7 @@ void vtkMAFVolumeSlicer::GenerateTextureOutput()
     outputObject->SetNumberOfScalarComponents(this->NumComponents);
     outputObject->AllocateScalars();
     
+    vtkDataSet *data = vtkDataSet::SafeDownCast(this->GetInput());
     const void *inputPointer  = data->GetPointData()->GetScalars()->GetVoidPointer(0);
     const void *outputPointer = outputObject->GetPointData()->GetScalars()->GetVoidPointer(0);
     
@@ -717,6 +734,8 @@ void vtkMAFVolumeSlicer::GenerateTextureOutput()
     outputObject->Modified();
 }
 
+
+//----------------------------------------------------------------------------
 int vtkMAFVolumeSlicer::RequestInformation(
     vtkInformation* vtkNotUsed(request),
     vtkInformationVector** vtkNotUsed(inputVector),
@@ -809,9 +828,6 @@ int vtkMAFVolumeSlicer::RequestInformation(
 }
 
 //----------------------------------------------------------------------------
-//
-// Clip through data generating surface.
-//
 int vtkMAFVolumeSlicer::RequestData(
   vtkInformation *vtkNotUsed(request),
   vtkInformationVector **inputVector,
@@ -824,6 +840,8 @@ int vtkMAFVolumeSlicer::RequestData(
     // get the input and output
     vtkDataSet *input = vtkDataSet::SafeDownCast(inInfo->Get(vtkDataObject::DATA_OBJECT()));
     vtkPolyData *output = vtkPolyData::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT()));
+
+    this->NumComponents = input->GetPointData()->GetNumberOfComponents();
 
     this->GetTexturedOutput()->SetScalarType(input->GetPointData()->GetScalars()->GetDataType());
     double spc[3] = {.33, .33, 1.};

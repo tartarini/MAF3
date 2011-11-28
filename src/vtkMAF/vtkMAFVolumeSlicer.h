@@ -73,7 +73,7 @@ class vtkLinearTransform;
 
 class VTK_vtkMAF_EXPORT vtkMAFVolumeSlicer : public vtkPolyDataAlgorithm {
 public:
-    vtkTypeMacro(vtkMAFVolumeSlicer,vtkPolyDataAlgorithm);
+    vtkTypeMacro(vtkMAFVolumeSlicer, vtkPolyDataAlgorithm);
     void PrintSelf(ostream& os, vtkIndent indent);
 
     // Description:
@@ -142,6 +142,12 @@ protected:
         vtkInformationVector* outputVector);
 
     /*virtual*/ int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
+    
+    /*virtual*/ int FillInputPortInformation( int /*port*/, vtkInformation* info);
+    
+    /*virtual*/ int FillOutputPortInformation( int port, vtkInformation* info);
+    
+    /*virtual int ProcessRequest( vtkInformation* request, vtkInformationVector** inputVector, vtkInformationVector* outputVector);*/
     
     void ComputeInputUpdateExtents(vtkDataObject *output);
     
