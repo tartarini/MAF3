@@ -137,7 +137,11 @@ protected:
     vtkMAFVolumeSlicer();
     ~vtkMAFVolumeSlicer();
 
-    int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
+    /*virtual*/ int RequestInformation(vtkInformation* request,
+        vtkInformationVector** inputVector,
+        vtkInformationVector* outputVector);
+
+    /*virtual*/ int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
     
     void ComputeInputUpdateExtents(vtkDataObject *output);
     

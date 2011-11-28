@@ -112,6 +112,9 @@ void mafPipeDataSliceVolumeTest::updatePipeTest() {
 
     QCOMPARE(dt, res);
 
+    mafProxyInterfacePointer texture = datapipe->textureOutput();
+    QVERIFY(texture != NULL);
+
     mafDEL(datapipe);
 }
 
