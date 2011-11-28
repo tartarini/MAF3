@@ -60,7 +60,7 @@ bool mafPipeDataSliceVolume::acceptObject(mafCore::mafObjectBase *obj) {
 }
 
 void mafPipeDataSliceVolume::updatePipe(double t) {
-    if (inputList()->size() == 0) {
+    /*if (inputList()->size() == 0) {
         return;
     }
 
@@ -104,5 +104,5 @@ void mafPipeDataSliceVolume::updatePipe(double t) {
     m_SlicerPolygonal->Update();
 
     output(t)->dataSetCollection()->itemAt(t)->setDataValue(&m_OutputValue);
-    Superclass::updatePipe(t);
+    Superclass::updatePipe(t);*/
 }
