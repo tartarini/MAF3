@@ -23,6 +23,7 @@
 #include <vtkDataObject.h>
 #include <vtkDataSet.h>
 #include <vtkProperty.h>
+#include <vtkTexture.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -40,9 +41,16 @@ mafPipeVisualVTKSliceVolume::mafPipeVisualVTKSliceVolume(const QString code_loca
     m_Mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
     m_Mapper->ScalarVisibilityOff();
 
+    mafProxyInterfacePointer t = m_SlicerPipe->textureOutput();
+    mafProxy<vtkAlgorithmOutput> *tp = mafProxyPointerTypeCast(vtkAlgorithmOutput, t);
+
+    vtkSmartPointer<vtkTexture> texture = vtkSmartPointer<vtkTexture>::New();
+    texture->SetInputConnection(*tp);
+
     m_Prop3D = vtkActor::New();
     m_Prop3D.setDestructionFunction(&vtkActor::Delete);
     vtkActor::SafeDownCast(m_Prop3D)->SetMapper(m_Mapper);
+    vtkActor::SafeDownCast(m_Prop3D)->SetTexture(texture);
     m_Output = &m_Prop3D;
 }
 
