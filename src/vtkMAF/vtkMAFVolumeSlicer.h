@@ -147,7 +147,7 @@ protected:
     
     /*virtual*/ int FillOutputPortInformation( int port, vtkInformation* info);
     
-    /*virtual*/ int ProcessRequest( vtkInformation* request, vtkInformationVector** inputVector, vtkInformationVector* outputVector);
+    /*virtual int ProcessRequest( vtkInformation* request, vtkInformationVector** inputVector, vtkInformationVector* outputVector);*/
     
     void ComputeInputUpdateExtents(vtkDataObject *output);
     

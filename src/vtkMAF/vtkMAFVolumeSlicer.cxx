@@ -88,7 +88,7 @@ vtkMAFVolumeSlicer::~vtkMAFVolumeSlicer() {
 //----------------------------------------------------------------------------
 int vtkMAFVolumeSlicer::FillInputPortInformation( int /*port*/, vtkInformation* info) {
     // All input ports consume polygonal data. 
-    info->Set(vtkAlgorithm::INPUT_REQUIRED_DATA_TYPE(), "vtkPolyData");
+    info->Set(vtkAlgorithm::INPUT_REQUIRED_DATA_TYPE(), "vtkDataSet");
     return 1;
 }
 
@@ -398,7 +398,7 @@ void vtkMAFVolumeSlicer::SetSliceTransform(vtkLinearTransform *trans)
 }
 
 void vtkMAFVolumeSlicer::GeneratePolygonalOutput() {
-    vtkDataSet *data = vtkDataSet::SafeDownCast(this->GetInput()->GetInformation()->Get(vtkDataObject::DATA_OBJECT()));
+    vtkDataSet *data = vtkDataSet::SafeDownCast(this->GetInput());
     this->NumComponents = data->GetPointData()->GetNumberOfComponents();
     
     this->PrepareVolume();
@@ -569,7 +569,7 @@ void vtkMAFVolumeSlicer::GeneratePolygonalOutput() {
 //----------------------------------------------------------------------------
 void vtkMAFVolumeSlicer::GenerateTextureOutput()
 {
-    vtkDataSet *data = vtkDataSet::SafeDownCast(this->GetInput()->GetInformation()->Get(vtkDataObject::DATA_OBJECT()));
+    vtkDataSet *data = vtkDataSet::SafeDownCast(this->GetInput());
     this->NumComponents = data->GetPointData()->GetNumberOfComponents();
     
     this->PrepareVolume();
@@ -738,23 +738,6 @@ void vtkMAFVolumeSlicer::GenerateTextureOutput()
     outputObject->Modified();
 }
 
-//----------------------------------------------------------------------------
-int vtkMAFVolumeSlicer::ProcessRequest( vtkInformation* request, vtkInformationVector** inputVector, vtkInformationVector* outputVector) {
-    // Look for requests we implement.
-    if(request->Has(vtkDemandDrivenPipeline::REQUEST_DATA())) {
-        vtkInformation* inInfo = inputVector[0]->GetInformationObject(0);
-        vtkInformation* outInfo = outputVector->GetInformationObject(0);
-        vtkPolyData* input = vtkPolyData::SafeDownCast( inInfo->Get(vtkDataObject::DATA_OBJECT()));
-        vtkPolyData* output = vtkPolyData::SafeDownCast(
-                                                        outInfo->Get(vtkDataObject::DATA_OBJECT()));
-        // The executive should not have invoked this 
-        // request without valid data objects according 
-        // to our specified interface. 
-        assert(input && output && "REQUEST_DATA must be given data!");
-        // Main filter implementation goes here.
-        output->Initialize();
-    }
-}
 
 //----------------------------------------------------------------------------
 int vtkMAFVolumeSlicer::RequestInformation(
