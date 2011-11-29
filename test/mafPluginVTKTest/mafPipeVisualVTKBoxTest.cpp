@@ -90,7 +90,7 @@ private Q_SLOTS:
         m_SphereMapper = vtkPolyDataMapper::New();
         m_SphereActor = vtkActor::New();
         m_SphereActor->SetMapper(m_SphereMapper);
-        m_RenderWidget = new mafVTKWidget();
+
         initializeGraphicResources();
     }
 
@@ -99,7 +99,7 @@ private Q_SLOTS:
         mafDEL(m_VME);
         mafDEL(m_VisualPipeSelection);
         mafMessageHandler::instance()->shutdown();
-        m_RenderWidget = new mafVTKWidget();
+
         shutdownGraphicResources();
     }
 

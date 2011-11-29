@@ -60,10 +60,12 @@ private Q_SLOTS:
         // Create the input data source and wrap through the mafProxy
         m_DataSourceLow = vtkSphereSource::New();
         m_DataSourceLow->SetRadius(2.0);
+        m_DataSourceLow->Update();
         m_DataSourceLowContainer = m_DataSourceLow->GetOutputPort(0);
         m_DataSourceHigh = vtkSphereSource::New();
         m_DataSourceHigh->SetThetaResolution(25);
         m_DataSourceHigh->SetPhiResolution(25);
+        m_DataSourceHigh->Update();
         m_DataSourceHighContainer = m_DataSourceHigh->GetOutputPort(0);
 
         // put the container inside the mafDataSet
@@ -91,7 +93,6 @@ private Q_SLOTS:
         m_SphereActor = vtkActor::New();
         m_SphereActor->SetMapper(m_SphereMapper);
 
-        m_RenderWidget = new mafVTKWidget();
         initializeGraphicResources();
     }
 
@@ -106,7 +107,7 @@ private Q_SLOTS:
         mafDEL(m_VME);
         mafDEL(m_VisualPipeSelection);
         mafMessageHandler::instance()->shutdown();
-        delete m_RenderWidget;
+
         shutdownGraphicResources();
     }
 

@@ -105,7 +105,7 @@ private Q_SLOTS:
         m_DataSet->setDataValue(&m_DataSourceContainer);
         m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
         //! </snippet>
-        m_RenderWidget = new mafVTKWidget();
+
         initializeGraphicResources();
     }
 
@@ -116,7 +116,7 @@ private Q_SLOTS:
         m_Reader->Delete();
         mafDEL(m_VME);
         mafMessageHandler::instance()->shutdown();
-        delete m_RenderWidget;
+
         shutdownGraphicResources();
     }
 

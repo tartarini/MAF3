@@ -109,7 +109,6 @@ private Q_SLOTS:
         m_VME->dataSetCollection()->insertItem(dataSet, 0);
         mafDEL(dataSet);
         //! </snippet>
-        m_RenderWidget = new mafVTKWidget();
         initializeGraphicResources();
     }
 
@@ -118,7 +117,6 @@ private Q_SLOTS:
         //here delete vtk stuff
         mafDEL(m_VME);
         mafMessageHandler::instance()->shutdown();
-        delete m_RenderWidget;
         shutdownGraphicResources();
     }
 
