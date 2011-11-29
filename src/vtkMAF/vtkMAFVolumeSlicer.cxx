@@ -426,7 +426,7 @@ void vtkMAFVolumeSlicer::GeneratePolygonalOutput() {
     if (this->GetTexturedOutput()) 
     {
         this->GetTexturedOutput()->Update();
-        memcpy(this->GlobalPlaneOrigin, this->GetTexturedOutput()->GetOrigin(), sizeof(this->GlobalPlaneOrigin));
+        //memcpy(this->GlobalPlaneOrigin, this->GetTexturedOutput()->GetOrigin(), sizeof(this->GlobalPlaneOrigin));
     }
     
     const float d = -(this->GlobalPlaneAxisZ[0] * this->GlobalPlaneOrigin[0] + this->GlobalPlaneAxisZ[1] * this->GlobalPlaneOrigin[1] + this->GlobalPlaneAxisZ[2] * this->GlobalPlaneOrigin[2]);
