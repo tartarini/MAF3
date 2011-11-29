@@ -186,6 +186,7 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTest() {
     pipe->setProperty("normalX", 0.);
     pipe->setProperty("normalY", 0.);
     pipe->setProperty("normalZ", 1.);
+    ((mafPipeVisualVTKSliceVolume*)pipe)->setSlice(center);
     pipe->setGraphicObject(m_RenderWidget);
     pipe->updatePipe();
 
