@@ -65,15 +65,15 @@
 #define __vtkMAFVolumeSlicer_h
 
 #include "vtkMAF_global.h"
-#include <vtkPolyDataAlgorithm.h>
+#include <vtkAlgorithm.h>
 
 /// forward declarations
 class vtkImageData;
 class vtkLinearTransform;
 
-class VTK_vtkMAF_EXPORT vtkMAFVolumeSlicer : public vtkPolyDataAlgorithm {
+class VTK_vtkMAF_EXPORT vtkMAFVolumeSlicer : public vtkAlgorithm {
 public:
-    vtkTypeMacro(vtkMAFVolumeSlicer, vtkPolyDataAlgorithm);
+    vtkTypeMacro(vtkMAFVolumeSlicer, vtkAlgorithm);
     void PrintSelf(ostream& os, vtkIndent indent);
 
     // Description:
@@ -132,11 +132,22 @@ public:
     /** 
      Transform slicer plane according to the given transformation before slicing.*/
     void SetSliceTransform(vtkLinearTransform *trans);
+    
+    vtkDataObject *GetInput();
 
+    /*virtual*/ int ProcessRequest(vtkInformation* request,
+                                   vtkInformationVector** inputVector,
+                                   vtkInformationVector* outputVector);
+    
 protected:
     vtkMAFVolumeSlicer();
     ~vtkMAFVolumeSlicer();
 
+    int RequestUpdateExtent(
+                        vtkInformation* request,
+                        vtkInformationVector** inputVector,
+                            vtkInformationVector* outputVector);
+    
     /*virtual*/ int RequestInformation(vtkInformation* request,
         vtkInformationVector** inputVector,
         vtkInformationVector* outputVector);

@@ -28,6 +28,7 @@
 #include <vtkCellArray.h>
 #include <vtkDoubleArray.h>
 #include <vtkLinearTransform.h>
+#include <vtkStreamingDemandDrivenPipeline.h>
 
 #include <vtkMath.h>
 #include <math.h>
@@ -72,10 +73,17 @@ vtkMAFVolumeSlicer::vtkMAFVolumeSlicer()
     this->SetNumberOfInputPorts(1);
     this->SetNumberOfOutputPorts(2);
 
+    vtkPolyData *output1 = vtkPolyData::New();
+    this->GetExecutive()->SetOutputData(0, output1);
+    output1->Delete();
+
+    
     vtkImageData *output2 = vtkImageData::New();
     output2->SetExtent(0, 511, 0, 511, 0, 0);
+    output2->SetDimensions(512, 512, 1);
     this->GetExecutive()->SetOutputData(1, output2);
     output2->Delete();
+    
 }
 
 //----------------------------------------------------------------------------
@@ -89,6 +97,7 @@ vtkMAFVolumeSlicer::~vtkMAFVolumeSlicer() {
 int vtkMAFVolumeSlicer::FillInputPortInformation( int /*port*/, vtkInformation* info) {
     // All input ports consume polygonal data. 
     info->Set(vtkAlgorithm::INPUT_REQUIRED_DATA_TYPE(), "vtkDataSet");
+
     return 1;
 }
 
@@ -100,6 +109,7 @@ int vtkMAFVolumeSlicer::FillOutputPortInformation( int port, vtkInformation* inf
     } else {
         info->Set(vtkDataObject::DATA_TYPE_NAME(), "vtkImageData");
     }
+
     return 1;
 }
 
@@ -197,6 +207,13 @@ vtkImageData *vtkMAFVolumeSlicer::GetTexturedOutput()
 {
     vtkDataObject *data = this->GetOutputDataObject(1);
     return vtkImageData::SafeDownCast(data);
+}
+
+vtkDataObject *vtkMAFVolumeSlicer::GetInput() {
+    vtkInformationVector **iv = this->GetExecutive()->GetInputInformation();
+    vtkInformation *inInfo = iv[0]->GetInformationObject(0);
+    vtkDataSet *input = vtkDataSet::SafeDownCast(inInfo->Get(vtkDataObject::DATA_OBJECT()));
+    return input;
 }
 
 //----------------------------------------------------------------------------
@@ -826,6 +843,49 @@ int vtkMAFVolumeSlicer::RequestInformation(
 
     return 1;
 }
+
+int vtkMAFVolumeSlicer::ProcessRequest(vtkInformation* request,
+                                         vtkInformationVector** inputVector,
+                                         vtkInformationVector* outputVector)
+{
+    // generate the data
+    if(request->Has(vtkDemandDrivenPipeline::REQUEST_DATA()))
+    {
+        return this->RequestData(request, inputVector, outputVector);
+    }
+    
+    if(request->Has(vtkStreamingDemandDrivenPipeline::REQUEST_UPDATE_EXTENT()))
+    {
+        return this->RequestUpdateExtent(request, inputVector, outputVector);
+    }
+    
+    // execute information
+    if(request->Has(vtkDemandDrivenPipeline::REQUEST_INFORMATION()))
+    {
+        return this->RequestInformation(request, inputVector, outputVector);
+    }
+    
+    return this->Superclass::ProcessRequest(request, inputVector, outputVector);
+}
+
+int vtkMAFVolumeSlicer::RequestUpdateExtent(
+                                              vtkInformation* vtkNotUsed(request),
+                                              vtkInformationVector** inputVector,
+                                              vtkInformationVector* vtkNotUsed(outputVector))
+{
+    int numInputPorts = this->GetNumberOfInputPorts();
+    for (int i=0; i<numInputPorts; i++)
+    {
+        int numInputConnections = this->GetNumberOfInputConnections(i);
+        for (int j=0; j<numInputConnections; j++)
+        {
+            vtkInformation* inputInfo = inputVector[i]->GetInformationObject(j);
+            inputInfo->Set(vtkStreamingDemandDrivenPipeline::EXACT_EXTENT(), 1);
+        }
+    }
+    return 1;
+}
+
 
 //----------------------------------------------------------------------------
 int vtkMAFVolumeSlicer::RequestData(
