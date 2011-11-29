@@ -17,8 +17,8 @@
 #include "mafPipeVisualVTK.h"
 
 // Foundation Class forwarding list
-class vtkActor;
 class vtkOutlineFilter;
+class vtkPolyDataMapper;
 
 namespace mafPluginVTK {
 
@@ -49,6 +49,7 @@ protected:
     
 private:
     vtkOutlineFilter *m_OutlineFilter; ///< Filter used to generate the outline box for input data object.
+    vtkPolyDataMapper *m_Mapper; ///< Mapper for the box.
 };
 
 } // namespace mafPluginVTK

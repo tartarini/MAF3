@@ -35,18 +35,18 @@ mafPipeVisualVTKSelection::mafPipeVisualVTKSelection(const QString code_location
     m_OutlineCornerFilter = vtkOutlineCornerFilter::New();
     m_OutlineCornerFilter->SetExecutive(compositeDataPipeline);
 
-    vtkPolyDataMapper *mapper = vtkPolyDataMapper::New();
-    mapper->SetInputConnection(0, m_OutlineCornerFilter->GetOutputPort(0));
+    m_Mapper = vtkPolyDataMapper::New();
     m_Prop3D = vtkActor::New();
     m_Prop3D->SetPickable(0);
     m_Prop3D.setDestructionFunction(&vtkActor::Delete);
-    vtkActor::SafeDownCast(m_Prop3D)->SetMapper(mapper);
+    vtkActor::SafeDownCast(m_Prop3D)->SetMapper(m_Mapper);
     vtkActor::SafeDownCast(m_Prop3D)->GetProperty()->SetLineWidth(3);
-    mapper->Delete();
     m_Output = &m_Prop3D;
 }
 
 mafPipeVisualVTKSelection::~mafPipeVisualVTKSelection() {
+    m_OutlineCornerFilter->Delete();
+    m_Mapper->Delete();
 }
 
 bool mafPipeVisualVTKSelection::acceptObject(mafCore::mafObjectBase *obj) {
@@ -74,4 +74,5 @@ void mafPipeVisualVTKSelection::updatePipe(double t) {
         m_OutlineCornerFilter->SetInputConnection(*dataSet);
         m_OutlineCornerFilter->Update();
     }
+    m_Mapper->SetInputConnection(0, m_OutlineCornerFilter->GetOutputPort(0));
 }

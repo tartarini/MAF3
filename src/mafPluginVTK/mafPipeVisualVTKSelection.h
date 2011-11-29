@@ -17,8 +17,8 @@
 #include "mafPipeVisualVTK.h"
 
 // Foundation Class forwarding list
-class vtkActor;
 class vtkOutlineCornerFilter;
+class vtkPolyDataMapper;
 
 namespace mafPluginVTK {
 
@@ -50,6 +50,7 @@ protected:
     
 private:
     vtkOutlineCornerFilter *m_OutlineCornerFilter; ///< Filter used to generate the outline corners for representing the selected object.
+    vtkPolyDataMapper *m_Mapper; ///< Mapper for box.
 };
 
 } // namespace mafPluginVTK
