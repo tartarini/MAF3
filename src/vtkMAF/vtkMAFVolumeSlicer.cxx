@@ -423,10 +423,11 @@ void vtkMAFVolumeSlicer::GeneratePolygonalOutput() {
     output->Reset();
     
     // define the plane
-    if (this->GetTexturedOutput()) 
+    vtkImageData *texture = this->GetTexturedOutput();
+    if (texture) 
     {
-        this->GetTexturedOutput()->Update();
-        //memcpy(this->GlobalPlaneOrigin, this->GetTexturedOutput()->GetOrigin(), sizeof(this->GlobalPlaneOrigin));
+        texture->Update();
+        memcpy(this->GlobalPlaneOrigin, texture->GetOrigin(), sizeof(this->GlobalPlaneOrigin));
     }
     
     const float d = -(this->GlobalPlaneAxisZ[0] * this->GlobalPlaneOrigin[0] + this->GlobalPlaneAxisZ[1] * this->GlobalPlaneOrigin[1] + this->GlobalPlaneAxisZ[2] * this->GlobalPlaneOrigin[2]);
@@ -481,9 +482,8 @@ void vtkMAFVolumeSlicer::GeneratePolygonalOutput() {
     // find image parameters for texture mapping
     double spacing[3];
     int size[2];
-    if (this->GetTexturedOutput()) 
+    if (texture) 
     {
-        vtkImageData *texture = this->GetTexturedOutput();
         int extent[6];
         //assert(texture->GetSource() != this); //doesn't mean anything compare a texture with this object!
         texture->UpdateInformation();
@@ -509,7 +509,7 @@ void vtkMAFVolumeSlicer::GeneratePolygonalOutput() {
         pointsObj->Delete();
     }
     pointsObj->Allocate(numberOfPoints, 1);
-    vtkDoubleArray *tsObj = NULL;//vtkDoubleArray::SafeDownCast(output->GetPointData()->GetTCoords());
+    vtkDoubleArray *tsObj = NULL;
     if (tsObj == NULL) 
     {
         tsObj = vtkDoubleArray::New();
@@ -593,6 +593,7 @@ void vtkMAFVolumeSlicer::GenerateTextureOutput()
     outputObject->GetWholeExtent(extent);
     outputObject->SetExtent(extent);
     outputObject->SetNumberOfScalarComponents(this->NumComponents);
+    outputObject->SetOrigin(this->GlobalPlaneOrigin);
     outputObject->AllocateScalars();
     
     vtkDataSet *data = vtkDataSet::SafeDownCast(this->GetInput());
@@ -895,11 +896,9 @@ int vtkMAFVolumeSlicer::RequestData(
 {
     // get the info objects
     vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
-    vtkInformation *outInfo = outputVector->GetInformationObject(0);
 
     // get the input and output
     vtkDataSet *input = vtkDataSet::SafeDownCast(inInfo->Get(vtkDataObject::DATA_OBJECT()));
-    vtkPolyData *output = vtkPolyData::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT()));
 
     this->NumComponents = input->GetPointData()->GetNumberOfComponents();
 
@@ -910,8 +909,8 @@ int vtkMAFVolumeSlicer::RequestData(
     }
     this->GetTexturedOutput()->SetSpacing(spc);
 
-    this->GeneratePolygonalOutput();
     this->GenerateTextureOutput();
+    this->GeneratePolygonalOutput();
 
 //    output->Squeeze();
 
