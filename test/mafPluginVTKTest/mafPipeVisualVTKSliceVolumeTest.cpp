@@ -33,7 +33,14 @@
 #include <vtkDataSetReader.h>
 #include <vtkAlgorithmOutput.h>
 
+#include <vtkOutlineFilter.h>
+#include <vtkPolyDataMapper.h>
+
 #include <vtkMAFVolumeSlicer.h>
+
+#include <vtkRenderWindowInteractor.h>
+
+#include <vtkCamera.h>
 
 // render window stuff
 #include <vtkRenderer.h>
@@ -200,11 +207,26 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTest() {
 
     // Connect the actor (contained into the container) with the renderer.
     m_Renderer->AddActor(*actor);
+    
+    vtkOutlineFilter *m_OutlineFilter = vtkOutlineFilter::New();
+    m_OutlineFilter->SetInputConnection(0, m_Reader->GetOutputPort(0));
+    vtkPolyDataMapper *mapper = vtkPolyDataMapper::New();
+    mapper->SetInputConnection(0, m_OutlineFilter->GetOutputPort());
+    vtkActor *actorOutline = vtkActor::New();
+    actorOutline->SetMapper(mapper);
+    mapper->Delete();
+    m_Renderer->GetActiveCamera()->SetRoll(20);
+    m_Renderer->GetActiveCamera()->Azimuth(20);
+    m_Renderer->GetActiveCamera()->Yaw(20);
+    m_Renderer->AddActor(actorOutline);
 
     ((mafVTKWidget*)m_RenderWidget)->update();
     m_Renderer->ResetCamera();
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
-    QTest::qSleep(2000);
+    
+
+    
+    QTest::qSleep(12000);
 
     pipe->setGraphicObject(NULL);
     mafDEL(pipe);
