@@ -35,7 +35,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 ## copy ui files
 ## #################################################################
 
-mafCopyFilesFromExtension("ui" "mafGUITest")
+#mafCopyFilesFromExtension("ui" "mafGUITest")
 
 ## #################################################################
 ## Installation
