@@ -20,7 +20,7 @@ using namespace mafResources;
 
 mafImporterSTL::mafImporterSTL(const QString code_location) : mafImporter(code_location) {
     m_Reader = vtkSTLReader::New();
-    setProperty("wildcard", mafTr("STL Files (*.*)"));
+    setProperty("wildcard", mafTr("STL Files (*.stl)"));
 }
 
 mafImporterSTL::~mafImporterSTL() {
