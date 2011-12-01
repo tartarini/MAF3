@@ -24,11 +24,11 @@ namespace mafSerialization {
  This singletone provides the facade class for the object serialization mechanism.
  It provides also the creation of 3 new IDs:
  - maf.local.serialization.load
- - maf.local.serialization.save
+ - maf.local.serialization.save : topic used for save the memento of a serializable object which can be serialized by a codec (XML, RAW ...) in an external file. Generally with a Hierarchical data system all the mementoes will be serialized in a unique file.
  - maf.local.serialization.setIgnoreModified
  - maf.local.serialization.ignoreModified
- - maf.local.serialization.export
- - maf.local.serialization.import
+ - maf.local.serialization.export: topic used for calling an external data codec which encode into a specific file format, defined by the codec itself. The final result will be a new file which contains the internal structure of the custom data.
+ - maf.local.serialization.import: topic used for calling an external data codec which decode from a specific file format, defined by the codec itself. The final result will be a memory allocation which contains the custom data structure loaded from the file.
  - maf.local.serialization.extDataImported
  - maf.local.serialization.mementoLoaded
  related to 'load' and 'save' slots and 'mementoLoaded' signal.
