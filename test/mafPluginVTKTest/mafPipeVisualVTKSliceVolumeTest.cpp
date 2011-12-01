@@ -36,10 +36,7 @@
 #include <vtkOutlineFilter.h>
 #include <vtkPolyDataMapper.h>
 
-#include <vtkMAFVolumeSlicer.h>
-
 #include <vtkRenderWindowInteractor.h>
-
 #include <vtkCamera.h>
 
 // render window stuff
@@ -92,7 +89,7 @@ private Q_SLOTS:
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSliceVolume)
 
         QString fname(MAF_DATA_DIR);
-        fname.append("/VTK/mafPipeVisualVTKIsoSurfaceTestData.vtk");
+        fname.append("/VTK/mafPipeVisualVTKSliceVolumeTestData.vtk");
         
         // Import a VTK volume.
         m_Reader = vtkDataSetReader::New();
@@ -107,9 +104,6 @@ private Q_SLOTS:
         //// to "wrap" the 'vtkCubeSource' of type vtkPolyData just simply use the code below.
         m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_DataSourceContainer = m_Reader->GetOutputPort(0);
-
-//        m_Slicer = vtkMAFVolumeSlicer::New();
-//        m_Slicer->SetInputConnection(m_Reader->GetOutputPort(0));
 
         //Insert data into VME
         m_VME = mafNEW(mafResources::mafVME);
@@ -128,7 +122,6 @@ private Q_SLOTS:
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_VME);
-//        m_Slicer->Delete();
         mafMessageHandler::instance()->shutdown();
 
         shutdownGraphicResources();
@@ -144,8 +137,6 @@ private:
     mafVME *m_VME; ///< Contain the only item vtkPolydata representing a Volume.
     mafProxy<vtkAlgorithmOutput> m_DataSourceContainer; ///< Container of the Data Source
     vtkDataSetReader *m_Reader;
-
-//    vtkMAFVolumeSlicer *m_Slicer;
 
     QObject *m_RenderWidget; /// renderer widget
     vtkRenderer *m_Renderer; ///< Accessory renderer
@@ -190,17 +181,6 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTest() {
     pipe->setGraphicObject(m_RenderWidget);
     pipe->updatePipe();
 
-    float xVect[3] = {1., 0., 0.};
-    float yVect[3] = {0., 1., 0.};
-//    m_Slicer->SetPlaneOrigin(center);
-//    m_Slicer->SetPlaneAxisX(xVect);
-//    m_Slicer->SetPlaneAxisY(yVect);
-//    m_Slicer->Modified();
-//    m_Slicer->Update();
-
-//    vtkImageData *image = m_Slicer->GetTexturedOutput();
-//    vtkPolyData *poly = vtkPolyData::SafeDownCast(m_Slicer->GetOutputDataObject(0));
-
     // Get the vtkActor from the visual pipe
     // And assign to a mafProxy
     mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, pipe->output());
@@ -224,9 +204,7 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTest() {
     ((mafVTKWidget*)m_RenderWidget)->update();
     m_Renderer->ResetCamera();
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
-    
-
-    
+        
     QTest::qSleep(12000);
 
     pipe->setGraphicObject(NULL);

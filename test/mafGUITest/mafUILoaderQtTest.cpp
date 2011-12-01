@@ -3,12 +3,13 @@
  *  mafGUITest
  *
  *  Created by Paolo Quadrani on 26/10/10.
- *  Copyright 2010 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
+#include <mafTestConfig.h>
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafProxy.h>
@@ -96,7 +97,9 @@ void mafUILoaderQtTest::mafUILoaderQtAllocationTest() {
 }
 
 void mafUILoaderQtTest::mafUILoaderQtUILoadTest() {
-    m_UILoader->uiLoad("testUIFile.ui");
+    QString uiFile(MAF_DATA_DIR);
+    uiFile.append("/GUI/testUIFile.ui");
+    m_UILoader->uiLoad(uiFile);
     QVERIFY(m_LoadRequestor->widgetLoaded() != NULL);
 }
 
