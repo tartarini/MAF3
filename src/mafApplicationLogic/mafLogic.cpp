@@ -50,7 +50,7 @@ mafLogic::~mafLogic() {
     m_LibraryHandlersHash.clear();
 }
 
-bool mafLogic::initialize() {
+bool mafLogic::initialize(bool light) {
     bool result(Superclass::initialize());
 
     // Call the initialization of the superclass.
@@ -102,7 +102,9 @@ bool mafLogic::initialize() {
             if(handler) {
                 m_LibraryHandlersHash.insert(so, handler);
             }
-            result = result && (handler != NULL);
+            if (!light) {
+                result = result && (handler != NULL);
+            }
         }
 
         requestNewHierarchy();
