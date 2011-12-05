@@ -59,10 +59,7 @@ public:
     /// Allow to send a network request.
     /** Need to convert the parameter list into another list of basic type to string which are used in QtSoap.*/
     /*virtual*/ void send(const QString methodName, mafEventArgumentsList *argList, bool externalSend = false);
-
-    /// Marshalling of the datatypes
-    QtSoapType *marshall(const QString name, const QVariant &parameter);
-
+	
     /// return the response retrieved from the service
     QtSoapType *response();
 
@@ -81,12 +78,19 @@ public Q_SLOTS:
     void registerServerMethod(QString methodName, QList<QVariant::Type> types);
 
 private Q_SLOTS:
-    /// retrieve response from the service
+    
+	/// retrieve response from the service
     void retrieveRemoteResponse();
 
 private:
     /// stop and destroy the server instance.
     void stopServer();
+
+	///Add a custom string header to the qtsoap envelope message using the m_AuthenticationMap attribute
+	void addCustomHeader();
+
+	/// Marshalling of the datatypes
+    QtSoapType *marshall(const QString name, const QVariant &parameter);
 
     QtSoapHttpTransport *m_Http; ///< variable that represents the soap request from client to server
     QtSoapMessage m_Request; ///< variable that represents the request
