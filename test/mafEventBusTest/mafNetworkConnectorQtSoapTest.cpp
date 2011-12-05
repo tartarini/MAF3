@@ -125,9 +125,15 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapConstructorTest() {
 
 
 void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassingStringTest() {
-    //create soap client, initializing host and port
-    m_NetWorkConnectorQtSoap->createClient("localhost", 7889);
-    m_NetWorkConnectorQtSoap->setWSDL(WSDL_URL);
+    
+	// set advanced parameters map
+	QMap<QString,QVariant> advancedMap;	
+	advancedMap.insert("WSDLUrl",WSDL_URL);
+	advancedMap.insert("Path", "http://localhost:8280/services/echo.echoHttpSoap11Endpoint");
+	advancedMap.insert("Action","myEcho");
+
+	//create soap client, initializing host and port
+    m_NetWorkConnectorQtSoap->createClient("localhost", 7889, &advancedMap);
 
     // customize call
     mafEventArgumentsList myList; // create list to send
@@ -147,9 +153,7 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     //append inside the list
     myList.push_back(mafEventArgument(QVariantMap, values));
 
-    // send call
-    m_NetWorkConnectorQtSoap->setAction("myEcho");
-    m_NetWorkConnectorQtSoap->setPath(WSDL_URL);
+    // send call    
     m_NetWorkConnectorQtSoap->send("myEcho", &myList);
 
     //wait for response from remote server
@@ -165,10 +169,22 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
 }
 
 void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassingStringOnAxisServiceTest() {
-    //create soap client, initializing host and port
-    m_NetWorkConnectorQtSoap->createClient("localhost", 8280);
-    m_NetWorkConnectorQtSoap->setWSDL("http://localhost:8280/services/echo?wsdl");
+    
+	// set advanced parameters map
+	QMap<QString,QVariant> advancedMap;	
+	advancedMap.insert("WSDLUrl","http://localhost:8280/services/echo?wsdl");
+	advancedMap.insert("Path", "http://localhost:8280/services/echo.echoHttpSoap11Endpoint");
+	advancedMap.insert("Action","urn:echoString");
 
+	// register namespaces
+	QVariantMap namespacesMap;
+	namespacesMap.insert("ns", "http://echo.services.core.carbon.wso2.org");	
+	
+	advancedMap.insert("Namespaces", namespacesMap );
+
+	//create soap client, initializing host and port
+    m_NetWorkConnectorQtSoap->createClient("localhost", 8280, &advancedMap);
+    
     // customize call
     mafEventArgumentsList myList; // create list to send
 
@@ -183,17 +199,10 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     //set the name and the value
     values.insert("in", v);
 
-
     //append inside the list
     myList.push_back(mafEventArgument(QVariantMap,values));
 
-    QtSoapNamespaces &registry = QtSoapNamespaces::instance();
-    registry.registerNamespace("ns", "http://echo.services.core.carbon.wso2.org");
-
-    // send call
-    m_NetWorkConnectorQtSoap->registerNamespace("ns", "http://echo.services.core.carbon.wso2.org");
-    m_NetWorkConnectorQtSoap->setAction("urn:echoString");
-    m_NetWorkConnectorQtSoap->setPath("http://localhost:8280/services/echo.echoHttpSoap11Endpoint");
+    // send call    
     m_NetWorkConnectorQtSoap->send("ns:echoString", &myList);
 
     //wait for response from remote server
@@ -209,9 +218,14 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
 }
 
 void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassingStringArrayTest() {
-    //create soap client, initializing host and port
-    m_NetWorkConnectorQtSoap->createClient("localhost", 7889);
-    m_NetWorkConnectorQtSoap->setWSDL(WSDL_URL);
+    // set advanced parameters map
+	QMap<QString,QVariant> advancedMap;	
+	advancedMap.insert("WSDLUrl",WSDL_URL);
+	advancedMap.insert("Path", WSDL_URL);
+	advancedMap.insert("Action","testArray");
+
+	//create soap client, initializing host and port
+    m_NetWorkConnectorQtSoap->createClient("localhost", 7889, &advancedMap);
 
     // customize call
     mafEventArgumentsList myList; // create list to send
@@ -242,8 +256,6 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
     myList.push_back(mafEventArgument(QVariantMap,values));
 
     // send call
-    m_NetWorkConnectorQtSoap->setAction("testArray");
-    m_NetWorkConnectorQtSoap->setPath(WSDL_URL);
     m_NetWorkConnectorQtSoap->send("testArray", &myList);
 
     //wait for response from remote server
@@ -259,10 +271,26 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionPassing
 }
 
 void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionWithGSOAPServiceTest() {
-    //create soap client, initializing host and port
-    m_NetWorkConnectorQtSoap->createClient("ws.biomedtown.org", 80);
-    m_NetWorkConnectorQtSoap->setWSDL("http://ws.biomedtown.org/hello.wsdl");
+    
+	// set advanced parameters map
+	QMap<QString,QVariant> advancedMap;	
+	advancedMap.insert("WSDLUrl","http://ws.biomedtown.org/hello.wsdl");
+	advancedMap.insert("Path", "hello.cgi"); //warning : the path of the service should be selected depending in which way the service is implemented.
+	advancedMap.insert("Action","urn:echoString");
 
+	// register namespaces
+	QVariantMap namespacesMap;
+	namespacesMap.insert("h", "http://tempuri.org/h.xsd");	
+	
+	advancedMap.insert("Namespaces", namespacesMap );
+
+	//create soap client, initializing host and port
+    m_NetWorkConnectorQtSoap->createClient("ws.biomedtown.org", 80, &advancedMap);
+    
+	
+	//create soap client, initializing host and port
+    m_NetWorkConnectorQtSoap->createClient("ws.biomedtown.org", 80);
+    
     // customize call
     mafEventArgumentsList myList; // create list to send
 
@@ -273,10 +301,7 @@ void mafNetworkConnectorQtSoapTest::mafNetworkConnectorQtSoapCommunictionWithGSO
     //append inside the list
     myList.push_back(mafEventArgument(QVariantMap,values));
 
-    // send call
-    m_NetWorkConnectorQtSoap->registerNamespace("h", "http://tempuri.org/h.xsd");
-    m_NetWorkConnectorQtSoap->setAction("");
-    m_NetWorkConnectorQtSoap->setPath("hello.cgi"); //warning : the path of the service should be selected depending in which way the service is implemented.
+    // send call    
     m_NetWorkConnectorQtSoap->send("h:hello", &myList);
 
     //wait for response from remote server

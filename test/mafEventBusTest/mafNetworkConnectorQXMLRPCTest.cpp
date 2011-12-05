@@ -155,12 +155,11 @@ void mafNetworkConnectorQXMLRPCTest::mafNetworkConnectorQXMLRPCCommunictionWithH
     mafRegisterLocalCallback("maf.local.eventBus.globalUpdate", m_ObjectTest, "updateObject()");
 
     //Add authentication map
-    QMap<QString, QString> authenticationMap;
+    QMap<QString, QVariant> authenticationMap;
     authenticationMap.insert("coockie", "testCookie");
 
-    m_NetWorkConnectorQXMLRPC->setAuthenticationHeader(&authenticationMap);
-
-
+    m_NetWorkConnectorQXMLRPC->setAdvancedParameters(&authenticationMap);
+	
     //create list to send from the client
     //first parameter is a list which contains event properties
     QVariantList eventParameters;

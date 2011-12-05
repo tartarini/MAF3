@@ -82,7 +82,7 @@ public:
     testNetworkConnectorForEventBus();
 
     /// Create and initialize client
-    /*virtual*/ void createClient(const QString hostName, const unsigned int port);
+    /*virtual*/ void createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> * advancedParameters = NULL);
 
     /// Return the string variable initializated and updated from the data pipe.
     /*virtual*/ void createServer(const unsigned int port);
@@ -126,7 +126,7 @@ void testNetworkConnectorForEventBus::startListen() {
     m_ConnectorStatus = "Server Listening";
 }
 
-void testNetworkConnectorForEventBus::createClient(const QString hostName, const unsigned int port) {
+void testNetworkConnectorForEventBus::createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> * advancedParameters) {
     m_ConnectorStatus = "Client Created - Host: ";
     m_ConnectorStatus.append(hostName);
     m_ConnectorStatus.append(" Port: ");
