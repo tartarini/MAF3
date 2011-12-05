@@ -57,6 +57,9 @@ public:
 Q_SIGNALS:
     /// signal for send a message to through network
     void remoteCommunication(const QString event_id, mafEventArgumentsList *argList);
+    
+    /// signal for notify that the response is updated
+    void updatedResponseSignal(QMap<QString, QVariant> response);
 
 protected:
     QString m_Protocol; ///< define the protocol of the connector (xmlrpc, soap, etc...)

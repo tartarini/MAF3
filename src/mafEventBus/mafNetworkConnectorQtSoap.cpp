@@ -316,15 +316,8 @@ void mafNetworkConnectorQtSoap::send(const QString methodName, mafEventArguments
 
 void mafNetworkConnectorQtSoap::retrieveRemoteResponse()
 {
-
-	
-	
     // Get a reference to the response message.
     const QtSoapMessage &message = m_Http->getResponse();
-	qDebug() << "retrieveRemoteResponse";
-
-	qDebug() << "************************* RESPONSE *********************************";
-    qDebug() << message.toXmlString();
     // Check if the response is a SOAP Fault message
     if (message.isFault()) {
         qDebug("Error: %s", message.faultString().value().toString().toLatin1().constData());
@@ -333,6 +326,12 @@ void mafNetworkConnectorQtSoap::retrieveRemoteResponse()
     else {
         // Get the return value, and print the result.
         m_Response = const_cast<QtSoapType *>( &(message.returnValue()));
+    }
+    
+    if(m_Response) {
+        //need to marshall inside QMap variable
+        QMap<QString, QVariant> response;
+        Q_EMIT(updatedResponseSignal(response));
     }
 }
 
