@@ -31,7 +31,7 @@ public:
     mafNetworkConnector();
 
     /// create the unique instance of the client.
-    virtual void createClient(const QString hostName, const unsigned int port) = 0;
+    virtual void createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParameters = NULL) = 0;
 
     /// create the unique instance of the server.
     virtual void createServer(const unsigned int port) = 0;
@@ -51,12 +51,16 @@ public:
     /// register all the signals and slots
     virtual void initializeForEventBus() = 0;
 
+	/// Set advanced parameters
+    virtual void setAdvancedParameters(QMap<QString, QVariant> *advancedParameters);
+
 Q_SIGNALS:
     /// signal for send a message to through network
     void remoteCommunication(const QString event_id, mafEventArgumentsList *argList);
 
 protected:
     QString m_Protocol; ///< define the protocol of the connector (xmlrpc, soap, etc...)
+	QMap<QString, QVariant> *m_AdvancedParameters; ///< Map with authentication header for all protocols 
 };
 
 } //namespace mafEventBus

@@ -13,10 +13,14 @@
 
 using namespace mafEventBus;
 
-mafNetworkConnector::mafNetworkConnector() {
+mafNetworkConnector::mafNetworkConnector() : m_AdvancedParameters(NULL) {
 
 }
 
 QString mafNetworkConnector::protocol() {
     return m_Protocol;
+}
+
+void mafNetworkConnector::setAdvancedParameters(QMap<QString, QVariant> *advancedParameters){
+    m_AdvancedParameters = advancedParameters;
 }

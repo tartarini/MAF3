@@ -36,19 +36,13 @@ public:
     /*virtual*/ ~mafNetworkConnectorQtSoap();
 
     /// create the unique instance of the client.
-    /*virtual*/ void createClient(const QString hostName, const unsigned int port);
+    /*virtual*/ void createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParameters = NULL );
 
-    /// set the url of the wsdl for querying the service.
-    void setWSDL(const QString wsdlUrl);
-
-    /// set the action for the http transport
-    void setAction(const QString action);
-
-    /// set the path, for example the end point or the wsdl
-    void setPath(const QString path);
-
-    /// register a further namespace which will be used in soap 1.1 for axis2 compatibility
-    void registerNamespace(QString prefix, QString namespaceURI);
+	/// Set advanced parameters
+	/* REQUIRE(advancedParameters->contains("Action")) 
+	REQUIRE(advancedParameters->contains("WSDLUrl"))	
+	REQUIRE(advancedParameters->contains("Path")) */
+    /*virtual*/ void setAdvancedParameters(QMap<QString, QVariant> *advancedParameters);
 
     /// create the unique instance of the server.
     /*virtual*/ void createServer(const unsigned int port);
@@ -59,9 +53,8 @@ public:
     /// Allow to send a network request.
     /** Need to convert the parameter list into another list of basic type to string which are used in QtSoap.*/
     /*virtual*/ void send(const QString methodName, mafEventArgumentsList *argList, bool externalSend = false);
-<<<<<<< .mine	
-=======
->>>>>>> .theirs    /// return the response retrieved from the service
+
+	/// return the response retrieved from the service
     QtSoapType *response();
 
     /// register all the signalsand slots
@@ -86,17 +79,14 @@ private Q_SLOTS:
 private:
     /// Marshalling of the datatypes
     QtSoapType *marshall(const QString name, const QVariant &parameter);
-    
-    /// stop and destroy the server instance.
+
+	/// stop and destroy the server instance.
     void stopServer();
 
 	///Add a custom string header to the qtsoap envelope message using the m_AuthenticationMap attribute
-	void addCustomHeader();
+	void addAuthenticationHeader();
 
-	/// Marshalling of the datatypes
-    QtSoapType *marshall(const QString name, const QVariant &parameter);
-
-    QtSoapHttpTransport *m_Http; ///< variable that represents the soap request from client to server
+	QtSoapHttpTransport *m_Http; ///< variable that represents the soap request from client to server
     QtSoapMessage m_Request; ///< variable that represents the request
     mafRegisterMethodsMap m_RegisterMethodsMap;
     QString m_WSDLUrl; ///< represents the url of the wsdl
@@ -109,25 +99,10 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline void mafNetworkConnectorQtSoap::setWSDL(const QString wsdlUrl) {
-    m_WSDLUrl = wsdlUrl;
-}
-
-inline void mafNetworkConnectorQtSoap::setAction(const QString action) {
-    m_Action = action;
-}
-
-inline void mafNetworkConnectorQtSoap::setPath(const QString path) {
-    m_Path = path;
-}
-
 inline QtSoapType *mafNetworkConnectorQtSoap::response() {
     return m_Response;
 }
 
-inline void mafNetworkConnectorQtSoap::registerNamespace(QString prefix, QString namespaceURI) {
-    m_Request.useNamespace(prefix, namespaceURI);
-}
 
 } //namespace mafEventBus
 

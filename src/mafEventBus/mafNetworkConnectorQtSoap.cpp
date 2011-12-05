@@ -13,6 +13,8 @@
 #include "mafEventBusManager.h"
 
 #include "mafEvent.h"
+#include <qtsoap.h>
+
 
 using namespace mafEventBus;
 
@@ -41,7 +43,7 @@ void mafNetworkConnectorQtSoap::registerServerMethod(QString methodName, QList<Q
    m_RegisterMethodsMap.insert(methodName, types);
 }
 
-void mafNetworkConnectorQtSoap::createClient(const QString hostName, const unsigned int port) {
+void mafNetworkConnectorQtSoap::createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParameters ) {
     if(m_Http == NULL) {
         m_Http = new QtSoapHttpTransport();
         QObject::connect(m_Http, SIGNAL(responseReady()), this, SLOT(retrieveRemoteResponse()));
@@ -108,8 +110,49 @@ void mafNetworkConnectorQtSoap::createClient(const QString hostName, const unsig
     m_Http->submitRequest(request, "/WebServices/Population/population.asmx");*/
 
 
+	// set advanced paramters
+	if ( advancedParameters && advancedParameters->count() ){
+		setAdvancedParameters( advancedParameters );
+	}
+
     qDebug("retrieve value...");
     
+}
+
+/// Set advanced parameters
+void mafNetworkConnectorQtSoap::setAdvancedParameters(QMap<QString, QVariant> *advancedParameters){
+	
+	mafNetworkConnector::setAdvancedParameters( advancedParameters );
+
+	// authentication header
+	addAuthenticationHeader();
+
+	// wsdl
+	if (m_AdvancedParameters->contains("WSDLUrl")){
+		m_WSDLUrl = m_AdvancedParameters->value("WSDLUrl").toString();
+	}
+
+	// action
+	if (m_AdvancedParameters->contains("Action")){
+		m_Action = m_AdvancedParameters->value("Action").toString();
+	}
+
+	// path
+	if (m_AdvancedParameters->contains("Path")){
+		m_Path = m_AdvancedParameters->value("Path").toString();
+	}
+
+	// namespaces
+	if (m_AdvancedParameters->contains("Namespaces")){
+		QVariantMap nmap = m_AdvancedParameters->value("Namespaces").toMap();
+
+		QVariantMap::Iterator it(nmap.begin());
+		while( it != nmap.end() ) {			
+			m_Request.useNamespace( it.key(), it.value().toString() );
+			++it;
+		}
+	}
+
 }
 
 void mafNetworkConnectorQtSoap::createServer(const unsigned int port) {
@@ -211,37 +254,76 @@ QtSoapType *mafNetworkConnectorQtSoap::marshall(const QString name, const QVaria
     return returnValue;
 }
 
+
+void mafNetworkConnectorQtSoap::addAuthenticationHeader(){
+	
+	// TODO: create a mechanism for being generic when creating an authorization header.
+
+	if ( !m_AdvancedParameters->contains("UsernameValue") ) {
+		return;
+	}
+
+	QString customNamespace = (* m_AdvancedParameters)["Namespace"].toString();
+	customNamespace.append(":");
+
+	QtSoapStruct * Security = new QtSoapStruct();
+	Security->setName(QtSoapQName(customNamespace + "Security"));
+
+	QtSoapStruct *UsernameToken = new QtSoapStruct();
+	UsernameToken->setName(QtSoapQName(customNamespace + "UsernameToken"));
+	
+	QtSoapSimpleType *user = new QtSoapSimpleType(QtSoapQName(customNamespace + "Username"), (* m_AdvancedParameters)["UsernameValue"].toString());
+	QtSoapSimpleType *pass = new QtSoapSimpleType(QtSoapQName(customNamespace + "Password"), (* m_AdvancedParameters)["PasswordValue"].toString());
+	
+	UsernameToken->insert(user);
+	UsernameToken->insert(pass);
+	
+	Security->insert(UsernameToken);
+	
+	m_Request.addHeaderItem((class QtSoapType *)Security);	
+
+}
+
 void mafNetworkConnectorQtSoap::send(const QString methodName, mafEventArgumentsList *argList, bool externalSend) {
     //REQUIRE(!params->at(0).isNull());
     //REQUIRE(params->at(0).canConvert(QVariant::Hash) == true);
     Q_UNUSED(externalSend);
-
+	
     QString type = argList->at(0).name();
     if(argList == NULL || type != "QVariantMap") {
         qDebug() << "NULL or invalid argument, nothing to send!";
         return;
     }
-    m_Request.clear();
-    m_Request.setMethod(methodName);
-    QVariantMap *values;
+    
+	m_Request.setMethod(methodName);
+
+	QVariantMap *values;
     values = reinterpret_cast<QVariantMap *> (argList->at(0).data());
     int i = 0, size = values->size();
     for(;i<size;++i) {
         m_Request.addMethodArgument(marshall(values->keys().at(i), values->values().at(i)));
     }
 
-    qDebug() << m_Request.toXmlString();
 
     // Submit the request the the web service.
     m_Http->setAction(m_Action);
     m_Http->submitRequest(m_Request, m_Path);
 
+	// clear request for further messages
+	m_Request.clear();
+	
 }
 
 void mafNetworkConnectorQtSoap::retrieveRemoteResponse()
 {
+
+	
+	
     // Get a reference to the response message.
     const QtSoapMessage &message = m_Http->getResponse();
+	qDebug() << "retrieveRemoteResponse";
+
+	qDebug() << "************************* RESPONSE *********************************";
     qDebug() << message.toXmlString();
     // Check if the response is a SOAP Fault message
     if (message.isFault()) {

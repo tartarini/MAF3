@@ -16,7 +16,7 @@
 
 using namespace mafEventBus;
 
-mafNetworkConnectorQXMLRPC::mafNetworkConnectorQXMLRPC() : mafNetworkConnector(), m_Client(NULL), m_Server(NULL), m_RequestId(0), m_HeaderMap(NULL) {
+mafNetworkConnectorQXMLRPC::mafNetworkConnectorQXMLRPC() : mafNetworkConnector(), m_Client(NULL), m_Server(NULL), m_RequestId(0) {
     //generate remote signal, this signal must map in the
     //possible connection with the remote server.
     //Server, in this case XMLRPC, will register a method with id REMOTE_COMMUNICATION
@@ -45,7 +45,7 @@ mafNetworkConnector *mafNetworkConnectorQXMLRPC::clone() {
     return copy;
 }
 
-void mafNetworkConnectorQXMLRPC::createClient(const QString hostName, const unsigned int port) {
+void mafNetworkConnectorQXMLRPC::createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParameters ) {
     bool result(false);
     if(m_Client == NULL) {
         m_Client = new xmlrpc::Client(NULL);
@@ -63,6 +63,12 @@ void mafNetworkConnectorQXMLRPC::createClient(const QString hostName, const unsi
     }
 
     m_Client->setHost( hostName, port );
+
+	// set advanced paramters
+	if ( advancedParameters && advancedParameters->count() ){
+		setAdvancedParameters( advancedParameters );
+	}
+
 }
 
 void mafNetworkConnectorQXMLRPC::setProxy(const QString & host, int port, const QString & userName, const QString & password) {
@@ -225,7 +231,7 @@ void mafNetworkConnectorQXMLRPC::send(const QString event_id, mafEventArgumentsL
 }
 
 void mafNetworkConnectorQXMLRPC::xmlrpcSend(const QString &methodName, QList<xmlrpc::Variant> parameters) {
-    m_Client->request(parameters, methodName, m_HeaderMap); 
+    m_Client->request(parameters, methodName, m_AdvancedParameters); 
 }
 
 void mafNetworkConnectorQXMLRPC::processReturnValue( int requestId, QVariant value ) {
@@ -336,8 +342,4 @@ void mafNetworkConnectorQXMLRPC::processRequest( int requestId, QString methodNa
         delete argList;
         argList = NULL;
     }
-}
-
-void mafEventBus::mafNetworkConnectorQXMLRPC::setAuthenticationHeader(QMap<QString, QString> *headerMap){
-    m_HeaderMap = headerMap;
 }

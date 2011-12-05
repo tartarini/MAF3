@@ -40,7 +40,7 @@ public:
     /*virtual*/ ~mafNetworkConnectorQXMLRPC();
 
     /// create the unique instance of the client, proxyHost and proxyPort are optional.
-    /*virtual*/ void createClient(const QString hostName, const unsigned int port);
+    /*virtual*/ void createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParameters = NULL);
 
     /// create the unique instance of the server.
     /*virtual*/ void createServer(const unsigned int port);
@@ -53,9 +53,6 @@ public:
 
     /// register all the signals and slots
     /*virtual*/ void initializeForEventBus();
-
-    /// Set authentication header map.
-    void setAuthenticationHeader(QMap<QString, QString> *headerMap);
 
     /// Set proxy values.
     void setProxy(const QString & host, int port, const QString & userName, const QString & password);
@@ -94,8 +91,7 @@ private:
     void stopServer();
 
     int m_RequestId; ///< id test for a specific (experimental) request
-
-    QMap<QString, QString> *m_HeaderMap; ///< Map with header authentication (like cookie).
+	    
     QString m_ProxyHostName; ///< Proxy host
     int m_ProxyPort; ///< Proxy port
     QString m_ProxyUserName; ///< Proxy user name
