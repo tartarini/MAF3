@@ -59,8 +59,9 @@ public:
     /// Allow to send a network request.
     /** Need to convert the parameter list into another list of basic type to string which are used in QtSoap.*/
     /*virtual*/ void send(const QString methodName, mafEventArgumentsList *argList, bool externalSend = false);
-	
-    /// return the response retrieved from the service
+<<<<<<< .mine	
+=======
+>>>>>>> .theirs    /// return the response retrieved from the service
     QtSoapType *response();
 
     /// register all the signalsand slots
@@ -83,6 +84,9 @@ private Q_SLOTS:
     void retrieveRemoteResponse();
 
 private:
+    /// Marshalling of the datatypes
+    QtSoapType *marshall(const QString name, const QVariant &parameter);
+    
     /// stop and destroy the server instance.
     void stopServer();
 
