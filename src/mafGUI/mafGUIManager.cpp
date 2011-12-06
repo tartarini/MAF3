@@ -900,6 +900,8 @@ void mafGUIManager::openRecentFile() {
     if (action) {
         QString file_to_open(action->data().toString());
         if (!file_to_open.isEmpty() && QFile(file_to_open).exists()){
+            newWorkingSession();
+
             mafEventArgumentsList argList;
             argList.append(mafEventArgument(QString, file_to_open));
             mafEventBusManager::instance()->notifyEvent("maf.local.logic.openFile", mafEventTypeLocal, &argList);
@@ -1011,6 +1013,8 @@ void mafGUIManager::open() {
     }
     qDebug() << files[0];
     
+    newWorkingSession();
+
     //Load memento hierarchy
     m_Logic->restoreHierarchy(files[0]);
     m_CompleteFileName = files[0];
