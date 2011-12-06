@@ -198,9 +198,18 @@ QtSoapType *mafNetworkConnectorQtSoap::marshall(const QString name, const QVaria
         case QVariant::Time:
                 returnValue = new QtSoapSimpleType(QtSoapQName(name), parameter.toTime().toString());
                 break;
-        case QVariant::StringList:
-        case QVariant::List: {
+        case QVariant::StringList:{
                 QtSoapArray *arr = new QtSoapArray(QtSoapQName(name, ""), QtSoapType::String, parameter.toList().size());
+                int index = 0;
+                Q_FOREACH( QVariant item, parameter.toList() ) {
+                    arr->insert(index, marshall(QString("Elem_").append(QString::number(index)), item ));
+                    ++index;
+                    }
+                returnValue = arr;
+                break;
+        }
+        case QVariant::List: {
+				QtSoapArray *arr = new QtSoapArray(QtSoapQName(name, "array"), QtSoapType::Other, parameter.toList().size());
                 int index = 0;
                 Q_FOREACH( QVariant item, parameter.toList() ) {
                     arr->insert(index, marshall(QString("Elem_").append(QString::number(index)), item ));
@@ -212,14 +221,16 @@ QtSoapType *mafNetworkConnectorQtSoap::marshall(const QString name, const QVaria
         case QVariant::Map: {
             QMap<QString, QVariant> map = parameter.toMap();
             QMap<QString, QVariant>::ConstIterator iter = map.begin();
-            QtSoapArray *arr = new QtSoapArray(QtSoapQName(name, ""), QtSoapType::String, parameter.toMap().size());
+            //QtSoapArray *arr = new QtSoapArray(QtSoapQName(name, ""), QtSoapType::Other, parameter.toMap().size());
+			QtSoapStruct *stru= new QtSoapStruct(QtSoapQName(name, "struct"));
             int index = 0;
             while( iter != map.end() ) {
-                arr->insert(index, marshall(iter.key(), *iter));
+                //arr->insert(index, marshall(iter.key(), *iter));
+				stru->insert( marshall( iter.key(), iter.value()) );
                 ++iter;
-                ++index;
+                
             }
-            returnValue = arr;
+            returnValue = stru;
             break;
         }
         case QVariant::Hash: {
@@ -255,15 +266,96 @@ QtSoapType *mafNetworkConnectorQtSoap::marshall(const QString name, const QVaria
 }
 
 
+QVariant mafNetworkConnectorQtSoap::unmarshall( QtSoapType *s ) {
+    QVariant returnValue;
+    switch( s->type() ){        
+		case QtSoapType::Double:
+		case QtSoapType::Float:
+		case QtSoapType::Decimal: {
+			qDebug() <<"QtSoapType::Decimal";
+			returnValue.setValue( s->value().toDouble() );
+			break;
+		}
+		case QtSoapType::String: {
+			qDebug() <<"QtSoapType::String";
+			returnValue.setValue( s->value().toString() );
+			break;
+		}
+		case QtSoapType::Boolean: {
+			qDebug() <<"QtSoapType::Boolean";
+			returnValue.setValue( s->value().toBool() );
+			break;
+		}	
+		case QtSoapType::Int:
+		case QtSoapType::Integer: {
+			qDebug() <<"QtSoapType::Integer";
+			returnValue.setValue( s->value().toInt() );
+			break;
+		}
+		case QtSoapType::Byte:
+		case QtSoapType::Base64Binary: {
+			qDebug() <<"QtSoapType::Byte";
+			returnValue.setValue( s->value().toByteArray() );
+			break;
+		}
+		case QtSoapType::Array:{
+			qDebug() <<"QtSoapType::Array";
+			
+			QList<QVariant> qlist;
+
+			QtSoapArray * list = (QtSoapArray *) s;
+
+			for (int i=0; i < list->count(); i++){
+				QVariant child = unmarshall( &list->at(i) );
+				qlist.append( child );
+			}
+
+			returnValue.setValue( qlist );
+
+			break;
+		}
+		case QtSoapType::Struct:{
+			qDebug() <<"QtSoapType::Struct";
+			
+			QMap<QString,QVariant> qmap;
+
+			QtSoapStruct* qstruct = (QtSoapStruct *) s;
+			QtSoapStructIterator it(*qstruct);
+						
+			for (int i=0; i < qstruct->count(); i++){
+				QVariant child = unmarshall( it.data() );
+
+				qmap.insert(it.key().name(), child );
+				++it;
+			}
+
+			returnValue.setValue( qmap );
+
+			break;
+		}
+        default: {            
+			qWarning() << "BEWARE: Type not unmarshalled correctly";
+            returnValue.setValue( s->value() );            
+            break;
+        }
+    }
+
+	qDebug() << returnValue.toString();
+    //ENSURE(returnValue != NULL);
+    return returnValue;
+}
+
 void mafNetworkConnectorQtSoap::addAuthenticationHeader(){
 	
 	// TODO: create a mechanism for being generic when creating an authorization header.
 
-	if ( !m_AdvancedParameters->contains("UsernameValue") ) {
+	if ( !m_AdvancedParameters->contains("Authentication") ) {
 		return;
 	}
 
-	QString customNamespace = (* m_AdvancedParameters)["Namespace"].toString();
+	QMap<QString,QVariant> &authenticationMap = (*m_AdvancedParameters)["Authentication"].toMap();
+
+	QString customNamespace = authenticationMap["Namespace"].toString();
 	customNamespace.append(":");
 
 	QtSoapStruct * Security = new QtSoapStruct();
@@ -272,8 +364,8 @@ void mafNetworkConnectorQtSoap::addAuthenticationHeader(){
 	QtSoapStruct *UsernameToken = new QtSoapStruct();
 	UsernameToken->setName(QtSoapQName(customNamespace + "UsernameToken"));
 	
-	QtSoapSimpleType *user = new QtSoapSimpleType(QtSoapQName(customNamespace + "Username"), (* m_AdvancedParameters)["UsernameValue"].toString());
-	QtSoapSimpleType *pass = new QtSoapSimpleType(QtSoapQName(customNamespace + "Password"), (* m_AdvancedParameters)["PasswordValue"].toString());
+	QtSoapSimpleType *user = new QtSoapSimpleType(QtSoapQName(customNamespace + "Username"), authenticationMap["UsernameValue"].toString());
+	QtSoapSimpleType *pass = new QtSoapSimpleType(QtSoapQName(customNamespace + "Password"), authenticationMap["PasswordValue"].toString());
 	
 	UsernameToken->insert(user);
 	UsernameToken->insert(pass);
@@ -324,15 +416,18 @@ void mafNetworkConnectorQtSoap::retrieveRemoteResponse()
         m_Response = NULL;
     }
     else {
+
         // Get the return value, and print the result.
         m_Response = const_cast<QtSoapType *>( &(message.returnValue()));
-    }
-    
-    if(m_Response) {
+
+		if(m_Response) {
         //need to marshall inside QMap variable
-        QMap<QString, QVariant> response;
-        Q_EMIT(updatedResponseSignal(response));
-    }
+		   QVariant response = unmarshall(m_Response);
+		   
+		   Q_EMIT( updatedResponseSignal( response ) );
+		}
+    }    
+    
 }
 
 

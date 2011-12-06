@@ -80,6 +80,9 @@ private:
     /// Marshalling of the datatypes
     QtSoapType *marshall(const QString name, const QVariant &parameter);
 
+	/// Unmarshalling of the qtsoap datatypes
+	QVariant unmarshall(QtSoapType *s );
+
 	/// stop and destroy the server instance.
     void stopServer();
 
