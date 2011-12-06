@@ -38,6 +38,7 @@ class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSliceVolume : public mafPipeVisu
     Q_PROPERTY(QString normalX READ normalX WRITE setNormalX)
     Q_PROPERTY(QString normalY READ normalY WRITE setNormalY)
     Q_PROPERTY(QString normalZ READ normalZ WRITE setNormalZ)
+    Q_PROPERTY(QString sliceAxes READ sliceAxes WRITE setSliceAxes)
     Q_PROPERTY(QString thickness READ thickness WRITE setThickness)
 
     /// typedef macro.
@@ -122,6 +123,12 @@ public Q_SLOTS:
 
     /// Set thickness value from text box.
     void on_thickness_textEdited(QString stringValue);
+
+    /// Set the slice axes normal to the slicing plane.
+    QString sliceAxes() const;
+
+    /// Assign the slice axes normal to the slicing plane.
+    void setSliceAxes(QString axes);
 
 protected:
     /// Object destructor.
@@ -232,6 +239,15 @@ inline void mafPipeVisualVTKSliceVolume::setNormalZ(QString stringValue) {
     double *n = m_SlicerPipe->normal();
     n[2] = stringValue.toDouble();
     m_SlicerPipe->setNormal(n);
+}
+
+inline QString mafPipeVisualVTKSliceVolume::sliceAxes() const {
+    return QString::number(m_SlicerPipe->planeNormalAxes());
+}
+
+inline void mafPipeVisualVTKSliceVolume::setSliceAxes(QString axes) {
+    mafPlaneNormal n = (mafPlaneNormal)axes.toInt();
+    m_SlicerPipe->setPlaneNormalAxes(n);
 }
 
 } // namespace mafPluginVTK
