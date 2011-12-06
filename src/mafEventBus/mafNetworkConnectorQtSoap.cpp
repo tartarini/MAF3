@@ -353,7 +353,7 @@ void mafNetworkConnectorQtSoap::addAuthenticationHeader(){
 		return;
 	}
 
-	QMap<QString,QVariant> &authenticationMap = (*m_AdvancedParameters)["Authentication"].toMap();
+	QMap<QString,QVariant> authenticationMap = (*m_AdvancedParameters)["Authentication"].toMap();
 
 	QString customNamespace = authenticationMap["Namespace"].toString();
 	customNamespace.append(":");
