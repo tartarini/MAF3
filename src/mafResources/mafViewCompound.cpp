@@ -81,3 +81,11 @@ void mafViewCompound::updateView() {
         subView->updateView();
     }
 }
+
+void mafViewCompound::clearScene() {
+    mafView *subView;
+    Q_FOREACH(subView, m_ViewList) {
+        subView->clearScene();
+    }
+    Superclass::clearScene();
+}
