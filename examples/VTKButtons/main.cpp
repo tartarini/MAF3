@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
     logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "Slice");
     // ... and customize it telling to use mafPipeVisualVTKSurface visual pipe to render vtkPolyData data type.
     logic->customizeVisualization("VTK view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
-    logic->customizeVisualization("Slice", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSliceSurface");
+    logic->customizeVisualization("Slice", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
 
 //    logic->plugObject("mafResources::mafView", "mafScriptInterpreter::mafViewScriptInterpreterPython", "Python Console");
 
@@ -74,6 +74,5 @@ int main(int argc, char *argv[]) {
     int result = a.exec();
 
     mafDEL(logic);
-
     return result;
 }
