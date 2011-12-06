@@ -93,23 +93,28 @@ public:
     }
 
     // Description:
-    // Return the mtime also considering the locator and clip function.
+    // Return the mtime also considering the implicit plane.
     unsigned long GetMTime();
 
     /**
+     Specify the normal of the plane.*/
+    void SetPlaneNormal(double normal[3]);
+    void SetPlaneNormal(double nx, double ny, double nz);
+    vtkGetVectorMacro(PlaneNormal, double, 3);
+
+    /**
      Specify a point defining the origin of the plane.*/
-    //  vtkSetVector3Macro(PlaneOrigin, double);
     void SetPlaneOrigin(double origin[3]);
     void SetPlaneOrigin(double x, double y, double z);
     vtkGetVectorMacro(PlaneOrigin, double, 3);
     
     /** Specify x-axis of the plane*/
-    void SetPlaneAxisX(float axis[3]);
-    vtkGetVectorMacro(PlaneAxisX, float, 3);
+    void SetPlaneAxisX(double axis[3]);
+    vtkGetVectorMacro(PlaneAxisX, double, 3);
     
     /** Specify x-axis of the plane*/
-    void SetPlaneAxisY(float axis[3]);
-    vtkGetVectorMacro(PlaneAxisY, float, 3);
+    void SetPlaneAxisY(double axis[3]);
+    vtkGetVectorMacro(PlaneAxisY, double, 3);
     
     /**
      Set / Get the Window for color modulation. The formula for modulation is 
@@ -163,7 +168,7 @@ protected:
     void ComputeInputUpdateExtents(vtkDataObject *output);
     
     void PrepareVolume();
-    void CalculateTextureCoordinates(const float point[3], const int size[2], const double spacing[2], float ts[2]);
+    void CalculateTextureCoordinates(const double point[3], const int size[2], const double spacing[2], double ts[2]);
     
     template<typename InputDataType, typename OutputDataType> void CreateImage(const InputDataType *input, OutputDataType *output, vtkImageData *outputObject);
 
@@ -173,14 +178,16 @@ protected:
     int   NumComponents;
     // plane coordinates
     double PlaneOrigin[3];
-    float PlaneAxisX[3];
-    float PlaneAxisY[3];
-    float PlaneAxisZ[3];
+    double PlaneAxisX[3];
+    double PlaneAxisY[3];
+    double PlaneAxisZ[3];
     
     double GlobalPlaneOrigin[3];
-    float GlobalPlaneAxisX[3];
-    float GlobalPlaneAxisY[3];
-    float GlobalPlaneAxisZ[3];
+    double GlobalPlaneAxisX[3];
+    double GlobalPlaneAxisY[3];
+    double GlobalPlaneAxisZ[3];
+
+    double PlaneNormal[3];
     
     vtkLinearTransform *TransformSlice;
     
@@ -193,7 +200,7 @@ protected:
     // look-up tables and caches
     vtkTimeStamp PreprocessingTime;
     
-    float*       VoxelCoordinates[3];
+    double*       VoxelCoordinates[3];
     double       DataOrigin[3];
     double        DataBounds[3][2];
     int          DataDimensions[3];
