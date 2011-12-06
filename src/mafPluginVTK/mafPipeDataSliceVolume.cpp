@@ -114,7 +114,7 @@ void mafPipeDataSliceVolume::setPlaneNormalAxes(mafPlaneNormal axes) {
     m_PlaneNormalAxes = axes;
     switch (axes) {
         case mafPlaneNormalX:
-            m_XVector[0] = 0.;
+            m_XVector[0] = 0.0001; //this is a ancestor bug... very sad.
             m_XVector[1] = 1.;
             m_XVector[2] = 0.;
             m_YVector[0] = 0.;
