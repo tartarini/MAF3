@@ -225,10 +225,6 @@ void mafLogic::storeHierarchy(QString fileName, bool enableSaveAs) {
 }
 
 void mafLogic::restoreHierarchy(QString fileName) {
-    // Crate a new session.
-    /// view select
-    mafEventBusManager::instance()->notifyEvent("maf.local.gui.new", mafEventTypeLocal, NULL);
-
     //Load memento from file
     mafCore::mafMemento *mementoHierarchy = NULL;
     mafEventArgumentsList argList;
