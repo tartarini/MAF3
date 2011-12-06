@@ -78,7 +78,7 @@ public:
     mafSceneNode *sceneNodeFromVme(mafObjectBase *vme);
     
     /// clear and delete the SceneGraphs.
-    void clearScene();
+    virtual void clearScene();
 
     ///Get the selected SceneNode.
     mafSceneNode *selectedSceneNode();
