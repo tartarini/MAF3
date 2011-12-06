@@ -5,7 +5,7 @@
  *  Created by Roberto Mucci on 30/03/10.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -33,7 +33,7 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace mafEventBus;
 
-mafViewVTK::mafViewVTK(const QString code_location) : mafView(code_location), m_Renderer(NULL), m_CameraParallel(false) {
+mafViewVTK::mafViewVTK(const QString code_location) : mafView(code_location), m_Renderer(NULL), m_CameraParallel(false), m_CameraAxesDirection(mafCameraDirectionZNegative) {
     m_SceneNodeType = "mafPluginVTK::mafSceneNodeVTK";
 }
 
@@ -53,6 +53,7 @@ bool mafViewVTK::initialize() {
         m_Renderer->SetBackground(0.1, 0.1, 0.1);
         ((mafVTKWidget*)m_RenderWidget)->showAxes(true);
         ((mafVTKWidget*)m_RenderWidget)->setParallelCameraMode(m_CameraParallel);
+        setCameraAxes(m_CameraAxesDirection);
     
         //create the instance for selection pipe.
         m_PipeVisualSelection = mafNEW(mafPluginVTK::mafPipeVisualVTKSelection);
@@ -76,6 +77,34 @@ bool mafViewVTK::initialize() {
         return true;
     }
     return false;
+}
+
+void mafViewVTK::setCameraAxes(int axes) {
+    m_CameraAxesDirection = (mafCameraDirection)axes;
+    if (m_RenderWidget == NULL) {
+        return;
+    }
+
+    switch (m_CameraAxesDirection) {
+            case mafCameraDirectionX:
+                ((mafVTKWidget*)m_RenderWidget)->setCameraViewDirection(1., 0., 0.);
+                break;
+            case mafCameraDirectionXNegative:
+                ((mafVTKWidget*)m_RenderWidget)->setCameraViewDirection(-1., 0., 0.);
+                break;
+            case mafCameraDirectionY:
+                ((mafVTKWidget*)m_RenderWidget)->setCameraViewDirection(0., 1., 0.);
+                break;
+            case mafCameraDirectionYNegative:
+                ((mafVTKWidget*)m_RenderWidget)->setCameraViewDirection(0., -1., 0.);
+                break;
+            case mafCameraDirectionZ:
+                ((mafVTKWidget*)m_RenderWidget)->setCameraViewDirection(0., 0., 1.);
+                break;
+            case mafCameraDirectionZNegative:
+                ((mafVTKWidget*)m_RenderWidget)->setCameraViewDirection(0., 0., -1.);
+                break;
+    }
 }
 
 void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
