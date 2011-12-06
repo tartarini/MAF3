@@ -56,6 +56,12 @@ public:
     /// Allows to set the parallel camera mode on all layers.
     void setParallelCameraMode(bool on = true);
 
+    /// Allows to set the camera viewing direction.
+    void setCameraViewDirection(double normal[3]);
+
+    /// Allows to set the camera viewing direction.
+    void setCameraViewDirection(double x, double y, double z);
+
     /// Allows to show the axes representing the global reference system. This method has to be called after that the renderer has been added to the renderwindow.
     void showAxes(bool show = true);
 

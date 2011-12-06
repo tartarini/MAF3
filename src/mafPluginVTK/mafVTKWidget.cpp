@@ -61,6 +61,21 @@ void mafVTKWidget::setParallelCameraMode(bool on /* = true */) {
     m_RendererBase->GetActiveCamera()->SetParallelProjection(on ? 1 : 0);
 }
 
+void mafVTKWidget::setCameraViewDirection(double x, double y, double z) {
+    double n[3];
+    n[0] = x;
+    n[1] = y;
+    n[2] = z;
+    setCameraViewDirection(n);
+}
+
+void mafVTKWidget::setCameraViewDirection(double normal[3]) {
+    vtkCamera *camera = m_RendererBase->GetActiveCamera();
+    camera->SetFocalPoint(0.,0.,0.);
+    camera->SetPosition(normal);
+    camera->OrthogonalizeViewUp();
+}
+
 void mafPluginVTK::mafVTKWidget::initializeLayers() {
     vtkRenderWindow *renWin = GetRenderWindow();
     // Set the number of layers for the render window.
