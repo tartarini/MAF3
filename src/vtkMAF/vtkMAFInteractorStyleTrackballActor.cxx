@@ -701,11 +701,17 @@ void vtkMAFInteractorStyleTrackballActor::OnChar()
 
     case 'u' :
     case 'U' :
-        rwi->UserCallback();
+        {
+            rwi->UserCallback();
+        }
         break;
 
     case 'r' :
     case 'R' :
+        {
+            this->CurrentRenderer->ResetCamera();
+            this->CurrentRenderer->GetRenderWindow()->Render();
+        }
         break;
 
     case 'w' :
