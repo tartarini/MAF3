@@ -85,26 +85,101 @@ void mafViewVTK::setCameraAxes(int axes) {
         return;
     }
 
+    double position[3], focalPoint[3], viewUp[3];
     switch (m_CameraAxesDirection) {
             case mafCameraDirectionX:
-                ((mafVTKWidget*)m_RenderWidget)->setCameraViewDirection(1., 0., 0.);
+            {
+                position[0] = 0.;
+                position[1] = 0.;
+                position[2] = 0.;
+                focalPoint[0] = 1.;
+                focalPoint[1] = 0.; 
+                focalPoint[2] = 0.;
+                viewUp[0] = 0.;
+                viewUp[1] = 1.;
+                viewUp[2] = 0.;
+            }
                 break;
             case mafCameraDirectionXNegative:
-                ((mafVTKWidget*)m_RenderWidget)->setCameraViewDirection(-1., 0., 0.);
+            {
+                position[0] = 0.;
+                position[1] = 0.;
+                position[2] = 0.;
+                focalPoint[0] = -1.;
+                focalPoint[1] = 0.; 
+                focalPoint[2] = 0.;
+                viewUp[0] = 0.;
+                viewUp[1] = 1.;
+                viewUp[2] = 0.;
+            }
                 break;
             case mafCameraDirectionY:
-                ((mafVTKWidget*)m_RenderWidget)->setCameraViewDirection(0., 1., 0.);
+            {
+                position[0] = 0.;
+                position[1] = 0.;
+                position[2] = 0.;
+                focalPoint[0] = 0.;
+                focalPoint[1] = 1.; 
+                focalPoint[2] = 0.;
+                viewUp[0] = 0.;
+                viewUp[1] = 0.;
+                viewUp[2] = 1.;
+            }
                 break;
             case mafCameraDirectionYNegative:
-                ((mafVTKWidget*)m_RenderWidget)->setCameraViewDirection(0., -1., 0.);
+            {
+                position[0] = 0.;
+                position[1] = 0.;
+                position[2] = 0.;
+                focalPoint[0] = 0.;
+                focalPoint[1] = -1.; 
+                focalPoint[2] = 0.;
+                viewUp[0] = 0.;
+                viewUp[1] = 0.;
+                viewUp[2] = 1.;
+            }
                 break;
             case mafCameraDirectionZ:
-                ((mafVTKWidget*)m_RenderWidget)->setCameraViewDirection(0., 0., 1.);
+            {
+                position[0] = 0.;
+                position[1] = 0.;
+                position[2] = 0.;
+                focalPoint[0] = 0.;
+                focalPoint[1] = 0.; 
+                focalPoint[2] = 1.;
+                viewUp[0] = 0.;
+                viewUp[1] = 1.;
+                viewUp[2] = 0.;
+            }
                 break;
             case mafCameraDirectionZNegative:
-                ((mafVTKWidget*)m_RenderWidget)->setCameraViewDirection(0., 0., -1.);
+            {
+                position[0] = 0.;
+                position[1] = 0.;
+                position[2] = 0.;
+                focalPoint[0] = 0.;
+                focalPoint[1] = 0.; 
+                focalPoint[2] = -1.;
+                viewUp[0] = 0.;
+                viewUp[1] = 1.;
+                viewUp[2] = 0.;
+            }
                 break;
+            default:
+            {
+                position[0] = 0.;
+                position[1] = 0.;
+                position[2] = 0.;
+                focalPoint[0] = 0.;
+                focalPoint[1] = 0.; 
+                focalPoint[2] = 1.;
+                viewUp[0] = 0.;
+                viewUp[1] = 1.;
+                viewUp[2] = 0.;
+            }
+            break;
     }
+    ((mafVTKWidget*)m_RenderWidget)->setCameraParameters(position, focalPoint,viewUp);
 }
 
 void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {

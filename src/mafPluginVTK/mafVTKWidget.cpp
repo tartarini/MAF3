@@ -24,7 +24,7 @@
 #include <vtkSmartPointer.h>
 #include <vtkProp.h>
 #include <vtkCamera.h>
-
+#include <vtkMath.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -61,19 +61,11 @@ void mafVTKWidget::setParallelCameraMode(bool on /* = true */) {
     m_RendererBase->GetActiveCamera()->SetParallelProjection(on ? 1 : 0);
 }
 
-void mafVTKWidget::setCameraViewDirection(double x, double y, double z) {
-    double n[3];
-    n[0] = x;
-    n[1] = y;
-    n[2] = z;
-    setCameraViewDirection(n);
-}
-
-void mafVTKWidget::setCameraViewDirection(double normal[3]) {
+void mafVTKWidget::setCameraParameters(double position[3], double focalPoint[3], double viewUp[3]) {
     vtkCamera *camera = m_RendererBase->GetActiveCamera();
-    camera->SetFocalPoint(0.,0.,0.);
-    camera->SetPosition(normal);
-    camera->OrthogonalizeViewUp();
+    camera->SetPosition(position);
+    camera->SetFocalPoint(focalPoint);
+    camera->SetViewUp(viewUp);
 }
 
 void mafPluginVTK::mafVTKWidget::initializeLayers() {

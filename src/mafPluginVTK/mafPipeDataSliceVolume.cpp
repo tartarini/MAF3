@@ -27,8 +27,6 @@ using namespace mafPluginVTK;
 mafPipeDataSliceVolume::mafPipeDataSliceVolume(const QString code_location) : mafPipeData(code_location) {
     m_SliceOrigin[0] = m_SliceOrigin[1] = m_SliceOrigin[2] = 0.;
 
-    m_Normal[0] = m_Normal[1] = 0.;
-    m_Normal[2] = 1.;
     this->setPlaneNormalAxes(mafPlaneNormalZ);
 
     m_Slicer = vtkSmartPointer<vtkMAFVolumeSlicer>::New();
