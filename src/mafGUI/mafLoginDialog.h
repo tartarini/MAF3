@@ -61,7 +61,7 @@ public:
 
     void abortLoginSignal();
  
-protected Q_SLOTS:
+public Q_SLOTS:
     /// A lot to adjust the emitting of the signal.
     void slotAcceptLogin();
 
