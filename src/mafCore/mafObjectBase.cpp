@@ -16,7 +16,7 @@
 
 using namespace mafCore;
 
-mafObjectBase::mafObjectBase(const QString code_location) : QObject(), m_UIFilename(""), m_Modified(false), m_ReferenceCount(1), m_SelfUI(NULL), m_Delegate(NULL) {
+mafObjectBase::mafObjectBase(const QString code_location) : QObject(), m_UIFilename(""), m_UIRootWidget(NULL), m_Modified(false), m_ReferenceCount(1), m_Delegate(NULL) {
     mafIdProvider *provider = mafIdProvider::instance();
     m_ObjectId = provider->createNewId();
 
@@ -156,11 +156,11 @@ void mafObjectBase::connectObjectSlotsByName(QObject *signal_object) {
 }
 
 void mafObjectBase::updateUI(QObject *selfUI) {
-    if (selfUI != NULL) {
-        m_SelfUI = selfUI;
+    if (selfUI == NULL) {
+        return;
     }
     
-    QList<QObject *> widgetList = qFindChildren<QObject *>(m_SelfUI, QString());
+    QList<QObject *> widgetList = qFindChildren<QObject *>(selfUI, QString());
     int i = 0, size = widgetList.count();
     for(; i<size; ++i) {
         bool propertyIsAWidget = true;
