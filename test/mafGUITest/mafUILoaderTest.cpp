@@ -31,7 +31,7 @@ public:
     ///object constructor
     testmafUILoaderCustom();
     /// method for load the file
-    /*virtual*/ void uiLoad(const QString& fileName);
+    /*virtual*/ void uiLoad(const QString& fileName, int ui_type);
     /// check if gui is loaded
     bool isUILoaded() {
         return m_IsUILoaded;
@@ -39,7 +39,7 @@ public:
 
 public Q_SLOTS:
    ///return a value when the gui is loaded
-   void uiLoaded(mafCore::mafProxyInterface *widget);
+   void uiLoaded(mafCore::mafProxyInterface *widget, int ui_type);
 
 private:
      bool m_IsUILoaded;///< variable which represents if the ui is loaded
@@ -48,17 +48,18 @@ private:
 testmafUILoaderCustom::testmafUILoaderCustom() : mafUILoader(), m_IsUILoaded(false) {
 }
 
-void testmafUILoaderCustom::uiLoad(const QString& fileName) {
+void testmafUILoaderCustom::uiLoad(const QString& fileName, int ui_type) {
     REQUIRE(!fileName.isEmpty());
     mafProxyInterface *gui = NULL;
     mafEventArgumentsList list;
     list.append(mafEventArgument(mafCore::mafProxyInterface *, gui));
+    list.append(mafEventArgument(int, ui_type));
     mafEventBusManager::instance()->notifyEvent("maf.local.gui.uiloaded", mafEventTypeLocal, &list);
 }
 
-void testmafUILoaderCustom::uiLoaded(mafCore::mafProxyInterface  *widget) {
+void testmafUILoaderCustom::uiLoaded(mafCore::mafProxyInterface  *widget, int ui_type) {
     Q_UNUSED(widget);
-    qDebug() << "ui loaded";
+    qDebug() << QString("ui loaded of type %1").arg(ui_type);
     m_IsUILoaded = true;
 }
 
@@ -73,7 +74,7 @@ private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         m_UILoader = new testmafUILoaderCustom();
-        mafRegisterLocalCallback("maf.local.gui.uiloaded", m_UILoader, "uiLoaded(mafCore::mafProxyInterface *)");
+        mafRegisterLocalCallback("maf.local.gui.uiloaded", m_UILoader, "uiLoaded(mafCore::mafProxyInterface *, int)");
     }
 
     /// Cleanup test variables memory allocation.
@@ -98,7 +99,7 @@ void mafUILoaderTest::mafUILoaderAllocationTest() {
 }
 
 void mafUILoaderTest::mafUILoaderUILoadTest() {
-    m_UILoader->uiLoad("uiFileName");
+    m_UILoader->uiLoad("uiFileName", 0);
     QVERIFY(m_UILoader->isUILoaded() == true);
 }
 
