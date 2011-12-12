@@ -12,7 +12,7 @@
 #include "mafOrthoSlice.h"
 #include "ui_mafOrthoSlice.h"
 
-#include <qDebug>
+#include <QDebug>
 
 mafOrthoSlice::mafOrthoSlice(QWidget *parent) : QWidget(parent), ui(new Ui::mafOrthoSlice) {
     ui->setupUi(this);
