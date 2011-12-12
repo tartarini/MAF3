@@ -104,6 +104,13 @@ if(MAF_PLUGINCTK)
   #include(CMakeExternals/External_CTK.cmake)
 endif(MAF_PLUGINCTK)
 
+
+if(BUILD_WRAP)
+#  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} PythonQt)
+#  include(CMakeExternals/External_PythonQt.cmake)
+endif(BUILD_WRAP)
+
+
 #remove duplicates
 list(REMOVE_DUPLICATES MAF_DEPENDENCIES)
 
