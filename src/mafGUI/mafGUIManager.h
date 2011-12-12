@@ -3,9 +3,9 @@
  *  mafGUI
  *
  *  Created by Paolo Quadrani on 26/10/10.
- *  Copyright 2010 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -122,6 +122,12 @@ private:
     /// Manage the filename of the recent file.
     QString strippedName(const QString &fullFileName);
 
+    /// return the data object inside an item in order to retrieve the data object and not the visual one (for example scene-node).
+    QObject *dataObject(QModelIndex index);
+
+    /// Update recent file menu
+    void updateRecentFileMenu(QString fileName);
+
     QMenu *m_RecentFilesMenu; ///< Reference to 'Recent File' menu.
     QMenu *m_CurrentMenu; ///< Current menu that has been created during the mnu file parsing.
 
@@ -138,6 +144,7 @@ private:
     QWidget             *m_VMEWidget; ///< Widget representing the VME UI.
     QWidget             *m_ViewWidget; ///< Widget representing the View UI.
     QWidget             *m_VisualPipeWidget; ///< Widget representing the View UI.
+    bool                 m_UILoadedFromFile; ///< Flag indicating that the UI has been loaded from UI filename.
 
     mafObjectBase *m_CurrentPipeVisual; ///< Current used pipe visual.
     mafObjectBase *m_CurrentView; ///< Current view.
@@ -148,6 +155,9 @@ private:
     mafTreeModel    *m_Model;       ///< Tree model of VME.
     mafTreeWidget   *m_TreeWidget;  ///< Visualize the tree model.
     mafApplicationLogic::mafLogic *m_Logic; ///< Logic of the application.
+
+    QString m_CompleteFileName; ///< Name of the msf file.
+    QString m_LastPath; ///< Path of last msf file.
 
 Q_SIGNALS:
     /// Signal emitted when the GUI panel has been loaded.
@@ -183,6 +193,9 @@ public Q_SLOTS:
 
     /// Show the application's settings dialog.
     void showSettingsDialog();
+
+    /// Slot called when the UI is loaded from the mafUILoaderQt, and the GUI is shown.
+    void showGui(mafCore::mafProxyInterface *guiWidget, int ui_type);
 
 private Q_SLOTS:
     /// Start the operation associated with the operation's action activated.
@@ -223,9 +236,6 @@ private Q_SLOTS:
     
     /// Slot needed to intercept the started operation and ask it for the GUI filename.
     void operationDidStart(mafCore::mafObjectBase *operation);
-
-    /// Slot called when the UI is loaded from the mafUILoaderQt, and the gui is shown.
-    void showGui(mafCore::mafProxyInterface *guiWidget);
     
     /// save the current working session.
     void save();
@@ -238,17 +248,6 @@ private Q_SLOTS:
 
     /// Allows to parse the compound widget's layout and return the root object
     QObject *parseCompoundLayoutFile(QString layoutFile);
-
-private:
-    /// return the data object inside an item in order to retrieve the data object and not the visual one (for example scene-node).
-    QObject *dataObject(QModelIndex index);
-
-    /// Update recent file menu
-    void updateRecentFileMenu(QString fileName);
-
-    QString m_CompleteFileName; ///< Name of the msf file.
-    QString m_LastPath; ///< Path of last msf file.
-
 };
 
 /////////////////////////////////////////////////////////////
