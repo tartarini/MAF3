@@ -343,6 +343,8 @@ void mafMainWindow::viewCreated(mafCore::mafObjectBase *view) {
 }
 
 void mafMainWindow::subWindowDestroyed() {
+    m_GUIManager->showGui(NULL, mafGUILoadedTypeView);
+
     QMdiSubWindow *subWindow = qobject_cast<QMdiSubWindow *>(QObject::sender());
     mafEventBus::mafEventArgumentsList argList;
     mafObjectBase *view = m_ViewSubWindowHash.value(subWindow);
