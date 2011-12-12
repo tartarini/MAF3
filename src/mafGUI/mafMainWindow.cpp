@@ -219,11 +219,9 @@ void mafMainWindow::loadedGUIAvailable(int type, QWidget *w) {
                 ui->layoutOperation->addWidget(w);
                 break;
             case mafGUILoadedTypeView:
-                ui->tabWidget->setCurrentIndex(1);
                 ui->layoutView->addWidget(w);
                 break;
             case mafGUILoadedTypeVisualPipe:
-                //ui->tabWidget->setCurrentIndex(1);
                 ui->visualPipeLayout->addWidget(w);
                 break;
             case mafGUILoadedTypeVme:
@@ -355,7 +353,6 @@ void mafMainWindow::subWindowDestroyed() {
     }
     argList.append(mafEventArgument(mafCore::mafObjectBase *, view));
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.destroy", mafEventBus::mafEventTypeLocal, &argList);
-    
 }
 
 
