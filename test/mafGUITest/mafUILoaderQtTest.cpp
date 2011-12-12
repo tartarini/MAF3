@@ -99,7 +99,7 @@ void mafUILoaderQtTest::mafUILoaderQtAllocationTest() {
 void mafUILoaderQtTest::mafUILoaderQtUILoadTest() {
     QString uiFile(MAF_DATA_DIR);
     uiFile.append("/GUI/testUIFile.ui");
-    m_UILoader->uiLoad(uiFile);
+    m_UILoader->uiLoad(uiFile, 0);
     QVERIFY(m_LoadRequestor->widgetLoaded() != NULL);
 }
 

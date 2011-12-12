@@ -3,9 +3,9 @@
  *  mafGUI
  *
  *  Created by Daniele Giunchi on 29/10/10.
- *  Copyright 2010 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -22,7 +22,7 @@ mafUILoaderQt::mafUILoaderQt(const QString code_location) : mafUILoader(code_loc
 mafUILoaderQt::~mafUILoaderQt() {
 }
 
-void mafUILoaderQt::uiLoad(const QString &fileName) {
+void mafUILoaderQt::uiLoad(const QString &fileName, int ui_type) {
     QFile file(fileName.toAscii());
     file.open(QFile::ReadOnly);
     mafProxy<QWidget> *arg = new mafProxy<QWidget>();
@@ -32,5 +32,6 @@ void mafUILoaderQt::uiLoad(const QString &fileName) {
     mafProxyInterface *gui = arg;
     mafEventArgumentsList list;
     list.append(mafEventArgument(mafCore::mafProxyInterface *, gui));
+    list.append(mafEventArgument(int, ui_type));
     mafEventBusManager::instance()->notifyEvent("maf.local.gui.uiloaded", mafEventTypeLocal, &list);
 }

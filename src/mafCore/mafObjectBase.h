@@ -30,8 +30,8 @@ class mafVisitor;
 class MAFCORESHARED_EXPORT mafObjectBase : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString objectHash READ objectHash WRITE setObjectHash)
-    Q_PROPERTY(QObject *uiRootWidget READ uiRootWidget WRITE setUiRootWidget STORED false)
-    Q_PROPERTY(mafCore::mafDelegatePointer delegate READ delegate WRITE setDelegate STORED false)
+    Q_PROPERTY(QObject *uiRootWidget READ uiRootWidget WRITE setUIRootWidget STORED false)
+    Q_PROPERTY(mafCore::mafDelegatePointer delegateObject READ delegateObject WRITE setDelegateObject STORED false)
     Q_PROPERTY(QString uiFile READ uiFilename)
     /// typedef macro.
     mafSuperclassMacro(QObject);
@@ -94,20 +94,22 @@ public:
     /// Return the modified state of the mafObject.
     bool modified() const;
 
-    /// Return the filename associated to the object's UI.
-    const QString uiFilename() const;
+    /// Allow to assign a custom widget to the class instead of UI filename to be loaded.
+    /** This method initialize the m_UIRootWidget variable which is in mutual exclusion with m_UIFilename.
+    Assigning it will cause the m_UIFilename to be overwritten with the empty string.*/
+    void setUIRootWidget(QObject *w);
 
     /// Return the pointer to the root widget associated with the object.
     QObject *uiRootWidget() const;
 
-    /// Allows to assign the root widget to associate to the object.
-    void setUiRootWidget(QObject *w);
-    
+    /// Return the filename associated to the object's UI.
+    const QString uiFilename() const;
+
     /// Return the delegate class pointer.
-    mafDelegatePointer delegate() const;
+    mafDelegatePointer delegateObject() const;
     
     /// Assign the delegate class pointer to the object.
-    void setDelegate(mafDelegatePointer d);
+    void setDelegateObject(mafDelegatePointer d);
 
     /// Allows to accept a mafVisitor which will visit the object and will be executed the mafVisitor algorithm.
     virtual void acceptVisitor(mafVisitor *v);
@@ -144,7 +146,6 @@ private:
     //QByteArray m_ObjectHash; ///< Hash value for the current object.
     QUuid m_ObjectHash; ///< Hash value for the current object.
     bool m_Modified; ///< Contains the modified state of the VME.
-    QObject *m_SelfUI; ///< Ui object;
     mafDelegatePointer m_Delegate; ///< Delegate class pointer.
 
     volatile int m_ReferenceCount; ///< Index containing the reference count.
@@ -175,7 +176,7 @@ inline const QString mafObjectBase::uiFilename() const {
     return m_UIFilename;
 }
 
-inline void mafObjectBase::setUiRootWidget(QObject *w) {
+inline void mafObjectBase::setUIRootWidget(QObject *w) {
     m_UIRootWidget = w;
     m_UIFilename = "";
 }
@@ -184,11 +185,11 @@ inline QObject *mafObjectBase::uiRootWidget() const {
     return m_UIRootWidget;
 }
     
-inline mafDelegatePointer mafObjectBase::delegate() const {
+inline mafDelegatePointer mafObjectBase::delegateObject() const {
     return m_Delegate;
 }
 
-inline void mafObjectBase::setDelegate(mafDelegatePointer d) {
+inline void mafObjectBase::setDelegateObject(mafDelegatePointer d) {
     m_Delegate = d;
 }
 
