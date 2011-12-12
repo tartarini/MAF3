@@ -27,7 +27,7 @@ using namespace mafEventBus;
 using namespace mafGUI;
 
 mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location) : mafObjectBase(code_location)
-    , m_VMEWidget(NULL), m_ViewWidget(NULL), m_VisualPipeWidget(NULL), m_CurrentPipeVisual(NULL), m_CurrentView(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win)
+    , m_VMEWidget(NULL), m_ViewWidget(NULL), m_VisualPipeWidget(NULL), m_UILoadedFromFile(false), m_CurrentPipeVisual(NULL), m_CurrentView(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win)
     , m_Model(NULL), m_TreeWidget(NULL), m_Logic(NULL), m_CompleteFileName(), m_LastPath() {
 
     m_SettingsDialog = new mafGUIApplicationSettingsDialog();
@@ -59,7 +59,7 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     mafRegisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "setVMECheckState(mafCore::mafObjectBase *, bool)");
 
     m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
-    connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*)), this, SLOT(showGui(mafCore::mafProxyInterface*)));
+    connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*, int)), this, SLOT(showGui(mafCore::mafProxyInterface*, int)));
 }
 
 mafGUIManager::~mafGUIManager() {
@@ -454,13 +454,14 @@ void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
         m_GUILoadedType = mafGUILoadedTypeVme;
         
         QString guiFilename = vme->uiFilename();
-        if(guiFilename.isEmpty()) {
-            showGui(NULL);
+        m_UILoadedFromFile = !guiFilename.isEmpty();
+        if(m_UILoadedFromFile) {
+            // Ask the UI Loader to load the operation's GUI.
+            m_UILoader->uiLoad(guiFilename, m_GUILoadedType);
             return;
         }
         
-        // Ask the UI Loader to load the operation's GUI.
-        m_UILoader->uiLoad(guiFilename);
+        showGui(NULL, m_GUILoadedType);
     }
 }
 
@@ -472,14 +473,15 @@ void mafGUIManager::updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeV
         }
         m_CurrentPipeVisual = pipeVisual;
         QString guiFilename = pipeVisual->uiFilename();
-        if(!guiFilename.isEmpty()) {
+        m_UILoadedFromFile = !guiFilename.isEmpty();
+        if(m_UILoadedFromFile) {
             // Ask the UI Loader to load the view's GUI.
-            m_UILoader->uiLoad(guiFilename);
+            m_UILoader->uiLoad(guiFilename, m_GUILoadedType);
             return;
         }
     } 
     m_CurrentPipeVisual = NULL;
-    showGui(NULL);
+    showGui(NULL, m_GUILoadedType);
 }
 
 
@@ -675,10 +677,10 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
     m_GUILoadedType = mafGUILoadedTypeOperation;
     
     if(guiFilename.isEmpty()) {
-        showGui(NULL);
+        showGui(NULL, m_GUILoadedType);
     } else {    
         // Ask the UI Loader to load the operation's GUI.
-        m_UILoader->uiLoad(guiFilename);
+        m_UILoader->uiLoad(guiFilename, m_GUILoadedType);
     }
     
     // block the selection if the operation is single thread
@@ -747,7 +749,7 @@ mafTextEditWidget *mafGUIManager::createLogWidget(QWidget *parent) {
     return w;
 }
 
-void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
+void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget, int ui_type) {
     // Get the widget from the container
     mafProxy<QWidget> *w = mafProxyPointerTypeCast(QWidget, guiWidget);
     QWidget *widget = NULL;
@@ -762,6 +764,20 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
             Q_EMIT guiLoaded(m_GUILoadedType, m_OperationWidget);
         break;
         case mafGUILoadedTypeView:
+            {
+                if (m_ViewWidget) {
+                    m_ViewWidget->close();
+                    Q_EMIT guiTypeToRemove(mafGUILoadedTypeView);
+                }
+                m_ViewWidget = widget;
+                if (m_ViewWidget) {
+                    if (m_UILoadedFromFile) {
+                        mafConnectObjectWithGUI(m_CurrentView, m_ViewWidget);
+                    }
+                    Q_EMIT guiLoaded(m_GUILoadedType, m_ViewWidget);
+                }
+            }
+            Q_EMIT guiLoaded(m_GUILoadedType, widget);
         break;
         case mafGUILoadedTypeVisualPipe:
             {
@@ -771,7 +787,9 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
                 }
                 m_VisualPipeWidget = widget;
                 if (m_CurrentPipeVisual && m_VisualPipeWidget) {
-                    mafConnectObjectWithGUI(m_CurrentPipeVisual, m_VisualPipeWidget);
+                    if (m_UILoadedFromFile) {
+                        mafConnectObjectWithGUI(m_CurrentPipeVisual, m_VisualPipeWidget);
+                    }
                     Q_EMIT guiLoaded(m_GUILoadedType, m_VisualPipeWidget);
                 }
             }
@@ -789,7 +807,9 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget) {
             mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
 
             if (sel_vme) {
-                mafConnectObjectWithGUI(sel_vme, m_VMEWidget);
+                if (m_UILoadedFromFile) {
+                    mafConnectObjectWithGUI(sel_vme, m_VMEWidget);
+                }
                 Q_EMIT guiLoaded(m_GUILoadedType, m_VMEWidget);
             }
         }
@@ -845,13 +865,25 @@ void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
 
     // Get the selected view's UI file
     QString guiFilename = view->uiFilename();
-    if(guiFilename.isEmpty()) {
-        showGui(NULL);
-        return;
+    m_UILoadedFromFile = !guiFilename.isEmpty();
+    if(!m_UILoadedFromFile) {
+        // Check if there is a custom widget associated with the class...
+        QObject *customUI = view->uiRootWidget();
+        QWidget *customUIWidget = qobject_cast<QWidget *>(customUI);
+        if (customUI == NULL) {
+            // No GUI associated with the object...
+            showGui(NULL, m_GUILoadedType);
+            return;
+        } else {
+            mafProxy<QWidget> gui;
+            gui = customUIWidget;
+            showGui(&gui, m_GUILoadedType);
+            return;
+        }
     }
     
     // Ask the UI Loader to load the view's GUI.
-    m_UILoader->uiLoad(guiFilename);
+    m_UILoader->uiLoad(guiFilename, m_GUILoadedType);
 }
 
 void mafGUIManager::viewDestroyed() { //ALL THE VIEWS ARE DESTROYED
