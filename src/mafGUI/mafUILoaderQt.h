@@ -3,9 +3,9 @@
  *  mafGUI
  *
  *  Created by Daniele Giunchi on 29/10/10.
- *  Copyright 2010 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -19,7 +19,7 @@ namespace mafGUI {
 /**
   Class Name: mafUILoaderQt
   It represents the specific class for loading Qt graphical user interface from
-  .ui file  It parse xml and instantiates at runtime graphical Qt widgets.
+  .ui file  It parse XML and instantiates at runtime graphical Qt widgets.
   */
 class MAFGUISHARED_EXPORT mafUILoaderQt : public mafUILoader {
     Q_OBJECT
@@ -30,8 +30,8 @@ public:
     /// Object constructor.
     mafUILoaderQt(const QString code_location = "");
 
-    /// load from external file (generally an xml) the GUI
-    /*virtual*/ void uiLoad(const QString &fileName);
+    /// Load from external file (generally an XML) the GUI
+    /*virtual*/ void uiLoad(const QString &fileName, int ui_type);
 
 protected:
     /// Object destructor.
