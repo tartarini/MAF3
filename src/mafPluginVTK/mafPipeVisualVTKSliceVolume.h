@@ -39,8 +39,11 @@ class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSliceVolume : public mafPipeVisu
     Q_PROPERTY(QString normalY READ normalY WRITE setNormalY)
     Q_PROPERTY(QString normalZ READ normalZ WRITE setNormalZ)
     Q_PROPERTY(QString sliceAxes READ sliceAxes WRITE setSliceAxes)
-    Q_PROPERTY(QString thickness READ thickness WRITE setThickness)
-
+    
+    Q_PROPERTY(int positionSlider_minimum READ minimumPositionSlider)
+    Q_PROPERTY(int positionSlider_maximum READ maximumPositionSlider)
+    Q_PROPERTY(int positionSlider_value READ valuePositionSlider)
+    
     /// typedef macro.
     mafSuperclassMacro(mafPluginVTK::mafPipeVisualVTK);
 
@@ -115,30 +118,31 @@ public Q_SLOTS:
     /// Set normalZ value;
     void setNormalZ(QString value);
 
-    /// Get thickness value;
-    QString thickness();
-
-    /// Set thickness value;
-    void setThickness(QString value);
-
-    /// Set thickness value from text box.
-    void on_thickness_textEdited(QString stringValue);
-
     /// Set the slice axes normal to the slicing plane.
     QString sliceAxes() const;
 
     /// Assign the slice axes normal to the slicing plane.
     void setSliceAxes(QString axes);
+    
+    /// retrieve minimum value in slider range.
+    int minimumPositionSlider() const;
+    
+    /// retrieve maximum value in slider range.
+    int maximumPositionSlider() const;
+
+    /// retrieve current value in slider range.
+    int valuePositionSlider() const;
 
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTKSliceVolume();
 
 private:
-    double m_Thickness; ///< Contour thickness.
 
     mafPipeDataSliceVolume *m_SlicerPipe;    ///< Slicer data pipe.
     vtkSmartPointer<vtkPolyDataMapper> m_Mapper; ///< Data mapper.
+    double m_Range[2]; ///position range.
+    double m_CurrentValue; // current position.
 };
 
 /////////////////////////////////////////////////////////////
@@ -185,18 +189,6 @@ inline void mafPipeVisualVTKSliceVolume::setOriginZ(QString stringValue) {
 
 inline void mafPipeVisualVTKSliceVolume::on_originZ_textEdited(QString stringValue) {
     setOriginZ(stringValue);
-}
-
-inline QString mafPipeVisualVTKSliceVolume::thickness() {
-    return QString::number(m_Thickness);
-}
-
-inline void mafPipeVisualVTKSliceVolume::setThickness(QString stringValue) {
-    m_Thickness = stringValue.toDouble();
-}
-
-inline void mafPipeVisualVTKSliceVolume::on_thickness_textEdited(QString stringValue) {
-    m_Thickness = stringValue.toDouble();
 }
 
 inline void mafPipeVisualVTKSliceVolume::on_normalX_textEdited(QString stringValue) {
@@ -248,6 +240,19 @@ inline QString mafPipeVisualVTKSliceVolume::sliceAxes() const {
 inline void mafPipeVisualVTKSliceVolume::setSliceAxes(QString axes) {
     mafPlaneNormal n = (mafPlaneNormal)axes.toInt();
     m_SlicerPipe->setPlaneNormalAxes(n);
+}
+    
+inline int mafPipeVisualVTKSliceVolume::minimumPositionSlider() const {
+    return m_Range[0];
+}
+    
+
+inline int mafPipeVisualVTKSliceVolume::maximumPositionSlider() const {
+    return m_Range[1];
+}
+
+inline int mafPipeVisualVTKSliceVolume::valuePositionSlider() const {
+    return m_CurrentValue;
 }
 
 } // namespace mafPluginVTK

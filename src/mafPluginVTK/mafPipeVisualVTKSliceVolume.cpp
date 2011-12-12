@@ -33,8 +33,6 @@ using namespace mafPluginVTK;
 mafPipeVisualVTKSliceVolume::mafPipeVisualVTKSliceVolume(const QString code_location) : mafPipeVisualVTK(code_location) {
 //    m_UIFilename = "mafPipeVisualVTKSliceVolume.ui";
 
-    m_Thickness = 3.;
-
     m_SlicerPipe = mafNEW(mafPluginVTK::mafPipeDataSliceVolume);
     m_SlicerPipe->setParent(this);
 
@@ -82,7 +80,6 @@ void mafPipeVisualVTKSliceVolume::updatePipe(double t) {
     m_Mapper->SetInputConnection(*data);
 
     vtkActor *actor = vtkActor::SafeDownCast(m_Prop3D);
-    actor->GetProperty()->SetLineWidth(m_Thickness);
 }
 
 void mafPipeVisualVTKSliceVolume::setSlice(double *origin) {
