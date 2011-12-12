@@ -10,10 +10,12 @@
  */
 
 #include "mafViewOrthoSlice.h"
+#include "mafOrthoSlice.h"
 
 
 mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafResources::mafViewCompound(code_location) {
 	setConfigurationFile("OrthoSlice.xml");
+    this->setUIRootWidget(new mafOrthoSlice());
 }
 
 mafViewOrthoSlice::~mafViewOrthoSlice() {
