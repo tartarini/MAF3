@@ -9,6 +9,7 @@
  *
  */
 
+#include <mafTestConfig.h>
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafProxyInterface.h>
@@ -99,7 +100,9 @@ void mafUILoaderTest::mafUILoaderAllocationTest() {
 }
 
 void mafUILoaderTest::mafUILoaderUILoadTest() {
-    m_UILoader->uiLoad("uiFileName", 0);
+    QString uiFile(MAF_DATA_DIR);
+    uiFile.append("/GUI/testUIFile.ui");
+    m_UILoader->uiLoad(uiFile, 0);
     QVERIFY(m_UILoader->isUILoaded() == true);
 }
 
