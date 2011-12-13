@@ -31,7 +31,7 @@ public:
     mafViewCompoundConfigurator();
 
     /// Object destructor
-    ~mafViewCompoundConfigurator() {};
+    ~mafViewCompoundConfigurator();
 
     /// Read the configuration file given as argument and return true on success.
     bool parseConfigurationFile(QString configFile);

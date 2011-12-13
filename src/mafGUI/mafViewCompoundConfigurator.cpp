@@ -20,6 +20,9 @@ using namespace mafGUI;
 mafViewCompoundConfigurator::mafViewCompoundConfigurator() : m_RootObject(NULL) {
 }
 
+mafViewCompoundConfigurator::~mafViewCompoundConfigurator() {
+}
+
 void mafViewCompoundConfigurator::parseDocument(QDomNode current, QObject *parent) {
     QDomNodeList dnl = current.childNodes();
     for (int n=0; n < dnl.count(); ++n) {
