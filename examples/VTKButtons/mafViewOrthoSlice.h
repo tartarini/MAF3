@@ -13,6 +13,9 @@
 #define MAFVIEWORTHOSLICE_H
 
 #include <mafViewCompound.h>
+#include <mafSceneNode.h>
+
+class mafOrthoSlice;
  
 /**
  Class name: mafViewOrthoSlice
@@ -21,14 +24,38 @@
 class mafViewOrthoSlice : public mafResources::mafViewCompound {
     Q_OBJECT
     mafSuperclassMacro(mafResources::mafViewCompound);
-    
+
+public Q_SLOTS:
+    /// Allows to update slice position forwarding it to the visual pipes.
+    void sliceAtPosition(double *pos);
+
+    //////////////////////////////////////////////////////////////////////////
+    // Delegate methods
+    //////////////////////////////////////////////////////////////////////////
+    /// Set originX value;
+    void setOriginX(QString stringValue);
+
+    /// Set originY value;
+    void setOriginY(QString stringValue);
+
+    /// Set originZ value;
+    void setOriginZ(QString stringValue);
+    //////////////////////////////////////////////////////////////////////////
+
 public:
     /// Object constructor.
     mafViewOrthoSlice(const QString code_location = "");
 
+    /// Show scene node passed as argument.
+    /*virtual*/ void showSceneNode(mafResources::mafSceneNode *node, bool show = true);
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafViewOrthoSlice();
+
+private:
+    mafOrthoSlice *m_GUI; ///< GUI widget.
+    double m_SlicePosition[3]; ///< Current slice position.
 };
 
 #endif // MAFVIEWORTHOSLICE_H
