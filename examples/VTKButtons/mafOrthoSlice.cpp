@@ -14,7 +14,7 @@
 
 #include <QDebug>
 
-mafOrthoSlice::mafOrthoSlice(QWidget *parent) : QWidget(parent), ui(new Ui::mafOrthoSlice) {
+mafOrthoSlice::mafOrthoSlice(QWidget *parent) : QWidget(parent), ui(new Ui::mafOrthoSlice), m_Decimals(2) {
     ui->setupUi(this);
     ui->xPosition->setEnabled(false);
     ui->yPosition->setEnabled(false);
@@ -25,6 +25,7 @@ mafOrthoSlice::mafOrthoSlice(QWidget *parent) : QWidget(parent), ui(new Ui::mafO
     m_Bounds[3] = 1.;
     m_Bounds[4] = 0.;
     m_Bounds[5] = 1.;
+    m_Position[0] = m_Position[1] = m_Position[2] = 0.;
 }
 
 mafOrthoSlice::~mafOrthoSlice() {
@@ -52,6 +53,10 @@ void mafOrthoSlice::setBounds(double bounds[6]) {
     ui->yPosition->setRange(sliderBounds[2], sliderBounds[3]);
     ui->zPosition->setRange(sliderBounds[4], sliderBounds[5]);
 
+    m_Position[0] = (m_Bounds[0] + m_Bounds[1]) / 2;
+    m_Position[1] = (m_Bounds[2] + m_Bounds[3]) / 2;
+    m_Position[2] = (m_Bounds[4] + m_Bounds[5]) / 2;
+
     ui->xPosition->setValue((sliderBounds[0] + sliderBounds[1]) / 2);
     ui->yPosition->setValue((sliderBounds[2] + sliderBounds[3]) / 2);
     ui->zPosition->setValue((sliderBounds[4] + sliderBounds[5]) / 2);
@@ -65,18 +70,21 @@ void mafOrthoSlice::setDecimalDigits(int decimal) {
 }
 
 void mafOrthoSlice::on_xPosition_sliderMoved(int val) {
-    double scaledVal = this->calculateRealValue(val);
-    qDebug() << QString("X: %1").arg(scaledVal);
+    m_Position[0] = this->calculateRealValue(val);
+//    qDebug() << QString("X: %1").arg(m_Position[0]);
+    Q_EMIT positionUpdated(m_Position);
 }
 
 void mafOrthoSlice::on_yPosition_sliderMoved(int val) {
-    double scaledVal = this->calculateRealValue(val);
-    qDebug() << QString("Y: %1").arg(scaledVal);
+    m_Position[1] = this->calculateRealValue(val);
+//    qDebug() << QString("Y: %1").arg(m_Position[1]);
+    Q_EMIT positionUpdated(m_Position);
 }
 
 void mafOrthoSlice::on_zPosition_sliderMoved(int val) {
-    double scaledVal = this->calculateRealValue(val);
-    qDebug() << QString("Z: %1").arg(scaledVal);
+    m_Position[2] = this->calculateRealValue(val);
+//    qDebug() << QString("Z: %1").arg(m_Position[2]);
+    Q_EMIT positionUpdated(m_Position);
 }
 
 double mafOrthoSlice::calculateRealValue(int val) {
