@@ -131,6 +131,10 @@ private Q_SLOTS:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
+        QObject *ro = m_Configurator->rootObject();
+        if(ro) {
+            delete ro;
+        }
 		delete m_Configurator;
     }
 
