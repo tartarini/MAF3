@@ -189,6 +189,8 @@ ENDFOREACH()
 #   MESSAGE("  ${arg}")
 # ENDFOREACH()
 
+set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvmgcc42")
+
 #############################################################################################
 ### Configure and build MAF
 #############################################################################################
@@ -202,6 +204,7 @@ ExternalProject_Add(${proj}
   CMAKE_GENERATOR ${gen}
   CMAKE_ARGS
     ${MAF_superbuild_boolean_args}
+    -DCMAKE_XCODE_ATTRIBUTE_GCC_VERSION=${CMAKE_XCODE_ATTRIBUTE_GCC_VERSION}
     -DBUILD_TEST_SUITE:BOOL=${BUILD_TEST_SUITE}
     -DDATA_TEST:BOOL=${DATA_TEST}
     -DBUILD_EXAMPLES:BOOL=${BUILD_EXAMPLES}
