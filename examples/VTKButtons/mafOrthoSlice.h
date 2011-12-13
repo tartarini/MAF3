@@ -38,7 +38,7 @@ private Q_SLOTS:
 
 Q_SIGNALS:
     /// Signal emitting the position of all the sliders
-    void positionUpdated(double pos[3]);
+    void positionUpdated(double *pos);
 
 public:
     /// Object constructor
@@ -56,6 +56,8 @@ private:
     Ui::mafOrthoSlice *ui; ///< Pointer to the user interface widget
     double m_Bounds[6]; ///< Array containing the volume's bounds
     int m_Decimals; ///< Number of decimal digit to consider (default is 2)
+
+    double m_Position[3]; ///< Variable containing the position of the 3 axes coordinates.
 
     /// Calculate the real value of the position in double precision according to number of decimals.
     double calculateRealValue(int val);
