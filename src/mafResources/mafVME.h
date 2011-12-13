@@ -118,6 +118,9 @@ public:
     /// Return 3D bound of the current dataset containing the external data of the VME.
     QString boundZmax();
 
+    /// Fill parameter 'b' with 3D bounds of the VME data at given time. Default value means current time.
+    void bounds(double b[6], double t = -1);
+
     /// Return the length of the 3D bounding box of the data at the current timestamp.
     double length();
     

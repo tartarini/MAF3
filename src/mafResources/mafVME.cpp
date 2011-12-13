@@ -256,6 +256,13 @@ QString mafVME::boundZmax() {
     return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[5].toDouble());
 }
 
+void mafVME::bounds(double b[6], double t) {
+    QVariantList bVariant = this->dataSetCollection()->itemAt(t)->bounds();
+    for (int i = 0; i < 6; ++i) {
+        b[i] = bVariant[i].toDouble();
+    }
+}
+
 double mafVME::length() {
     mafDataSet *dataset = this->dataSetCollection()->itemAtCurrentTime();
     QVariantList b;
