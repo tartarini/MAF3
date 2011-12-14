@@ -96,6 +96,7 @@ private:
     QString m_Action; ///< represents the action to put inside transport http
     QString m_Path; ///< represents the path (for example the endpoint)
     QtSoapType *m_Response;
+	bool m_SecureConnection;
 };
 
 /////////////////////////////////////////////////////////////

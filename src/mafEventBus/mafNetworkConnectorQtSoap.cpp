@@ -18,7 +18,7 @@
 
 using namespace mafEventBus;
 
-mafNetworkConnectorQtSoap::mafNetworkConnectorQtSoap() : mafNetworkConnector(), m_Http(NULL), m_WSDLUrl(""),m_Response(NULL) {
+mafNetworkConnectorQtSoap::mafNetworkConnectorQtSoap() : mafNetworkConnector(), m_Http(NULL), m_WSDLUrl(""),m_Response(NULL), m_SecureConnection(false) {
     m_Protocol = "SOAP";
 }
 
@@ -79,9 +79,7 @@ void mafNetworkConnectorQtSoap::createClient(const QString hostName, const unsig
     arrData.insert(1, new QtSoapSimpleType(QtSoapQName("d2"), "dataA2"));*/
     //end exp
 
-    m_Http->setHost(hostName, false, port);
-
-
+	
     //ARRAY TEST
 
     // Set the method and add one argument.
@@ -114,6 +112,8 @@ void mafNetworkConnectorQtSoap::createClient(const QString hostName, const unsig
 	if ( advancedParameters && advancedParameters->count() ){
 		setAdvancedParameters( advancedParameters );
 	}
+
+	m_Http->setHost(hostName, m_SecureConnection, port);
 
     qDebug("retrieve value...");
     
@@ -151,6 +151,13 @@ void mafNetworkConnectorQtSoap::setAdvancedParameters(QMap<QString, QVariant> *a
 			m_Request.useNamespace( it.key(), it.value().toString() );
 			++it;
 		}
+	}
+
+	//secure connection
+	if (m_AdvancedParameters->contains("SecureConnection")){
+		m_SecureConnection = m_AdvancedParameters->value("SecureConnection").toBool();
+	}else{
+		m_SecureConnection = false;
 	}
 
 }
@@ -271,36 +278,29 @@ QVariant mafNetworkConnectorQtSoap::unmarshall( QtSoapType *s ) {
     switch( s->type() ){        
 		case QtSoapType::Double:
 		case QtSoapType::Float:
-		case QtSoapType::Decimal: {
-			qDebug() <<"QtSoapType::Decimal";
+		case QtSoapType::Decimal: {			
 			returnValue.setValue( s->value().toDouble() );
 			break;
 		}
 		case QtSoapType::String: {
-			qDebug() <<"QtSoapType::String";
 			returnValue.setValue( s->value().toString() );
 			break;
 		}
 		case QtSoapType::Boolean: {
-			qDebug() <<"QtSoapType::Boolean";
 			returnValue.setValue( s->value().toBool() );
 			break;
 		}	
 		case QtSoapType::Int:
 		case QtSoapType::Integer: {
-			qDebug() <<"QtSoapType::Integer";
 			returnValue.setValue( s->value().toInt() );
 			break;
 		}
 		case QtSoapType::Byte:
 		case QtSoapType::Base64Binary: {
-			qDebug() <<"QtSoapType::Byte";
 			returnValue.setValue( s->value().toByteArray() );
 			break;
 		}
 		case QtSoapType::Array:{
-			qDebug() <<"QtSoapType::Array";
-			
 			QList<QVariant> qlist;
 
 			QtSoapArray * list = (QtSoapArray *) s;
@@ -315,8 +315,6 @@ QVariant mafNetworkConnectorQtSoap::unmarshall( QtSoapType *s ) {
 			break;
 		}
 		case QtSoapType::Struct:{
-			qDebug() <<"QtSoapType::Struct";
-			
 			QMap<QString,QVariant> qmap;
 
 			QtSoapStruct* qstruct = (QtSoapStruct *) s;
@@ -340,7 +338,8 @@ QVariant mafNetworkConnectorQtSoap::unmarshall( QtSoapType *s ) {
         }
     }
 
-	qDebug() << returnValue.toString();
+	// qDebug() << "mafNetworkConnectorQtSoap::unmarshall";
+	// qDebug() << returnValue.toString();
     //ENSURE(returnValue != NULL);
     return returnValue;
 }
@@ -410,6 +409,7 @@ void mafNetworkConnectorQtSoap::retrieveRemoteResponse()
 {
     // Get a reference to the response message.
     const QtSoapMessage &message = m_Http->getResponse();
+
     // Check if the response is a SOAP Fault message
     if (message.isFault()) {
         qDebug("Error: %s", message.faultString().value().toString().toLatin1().constData());
