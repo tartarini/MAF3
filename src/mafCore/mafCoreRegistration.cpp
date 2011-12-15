@@ -23,7 +23,6 @@
 #include "mafHierarchy.h"
 #include "mafMementoHierarchy.h"
 #include "mafProxyInterface.h"
-#include "mafDelegate.h"
 
 
 using namespace mafCore;
