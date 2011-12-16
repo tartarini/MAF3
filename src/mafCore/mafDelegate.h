@@ -13,7 +13,7 @@
 #define MAFDELEGATE_H
 
 // Includes list
-#include "mafCore_global.h"
+#include "mafReferenceCounted.h"
 
 namespace mafCore {
 
@@ -24,23 +24,24 @@ namespace mafCore {
  This defines the base class for objects used to customize behavior of high level classes.
  All methods are implemented as public slots so to be able to call the method from outside the class.
 */
-class MAFCORESHARED_EXPORT mafDelegate : public QObject {
+class MAFCORESHARED_EXPORT mafDelegate : public mafReferenceCounted {
     Q_OBJECT
     /// typedef macro.
-    mafSuperclassMacro(mafCore::mafObjectBase);
+    mafSuperclassMacro(mafCore::mafReferenceCounted);
 
 public:
     /// Object constructor.
     mafDelegate();
-    
-    /// Object destructor.
-    ~mafDelegate();
     
     /// Check if a method has been defined into the delegate class.
     bool isMethodDefined(QString signature);
     
     /// Return true or false depending if the delegate class wants that the caller execute its own code or skip it.
     virtual bool shouldExecuteLocalCode();
+
+protected:
+    /// Object destructor.
+    ~mafDelegate();
 };
     
 typedef mafDelegate * mafDelegatePointer;

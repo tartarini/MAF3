@@ -13,7 +13,7 @@
 
 using namespace mafCore;
 
-mafDelegate::mafDelegate() {
+mafDelegate::mafDelegate() : mafReferenceCounted() {
 }
 
 mafDelegate::~mafDelegate() {
