@@ -16,16 +16,13 @@
 
 using namespace mafCore;
 
-mafObjectBase::mafObjectBase(const QString code_location) : QObject(), m_UIFilename(""), m_UIRootWidget(NULL), m_Modified(false), m_ReferenceCount(1), m_Delegate(NULL) {
+mafObjectBase::mafObjectBase(const QString code_location) : mafDelegate(), m_UIFilename(""), m_UIRootWidget(NULL), m_Modified(false), m_Delegate(NULL) {
     mafIdProvider *provider = mafIdProvider::instance();
     m_ObjectId = provider->createNewId();
 
     mafObjectRegistry::instance()->addObject(this, code_location);
 
     m_ObjectHash = QUuid::createUuid();
-    
-    connect(this, SIGNAL(incrementReference()), this, SLOT(ref()), Qt::DirectConnection);
-    connect(this, SIGNAL(decreaseReference()), this, SLOT(deleteObject()), Qt::DirectConnection);
 }
 
 mafObjectBase::~mafObjectBase() {
@@ -41,16 +38,11 @@ bool mafObjectBase::initialize() {
     return true;
 }
 
-void mafObjectBase::retain() {
-    Q_EMIT incrementReference();
-}
-
-void mafObjectBase::release() {
-    Q_EMIT decreaseReference();
-}
-
 void mafObjectBase::setModified(bool m) {
     m_Modified = m;
+    if (m_Modified) {
+        Q_EMIT modifiedObject();
+    }
 }
 
 bool mafObjectBase::isEqual(const mafObjectBase *obj) const {
@@ -208,23 +200,11 @@ void mafObjectBase::updateUI(QObject *selfUI) {
     }
 }
 
-void mafObjectBase::ref() {
-    ++m_ReferenceCount;
-}
-
-void mafObjectBase::deleteObject() {
-    --m_ReferenceCount;
-    //char *name = this->objectName().toAscii().data();
-    if(m_ReferenceCount == 0) {
-        this->setParent(NULL);
-        delete this;
-    }
-}
-
 void mafObjectBase::description() const {
+    Superclass::description();
+
     qDebug() << "Object Id: " << objectId();
     qDebug() << "Object Hash: " << objectHash();
     qDebug() << "Is modified: " << modified();
     qDebug() << "UI File name: " << uiFilename();
-    qDebug() << "Reference Count: " << referenceCount();
 }

@@ -27,24 +27,18 @@ class mafVisitor;
  Class name: mafObjectBase
  This class defines the MAF3 base object and visited by the mafVisitor class.
  */
-class MAFCORESHARED_EXPORT mafObjectBase : public QObject {
+class MAFCORESHARED_EXPORT mafObjectBase : public mafDelegate {
     Q_OBJECT
     Q_PROPERTY(QString objectHash READ objectHash WRITE setObjectHash)
     Q_PROPERTY(QObject *uiRootWidget READ uiRootWidget WRITE setUIRootWidget STORED false)
     Q_PROPERTY(mafCore::mafDelegatePointer delegateObject READ delegateObject WRITE setDelegateObject STORED false)
     Q_PROPERTY(QString uiFile READ uiFilename)
     /// typedef macro.
-    mafSuperclassMacro(QObject);
+    mafSuperclassMacro(mafCore::mafDelegate);
     
 Q_SIGNALS:
     /// Signal emitted to alert all receivers that the object has been modified.
     void modifiedObject();
-    
-    /// Allows to increment the reference count.
-    void incrementReference();
-    
-    /// Allows to decrement the reference count.
-    void decreaseReference();
 
     /// Signal emitted to update GUI.
     void updateGuiSignal(QObject *selfUI);
@@ -52,13 +46,6 @@ Q_SIGNALS:
 public Q_SLOTS:
     /// update ui widgets with properties, using USER flag in Q_PROPERTY.
     void updateUI(QObject *selfUI = NULL);
-
-private Q_SLOTS:
-    /// increment of 1 unit the reference count.
-    void ref();
-
-    /// delete the object.
-    void deleteObject();
 
 public:
     /// Object constructor.
@@ -117,15 +104,6 @@ public:
     /// Allows the generic connection, using the Qt notation on_ObjectName1_signal with on_ObjectName2_slot.
     void connectObjectSlotsByName(QObject *signal_object);
 
-    /// Allows to Q_EMIT the incrementReference in a thread safe way.
-    void retain();
-    
-    /// Allows to decrease the reference count of the object.
-    void release();
-    
-    /// return the reference count.
-    int referenceCount() const;
-    
     /// dump the description of the object (information, attributes, variables...)
     virtual void description() const;
 
@@ -143,12 +121,9 @@ protected:
 
 private:
     mafId m_ObjectId; ///< Unique ID which identifies the object.
-    //QByteArray m_ObjectHash; ///< Hash value for the current object.
     QUuid m_ObjectHash; ///< Hash value for the current object.
     bool m_Modified; ///< Contains the modified state of the VME.
     mafDelegatePointer m_Delegate; ///< Delegate class pointer.
-
-    volatile int m_ReferenceCount; ///< Index containing the reference count.
 };
 
 
@@ -197,10 +172,6 @@ inline bool mafObjectBase::operator ==(const mafObjectBase& obj) const {
     return this->isEqual(&obj);
 }
 
-inline int mafObjectBase::referenceCount() const{
-    return m_ReferenceCount;
-}
-
-} // mafCore
+} // namespace mafCore
 
 #endif  // MAFOBJECTBASE_H
