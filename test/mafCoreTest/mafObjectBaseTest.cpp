@@ -56,7 +56,7 @@ private Q_SLOTS:
         m_ObjTestVar = mafNEW(mafCore::mafObjectBase);
     }
 
-    /// Cleanup tes variables memory allocation.
+    /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         m_ObjTestVar->release();
     }
