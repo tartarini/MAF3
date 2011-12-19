@@ -32,9 +32,9 @@ namespace mafPluginVTK {
 */
 class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSliceVolume : public mafPipeVisualVTK {
     Q_OBJECT
-    Q_PROPERTY(QString originX READ originX WRITE setOriginX)
-    Q_PROPERTY(QString originY READ originY WRITE setOriginY)
-    Q_PROPERTY(QString originZ READ originZ WRITE setOriginZ)
+    Q_PROPERTY(QString originX READ originX)
+    Q_PROPERTY(QString originY READ originY)
+    Q_PROPERTY(QString originZ READ originZ)
     Q_PROPERTY(QString normalX READ normalX WRITE setNormalX)
     Q_PROPERTY(QString normalY READ normalY WRITE setNormalY)
     Q_PROPERTY(QString normalZ READ normalZ WRITE setNormalZ)
@@ -76,20 +76,11 @@ public Q_SLOTS:
     /// Get originX value;
     QString originX();
 
-    /// Set originX value;
-    void setOriginX(QString stringValue);
-
     /// Get originY value;
     QString originY();
 
-    /// Set originY value;
-    void setOriginY(QString stringValue);
-
     /// Get originZ value;
     QString originZ();
-
-    /// Set originZ value;
-    void setOriginZ(QString stringValue);
 
     /// Set normalX value from text box.
     void on_normalX_textEdited(QString stringValue);
@@ -138,11 +129,11 @@ protected:
     /* virtual */ ~mafPipeVisualVTKSliceVolume();
 
 private:
-
     mafPipeDataSliceVolume *m_SlicerPipe;    ///< Slicer data pipe.
     vtkSmartPointer<vtkPolyDataMapper> m_Mapper; ///< Data mapper.
     double m_Range[2]; ///position range.
     double m_CurrentValue; // current position.
+    double m_Origin[3]; ///< Origin of the slicing plane.
 };
 
 /////////////////////////////////////////////////////////////
@@ -150,57 +141,43 @@ private:
 /////////////////////////////////////////////////////////////
 
 inline QString mafPipeVisualVTKSliceVolume::originX() {
-    return QString::number(m_SlicerPipe->sliceOrigin()[0]);
-}
-
-inline void mafPipeVisualVTKSliceVolume::setOriginX(QString stringValue) {
-    double *o = m_SlicerPipe->sliceOrigin();
-    o[0] = stringValue.toDouble();
-    m_SlicerPipe->setSliceOrigin(o);
-}
-
-inline void mafPipeVisualVTKSliceVolume::on_originX_textEdited(QString stringValue) {
-    setOriginX(stringValue);
+//    return QString::number(m_SlicerPipe->sliceOrigin()[0]);
+    return QString::number(m_Origin[0]);
 }
 
 inline QString mafPipeVisualVTKSliceVolume::originY() {
-    return QString::number(m_SlicerPipe->sliceOrigin()[1]);
+    //    return QString::number(m_SlicerPipe->sliceOrigin()[1]);
+    return QString::number(m_Origin[1]);
 }
 
-inline void mafPipeVisualVTKSliceVolume::setOriginY(QString stringValue) {
-    double *o = m_SlicerPipe->sliceOrigin();
-    o[1] = stringValue.toDouble();
-    m_SlicerPipe->setSliceOrigin(o);
+inline void mafPipeVisualVTKSliceVolume::on_originX_textEdited(QString stringValue) {
+    m_Origin[0] = stringValue.toDouble();
+    setModified();
 }
 
 inline void mafPipeVisualVTKSliceVolume::on_originY_textEdited(QString stringValue) {
-    setOriginY(stringValue);
-}
-
-inline QString mafPipeVisualVTKSliceVolume::originZ() {
-    return QString::number(m_SlicerPipe->sliceOrigin()[2]);
-}
-
-inline void mafPipeVisualVTKSliceVolume::setOriginZ(QString stringValue) {
-    double *o = m_SlicerPipe->sliceOrigin();
-    o[2] = stringValue.toDouble();
-    m_SlicerPipe->setSliceOrigin(o);
+    m_Origin[1] = stringValue.toDouble();
+    setModified();
 }
 
 inline void mafPipeVisualVTKSliceVolume::on_originZ_textEdited(QString stringValue) {
-    setOriginZ(stringValue);
+    m_Origin[2] = stringValue.toDouble();
+    setModified();
 }
 
 inline void mafPipeVisualVTKSliceVolume::on_normalX_textEdited(QString stringValue) {
     setNormalX(stringValue);
+    setModified();
 }
 
 inline void mafPipeVisualVTKSliceVolume::on_normalY_textEdited(QString stringValue) {
     setNormalY(stringValue);
+    setModified();
 }
 
 inline void mafPipeVisualVTKSliceVolume::on_normalZ_textEdited(QString stringValue) {
     setNormalZ(stringValue);
+    setModified();
 }
 
 inline QString mafPipeVisualVTKSliceVolume::normalX() {
@@ -241,11 +218,10 @@ inline void mafPipeVisualVTKSliceVolume::setSliceAxes(QString axes) {
     mafPlaneNormal n = (mafPlaneNormal)axes.toInt();
     m_SlicerPipe->setPlaneNormalAxes(n);
 }
-    
+
 inline int mafPipeVisualVTKSliceVolume::minimumPositionSlider() const {
     return m_Range[0];
 }
-    
 
 inline int mafPipeVisualVTKSliceVolume::maximumPositionSlider() const {
     return m_Range[1];
