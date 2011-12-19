@@ -25,8 +25,10 @@ SET(OpenCV_DEPENDS)
   SET(ep_build_testing OFF)
   
   #SET(revision_tag 0cbd682)
+if(APPLE)
   set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvmgcc42")
-  
+endif(APPLE)
+
 IF(RESULT)
   IF(NOT DEFINED OpenCV_DIR)
     #MESSAGE("Adding project:${proj}")

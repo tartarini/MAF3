@@ -189,8 +189,9 @@ ENDFOREACH()
 #   MESSAGE("  ${arg}")
 # ENDFOREACH()
 
-set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvmgcc42")
-
+if(APPLE)
+    set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvmgcc42")
+endif(APPLE)
 #############################################################################################
 ### Configure and build MAF
 #############################################################################################
