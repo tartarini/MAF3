@@ -19,6 +19,7 @@ using namespace mafResources;
 
 mafPipe::mafPipe(const QString code_location) : mafObject(code_location), m_InputList(NULL) {
     m_InputList = new mafVMEList();
+    connect(this, SIGNAL(modifiedObject()), this, SLOT(updatePipe()));
 }
 
 mafPipe::~mafPipe() {
@@ -30,24 +31,30 @@ mafPipe::~mafPipe() {
 }
 
 void mafPipe::setInput(mafVME *vme) {
-    //REQUIRE(vme != NULL);
+    bool needsUpdate(false);
     if(!m_InputList->isEmpty()) {
+        const mafVME *input_vme = m_InputList->at(0);
+        if (input_vme->isEqual(vme)) {
+            return;
+        }
         removeInput(0);
+        needsUpdate = true;
     }
     
-    if(vme == NULL) {
-        setModified();
-        return;
-    }
-    
-    m_InputList->append(vme);
+    if(vme != NULL) {
+        m_InputList->append(vme);
 
-    mafDataSetCollection *datSetCollection = vme->dataSetCollection();
-    if (datSetCollection) {
-      //connect the data collection modified to the updatePipe slot
-      connect(datSetCollection, SIGNAL(modifiedObject()), this, SLOT(updatePipe()));
+        mafDataSetCollection *datSetCollection = vme->dataSetCollection();
+        if (datSetCollection) {
+            //connect the data collection modified to the updatePipe slot
+            connect(datSetCollection, SIGNAL(modifiedObject()), this, SLOT(updatePipe()));
+        }
     }
-    setModified();
+    
+    // Don't send modifyObject notification the first time you set the input
+    if (needsUpdate) {
+        setModified();
+    }
 }
 
 mafVME *mafPipe::input(int idx) const {
