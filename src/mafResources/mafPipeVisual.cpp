@@ -79,7 +79,7 @@ void mafPipeVisual::setGraphicObject(QObject *graphicObject) {
     if (m_GraphicObject != NULL) {
         //connect between render object coming from external library and visual pipe (vme Pick signal)
         //connect(m_GraphicObject, SIGNAL(vmePickSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)),  this, SLOT(vmePick(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
-        setModified();
+//        setModified();
         updatedGraphicObject();
     }
 }
