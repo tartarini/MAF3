@@ -42,7 +42,7 @@ public Q_SLOTS:
     virtual void graphicObjectInitialized();
 
 public:
-     /// Object constructor.
+    /// Object constructor.
     mafTool(const QString code_location = "");
 
     /// Assign the scene node to the tool so to have access to the VME and eventually its visual representation.
