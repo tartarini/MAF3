@@ -91,7 +91,7 @@ void mafDataSet::setDataValue(mafProxyInterface *data_value) {
         return; // Data is equal to that one already present.
 
     if(m_DataValue != NULL) {
-        Q_EMIT(dataValueDisconnected());
+        Q_EMIT dataValueDisconnected();
     }
     m_DataValue = data_value;
     if (m_DataValue) {
@@ -100,7 +100,7 @@ void mafDataSet::setDataValue(mafProxyInterface *data_value) {
         QString codecType = data_value->externalCodecType();
         m_ExternalCodecType = codecType;
         if(m_DataValue != NULL) {
-            Q_EMIT(dataValueConnected());
+            Q_EMIT dataValueConnected();
             m_DataLoaded = true;
             updateBounds();
         }
@@ -239,7 +239,7 @@ void mafDataSet::updateDataValue() {
 void mafDataSet::setBounds(QVariantList bounds) {
     m_Bounds.clear();
     m_Bounds.append(bounds);
-    setModified();
+//    setModified();
 }
 
 void mafDataSet::updateBounds() {
