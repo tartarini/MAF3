@@ -83,7 +83,8 @@ void mafDataSetCollection::setPose(double rx, double ry, double rz, double x, do
     writeOrientation(rx, ry, rz, m);
     // Write the position vector into the found matrix.
     writePosition(x, y, z, m);
-    Q_EMIT(modifiedObject());
+//    Q_EMIT modifiedObject();
+    setModified();
 }
 
 void mafDataSetCollection::setOrientation(double rx, double ry, double rz, double t) {
@@ -94,7 +95,8 @@ void mafDataSetCollection::setOrientation(double rx, double ry, double rz, doubl
     }
     // Write the orientation into the found matrix.
     writeOrientation(rx, ry, rz, m);
-    Q_EMIT(modifiedObject());
+//    Q_EMIT modifiedObject();
+    setModified();
 }
 
 void mafDataSetCollection::orientations(double ori[3], double t) {
@@ -138,7 +140,8 @@ void mafDataSetCollection::setPosition(double x, double y, double z, double t) {
     }
     // Write the position vector into the found matrix.
     writePosition(x, y, z, m);
-    Q_EMIT(modifiedObject());
+//    Q_EMIT modifiedObject();
+    setModified();
 }
 
 void mafDataSetCollection::position(double pos[3], double t) {
@@ -161,7 +164,8 @@ void mafDataSetCollection::setPose(const mafMatrix &matrix, double t) {
         return;
     }
     *m = matrix;
-    Q_EMIT(modifiedObject());
+//    Q_EMIT modifiedObject();
+    setModified();
 }
 
 void mafDataSetCollection::synchronizeItemWithPose(const mafMatrix &matrix, double t) {
@@ -255,7 +259,8 @@ bool mafDataSetCollection::insertItem(mafDataSet *item, double t) {
         m_CollectionMap->insert(ts, item);
         item->retain();
         
-        Q_EMIT(modifiedObject());
+//        Q_EMIT modifiedObject();
+        setModified();
     }
 
     return result;
@@ -275,9 +280,8 @@ bool mafDataSetCollection::setDataSet(mafDataSet *data, double t) {
             item->setPoseMatrix(data->poseMatrix());
             mafDEL(data);
 
-            //check where to Q_EMIT!!!
-            Q_EMIT(modifiedObject());
-
+//            Q_EMIT modifiedObject();
+            setModified();
 
             return true;
         } else {
@@ -293,7 +297,8 @@ bool mafDataSetCollection::setDataSet(mafDataSet *data, double t) {
 
 void mafDataSetCollection::updateData() {
     itemAtCurrentTime()->updateBounds();
-    Q_EMIT(modifiedObject());
+//    Q_EMIT modifiedObject();
+    setModified();
 }
 
 bool mafDataSetCollection::acceptData(mafDataSet *data) {
@@ -343,7 +348,8 @@ bool mafDataSetCollection::removeItem(mafDataSet *item, bool keep_alive) {
     double timestamp = m_CollectionMap->key(item, -1.0);
     if(timestamp != -1) {
         int removed_items = m_CollectionMap->remove(timestamp);
-        Q_EMIT(modifiedObject());
+//        Q_EMIT modifiedObject();
+        setModified();
         if(!keep_alive) {
             mafDEL(item);
         }
