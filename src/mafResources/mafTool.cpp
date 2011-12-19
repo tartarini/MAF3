@@ -34,3 +34,6 @@ void mafTool::updatePipe(double t) {
 
 void mafTool::graphicObjectInitialized() {
 }
+
+void mafTool::resetTool() {
+}
