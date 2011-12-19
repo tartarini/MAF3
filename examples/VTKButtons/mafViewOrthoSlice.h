@@ -32,14 +32,8 @@ public Q_SLOTS:
     //////////////////////////////////////////////////////////////////////////
     // Delegate methods
     //////////////////////////////////////////////////////////////////////////
-    /// Set originX value;
-    void setOriginX(QString stringValue);
-
-    /// Set originY value;
-    void setOriginY(QString stringValue);
-
-    /// Set originZ value;
-    void setOriginZ(QString stringValue);
+    /// Get originZ value;
+    QString originZ();
     //////////////////////////////////////////////////////////////////////////
 
 public:
@@ -48,6 +42,9 @@ public:
 
     /// Show scene node passed as argument.
     /*virtual*/ void showSceneNode(mafResources::mafSceneNode *node, bool show = true);
+
+    /// Return true or false depending if the delegate class wants that the caller execute its own code or skip it.
+    /*virtual*/ bool shouldExecuteLocalCode();
 
 protected:
     /// Object destructor.
