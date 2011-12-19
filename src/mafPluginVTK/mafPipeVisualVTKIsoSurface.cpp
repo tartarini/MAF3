@@ -34,7 +34,12 @@ using namespace std;
 
 mafPipeVisualVTKIsoSurface::mafPipeVisualVTKIsoSurface(const QString code_location) : mafPipeVisualVTK(code_location), m_Mapper(NULL), m_ContourFilter(NULL), m_ContourValue(1000) {
     m_UIFilename = "mafPipeVisualIsoSurface.ui";
+
+    m_ContourFilter = vtkContourFilter::New();
+    
     m_Mapper = vtkPolyDataMapper::New();
+    m_Mapper->SetInputConnection(m_ContourFilter->GetOutputPort());
+    
     m_Prop3D = vtkActor::New();
     m_Prop3D.setDestructionFunction(&vtkActor::Delete);
     vtkActor::SafeDownCast(m_Prop3D)->SetMapper(m_Mapper);
@@ -72,7 +77,6 @@ void mafPipeVisualVTKIsoSurface::updatePipe(double t) {
         m_ContourValue = (m_Range[1] - m_Range[0])/2;
     }
 
-    m_ContourFilter = vtkContourFilter::New();
     m_ContourFilter->UseScalarTreeOn();
     m_ContourFilter->SetInputConnection(*dataSet);
     m_ContourFilter->SetNumberOfContours(1);
@@ -80,7 +84,6 @@ void mafPipeVisualVTKIsoSurface::updatePipe(double t) {
     m_ContourFilter->Update();
     
     //Get data contained in the mafProxy
-    m_Mapper->SetInputConnection(m_ContourFilter->GetOutputPort());
     m_Mapper->SetScalarVisibility(m_ScalarVisibility);
     m_Mapper->Update();
     //Keep ImmediateModeRendering off: it slows rendering
