@@ -12,8 +12,11 @@
 #include "mafViewOrthoSlice.h"
 #include "mafOrthoSlice.h"
 #include <mafVME.h>
+#include <mafPipeVisual.h>
 
-mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafResources::mafViewCompound(code_location) {
+using namespace mafResources;
+
+mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafViewCompound(code_location) {
 	setConfigurationFile("OrthoSlice.xml");
     m_GUI = new mafOrthoSlice();
     this->setUIRootWidget(m_GUI);
@@ -27,31 +30,40 @@ void mafViewOrthoSlice::sliceAtPosition(double *pos) {
     m_SlicePosition[0] = pos[0];
     m_SlicePosition[1] = pos[1];
     m_SlicePosition[2] = pos[2];
+    // Trigger the pipe update
+    setModified();
+    updateView();
 }
 
-void mafViewOrthoSlice::showSceneNode(mafResources::mafSceneNode *node, bool show) {
+void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
     Superclass::showSceneNode(node, show);
     if (show) {
-        mafCore::mafObjectBase *vp = (mafCore::mafObjectBase *)node->visualPipe();
-//        vp->setDelegateObject(this);
-        mafResources::mafVME *vme = node->vme();
+        mafVME *vme = node->vme();
         double b[6];
         vme->bounds(b);
         m_GUI->setBounds(b);
+        const double *p = m_GUI->position();
+        m_SlicePosition[0] = p[0];
+        m_SlicePosition[1] = p[1];
+        m_SlicePosition[2] = p[2];
+        mafView *subView;
+        QList<mafView *> *vList = viewList();
+        Q_FOREACH(subView, *vList) {
+            mafSceneNode *sub_node = subView->sceneNodeFromVme((mafCore::mafObjectBase *)vme);
+            mafPipeVisual *vp = sub_node->visualPipe();
+            vp->setDelegateObject(this);
+            bool res = connect(this, SIGNAL(modifiedObject()), vp, SLOT(updatePipe()));
+        }
     }
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Delegate methods
 //////////////////////////////////////////////////////////////////////////
-void mafViewOrthoSlice::setOriginX(QString stringValue) {
-
+QString mafViewOrthoSlice::originZ() {
+    return QString::number(m_SlicePosition[2]);
 }
 
-void mafViewOrthoSlice::setOriginY(QString stringValue) {
-
-}
-
-void mafViewOrthoSlice::setOriginZ(QString stringValue) {
-
+bool mafViewOrthoSlice::shouldExecuteLocalCode() {
+    return false;
 }
