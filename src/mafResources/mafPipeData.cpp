@@ -56,7 +56,7 @@ mafVME *mafPipeData::output(double t) {
             m_Output = mafNEW(mafResources::mafVME);
         }
         m_Output->setTimestamp(t);
-        setModified();
+        //setModified();
     }
 
     mafVME *out_vme = m_Output;
