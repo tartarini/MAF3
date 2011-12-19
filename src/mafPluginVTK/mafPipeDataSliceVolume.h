@@ -57,6 +57,9 @@ public:
     /// Set the origin of the slice
     void setSliceOrigin(double *origin);
 
+    /// Set the origin of the slice
+    void setSliceOrigin(double origX, double origY, double origZ);
+
     /// Return the slice origin.
     double *sliceOrigin();
 
@@ -110,6 +113,12 @@ inline void mafPipeDataSliceVolume::setSliceOrigin(double *origin) {
     m_SliceOrigin[0] = origin[0];
     m_SliceOrigin[1] = origin[1];
     m_SliceOrigin[2] = origin[2];
+}
+
+inline void mafPipeDataSliceVolume::setSliceOrigin(double origX, double origY, double origZ) {
+    m_SliceOrigin[0] = origX;
+    m_SliceOrigin[1] = origY;
+    m_SliceOrigin[2] = origZ;
 }
 
 inline double *mafPipeDataSliceVolume::sliceOrigin() {
