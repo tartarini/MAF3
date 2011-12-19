@@ -50,7 +50,6 @@ testDataPipeCustom::testDataPipeCustom(const QString code_location) : mafPipeDat
 void testDataPipeCustom::updatePipe(double t) {
     m_PipeLine = "Updated";
     m_PipeLine.append(QString::number(t));
-
     Superclass::updatePipe(t);
 }
 
@@ -110,8 +109,7 @@ void mafPipeDataTest::mafPipeDataCreationAndUpdateTest() {
     QCOMPARE(pipe, res);
 
     res = "Updated1";
-    m_DataPipe->setModified();
-    m_DataPipe->output(1);
+    m_DataPipe->updatePipe(1);
     pipe = m_DataPipe->pipeline();
     QCOMPARE(pipe, res);
 }
@@ -123,7 +121,7 @@ void mafPipeDataTest::decorateTest() {
     QString check;
     m_DataPipe->decorateWithDataPipe(dpDecorator);
     
-    m_DataPipe->output(1);
+    m_DataPipe->updatePipe(1);
     check = dpDecorator->pipeline();
     QCOMPARE(check, res);
     mafDEL(dpDecorator);
