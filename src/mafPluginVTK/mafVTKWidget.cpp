@@ -38,7 +38,10 @@ mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f
 mafVTKWidget::~mafVTKWidget() {
     QHash<QString, vtkRenderer*>::iterator iter;
     for (iter = m_LayerHash.begin(); iter != m_LayerHash.end(); iter++) {
-        iter.value()->Delete();
+        vtkRenderer *ren = iter.value();
+        ren->RemoveAllViewProps();
+        ren->Delete();
+        ren = NULL;
     }
     if (m_Axes != NULL) {
         delete m_Axes;
@@ -51,6 +54,13 @@ void mafVTKWidget::initializeConnections() {
     result = connect(this, SIGNAL(mousePressSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mousePress(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
     result = connect(this, SIGNAL(mouseReleaseSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mouseRelease(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
     result= connect(this, SIGNAL(mouseMoveSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mouseMove(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
+}
+
+void mafVTKWidget::removeAllObjects() {
+    QHash<QString, vtkRenderer*>::iterator iter;
+    for (iter = m_LayerHash.begin(); iter != m_LayerHash.end(); iter++) {
+        iter.value()->RemoveAllViewProps();
+    }
 }
 
 bool mafVTKWidget::parallelCameraMode() const {
