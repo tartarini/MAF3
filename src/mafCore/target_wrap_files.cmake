@@ -4,5 +4,4 @@
 # List of files to wrap.
 
 SET(file_to_wrap
-   mafObjectBase.h
   )
