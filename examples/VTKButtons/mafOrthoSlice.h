@@ -49,6 +49,9 @@ public:
     /// Allows to set the volume's bounds
     void setBounds(double bounds[6]);
 
+    /// Allow to retrieve the position according to the values of the 3 sliders.
+    const double *position() const;
+
     /// Set the number of decimal digits to consider for precision
     void setDecimalDigits(int decimal = 2);
 
@@ -62,5 +65,10 @@ private:
     /// Calculate the real value of the position in double precision according to number of decimals.
     double calculateRealValue(int val);
 };
+
+inline const double *mafOrthoSlice::position() const {
+    const double *p = &m_Position[0];
+    return p;
+}
 
 #endif // MAFORTHOSLICE_H
