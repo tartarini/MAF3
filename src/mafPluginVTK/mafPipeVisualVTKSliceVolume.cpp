@@ -33,6 +33,8 @@ using namespace mafPluginVTK;
 mafPipeVisualVTKSliceVolume::mafPipeVisualVTKSliceVolume(const QString code_location) : mafPipeVisualVTK(code_location) {
 //    m_UIFilename = "mafPipeVisualVTKSliceVolume.ui";
 
+    m_Origin[0] = m_Origin[1]= m_Origin[2] = 0.;
+
     m_SlicerPipe = mafNEW(mafPluginVTK::mafPipeDataSliceVolume);
     m_SlicerPipe->setParent(this);
 
@@ -67,10 +69,40 @@ bool mafPipeVisualVTKSliceVolume::acceptObject(mafCore::mafObjectBase *obj) {
     return false;
 }
 
+QString mafPipeVisualVTKSliceVolume::originZ() {
+    //    return QString::number(m_SlicerPipe->sliceOrigin()[2]);
+
+    //////////////////////////////////////////////////////////////////////////
+    // Convert into macro with 3 parameters
+    QString sig("originZ()");
+    QString ret;
+    QGenericReturnArgument ret_val;
+    mafCore::mafDelegatePointer delegateObj = delegateObject();
+    if (delegateObj && delegateObj->isMethodDefined(sig)) {
+        ret_val = mafEventReturnArgument(QString, ret);
+        QString method = sig.split("(").at(0);
+        delegateObj->metaObject()->invokeMethod(delegateObj, method.toAscii(), Qt::DirectConnection, ret_val);
+        if (!delegateObj->shouldExecuteLocalCode()) {
+            return ret;
+        }
+    }
+    //////////////////////////////////////////////////////////////////////////
+    
+    return QString::number(m_Origin[2]);
+}
+
 void mafPipeVisualVTKSliceVolume::updatePipe(double t) {
     Superclass::updatePipe(t);
 
+    double b[6];
+    mafVME *vme = input();
+    vme->bounds(b, t);
+    m_Origin[0] = (b[0] + b[1]) / 2;
+    m_Origin[1] = (b[2] + b[3]) / 2;
+    m_Origin[2] = (b[4] + b[5]) / 2;
+
     m_SlicerPipe->setInput(input());
+    m_SlicerPipe->setSliceOrigin(originX().toDouble(), originY().toDouble(), originZ().toDouble());
     m_SlicerPipe->updatePipe(t);
 
     mafVME *output = m_SlicerPipe->output();
