@@ -44,4 +44,7 @@ void mafPipeVisualVTK::updateVisibility() {
 }
 
 void mafPipeVisualVTK::updatePipe(double t) {
+    // Reset the modified state of the pipe. 
+    // Now everything is up to date.
+    setModified(false);
 }
