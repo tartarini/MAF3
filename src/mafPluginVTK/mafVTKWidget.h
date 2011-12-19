@@ -74,6 +74,9 @@ public:
     /// Allows to retrieve the bounds for visible objects in all the created layers.
     double *visibleBoundsOnAllLayers();
 
+    /// Allow to remove all objects from all layers.
+    void removeAllObjects();
+
     //////////////////////////////////////////////// Layers API
 
     /// Allows to create a new layer. The new layer is put on top of all the other existing layers. Return the renderer associated with the created layer name.
