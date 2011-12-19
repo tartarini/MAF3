@@ -31,6 +31,8 @@
 #include "mafOperationTransform.h"
 #include "mafPipeVisualCompound.h"
 #include "mafOperationWorker.h"
+#include "mafTool.h"
+#include "mafToolHandler.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -53,6 +55,8 @@ void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObject(mafResources::mafInteractor);
     mafRegisterObject(mafResources::mafVisitorFindSceneNodeByVMEHash);
     mafRegisterObject(mafResources::mafPipeVisualCompound);
+    mafRegisterObject(mafResources::mafTool);
+    mafRegisterObject(mafResources::mafToolHandler);
     mafRegisterObjectAndAcceptBind(mafResources::mafOperationTransform);
     mafRegisterObjectAndAcceptBind(mafResources::mafImporter);
     qRegisterMetaType<mafResources::mafMatrixPointer>("mafResources::mafMatrixPointer");
@@ -79,6 +83,8 @@ void mafResourcesRegistration::unregisterResourcesObjects() {
     mafUnregisterObject(mafResources::mafInteractor);
     mafUnregisterObject(mafResources::mafVisitorFindSceneNodeByVMEHash);
     mafUnregisterObject(mafResources::mafPipeVisualCompound);
+    mafUnregisterObject(mafResources::mafTool);
+    mafUnregisterObject(mafResources::mafToolHandler);
     mafUnregisterObjectAndAcceptUnbind(mafResources::mafOperationTransform);
     mafUnregisterObjectAndAcceptUnbind(mafResources::mafImporter);
 }
