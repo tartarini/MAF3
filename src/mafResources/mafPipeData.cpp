@@ -61,11 +61,11 @@ mafVME *mafPipeData::output(double t) {
 
     mafVME *out_vme = m_Output;
 
-    if(modified()) {
-        setModified(false);
-        updatePipe(t);
-        Q_EMIT(modifiedObject());
-    }
+//    if(modified()) {
+//        setModified(false);
+//        updatePipe(t);
+//        Q_EMIT modifiedObject();
+//    }
 
     if(m_DecoratorPipe) {
         out_vme = m_DecoratorPipe->output(t);
