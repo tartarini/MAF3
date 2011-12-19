@@ -26,7 +26,16 @@ mafToolVTKAxes::mafToolVTKAxes(const QString code_location) : mafToolVTK(code_lo
 }
 
 mafToolVTKAxes::~mafToolVTKAxes() {
+    if (m_SceneNode) {
+        vtkAssembly *assembly = ((mafSceneNodeVTK *)m_SceneNode)->nodeAssembly();
+        assembly->RemovePart(m_AxesActor);
+    }
     m_AxesActor->Delete();
+}
+
+
+void mafToolVTKAxes::resetTool() {
+    removeProp(m_AxesActor);
 }
 
 void mafToolVTKAxes::setSceneNode(mafResources::mafSceneNode *node) {

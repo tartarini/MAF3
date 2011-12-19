@@ -41,6 +41,9 @@ public:
     /// Assign the scene node to the tool so to have access to the VME and eventually its visual representation.
     /*virtual*/ void setSceneNode(mafResources::mafSceneNode *node);
 
+    /// Allow to take the tool to the initial conditions.
+    /*virtual*/ void resetTool();
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafToolVTKAxes();
