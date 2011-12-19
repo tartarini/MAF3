@@ -52,6 +52,7 @@ bool mafPipeVisualVTKSurface::acceptObject(mafCore::mafObjectBase *obj) {
 }
 
 void mafPipeVisualVTKSurface::updatePipe(double t) {
+    // This call will set the modified state of the pipe to false.
     Superclass::updatePipe(t);
 
     mafDataSet *data = dataSetForInput(0, t);
@@ -62,5 +63,4 @@ void mafPipeVisualVTKSurface::updatePipe(double t) {
     m_Mapper->SetScalarVisibility(m_ScalarVisibility);
     //Keep ImmediateModeRendering off: it slows rendering
     //m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
-    setModified(false);
 }
