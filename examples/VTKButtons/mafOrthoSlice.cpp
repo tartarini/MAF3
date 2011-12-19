@@ -35,10 +35,12 @@ mafOrthoSlice::~mafOrthoSlice() {
 void mafOrthoSlice::setBounds(double bounds[6]) {
     double scaledBound;
     int sliderBounds[6];
+    int multiplier = 1;
     for (int i = 0; i < 6; ++i) {
         m_Bounds[i] = bounds[i];
         scaledBound = bounds[i];
         for (int d = 0; d < m_Decimals; ++d) {
+            multiplier *= 10;
             scaledBound *= 10;
         }
         sliderBounds[i] = (int)scaledBound;
@@ -60,6 +62,10 @@ void mafOrthoSlice::setBounds(double bounds[6]) {
     ui->xPosition->setValue((sliderBounds[0] + sliderBounds[1]) / 2);
     ui->yPosition->setValue((sliderBounds[2] + sliderBounds[3]) / 2);
     ui->zPosition->setValue((sliderBounds[4] + sliderBounds[5]) / 2);
+
+    ui->xPosition->setTickInterval((sliderBounds[1] - sliderBounds[0]) / multiplier);
+    ui->yPosition->setTickInterval((sliderBounds[3] - sliderBounds[2]) / multiplier);
+    ui->zPosition->setTickInterval((sliderBounds[5] - sliderBounds[4]) / multiplier);
 }
 
 void mafOrthoSlice::setDecimalDigits(int decimal) {
