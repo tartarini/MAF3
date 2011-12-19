@@ -110,7 +110,7 @@ bool mafSQLITE::insertRecord(const QSqlRecord &record) {
     // Set the object as modified and emit the related signal to notify the observer.
     if (result) {
         setModified();
-        Q_EMIT modifiedObject();
+//        Q_EMIT modifiedObject();
     }
     return result;
 }
