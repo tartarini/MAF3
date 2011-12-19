@@ -43,8 +43,6 @@ mafView::mafView(const QString code_location) : mafResource(code_location),
 
 mafView::~mafView() {
     clearScene();
-    // Q_EMIT signal to detach visual pipe GUI
-    Q_EMIT pipeVisualSelectedSignal(NULL);
 }
 
 void mafView::fillSceneGraph(mafCore::mafHierarchy *hierarchy) {
