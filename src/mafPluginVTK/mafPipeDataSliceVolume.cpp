@@ -63,10 +63,6 @@ void mafPipeDataSliceVolume::updatePipe(double t) {
     mafProxy<vtkAlgorithmOutput> *volume = mafProxyPointerTypeCast(vtkAlgorithmOutput, inputDataSet->dataValue());
 
     m_Slicer->SetInputConnection(*volume);
-    QVariantList b = inputDataSet->bounds();
-    m_SliceOrigin[0] = (b[0].toDouble() + b[1].toDouble()) / 2.;
-    m_SliceOrigin[1] = (b[2].toDouble() + b[3].toDouble()) / 2.;
-    m_SliceOrigin[2] = (b[4].toDouble() + b[5].toDouble()) / 2.;
     m_Slicer->SetPlaneOrigin(m_SliceOrigin);
 
     m_Slicer->SetPlaneAxisX(m_XVector);
