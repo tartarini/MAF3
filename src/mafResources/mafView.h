@@ -22,6 +22,7 @@ namespace mafResources {
 // Class forwarding list
 class mafSceneNode;
 class mafPipeVisual;
+class mafToolHandler;
 
 /**
  Class name: mafView
@@ -117,6 +118,7 @@ protected:
     
     unsigned int m_VisibleObjects; ///< Number of visible objects in view.
     QString m_SceneNodeType; ///< Type of SceneNode to instantiate for the current view.
+    mafToolHandler *m_ToolHandler; ///< Handler for tools in view.
 
 private:
     QString m_LayoutConfigurationFile; ///< XML filename that represents the layout configuration file for compound view
@@ -124,6 +126,7 @@ private:
     QHash<QString, QVariantHash> m_PipeParametersBindHash; ///< Hash containing the bind between visual pipe and its initialization parameter's hash to be assigned to the pipe when allocated.
     mafCore::mafHierarchyPointer m_Scenegraph; ///< SceneGraph
     QHash<mafVME *, mafSceneNode *> m_SceneNodeHash; ///< variable useful for rapid iteration between mafTreeItem
+
 
 Q_SIGNALS:
     /// Notify selection of a sceneNode. 
