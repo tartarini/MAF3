@@ -5,7 +5,7 @@
  *  Created by Daniele Giunchi - Paolo Quadrani on 24/03/10.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -51,7 +51,6 @@ protected:
 
 private:
     vtkAssembly *m_Assembly; ///< Assembly containing the prop 3D to visualize.
-    mafToolVTKAxes *m_AxesTool; ///< Axes to show the reference system of the node.
 
 public Q_SLOTS:
     /// update the position of the vme.

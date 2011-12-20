@@ -5,13 +5,12 @@
  *  Created by Daniele Giunchi - Paolo Quadrani on 24/03/10.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
 #include "mafSceneNodeVTK.h"
 #include "mafVTKWidget.h"
-#include "mafToolVTKAxes.h"
 
 #include <mafVME.h>
 #include <mafDataSetCollection.h>
@@ -31,14 +30,12 @@ using namespace mafPluginVTK;
 
 
 mafSceneNodeVTK::mafSceneNodeVTK(const QString code_location) : mafSceneNode(code_location),
-                                                                m_Assembly(NULL), 
-                                                                m_AxesTool(NULL) {
+                                                                m_Assembly(NULL) {
 }
 
 mafSceneNodeVTK::mafSceneNodeVTK(mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location) : 
                                                                 mafSceneNode(vme, graphicObject, visualPipeType, code_location), 
-                                                                m_Assembly(NULL), 
-                                                                m_AxesTool(NULL) {
+                                                                m_Assembly(NULL) {
 }
 
 bool mafSceneNodeVTK::initialize() {
@@ -46,7 +43,6 @@ bool mafSceneNodeVTK::initialize() {
         m_Assembly = vtkAssembly::New();
         m_Assembly->SetPickable(1);
 
-        m_AxesTool = mafNEW(mafPluginVTK::mafToolVTKAxes);
         update();
 
         connect(vme()->dataSetCollection(), SIGNAL(modifiedObject()), this, SLOT(update()), Qt::DirectConnection);
@@ -56,7 +52,6 @@ bool mafSceneNodeVTK::initialize() {
 }
 
 mafSceneNodeVTK::~mafSceneNodeVTK() {
-    mafDEL(m_AxesTool);
     m_Assembly->Delete();
 }
 
@@ -89,18 +84,11 @@ void mafSceneNodeVTK::setParentNode(const mafSceneNode *parent) {
 }
 
 void mafSceneNodeVTK::setVisibility(bool visible) {
-    m_AxesTool->setVisibility(visible);
-
     if(visible) {
         mafSceneNode::setVisibility(visible);
         mafProxy<vtkProp3D> *prop = mafProxyPointerTypeCast(vtkProp3D, visualPipe()->output());
         if(!m_Assembly->GetParts()->IsItemPresent(*prop)) {
             m_Assembly->AddPart(*prop);
-            m_AxesTool->setSceneNode(this);
-        }
-        mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(m_GraphicObject);
-        if (widget != NULL) {
-            m_AxesTool->setGraphicObject(m_GraphicObject);
         }
         update();
     } else {
