@@ -26,7 +26,8 @@ class mafSceneNode;
  */
 class MAFRESOURCESSHARED_EXPORT mafTool : public mafPipeVisual {
     Q_OBJECT
-    
+    Q_PROPERTY(bool followSelectedObject READ followSelectedObject WRITE setFollowSelectedObject)
+
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafPipeVisual);
 
@@ -51,12 +52,32 @@ public:
     /// Allow to take the tool to the initial conditions.
     virtual void resetTool();
 
+    /// Return the value of the follow selection flag.
+    bool followSelectedObject() const;
+
+    /// Set the flag associated to the follow selected object property.
+    void setFollowSelectedObject(bool follow = true);
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafTool();
 
     mafSceneNode *m_SceneNode; ///< Pointer to the scene node.
+    bool m_FollowSelectedObject; ///< Flag indicating that the tool il attached to the selected object in the scene (the default is true).
 };
+
+
+/////////////////////////////////////////////////////////////
+// Inline methods
+/////////////////////////////////////////////////////////////
+
+inline bool mafTool::followSelectedObject() const {
+    return m_FollowSelectedObject;
+}
+
+inline void mafTool::setFollowSelectedObject(bool follow) {
+    m_FollowSelectedObject = follow;
+}
 
 } //namespace mafResources
 
