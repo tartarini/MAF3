@@ -19,6 +19,7 @@
 #include "mafDataSet.h"
 #include "mafDataSetCollection.h"
 #include "mafVMEManager.h"
+#include "mafToolHandler.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -32,6 +33,7 @@ mafView::mafView(const QString code_location) : mafResource(code_location),
                                                 m_PipeVisualSelection(NULL), 
                                                 m_VisibleObjects(0), 
                                                 m_SceneNodeType("mafResources::mafSceneNode"),
+                                                m_ToolHandler(NULL),
                                                 m_LayoutConfigurationFile("") {
     m_SceneNodeHash.clear();
 
@@ -64,6 +66,9 @@ void mafView::fillSceneGraph(mafCore::mafHierarchy *hierarchy) {
 }
 
 void mafView::clearScene() {
+    if (m_ToolHandler) {
+        m_ToolHandler->setActiveSceneNode(NULL);
+    }
     mafDEL(m_Scenegraph);
     m_SelectedNode = NULL;
     
@@ -187,6 +192,9 @@ void mafView::selectSceneNode(mafSceneNode *node, bool select) {
         if (m_Selected) {
             notityVisualPipeSelected();
         }
+        if (m_ToolHandler) {
+            m_ToolHandler->setActiveSceneNode(m_SelectedNode);
+        }
     }
 }
 
@@ -230,6 +238,9 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
             --m_VisibleObjects;
         }
         node->setVisibility(show);
+        if (m_ToolHandler) {
+            m_ToolHandler->setVisibility(node->property("visibility").toBool());
+        }
         if(m_PipeVisualSelection) {
             m_PipeVisualSelection->setVisibility(show);
         }
