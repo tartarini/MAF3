@@ -14,6 +14,7 @@
 
 #include <mafVME.h>
 #include <mafDataSetCollection.h>
+#include <mafPipeVisual.h>
 
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
