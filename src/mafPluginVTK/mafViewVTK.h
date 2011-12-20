@@ -5,7 +5,7 @@
  *  Created by Roberto Mucci on 20/03/10.
  *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -51,6 +51,10 @@ public Q_SLOTS:
 
     /// Reset the visualization to show visible objects
     /*virtual*/ void resetVisualization(double *bounds = NULL);
+
+private Q_SLOTS:
+    /// Reset the tool handler when it is destroyed from the widget.
+    void resetToolHandler();
 
 public:
     /// Object constructor.
@@ -101,6 +105,10 @@ inline void mafViewVTK::setCameraParallel(bool parallel /* = true */) {
 
 inline int mafViewVTK::cameraAxes() const {
     return (int)m_CameraAxesDirection;
+}
+
+inline void mafViewVTK::resetToolHandler() {
+    m_ToolHandler = NULL;
 }
 
 } //namespace mafPluginVTK
