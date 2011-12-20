@@ -31,11 +31,13 @@ using namespace mafEventBus;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f), m_Axes(NULL), m_InteractionStarted(false), m_RendererBase(NULL), m_RendererTool(NULL), m_View(NULL) {
+mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f), m_Axes(NULL), m_InteractionStarted(false), m_RendererBase(NULL), m_RendererTool(NULL), m_View(NULL), m_ToolHandler(NULL) {
     initializeConnections();
 }
 
 mafVTKWidget::~mafVTKWidget() {
+    mafDEL(m_ToolHandler);
+
     QHash<QString, vtkRenderer*>::iterator iter;
     for (iter = m_LayerHash.begin(); iter != m_LayerHash.end(); iter++) {
         vtkRenderer *ren = iter.value();
@@ -86,6 +88,11 @@ void mafPluginVTK::mafVTKWidget::initializeLayers() {
     // Layer in which draw the 3D objects
     m_RendererBase = createLayer("base");
     m_RendererTool = createLayer("tool");
+
+    if (m_ToolHandler == NULL) {
+        m_ToolHandler = mafNEW(mafResources::mafToolHandler);
+    }
+    m_ToolHandler->setGraphicObject(this);
 }
 
 vtkRenderer *mafVTKWidget::createLayer(const QString layerName) {

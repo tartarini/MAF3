@@ -15,12 +15,15 @@
 // Includes list
 #include "mafPluginVTKDefinitions.h"
 #include <QVTKWidget.h>
+#include <mafToolHandler.h>
+
 
 class vtkRenderer;
 
 namespace mafPluginVTK {
 
 class mafAxes;
+
 
 /**
 Class name: mafVTKWidget
@@ -76,6 +79,9 @@ public:
 
     /// Allow to remove all objects from all layers.
     void removeAllObjects();
+
+    /// Return the tool handler.
+    mafResources::mafToolHandler *toolHandler() const;
 
     //////////////////////////////////////////////// Layers API
 
@@ -148,6 +154,7 @@ private:
     vtkRenderer *m_RendererTool; ///< Renderer associated to the tool layer.
     vtkRenderer *m_RendererBase; ///< Renderer associated to the base layer.
     QObject *m_View; ///< Link to the corresponding mafView
+    mafResources::mafToolHandler *m_ToolHandler; ///< Handler for tools.
 };
 
 /////////////////////////////////////////////////////////////
@@ -166,6 +173,10 @@ inline QVariant mafVTKWidget::viewObject() const {
     QVariant v;
     v.setValue<QObject *>(m_View);
     return v;
+}
+
+inline mafResources::mafToolHandler *mafVTKWidget::toolHandler() const {
+    return m_ToolHandler;
 }
 
 } // namespace mafPluginVTK
