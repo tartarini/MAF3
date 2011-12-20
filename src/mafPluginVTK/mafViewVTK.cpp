@@ -15,7 +15,9 @@
 #include "mafSceneNodeVTK.h"
 #include "mafPipeVisualVTKSelection.h"
 #include "mafInteractorVTKCamera.h"
+#include "mafToolVTKAxes.h"
 
+#include <mafToolHandler.h>
 #include <mafPipeVisual.h>
 #include <mafVME.h>
 #include <mafHierarchy.h>
@@ -46,14 +48,26 @@ bool mafViewVTK::initialize() {
         // Create the instance of the VTK Widget
         m_RenderWidget = new mafVTKWidget();
         m_RenderWidget->setObjectName("VTKWidget");
+        
         QVariant v;
         v.setValue<QObject*>(this);
         ((mafVTKWidget*)m_RenderWidget)->setViewObject(v);
+        
         m_Renderer = ((mafVTKWidget*)m_RenderWidget)->renderer();
         m_Renderer->SetBackground(0.1, 0.1, 0.1);
         ((mafVTKWidget*)m_RenderWidget)->showAxes(true);
         ((mafVTKWidget*)m_RenderWidget)->setParallelCameraMode(m_CameraParallel);
+        
         setCameraAxes(m_CameraAxesDirection);
+
+        m_ToolHandler = ((mafVTKWidget*)m_RenderWidget)->toolHandler();
+        connect(m_ToolHandler, SIGNAL(destroyed()), this, SLOT(resetToolHandler()));
+
+        // Add the axes tool to the handler.
+        mafToolVTKAxes *axesTool = mafNEW(mafPluginVTK::mafToolVTKAxes);
+        axesTool->setFollowSelectedObject();
+        m_ToolHandler->addTool(axesTool);
+        mafDEL(axesTool);
     
         //create the instance for selection pipe.
         m_PipeVisualSelection = mafNEW(mafPluginVTK::mafPipeVisualVTKSelection);
@@ -221,6 +235,7 @@ void mafViewVTK::selectSceneNode(mafResources::mafSceneNode *node, bool select) 
         m_PipeVisualSelection->input()->isEqual(m_SelectedNode->vme())) {
         return;
     }
+
     // remove from scene old selection
     mafProxy<vtkProp3D> *prop = mafProxyPointerTypeCast(vtkProp3D, m_PipeVisualSelection->output());
     mafSceneNodeVTK *selected = qobject_cast<mafSceneNodeVTK *>(m_SelectedNode);
@@ -229,7 +244,7 @@ void mafViewVTK::selectSceneNode(mafResources::mafSceneNode *node, bool select) 
     }
     //select new SceneNode
     mafView::selectSceneNode(node,select);
-    
+
     if(node && node->property("visibility").toBool()) {
         mafSceneNodeVTK *sn = qobject_cast<mafSceneNodeVTK *>(node);
         if(select) {
