@@ -37,8 +37,8 @@ void mafTreeModel::initialize() {
 
 QString mafTreeModel::dataHash(QObject *obj) {
     QVariant hash = obj->property("dataHash");
-    if(hash.isValid()) { //vme use directly the objectHash while scenenode dataHash which retrieves vme hash
-        //is a scenenode!
+    if(hash.isValid()) { //vme use directly the objectHash while SceneNnode dataHash which retrieves vme hash
+        //is a SceneNnode!
         return hash.toString();
     } else {
         //is a vme!
@@ -158,13 +158,13 @@ mafTreeItem *mafTreeModel::createNewItem(mafTreeItem *parent, QObject *obj) {
     // while in any other case (mafScenenode invisible or other data type like vme)
     // it doesn't matter any visualization
     if(v.isValid() && vs.isValid()){
-        bool visibility = obj->property("visibility").toBool();
-        item->setStatus(vs.toUInt(), visibility);
-        if(visibility) {
-            this->setProperty("visibility", visibility);
+        bool visib = v.toBool();
+        item->setStatus(vs.toUInt(), visib);
+        if(visib) {
+            this->setProperty("visibility", visib);
             mafEventArgumentsList argList;
             argList.append(mafEventArgument(mafCore::mafObjectBase*, (mafObjectBase*)obj));
-            argList.append(mafEventArgument(bool, visibility));
+            argList.append(mafEventArgument(bool, visib));
             mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);
         }
     } else {
@@ -271,5 +271,3 @@ QModelIndex mafTreeModel::indexFromData(QObject *data) {
         return ti->index();
     }
 }
-
-
