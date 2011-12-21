@@ -148,6 +148,7 @@ private:
 
     mafObjectBase *m_CurrentPipeVisual; ///< Current used pipe visual.
     mafObjectBase *m_CurrentView; ///< Current view.
+    mafObjectBase *m_CurrentVME; ///< Current VME selected.
 
     QMainWindow     *m_MainWindow;  ///< Main window associated to the application.
     mafUILoaderQt   *m_UILoader;    ///< Class in charge to load the GUI.

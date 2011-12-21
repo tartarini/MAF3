@@ -27,7 +27,7 @@ using namespace mafEventBus;
 using namespace mafGUI;
 
 mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location) : mafObjectBase(code_location)
-    , m_VMEWidget(NULL), m_ViewWidget(NULL), m_VisualPipeWidget(NULL), m_UILoadedFromFile(false), m_CurrentPipeVisual(NULL), m_CurrentView(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win)
+    , m_VMEWidget(NULL), m_ViewWidget(NULL), m_VisualPipeWidget(NULL), m_UILoadedFromFile(false), m_CurrentPipeVisual(NULL), m_CurrentView(NULL), m_CurrentVME(NULL), m_MaxRecentFiles(5), m_MainWindow(main_win)
     , m_Model(NULL), m_TreeWidget(NULL), m_Logic(NULL), m_CompleteFileName(), m_LastPath() {
 
     m_SettingsDialog = new mafGUIApplicationSettingsDialog();
@@ -406,62 +406,70 @@ QObject *mafGUIManager::menuItemByName(QString name) {
 }
 
 void mafGUIManager::updateMenuForSelectedVme(mafCore::mafObjectBase *vme) {
-    QStringList accepted_list;
-    accepted_list = mafCoreRegistration::acceptObject(vme);
+    if (vme && vme->isObjectValid()) {
+        m_CurrentVME = vme;
+        QStringList accepted_list;
+        accepted_list = mafCoreRegistration::acceptObject(vme);
 
-    QMenu *opMenu = (QMenu *)this->menuItemByName("Operations");
-    if (opMenu) {
-        QList<QAction *> opActions = opMenu->actions();
-        QString op;
-        Q_FOREACH(QAction *action, opActions) {
-            op = action->data().toString();
-            action->setEnabled(accepted_list.contains(op));
+        QMenu *opMenu = (QMenu *)this->menuItemByName("Operations");
+        if (opMenu) {
+            QList<QAction *> opActions = opMenu->actions();
+            QString op;
+            Q_FOREACH(QAction *action, opActions) {
+                op = action->data().toString();
+                action->setEnabled(accepted_list.contains(op));
+            }
         }
-    }
-    
-    QMenu *impMenu = (QMenu *)this->menuItemByName("Import");
-    if (impMenu) {
-        QList<QAction *> impActions= impMenu->actions();
-        QString imp;
-        Q_FOREACH(QAction *action, impActions) {
-            imp = action->data().toString();
-            action->setEnabled(accepted_list.contains(imp));
+
+        QMenu *impMenu = (QMenu *)this->menuItemByName("Import");
+        if (impMenu) {
+            QList<QAction *> impActions= impMenu->actions();
+            QString imp;
+            Q_FOREACH(QAction *action, impActions) {
+                imp = action->data().toString();
+                action->setEnabled(accepted_list.contains(imp));
+            }
         }
-    }
-    
-    QMenu *expMenu = (QMenu *)this->menuItemByName("Export");
-    if (expMenu) {
-        QList<QAction *> expActions= expMenu->actions();
-        QString exp;
-        Q_FOREACH(QAction *action, expActions) {
-            exp = action->data().toString();
-            action->setEnabled(accepted_list.contains(exp));
+
+        QMenu *expMenu = (QMenu *)this->menuItemByName("Export");
+        if (expMenu) {
+            QList<QAction *> expActions= expMenu->actions();
+            QString exp;
+            Q_FOREACH(QAction *action, expActions) {
+                exp = action->data().toString();
+                action->setEnabled(accepted_list.contains(exp));
+            }
         }
     }
 }
 
 void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
-    if(m_TreeWidget) {
-        QModelIndex index = m_Model->indexFromData(vme);
-        
-        QItemSelectionModel *sel = m_TreeWidget->selectionModel();
-        if(sel) {
-            sel->clearSelection();
-            sel->setCurrentIndex(index, QItemSelectionModel::Select);
+    if (vme && vme->isObjectValid()) {
+        if(m_TreeWidget) {
+            QModelIndex index = m_Model->indexFromData(vme);
+            if (!index.isValid()) {
+                return;
+            }
+
+            QItemSelectionModel *sel = m_TreeWidget->selectionModel();
+            if(sel) {
+                sel->clearSelection();
+                sel->setCurrentIndex(index, QItemSelectionModel::Select);
+            }
+
+            // Show the GUI for the selected VME.
+            m_GUILoadedType = mafGUILoadedTypeVme;
+
+            QString guiFilename = vme->uiFilename();
+            m_UILoadedFromFile = !guiFilename.isEmpty();
+            if(m_UILoadedFromFile) {
+                // Ask the UI Loader to load the operation's GUI.
+                m_UILoader->uiLoad(guiFilename, m_GUILoadedType);
+                return;
+            }
+
+            showGui(NULL, m_GUILoadedType);
         }
-        
-        // Show the GUI for the selected VME.
-        m_GUILoadedType = mafGUILoadedTypeVme;
-        
-        QString guiFilename = vme->uiFilename();
-        m_UILoadedFromFile = !guiFilename.isEmpty();
-        if(m_UILoadedFromFile) {
-            // Ask the UI Loader to load the operation's GUI.
-            m_UILoader->uiLoad(guiFilename, m_GUILoadedType);
-            return;
-        }
-        
-        showGui(NULL, m_GUILoadedType);
     }
 }
 
@@ -903,11 +911,16 @@ void mafGUIManager::viewDestroyed() { //ALL THE VIEWS ARE DESTROYED
 }
 
 void mafGUIManager::selectVME(QModelIndex index) {
-    QObject *obj = dataObject(index);
+    if (!index.isValid()) {
+        return;
+    }
 
-    mafEventBus::mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, qobject_cast<mafCore::mafObjectBase *>(obj)));
-    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventBus::mafEventTypeLocal, &argList);
+    QObject *obj = dataObject(index);
+    if (obj && obj != m_CurrentVME) {
+        mafEventBus::mafEventArgumentsList argList;
+        argList.append(mafEventArgument(mafCore::mafObjectBase *, qobject_cast<mafCore::mafObjectBase *>(obj)));
+        mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventBus::mafEventTypeLocal, &argList);
+    }
 }
 
 void mafGUIManager::setVMECheckState(mafCore::mafObjectBase *vme, bool visible) {
@@ -1068,16 +1081,21 @@ void mafGUIManager::updateRecentFileMenu(QString fileName) {
 }
 
 QObject *mafGUIManager::dataObject(QModelIndex index) {
+    QObject *obj(NULL);
     QTreeView *tree = (QTreeView *)QObject::sender();
     mafTreeItem *item = (mafTreeItem *)m_Model->itemFromIndex(index);
-    QObject *obj = item->data();
+    if (item) {
+        obj = item->data();
+    }
     
-    QString objName = "mafResources::mafVME";
-    if (objName.compare(obj->metaObject()->className())  != 0) {
-        QObject * vme;
-        QGenericReturnArgument ret_val = mafEventReturnArgument(QObject *, vme);
-        QMetaObject::invokeMethod(obj, "dataObject", Qt::AutoConnection, ret_val);
-        obj = vme;
+    if (obj) {
+        QString objName("mafResources::mafVME");
+        if (objName.compare(obj->metaObject()->className())  != 0) {
+            QObject * vme;
+            QGenericReturnArgument ret_val = mafEventReturnArgument(QObject *, vme);
+            QMetaObject::invokeMethod(obj, "dataObject", Qt::AutoConnection, ret_val);
+            obj = vme;
+        }
     }
     
     return obj;
