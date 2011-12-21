@@ -910,7 +910,7 @@ void mafGUIManager::viewDestroyed() { //ALL THE VIEWS ARE DESTROYED
     }
 }
 
-void mafGUIManager::selectVME(QModelIndex index) {
+void mafGUIManager::selectVME(const QModelIndex &index) {
     if (!index.isValid()) {
         return;
     }
@@ -1082,7 +1082,6 @@ void mafGUIManager::updateRecentFileMenu(QString fileName) {
 
 QObject *mafGUIManager::dataObject(QModelIndex index) {
     QObject *obj(NULL);
-    QTreeView *tree = (QTreeView *)QObject::sender();
     mafTreeItem *item = (mafTreeItem *)m_Model->itemFromIndex(index);
     if (item) {
         obj = item->data();
@@ -1091,7 +1090,7 @@ QObject *mafGUIManager::dataObject(QModelIndex index) {
     if (obj) {
         QString objName("mafResources::mafVME");
         if (objName.compare(obj->metaObject()->className())  != 0) {
-            QObject * vme;
+            QObject * vme(NULL);
             QGenericReturnArgument ret_val = mafEventReturnArgument(QObject *, vme);
             QMetaObject::invokeMethod(obj, "dataObject", Qt::AutoConnection, ret_val);
             obj = vme;
@@ -1100,4 +1099,3 @@ QObject *mafGUIManager::dataObject(QModelIndex index) {
     
     return obj;
 }
-

@@ -215,7 +215,7 @@ private Q_SLOTS:
     void viewDestroyed();
 
     /// Allow to send a vme selection request when an item has been clicked into the mafTreWidget.
-    void selectVME(QModelIndex index);
+    void selectVME(const QModelIndex &);
 
     /// Allow to visualize a VME from code.
     void setVMECheckState(mafCore::mafObjectBase *sceneNode, bool visible);
