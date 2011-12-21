@@ -334,7 +334,7 @@ void mafGUIManager::showSettingsDialog() {
 }
 
 void mafGUIManager::fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash) {
-    mafCore::mafObjectBase *sel_vme;
+    mafCore::mafObjectBase *sel_vme = NULL;
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
 
@@ -398,7 +398,7 @@ QObject *mafGUIManager::menuItemByName(QString name) {
     for (int i = 0; i < m_MenuItemList.size(); ++i) {
         QObject *action = m_MenuItemList.at(i);
         QString an = action->objectName();
-        if (an == name) {
+        if (an.compare(name) == 0) {
             return action;
         }
     }
