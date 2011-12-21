@@ -45,7 +45,7 @@ void mafTreeWidget::dragMoveEvent(QDragMoveEvent *event) {
 
 bool mafTreeWidget::event(QEvent *event) {
     bool result = QTreeView::event(event);
-    
+
     if(event->type() == QEvent::ChildRemoved) {
         this->clearSelection();
         mafTreeModel *m = (mafTreeModel *)model();
