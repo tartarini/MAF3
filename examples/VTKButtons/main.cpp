@@ -34,6 +34,7 @@ int main(int argc, char *argv[]) {
     if(!ok) {
         exit(1);
     }
+    mafEventBus::mafEventBusManager::instance()->enableEventLogging(true);
 
     // Plug into the factory the custom objects (Operations, Views, ...).
     // If the object has also an acceptObject method defined, call macro:
