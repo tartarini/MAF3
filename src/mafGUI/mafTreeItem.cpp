@@ -3,9 +3,9 @@
  *  mafGUI
  *
  *  Created by Daniele Giunchi on 26/10/10.
- *  Copyright 2010 B3C. All rights reserved.
+ *  Copyright 2011 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -13,11 +13,10 @@
 
 using namespace mafGUI;
 
-mafTreeItem::mafTreeItem(QObject *obj) : QStandardItem(obj->objectName()) {
+mafTreeItem::mafTreeItem(QObject *obj) : QStandardItem(obj->objectName()), m_Data(obj) {
     setIcon(QIcon(obj->property("iconFile").toString()));
     setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|
              Qt::ItemIsEditable);
-    m_Data = obj;
     setStatus(mafItemStatusNotCheckable, false);
 }
 
