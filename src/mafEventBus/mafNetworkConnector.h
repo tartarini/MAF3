@@ -56,7 +56,7 @@ public:
 
 Q_SIGNALS:
     /// signal for send a message to through network
-    void remoteCommunication(const QString event_id, mafEventArgumentsList *argList);
+    void remoteCommunication(const QString event_id, mafEventArgumentsList *argList, bool externalSend);
     
     /// signal for notify that the response is updated
     void updatedResponseSignal( QVariant response);
