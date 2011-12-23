@@ -26,8 +26,8 @@ mafNetworkConnectorQXMLRPC::mafNetworkConnectorQXMLRPC() : mafNetworkConnector()
 }
 
 void mafNetworkConnectorQXMLRPC::initializeForEventBus() {
-    mafRegisterRemoteSignal("maf.remote.eventBus.communication.send.xmlrpc", this, "remoteCommunication(const QString, mafEventArgumentsList *)");
-    mafRegisterRemoteCallback("maf.remote.eventBus.communication.send.xmlrpc", this, "send(const QString, mafEventArgumentsList *, bool externalSend)");
+    mafRegisterRemoteSignal("maf.remote.eventBus.communication.send.xmlrpc", this, "remoteCommunication(const QString, mafEventArgumentsList *, bool)");
+    mafRegisterRemoteCallback("maf.remote.eventBus.communication.send.xmlrpc", this, "send(const QString, mafEventArgumentsList *, bool )");
 }
 
 mafNetworkConnectorQXMLRPC::~mafNetworkConnectorQXMLRPC() {
