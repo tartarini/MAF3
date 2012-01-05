@@ -16,8 +16,8 @@
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
     QByteArray ba;
-    if(argc != 4) {
-        ba = mafTr("Usage: \nclientXMLRPC port server_address").toAscii();
+    if(argc != 5) {
+        ba = mafTr("Usage: \nclientXMLRPC port server_address dbName workflowId").toAscii();
         qDebug("%s", ba.data());
         exit(0);
     }
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
      //log parameters
      operationParameters.insert("dataBaseName", argv[3]);
      operationParameters.insert("tableName", "logTable");
-     operationParameters.insert("workflowId", "123");
+     operationParameters.insert("workflowId", argv[4]);
      
     /*
     operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
