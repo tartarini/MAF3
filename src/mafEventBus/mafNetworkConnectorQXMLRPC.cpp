@@ -174,6 +174,7 @@ void mafNetworkConnectorQXMLRPC::startListen() {
 }
 
 void mafNetworkConnectorQXMLRPC::send(const QString event_id, mafEventArgumentsList *argList, bool externalSend) {
+    qDebug() << "Sending ...";
     QList<xmlrpc::Variant> *vl = NULL;
     xmlrpc::Variant var;
     QByteArray ba;
