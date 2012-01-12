@@ -14,6 +14,7 @@
 #include "mafVTKWidget.h"
 
 #include <vtkRenderer.h>
+#include <vtkRenderWindow.h>
 #include <vtkAssembly.h>
 
 using namespace mafPluginVTK;
@@ -30,8 +31,11 @@ mafToolVTK::~mafToolVTK() {
 void mafToolVTK::updatedGraphicObject() {
     mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(m_GraphicObject);
     if (widget) {
-        m_RendererTool = widget->renderer("tool");
-        Q_EMIT graphicObjectReady();
+        if (m_RendererTool == NULL) {
+            m_RendererTool = widget->renderer("tool");
+            Q_EMIT graphicObjectReady();
+        }
+        m_RendererTool->GetRenderWindow()->Render();
     }
 }
 
