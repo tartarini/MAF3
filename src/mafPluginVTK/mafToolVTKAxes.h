@@ -38,18 +38,12 @@ public:
      /// Object constructor.
     mafToolVTKAxes(const QString code_location = "");
 
-    /// Assign the scene node to the tool so to have access to the VME and eventually its visual representation.
-    /*virtual*/ void setSceneNode(mafResources::mafSceneNode *node);
-
     /// Allow to take the tool to the initial conditions.
     /*virtual*/ void resetTool();
 
 protected:
     /// Object destructor.
     /* virtual */ ~mafToolVTKAxes();
-
-    /// update visibility for actor or volume passed as parameter
-    /*virtual*/ void updateVisibility();
 
 private:
     vtkAxesActor *m_AxesActor; ///< Axes to show the reference system of the node.

@@ -26,39 +26,15 @@ mafToolVTKAxes::mafToolVTKAxes(const QString code_location) : mafToolVTK(code_lo
 }
 
 mafToolVTKAxes::~mafToolVTKAxes() {
-    if (m_SceneNode) {
-        vtkAssembly *assembly = ((mafSceneNodeVTK *)m_SceneNode)->nodeAssembly();
-        assembly->RemovePart(m_AxesActor);
-    }
     m_AxesActor->Delete();
 }
-
 
 void mafToolVTKAxes::resetTool() {
     removeProp(m_AxesActor);
 }
 
-void mafToolVTKAxes::setSceneNode(mafResources::mafSceneNode *node) {
-    vtkAssembly *assembly = NULL;
-    if (m_SceneNode) {
-        // remove the axes from the old scene node...
-        assembly = ((mafSceneNodeVTK *)m_SceneNode)->nodeAssembly();
-        assembly->RemovePart(m_AxesActor);
-    }
-    // initialize the member variable...
-    Superclass::setSceneNode(node);
-
-    // ... then add the axes actor to the new assembly...
-    if (m_SceneNode) {
-        assembly = ((mafSceneNodeVTK *)m_SceneNode)->nodeAssembly();
-        assembly->AddPart(m_AxesActor);
-    }
-}
-
 void mafToolVTKAxes::graphicObjectInitialized() {
+    // Graphic widget (render window, interactor...) has been created and initialized.
+    // now can add the tool's actor.
     addProp(m_AxesActor);
-}
-
-void mafToolVTKAxes::updateVisibility() {
-    m_AxesActor->SetVisibility(visibility() ? 1 : 0);
 }
