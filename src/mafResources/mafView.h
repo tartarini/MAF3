@@ -3,7 +3,7 @@
  *  mafResources
  *
  *  Created by Roberto Mucci - Paolo Quadrani - Daniele Giunchi on 20/03/10.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -113,8 +113,6 @@ protected:
     QObject *m_RenderWidget; ///< Rendering widget for the view.
     bool m_Selected; ///< Flag for active view.
     mafSceneNode *m_SelectedNode; ///< Keep track of the selected SceneNode.
-    
-    mafResources::mafPipeVisual *m_PipeVisualSelection; ///< variable with the pipe for vme selection
     
     unsigned int m_VisibleObjects; ///< Number of visible objects in view.
     QString m_SceneNodeType; ///< Type of SceneNode to instantiate for the current view.

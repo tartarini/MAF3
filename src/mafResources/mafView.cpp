@@ -30,7 +30,6 @@ mafView::mafView(const QString code_location) : mafResource(code_location),
                                                 m_Scenegraph(NULL), 
                                                 m_VisualPipeHash(NULL), 
                                                 m_SelectedNode(NULL),
-                                                m_PipeVisualSelection(NULL), 
                                                 m_VisibleObjects(0), 
                                                 m_SceneNodeType("mafResources::mafSceneNode"),
                                                 m_ToolHandler(NULL),
@@ -74,9 +73,6 @@ void mafView::clearScene() {
     
     m_SceneNodeHash.clear();
     Q_EMIT pipeVisualSelectedSignal(NULL);
-    if(m_PipeVisualSelection) {
-        m_PipeVisualSelection->setInput(NULL);
-    }
 }
 
 mafSceneNode *mafView::createSceneNode(mafVME *vme) {
@@ -181,14 +177,7 @@ void mafView::selectSceneNode(mafSceneNode *node, bool select) {
     m_SelectedNode = node;
     Q_UNUSED(select);
 
-    if(node && m_PipeVisualSelection) {
-        if (node->property("visibility").toBool()) {
-            //This code starts the loading of data, so 
-            //it is called only if the node is visible.
-            m_PipeVisualSelection->setInput(node->vme());
-            m_PipeVisualSelection->updatePipe();
-        }
-        m_PipeVisualSelection->setVisibility(node->property("visibility").toBool());
+    if(m_SelectedNode) {
         if (m_Selected) {
             notityVisualPipeSelected();
         }
@@ -240,9 +229,6 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
         node->setVisibility(show);
         if (m_ToolHandler) {
             m_ToolHandler->setVisibility(node->property("visibility").toBool());
-        }
-        if(m_PipeVisualSelection) {
-            m_PipeVisualSelection->setVisibility(show);
         }
     }
     if (node->visualPipe() && m_PipeParametersBindHash.contains(visualPipeType)) {
