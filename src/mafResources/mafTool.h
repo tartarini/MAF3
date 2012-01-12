@@ -27,6 +27,7 @@ class mafSceneNode;
 class MAFRESOURCESSHARED_EXPORT mafTool : public mafPipeVisual {
     Q_OBJECT
     Q_PROPERTY(bool followSelectedObject READ followSelectedObject WRITE setFollowSelectedObject)
+    Q_PROPERTY(bool followSelectedObjectVisibility READ followSelectedObjectVisibility WRITE setFollowSelectedObjectVisibility)
 
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafPipeVisual);
@@ -58,12 +59,19 @@ public:
     /// Set the flag associated to the follow selected object property.
     void setFollowSelectedObject(bool follow = true);
 
+    /// Return the value of the follow selection visibility flag.
+    bool followSelectedObjectVisibility() const;
+
+    /// Set the flag associated to the follow selected object visibility property.
+    void setFollowSelectedObjectVisibility(bool follow = true);
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafTool();
 
     mafSceneNode *m_SceneNode; ///< Pointer to the scene node.
-    bool m_FollowSelectedObject; ///< Flag indicating that the tool il attached to the selected object in the scene (the default is true).
+    bool m_FollowSelectedObject; ///< Flag indicating that the tool is attached to the selected object in the scene (the default is true).
+    bool m_FollowSelectedObjectVisibility; ///< Flag indicating that the tool follows the visibility of the selected object.
 };
 
 
@@ -77,6 +85,14 @@ inline bool mafTool::followSelectedObject() const {
 
 inline void mafTool::setFollowSelectedObject(bool follow) {
     m_FollowSelectedObject = follow;
+}
+
+inline bool mafTool::followSelectedObjectVisibility() const {
+    return m_FollowSelectedObjectVisibility;
+}
+
+inline void mafTool::setFollowSelectedObjectVisibility(bool follow) {
+    m_FollowSelectedObjectVisibility = follow;
 }
 
 } //namespace mafResources

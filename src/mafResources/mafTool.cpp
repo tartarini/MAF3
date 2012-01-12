@@ -15,7 +15,7 @@
 using namespace mafResources;
 
 
-mafTool::mafTool(const QString code_location) : mafPipeVisual(code_location), m_SceneNode(NULL), m_FollowSelectedObject(true) {
+mafTool::mafTool(const QString code_location) : mafPipeVisual(code_location), m_SceneNode(NULL), m_FollowSelectedObject(true), m_FollowSelectedObjectVisibility(true) {
     connect(this, SIGNAL(graphicObjectReady()), this, SLOT(graphicObjectInitialized()));
 }
 
