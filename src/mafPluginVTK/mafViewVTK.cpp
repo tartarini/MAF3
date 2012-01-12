@@ -13,8 +13,9 @@
 #include "mafViewVTK.h"
 #include "mafVTKWidget.h"
 #include "mafSceneNodeVTK.h"
-#include "mafPipeVisualVTKSelection.h"
 #include "mafInteractorVTKCamera.h"
+
+#include "mafToolVTKSelection.h"
 #include "mafToolVTKAxes.h"
 
 #include <mafToolHandler.h>
@@ -40,7 +41,6 @@ mafViewVTK::mafViewVTK(const QString code_location) : mafView(code_location), m_
 }
 
 mafViewVTK::~mafViewVTK() {
-    mafDEL(m_PipeVisualSelection);
 }
 
 bool mafViewVTK::initialize() {
@@ -65,14 +65,14 @@ bool mafViewVTK::initialize() {
 
         // Add the axes tool to the handler.
         mafToolVTKAxes *axesTool = mafNEW(mafPluginVTK::mafToolVTKAxes);
-        axesTool->setFollowSelectedObject();
         m_ToolHandler->addTool(axesTool);
         mafDEL(axesTool);
     
         //create the instance for selection pipe.
-        m_PipeVisualSelection = mafNEW(mafPluginVTK::mafPipeVisualVTKSelection);
-        m_PipeVisualSelection->setGraphicObject(m_RenderWidget);
-    
+        mafToolVTKSelection *toolSelection = mafNEW(mafPluginVTK::mafToolVTKSelection);
+        m_ToolHandler->addTool(toolSelection);
+        mafDEL(toolSelection);
+
         // push camera interactor
         mafInteractorVTKCamera *interactor = mafNEW(mafPluginVTK::mafInteractorVTKCamera);
         vtkRenderWindowInteractor *iren = ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->GetInteractor();
@@ -227,30 +227,4 @@ void mafViewVTK::resetVisualization(double *bounds) {
     } else {
         m_Renderer->ResetCamera();
     }
-}
-
-void mafViewVTK::selectSceneNode(mafResources::mafSceneNode *node, bool select) {
-    if (m_SelectedNode && m_SelectedNode->isEqual(node) && 
-        m_PipeVisualSelection && m_PipeVisualSelection->input() &&
-        m_PipeVisualSelection->input()->isEqual(m_SelectedNode->vme())) {
-        return;
-    }
-
-    // remove from scene old selection
-    mafProxy<vtkProp3D> *prop = mafProxyPointerTypeCast(vtkProp3D, m_PipeVisualSelection->output());
-    mafSceneNodeVTK *selected = qobject_cast<mafSceneNodeVTK *>(m_SelectedNode);
-    if(selected) {
-        selected->nodeAssembly()->RemovePart(*prop);
-    }
-    //select new SceneNode
-    mafView::selectSceneNode(node,select);
-
-    if(node && node->property("visibility").toBool()) {
-        mafSceneNodeVTK *sn = qobject_cast<mafSceneNodeVTK *>(node);
-        if(select) {
-            sn->nodeAssembly()->AddPart(*prop);
-        } 
-        sn->update();
-    }
-    updateView();
 }
