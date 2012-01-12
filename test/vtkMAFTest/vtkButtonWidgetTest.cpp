@@ -3,13 +3,13 @@
  *  vtkMAF
  *
  *  Created by Paolo Quadrani on 28/09/11.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include "mafTestConfig.h"
+#include <mafTestConfig.h>
 #include <mafTestSuite.h>
 
 #include <mafCoreSingletons.h>
@@ -77,8 +77,8 @@ public:
 
 
 /**
- Class name: mafExporterVTKTest
- This class implements the test suite for mafImporterVTK.
+ Class name: vtkButtonWidgetTest
+ This class implements the test suite for vtkButtonWidget.
  */
 class vtkButtonWidgetTest: public QObject {
     Q_OBJECT
@@ -92,7 +92,7 @@ private Q_SLOTS:
     void cleanupTestCase() {
     }
     
-    /// Test the import of VTK file created.
+    /// Test the VTKButton functionality.
     void TestButtonWidget();
 };
 
@@ -438,7 +438,7 @@ void vtkButtonWidgetTest::TestButtonWidget() {
    buttonWidget4->EnabledOn();
    buttonWidget5->EnabledOn();
    buttonWidget6->EnabledOn();
- 
+
    iren->Start();
 }
 
