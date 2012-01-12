@@ -52,14 +52,14 @@ private Q_SLOTS:
         fname.append("/VTK/mafPipeVisualVTKIsoSurfaceTestData.vtk");
 
         // Import a VTK volume.
-        m_Reader = vtkDataSetReader::New();
+        vtkDataSetReader *reader = vtkDataSetReader::New();
         fname = QDir::toNativeSeparators(fname);
         QByteArray ba = fname.toAscii();
-        m_Reader->SetFileName(ba.data());
-        m_Reader->Update();
+        reader->SetFileName(ba.data());
+        reader->Update();
 
         // Create a container with a vtkImageData
-        m_Volume = m_Reader->GetOutputPort();
+        m_Volume = reader->GetOutputPort();
         m_Volume.setClassTypeNameFunction(vtkClassTypeNameExtract);
 
         // and give it to the mafDataSet.
@@ -72,6 +72,7 @@ private Q_SLOTS:
         dataSet->setDataValue(&m_Volume);
         m_VME->dataSetCollection()->insertItem(dataSet);
         mafDEL(dataSet);
+        reader->Delete();
         //! </snippet>
     }
 
@@ -94,7 +95,6 @@ private Q_SLOTS:
 private:
     mafVME *m_VME; ///< Contains the test volume data.
     mafProxy<vtkAlgorithmOutput> m_Volume; ///< Container of VTK volume data.
-    vtkDataSetReader *m_Reader;
 };
 
 void mafPipeDataSliceVolumeTest::updatePipeTest() {
