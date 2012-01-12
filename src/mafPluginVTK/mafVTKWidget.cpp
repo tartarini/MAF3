@@ -164,7 +164,9 @@ void mafVTKWidget::moveLayerTo(const QString layerName, unsigned int layerLevel)
 }
 
 void mafVTKWidget::showAxes(bool show) {
-    m_Axes = new mafAxes(m_RendererTool);
+    if (m_Axes == NULL) {
+        m_Axes = new mafAxes(m_RendererTool);
+    }
     m_Axes->setVisibility(show);
 }
 
