@@ -48,9 +48,6 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTK();
     
-    /// Update the pipeline with the new graphic object.
-    /*virtual*/ void updatedGraphicObject();
-    
     /// update visibility for actor or volume passed as parameter
     void updateVisibility();
 
@@ -64,6 +61,9 @@ private:
 public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change.
     /*virtual*/ void updatePipe(double t = -1);
+
+    /// Update the pipeline with the new graphic object.
+    /*virtual*/ void updatedGraphicObject();
 
     /// Set the flag to activate scalar visibility.
     void setScalarVisibility(bool scalarVisibility);
