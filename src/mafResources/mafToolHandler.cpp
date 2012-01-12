@@ -71,10 +71,16 @@ void mafToolHandler::setActiveSceneNode(mafSceneNode *node) {
         if (tool->followSelectedObject()) {
             // If tool has to be attached to the selected node, pass it to the tool.
             tool->setSceneNode(m_SceneNode);
+            if (m_SceneNode) {
+                tool->setInput(m_SceneNode->vme());
+            }
+        }
+        if (tool->followSelectedObjectVisibility()) {
             bool v = m_SceneNode && m_SceneNode->property("visibility").toBool();
             // ... and update its visibility according to the node visibility.
             tool->setVisibility(v);
         }
+        tool->updatedGraphicObject();
     }
 }
 
