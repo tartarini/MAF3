@@ -32,6 +32,11 @@ class MAFPLUGINVTKSHARED_EXPORT mafToolVTK : public mafResources::mafTool {
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafTool);
 
+public Q_SLOTS:
+    /// Called when a new graphic object has been set.
+    /** This method has to be re-defined to update stuff linked to the graphic object.*/
+    /*virtual*/ void updatedGraphicObject();
+
 public:
      /// Object constructor.
     mafToolVTK(const QString code_location = "");
@@ -42,10 +47,6 @@ public:
 protected:
     /// Object destructor.
     /* virtual */ ~mafToolVTK();
-
-    /// Called when a new graphic object has been set.
-    /** This method has to be re-defined to update stuff linked to the graphic object.*/
-    /*virtual*/ void updatedGraphicObject();
 
 	/// Add a vtkProp3D to the tool layer.
 	virtual void addProp(vtkProp3D *prop);
