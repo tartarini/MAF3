@@ -36,6 +36,9 @@ public:
      /// Object constructor.
     mafToolVTK(const QString code_location = "");
 
+    /// Assign the scene node to the tool so to have access to the VME and eventually its visual representation.
+    /*virtual*/ void setSceneNode(mafResources::mafSceneNode *node);
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafToolVTK();
@@ -56,8 +59,12 @@ protected:
 	/// Remove a VTK widget from the tool layer.
 	virtual void removeWidget(vtkInteractorObserver *w);
 
+    /// update visibility for actor or volume passed as parameter
+    /*virtual*/ void updateVisibility();
+
 private:
     vtkRenderer *m_RendererTool; ///< Renderer used to place tools.
+    QList<vtkProp3D *> m_PropList; ///< List of vtkProp3D associated with the tool.
 };
 
 } //namespace mafResources
