@@ -3,9 +3,9 @@
  *  mafPluginVTK
  *
  *  Created by Roberto Mucci on 14/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -17,11 +17,11 @@
 #include "mafPipeVisualVTKSurface.h"
 #include "mafPipeVisualVTKIsoSurface.h"
 #include "mafPipeVisualVTKMIPVolume.h"
-#include "mafPipeVisualVTKSelection.h"
 #include "mafPipeVisualVTKBox.h"
 #include "mafPipeVisualVTKSliceSurface.h"
 #include "mafPipeVisualVTKSliceVolume.h"
 
+#include "mafToolVTKSelection.h"
 #include "mafToolVTKAxes.h"
 
 #include "mafViewVTK.h"
@@ -59,7 +59,6 @@ mafPluginRegistrator::mafPluginRegistrator() {
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKMIPVolume);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKIsoSurface);
-    mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSelection);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKBox);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSliceSurface);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSliceVolume);
@@ -81,6 +80,7 @@ mafPluginRegistrator::mafPluginRegistrator() {
     mafRegisterObject(mafPluginVTK::mafVTKParametricSurfaceEllipsoid);
     mafRegisterObject(mafPluginVTK::mafDataBoundaryAlgorithmVTK);
 
+    mafRegisterObjectAndAcceptBind(mafPluginVTK::mafToolVTKSelection);
     mafRegisterObject(mafPluginVTK::mafToolVTKAxes);
 }
 
@@ -93,7 +93,6 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKSurface);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKIsoSurface);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKMIPVolume);
-    mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKSelection);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKBox);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKSliceSurface);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKSliceVolume);
@@ -115,6 +114,7 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     mafUnregisterObject(mafPluginVTK::mafVTKParametricSurfaceEllipsoid);
     mafUnregisterObject(mafPluginVTK::mafDataBoundaryAlgorithmVTK);
     
+    mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafToolVTKSelection);
     mafUnregisterObject(mafPluginVTK::mafToolVTKAxes);
 }
 
@@ -128,11 +128,11 @@ void mafPluginRegistrator::registerAllObjects() {
     mafPluggedObjectInformation visualPipeVTKSurface("Visual pipe VTK Surface", "mafPluginVTK::mafPipeVisualVTKSurface");
     mafPluggedObjectInformation visualPipeVTKIsoSurface("Visual pipe VTK Iso Surface", "mafPluginVTK::mafPipeVisualVTKIsoSurface");
     mafPluggedObjectInformation visualPipeVTKMIPVolume("Visual pipe VTK MIP Volume", "mafPluginVTK::mafPipeVisualVTKMIPVolume");
-    mafPluggedObjectInformation visualPipeSelection("Visual pipe used to represent selection of data", "mafPluginVTK::mafPipeVisualVTKSelection");
     mafPluggedObjectInformation visualPipeBox("Visual pipe used to represent data bounding box", "mafPluginVTK::mafPipeVisualVTKBox");
     mafPluggedObjectInformation visualPipeSliceSurface("Visual pipe used to slice a vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSliceSurface");
     mafPluggedObjectInformation visualPipeSliceVolume("Visual pipe used to slice a VTK volume", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
     
+    mafPluggedObjectInformation toolSelection("Tool used to represent selection of data", "mafPluginVTK::mafToolVTKSelection");
     mafPluggedObjectInformation toolAxes("Tool used to represent reference system", "mafPluginVTK::mafToolVTKAxes");
 
     mafPluggedObjectInformation viewVTK("VTK view", "mafPluginVTK::mafViewVTK");
@@ -154,10 +154,10 @@ void mafPluginRegistrator::registerAllObjects() {
     pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeVTKSurface);
     pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeVTKIsoSurface);
     pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeVTKMIPVolume);
-    pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeSelection);
     pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeBox);
     pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeSliceSurface);
     pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeSliceVolume);
+    pluginHash.insertMulti("mafResources::mafTool", toolSelection);
     pluginHash.insertMulti("mafResources::mafTool", toolAxes);
     pluginHash.insertMulti("mafResources::mafView", viewVTK);
     pluginHash.insertMulti("mafResources::mafOperation", opParametricSurface);
