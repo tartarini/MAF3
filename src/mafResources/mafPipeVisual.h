@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Roberto Mucci on 30/12/09.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -51,18 +51,12 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisual();
 
-    /// Called when a new graphic object has been set.
-    /** This method has to be re-defined to update stuff linked to the graphic object.*/
-    virtual void updatedGraphicObject();
-
     /// update visibility for actor or volume passed as parameter
     virtual void updateVisibility();
 
     mafCore::mafProxyInterface *m_Output; ///< Output for visual pipe.
     QObject *m_GraphicObject; ///< represents the graphic object for render the scene.
     
-    mafPipeVisual *m_PipeVisualSelection; ///< delegate object for visualize selection of the selected vme
-
 private:
     /// Register signals and slots connections with the event bus.
     void initializeConnections();
@@ -77,6 +71,10 @@ public Q_SLOTS:
     /// Set the visibility of its rendering scene.
     virtual void setVisibility(bool visible);
     
+    /// Called when a new graphic object has been set.
+    /** This method has to be re-defined to update stuff linked to the graphic object.*/
+    virtual void updatedGraphicObject();
+
 private Q_SLOTS:
     /// Forward the vmePick event if the pick hits the current visualized VME.
     bool vmePick(double *pickPos, unsigned long, mafCore::mafProxyInterface *actor, QEvent *e);

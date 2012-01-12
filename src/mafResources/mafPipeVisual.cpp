@@ -3,9 +3,9 @@
  *  mafResources
  *
  *  Created by Roberto Mucci on 30/12/09.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -21,7 +21,7 @@ using namespace mafEventBus;
 using namespace mafResources;
 
 
-mafPipeVisual::mafPipeVisual(const QString code_location) : mafPipe(code_location), m_Output(NULL), m_GraphicObject(NULL), m_PipeVisualSelection(NULL), m_Visibility(false) {
+mafPipeVisual::mafPipeVisual(const QString code_location) : mafPipe(code_location), m_Output(NULL), m_GraphicObject(NULL), m_Visibility(false) {
     initializeConnections();
 }
 
