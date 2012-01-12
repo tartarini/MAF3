@@ -25,9 +25,11 @@ mafVisitorFindObjectsByHashCode::~mafVisitorFindObjectsByHashCode() {
 }
 
 void mafVisitorFindObjectsByHashCode::visit(mafObjectBase *object) {
-  if(m_HashCode == object->objectHash()) {
-      if(!m_ObjectsList->contains(object)) {
-          m_ObjectsList->push_back(object);
-      }
-  }
+    // Check if given object has the same hash code of that one stored into the visitor.
+    if(m_HashCode == object->objectHash()) {
+        // If both are equal, add the object to the result list.
+        if(!m_ObjectsList->contains(object)) {
+            m_ObjectsList->push_back(object);
+        }
+    }
 }
