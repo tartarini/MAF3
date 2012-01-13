@@ -48,6 +48,8 @@ bool mafViewVTK::initialize() {
         // Create the instance of the VTK Widget
         m_RenderWidget = new mafVTKWidget();
         m_RenderWidget->setObjectName("VTKWidget");
+        ((mafVTKWidget*)m_RenderWidget)->setToolHandler(m_ToolHandler);
+        m_ToolHandler->release();
         
         QVariant v;
         v.setValue<QObject*>(this);
@@ -59,9 +61,6 @@ bool mafViewVTK::initialize() {
         ((mafVTKWidget*)m_RenderWidget)->setParallelCameraMode(m_CameraParallel);
         
         setCameraAxes(m_CameraAxesDirection);
-
-        m_ToolHandler = ((mafVTKWidget*)m_RenderWidget)->toolHandler();
-        connect(m_ToolHandler, SIGNAL(destroyed()), this, SLOT(resetToolHandler()));
 
         // Add the axes tool to the handler.
         mafToolVTKAxes *axesTool = mafNEW(mafPluginVTK::mafToolVTKAxes);
