@@ -10,31 +10,31 @@
  */
 
 #include "mafToolVTKButtons.h"
-#include "mafSceneNodeVTK.h"
+#include <mafSceneNodeVTK.h>
 
 #include <vtkSmartPointer.h>
-#include <vtkAxesActor.h>
+#include <vtkTIFFReader.h>
+#include <vtkPNGReader.h>
+
 #include <vtkButtonWidget.h>
 #include <vtkTexturedButtonRepresentation.h>
 #include <vtkTexturedButtonRepresentation2D.h>
-#include <vtkTIFFReader.h>
-#include <vtkPNGReader.h>
-#include <vtkCommand.h>
-#include <vtkRenderer.h>
-#include <vtkRenderWindow.h>
 
-#define VTK_CREATE(type, name) \
-    vtkSmartPointer<type> name = vtkSmartPointer<type>::New()
+#include <vtkCommand.h>
+
+
+#define VTK_CREATE(obj_type, obj_name) vtkSmartPointer<obj_type> obj_name = vtkSmartPointer<obj_type>::New()
 
 //using namespace mafPluginVTK;
 
 // Callback for the interaction
 class vtkButtonCallback : public vtkCommand {
 public:
-    static vtkButtonCallback *New()
-    { return new vtkButtonCallback; }
-    virtual void Execute(vtkObject *caller, unsigned long, void*)
-    {
+    static vtkButtonCallback *New() { 
+        return new vtkButtonCallback; 
+    }
+
+    virtual void Execute(vtkObject *caller, unsigned long, void*) {
         vtkButtonWidget *buttonWidget = reinterpret_cast<vtkButtonWidget*>(caller);
         vtkTexturedButtonRepresentation *rep = reinterpret_cast<vtkTexturedButtonRepresentation*>(buttonWidget->GetRepresentation());
         int state = rep->GetState();
@@ -77,7 +77,6 @@ mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK
     m_ButtonWidget = vtkButtonWidget::New();
     m_ButtonWidget->SetRepresentation(rep);
     m_ButtonWidget->AddObserver(vtkCommand::StateChangedEvent,myCallback);
-
 }
 
 mafToolVTKButtons::~mafToolVTKButtons() {
@@ -93,5 +92,3 @@ void mafToolVTKButtons::graphicObjectInitialized() {
     // now can add the widget.
     addWidget(m_ButtonWidget);
 }
-
-
