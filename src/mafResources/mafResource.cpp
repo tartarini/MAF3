@@ -3,7 +3,7 @@
  *  mafResources
  *
  *  Created by Roberto Mucci - Paolo Quadrani - Daniele Giunchi on 30/12/09.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -17,23 +17,29 @@ using namespace mafResources;
 
 
 mafResource::mafResource(const QString code_location) : mafObject(code_location), m_Output(NULL), m_InputList(NULL) {
+    // List of input objects for this resource.
     m_InputList = new mafResourceList;
+    // Variable used to manage concurrent access to the resource.
     m_Lock = new QReadWriteLock(QReadWriteLock::Recursive);
 }
 
 mafResource::~mafResource() {
+    // Clear all inputs and free memory associated to them.
     m_InputList->clear();
     delete m_InputList;
     m_InputList = NULL;
-    
+
+    // Remove all the interactors associated to the resource.
     while (!m_InteractorStack.isEmpty()) {
         popInteractor();
     }
-    
+
+    // Free the memory of the lock variable.
     delete m_Lock;
 }
 
 bool mafResource::isObjectValid() const {
+    // check if the object is valid.
     if(Superclass::isObjectValid()) {
         mafResource *obj = NULL;
         Q_FOREACH(obj, *m_InputList) {
