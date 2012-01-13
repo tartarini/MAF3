@@ -93,6 +93,9 @@ public:
     /// Assign the hash that will contains the association between data type and related visual pipe to use for render it.
     void setVisualPipeHash(const QVariantHash hash);
 
+    /// Return the tool handler associated with the view.
+    mafToolHandler *toolHandler() const;
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafView();
@@ -139,6 +142,9 @@ public Q_SLOTS:
 
     /// Reset the visualization to show visible objects
     virtual void resetVisualization(double *bounds = NULL);
+
+    /// Reset the tool handler when it is destroyed from the widget.
+    void resetToolHandler();
 
     /// Allows to bing visual pipe type with parameter's hash used to initialize its pipe algorithm parameters when allocated.
     void plugPipeParametersHashItem(QString pipe_type, QVariantHash hash);
@@ -199,6 +205,14 @@ inline QVariant mafView::renderWidget() const {
 
 inline mafSceneNode * mafView::selectedSceneNode(){
     return m_SelectedNode;
+}
+
+inline void mafView::resetToolHandler() {
+    m_ToolHandler = NULL;
+}
+
+inline mafToolHandler *mafView::toolHandler() const {
+    return m_ToolHandler;
 }
 
 } //namespace mafResources

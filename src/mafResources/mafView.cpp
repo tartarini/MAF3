@@ -36,6 +36,9 @@ mafView::mafView(const QString code_location) : mafResource(code_location),
                                                 m_LayoutConfigurationFile("") {
     m_SceneNodeHash.clear();
 
+    m_ToolHandler = mafNEW(mafResources::mafToolHandler);
+    connect(m_ToolHandler, SIGNAL(destroyed()), this, SLOT(resetToolHandler()));
+
     // Callbacks related to the VME creation
     mafRegisterLocalCallback("maf.local.resources.vme.add", this, "vmeAdd(mafCore::mafObjectBase *)")
     // Callback related to the VME selection
