@@ -58,6 +58,12 @@ void mafVTKWidget::initializeConnections() {
     result= connect(this, SIGNAL(mouseMoveSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mouseMove(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
 }
 
+void mafVTKWidget::setToolHandler(mafResources::mafToolHandler *handler) {
+    m_ToolHandler = handler;
+    m_ToolHandler->setGraphicObject(this);
+    m_ToolHandler->retain();
+}
+
 void mafVTKWidget::removeAllObjects() {
     QHash<QString, vtkRenderer*>::iterator iter;
     for (iter = m_LayerHash.begin(); iter != m_LayerHash.end(); iter++) {
@@ -88,11 +94,6 @@ void mafPluginVTK::mafVTKWidget::initializeLayers() {
     // Layer in which draw the 3D objects
     m_RendererBase = createLayer("base");
     m_RendererTool = createLayer("tool");
-
-    if (m_ToolHandler == NULL) {
-        m_ToolHandler = mafNEW(mafResources::mafToolHandler);
-    }
-    m_ToolHandler->setGraphicObject(this);
 }
 
 vtkRenderer *mafVTKWidget::createLayer(const QString layerName) {
