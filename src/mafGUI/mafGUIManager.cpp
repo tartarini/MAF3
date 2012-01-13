@@ -458,23 +458,20 @@ void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
             }
 
             // Show the GUI for the selected VME.
-            m_GUILoadedType = mafGUILoadedTypeVme;
-
             QString guiFilename = vme->uiFilename();
             m_UILoadedFromFile = !guiFilename.isEmpty();
             if(m_UILoadedFromFile) {
                 // Ask the UI Loader to load the operation's GUI.
-                m_UILoader->uiLoad(guiFilename, m_GUILoadedType);
+                m_UILoader->uiLoad(guiFilename, mafGUILoadedTypeVme);
                 return;
             }
 
-            showGui(NULL, m_GUILoadedType);
+            showGui(NULL, mafGUILoadedTypeVme);
         }
     }
 }
 
 void mafGUIManager::updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeVisual) {
-    m_GUILoadedType = mafGUILoadedTypeVisualPipe;
     if (pipeVisual) {
         if (m_CurrentPipeVisual == pipeVisual) {
             return;
@@ -484,12 +481,12 @@ void mafGUIManager::updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeV
         m_UILoadedFromFile = !guiFilename.isEmpty();
         if(m_UILoadedFromFile) {
             // Ask the UI Loader to load the view's GUI.
-            m_UILoader->uiLoad(guiFilename, m_GUILoadedType);
+            m_UILoader->uiLoad(guiFilename, mafGUILoadedTypeVisualPipe);
             return;
         }
     } 
     m_CurrentPipeVisual = NULL;
-    showGui(NULL, m_GUILoadedType);
+    showGui(NULL, mafGUILoadedTypeVisualPipe);
 }
 
 
@@ -682,13 +679,11 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
     m_OperationWidget->setOperation(operation);
     operation->setObjectName(m_OperationWidget->operationName());
 
-    m_GUILoadedType = mafGUILoadedTypeOperation;
-    
     if(guiFilename.isEmpty()) {
-        showGui(NULL, m_GUILoadedType);
+        showGui(NULL, mafGUILoadedTypeOperation);
     } else {    
         // Ask the UI Loader to load the operation's GUI.
-        m_UILoader->uiLoad(guiFilename, m_GUILoadedType);
+        m_UILoader->uiLoad(guiFilename, mafGUILoadedTypeOperation);
     }
     
     // block the selection if the operation is single thread
@@ -702,8 +697,7 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
 void mafGUIManager::removeOperationGUI() {
     QMenu *opMenu = (QMenu *)this->menuItemByName("Operations");
     opMenu->setEnabled(true);
-    m_GUILoadedType = mafGUILoadedTypeOperation;
-    Q_EMIT guiTypeToRemove(m_GUILoadedType);
+    Q_EMIT guiTypeToRemove(mafGUILoadedTypeOperation);
     
     /// enable the tree
     mafTreeItemDelegate *d = (mafTreeItemDelegate *) m_TreeWidget->itemDelegate();
@@ -766,10 +760,12 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget, int ui_type) 
         widget = *w;
     }
 
-    switch(m_GUILoadedType) {
+    switch(ui_type) {
         case mafGUILoadedTypeOperation:
-            m_OperationWidget->setOperationGUI(widget);
-            Q_EMIT guiLoaded(m_GUILoadedType, m_OperationWidget);
+            if (widget) {
+                m_OperationWidget->setOperationGUI(widget);
+                Q_EMIT guiLoaded(ui_type, m_OperationWidget);
+            }
         break;
         case mafGUILoadedTypeView:
             {
@@ -782,10 +778,9 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget, int ui_type) 
                     if (m_UILoadedFromFile) {
                         mafConnectObjectWithGUI(m_CurrentView, m_ViewWidget);
                     }
-                    Q_EMIT guiLoaded(m_GUILoadedType, m_ViewWidget);
+                    Q_EMIT guiLoaded(ui_type, m_ViewWidget);
                 }
             }
-            Q_EMIT guiLoaded(m_GUILoadedType, widget);
         break;
         case mafGUILoadedTypeVisualPipe:
             {
@@ -798,7 +793,7 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget, int ui_type) 
                     if (m_UILoadedFromFile) {
                         mafConnectObjectWithGUI(m_CurrentPipeVisual, m_VisualPipeWidget);
                     }
-                    Q_EMIT guiLoaded(m_GUILoadedType, m_VisualPipeWidget);
+                    Q_EMIT guiLoaded(ui_type, m_VisualPipeWidget);
                 }
             }
         break;
@@ -818,12 +813,12 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget, int ui_type) 
                 if (m_UILoadedFromFile) {
                     mafConnectObjectWithGUI(sel_vme, m_VMEWidget);
                 }
-                Q_EMIT guiLoaded(m_GUILoadedType, m_VMEWidget);
+                Q_EMIT guiLoaded(ui_type, m_VMEWidget);
             }
         }
         break;
         default:
-            qWarning() << mafTr("type %1 not recognized...").arg(m_GUILoadedType);
+            qWarning() << mafTr("type %1 not recognized...").arg(ui_type);
             return;
         break;
     }
@@ -868,8 +863,6 @@ void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
         // TODO: select previous index
         //m_TreeWidget->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
     }
-    // Set the current panel to the parent panel of view properties.
-    m_GUILoadedType = mafGUILoadedTypeView;
 
     // Get the selected view's UI file
     QString guiFilename = view->uiFilename();
@@ -880,23 +873,29 @@ void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
         QWidget *customUIWidget = qobject_cast<QWidget *>(customUI);
         if (customUI == NULL) {
             // No GUI associated with the object...
-            showGui(NULL, m_GUILoadedType);
+            showGui(NULL, mafGUILoadedTypeView);
             return;
         } else {
             mafProxy<QWidget> gui;
             gui = customUIWidget;
-            showGui(&gui, m_GUILoadedType);
+            showGui(&gui, mafGUILoadedTypeView);
             return;
         }
     }
     
     // Ask the UI Loader to load the view's GUI.
-    m_UILoader->uiLoad(guiFilename, m_GUILoadedType);
+    m_UILoader->uiLoad(guiFilename, mafGUILoadedTypeView);
 }
 
 void mafGUIManager::viewDestroyed() { //ALL THE VIEWS ARE DESTROYED
+    // Tis method is called when last view is destroyed, so no other view will be selected.
+    // Remove its GUI.
+    this->showGui(NULL, mafGUILoadedTypeView);
+
+    // Reset value for current view selected and corresponding visual pipe.
     m_CurrentView = NULL;
     m_CurrentPipeVisual = NULL;
+
     // Get hierarchy from mafVMEManager
     mafCore::mafHierarchyPointer vmeHierarchy = NULL;
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, vmeHierarchy);

@@ -152,7 +152,6 @@ private:
 
     QMainWindow     *m_MainWindow;  ///< Main window associated to the application.
     mafUILoaderQt   *m_UILoader;    ///< Class in charge to load the GUI.
-    mafGUILoadedType m_GUILoadedType; ///< Type of GUI loaded.
     mafTreeModel    *m_Model;       ///< Tree model of VME.
     mafTreeWidget   *m_TreeWidget;  ///< Visualize the tree model.
     mafApplicationLogic::mafLogic *m_Logic; ///< Logic of the application.

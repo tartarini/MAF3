@@ -233,7 +233,17 @@ void mafMainWindow::loadedGUIAvailable(int type, QWidget *w) {
 }
 
 void mafMainWindow::loadedGUIToRemove(int type) {
-    ui->tabWidget->setCurrentIndex(0);
+    switch(type) {
+        case mafGUILoadedTypeOperation:
+            ui->tabWidget->setCurrentIndex(0);
+            break;
+        case mafGUILoadedTypeView:
+            break;
+        case mafGUILoadedTypeVisualPipe:
+            break;
+        case mafGUILoadedTypeVme:
+            break;
+    }
 }
 
 void mafMainWindow::readSettings() {
@@ -343,8 +353,6 @@ void mafMainWindow::viewCreated(mafCore::mafObjectBase *view) {
 }
 
 void mafMainWindow::subWindowDestroyed() {
-    m_GUIManager->showGui(NULL, mafGUILoadedTypeView);
-
     QMdiSubWindow *subWindow = qobject_cast<QMdiSubWindow *>(QObject::sender());
     mafEventBus::mafEventArgumentsList argList;
     mafObjectBase *view = m_ViewSubWindowHash.value(subWindow);

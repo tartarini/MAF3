@@ -17,14 +17,17 @@ using namespace mafResources;
 using namespace mafCore;
 
 mafMatrix::mafMatrix() {
+    // Create the instance of OpenCV 4x4 double value matrix.
     m_Matrix = cvCreateMat(4, 4, CV_64FC1);
 }
 
 mafMatrix::mafMatrix(int rows, int cols) {
+    // Create the instance of generic dimensioned OpenCV double value matrix.
     m_Matrix = cvCreateMat(rows, cols, CV_64FC1);
 }
 
 mafMatrix::mafMatrix(const mafMatrix &m) {
+    // Copy constructor for 4x4 double value matrix.
     m_Matrix = cvCreateMat(4, 4, CV_64FC1);
     *this = m;
 }
@@ -34,21 +37,26 @@ mafMatrix::~mafMatrix() {
 }
 
 mafMatrix & mafMatrix::operator =(const mafMatrix &mat) {
+    // Assignment operator overload.
     cvCopy(mat.m_Matrix, m_Matrix);
     return *this;
 }
 
 double *mafMatrix::rawData() const {
+    // Return the pointer of raw data contained into the matrix
+    // as row-wise values.
     return m_Matrix->data.db;
 }
 
 mafMatrix *mafMatrix::clone() const {
-    mafMatrix *m= new mafMatrix(m_Matrix->rows, m_Matrix->cols);
+    // Return a cloned matrix. The memory has to be released by who required the clone.
+    mafMatrix *m = new mafMatrix(m_Matrix->rows, m_Matrix->cols);
     cvCopy(m_Matrix, m->m_Matrix);
     return m;
 }
 
 bool mafMatrix::isEqual(const mafMatrix &mat) {
+    // First check is on number of rows and cols
     CvMat *check = mat.m_Matrix;
     if(m_Matrix->rows != check->rows || m_Matrix->cols != check->cols) {
         return false;
@@ -59,13 +67,14 @@ bool mafMatrix::isEqual(const mafMatrix &mat) {
     int dim = r * c;
     int i=0;
 
+    // Then cycle on all values and check their values using mafEqual macro.
     double *me = rawData();
     double *other = mat.rawData();
     for (; i < dim; ++i) {
         if (!mafEquals(me[i], other[i])) {
-            qDebug() << "Not equal at index: " << i;
-            qDebug() << "first:  " << me[i];
-            qDebug() << "second: " << other[i];
+            qDebug() << mafTr("Not equal at index: ") << i;
+            qDebug() << mafTr("first:  ") << me[i];
+            qDebug() << mafTr("second: ") << other[i];
             return false;
         }
     }
@@ -74,10 +83,11 @@ bool mafMatrix::isEqual(const mafMatrix &mat) {
 }
 
 void mafMatrix::description() const {
+    // Print the information contained into the class.
     int r = m_Matrix->rows;
     int c = m_Matrix->cols;
-    qDebug() << "Number of Rows: " << r; 
-    qDebug() << "Number of Cols: " << c;
+    qDebug() << mafTr("Number of Rows: ") << r; 
+    qDebug() << mafTr("Number of Cols: ") << c;
     int i=0;
     int j=0;
     double value;
@@ -93,10 +103,13 @@ void mafMatrix::description() const {
 }
 
 void mafMatrix::setIdentity() {
+    // Assign the identity matrix to the internal matrix instance.
+    // All previous values are overwritten.
     cvSetIdentity(m_Matrix);
 }
 
 mafMatrix mafMatrix::operator *(const mafMatrix &mat) {
+    // Overload of the '*' operator to perform the matrix multiplication.
     mafMatrix result(m_Matrix->rows, mat.m_Matrix->cols);
     cvMatMul(m_Matrix, mat.m_Matrix, result.m_Matrix);
     
@@ -104,9 +117,11 @@ mafMatrix mafMatrix::operator *(const mafMatrix &mat) {
 }
 
 void mafMatrix::setElement(int row, int col, double value) {
+    // Assign the value 'value' at the element (row, col).
     cvmSet(m_Matrix, row, col, value);
 }
 
 double mafMatrix::element(int row, int col) {
+    // Return the element located at (row, col)
     return cvmGet(m_Matrix, row, col);
 }
