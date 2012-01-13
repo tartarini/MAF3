@@ -52,10 +52,6 @@ public Q_SLOTS:
     /// Reset the visualization to show visible objects
     /*virtual*/ void resetVisualization(double *bounds = NULL);
 
-private Q_SLOTS:
-    /// Reset the tool handler when it is destroyed from the widget.
-    void resetToolHandler();
-
 public:
     /// Object constructor.
     mafViewVTK(const QString code_location = "");
@@ -105,10 +101,6 @@ inline void mafViewVTK::setCameraParallel(bool parallel /* = true */) {
 
 inline int mafViewVTK::cameraAxes() const {
     return (int)m_CameraAxesDirection;
-}
-
-inline void mafViewVTK::resetToolHandler() {
-    m_ToolHandler = NULL;
 }
 
 } //namespace mafPluginVTK
