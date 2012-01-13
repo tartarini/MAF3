@@ -81,7 +81,7 @@ public:
     void removeAllObjects();
 
     /// Return the tool handler.
-    mafResources::mafToolHandler *toolHandler() const;
+    void setToolHandler(mafResources::mafToolHandler *handler);
 
     //////////////////////////////////////////////// Layers API
 
@@ -173,10 +173,6 @@ inline QVariant mafVTKWidget::viewObject() const {
     QVariant v;
     v.setValue<QObject *>(m_View);
     return v;
-}
-
-inline mafResources::mafToolHandler *mafVTKWidget::toolHandler() const {
-    return m_ToolHandler;
 }
 
 } // namespace mafPluginVTK
