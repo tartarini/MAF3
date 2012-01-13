@@ -16,6 +16,7 @@
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
 #include <vtkAssembly.h>
+#include <vtkInteractorObserver.h>
 
 using namespace mafPluginVTK;
 
@@ -26,6 +27,7 @@ mafToolVTK::mafToolVTK(const QString code_location) : mafResources::mafTool(code
 mafToolVTK::~mafToolVTK() {
     setSceneNode(NULL);
     m_PropList.clear();
+    m_WidgetList.clear();
 }
 
 void mafToolVTK::updatedGraphicObject() {
@@ -40,23 +42,31 @@ void mafToolVTK::updatedGraphicObject() {
 }
 
 void mafToolVTK::addProp(vtkProp3D *prop) {
-    if (m_RendererTool) {
+    if (m_RendererTool && prop && !m_PropList.contains(prop)) {
         m_RendererTool->AddViewProp(prop);
         m_PropList.append(prop);
     }
 }
 
 void mafToolVTK::removeProp(vtkProp3D *prop) {
-    if (m_RendererTool) {
+    if (m_RendererTool && prop) {
         m_RendererTool->RemoveViewProp(prop);
         m_PropList.removeOne(prop);
     }
 }
 
 void mafToolVTK::addWidget(vtkInteractorObserver *w) {
+    if (w && !m_WidgetList.contains(w)) {
+        w->SetInteractor(m_RendererTool->GetRenderWindow()->GetInteractor());
+        w->SetCurrentRenderer(m_RendererTool);
+        m_WidgetList.append(w);
+    }
 }
 
 void mafToolVTK::removeWidget(vtkInteractorObserver *w) {
+    if (w) {
+        m_WidgetList.removeOne(w);
+    }
 }
 
 void mafToolVTK::setSceneNode(mafResources::mafSceneNode *node) {
@@ -84,5 +94,8 @@ void mafToolVTK::updateVisibility() {
     // Update the visibility of the actor associated with the tool.
     Q_FOREACH(vtkProp3D *prop, m_PropList) {
         prop->SetVisibility(visibility() ? 1 : 0);
+    }
+    Q_FOREACH(vtkInteractorObserver *widget, m_WidgetList) {
+        widget->SetEnabled(visibility() ? 1 : 0);
     }
 }

@@ -58,7 +58,7 @@ protected:
 	virtual void addWidget(vtkInteractorObserver *w);
 	
 	/// Remove a VTK widget from the tool layer.
-	virtual void removeWidget(vtkInteractorObserver *w);
+	virtual void removeWidget(vtkInteractorObserver *w); 
 
     /// update visibility for actor or volume passed as parameter
     /*virtual*/ void updateVisibility();
@@ -66,6 +66,7 @@ protected:
 private:
     vtkRenderer *m_RendererTool; ///< Renderer used to place tools.
     QList<vtkProp3D *> m_PropList; ///< List of vtkProp3D associated with the tool.
+    QList<vtkInteractorObserver *> m_WidgetList; ///< List of widgets associated with the tool.
 };
 
 } //namespace mafResources
