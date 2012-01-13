@@ -17,4 +17,5 @@ SET(target_libraries
   mafApplicationLogic
   mafGUI
   mafResources
+  mafPluginVTK
   )
