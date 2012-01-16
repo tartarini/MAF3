@@ -29,7 +29,6 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-
 mafPipeVisualVTKSliceVolume::mafPipeVisualVTKSliceVolume(const QString code_location) : mafPipeVisualVTK(code_location) {
 //    m_UIFilename = "mafPipeVisualVTKSliceVolume.ui";
 
@@ -69,19 +68,48 @@ bool mafPipeVisualVTKSliceVolume::acceptObject(mafCore::mafObjectBase *obj) {
     return false;
 }
 
-QString mafPipeVisualVTKSliceVolume::originZ() {
-    //    return QString::number(m_SlicerPipe->sliceOrigin()[2]);
-
+QString mafPipeVisualVTKSliceVolume::originX() {
     //////////////////////////////////////////////////////////////////////////
-    // Convert into macro with 3 parameters
-    QString sig("originZ()");
-    QString ret;
-    QGenericReturnArgument ret_val;
+    QString sig("originX()");
     mafCore::mafDelegatePointer delegateObj = delegateObject();
     if (delegateObj && delegateObj->isMethodDefined(sig)) {
-        ret_val = mafEventReturnArgument(QString, ret);
-        QString method = sig.split("(").at(0);
-        delegateObj->metaObject()->invokeMethod(delegateObj, method.toAscii(), Qt::DirectConnection, ret_val);
+        QString ret;
+        QGenericReturnArgument ret_val = mafEventReturnArgument(QString, ret);
+        delegateObj->executeMethod(sig, ret_val);
+        if (!delegateObj->shouldExecuteLocalCode()) {
+            return ret;
+        }
+    }
+    //////////////////////////////////////////////////////////////////////////
+
+    return QString::number(m_Origin[0]);
+}
+
+QString mafPipeVisualVTKSliceVolume::originY() {
+    //////////////////////////////////////////////////////////////////////////
+    QString sig("originY()");
+    mafCore::mafDelegatePointer delegateObj = delegateObject();
+    if (delegateObj && delegateObj->isMethodDefined(sig)) {
+        QString ret;
+        QGenericReturnArgument ret_val = mafEventReturnArgument(QString, ret);
+        delegateObj->executeMethod(sig, ret_val);
+        if (!delegateObj->shouldExecuteLocalCode()) {
+            return ret;
+        }
+    }
+    //////////////////////////////////////////////////////////////////////////
+
+    return QString::number(m_Origin[1]);
+}
+
+QString mafPipeVisualVTKSliceVolume::originZ() {
+    //////////////////////////////////////////////////////////////////////////
+    QString sig("originZ()");
+    mafCore::mafDelegatePointer delegateObj = delegateObject();
+    if (delegateObj && delegateObj->isMethodDefined(sig)) {
+        QString ret;
+        QGenericReturnArgument ret_val = mafEventReturnArgument(QString, ret);
+        delegateObj->executeMethod(sig, ret_val);
         if (!delegateObj->shouldExecuteLocalCode()) {
             return ret;
         }

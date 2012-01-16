@@ -140,16 +140,6 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline QString mafPipeVisualVTKSliceVolume::originX() {
-//    return QString::number(m_SlicerPipe->sliceOrigin()[0]);
-    return QString::number(m_Origin[0]);
-}
-
-inline QString mafPipeVisualVTKSliceVolume::originY() {
-    //    return QString::number(m_SlicerPipe->sliceOrigin()[1]);
-    return QString::number(m_Origin[1]);
-}
-
 inline void mafPipeVisualVTKSliceVolume::on_originX_textEdited(QString stringValue) {
     m_Origin[0] = stringValue.toDouble();
     setModified();
