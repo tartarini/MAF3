@@ -46,12 +46,18 @@
 
 #include <mafPluginConfigurator.h>
 
+#include <vtkMAFLog.h>
+
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafPluginVTK;
 using namespace mafResources;
 
 mafPluginRegistrator::mafPluginRegistrator() {
+    vtkMAFLog *vtkLogRedirector = vtkMAFLog::New();
+    vtkOutputWindow::SetInstance(vtkLogRedirector);
+    vtkLogRedirector->Delete();
+
     // Register to the mafObjectFactory the plug-in object's types.
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeDataImageThreshold);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeDataSliceSurface);
