@@ -60,6 +60,14 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
 //////////////////////////////////////////////////////////////////////////
 // Delegate methods
 //////////////////////////////////////////////////////////////////////////
+QString mafViewOrthoSlice::originX() {
+    return QString::number(m_SlicePosition[0]);
+}
+
+QString mafViewOrthoSlice::originY() {
+    return QString::number(m_SlicePosition[1]);
+}
+
 QString mafViewOrthoSlice::originZ() {
     return QString::number(m_SlicePosition[2]);
 }
