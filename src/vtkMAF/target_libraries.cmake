@@ -5,6 +5,7 @@
 # 
 
 SET(foundation_libraries 
+	
 )
 
 SET(VTK_LIBRARIES
@@ -21,4 +22,5 @@ SET(VTK_LIBRARIES
 
 SET(target_libraries
   ${VTK_LIBRARIES}
+  ${QT_LIBRARIES}
   )
