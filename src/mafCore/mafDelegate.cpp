@@ -27,3 +27,8 @@ bool mafDelegate::isMethodDefined(QString signature) {
 bool mafDelegate::shouldExecuteLocalCode() {
     return true;
 }
+
+void mafDelegate::executeMethod(QString signature, QGenericReturnArgument ret) {
+    QString method = signature.split("(").at(0);
+    metaObject()->invokeMethod(this, method.toAscii(), Qt::DirectConnection, ret);
+}

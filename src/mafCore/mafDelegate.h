@@ -35,6 +35,9 @@ public:
     
     /// Check if a method has been defined into the delegate class.
     bool isMethodDefined(QString signature);
+
+    /// Execute delegated method.
+    void executeMethod(QString signature, QGenericReturnArgument ret);
     
     /// Return true or false depending if the delegate class wants that the caller execute its own code or skip it.
     virtual bool shouldExecuteLocalCode();
