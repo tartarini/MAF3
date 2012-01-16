@@ -36,9 +36,9 @@ public:
     /// Check if a method has been defined into the delegate class.
     bool isMethodDefined(QString signature);
 
-    /// Execute delegated method.
-    void executeMethod(QString signature, QGenericReturnArgument ret);
-    
+    /// Execute delegated method with optional arguments and return value.
+    void executeMethod(QString signature, mafArgumentList *argList = NULL, QGenericReturnArgument *ret = NULL) const;
+
     /// Return true or false depending if the delegate class wants that the caller execute its own code or skip it.
     virtual bool shouldExecuteLocalCode();
 
@@ -46,7 +46,7 @@ protected:
     /// Object destructor.
     ~mafDelegate();
 };
-    
+
 typedef mafDelegate * mafDelegatePointer;
 
 } //namespace mafCore
