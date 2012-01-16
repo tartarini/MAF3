@@ -3,9 +3,9 @@
  *  mafPluginVTK
  *
  *  Created by Roberto Mucci on 14/12/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -55,6 +55,7 @@ extern "C" MAFPLUGINVTKSHARED_EXPORT mafResources::mafPluginInfo pluginInfo() {
 // MAF required version function.
 // XML file for the UI. Also with switch possibility between different levels of complexity.
 mafPluginRegistrator registrator;
+
 
 /** Tells us to register our functionality to an engine kernel*/
 extern "C" MAFPLUGINVTKSHARED_EXPORT void registerPlugin() {
