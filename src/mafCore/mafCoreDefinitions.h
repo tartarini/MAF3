@@ -21,6 +21,10 @@
 #define CALLBACK_SIGNATURE "1"
 #define SIGNAL_SIGNATURE   "2"
 
+#define mafArgument(var_type, var) QArgument<var_type >(#var_type, var)
+#define mafReturnArgument(var_type, var) QReturnArgument<var_type >(#var_type, var)
+typedef QList<QGenericArgument> mafArgumentList;
+
 namespace mafCore {
 
 #define mafCodeLocation __FILE__":"QTOSTRING(__LINE__)
