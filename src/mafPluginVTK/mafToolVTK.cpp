@@ -25,7 +25,7 @@ mafToolVTK::mafToolVTK(const QString code_location) : mafResources::mafTool(code
 }
 
 mafToolVTK::~mafToolVTK() {
-    setSceneNode(NULL);
+//    setSceneNode(NULL);
     m_PropList.clear();
     m_WidgetList.clear();
 }
