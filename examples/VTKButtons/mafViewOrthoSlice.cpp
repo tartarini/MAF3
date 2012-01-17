@@ -53,6 +53,7 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
             mafPipeVisual *vp = sub_node->visualPipe();
             vp->setDelegateObject(this);
             bool res = connect(this, SIGNAL(modifiedObject()), vp, SLOT(updatePipe()));
+            vp->updatePipe();
         }
     }
 }
