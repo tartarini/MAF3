@@ -54,6 +54,7 @@ bool mafSceneNodeVTK::initialize() {
 
 mafSceneNodeVTK::~mafSceneNodeVTK() {
     m_Assembly->Delete();
+    m_Assembly = NULL;
 }
 
 void mafSceneNodeVTK::setParentNode(const mafSceneNode *parent) {
