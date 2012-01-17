@@ -15,6 +15,7 @@
 #include <mafLogic.h>
 
 #include "mafViewOrthoSlice.h"
+#include "mafViewVTKButtons.h"
 
 //#include <mafViewScriptInterpreterPython.h>
 //#include <mafInterpreterPreferencesWidget.h>
@@ -45,6 +46,7 @@ int main(int argc, char *argv[]) {
     // mafRegisterObject(myNamespace::myClassCustom);
 //    mafRegisterObject(mafScriptInterpreter::mafViewScriptInterpreterPython);
     mafRegisterObject(mafViewOrthoSlice);
+    mafRegisterObject(mafViewVTKButtons);
 
     // Plug the object's information into the framework
 //    logic->plugObject("mafResources::mafOperation", "mafResources::mafOperationTransform", "Transform");
@@ -52,8 +54,10 @@ int main(int argc, char *argv[]) {
     // Plug a View into the application
     logic->plugObject("mafResources::mafView", "mafViewOrthoSlice", "OrthoSlice");
     logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "Slice");
+    logic->plugObject("mafResources::mafView", "mafViewVTKButtons", "Buttons view");
     // ... and customize it telling to use mafPipeVisualVTKSurface visual pipe to render vtkPolyData data type.
     logic->customizeVisualization("VTK view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
+    logic->customizeVisualization("Buttons view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("Slice", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
 
 //    logic->plugObject("mafResources::mafView", "mafScriptInterpreter::mafViewScriptInterpreterPython", "Python Console");
