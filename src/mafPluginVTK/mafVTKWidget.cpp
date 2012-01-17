@@ -172,6 +172,8 @@ void mafVTKWidget::showAxes(bool show) {
 }
 
 void mafVTKWidget::mousePressEvent(QMouseEvent* e) {
+    Superclass::mousePressEvent(e);
+
     vtkRenderWindowInteractor* iren = NULL;
     if(this->mRenWin) {
         iren = this->mRenWin->GetInteractor();
@@ -198,6 +200,8 @@ void mafVTKWidget::mousePressEvent(QMouseEvent* e) {
 }
 
 void mafVTKWidget::mouseReleaseEvent(QMouseEvent* e) {
+    Superclass::mouseReleaseEvent(e);
+
     vtkRenderWindowInteractor* iren = NULL;
     if(this->mRenWin) {
         iren = this->mRenWin->GetInteractor();
@@ -222,6 +226,8 @@ void mafVTKWidget::mouseReleaseEvent(QMouseEvent* e) {
 }
 
 void mafVTKWidget::mouseMoveEvent(QMouseEvent* e) {
+    Superclass::mouseMoveEvent(e);
+
     vtkRenderWindowInteractor* iren = NULL;
     if(this->mRenWin) {
         iren = this->mRenWin->GetInteractor();
