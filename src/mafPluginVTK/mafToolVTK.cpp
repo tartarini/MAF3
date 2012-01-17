@@ -57,7 +57,8 @@ void mafToolVTK::removeProp(vtkProp3D *prop) {
 
 void mafToolVTK::addWidget(vtkInteractorObserver *w) {
     if (w && !m_WidgetList.contains(w)) {
-        w->SetInteractor(m_RendererTool->GetRenderWindow()->GetInteractor());
+        mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(m_GraphicObject);
+        w->SetInteractor(widget->GetRenderWindow()->GetInteractor());
         w->SetCurrentRenderer(m_RendererTool);
         m_WidgetList.append(w);
     }
