@@ -61,7 +61,7 @@ private Q_SLOTS:
         mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSurface);
 
         m_VMEManager = mafVMEManager::instance();
-        m_EventBus->notifyEvent("maf.local.resources.hierarchy.new", mafEventTypeLocal);
+        mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.new", mafEventTypeLocal);
         
         mafObject *root;
         QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
