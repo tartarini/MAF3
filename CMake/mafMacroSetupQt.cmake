@@ -14,7 +14,7 @@
 
 MACRO(mafMacroSetupQt)
 
-  SET(minimum_required_qt_version "4.6")
+  SET(minimum_required_qt_version "4.7")
 
   FIND_PACKAGE(Qt4)
 
