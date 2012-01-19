@@ -2,8 +2,8 @@
  *  mafToolVTKPlane.cpp
  *  mafPluginVTK
  *
- *  Created by Paolo Quadrani on 25/11/11.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Created by Paolo Quadrani on 19/1/12.
+ *  Copyright 2012 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -12,12 +12,11 @@
 #include "mafToolVTKPlane.h"
 #include "mafSceneNodeVTK.h"
 
-#include <vtkAssembly.h>
-#include <vtkPlane.h>
+#include <mafPipeDataSlice.h>
+
 #include <vtkCommand.h>
 #include <vtkImplicitPlaneWidget2.h>
-#include <vtkImplicitPlaneRepresentation.h>
-#include <vtkActor.h>
+#include <vtkMAFImplicitPlaneRepresentation.h>
 
 
 // Callback for the interaction
@@ -26,67 +25,68 @@
 class vtkIPWCallback : public vtkCommand {
 public:
 	static vtkIPWCallback *New() { return new vtkIPWCallback; }
-  	virtual void Execute(vtkObject *caller, unsigned long, void*) {
-    	vtkImplicitPlaneWidget2 *planeWidget = reinterpret_cast<vtkImplicitPlaneWidget2*>(caller);
-    	vtkImplicitPlaneRepresentation *rep = reinterpret_cast<vtkImplicitPlaneRepresentation*>(planeWidget->GetRepresentation());
-    	rep->GetPlane(this->Plane);
-    }
-  	vtkIPWCallback() : Plane(0), Actor(0) {}
-  	vtkPlane *Plane;
-  	vtkActor *Actor;
+  	virtual void Execute(vtkObject *caller, unsigned long, void*);
+  	vtkIPWCallback() : Tool(0) {}
+    mafResources::mafTool *Tool;
 };
 
+void vtkIPWCallback::Execute(vtkObject *caller, unsigned long, void*) {
+    vtkImplicitPlaneWidget2 *planeWidget = reinterpret_cast<vtkImplicitPlaneWidget2*>(caller);
+    vtkMAFImplicitPlaneRepresentation *rep = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(planeWidget->GetRepresentation());
+    double ori[3], nor[3];
+    rep->GetOrigin(ori);
+    rep->GetNormal(nor);
+    mafCore::mafPoint o(ori), n(nor);
+    QVariant vo, vn;
+    vo.setValue<mafCore::mafPoint>(o);
+    vn.setValue<mafCore::mafPoint>(n);
+    Tool->setProperty("origin", vo);
+    Tool->setProperty("normal", vn);
+    Tool->setModified();
+}
 
+
+//-----------------------------------------------------------------------------------------------------
 
 using namespace mafPluginVTK;
-
+using namespace mafCore;
 
 mafToolVTKPlane::mafToolVTKPlane(const QString code_location) : mafToolVTK(code_location) {
-    m_Plane = vtkPlane::New();
+    VTK_CREATE(vtkIPWCallback, myCallback);
+    myCallback->Tool = this;
+
+    VTK_CREATE(vtkMAFImplicitPlaneRepresentation, rep);
+    rep->SetPlaceFactor(1.25);
+    rep->DrawPlaneOff();
+    rep->DrawOutlineBoxOff();
+    rep->OutlineTranslationOff();
+    rep->SetOrigin(0,0,0);
+
+    m_PlaneWidget = vtkSmartPointer<vtkImplicitPlaneWidget2>::New();
+    m_PlaneWidget->SetRepresentation(rep);
+    m_PlaneWidget->AddObserver(vtkCommand::InteractionEvent,myCallback);
 }
 
 mafToolVTKPlane::~mafToolVTKPlane() {
-    m_Plane->Delete();
 }
 
-void mafToolVTKPlane::setSceneNode(mafResources::mafSceneNode *node) {
-    vtkAssembly *assembly = NULL;
-    if (m_SceneNode) {
-        // remove the axes from the old scene node...
-        assembly = ((mafSceneNodeVTK *)m_SceneNode)->nodeAssembly();
-//        assembly->RemovePart(m_AxesActor);
-    }
-    // initialize the member variable...
-    Superclass::setSceneNode(node);
+void mafToolVTKPlane::setVOI(mafBounds bounds) {
+    m_VOI = bounds;
+    vtkMAFImplicitPlaneRepresentation *rep = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidget->GetRepresentation());
+    double b[6];
+    b[0] = bounds.xMin;
+    b[1] = bounds.xMax;
+    b[2] = bounds.yMin;
+    b[3] = bounds.yMax;
+    b[4] = bounds.zMin;
+    b[5] = bounds.zMax;
+    rep->PlaceWidget(b);
+}
 
-    // ... then add the axes actor to the new assembly...
-    if (m_SceneNode) {
-        assembly = ((mafSceneNodeVTK *)m_SceneNode)->nodeAssembly();
-//        assembly->AddPart(m_AxesActor);
-    }
+void mafToolVTKPlane::resetTool() {
+    removeWidget(m_PlaneWidget);
 }
 
 void mafToolVTKPlane::graphicObjectInitialized() {
-  	vtkSmartPointer<vtkIPWCallback> myCallback = 
-    vtkSmartPointer<vtkIPWCallback>::New();
-  	myCallback->Plane = m_Plane;
-//  	myCallback->Actor = actor;
- 
-  	vtkSmartPointer<vtkImplicitPlaneRepresentation> rep = 
-    vtkSmartPointer<vtkImplicitPlaneRepresentation>::New();
-  	rep->SetPlaceFactor(1.25); // This must be set prior to placing the widget
-//  	rep->PlaceWidget(actor->GetBounds());
-//  	rep->SetNormal(plane->GetNormal());
-  	rep->SetOrigin(0,0,50); //this doesn't seem to work?
- 
-  	m_PlaneWidget = vtkSmartPointer<vtkImplicitPlaneWidget2>::New();
-//  	m_PlaneWidget->SetInteractor(renderWindowInteractor);
-  	m_PlaneWidget->SetRepresentation(rep);
-  	m_PlaneWidget->AddObserver(vtkCommand::InteractionEvent,myCallback);
-//    addProp(m_AxesActor);
-}
-
-void mafToolVTKPlane::updateVisibility() {
-//    m_AxesActor->SetVisibility(visibility() ? 1 : 0);
-  	m_PlaneWidget->On();
+    addWidget(m_PlaneWidget);
 }
