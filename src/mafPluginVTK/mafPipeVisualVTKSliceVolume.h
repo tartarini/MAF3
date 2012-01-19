@@ -205,7 +205,7 @@ inline QString mafPipeVisualVTKSliceVolume::sliceAxes() const {
 }
 
 inline void mafPipeVisualVTKSliceVolume::setSliceAxes(QString axes) {
-    mafPlaneNormal n = (mafPlaneNormal)axes.toInt();
+    mafResources::mafPlaneNormal n = (mafResources::mafPlaneNormal)axes.toInt();
     m_SlicerPipe->setPlaneNormalAxes(n);
 }
 
