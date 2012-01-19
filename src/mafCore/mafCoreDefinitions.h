@@ -73,13 +73,37 @@ typedef struct {
     int m_Multiplicity; ///< Multiplicity for the encoded property.
 } mafMementoPropertyItem;
 
-/// Struct that defines the information used by a plug-in that needs to plug new objects into MAF3 framework.
+/// Structure that defines the information used by a plug-in that needs to plug new objects into MAF3 framework.
 struct mafPluggedObjectInformation{
     mafPluggedObjectInformation() : m_Label(""), m_ClassType("") {}
     mafPluggedObjectInformation(QString label, QString classtype) : m_Label(label), m_ClassType(classtype) {}
     QString m_Label;      ///< String label associated to the plugged object; it will be shown in the user interface if no custom label is assigned by the user.
     QString m_ClassType;  ///< Class type of the plugged object.
 };
+
+/// Structure storing information of 3D point
+typedef struct mafPoint {
+    mafPoint() : x(0), y(0), z(0) {}
+    mafPoint(double x_pos, double y_pos, double z_pos) : x(x_pos), y(y_pos), z(z_pos) {}
+    mafPoint(const mafPoint &p) : x(p.x), y(p.y), z(p.z) {}
+    mafPoint(double pos[3]) : x(pos[0]), y(pos[1]), z(pos[2]) {}
+    double x;
+    double y;
+    double z;
+} mafPoint;
+
+/// Structure storing information of 3D bounds (volume of interest)
+typedef struct mafBounds {
+    mafBounds() : xMin(0), yMin(0), zMin(0), xMax(0), yMax(0), zMax(0) {}
+    mafBounds(const mafBounds &p) : xMin(p.xMin), yMin(p.yMin), zMin(p.zMin), xMax(p.xMax), yMax(p.yMax), zMax(p.zMax) {}
+    mafBounds(double pos[6]) : xMin(pos[0]), xMax(pos[1]), yMin(pos[2]), yMax(pos[3]), zMin(pos[4]), zMax(pos[5]) {}
+    double xMin;
+    double yMin;
+    double zMin;
+    double xMax;
+    double yMax;
+    double zMax;
+} mafBounds;
 
 ///< Enum that define the Serialization pattern. For "Composition" or for "Inheritance"
 typedef enum {
@@ -88,10 +112,10 @@ typedef enum {
 } mafSerializationPattern;
 
 ///< Enum that define the script type contained into the QVariantHash passed to the mafObject.
-typedef enum {
-    mafScriptTypeFilePath = 0,
-    mafScriptTypeStringScript
-} mafScriptType;
+typedef enum mafScriptSourceType {
+    mafScriptSourceTypeFilePath = 0,
+    mafScriptSourceTypeStringScript
+} mafScriptSourceType;
 
 #define mafScriptKey "script"
 #define mafScriptTypeKey "type"
@@ -111,6 +135,9 @@ class mafObjectBase;
 typedef QList<mafObjectBase *> mafObjectsList;
 
 }  // mafCore
+
+Q_DECLARE_METATYPE(mafCore::mafPoint);
+Q_DECLARE_METATYPE(mafCore::mafBounds);
 
 #endif // MAFDEFINITIONS_H
 
