@@ -19,12 +19,9 @@
 #include <vtkButtonWidget.h>
 #include <vtkEllipticalButtonSource.h>
 #include <vtkTexturedButtonRepresentation.h>
-//#include <vtkTexturedButtonRepresentation2D.h>
 
 #include <vtkCommand.h>
 
-
-#define VTK_CREATE(obj_type, obj_name) vtkSmartPointer<obj_type> obj_name = vtkSmartPointer<obj_type>::New()
 
 //using namespace mafPluginVTK;
 
@@ -63,15 +60,6 @@ mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK
     VTK_CREATE(vtkPNGReader, image2);
     image2->SetFileName(ba.data());
     image2->Update();
-
-//     VTK_CREATE(vtkTexturedButtonRepresentation2D, rep);
-//     rep->SetNumberOfStates(2);
-//     rep->SetButtonTexture(0,image1->GetOutput());
-//     rep->SetButtonTexture(1,image2->GetOutput());
-//     rep->SetPlaceFactor(1);
-//     double bds[6]; 
-//     bds[0] = 25; bds[1] = 65; bds[2] = 50; bds[3] = 200;
-//     rep->PlaceWidget(bds);
 
     VTK_CREATE(vtkEllipticalButtonSource, button);
     button->TwoSidedOn();
