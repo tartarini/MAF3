@@ -22,12 +22,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafPipeDataSliceSurface::mafPipeDataSliceSurface(const QString code_location) : mafPipeData(code_location) {
-    m_SliceOrigin[0] = m_SliceOrigin[1] = m_SliceOrigin[2] = 0.;
-
-    m_Normal[0] = m_Normal[1] = 0.;
-    m_Normal[2] = 1.;
-
+mafPipeDataSliceSurface::mafPipeDataSliceSurface(const QString code_location) : mafPipeDataSlice(code_location) {
     m_Plane = vtkSmartPointer<vtkPlane>::New();
     m_Cutter = vtkSmartPointer<vtkCutter>::New();
     m_Cutter->SetCutFunction(m_Plane);
@@ -59,8 +54,8 @@ void mafPipeDataSliceSurface::updatePipe(double t) {
         return;
     }
 
-    m_Plane->SetOrigin(m_SliceOrigin);
-    m_Plane->SetNormal(m_Normal);
+    m_Plane->SetOrigin(sliceOrigin());
+    m_Plane->SetNormal(normal());
 
     //Get data contained in the mafProxy
     mafProxy<vtkAlgorithmOutput> *surface = mafProxyPointerTypeCast(vtkAlgorithmOutput, inputDataSet->dataValue());
