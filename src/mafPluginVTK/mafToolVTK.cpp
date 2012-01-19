@@ -89,6 +89,7 @@ void mafToolVTK::setSceneNode(mafResources::mafSceneNode *node) {
             assembly->AddPart(prop);
         }
     }
+    updatePipe();
 }
 
 void mafToolVTK::updateVisibility() {
