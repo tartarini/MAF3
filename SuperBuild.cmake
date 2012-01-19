@@ -252,5 +252,9 @@ ExternalProject_Add(${proj}
   INSTALL_COMMAND ""
   )
   
+  #set(tmp_dir)
+  #ExternalProject_Get_Property(${proj} source_dir binary_dir tmp_dir)
+  #add_custom_command(TARGET VPHOP PRE_BUILD
+  #      COMMAND ${CMAKE_COMMAND} -E touch "${tmp_dir}/${proj}-cfgcmd.txt" )
   
 #message (".......................... Exiting ${CMAKE_CURRENT_LIST_FILE} ............................")
