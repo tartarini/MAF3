@@ -176,7 +176,7 @@ inline int mafObject::progressStatus() const {
 inline QVariantHash *mafObject::scriptDictionary() {
     QVariantHash *dic = new QVariantHash();
     dic->insert(mafScriptKey, QVariant(""));
-    dic->insert(mafScriptTypeKey, QVariant(mafScriptTypeStringScript));
+    dic->insert(mafScriptTypeKey, QVariant(mafScriptSourceTypeStringScript));
     dic->insert(mafScriptInterpreterKey, QVariant("python"));
     return dic;
 }

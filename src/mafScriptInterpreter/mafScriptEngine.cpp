@@ -102,7 +102,7 @@ bool mafScriptEngine::executeScriptOnObject(mafCore::mafObject *objectWithScript
         int scriptType = dic.value(mafScriptTypeKey).toInt();
         QString interpreterType = dic.value(mafScriptInterpreterKey).toString();
         scriptInterpreter = mafScriptEditorPool::instance()->console(interpreterType);
-        if (scriptType == mafScriptTypeStringScript) {
+        if (scriptType == mafScriptSourceTypeStringScript) {
             scriptInterpreter->interpret(dic.value(mafScriptKey).toString(), &stat);
         } else {
             stat = scriptInterpreter->load(dic.value(mafScriptKey).toString()) ? 0 : 1;
