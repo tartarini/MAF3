@@ -36,6 +36,9 @@ enum {
 
 MAFPLUGINVTKSHARED_EXPORT QString vtkClassTypeNameExtract(vtkAlgorithmOutput *algorithmOutput);
 
+#ifndef VTK_CREATE
+#define VTK_CREATE(obj_type, obj_name) vtkSmartPointer<obj_type> obj_name = vtkSmartPointer<obj_type>::New()
+#endif
 
 
 #endif // MAFPLUGINVTKDEFINITIONS_H
