@@ -8,8 +8,6 @@
 # preventing people from using the same compiler but with a different generator,
 # or just the same compiler installed in a non-standard location.
 
-set(SKIP_VTK_BUILD_SETTINGS_FILE 1)
-
 # Add compiler flags needed to use MAF.
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${MAF_REQUIRED_C_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MAF_REQUIRED_CXX_FLAGS}")
@@ -60,9 +58,9 @@ include(${CMAKE_MODULE_PATH}/mafMacroWrapTargetFiles.cmake)
 include(${CMAKE_MODULE_PATH}/mafMacroTargetLibraries.cmake)
 include(${CMAKE_MODULE_PATH}/mafCopyFilesFromExtension.cmake)
 
-#-----------------------------------------------------------------------------
+#############################################################################################
 # QT
-#
+#############################################################################################
 
 mafMacroSetupQt()
 # Update MAF_BASE_LIBRARIES with QT libraries
