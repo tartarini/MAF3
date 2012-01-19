@@ -13,11 +13,8 @@
 #include "mafObjectFactory.h"
 #include "mafMemento.h"
 #include "mafMementoHierarchy.h"
-#include <mafEventBusManager.h>
 
 using namespace mafCore;
-using namespace mafEventBus;
-
 
 mafHierarchy::mafHierarchy(const QString code_location) : mafObject(code_location), m_Tree(NULL) {
     //create Tree
