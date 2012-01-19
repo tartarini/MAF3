@@ -64,6 +64,8 @@ void mafCoreRegistration::registerCoreObjects() {
     qRegisterMetaType<mafCore::mafProxyInterfacePointer>("mafCore::mafProxyInterfacePointer");
     qRegisterMetaType<mafCore::mafProxyInterface>("mafCore::mafProxyInterface");
     qRegisterMetaType<mafCore::mafProxyInterface>("mafCore::mafDelegatePointer");
+    qRegisterMetaType<mafCore::mafPoint>("mafCore::mafPoint");
+    qRegisterMetaType<mafCore::mafBounds>("mafCore::mafBounds");
 }
 
 void mafCoreRegistration::unregisterCoreObjects() {
