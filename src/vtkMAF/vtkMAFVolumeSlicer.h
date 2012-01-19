@@ -110,10 +110,12 @@ public:
     
     /** Specify x-axis of the plane*/
     void SetPlaneAxisX(double axis[3]);
+    void SetPlaneAxisX(const double *axis);
     vtkGetVectorMacro(PlaneAxisX, double, 3);
     
     /** Specify y-axis of the plane*/
     void SetPlaneAxisY(double axis[3]);
+    void SetPlaneAxisY(const double *axis);
     vtkGetVectorMacro(PlaneAxisY, double, 3);
     
     /**

@@ -145,11 +145,26 @@ int vtkMAFVolumeSlicer::FillOutputPortInformation( int port, vtkInformation* inf
 }
 
 //----------------------------------------------------------------------------
+void vtkMAFVolumeSlicer::SetPlaneAxisX(const double *axis)
+//----------------------------------------------------------------------------
+{
+    if (axis == NULL)
+    {
+        return;
+    }
+    double x[3];
+    memcpy(x, axis, sizeof(x));
+    SetPlaneAxisX(x);
+}
+
+//----------------------------------------------------------------------------
 void vtkMAFVolumeSlicer::SetPlaneAxisX(double axis[3]) 
 //----------------------------------------------------------------------------
 {
     if (vtkMath::Norm(axis) < 1.e-5f)
+    {
         return;
+    }
     memcpy(this->PlaneAxisX, axis, sizeof(this->PlaneAxisX));
     vtkMath::Normalize(this->PlaneAxisX);
     vtkMath::Cross(this->PlaneAxisX, this->PlaneAxisY, this->PlaneAxisZ);
@@ -164,6 +179,20 @@ void vtkMAFVolumeSlicer::SetPlaneAxisX(double axis[3])
     }
     this->Modified();
 }
+
+//----------------------------------------------------------------------------
+void vtkMAFVolumeSlicer::SetPlaneAxisY(const double *axis)
+//----------------------------------------------------------------------------
+{
+    if (axis == NULL)
+    {
+        return;
+    }
+    double y[3];
+    memcpy(y, axis, sizeof(y));
+    SetPlaneAxisY(y);
+}
+
 //----------------------------------------------------------------------------
 void vtkMAFVolumeSlicer::SetPlaneAxisY(double axis[3])
 //----------------------------------------------------------------------------
