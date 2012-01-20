@@ -33,7 +33,11 @@ mafMacroWrapTargetFiles()
 ## #################################################################
 
 # Create the library.
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
+if(${BUILD_SHARED_LIBS})
+  ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
+else(${BUILD_SHARED_LIBS})
+  ADD_LIBRARY(${PROJECT_NAME} STATIC ${PROJECT_SRCS})
+endif(${BUILD_SHARED_LIBS})  
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 
 ## #################################################################

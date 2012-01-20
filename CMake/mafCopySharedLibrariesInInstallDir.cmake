@@ -22,6 +22,9 @@ else(WIN32)
    endif(APPLE)
 endif(WIN32)
 
+if(lib_ext STREQUAL "*")
+else(lib_ext STREQUAL "*")
+
 FILE(GLOB file_list ${vardir}/*.${lib_ext})
 FILE(GLOB file_list_debug ${vardir}/Debug/*.${lib_ext})
 FILE(GLOB file_list_release ${vardir}/Release/*.${lib_ext})
@@ -54,5 +57,5 @@ foreach(file_release ${file_list_release})
           COMMAND ${CMAKE_COMMAND} -E copy ${file_release} ${CMAKE_BINARY_DIR}/bin/Release/${fileName} )
 endforeach(file_release ${file_list_release})
 
-
+endif(lib_ext STREQUAL "*")
 ENDMACRO()

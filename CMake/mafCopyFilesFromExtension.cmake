@@ -9,7 +9,7 @@
 #
 #
 MACRO(mafCopyFilesFromExtension extension project)
-
+if(${BUILD_SHARED_LIBS})
 set(TARGET_LOC)
 set(DEST_ABSOLUTE_DIR)
 get_target_property(TARGET_LOC ${project} LOCATION)
@@ -22,5 +22,5 @@ foreach(file ${tocopy_file_list})
   add_custom_command(TARGET ${project} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy ${file} ${DEST_ABSOLUTE_DIR}/${fileName} )
 endforeach(file ${tocopy_file_list})
-
+endif(${BUILD_SHARED_LIBS})
 ENDMACRO()

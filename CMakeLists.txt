@@ -19,6 +19,7 @@ project(MAF)
 
 option(BUILD_TEST_SUITE "Build Module's Tests"      OFF)
 option(BUILD_EXAMPLES "Build Examples"              OFF)
+option(BUILD_SHARED_LIBS "Build Shared Libs"        ON)
 option(BUILD_QA "Build Q&A"                         OFF)
 option(BUILD_DOCUMENTATION "Build documentation"    OFF)
 option(BUILD_WRAP "Build Wrap"                      OFF)
@@ -29,6 +30,7 @@ option(MAF_USE_GIT_PROTOCOL "If ON use git protocol, otherwise http"            
 
 option(MAF_SUPERBUILD "Always keep ON superbuild" ON)
 mark_as_advanced(MAF_SUPERBUILD)
+mark_as_advanced(BUILD_SHARED_LIBS)
 
 FIND_PACKAGE(Git)
 if(NOT GIT_FOUND)
