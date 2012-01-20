@@ -61,6 +61,7 @@ CMAKE_ARGS
         -DBUILD_TESTING:BOOL=OFF
         -DBUILD_EXAMPLES:BOOL=OFF
         -DBUILD_DOCUMENTATION:BOOL=FALSE
+        -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
         -DCMAKE_CXX_FLAGS:STRING=${ep_common_cxx_flags}
         -DCMAKE_C_FLAGS:STRING=${ep_common_c_flags}
         -DCMAKE_EXE_LINKER_FLAGS:STRING=${ep_exe_linker_flags}
@@ -144,6 +145,7 @@ CMAKE_ARGS
         -DBUILD_TESTING:BOOL=OFF
         -DBUILD_EXAMPLES:BOOL=OFF
         -DBUILD_DOCUMENTATION:BOOL=FALSE
+        -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
         -DCMAKE_CXX_FLAGS:STRING=${ep_common_cxx_flags}
         -DCMAKE_C_FLAGS:STRING=${ep_common_c_flags}
         -DCMAKE_EXE_LINKER_FLAGS:STRING=${ep_exe_linker_flags}
