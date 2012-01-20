@@ -11,19 +11,16 @@
 
 #include "mafToolVTKButtons.h"
 #include <mafSceneNodeVTK.h>
+#include <QImage.h>
 
 #include <vtkSmartPointer.h>
-#include <vtkTIFFReader.h>
-#include <vtkPNGReader.h>
+#include <vtkQImageToImageSource.h>
 
 #include <vtkButtonWidget.h>
 #include <vtkEllipticalButtonSource.h>
 #include <vtkTexturedButtonRepresentation.h>
 
 #include <vtkCommand.h>
-
-
-//using namespace mafPluginVTK;
 
 // Callback for the interaction
 class vtkButtonCallback : public vtkCommand {
@@ -43,23 +40,20 @@ public:
 
 mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location) {
     // Create an image for the button
-    QString fname("./Images/beach.tif");
-    fname = QDir::toNativeSeparators(fname);
-    QByteArray ba = fname.toAscii();
+    QImage image1;
+    bool loaded = image1.load(":/images/spe.png");
 
-    VTK_CREATE(vtkTIFFReader, image1);
-    image1->SetFileName(ba.data());
-    image1->SetOrientationType( 4 );
-    image1->Update();
+    VTK_CREATE(vtkQImageToImageSource, imageToVTK1);
+    imageToVTK1->SetQImage(&image1);
+    imageToVTK1->Update();
 
     // Create an image for the button
-    QString fname2("./Images/fran_cut.png");
-    fname2 = QDir::toNativeSeparators(fname2);
-    ba = fname2.toAscii();
+    QImage image2;
+    loaded = image2.load(":/images/fran_cut.png");
 
-    VTK_CREATE(vtkPNGReader, image2);
-    image2->SetFileName(ba.data());
-    image2->Update();
+    VTK_CREATE(vtkQImageToImageSource, imageToVTK2);
+    imageToVTK2->SetQImage(&image2);
+    imageToVTK2->Update();
 
     VTK_CREATE(vtkEllipticalButtonSource, button);
     button->TwoSidedOn();
@@ -69,8 +63,8 @@ mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK
 
     VTK_CREATE(vtkTexturedButtonRepresentation, rep);
     rep->SetNumberOfStates(2);
-    rep->SetButtonTexture(0,image1->GetOutput());
-    rep->SetButtonTexture(1,image2->GetOutput());
+    rep->SetButtonTexture(0,imageToVTK2->GetOutput());
+    rep->SetButtonTexture(1,imageToVTK1->GetOutput());
     rep->SetButtonGeometryConnection(button->GetOutputPort());
     rep->SetPlaceFactor(1);
     double bds[6];
