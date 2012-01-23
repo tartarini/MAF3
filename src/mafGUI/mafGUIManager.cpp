@@ -680,7 +680,18 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
     operation->setObjectName(m_OperationWidget->operationName());
 
     if(guiFilename.isEmpty()) {
-        showGui(NULL, mafGUILoadedTypeOperation);
+        QObject *customUI = operation->uiRootWidget();
+        QWidget *customUIWidget = qobject_cast<QWidget *>(customUI);
+        if (customUI == NULL) {
+            // No GUI associated with the object...
+            showGui(NULL, mafGUILoadedTypeOperation);
+            return;
+        } else {
+            mafProxy<QWidget> gui;
+            gui = customUIWidget;
+            showGui(&gui, mafGUILoadedTypeOperation);
+            return;
+        }
     } else {    
         // Ask the UI Loader to load the operation's GUI.
         m_UILoader->uiLoad(guiFilename, mafGUILoadedTypeOperation);
@@ -690,8 +701,6 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
     mafTreeItemDelegate *d = (mafTreeItemDelegate *) m_TreeWidget->itemDelegate();
     d->setGlobalLock(true);
     m_TreeWidget->setEnabled(false);
-
-        
 }
 
 void mafGUIManager::removeOperationGUI() {
@@ -762,10 +771,8 @@ void mafGUIManager::showGui(mafCore::mafProxyInterface *guiWidget, int ui_type) 
 
     switch(ui_type) {
         case mafGUILoadedTypeOperation:
-            if (widget) {
-                m_OperationWidget->setOperationGUI(widget);
-                Q_EMIT guiLoaded(ui_type, m_OperationWidget);
-            }
+             m_OperationWidget->setOperationGUI(widget);
+             Q_EMIT guiLoaded(ui_type, m_OperationWidget);
         break;
         case mafGUILoadedTypeView:
             {
