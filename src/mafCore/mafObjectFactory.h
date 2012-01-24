@@ -16,6 +16,7 @@
 #include "mafClassFactory.h"
 #include "mafObjectBase.h"
 #include "mafSmartPointer.h"
+#include "mafObjectRegistry.h"
 
 #define mafRegisterObject(maf_object_type) \
     mafCore::mafObjectFactory::instance()->registerObject<maf_object_type>(#maf_object_type);
@@ -26,8 +27,14 @@
 #define mafNEW(maf_object_type) \
     mafCore::mafObjectFactory::instance()->instantiateObject<maf_object_type>(#maf_object_type, mafCodeLocation);
 
+#define qtNEW(qt_object_type) \
+    mafCore::mafObjectFactory::instance()->instantiateQtObject<qt_object_type>(#qt_object_type, mafCodeLocation);
+
 #define mafNEWFromString(maf_object_type_string) \
     mafCore::mafObjectFactory::instance()->instantiateObjectBase(maf_object_type_string, mafCodeLocation);
+
+#define qtNEWFromString(qt_object_type_string) \
+    mafCore::mafObjectFactory::instance()->instantiateQtObject(qt_object_type_string, mafCodeLocation);
 
 #define mafDEL(object_pointer) \
     if(object_pointer != NULL) { \
@@ -82,14 +89,25 @@ public:
     
     /// Create an instance of the object given its typename as a string.
     /** This function differs from the instantiateObjectBase because it returns the allocated object
-    casted to its real type, so the function is templated and has to be called with the real type.*/
+    casted to its real type, so the function is template and has to be called with the real type.*/
     template<typename T> T* instantiateObject( const QString& className, const QString location = "");
+
+    /// Create an instance of the Qt object given its typename as a string.
+    /** This function differs from the instantiateObjectBase because it returns the allocated object
+    casted to its real type, so the function is template and has to be called with the real type.*/
+    template<typename T> T* instantiateQtObject( const QString& className, const QString location = "");
 
     /// Create an instance of the object given its typename as string.
     /** This function allocate the object given its typename as string (considering the namespace) and return
     the pointer of the mafObjectBase which is the base of all object in MAF. This method is used by the mafCodec
     classes and in all the other situation where is only a string and not the corresponding type definition.*/
     MAFCORESHARED_EXPORT mafObjectBase *instantiateObjectBase( const QString &className, const QString location);
+
+    /// Create an instance of the object given its typename as string.
+    /** This function allocate the object given its typename as string (considering the namespace) and return
+    the pointer of the mafObjectBase which is the base of all object in MAF. This method is used by the mafCodec
+    classes and in all the other situation where is only a string and not the corresponding type definition.*/
+    MAFCORESHARED_EXPORT QObject *instantiateQtObject( const QString &className, const QString location);
 
     /// Allows creation of mafSmartPointer object given the class type of the object to allocate.
     template <typename T> mafSmartPointer<T> instantiateSmartObject( const QString& className );
@@ -124,6 +142,16 @@ T *mafObjectFactory::instantiateObject( const QString& className, const QString 
         this->registerObject<T>(className);
     }
     QObject *obj = m_ObjectMap.value(className)->make(location);
+    return qobject_cast<T *>(obj);
+}
+
+template <typename T>
+T *mafObjectFactory::instantiateQtObject( const QString& className, const QString location ) {
+    if (!isObjectRegistered(className)) {
+        this->registerObject<T>(className);
+    }
+    QObject *obj = m_ObjectMap.value(className)->make();
+    //mafObjectRegistry::instance()->addObject(obj, location);
     return qobject_cast<T *>(obj);
 }
 

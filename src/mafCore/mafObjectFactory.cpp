@@ -47,3 +47,15 @@ mafObjectBase *mafObjectFactory::instantiateObjectBase( const QString &className
         return NULL;
     }
 }
+
+QObject *mafObjectFactory::instantiateQtObject( const QString &className, const QString location ) {
+    // Check the existence of object type into the hash and then return its instance.
+    if (isObjectRegistered(className)) {
+        QObject *obj = m_ObjectMap.value(className)->make();
+        //mafObjectRegistry::instance()->addObject(obj, location);
+        return obj;
+    } else {
+        qWarning() << mafTr("Can not create object instance of type: ") << className;
+        return NULL;
+    }
+}
