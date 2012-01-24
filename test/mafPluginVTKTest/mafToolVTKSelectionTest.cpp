@@ -164,10 +164,12 @@ void mafToolVTKSelectionTest::allocationTest() {
 
 void mafToolVTKSelectionTest::createPipeTest() {
     mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, m_VisualPipeSelection->output());
-    QVERIFY(actor != NULL);
+    QVERIFY(actor == NULL);
+    
+    /// Tool objects doesn't return any output
 
-    mafDataSet *sphere = m_VME->dataSetCollection()->itemAt(0);
-   mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, sphere->dataValue());
+    /*mafDataSet *sphere = m_VME->dataSetCollection()->itemAt(0);
+    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, sphere->dataValue());
     m_SphereMapper->SetInputConnection(*dataSet);
 
     // Connect the actor (contained into the container) with the renderer.
@@ -176,7 +178,7 @@ void mafToolVTKSelectionTest::createPipeTest() {
 
     ((mafVTKWidget*)m_RenderWidget)->update();
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
-    QTest::qSleep(2000);
+    QTest::qSleep(2000);*/
 }
 
 void mafToolVTKSelectionTest::updatePipeTest() {
