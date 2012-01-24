@@ -3,9 +3,9 @@
  *  mafPluginVTK
  *
  *  Created by Daniele Giunchi - Paolo Quadrani on 30/12/09.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
