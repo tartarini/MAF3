@@ -67,7 +67,7 @@ void mafObjectRegistryTest::mafObjectRegistryConstructorTest() {
 
 void mafObjectRegistryTest::liveObjectsTest() {
     //! <snippet>
-    mafObjectsList liveObjects;
+    QObjectList liveObjects;
     m_Registry->liveObjects(&liveObjects);
     //! </snippet>
     int n0 = liveObjects.count();
