@@ -24,7 +24,10 @@ namespace mafCore {
 template<class F> class mafClassFactory : public mafObjectFactoryInterface {
 public:
     /// Allocator for MAF objects.
-    mafObjectBase* make(const QString codeLocation = "") const { return new F(codeLocation); }
+    mafObjectBase* make(const QString codeLocation) const { return new F(codeLocation); }
+
+    /// Allocator for Qt objects.
+    QObject* make() const { return new F(); }
 };
 
 } //mafCore
