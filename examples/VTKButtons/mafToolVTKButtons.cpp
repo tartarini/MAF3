@@ -11,7 +11,7 @@
 
 #include "mafToolVTKButtons.h"
 #include <mafSceneNodeVTK.h>
-#include <QImage.h>
+#include <QImage>
 
 #include <vtkSmartPointer.h>
 #include <vtkQImageToImageSource.h>
