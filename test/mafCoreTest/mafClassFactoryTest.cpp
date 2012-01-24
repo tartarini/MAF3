@@ -27,7 +27,7 @@ private Q_SLOTS:
     void initTestCase() {
     }
 
-    /// Cleanup tes variables memory allocation.
+    /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
     }
 
@@ -39,9 +39,15 @@ private:
 };
 
 void mafClassFactoryTest::mafClassFactoryAllocationTest() {
+    //Create an instance of a mafObjectBase
     mafObjectBase *obj = m_ClassFactory.make(mafCodeLocation);
     QVERIFY(obj != NULL);
     mafDEL(obj);
+
+    //Create an instance of a qObject
+    QObject *qObj = m_ClassFactory.make();
+    QVERIFY(qObj != NULL);
+    delete qObj;
 }
 
 
