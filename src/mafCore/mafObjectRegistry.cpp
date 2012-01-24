@@ -66,7 +66,7 @@ void mafObjectRegistry::dumpLiveObjects() {
     qDebug() << "Total Number of Leaked Objects Reference counts: " << totalReferenceCountLeakedObjects;
 }
 
-void mafObjectRegistry::liveObjects(mafObjectsList *objects) {
+void mafObjectRegistry::liveObjects(QObjectList *objects) {
     REQUIRE(objects != NULL);
 
     objects->clear();
@@ -100,7 +100,11 @@ mafObjectsList *mafObjectRegistry::findObjects(mafVisitorFindObjects *v) {
     mafRegistryHashType::const_iterator iter = m_Registry.constBegin();
     v->objectsList()->clear();
     while(iter != m_Registry.constEnd()) {
-        iter.value().m_Object->acceptVisitor(v);
+        QObject *obj = iter.value().m_Object;
+        mafObjectBase *objBase = qobject_cast<mafObjectBase*>(obj);
+        if (objBase) {
+            objBase->acceptVisitor(v);
+        }
         ++iter;
     }
     return v->objectsList();

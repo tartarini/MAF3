@@ -35,10 +35,10 @@ public:
     void dumpLiveObjects();
 
     /// Fill the 'objects' list with all the live objects contained by the registry.
-    void liveObjects(mafObjectsList *objects);
+    void liveObjects(QObjectList *objects);
 
     /// Return the object pointer from its hash code.
-    /** This is an example that demostrate the usage of findObjectsThreaded.
+    /** This is an example that demonstrate the usage of findObjectsThreaded.
     It is also a shortcut for searching object by a given hash string. Non valid hash code will make return a NULL pointer.*/
     mafObjectBase *objectFromHash(const QString &hash);
 
@@ -50,11 +50,13 @@ public:
 
 protected:
     friend class mafObjectBase;
+    //friend class mafObjectFactory;
+
 
     /// Register allocated object into the registry hash.
     void addObject(mafObjectBase *obj, const QString location);
 
-    /// Remove object from the registry hash. It appens when object is deleted.
+    /// Remove object from the registry hash. It happens when object is deleted.
     void removeObject(mafId obj_id);
 
 private:
@@ -66,7 +68,7 @@ private:
 
     /** struct that contain information on allocated object.*/
     struct mafObjectRegistryItem {
-        mafObjectBase *m_Object;
+        QObject *m_Object;
         QString m_InstantiateLocationInfo;
         QTime m_AllocationTime;
         int m_ReferenceCount;
