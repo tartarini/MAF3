@@ -28,7 +28,10 @@ public:
     virtual ~mafObjectFactoryInterface();
 
     /// Allocator for MAF objects.
-    virtual mafObjectBase* make(const QString codeLocation = "") const = 0;
+    virtual mafObjectBase* make(const QString codeLocation) const = 0;
+
+    /// Allocator for Qt objects.
+    virtual QObject* make() const = 0;
 };
 
 } //mafCore
