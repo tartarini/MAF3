@@ -50,6 +50,12 @@ private Q_SLOTS:
     /// create object instance test case (return the base type).
     void instantiateObjectBaseTest();
 
+    /// create object instance test case.
+    void instantiateQObjectTest();
+
+    /// create object instance test case (return the base type).
+    void instantiateQObjectFromStringTest();
+
     /// unregister object test case.
     void unregisterObjectTest();
 
@@ -75,6 +81,11 @@ void mafObjectFactoryTest::registerObjectTest() {
     res = mafObjectFactory::instance()->isObjectRegistered("mafCore::mafObjectBase");
     //! </snippet>
     QVERIFY(res == true);
+
+    // Register qt Object
+    mafRegisterQtObject(QWidget)
+    res = mafObjectFactory::instance()->isQtObjectRegistered("QWidget");
+    QVERIFY(res == true);
 }
 
 void mafObjectFactoryTest::instantiateObjectTest() {
@@ -91,6 +102,22 @@ void mafObjectFactoryTest::instantiateObjectBaseTest() {
     QString cn = obj->metaObject()->className();
     QVERIFY(cn == "mafCore::mafObject");
     mafDEL(obj);
+}
+
+void mafObjectFactoryTest::instantiateQObjectTest() {
+    mafRegisterQtObject(QObject)
+    QObject *obj = mafNEWQt(QObject);
+    QVERIFY(obj != NULL);
+    delete obj;
+}
+
+void mafObjectFactoryTest::instantiateQObjectFromStringTest() {
+    mafRegisterQtObject(QObject);
+    QObject *obj = mafNEWQtFromString("QObject");
+    QVERIFY(obj != NULL);
+    QString cn = obj->metaObject()->className();
+    QVERIFY(cn == "QObject");
+    delete obj;
 }
 
 void mafObjectFactoryTest::unregisterObjectTest() {
