@@ -16,6 +16,8 @@
 
 #include "mafViewOrthoSlice.h"
 #include "mafViewVTKButtons.h"
+#include "mafOrthoSlice.h"
+
 
 //#include <mafViewScriptInterpreterPython.h>
 //#include <mafInterpreterPreferencesWidget.h>
@@ -59,6 +61,10 @@ int main(int argc, char *argv[]) {
     logic->customizeVisualization("VTK view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("Buttons view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("Slice", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
+
+    // Example of View customization with a particular widget
+    //mafRegisterQtObject(mafOrthoSlice);
+    //logic->customizeViewRootWidget("OrthoSlice", "mafOrthoSlice");
 
 //    logic->plugObject("mafResources::mafView", "mafScriptInterpreter::mafViewScriptInterpreterPython", "Python Console");
 
