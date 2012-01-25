@@ -83,8 +83,8 @@ void mafObjectFactoryTest::registerObjectTest() {
     QVERIFY(res == true);
 
     // Register qt Object
-    mafRegisterQtObject(QWidget)
-    res = mafObjectFactory::instance()->isQtObjectRegistered("QWidget");
+    mafRegisterQtObject(QObject)
+    res = mafObjectFactory::instance()->isQtObjectRegistered("QObject");
     QVERIFY(res == true);
 }
 
