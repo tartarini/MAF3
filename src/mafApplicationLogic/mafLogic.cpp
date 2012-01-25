@@ -134,6 +134,14 @@ void mafLogic::customizeVisualization(const QString view_name, const QString dat
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.customizeVisualization", mafEventTypeLocal, &argList);
 }
 
+
+void mafLogic::customizeViewRootWidget(const QString view_name, QString rootWidget_name) {
+    mafEventBus::mafEventArgumentsList argList;
+    argList.append(mafEventArgument(QString, view_name));
+    argList.append(mafEventArgument(QString, rootWidget_name));
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.customizeViewRootWidget", mafEventTypeLocal, &argList);
+}
+
 void mafLogic::plugObject(const QString base_class, const QString class_type, const QString object_label) {
     // Add information to the
     mafPluggedObjectInformation objectInformation(object_label, class_type);
