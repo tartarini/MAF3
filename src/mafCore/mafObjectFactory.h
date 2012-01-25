@@ -14,6 +14,7 @@
 
 // Includes list
 #include "mafClassFactory.h"
+#include "mafQtClassFactory.h"
 #include "mafObjectBase.h"
 #include "mafSmartPointer.h"
 #include "mafObjectRegistry.h"
@@ -21,20 +22,26 @@
 #define mafRegisterObject(maf_object_type) \
     mafCore::mafObjectFactory::instance()->registerObject<maf_object_type>(#maf_object_type);
 
+#define mafRegisterQtObject(qt_object_type) \
+    mafCore::mafObjectFactory::instance()->registerQtObject<qt_object_type>(#qt_object_type);
+
 #define mafUnregisterObject(maf_object_type) \
     mafCore::mafObjectFactory::instance()->unregisterObject(#maf_object_type);
+
+#define mafUnregisterQtObject(qt_object_type) \
+    mafCore::mafObjectFactory::instance()->unregisterQtObject(#qt_object_type);
 
 #define mafNEW(maf_object_type) \
     mafCore::mafObjectFactory::instance()->instantiateObject<maf_object_type>(#maf_object_type, mafCodeLocation);
 
-#define qtNEW(qt_object_type) \
+#define mafNEWQt(qt_object_type) \
     mafCore::mafObjectFactory::instance()->instantiateQtObject<qt_object_type>(#qt_object_type, mafCodeLocation);
 
 #define mafNEWFromString(maf_object_type_string) \
     mafCore::mafObjectFactory::instance()->instantiateObjectBase(maf_object_type_string, mafCodeLocation);
 
-#define qtNEWFromString(qt_object_type_string) \
-    mafCore::mafObjectFactory::instance()->instantiateQtObject(qt_object_type_string, mafCodeLocation);
+#define mafNEWQtFromString(qt_object_type_string) \
+    mafCore::mafObjectFactory::instance()->instantiateQtObjectFromString(qt_object_type_string, mafCodeLocation);
 
 #define mafDEL(object_pointer) \
     if(object_pointer != NULL) { \
@@ -78,14 +85,23 @@ public:
     /// Destroy the singleton instance. To be called at the end of the application.
     MAFCORESHARED_EXPORT void shutdown();
     
-    /// Allows to register maf objects into the factory to be created.
+    /// Allows to register MAF objects into the factory to be created.
     template<typename T> void registerObject( const QString &className );
+
+    /// Allows to register Qt objects into the factory to be created.
+    template<typename T> void registerQtObject( const QString &className );
     
-    /// Allows to unregister maf objects from the factory.
+    /// Allows to unregister MAF objects from the factory.
     MAFCORESHARED_EXPORT bool unregisterObject( const QString &className );
 
-    /// check if an object has been registered into the factory.
+    /// Allows to unregister Qt objects from the factory.
+    MAFCORESHARED_EXPORT bool unregisterQtObject( const QString &className );
+
+    /// check if a MAF object has been registered into the factory.
     MAFCORESHARED_EXPORT bool isObjectRegistered( const QString &className );
+
+    /// check if a Qt object has been registered into the factory.
+    MAFCORESHARED_EXPORT bool isQtObjectRegistered( const QString &className );
     
     /// Create an instance of the object given its typename as a string.
     /** This function differs from the instantiateObjectBase because it returns the allocated object
@@ -107,7 +123,7 @@ public:
     /** This function allocate the object given its typename as string (considering the namespace) and return
     the pointer of the mafObjectBase which is the base of all object in MAF. This method is used by the mafCodec
     classes and in all the other situation where is only a string and not the corresponding type definition.*/
-    MAFCORESHARED_EXPORT QObject *instantiateQtObject( const QString &className, const QString location);
+    MAFCORESHARED_EXPORT QObject *instantiateQtObjectFromString( const QString &className, const QString location);
 
     /// Allows creation of mafSmartPointer object given the class type of the object to allocate.
     template <typename T> mafSmartPointer<T> instantiateSmartObject( const QString& className );
@@ -122,7 +138,11 @@ private:
     ~mafObjectFactory();
 
     typedef QHash<QString, mafObjectFactoryInterface*> mafObjectFactoryMapType;
-    mafObjectFactoryMapType m_ObjectMap; ///< Hash table used for storing registered objects.
+    mafObjectFactoryMapType m_ObjectMap; ///< Hash table used for storing MAF registered objects.
+
+    typedef QHash<QString, mafQtObjectFactoryInterface*> mafQtObjectFactoryMapType;
+    mafQtObjectFactoryMapType m_QtObjectMap; ///< Hash table used for storing Qt registered objects.
+
 };
 
 /////////////////////////////////////////////////////////////
@@ -137,6 +157,13 @@ void mafObjectFactory::registerObject( const QString& className ) {
 }
 
 template <typename T>
+void mafObjectFactory::registerQtObject( const QString& className ) {
+    if (!isQtObjectRegistered(className)) {
+        m_QtObjectMap.insert(className, new mafQtClassFactory<T>);
+    }
+}
+
+template <typename T>
 T *mafObjectFactory::instantiateObject( const QString& className, const QString location ) {
     if (!isObjectRegistered(className)) {
         this->registerObject<T>(className);
@@ -147,10 +174,10 @@ T *mafObjectFactory::instantiateObject( const QString& className, const QString 
 
 template <typename T>
 T *mafObjectFactory::instantiateQtObject( const QString& className, const QString location ) {
-    if (!isObjectRegistered(className)) {
-        this->registerObject<T>(className);
-    }
-    QObject *obj = m_ObjectMap.value(className)->make();
+     if (!isQtObjectRegistered(className)) {
+         this->registerQtObject<T>(className);
+     }
+    QObject *obj = m_QtObjectMap.value(className)->make();
     //mafObjectRegistry::instance()->addObject(obj, location);
     return qobject_cast<T *>(obj);
 }
