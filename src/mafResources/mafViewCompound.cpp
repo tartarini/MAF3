@@ -11,6 +11,7 @@
 
 #include "mafViewCompound.h"
 #include "mafSceneNode.h"
+#include "mafToolHandler.h"
 
 #include <mafEventBusManager.h>
 
@@ -21,6 +22,7 @@ mafViewCompound::mafViewCompound(const QString code_location) : mafView(code_loc
 }
 
 mafViewCompound::~mafViewCompound() {
+    mafDEL(m_ToolHandler);
 }
 
 bool mafViewCompound::initialize() {
@@ -80,12 +82,4 @@ void mafViewCompound::updateView() {
     Q_FOREACH(subView, m_ViewList) {
         subView->updateView();
     }
-}
-
-void mafViewCompound::clearScene() {
-    mafView *subView;
-    Q_FOREACH(subView, m_ViewList) {
-        subView->clearScene();
-    }
-    Superclass::clearScene();
 }
