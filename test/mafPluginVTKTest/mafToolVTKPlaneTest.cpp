@@ -97,18 +97,16 @@ private Q_SLOTS:
         dataHigh->setBoundaryAlgorithm(boundaryAlgorithm1);
         dataHigh->setDataValue(&m_DataSourceHighContainer);
 
-        mafVME *vme = mafNEW(mafResources::mafVME);
+        m_VME = mafNEW(mafResources::mafVME);
         // Assign the dataset to the VME.
-        vme->dataSetCollection()->insertItem(dataLow, 0.0);
-        vme->dataSetCollection()->insertItem(dataHigh, 3.0);
-        vme->setTimestamp(0.0);
+        m_VME->dataSetCollection()->insertItem(dataLow, 0.0);
+        m_VME->dataSetCollection()->insertItem(dataHigh, 3.0);
+        m_VME->setTimestamp(0.0);
         mafDEL(dataLow);
         mafDEL(dataHigh);
 
-        m_SceneNode = new mafSceneNode(vme, m_RenderWidget, "");
+        m_SceneNode = new mafSceneNode(m_VME, m_RenderWidget, "");
         m_SceneNode->initialize();
-
-        mafDEL(vme);
 
         m_SphereMapper = vtkPolyDataMapper::New();
         m_SphereActor->SetMapper(m_SphereMapper);
@@ -122,6 +120,7 @@ private Q_SLOTS:
         m_SphereMapper->Delete();
         m_SphereActor->Delete();
 
+        mafDEL(m_VME);
         mafDEL(m_SceneNode);
         mafDEL(m_ToolPlane);
         mafMessageHandler::instance()->shutdown();
@@ -143,10 +142,12 @@ private:
     mafProxy<vtkAlgorithmOutput> m_DataSourceHighContainer; ///< Container of the Data Source
     vtkSphereSource *m_DataSourceHigh; ///< Source data for the test suite.
     mafSceneNode *m_SceneNode; ///< SceneNode holding the VME.
+    mafVME *m_VME; ///< VME vontaining input data.
 
     vtkPolyDataMapper *m_SphereMapper; ///< Mapper to show the VME inner data.
     vtkActor *m_SphereActor; ///< Actor for the m_SphereMapper.
     QObject *m_RenderWidget; /// renderer widget
+    vtkRenderer *m_Renderer;
     QMainWindow *w;
 };
 
@@ -158,9 +159,9 @@ void mafToolVTKPlaneTest::initializeGraphicResources() {
     m_RenderWidget = new mafVTKWidget();
     ((mafVTKWidget*)m_RenderWidget)->setParent(w);
 
-    vtkRenderer *renderer = ((mafVTKWidget*)m_RenderWidget)->renderer();
-    renderer->AddActor(m_SphereActor);
-    renderer->SetBackground(0.1, 0.1, 0.1);
+    m_Renderer = ((mafVTKWidget*)m_RenderWidget)->renderer();
+    m_Renderer->AddActor(m_SphereActor);
+    m_Renderer->SetBackground(0.1, 0.1, 0.1);
 
     ((mafVTKWidget*)m_RenderWidget)->update();
     w->show();
@@ -175,7 +176,7 @@ void mafToolVTKPlaneTest::allocationTest() {
 }
 
 void mafToolVTKPlaneTest::updatePipeTest() {
-    mafDataSet *sphere = m_SceneNode->vme()->dataSetCollection()->itemAtCurrentTime();
+    mafDataSet *sphere = m_VME->dataSetCollection()->itemAtCurrentTime();
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, sphere->dataValue());
     m_SphereMapper->SetInputConnection(*dataSet);
 
@@ -186,11 +187,13 @@ void mafToolVTKPlaneTest::updatePipeTest() {
     }
     mafBounds bounds = mafBounds(b);
     m_ToolPlane->setVOI(bounds);
+    m_ToolPlane->setVisibility(true);
 
     ((mafVTKWidget*)m_RenderWidget)->update();
+    m_Renderer->ResetCamera();
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
 
-    QTest::qSleep(2000);
+    QTest::qSleep(3000);
 }
 
 MAF_REGISTER_TEST(mafToolVTKPlaneTest);
