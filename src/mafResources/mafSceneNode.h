@@ -42,7 +42,7 @@ public:
     /// Object constructor (Used in test suite)
     mafSceneNode(mafVME *vme, QObject *graphicObject, const QString visualPipeType, const QString code_location = "");
     
-    /// Create the view
+    /// Initialize scene node information according to the assigned VME.
     /*virtual*/ bool initialize();
 
     /// Set the parent of the current node.
