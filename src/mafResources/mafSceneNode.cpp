@@ -43,7 +43,6 @@ mafSceneNode::mafSceneNode(mafVME *vme, QObject *graphicObject, const QString vi
 bool mafSceneNode::initialize() {
     if (Superclass::initialize()) {
         REQUIRE(m_VME);
-        m_VME->retain();
         connect(m_VME, SIGNAL(detatched()), this, SIGNAL(destroyNode()));
         this->setProperty("iconFile",m_VME->property("iconFile"));
         this->setObjectName(m_VME->objectName());
@@ -53,9 +52,6 @@ bool mafSceneNode::initialize() {
 }
 
 mafSceneNode::~mafSceneNode() {
-    if (m_VME) {
-        m_VME->release();
-    }
     mafDEL(this->m_VisualPipe);
 }
 
