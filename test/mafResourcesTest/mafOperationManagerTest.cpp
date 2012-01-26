@@ -343,9 +343,15 @@ private Q_SLOTS:
         m_EventBus = mafEventBusManager::instance();
 
         m_VMEManager = mafVMEManager::instance();
+
+        //Request hierarchy
+        mafHierarchyPointer hierarchy;
+        QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+        mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+
         //Select root
         mafObject *root;
-        QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
+        ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
         mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
 
         m_OperationManager = mafOperationManager::instance();
@@ -468,12 +474,11 @@ void mafOperationManagerTest::abortExecutionTest() {
     // Print debug message (possible and done immediately because the operation execute in background).
     qDebug() << mafTr("start background execution for ") << op->objectName();
 
-    // Create a timer to abort the endlass loop after a fixed amount of time.
-    
     // Get the operation's worker.
     QThread *obj = m_ExecutionPool->at(0);
     mafOperationWorker *worker = qobject_cast<mafResources::mafOperationWorker *>(obj);
     
+    // Create a timer to abort the endless loop after a fixed amount of time.
     QTime dieTime = QTime::currentTime().addSecs(1);
     while(QTime::currentTime() < dieTime) {
         QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
