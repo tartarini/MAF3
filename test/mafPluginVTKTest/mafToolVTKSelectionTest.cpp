@@ -3,9 +3,9 @@
  *  mafPluginVTK
  *
  *  Created by Paolo Quadrani on 11/11/10.
- *  Copyright 2010 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -48,7 +48,7 @@ class mafToolVTKSelectionTest : public QObject {
 private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
-        // Install the MAF3 Message handler for logging pourposes...
+        // Install the MAF3 Message handler for logging purposes...
         mafMessageHandler::instance()->installMessageHandler();
 
         // Register the mafResources objects and the visual pipe that has to be tested.
@@ -114,9 +114,6 @@ private Q_SLOTS:
     /// Allocation test for the mafToolVTKSelection.
     void allocationTest();
 
-    /// Test the creation of the visual pipe for the sphere source at low resolution (timestamp 0)
-    void createPipeTest();
-
     /// Test the update of the visual pipe for the sphere source at high resolution (timestamp 3)
     void updatePipeTest();
 
@@ -160,25 +157,6 @@ void mafToolVTKSelectionTest::allocationTest() {
     QVERIFY(m_VisualPipeSelection != NULL);
     QVERIFY(mafToolVTKSelection::acceptObject(m_VME));
     m_VisualPipeSelection->setInput(m_VME);
-}
-
-void mafToolVTKSelectionTest::createPipeTest() {
-    mafProxy<vtkActor> *actor = mafProxyPointerTypeCast(vtkActor, m_VisualPipeSelection->output());
-    QVERIFY(actor == NULL);
-    
-    /// Tool objects doesn't return any output
-
-    /*mafDataSet *sphere = m_VME->dataSetCollection()->itemAt(0);
-    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, sphere->dataValue());
-    m_SphereMapper->SetInputConnection(*dataSet);
-
-    // Connect the actor (contained into the container) with the renderer.
-    m_Renderer->AddActor(*actor);
-    m_Renderer->ResetCamera(); 
-
-    ((mafVTKWidget*)m_RenderWidget)->update();
-    ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
-    QTest::qSleep(2000);*/
 }
 
 void mafToolVTKSelectionTest::updatePipeTest() {
