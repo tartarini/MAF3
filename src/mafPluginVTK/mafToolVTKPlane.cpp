@@ -55,12 +55,19 @@ mafToolVTKPlane::mafToolVTKPlane(const QString code_location) : mafToolVTK(code_
     VTK_CREATE(vtkIPWCallback, myCallback);
     myCallback->Tool = this;
 
+    double b[6] = {0,1,0,1,0,1};
+
+    m_Origin = mafPoint(0,0,0);
+    m_Normal = mafPoint(0,0,1);
+    m_VOI = mafBounds(b);
+
     VTK_CREATE(vtkMAFImplicitPlaneRepresentation, rep);
     rep->SetPlaceFactor(1.25);
     rep->DrawPlaneOff();
     rep->DrawOutlineBoxOff();
     rep->OutlineTranslationOff();
     rep->SetOrigin(0,0,0);
+    rep->SetNormal(0,0,1);
 
     m_PlaneWidget = vtkSmartPointer<vtkImplicitPlaneWidget2>::New();
     m_PlaneWidget->SetRepresentation(rep);
