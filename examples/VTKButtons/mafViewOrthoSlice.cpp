@@ -51,9 +51,11 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
         Q_FOREACH(subView, *vList) {
             mafSceneNode *sub_node = subView->sceneNodeFromVme((mafCore::mafObjectBase *)vme);
             mafPipeVisual *vp = sub_node->visualPipe();
-            vp->setDelegateObject(this);
-            bool res = connect(this, SIGNAL(modifiedObject()), vp, SLOT(updatePipe()));
-            vp->updatePipe();
+            if (vp) {
+                vp->setDelegateObject(this);
+                bool res = connect(this, SIGNAL(modifiedObject()), vp, SLOT(updatePipe()));
+                vp->updatePipe();
+            }
         }
     }
 }
