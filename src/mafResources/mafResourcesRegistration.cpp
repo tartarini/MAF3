@@ -33,6 +33,7 @@
 #include "mafOperationWorker.h"
 #include "mafTool.h"
 #include "mafToolHandler.h"
+#include "mafPipeDataSlice.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -57,8 +58,10 @@ void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObject(mafResources::mafPipeVisualCompound);
     mafRegisterObject(mafResources::mafTool);
     mafRegisterObject(mafResources::mafToolHandler);
+    mafRegisterObject(mafResources::mafPipeDataSlice);
     mafRegisterObjectAndAcceptBind(mafResources::mafOperationTransform);
     mafRegisterObjectAndAcceptBind(mafResources::mafImporter);
+
     qRegisterMetaType<mafResources::mafMatrixPointer>("mafResources::mafMatrixPointer");
     qRegisterMetaType<mafResources::mafMatrix>("mafResources::mafMatrix");
     qRegisterMetaType<mafResources::mafResourceWorkerPointer>("mafResources::mafResourceWorkerPointer");
@@ -85,6 +88,7 @@ void mafResourcesRegistration::unregisterResourcesObjects() {
     mafUnregisterObject(mafResources::mafPipeVisualCompound);
     mafUnregisterObject(mafResources::mafTool);
     mafUnregisterObject(mafResources::mafToolHandler);
+    mafUnregisterObject(mafResources::mafPipeDataSlice);
     mafUnregisterObjectAndAcceptUnbind(mafResources::mafOperationTransform);
     mafUnregisterObjectAndAcceptUnbind(mafResources::mafImporter);
 }
