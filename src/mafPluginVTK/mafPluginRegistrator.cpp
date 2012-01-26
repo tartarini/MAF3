@@ -23,6 +23,7 @@
 
 #include "mafToolVTKSelection.h"
 #include "mafToolVTKAxes.h"
+#include "mafToolVTKPlane.h"
 
 #include "mafViewVTK.h"
 #include "mafSceneNodeVTK.h"
@@ -88,6 +89,7 @@ mafPluginRegistrator::mafPluginRegistrator() {
 
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafToolVTKSelection);
     mafRegisterObject(mafPluginVTK::mafToolVTKAxes);
+    mafRegisterObject(mafPluginVTK::mafToolVTKPlane);
 }
 
 mafPluginRegistrator::~mafPluginRegistrator() {
@@ -122,6 +124,7 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafToolVTKSelection);
     mafUnregisterObject(mafPluginVTK::mafToolVTKAxes);
+    mafUnregisterObject(mafPluginVTK::mafToolVTKPlane);
 }
 
 void mafPluginRegistrator::registerAllObjects() {
@@ -140,6 +143,7 @@ void mafPluginRegistrator::registerAllObjects() {
     
     mafPluggedObjectInformation toolSelection("Tool used to represent selection of data", "mafPluginVTK::mafToolVTKSelection");
     mafPluggedObjectInformation toolAxes("Tool used to represent reference system", "mafPluginVTK::mafToolVTKAxes");
+    mafPluggedObjectInformation toolPlane("Tool used to represent plane", "mafPluginVTK::mafToolVTKPlane");
 
     mafPluggedObjectInformation viewVTK("VTK view", "mafPluginVTK::mafViewVTK");
     
@@ -165,6 +169,7 @@ void mafPluginRegistrator::registerAllObjects() {
     pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeSliceVolume);
     pluginHash.insertMulti("mafResources::mafTool", toolSelection);
     pluginHash.insertMulti("mafResources::mafTool", toolAxes);
+    pluginHash.insertMulti("mafResources::mafTool", toolPlane);
     pluginHash.insertMulti("mafResources::mafView", viewVTK);
     pluginHash.insertMulti("mafResources::mafOperation", opParametricSurface);
     pluginHash.insertMulti("mafResources::mafOperation", opTransformVTK);
