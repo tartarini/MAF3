@@ -14,6 +14,7 @@
 
 #include <mafViewCompound.h>
 #include <mafSceneNode.h>
+#include <mafToolVTKPlane.h>
 
 class mafOrthoSlice;
  
@@ -55,6 +56,10 @@ protected:
 private:
     mafOrthoSlice *m_GUI; ///< GUI widget.
     double m_SlicePosition[3]; ///< Current slice position.
+    mafPluginVTK::mafToolVTKPlane *m_PlaneTool[3];
+
+    /// Initialize the plane tools
+    void addPlaneToolsToHandler();
 };
 
 #endif // MAFVIEWORTHOSLICE_H

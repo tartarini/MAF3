@@ -13,10 +13,15 @@
 #include "mafOrthoSlice.h"
 #include <mafVME.h>
 #include <mafPipeVisual.h>
+#include <mafToolHandler.h>
 
 using namespace mafResources;
 
 mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafViewCompound(code_location) {
+    m_PlaneTool[0] = NULL;
+    m_PlaneTool[1] = NULL;
+    m_PlaneTool[2] = NULL;
+
 	setConfigurationFile("OrthoSlice.xml");
     m_GUI = new mafOrthoSlice();
     this->setUIRootWidget(m_GUI);
@@ -24,6 +29,27 @@ mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafViewCompo
 }
 
 mafViewOrthoSlice::~mafViewOrthoSlice() {
+    for (int t = 0; t < 3; ++t) {
+        mafDEL(m_PlaneTool[t]);
+    }
+}
+
+void mafViewOrthoSlice::addPlaneToolsToHandler() {
+    mafCore::mafPoint n[3];
+    n[0] = mafCore::mafPoint(1., 0., 0.);
+    n[1] = mafCore::mafPoint(0., 1., 0.);
+    n[2] = mafCore::mafPoint(0., 0., 1.);
+    for (int t = 0; t < 3; ++t) {
+        m_PlaneTool[t] = mafNEW(mafPluginVTK::mafToolVTKPlane);
+        m_PlaneTool[t]->setFollowSelectedObject(false);
+        m_PlaneTool[t]->setFollowSelectedObjectVisibility(false);
+        m_PlaneTool[t]->setNormal(n[t]);
+    }
+    Q_FOREACH(mafView *v, *viewList()) {
+        v->toolHandler()->addTool(m_PlaneTool[0]);
+        v->toolHandler()->addTool(m_PlaneTool[1]);
+        v->toolHandler()->addTool(m_PlaneTool[2]);
+    }
 }
 
 void mafViewOrthoSlice::sliceAtPosition(double *pos) {
