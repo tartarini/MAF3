@@ -88,14 +88,18 @@ void mafSceneNodeVTK::setParentNode(const mafSceneNode *parent) {
 void mafSceneNodeVTK::setVisibility(bool visible) {
     if(visible) {
         mafSceneNode::setVisibility(visible);
-        mafProxy<vtkProp3D> *prop = mafProxyPointerTypeCast(vtkProp3D, visualPipe()->output());
-        if(!m_Assembly->GetParts()->IsItemPresent(*prop)) {
-            m_Assembly->AddPart(*prop);
+        if (visualPipe() != NULL && visualPipe()->output() != NULL) {
+            mafProxy<vtkProp3D> *prop = mafProxyPointerTypeCast(vtkProp3D, visualPipe()->output());
+            if(!m_Assembly->GetParts()->IsItemPresent(*prop)) {
+                m_Assembly->AddPart(*prop);
+            }
+            update();
         }
-        update();
     } else {
-        mafProxy<vtkProp3D> *prop = mafProxyPointerTypeCast(vtkProp3D, visualPipe()->output());
-        m_Assembly->RemovePart(*prop);
+        if (visualPipe() != NULL && visualPipe()->output() != NULL) {
+            mafProxy<vtkProp3D> *prop = mafProxyPointerTypeCast(vtkProp3D, visualPipe()->output());
+            m_Assembly->RemovePart(*prop);
+        }
         mafSceneNode::setVisibility(visible);
     }
 }
