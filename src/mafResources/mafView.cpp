@@ -219,23 +219,25 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
         mafPluggedObjectInformationList *vpsHash = mafPluginManager::instance()->queryPluggedObjects("mafResources::mafPipeVisual");
         QByteArray ba = mafTr("Visual pipe not found for '%1'!").arg(dataType).toAscii();
         qWarning("%s", ba.data());
-        return;
     }
 
     if(m_Scenegraph != NULL) {
-        if (show) {
-            ++m_VisibleObjects;
-            node->setVisualPipe(visualPipeType);
-        } else {
-            --m_VisibleObjects;
+        if (!visualPipeType.isEmpty()) {
+            if (show) {
+                ++m_VisibleObjects;
+                node->setVisualPipe(visualPipeType);
+            } else {
+                --m_VisibleObjects;
+            }
         }
         node->setVisibility(show);
-        if (m_ToolHandler) {
-            m_ToolHandler->setVisibility(node->property("visibility").toBool());
-        }
     }
     if (node->visualPipe() && m_PipeParametersBindHash.contains(visualPipeType)) {
         node->visualPipe()->setParametersHash(m_PipeParametersBindHash.value(visualPipeType));
+    }
+
+    if (m_ToolHandler) {
+        m_ToolHandler->setVisibility(show);
     }
     updateView();
 }
