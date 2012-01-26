@@ -34,9 +34,6 @@ public:
     /// Show scene node passed as argument.
     /*virtual*/ void showSceneNode(mafSceneNode *node, bool show = true);
 
-    /// clear and delete the SceneGraphs.
-    /*virtual*/ void clearScene();
-
     /// Return the list of sub-views.
     QList<mafView *> *viewList();
 
