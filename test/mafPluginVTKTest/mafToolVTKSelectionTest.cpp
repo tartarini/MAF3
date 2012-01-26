@@ -143,7 +143,6 @@ void mafToolVTKSelectionTest::initializeGraphicResources() {
     m_Renderer = ((mafVTKWidget*)m_RenderWidget)->renderer();
     m_Renderer->AddActor(m_SphereActor);
 
-
     m_Renderer->SetBackground(0.1, 0.1, 0.1);
     ((mafVTKWidget*)m_RenderWidget)->update();
     w->show();
@@ -167,6 +166,7 @@ void mafToolVTKSelectionTest::updatePipeTest() {
     m_SphereMapper->SetInputConnection(*dataSet);
 
     ((mafVTKWidget*)m_RenderWidget)->update();
+    m_Renderer->ResetCamera();
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
 
     QTest::qSleep(2000);
