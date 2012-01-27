@@ -40,9 +40,15 @@ private Q_SLOTS:
         mafResourcesRegistration::registerResourcesObjects();
         m_EventBus = mafEventBusManager::instance();
         m_VMEManager = mafVMEManager::instance();
+
+        //Request hierarchy
+        mafHierarchyPointer hierarchy;
+        QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+        mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+
         //Select root
         mafObject *root;
-        QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
+        ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
         mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
     }
 
