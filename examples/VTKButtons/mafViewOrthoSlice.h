@@ -56,7 +56,7 @@ protected:
 private:
     mafOrthoSlice *m_GUI; ///< GUI widget.
     double m_SlicePosition[3]; ///< Current slice position.
-    mafPluginVTK::mafToolVTKPlane *m_PlaneTool[3];
+    QList<mafPluginVTK::mafToolVTKPlane *> m_PlaneTool;
 
     /// Initialize the plane tools
     void addPlaneToolsToHandler();
