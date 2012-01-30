@@ -32,8 +32,6 @@ mafOperationParametricSurface::mafOperationParametricSurface(const QString code_
     m_ParametricSurfaceList.clear();
     m_ParametricContainer = NULL;
     this->setParametricSurfaceType(m_ParametricSurfaceType);
-    this->initializeParametricSurfaces();
-    this->visualizeParametricSurface();
 }
 
 mafOperationParametricSurface::~mafOperationParametricSurface() {
@@ -49,6 +47,34 @@ mafOperationParametricSurface::~mafOperationParametricSurface() {
     mafDEL(m_ParametricEllipsoid);
     mafDEL(m_DataSet);
     mafDEL(m_VME)
+}
+
+bool mafOperationParametricSurface::initialize() {
+    if (Superclass::initialize()) {
+        m_ParametricSphere = (mafVTKParametricSurfaceSphere *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceSphere");
+        m_ParametricSphere->setParent(this);
+        m_ParametricSurfaceList.insert(PARAMETRIC_SPHERE, m_ParametricSphere);
+
+        m_ParametricCube = (mafVTKParametricSurfaceCube *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceCube");
+        m_ParametricCube->setParent(this);
+        m_ParametricSurfaceList.insert(PARAMETRIC_CUBE, m_ParametricCube);
+
+        m_ParametricCone = (mafVTKParametricSurfaceCone *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceCone");
+        m_ParametricCone->setParent(this);
+        m_ParametricSurfaceList.insert(PARAMETRIC_CONE, m_ParametricCone);
+
+        m_ParametricCylinder = (mafVTKParametricSurfaceCylinder *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceCylinder");
+        m_ParametricCylinder->setParent(this);
+        m_ParametricSurfaceList.insert(PARAMETRIC_CYLINDER, m_ParametricCylinder);
+
+        m_ParametricEllipsoid = (mafVTKParametricSurfaceEllipsoid *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceEllipsoid");
+        m_ParametricEllipsoid->setParent(this);
+        m_ParametricSurfaceList.insert(PARAMETRIC_ELLIPSOID, m_ParametricEllipsoid);
+        
+        this->visualizeParametricSurface();
+        return true;
+    }
+    return false;
 }
 
 void mafOperationParametricSurface::visualizeParametricSurface() {
@@ -85,28 +111,6 @@ void mafOperationParametricSurface::visualizeParametricSurface() {
     argList.append(mafEventArgument(mafCore::mafObjectBase*, m_VME));
     argList.append(mafEventArgument(bool, true));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);
-}
-
-void mafOperationParametricSurface::initializeParametricSurfaces(){
-    m_ParametricSphere = (mafVTKParametricSurfaceSphere *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceSphere");
-    m_ParametricSphere->setParent(this);
-    m_ParametricSurfaceList.insert(PARAMETRIC_SPHERE, m_ParametricSphere);
-
-    m_ParametricCube = (mafVTKParametricSurfaceCube *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceCube");
-    m_ParametricCube->setParent(this);
-    m_ParametricSurfaceList.insert(PARAMETRIC_CUBE, m_ParametricCube);
-
-    m_ParametricCone = (mafVTKParametricSurfaceCone *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceCone");
-    m_ParametricCone->setParent(this);
-    m_ParametricSurfaceList.insert(PARAMETRIC_CONE, m_ParametricCone);
-
-    m_ParametricCylinder = (mafVTKParametricSurfaceCylinder *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceCylinder");
-    m_ParametricCylinder->setParent(this);
-    m_ParametricSurfaceList.insert(PARAMETRIC_CYLINDER, m_ParametricCylinder);
-
-    m_ParametricEllipsoid = (mafVTKParametricSurfaceEllipsoid *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceEllipsoid");
-    m_ParametricEllipsoid->setParent(this);
-    m_ParametricSurfaceList.insert(PARAMETRIC_ELLIPSOID, m_ParametricEllipsoid);
 }
 
 bool mafOperationParametricSurface::acceptObject(mafCore::mafObjectBase *obj) {

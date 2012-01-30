@@ -42,6 +42,9 @@ public:
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
 
+    /// Initialize the operation. Put here the initialization of operation's parameters.
+    /*virtual*/ bool initialize();
+
 public Q_SLOTS:
     /// Set type of parametric surface used as marker.
     void setParametricSurfaceType(int parametricSurfaceType);
@@ -126,9 +129,6 @@ protected:
     /*virtual*/ void terminated();
     
 private:
-    /// Create parametric surfaces.
-    void initializeParametricSurfaces();
-
     /// Visualize parametric surface
     void visualizeParametricSurface();
 
