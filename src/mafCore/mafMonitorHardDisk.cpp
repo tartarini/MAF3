@@ -43,9 +43,13 @@ void mafMonitorHardDisk::update() {
 //    #ifdef __APPLE__
 
 //    #else
+    #if __x86_64__
     struct statfs64 s;
     statfs64("/", &s);
-
+    #else
+    struct statfs s;
+    statfs("/", &s);
+    #endif
     if (s.f_blocks > 0) {
         m_TotalSpace = s.f_blocks * s.f_bsize;
         m_FreeSpace = s.f_bfree * s.f_bsize;
