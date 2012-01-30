@@ -203,8 +203,8 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
     }
 
     // Find visual pipe for this kind of data
-    QString visualPipeType;
-    QString dataType;
+    QString visualPipeType("");
+    QString dataType("");
     mafDataSet *data = node->vme()->outputData();
     if  (data != NULL) {
         dataType = data->externalDataType();
