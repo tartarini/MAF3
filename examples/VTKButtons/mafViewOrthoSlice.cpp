@@ -34,6 +34,7 @@ mafViewOrthoSlice::~mafViewOrthoSlice() {
 
 void mafViewOrthoSlice::addPlaneToolsToHandler() {
     mafCore::mafPoint n[3];
+    mafCore::mafPoint o(m_SlicePosition);
     n[0] = mafCore::mafPoint(1., 0., 0.);
     n[1] = mafCore::mafPoint(0., 1., 0.);
     n[2] = mafCore::mafPoint(0., 0., 1.);
@@ -42,12 +43,14 @@ void mafViewOrthoSlice::addPlaneToolsToHandler() {
         plane->setFollowSelectedObject(false);
         plane->setFollowSelectedObjectVisibility(false);
         plane->setNormal(n[t]);
+        plane->setOrigin(o);
         m_PlaneTool.push_back(plane);
     }
     Q_FOREACH(mafView *v, *viewList()) {
-        v->toolHandler()->addTool(m_PlaneTool.at(0));
-        v->toolHandler()->addTool(m_PlaneTool.at(1));
-        v->toolHandler()->addTool(m_PlaneTool.at(2));
+        mafToolHandler *handler = v->toolHandler();
+        handler->addTool(m_PlaneTool.at(0));
+        handler->addTool(m_PlaneTool.at(1));
+        handler->addTool(m_PlaneTool.at(2));
     }
 }
 
@@ -67,11 +70,11 @@ void mafViewOrthoSlice::sliceAtPosition(double *pos) {
 
 void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
     Superclass::showSceneNode(node, show);
+    double b[6];
     if (show) {
         mafVME *vme = node->vme();
+        vme->bounds(b);
         if (m_VisibleObjects == 1) {
-            double b[6];
-            vme->bounds(b);
             m_GUI->setBounds(b);
             const double *p = m_GUI->position();
             m_SlicePosition[0] = p[0];
@@ -90,10 +93,13 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
             }
         }
     }
-    if (m_PlaneTool[0] == NULL) {
+    if (m_PlaneTool.isEmpty()) {
         addPlaneToolsToHandler();
     }
     Q_FOREACH(mafToolVTKPlane *plane, m_PlaneTool) {
+        mafBounds bounds(b);
+        plane->setSceneNode(node);
+        plane->setVOI(bounds);
         plane->setVisibility(m_VisibleObjects != 0);
     }
 }
