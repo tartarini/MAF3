@@ -59,8 +59,6 @@ public:
     void setupMainWindow();
 
 public Q_SLOTS:
-    /// Show/Hide the collaboration dock widget.
-    void updateCollaborationDockVisibility(bool visible);
 
     /// Called when the view is going to be selected by the mouse
     void viewWillBeSelected();
@@ -116,8 +114,6 @@ private:
     mafGUI::mafTextEditWidget *m_LogWidget;
 
     mafApplicationLogic::mafLogic *m_Logic; ///< Application's logic.
-
-    QDockWidget *m_DockGoogleChat; ///< Dock widget containing the google chat widget.
 
     QHash<QMdiSubWindow *, mafCore::mafObjectBase *> m_ViewSubWindowHash; ///< hash which binds mafViews with qt sub windows
     

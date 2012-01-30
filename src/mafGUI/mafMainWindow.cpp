@@ -15,7 +15,6 @@
 #include <mafEventBusManager.h>
 
 #include "mafGUIApplicationSettingsDialog.h"
-#include "mafGoogleChatWidget.h"
 #include <QToolButton>
 
 using namespace mafCore;
@@ -134,16 +133,6 @@ void mafMainWindow::initializeMainWindow() {
     clearButton->setText("Clear");
     ui->horizontalLogLayout->addWidget(clearButton);
     connect(clearButton, SIGNAL(pressed()), m_LogWidget, SLOT(clear()));
-
-    // **** Google chat ****
-    QObject *collaborateAction = m_GUIManager->menuItemByName("Collaborate");
-    m_DockGoogleChat = new QDockWidget(tr("Google Chat"));
-    m_DockGoogleChat->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    m_DockGoogleChat->setWidget(new GoogleChat());
-    if(collaborateAction) {
-        connect(collaborateAction, SIGNAL(triggered(bool)), this, SLOT(updateCollaborationDockVisibility(bool)));
-        connect(m_DockGoogleChat, SIGNAL(visibilityChanged(bool)), collaborateAction, SLOT(setChecked(bool)));
-    }
 
     connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(subWindowSelected(QMdiSubWindow*)));
 
@@ -320,13 +309,6 @@ bool mafMainWindow::save() {
 
 void mafMainWindow::plugApplicationSettingsPage(mafGUIApplicationSettingsPage *page) {
     m_GUIManager->settingsDialog()->addPage(page);
-}
-
-void mafMainWindow::updateCollaborationDockVisibility(bool visible) {
-    if(m_DockGoogleChat->parent() == NULL) {
-        this->addDockWidget(Qt::LeftDockWidgetArea, m_DockGoogleChat);
-    }
-    m_DockGoogleChat->setVisible(visible);
 }
 
 void mafMainWindow::viewCreated(mafCore::mafObjectBase *view) {
