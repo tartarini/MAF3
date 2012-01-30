@@ -65,6 +65,7 @@ mafToolVTKPlane::mafToolVTKPlane(const QString code_location) : mafToolVTK(code_
     rep->SetPlaceFactor(1.25);
     rep->DrawPlaneOff();
     rep->DrawOutlineBoxOff();
+    rep->SetRotationEnabled(0);
     rep->OutlineTranslationOff();
     rep->SetOrigin(0,0,0);
     rep->SetNormal(0,0,1);
@@ -88,6 +89,21 @@ void mafToolVTKPlane::setVOI(mafBounds bounds) {
     b[4] = bounds.zMin;
     b[5] = bounds.zMax;
     rep->PlaceWidget(b);
+    setModified();
+}
+
+void mafToolVTKPlane::setOrigin(mafCore::mafPoint o) {
+    m_Origin = o;
+    vtkMAFImplicitPlaneRepresentation *rep = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidget->GetRepresentation());
+    rep->SetOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    setModified();
+}
+
+void mafToolVTKPlane::setNormal(mafCore::mafPoint n) {
+    m_Normal = n;
+    vtkMAFImplicitPlaneRepresentation *rep = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidget->GetRepresentation());
+    rep->SetNormal(m_Normal.x, m_Normal.y, m_Normal.z);
+    setModified();
 }
 
 void mafToolVTKPlane::resetTool() {

@@ -86,16 +86,8 @@ inline mafCore::mafPoint mafToolVTKPlane::origin() const {
     return m_Origin;
 }
 
-inline void mafToolVTKPlane::setOrigin(mafCore::mafPoint o) {
-    m_Origin = o;
-}
-
 inline mafCore::mafPoint mafToolVTKPlane::normal() const {
     return m_Normal;
-}
-
-inline void mafToolVTKPlane::setNormal(mafCore::mafPoint n) {
-    m_Normal = n;
 }
 
 inline mafCore::mafBounds mafToolVTKPlane::voi() const {
