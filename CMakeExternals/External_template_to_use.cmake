@@ -5,7 +5,7 @@
 SET(proj ExternalLibrary)
 
   
-execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/SCS-B3C/ExternalLibrary.git"
+execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/b3c/ExternalLibrary.git"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   RESULT_VARIABLE RESULT)
        
@@ -56,7 +56,7 @@ ELSE(RESULT)
     #MESSAGE("Adding project:${proj}")
     
     ExternalProject_Add(${proj}
-      GIT_REPOSITORY "${git_protocol}://github.com/SCS-B3C/ExternalLibrary.git"
+      GIT_REPOSITORY "${git_protocol}://github.com/b3c/ExternalLibrary.git"
       GIT_TAG "origin/master"
       CMAKE_GENERATOR ${gen}
       INSTALL_COMMAND ""

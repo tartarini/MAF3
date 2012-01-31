@@ -4,7 +4,7 @@
 
 set(proj VTK)
 
-execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/SCS-B3C/VTK.git"
+execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/b3c/VTK.git"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   RESULT_VARIABLE RESULT)
                                     
@@ -132,7 +132,7 @@ ELSE(RESULT)
 
   #MESSAGE("Adding project:${proj}")
   ExternalProject_Add(${proj}
-    GIT_REPOSITORY "${git_protocol}://github.com/SCS-B3C/VTK.git"
+    GIT_REPOSITORY "${git_protocol}://github.com/b3c/VTK.git"
     #GIT_TAG "origin"
     INSTALL_COMMAND ""
     #INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/build/bin

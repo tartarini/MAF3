@@ -69,7 +69,7 @@ SET(PythonQt_DEPENDS)
       #SOURCE_DIR ${CMAKE_BINARY_DIR}/${proj}
       #BINARY_DIR ${proj}-build
       PREFIX ${proj}${ep_suffix}
-      GIT_REPOSITORY "${git_protocol}://github.com/SCS-B3C/PythonQt.git"
+      GIT_REPOSITORY "${git_protocol}://github.com/b3c/PythonQt.git"
       GIT_TAG "origin/master"
       CMAKE_GENERATOR ${gen}
       UPDATE_COMMAND ""

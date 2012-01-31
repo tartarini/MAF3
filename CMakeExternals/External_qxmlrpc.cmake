@@ -5,7 +5,7 @@
 SET(proj qxmlrpc)
 
   
-execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/SCS-B3C/qxmlrpc.git"
+execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/b3c/qxmlrpc.git"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   RESULT_VARIABLE RESULT)
        
@@ -56,7 +56,7 @@ ELSE(RESULT)
     #MESSAGE("Adding project:${proj}")
     
     ExternalProject_Add(${proj}
-      GIT_REPOSITORY "${git_protocol}://github.com/SCS-B3C/qxmlrpc.git"
+      GIT_REPOSITORY "${git_protocol}://github.com/b3c/qxmlrpc.git"
       GIT_TAG "origin/master"
       CMAKE_GENERATOR ${gen}
       INSTALL_COMMAND ""

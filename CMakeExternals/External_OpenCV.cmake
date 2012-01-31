@@ -10,7 +10,7 @@ SET(OpenCV_DEPENDS)
   SET(proj_DEPENDENCIES)
   
   SET(OpenCV_DEPENDS ${proj})
-  execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/SCS-B3C/OpenCV.git"
+  execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/b3c/OpenCV.git"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   RESULT_VARIABLE RESULT)
   
@@ -67,7 +67,7 @@ ELSE(RESULT)
     #MESSAGE("Adding project:${proj}")
     
     ExternalProject_Add(${proj}
-      GIT_REPOSITORY "${git_protocol}://github.com/SCS-B3C/OpenCV.git"
+      GIT_REPOSITORY "${git_protocol}://github.com/b3c/OpenCV.git"
       GIT_TAG "origin/master"
       #GIT_TAG ${revision_tag}
       CMAKE_GENERATOR ${gen}

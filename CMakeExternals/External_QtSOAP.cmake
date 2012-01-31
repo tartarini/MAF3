@@ -10,7 +10,7 @@ SET(QtSOAP_DEPENDS)
   SET(proj_DEPENDENCIES)
 
   SET(QtSOAP_DEPENDS ${proj})
-  execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/SCS-B3C/QtSOAP.git"
+  execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/b3c/QtSOAP.git"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   RESULT_VARIABLE RESULT)
    
@@ -53,7 +53,7 @@ SET(QtSOAP_DEPENDS)
     IF(NOT DEFINED QtSOAP_DIR)
     #MESSAGE("Adding project:${proj}")
     ExternalProject_Add(${proj}
-      GIT_REPOSITORY "${git_protocol}://github.com/SCS-B3C/QtSOAP.git"
+      GIT_REPOSITORY "${git_protocol}://github.com/b3c/QtSOAP.git"
       GIT_TAG "origin/master"
       CMAKE_GENERATOR ${gen}
       INSTALL_COMMAND ""
