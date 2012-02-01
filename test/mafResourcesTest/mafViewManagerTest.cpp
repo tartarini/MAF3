@@ -15,6 +15,7 @@
 #include <mafEventBusManager.h>
 #include <mafViewManager.h>
 #include <mafView.h>
+#include <mafToolHandler.h>
 #include <mafMemento.h>
 
 using namespace mafCore;
@@ -70,10 +71,18 @@ public:
     
     /// Crete view.
     /*virtual*/ bool initialize();
+
+protected:
+    /// Object destructor.
+    /* virtual */ ~testViewCustom();
 };
 
 testViewCustom::testViewCustom(const QString code_location) : mafView(code_location) {
     
+}
+
+testViewCustom::~testViewCustom() {
+    mafDEL(m_ToolHandler);
 }
 
 bool testViewCustom::initialize() {
@@ -106,10 +115,11 @@ private Q_SLOTS:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
-        mafUnregisterObject(testViewCustom);
         m_ViewManager->shutdown();
 
         delete m_Observer;
+
+        mafUnregisterObject(testViewCustom);
 
         // Shutdown event-bus singleton and core singletons.
         m_EventBus->shutdown();

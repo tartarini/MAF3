@@ -14,6 +14,7 @@
 #include <mafResourcesSingletons.h>
 #include <mafProxy.h>
 #include <mafView.h>
+#include <mafToolHandler.h>
 #include <mafVME.h>
 #include <mafSceneNode.h>
 #include <mafVisitorFindSceneNodeByVMEHash.h>
@@ -51,6 +52,8 @@ private Q_SLOTS:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
+        mafToolHandler *handler = m_View->toolHandler();
+        mafDEL(handler);
         mafDEL(m_View);
         mafResourcesSingletons::mafSingletonsShutdown();
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request");
