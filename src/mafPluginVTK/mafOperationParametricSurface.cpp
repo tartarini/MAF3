@@ -36,7 +36,7 @@ mafOperationParametricSurface::mafOperationParametricSurface(const QString code_
 
 mafOperationParametricSurface::~mafOperationParametricSurface() {
     m_ParametricSurfaceList.clear();
-    m_Output = NULL;
+    mafDEL(m_Output);
     m_ParametricContainer = NULL;
     
 
