@@ -69,6 +69,7 @@ private Q_SLOTS:
 
         // Create the parametric operation.
         m_OpParametric = mafNEW(mafPluginVTK::mafOperationParametricSurface);
+        m_OpParametric->initialize();
         m_RenderWidget = new mafVTKWidget();
         initializeGraphicResources();
     }
@@ -119,7 +120,7 @@ void mafOperationParametricSurfaceTest::shutdownGraphicResources() {
 void mafOperationParametricSurfaceTest::testExecute() {
     //Set parameters ( create a cube )
     QVariantMap parameters;
-    parameters.insert("type", QVariant(1));
+    parameters.insert("parametricSurfaceType", QVariant(1));
     parameters.insert("cubeXLength", QVariant(5.0));
     parameters.insert("cubeYLength", QVariant(5.0));
     parameters.insert("cubeZLength", QVariant(5.0));
