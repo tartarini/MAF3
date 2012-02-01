@@ -21,7 +21,7 @@ using namespace mafResources;
 using namespace mafEventBus;
 using namespace mafCore;
 
-mafOperationParametricSurface::mafOperationParametricSurface(const QString code_location) : mafOperation(code_location), m_VME(NULL), m_DataSet(NULL) {
+mafOperationParametricSurface::mafOperationParametricSurface(const QString code_location) : mafOperation(code_location), m_DataSet(NULL) {
     m_UIFilename = "mafParametricSurface.ui";
     m_ParametricSurfaceType = PARAMETRIC_SPHERE;
     m_ParametricSphere = NULL;
@@ -46,7 +46,6 @@ mafOperationParametricSurface::~mafOperationParametricSurface() {
     mafDEL(m_ParametricCylinder);
     mafDEL(m_ParametricEllipsoid);
     mafDEL(m_DataSet);
-    mafDEL(m_VME)
 }
 
 bool mafOperationParametricSurface::initialize() {
@@ -87,28 +86,26 @@ void mafOperationParametricSurface::visualizeParametricSurface() {
     char *v = ba.data();
     
     //Insert data into VME
-    m_VME = mafNEW(mafResources::mafVME);
-    m_VME->setObjectName(mafTr("Parametric Surface"));
+    this->m_Output = mafNEW(mafResources::mafVME);
+    this->m_Output->setObjectName(mafTr("Parametric Surface"));
     m_DataSet = mafNEW(mafResources::mafDataSet);
     m_DataSet->setBoundaryAlgorithmName("mafPluginVTK::mafDataBoundaryAlgorithmVTK");
     m_DataSet->setDataValue(&m_ParametricContainer);
-    m_VME->dataSetCollection()->insertItem(m_DataSet, 0);
-    m_VME->dataSetCollection()->setPose(0., 0., 0.);
-    m_VME->dataSetCollection()->setOrientation(0., 0., 0.);
-    //m_VME->setProperty("visibility", true);
-    this->m_Output = m_VME;
+    ((mafVME *)this->m_Output)->dataSetCollection()->insertItem(m_DataSet, 0);
+    ((mafVME *)this->m_Output)->dataSetCollection()->setPose(0., 0., 0.);
+    ((mafVME *)this->m_Output)->dataSetCollection()->setOrientation(0., 0., 0.);
 
     //set the icon file for vme
-    m_VME->setProperty("iconFile",  ":/images/surface.png");
+    this->m_Output->setProperty("iconFile",  ":/images/surface.png");
     
     //Notify vme add
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Output));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 
     //Visualize vme added
     argList.clear();
-    argList.append(mafEventArgument(mafCore::mafObjectBase*, m_VME));
+    argList.append(mafEventArgument(mafCore::mafObjectBase*, m_Output));
     argList.append(mafEventArgument(bool, true));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);
 }
@@ -129,7 +126,7 @@ void mafOperationParametricSurface::execute() {
 void mafOperationParametricSurface::terminated() {
     if (m_Status == mafOperationStatusCanceled || m_Status == mafOperationStatusAborted) {
         mafEventArgumentsList argList;
-        argList.append(mafEventArgument(mafCore::mafObjectBase *, m_VME));
+        argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Output));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.remove", mafEventTypeLocal, &argList);
     }
 }
@@ -240,7 +237,7 @@ void mafOperationParametricSurface::setParametricSurfaceType(int index){
 void mafOperationParametricSurface::updateParametricSurface() {
     mafVTKParametricSurface *currentSurface = m_ParametricSurfaceList.at(m_ParametricSurfaceType);
     m_ParametricContainer = currentSurface->output();
-    m_VME->dataSetCollection()->updateData();
+    ((mafVME *)this->m_Output)->dataSetCollection()->updateData();
 }
 
 void mafOperationParametricSurface::on_parametricSurfaceType_currentChanged(int index){

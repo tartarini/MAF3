@@ -143,7 +143,6 @@ private:
     mafVTKParametricSurfaceCone *m_ParametricCone; ///< VTK parametric cone.
     mafVTKParametricSurfaceCylinder *m_ParametricCylinder; ///< VTK parametric cylinder.
     mafVTKParametricSurfaceEllipsoid *m_ParametricEllipsoid; ///< VTK parametric ellipsoid.
-    mafResources::mafVME *m_VME; ///< Output VME;
     mafResources::mafDataSet *m_DataSet; ///< Dataset of output VME;
     mafCore::mafProxy<vtkAlgorithmOutput> m_ParametricContainer; ///< output of the parametric sirface.
     QList<mafVTKParametricSurface*> m_ParametricSurfaceList; ///< List of parametric surfaces.
