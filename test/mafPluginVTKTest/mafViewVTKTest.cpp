@@ -16,6 +16,7 @@
 #include <mafVMEManager.h>
 #include <mafView.h>
 #include <mafViewVTK.h>
+#include <mafToolHandler.h>
 #include <mafPipeVisualVTKSurface.h>
 #include <mafDataBoundaryAlgorithmVTK.h>
 #include <mafSceneNode.h>
@@ -127,6 +128,9 @@ private Q_SLOTS:
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
+        mafToolHandler *handler = m_View->toolHandler();
+        mafDEL(handler);
+        
         //To close widget window
         QObject *widgetObj = m_View->property("renderWidget").value<QObject*>();
         QWidget *widget = qobject_cast<QWidget*>(widgetObj);
