@@ -37,7 +37,7 @@ using namespace mafEventBus;
 using namespace mafCore;
 using namespace mafApplicationLogic;
 
-mafLogic::mafLogic(const QString code_location) : mafLogicLight(code_location), m_WorkingDirectory(""), m_ApplicationDirectory(QDir::currentPath()) {
+mafLogic::mafLogic(const QString code_location) : mafLogicLight(code_location), m_WorkingDirectory(""), m_ApplicationName("") {
 }
 
 mafLogic::~mafLogic() {
@@ -52,7 +52,7 @@ mafLogic::~mafLogic() {
 
 bool mafLogic::initialize(bool light) {
     bool result(Superclass::initialize());
-
+    
     // Call the initialization of the superclass.
     if (result) {
         mafIdProvider *provider = mafIdProvider::instance();
@@ -151,7 +151,8 @@ void mafLogic::plugObject(const QString base_class, const QString class_type, co
 
 void mafLogic::loadPlugins(QString plugin_dir) {
     // Compose the plugin absolute directory.
-    QString pluginsDir = plugin_dir.isEmpty() ? (m_ApplicationDirectory + QDir::toNativeSeparators("/plugins/")) : plugin_dir;
+    QString appDir(QCoreApplication::applicationDirPath());
+    QString pluginsDir = plugin_dir.isEmpty() ? (appDir + QDir::toNativeSeparators("/plugins/")) : plugin_dir;
     pluginsDir = QDir::cleanPath(pluginsDir);
     
     //check all plugin dirs

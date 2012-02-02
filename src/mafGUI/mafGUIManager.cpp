@@ -216,8 +216,12 @@ QDomNode mafGUIManager::parseMenuTree(QDomNode current) {
 }
 
 QObject *mafGUIManager::parseCompoundLayoutFile(QString layoutFile) {
+    QString layoutFullPath(QCoreApplication::applicationDirPath());
+    layoutFullPath.append("/");
+    layoutFullPath.append(layoutFile);
+    
     mafViewCompoundConfigurator *configurator = new mafViewCompoundConfigurator();
-    configurator->parseConfigurationFile(layoutFile);
+    configurator->parseConfigurationFile(layoutFullPath);
     QObject *obj = configurator->rootObject();
     delete configurator;
     return obj;
