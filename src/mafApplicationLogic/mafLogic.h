@@ -43,6 +43,7 @@ namespace mafApplicationLogic {
 class MAFAPPLICATIONLOGICSHARED_EXPORT mafLogic : public mafLogicLight {
     Q_OBJECT
     Q_PROPERTY(QString workingDir READ workingDirectory WRITE setWorkingDirectory);
+    Q_PROPERTY(QString applicationName READ applicationName WRITE setApplicationName);
     /// typedef macro.
     mafSuperclassMacro(mafLogic::mafLogicLight);
 
@@ -101,6 +102,12 @@ public:
 
     /// Allows to retrieve the application's working directory.
     QString workingDirectory() const;
+    
+    /// Allows to retrieve the application's name.
+    QString applicationName() const;
+    
+    /// Assign the application's name
+    void setApplicationName(QString name);
 
     /// Returns the VME Hierarchy.
     mafCore::mafHierarchy *hierarchy();
@@ -129,7 +136,7 @@ protected:
 
 private:
     QString m_WorkingDirectory; ///< Contains the root directory of the application's data.
-    QString m_ApplicationDirectory; ///< Contains the application's working directory.
+    QString m_ApplicationName; ///< Contains the application's name.
     mafCore::mafPluggedObjectsHash m_CustomPluggedObjectsHash; ///< Hash containing operations, views and all the plugged custom objects.
     QHash<QString, QLibrary *> m_LibraryHandlersHash; ///< Hash containing  the loaded plugins.
     mafCore::mafHierarchy *m_Hierarchy; ///< VME Hierarchy
@@ -144,6 +151,14 @@ inline void mafLogic::setWorkingDirectory(const QString wd) {
 
 inline QString mafLogic::workingDirectory() const {
     return m_WorkingDirectory;
+}
+    
+inline QString mafLogic::applicationName() const {
+    return m_ApplicationName;
+}
+    
+inline void mafLogic::setApplicationName(QString name) {
+    m_ApplicationName = name;
 }
 
 inline mafCore::mafHierarchy *mafLogic::hierarchy() {
