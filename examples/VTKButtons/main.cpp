@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
 
     // Create the application's logic instance
     mafApplicationLogic::mafLogic *logic = new mafApplicationLogic::mafLogic();
+    logic->setApplicationName(argv[0]);
     // and initialize it. This initialization will load dynamically the mafResources Library.
     bool ok = logic->initialize();
     if(!ok) {
