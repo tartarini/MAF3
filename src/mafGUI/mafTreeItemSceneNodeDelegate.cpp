@@ -44,6 +44,7 @@ void mafTreeItemSceneNodeDelegate::setModelData(QWidget * editor, QAbstractItemM
 bool mafTreeItemSceneNodeDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) {
     bool result = QStyledItemDelegate::editorEvent(event, model, option, index);
     QObject *sceneNode = objFromIndex(index);
+    mafObjectBase *obj = qobject_cast<mafObjectBase*>(sceneNode);
 
     //If item is a SceneNode, set visibility property to item checked
     QVariant value = index.data(Qt::CheckStateRole);
@@ -54,7 +55,7 @@ bool mafTreeItemSceneNodeDelegate::editorEvent(QEvent *event, QAbstractItemModel
     if (visibility != state) {
         //sceneNode->setProperty("visibility", state);
         mafEventArgumentsList argList;
-        argList.append(mafEventArgument(mafCore::mafObjectBase*, (mafObjectBase*)sceneNode));
+        argList.append(mafEventArgument(mafCore::mafObjectBase*, obj));
         argList.append(mafEventArgument(bool, state));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);
     }
