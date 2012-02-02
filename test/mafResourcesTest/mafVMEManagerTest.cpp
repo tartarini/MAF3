@@ -109,7 +109,7 @@ void mafVMEManagerTest::vmeManagingTest() {
 }
 
 void mafVMEManagerTest::createHierarchyTest() {
-    // this test is a smke test for verifying that manager doesn't crash.
+    // this test is a smoke test for verifying that manager doesn't crash.
     // createHierarchy is a private method
     m_EventBus->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal);
 }
@@ -133,13 +133,15 @@ void mafVMEManagerTest::absolutePoseMatrixTest() {
     dataVME2->release();
     
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, vme1));
+    mafCore::mafObjectBase *send = vme1;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, send));
     m_EventBus->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
-    
+
     argList.clear();
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, vme2));
+    send = vme2;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, send));
     m_EventBus->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
-    
+
     m_EventBus->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal,  &argList);
 
     mafVME *vme3 = mafNEW(mafResources::mafVME);
@@ -156,7 +158,8 @@ void mafVMEManagerTest::absolutePoseMatrixTest() {
     dataVME3->release();
     
     argList.clear();
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, vme3));
+    send = vme3;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, send));
     m_EventBus->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 
     //   root 
@@ -173,7 +176,7 @@ void mafVMEManagerTest::absolutePoseMatrixTest() {
     
     mafMatrixPointer absMatrix = NULL;
     argList.clear();
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, vme3));
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, send));
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafResources::mafMatrixPointer, absMatrix);
     m_EventBus->notifyEvent("maf.local.resources.vme.absolutePoseMatrix", mafEventTypeLocal, &argList, &ret_val);
     

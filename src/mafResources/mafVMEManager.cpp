@@ -119,15 +119,16 @@ void mafVMEManager::vmeSelect(mafObjectBase *vme) {
 }
 
 void mafVMEManager::vmeAdd(mafObjectBase *vme) {
-    mafVME *vme_to_add = qobject_cast<mafResources::mafVME *>(vme);
-    if(NULL == vme_to_add) {
+    if(NULL == vme) {
         QByteArray ba = mafTr("Trying to add an object that not represent a mafVME.").toAscii();
         qWarning("%s", ba.data());
         return;
     }
     // VME has been added.
     connect(vme, SIGNAL(destroyed()), this, SLOT(vmeDestroyed()), Qt::DirectConnection);
-    m_VMEHierarchy->addHierarchyNode(vme, m_SelectedVME);
+    if(m_VMEHierarchy) {
+        m_VMEHierarchy->addHierarchyNode(vme, m_SelectedVME);
+    }
 }
 
 void mafVMEManager::vmeRemove(mafObjectBase *vme) {

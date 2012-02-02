@@ -11,12 +11,14 @@
 
 #include <mafTestSuite.h>
 #include <mafResourcesRegistration.h>
+#include <mafResourcesSingletons.h>
 #include <mafPipeData.h>
 #include <mafProxy.h>
 #include <mafInteractor.h>
 #include <mafMemento.h>
 #include <mafVME.h>
 #include <mafDataSet.h>
+#include <mafVMEManager.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -149,16 +151,24 @@ private Q_SLOTS:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
         mafResourcesRegistration::registerResourcesObjects();
+        
         mafRegisterObject(testVMEPipeDataCustom);
         //! <snippet>
         m_VME = mafNEW(mafResources::mafVME);
         //! </snippet>
+
+        m_EventBus = mafEventBusManager::instance();
+        m_VMEManager = mafVMEManager::instance();
+        m_VMEManager->shutdown();
+        
     }
 
     /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
         mafDEL(m_VME);
         mafUnregisterObject(testVMEPipeDataCustom);
+        m_EventBus->notifyEvent("maf.local.resources.hierarchy.request");
+        m_EventBus->shutdown();
         mafMessageHandler::instance()->shutdown();
     }
 
@@ -182,6 +192,8 @@ private Q_SLOTS:
 
 private:
     mafVME *m_VME; ///< Test var.
+    mafEventBusManager *m_EventBus;
+    mafVMEManager *m_VMEManager;
 };
 
 void mafVMETest::mafVMEAllocationTest() {

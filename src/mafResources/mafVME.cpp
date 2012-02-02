@@ -170,17 +170,17 @@ void mafVME::setMemento(mafMemento *memento, bool deep_memento) {
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_vme);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
 
+    mafObjectBase *obj = this;
     // add vme
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, this));
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, obj));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 
-    // Notify the item selection.
-    argList.clear();
-    argList.append(mafEventArgument(mafCore::mafObjectBase*, this));
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
-    
 
+    // Notify the item selection.
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+
+    
     int n = 0;
     int childrenNum = memento->children().size();
     for (n; n < childrenNum; n++) {

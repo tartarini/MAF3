@@ -42,7 +42,20 @@ private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();
-        mafResourcesSingletons::mafSingletonsInitialize();
+        
+
+        m_EventBus = mafEventBusManager::instance();
+        m_VMEManager = mafVMEManager::instance();
+
+        //Request hierarchy
+        mafHierarchyPointer hierarchy;
+        QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+        m_EventBus->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+
+        //Select root
+        mafObject *root;
+        ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
+        m_EventBus->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
 
         mafResourcesRegistration::registerResourcesObjects();
         m_BindingHash.insert("vtkPolyData","mafPipesLibrary::mafPipeVisualVTKSurface");
@@ -55,8 +68,9 @@ private Q_SLOTS:
         mafToolHandler *handler = m_View->toolHandler();
         mafDEL(handler);
         mafDEL(m_View);
-        mafResourcesSingletons::mafSingletonsShutdown();
-        mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request");
+        
+        m_EventBus->notifyEvent("maf.local.resources.hierarchy.request");
+        m_EventBus->shutdown();
         mafMessageHandler::instance()->shutdown();
     }
 
@@ -78,6 +92,8 @@ private Q_SLOTS:
 private:
     mafView *m_View; ///< Test var.
     QVariantHash m_BindingHash; ///< Test var.
+    mafEventBusManager *m_EventBus;
+    mafVMEManager *m_VMEManager;
 };
 
 void mafViewTest::mafViewAllocationTest() {
@@ -86,7 +102,7 @@ void mafViewTest::mafViewAllocationTest() {
 
 void mafViewTest::mafViewAddRemoveSceneNodeTest() {
     mafVME *vme = mafNEW(mafResources::mafVME);
-
+    
     //add VME
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
