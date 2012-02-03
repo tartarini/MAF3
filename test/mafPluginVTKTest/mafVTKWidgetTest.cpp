@@ -120,7 +120,7 @@ private Q_SLOTS:
         
         //select
         mafEventArgumentsList argList;
-        argList.append(mafEventArgument(mafCore::mafObjectBase *, root));
+        argList.append(mafEventArgument(mafCore::mafObject *, root));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 
         
