@@ -17,7 +17,7 @@
 #include <mafPluginManager.h>
 #include <mafVMEManager.h>
 #include <mafVME.h>
-
+#include <mafDataSet.h>
 #include <mafVTKWidget.h>
 
 #include <vtkRenderWindowInteractor.h>
@@ -133,6 +133,9 @@ void mafOperationParametricSurfaceTest::testExecute() {
     m_VME = qobject_cast<mafVME *>(m_OpParametric->output());
 
     QVERIFY(m_VME != NULL);
+
+    QString correctDataType = m_VME->outputData()->externalDataType();
+    QVERIFY(correctDataType.compare("vtkPolyData") == 0);
 }
 
 void mafOperationParametricSurfaceTest::visualizeTest() {
