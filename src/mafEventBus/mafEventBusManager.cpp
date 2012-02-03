@@ -181,9 +181,7 @@ void mafEventBusManager::notifyEvent(const QString topic, mafEventType ev_type, 
     }
 
     //event dispatched in local channel
-    mafEvent *event_dic = new mafEventBus::mafEvent;
-    (*event_dic)[TOPIC] = topic;
-    (*event_dic)[TYPE] = static_cast<int>(ev_type);
+    mafEvent *event_dic = new mafEvent(topic, ev_type);
     notifyEvent(*event_dic, argList, returnArg);
     delete event_dic;
 }
