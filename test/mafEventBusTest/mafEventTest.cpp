@@ -47,6 +47,9 @@ private Q_SLOTS:
 
     /// test all the accessors of a mafEvent
     void mafEventAccessorsTest();
+    
+    /// Test arguments and retval methods
+    void mafEventArgListRetValTest();
 
 private:
     mafEvent *m_Event; ///< Test var.
@@ -81,9 +84,19 @@ void mafEventTest::mafEventAccessorsTest() {
     QCOMPARE(m_Event->eventTopic(), topic);
 }
 
+void mafEventTest::mafEventArgListRetValTest() {
+    QString topic = "maf.level1.level2.level3";
+    mafEvent *ev = new mafEvent(topic);
+    int par1(5);
+    QObject par2;
+    ev->addParameter(mafEventArgument(int, par1));
+    ev->addParameter(mafEventArgument(QObject*, &par2));
+    mafEventArgumentsListPointer argList = ev->argumentList();
+    int n = argList->count();
+    QVERIFY(2 == n);
+    
+    delete ev;
+}
 
 MAF_REGISTER_TEST(mafEventTest);
 #include "mafEventTest.moc"
-
-
-
