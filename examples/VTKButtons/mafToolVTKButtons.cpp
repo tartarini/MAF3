@@ -61,6 +61,7 @@ mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK
     button->SetShoulderResolution(24);
     button->SetTextureResolution(24);
 
+
     VTK_CREATE(vtkTexturedButtonRepresentation, rep);
     rep->SetNumberOfStates(2);
     rep->SetButtonTexture(0,imageToVTK2->GetOutput());
