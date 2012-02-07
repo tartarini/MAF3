@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
 
     // Eventually call the loadPlugins method with custom directory to allow the application
     // load custom plugins located in custom directories.
-//    logic->loadPlugins(cusom_plugin_path);
+    logic->loadPlugins();
 
     w.setupMainWindow();
     int result = a.exec();
