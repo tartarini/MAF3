@@ -261,7 +261,7 @@ void mafEventBusManagerTest::eventBusRegistrationNotificationTest() {
     m_EventBus->notifyEvent(updateID);
 }
 
- void mafEventBusManagerTest::eventBusWithArgumentTest() {
+void mafEventBusManagerTest::eventBusWithArgumentTest() {
     testObjectCustom *ObjTestSender = new testObjectCustom();
     ObjTestSender->setObjectValue(52);
 
@@ -274,12 +274,20 @@ void mafEventBusManagerTest::eventBusRegistrationNotificationTest() {
     // Register also the second observer...
     mafRegisterLocalCallback(setValueID, m_ObjTestObserver2, "setObjectValue(int)");
 
+    // ------------------ DEPRECATED CODE (commented) ------------------
+//    mafEventArgumentsList list;
+//    list.append(mafEventArgument(int, ObjTestSender->var()));
+//
+//    m_EventBus->notifyEvent(setValueID, mafEventTypeLocal, &list);
+    
+    // ------------------ Event notification with arguments ------------------
     //! <snippet>
-    mafEventArgumentsList list;
-    list.append(mafEventArgument(int, ObjTestSender->var()));
-
-    m_EventBus->notifyEvent(setValueID, mafEventTypeLocal, &list);
+    mafEvent ev(setValueID);
+    ev.addParameter(mafEventArgument(int, ObjTestSender->var()));
+    
+    m_EventBus->notifyEvent(ev);
     //! </snippet>
+    
     int status = m_ObjTestObserver->var();
     QVERIFY(status == ObjTestSender->var());
     delete ObjTestSender;
@@ -296,10 +304,15 @@ void mafEventBusManagerTest::eventBusWithReturnArgumentTest() {
     mafRegisterLocalCallback(returnValueID, ObjTestSender, "returnObjectValue()");
 
 
-    //Notify event with return argument
     int returnValue = 0;
-    QGenericReturnArgument ret_val = mafEventReturnArgument(int,returnValue);
-    m_EventBus->notifyEvent(returnValueID, mafEventTypeLocal, NULL, &ret_val);
+    // ------------------ DEPRECATED CODE (commented) ------------------
+//    QGenericReturnArgument ret_val = mafEventReturnArgument(int,returnValue);
+//    m_EventBus->notifyEvent(returnValueID, mafEventTypeLocal, NULL, &ret_val);
+
+    //Notify event with return argument
+    mafEvent ev(returnValueID);
+    ev.setReturnValue(mafEventReturnArgument(int,returnValue));
+    m_EventBus->notifyEvent(ev);
 
     QVERIFY(returnValue == 5);
     delete ObjTestSender;

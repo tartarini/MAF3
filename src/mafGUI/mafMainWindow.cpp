@@ -26,8 +26,7 @@ mafMainWindow::mafMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 
 mafMainWindow::mafMainWindow(mafApplicationLogic::mafLogic *logic, QWidget *parent) : QMainWindow(parent), m_GUIManager(NULL), ui(new Ui::mafMainWindow), m_Logic(logic) {
     initializeMainWindow();
-    m_Logic->loadPlugins();
-    
+//     m_Logic->loadPlugins();
 }
 
 mafGUI::mafGUIManager *mafMainWindow::guiManager() {

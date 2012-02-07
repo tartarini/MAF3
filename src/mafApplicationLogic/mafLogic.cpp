@@ -15,8 +15,6 @@
 #include <mafEventBusManager.h>
 #include <mafMementoHierarchy.h>
 
-using namespace mafEventBus;
-
 #define PLUGIN_EXTENSION_FILTER "*.mafplugin"
 
 #ifdef WIN32
@@ -32,9 +30,8 @@ using namespace mafEventBus;
 #endif
 
 
-
-
 using namespace mafCore;
+using namespace mafEventBus;
 using namespace mafApplicationLogic;
 
 mafLogic::mafLogic(const QString code_location) : mafLogicLight(code_location), m_WorkingDirectory(""), m_ApplicationName("") {
@@ -120,26 +117,28 @@ mafCore::mafHierarchy *mafLogic::requestNewHierarchy() {
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.clearViews");
 
     // Initialize data hierarchy
-    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, m_Hierarchy);
-    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.new", mafEventTypeLocal, NULL, &ret_val);
+    mafEvent ev("maf.local.resources.hierarchy.new");
+    ev.setReturnValue(mafEventReturnArgument(mafCore::mafHierarchyPointer, m_Hierarchy));
+
+    mafEventBusManager::instance()->notifyEvent(ev);
     
     return m_Hierarchy;
 }
 
 void mafLogic::customizeVisualization(const QString view_name, const QString data_type, const QString pipe_visual_type) {
-    mafEventBus::mafEventArgumentsList argList;
-    argList.append(mafEventArgument(QString, view_name));
-    argList.append(mafEventArgument(QString, data_type));
-    argList.append(mafEventArgument(QString, pipe_visual_type));
-    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.customizeVisualization", mafEventTypeLocal, &argList);
+    mafEvent ev("maf.local.resources.view.customizeVisualization");
+    ev.addParameter(mafEventArgument(QString, view_name));
+    ev.addParameter(mafEventArgument(QString, data_type));
+    ev.addParameter(mafEventArgument(QString, pipe_visual_type));
+    mafEventBusManager::instance()->notifyEvent(ev);
 }
 
 
 void mafLogic::customizeViewRootWidget(const QString view_name, QString rootWidget_name) {
-    mafEventBus::mafEventArgumentsList argList;
-    argList.append(mafEventArgument(QString, view_name));
-    argList.append(mafEventArgument(QString, rootWidget_name));
-    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.customizeViewRootWidget", mafEventTypeLocal, &argList);
+    mafEvent ev("maf.local.resources.view.customizeViewRootWidget");
+    ev.addParameter(mafEventArgument(QString, view_name));
+    ev.addParameter(mafEventArgument(QString, rootWidget_name));
+    mafEventBusManager::instance()->notifyEvent(ev);
 }
 
 void mafLogic::plugObject(const QString base_class, const QString class_type, const QString object_label) {
@@ -160,7 +159,6 @@ void mafLogic::loadPlugins(QString plugin_dir) {
     pdir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot );
     QStringList plugin_dir_list = pdir.entryList();
 
-    mafEventArgumentsList argList;
     Q_FOREACH(QString p, plugin_dir_list) {
         // Check for plugins to load
         QStringList filters;
@@ -176,19 +174,19 @@ void mafLogic::loadPlugins(QString plugin_dir) {
         
         // For each plugin file ask the plugin manager to load it through the event bus.
         Q_FOREACH(QString file, plugin_list) {
-            argList.clear();
             file = dir.absoluteFilePath(file);
             QByteArray ba = file.toAscii();
             char *v = ba.data();
-            argList.append(mafEventArgument(QString, file));
-            mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.loadLibrary", mafEventTypeLocal, &argList);
+            mafEvent ev("maf.local.resources.plugin.loadLibrary");
+            ev.addParameter(mafEventArgument(QString, file));
+            mafEventBusManager::instance()->notifyEvent(ev);
         }
     }
 
     // Plug also the custom objects plugged from the vertical application.
-    argList.clear();
-    argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, m_CustomPluggedObjectsHash));
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.registerLibrary", mafEventTypeLocal, &argList);
+    mafEvent ev("maf.local.resources.plugin.registerLibrary");
+    ev.addParameter(mafEventArgument(mafCore::mafPluggedObjectsHash, m_CustomPluggedObjectsHash));
+    mafEventBusManager::instance()->notifyEvent(ev);
 }
 
 void mafLogic::storeSettings() {
@@ -205,43 +203,48 @@ void mafLogic::restoreSettings() {
 
 
 void mafLogic::storeHierarchy(QString fileName, bool enableSaveAs) {
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(bool, enableSaveAs));
-    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.changeIgnoreModified", mafEventTypeLocal, &argList);
+    mafEvent ev("maf.local.serialization.changeIgnoreModified");
+    ev.addParameter(mafEventArgument(bool, enableSaveAs));
+    mafEventBusManager::instance()->notifyEvent(ev);
     
     // Get hierarchy
     mafCore::mafHierarchyPointer hierarchy;
-    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+    ev.clearArgList();
+    ev[TOPIC] = "maf.local.resources.hierarchy.request";
+    ev.setReturnValue(mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy));
+    mafEventBusManager::instance()->notifyEvent(ev);
     
     mafMementoHierarchy * mementoHiearachy = (mafMementoHierarchy*)hierarchy->createMemento();
     REQUIRE(mementoHiearachy != NULL);
 
     // Serialize memento to file
     QString encodeType = "XML";
-    argList.clear();
-    argList.append(mafEventArgument(mafCore::mafMemento *, mementoHiearachy));
-    argList.append(mafEventArgument(QString, fileName));
-    argList.append(mafEventArgument(QString, encodeType));
-    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal, &argList);
+    ev.clearArgList();
+    ev[TOPIC] = "maf.local.serialization.save";
+    ev.addParameter(mafEventArgument(mafCore::mafMemento *, mementoHiearachy));
+    ev.addParameter(mafEventArgument(QString, fileName));
+    ev.addParameter(mafEventArgument(QString, encodeType));
+    mafEventBusManager::instance()->notifyEvent(ev);
     mafDEL(mementoHiearachy);
     
     // assign false to the ignore modified of the serialization manager
-    argList.clear();
-    argList.append(mafEventArgument(bool, false));
-    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.changeIgnoreModified", mafEventTypeLocal, &argList);
-    
+    ev.clearArgList();
+    ev[TOPIC] = "maf.local.serialization.changeIgnoreModified";
+    ev.addParameter(mafEventArgument(bool, false));
+    mafEventBusManager::instance()->notifyEvent(ev);
 }
 
 void mafLogic::restoreHierarchy(QString fileName) {
     //Load memento from file
     mafCore::mafMemento *mementoHierarchy = NULL;
-    mafEventArgumentsList argList;
     QString encodeType = "XML";
-    argList.append(mafEventArgument(QString, fileName));
-    argList.append(mafEventArgument(QString, encodeType));
-    QGenericReturnArgument retVal = mafEventReturnArgument(mafCore::mafMemento*, mementoHierarchy);
-    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal, &argList, &retVal);
+
+    mafEvent ev("maf.local.serialization.load");
+    ev.addParameter(mafEventArgument(QString, fileName));
+    ev.addParameter(mafEventArgument(QString, encodeType));
+    ev.setReturnValue(mafEventReturnArgument(mafCore::mafMemento*, mementoHierarchy));
+    mafEventBusManager::instance()->notifyEvent(ev);
+    
     if(mementoHierarchy == NULL) {
         QByteArray ba = mafTr("Impossible to load MSF").toAscii();
         qCritical("%s", ba.data());
@@ -254,26 +257,23 @@ void mafLogic::restoreHierarchy(QString fileName) {
     
     //fill the scene graphs of all the views
     // @@ TODO if hierarchy will handle all the hierarchy , and not shared the effort with all the other Objects, this method would be useless:
-    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.fillViews");
+    mafEvent evFillViews("maf.local.resources.view.fillViews");
+    mafEventBus::mafEventBusManager::instance()->notifyEvent(evFillViews);
     
     //retrieve root
     mafObject *root;
-    retVal = mafEventReturnArgument(mafCore::mafObject *, root);
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &retVal);
+    mafEvent evRoot("maf.local.resources.hierarchy.root");
+    evRoot.setReturnValue(mafEventReturnArgument(mafCore::mafObject *, root));
+    mafEventBusManager::instance()->notifyEvent(evRoot);
     
     //select
-    argList.clear();
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, root));
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
-
+    mafEvent evSel("maf.local.resources.vme.select");
+    evRoot.addParameter(mafEventArgument(mafCore::mafObjectBase *, root));
+    mafEventBusManager::instance()->notifyEvent(evSel);
 }
 
 void mafLogic::executedOperation(QVariantMap response) {
-    mafEventArgumentsList argList;
-    argList.push_back(Q_ARG(QVariantMap, response));
-        
-    mafEvent dictionary;
-    dictionary.setEventTopic("maf.local.eventBus.setResponseToNetwork");
-    dictionary.setEventType(mafEventTypeLocal);
-    mafEventBusManager::instance()->notifyEvent(dictionary, &argList);
+    mafEvent dictionary("maf.local.eventBus.setResponseToNetwork");
+    dictionary.addParameter(mafEventArgument(QVariantMap, response));
+    mafEventBusManager::instance()->notifyEvent(dictionary);
 }

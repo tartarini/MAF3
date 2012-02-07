@@ -13,12 +13,12 @@
 
 using namespace mafEventBus;
 
-mafEvent::mafEvent() {
+mafEvent::mafEvent() : m_SynchronousEvent(true) {
     m_EventHash = new QVariantHash();
 }
 
 /// Overload object constructor.
-mafEvent::mafEvent(QString topic, mafEventType event_type, mafSignatureType signature_type, QObject *objectPointer, QString signature) {
+mafEvent::mafEvent(QString topic, mafEventType event_type, mafSignatureType signature_type, QObject *objectPointer, QString signature, bool synchronous) : m_SynchronousEvent(synchronous) {
     m_EventHash = new QVariantHash();
     entries()->insert(TOPIC, topic);
     entries()->insert(TYPE, static_cast<int>(event_type));
@@ -29,8 +29,15 @@ mafEvent::mafEvent(QString topic, mafEventType event_type, mafSignatureType sign
     entries()->insert(SIGNATURE, signature);
 }
 
+mafEvent::mafEvent(QString topic, mafEventType event_type, bool synchronous) : m_SynchronousEvent(synchronous) {
+    m_EventHash = new QVariantHash();
+    entries()->insert(TOPIC, topic);
+    entries()->insert(TYPE, static_cast<int>(event_type));
+}
+
 mafEvent::~mafEvent() {
     m_EventHash->clear();
+    m_ArgList.clear();
     delete m_EventHash;
 }
 
@@ -65,6 +72,10 @@ void mafEvent::setEventType(mafEventType et) {
 
 void mafEvent::setEventTopic(QString topic) {
     entries()->insert(TOPIC, topic);
+}
+
+void mafEvent::clearArgList() {
+    m_ArgList.clear();
 }
 
 /*QString mafEvent::eventIdName() const {
