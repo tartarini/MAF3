@@ -23,6 +23,7 @@
 #else
     #define SHARED_OBJECT_PREFIX "lib"
     #ifdef __APPLE__
+        #define SHARED_OBJECT_PREFIX QString(m_ApplicationName).append("/Contents/MacOS/")
         #define SHARED_OBJECT_SUFFIX ".dylib"
     #else
         #define SHARED_OBJECT_SUFFIX ".so"
@@ -47,7 +48,7 @@ mafLogic::~mafLogic() {
     m_LibraryHandlersHash.clear();
 }
 
-bool mafLogic::initialize(bool light) {
+bool mafLogic::initialize() {
     bool result(Superclass::initialize());
     
     // Call the initialization of the superclass.
@@ -93,20 +94,19 @@ bool mafLogic::initialize(bool light) {
         sharedObjects << so;
 
         QLibrary *handler(NULL);
-        
+
         Q_FOREACH(so, sharedObjects) {
             handler = mafInitializeModule(so);
             if(handler) {
                 m_LibraryHandlersHash.insert(so, handler);
-            }
-            if (!light) {
-                result = result && (handler != NULL);
-            }
+            } 
+            
+            result = result && (handler != NULL);
         }
 
         requestNewHierarchy();
     }
-
+    
     // Perform design by contract check.
     ENSURE(result);
     return result;
