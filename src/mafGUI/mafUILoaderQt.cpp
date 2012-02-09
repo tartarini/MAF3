@@ -12,6 +12,12 @@
 #include "mafUILoaderQt.h"
 #include <mafProxy.h>
 
+#ifdef __APPLE__
+    #define UI_PATH QString(QCoreApplication::instance()->applicationName()).append("/Contents/MacOS/")
+#else
+    #define UI_PATH ""
+#endif
+
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafGUI;
@@ -23,7 +29,9 @@ mafUILoaderQt::~mafUILoaderQt() {
 }
 
 void mafUILoaderQt::uiLoad(const QString &fileName, int ui_type) {
-    QFile file(fileName.toAscii());
+    
+    QString path = UI_PATH;
+    QFile file(path.append(fileName.toAscii()));
     file.open(QFile::ReadOnly);
     mafProxy<QWidget> *arg = new mafProxy<QWidget>();
     *arg = m_UILoaderQt.load(&file);

@@ -7,6 +7,7 @@
 SET(foundation_libraries 
   ${QXMLRPC_LIBRARY} 
   ${QTSOAP_LIBRARY}
+  opencv_core
 )
 
 if(NOT ${BUILD_SHARED_LIBS})
@@ -17,6 +18,18 @@ if(NOT ${BUILD_SHARED_LIBS})
 )
 endif(NOT ${BUILD_SHARED_LIBS})
 
+SET(VTK_LIBRARIES
+  vtkHybrid 
+  vtkRendering 
+  vtkVolumeRendering
+  vtkGraphics 
+  vtkImaging 
+  vtkIO 
+  vtkFiltering 
+  vtkCommon
+  QVTK
+)
+
 SET(target_libraries
   ${MAF_BASE_LIBRARIES}
   ${foundation_libraries}
@@ -25,5 +38,6 @@ SET(target_libraries
   mafApplicationLogic
   mafGUI
   mafResources
+  ${VTK_LIBRARIES}
   mafPluginVTK
   )

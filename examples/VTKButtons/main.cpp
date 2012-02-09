@@ -9,6 +9,12 @@
  *
  */
 
+#define BUNDLE_SUFFIX ""
+
+#ifdef __APPLE__
+#define BUNDLE_SUFFIX ".app"
+#endif
+
 #include <QtGui/QApplication>
 
 #include <mafMainWindow.h>
@@ -27,17 +33,19 @@ int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     a.setOrganizationName("SCS");
     a.setOrganizationDomain("scsolutions.org");
-    a.setApplicationName("VTKButtons");
+    a.setApplicationName(QString("VTKButtons").append(BUNDLE_SUFFIX));
     a.setApplicationVersion("1.0");
-
+    qDebug() << argv[0];
     // Create the application's logic instance
     mafApplicationLogic::mafLogic *logic = new mafApplicationLogic::mafLogic();
-    logic->setApplicationName(argv[0]);
+    logic->setApplicationName(a.applicationName());
+    
     // and initialize it. This initialization will load dynamically the mafResources Library.
     bool ok = logic->initialize();
     if(!ok) {
         exit(1);
     }
+    
     mafEventBus::mafEventBusManager::instance()->enableEventLogging(true);
 
     // Plug into the factory the custom objects (Operations, Views, ...).

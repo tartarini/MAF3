@@ -98,7 +98,7 @@ public:
 
     /// Allows to initialize all the singletons and register all the objects to the factory.
     /// Set light to true if mafResource and mafSerialization module are not required by the application.
-    virtual bool initialize(bool light = false);
+    virtual bool initialize();
 
     /// Allows to retrieve the application's working directory.
     QString workingDirectory() const;
