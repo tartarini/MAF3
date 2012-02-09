@@ -20,10 +20,11 @@ namespace mafCore {
 // Class forwarding list
 class mafObjectBase;
 class mafVisitorFindObjects;
+class mafVisitor;
 
 /**
  Class name: mafObjectRegistry
- This singletone provides the place where allocated objects are monitored.
+ This singleton provides the place where allocated objects are monitored.
  In this way you can monitor when, where and who allocated the object.
  */
 class MAFCORESHARED_EXPORT mafObjectRegistry  {
@@ -48,10 +49,15 @@ public:
     /// Engine of the 'find objects' that will be executed on separate thread if invoked from the findObjectsThreaded method.
     mafObjectsList *findObjects(mafVisitorFindObjects *v);
 
+    /// Apply the visitor object to the given list of objects using QtConcurrent framework.
+    void applyVisitorToObjectListThreaded(mafVisitor *v, mafObjectsList *objectList);
+
+    /// Engine of the 'apply visitor' that will be executed on separate thread if invoked from the applyVisitorToObjectListThreaded method.
+    void applyVisitorToObjectList(mafVisitor *v, mafObjectsList *objectList);
+
 protected:
     friend class mafObjectBase;
     //friend class mafObjectFactory;
-
 
     /// Register allocated object into the registry hash.
     void addObject(mafObjectBase *obj, const QString location);
