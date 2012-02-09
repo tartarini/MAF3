@@ -96,8 +96,7 @@ void mafObjectRegistry::applyVisitorToObjectListThreaded(mafVisitor *v, mafObjec
 void mafObjectRegistry::applyVisitorToObjectList(mafVisitor *v, mafObjectsList *objectList) {
     mafObjectsList::const_iterator iter = objectList->constBegin();
     while(iter != objectList->constEnd()) {
-        QObject *obj = iter.value();
-        mafObjectBase *objBase = qobject_cast<mafObjectBase*>(obj);
+        mafObjectBase *objBase = *iter;
         if (objBase) {
             objBase->acceptVisitor(v);
         }
