@@ -35,10 +35,15 @@ int main(int argc, char *argv[]) {
     a.setOrganizationDomain("scsolutions.org");
     a.setApplicationName(QString("VTKButtons").append(BUNDLE_SUFFIX));
     a.setApplicationVersion("1.0");
-    qDebug() << argv[0];
+
     // Create the application's logic instance
     mafApplicationLogic::mafLogic *logic = new mafApplicationLogic::mafLogic();
     logic->setApplicationName(a.applicationName());
+    
+    
+    /// push libraries to load during initialization.
+    logic->pushLibraryToLoad("mafResources");
+    logic->pushLibraryToLoad("mafSerialization");
     
     // and initialize it. This initialization will load dynamically the mafResources Library.
     bool ok = logic->initialize();

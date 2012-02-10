@@ -129,6 +129,9 @@ public:
 
     /// Plug the information to customize the root widget associated to a specific view.
     void customizeViewRootWidget(const QString view_name, const QString rootWidget_name);
+    
+    /// Push a library name in the list of libraries to load in app initialization.
+    void pushLibraryToLoad(QString libraryName);
                   
 protected:
     /// Object destructor.
@@ -138,6 +141,7 @@ private:
     QString m_WorkingDirectory; ///< Contains the root directory of the application's data.
     QString m_ApplicationName; ///< Contains the application's name.
     mafCore::mafPluggedObjectsHash m_CustomPluggedObjectsHash; ///< Hash containing operations, views and all the plugged custom objects.
+    QStringList m_LibrariesList; ///< contains the name of the libraries which needs to be loaded in app initialization.
     QHash<QString, QLibrary *> m_LibraryHandlersHash; ///< Hash containing  the loaded plugins.
     mafCore::mafHierarchy *m_Hierarchy; ///< VME Hierarchy
 };

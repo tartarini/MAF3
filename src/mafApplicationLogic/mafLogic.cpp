@@ -36,6 +36,7 @@ using namespace mafEventBus;
 using namespace mafApplicationLogic;
 
 mafLogic::mafLogic(const QString code_location) : mafLogicLight(code_location), m_WorkingDirectory(""), m_ApplicationName("") {
+    m_LibrariesList.clear();
 }
 
 mafLogic::~mafLogic() {
@@ -81,24 +82,14 @@ bool mafLogic::initialize() {
         m_CustomPluggedObjectsHash.clear();
 
         // Load the module related to the resources and managers and initialize it.
-        QStringList sharedObjects;
-        QString so;
-        so.append(SHARED_OBJECT_PREFIX);
-        so.append("mafResources");
-        so.append(SHARED_OBJECT_SUFFIX);
-        sharedObjects << so;
-        so.clear();
-        so.append(SHARED_OBJECT_PREFIX);
-        so.append("mafSerialization");
-        so.append(SHARED_OBJECT_SUFFIX);
-        sharedObjects << so;
-
         QLibrary *handler(NULL);
-
-        Q_FOREACH(so, sharedObjects) {
-            handler = mafInitializeModule(so);
+        Q_FOREACH(QString so, m_LibrariesList) {
+            QString soLibName(SHARED_OBJECT_PREFIX);
+            soLibName.append(so);
+            soLibName.append(SHARED_OBJECT_SUFFIX);
+            handler = mafInitializeModule(soLibName);
             if(handler) {
-                m_LibraryHandlersHash.insert(so, handler);
+                m_LibraryHandlersHash.insert(soLibName, handler);
             } 
             
             result = result && (handler != NULL);
@@ -146,6 +137,10 @@ void mafLogic::plugObject(const QString base_class, const QString class_type, co
     mafPluggedObjectInformation objectInformation(object_label, class_type);
     // add the plugged object to the hash
     m_CustomPluggedObjectsHash.insertMulti(base_class, objectInformation);
+}
+
+void mafLogic:: pushLibraryToLoad(QString libraryName) {
+    m_LibrariesList << libraryName;
 }
 
 void mafLogic::loadPlugins(QString plugin_dir) {
