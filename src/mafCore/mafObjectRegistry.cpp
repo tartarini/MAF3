@@ -83,6 +83,27 @@ void mafObjectRegistry::liveObjects(QObjectList *objects) {
     }
 }
 
+void mafObjectRegistry::applyVisitorToObjectListThreaded(mafVisitor *v, mafObjectsList *objectList) {
+    // Initialize the max thread count depending on the number of core present into the PC.
+    int idealThreadCount = QThread::idealThreadCount();
+    QThreadPool::globalInstance()->setMaxThreadCount(idealThreadCount);
+    // Use the QtConcurrent framework to run the function in a separate thread.
+    QFuture<void> future = QtConcurrent::run(this, &mafCore::mafObjectRegistry::applyVisitorToObjectList, v, objectList);
+    // Wait that the search is performed.
+    future.waitForFinished();
+}
+
+void mafObjectRegistry::applyVisitorToObjectList(mafVisitor *v, mafObjectsList *objectList) {
+    mafObjectsList::const_iterator iter = objectList->constBegin();
+    while(iter != objectList->constEnd()) {
+        mafObjectBase *objBase = *iter;
+        if (objBase) {
+            objBase->acceptVisitor(v);
+        }
+        ++iter;
+    }
+}
+
 mafObjectsList *mafObjectRegistry::findObjectsThreaded(mafVisitorFindObjects *v) {
     // Initialize the max thread count depending on the number of core present into the PC.
     int idealThreadCount = QThread::idealThreadCount();
