@@ -3,27 +3,60 @@
 #  maf
 #
 #  Created by Daniele Giunchi - Paolo Quadrani on 10/09/10.
-#  Copyright 2009 B3C. All rights reserved.
+#  Copyright 2011 B3C. All rights reserved.
 #
 #  See Licence at: http://tiny.cc/QXJ4D
 #
 #
 
-MACRO(mafMacroInstallProject)
-  #name of output library should be equal in all the platforms:   e.g. mafCore.dylib 
-  #SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES PREFIX "" )
-  #if (CMAKE_BUILD_TYPE MATCHES Release)
-    SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}" )
-  #endif(CMAKE_BUILD_TYPE MATCHES Release)
+MACRO(mafMacroInstallProject executable)
+SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}" )
 
-  #if(CMAKE_BUILD_TYPE MATCHES Debug)
-  #  if(WIN32)
-  #      SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}_d" )
-  #  else(WIN32)
-  #      SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}_debug" )
-  #  endif(WIN32)
-  #else(CMAKE_BUILD_TYPE MATCHES Debug)
-  #  SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}" )
-  #endif(CMAKE_BUILD_TYPE MATCHES Debug)
+if(${executable})
+  IF (APPLE)
+    set(lib_ext "dylib")
+    
+    set(TARGET_LOC)
+    set(DEST_ABSOLUTE_DIR)
+    get_target_property(TARGET_LOC ${PROJECT_NAME} LOCATION)
+    get_filename_component(DEST_ABSOLUTE_DIR ${TARGET_LOC} PATH)
+
+    set(MACOS_BUNDLE_DIR "${DEST_ABSOLUTE_DIR}")
+# DEBUG
+    SET(SOURCE_DIR   "${LIBRARY_OUTPUT_PATH}/Debug")
+    SET(TARGET_DIR   ${MACOS_BUNDLE_DIR})
+    
+    FILE(GLOB file_list ${SOURCE_DIR}/*.${lib_ext})    
+    foreach(filelib ${file_list})
+      get_filename_component(fileName ${filelib} NAME)
+      add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                          COMMAND ${CMAKE_COMMAND} -E copy ${filelib} ${TARGET_DIR}/${fileName} )
+    endforeach(filelib ${file_list})
+    
+    set(file_list)
+#RELEASE
+    SET(SOURCE_DIR   "${LIBRARY_OUTPUT_PATH}/Release")
+    SET(TARGET_DIR   ${MACOS_BUNDLE_DIR})
+    
+    FILE(GLOB file_list ${SOURCE_DIR}/*.${lib_ext})    
+    foreach(filelib ${file_list})
+      get_filename_component(fileName ${filelib} NAME)
+      add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                          COMMAND ${CMAKE_COMMAND} -E copy ${filelib} ${TARGET_DIR}/${fileName} )
+    endforeach(filelib ${file_list})
+    set(file_list)
+#
+    SET(SOURCE_DIR   "${LIBRARY_OUTPUT_PATH}")
+    SET(TARGET_DIR   ${MACOS_BUNDLE_DIR})
+    
+    FILE(GLOB file_list ${SOURCE_DIR}/*.${lib_ext})    
+    foreach(filelib ${file_list})
+      get_filename_component(fileName ${filelib} NAME)
+      add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                          COMMAND ${CMAKE_COMMAND} -E copy ${filelib} ${TARGET_DIR}/${fileName} )
+    endforeach(filelib ${file_list})
+
+  ENDIF (APPLE)
+endif(${executable})
   
 ENDMACRO()
