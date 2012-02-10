@@ -23,6 +23,8 @@
 #include "mafHierarchy.h"
 #include "mafMementoHierarchy.h"
 #include "mafProxyInterface.h"
+// #include "mafVisitorFindObjectsByHashCode.h"
+#include "mafVisitorBounds.h"
 
 
 using namespace mafCore;
@@ -60,6 +62,9 @@ void mafCoreRegistration::registerCoreObjects() {
     mafRegisterObject(mafCore::mafMonitorHardDisk);
     mafRegisterObject(mafCore::mafHierarchy);
     mafRegisterObject(mafCore::mafMementoHierarchy);
+//     mafRegisterObject(mafCore::mafVisitorFindObjectsByHashCode);
+    mafRegisterObject(mafCore::mafVisitorBounds);
+
     qRegisterMetaType<mafCore::mafHierarchyPointer>("mafCore::mafHierarchyPointer");
     qRegisterMetaType<mafCore::mafProxyInterfacePointer>("mafCore::mafProxyInterfacePointer");
     qRegisterMetaType<mafCore::mafProxyInterface>("mafCore::mafProxyInterface");
@@ -82,4 +87,6 @@ void mafCoreRegistration::unregisterCoreObjects() {
     mafUnregisterObject(mafCore::mafMonitorHardDisk);
     mafUnregisterObject(mafCore::mafHierarchy);
     mafUnregisterObject(mafCore::mafMementoHierarchy);
+//     mafUnregisterObject(mafCore::mafVisitorFindObjectsByHashCode);
+    mafUnregisterObject(mafCore::mafVisitorBounds);
 }
