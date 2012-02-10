@@ -52,4 +52,4 @@ mafCopyFilesFromExtension("ui" "SimpleApp")
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject()
+mafMacroInstallProject(1)

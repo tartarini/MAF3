@@ -37,5 +37,5 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SUFFIX ".mafplugin")
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject()
+mafMacroInstallProject(0)
 
