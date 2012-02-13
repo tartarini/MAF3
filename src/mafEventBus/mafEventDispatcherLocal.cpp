@@ -56,7 +56,6 @@ void mafEventDispatcherLocal::notifyEvent(const mafEvent &event_dictionary, mafE
             QString signal_to_emit = (*itemEventProp)[SIGNATURE].toString().split("(")[0];
             QObject *obj = (*itemEventProp)[OBJECT].value<QObject *>();
             if(argList != NULL) {
-                qDebug() << argList;
                 if (returnArg == NULL || returnArg->data() == NULL) { //don't use return value
                     switch (argList->count()) {
                         case 0:
