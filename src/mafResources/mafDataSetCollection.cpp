@@ -269,11 +269,16 @@ bool mafDataSetCollection::insertItem(mafDataSet *item, double t) {
 bool mafDataSetCollection::setDataSet(mafDataSet *data, double t) {
     REQUIRE(data != NULL);
 
+    mafDataSet *item = itemAt(t);
+    if(item == data) {
+         qDebug() << "Trying to insert the same dataset...";
+         return true;
+    }
+
     QByteArray ba;
     if(acceptData(data)) {
         // Find the matrix at the given timestamp
-        mafDataSet *item = itemAt(t);
-        if(item != NULL) {
+        if(item != NULL ) {
             // Item found into the collection.
             // Modify the already present item and free the memory
             item->setDataValue(data->dataValue());
@@ -297,7 +302,7 @@ bool mafDataSetCollection::setDataSet(mafDataSet *data, double t) {
 
 void mafDataSetCollection::updateData() {
     itemAtCurrentTime()->updateBounds();
-//    Q_EMIT modifiedObject();
+    //    Q_EMIT modifiedObject();
     setModified();
 }
 
