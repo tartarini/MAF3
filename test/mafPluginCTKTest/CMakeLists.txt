@@ -41,4 +41,4 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject()
+mafMacroInstallProject(0)

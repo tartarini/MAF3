@@ -45,7 +45,7 @@ mafMacroWrapBuild()
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject()
+mafMacroInstallProject(0)
 
 
 ######### TEMPORARY CODE ######### qa toolkit will be extracted from MAF

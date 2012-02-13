@@ -53,4 +53,4 @@ mafCopyFilesFromExtension("xml" ${PROJECT_NAME})
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject()
+mafMacroInstallProject(1)

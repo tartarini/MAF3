@@ -3,16 +3,39 @@
  *  mafCoreTest
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
 #include <mafTestSuite.h>
 #include <mafObject.h>
+#include <mafVisitor.h>
 
 using namespace mafCore;
+
+//-------------------------------------------------------------------------
+/**
+ Class name: testVisitorCounter
+ Define a custom visitor.
+ */
+class testVisitorCounter : public mafVisitor {
+    Q_OBJECT
+public:
+    testVisitorCounter(const QString code_location = "");
+    /*virtual*/ void visit(mafObjectBase *obj) {++m_VisitedObjectCount;}
+
+    /// Return m_LabelVisited's value
+    const int visitedObjectCount() {return m_VisitedObjectCount;}
+private:
+    int m_VisitedObjectCount; ///< Test var.
+};
+
+testVisitorCounter::testVisitorCounter(const QString code_location) : mafVisitor(code_location), m_VisitedObjectCount(0) {
+}
+//-------------------------------------------------------------------------
+
 
 /**
  Class name: mafObjectRegistryTest
@@ -45,17 +68,21 @@ private Q_SLOTS:
         m_Registry = mafObjectRegistry::instance();
     }
 
-    /// Cleanup tes variables memory allocation.
+    /// Cleanup test variables memory allocation.
     void cleanupTestCase() {
     }
 
     /// create new object and check that is not NULL test case.
     void mafObjectRegistryConstructorTest();
+
     /// test the live objects presence.
     void liveObjectsTest();
 
     /// test the method for finding an object from its hash code
     void objectFromHashTest();
+
+    /// Test the apply visitor method.
+    void applyVisitorToObjectListThreadedTest();
 
 private:
     mafObjectRegistry *m_Registry; ///< Test var.
@@ -109,6 +136,27 @@ void mafObjectRegistryTest::objectFromHashTest() {
     QVERIFY(checkObject == NULL);
 
     mafDEL(obj1);
+}
+
+void mafObjectRegistryTest::applyVisitorToObjectListThreadedTest() {
+    mafObjectBase *obj1 = mafNEW(mafCore::mafObjectBase);
+    mafObjectBase *obj2 = mafNEW(mafCore::mafObjectBase);
+    mafObjectBase *obj3 = mafNEW(mafCore::mafObjectBase);
+    mafObjectsList objList;
+    objList << obj1;
+    objList << obj2;
+    objList << obj3;
+
+    testVisitorCounter *v = new testVisitorCounter;
+    m_Registry->applyVisitorToObjectListThreaded(v, &objList);
+
+    int n = v->visitedObjectCount();
+    QVERIFY(n == 3);
+    
+    mafDEL(obj1);
+    mafDEL(obj2);
+    mafDEL(obj3);
+    delete v;
 }
 
 MAF_REGISTER_TEST(mafObjectRegistryTest);
