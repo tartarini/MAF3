@@ -39,13 +39,15 @@ mafDataBoundaryAlgorithmVTK::~mafDataBoundaryAlgorithmVTK() {
 mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(mafCore::mafProxyInterface *data, mafResources::mafMatrix *matrix) {
     if(data) {
         mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data);
-        vtkAlgorithm *producer = (*dataSet)->GetProducer();
-        vtkDataObject *dataObject = producer->GetOutputDataObject(0);
-        vtkDataSet* vtkData = vtkDataSet::SafeDownCast(dataObject);
+        if (dataSet != NULL) {
+            vtkAlgorithm *producer = (*dataSet)->GetProducer();
+            vtkDataObject *dataObject = producer->GetOutputDataObject(0);
+            vtkDataSet* vtkData = vtkDataSet::SafeDownCast(dataObject);
 
-        double b[6];
-        vtkData->GetBounds(b);
-        return this->calculateBoundary(b, matrix);
+            double b[6];
+            vtkData->GetBounds(b);
+            return this->calculateBoundary(b, matrix);
+        }
     }
     return NULL;
 }
