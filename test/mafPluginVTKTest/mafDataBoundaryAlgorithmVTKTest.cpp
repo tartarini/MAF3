@@ -115,5 +115,5 @@ void mafDataBoundaryAlgorithmVTKTest::calculateBoundaryTest() {
 }
 
 
-//MAF_REGISTER_TEST(mafDataBoundaryAlgorithmVTKTest);
+MAF_REGISTER_TEST(mafDataBoundaryAlgorithmVTKTest);
 #include "mafDataBoundaryAlgorithmVTKTest.moc"

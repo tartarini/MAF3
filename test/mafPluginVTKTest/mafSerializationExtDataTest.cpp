@@ -215,12 +215,13 @@ void mafSerializationXMLExtDataTest::mafSerializationVTKSaveTest() {
     
     //Save VME with ASCII dataSet
     mafMementoVME *mementoVME = (mafMementoVME *)m_Vme->createMemento();
-    QVERIFY(mementoVME != NULL);
+    QVERIFY(mementoVME != NULL);    
     
     argList.clear();
     encodeType = "XML";
     argList.clear();
-    argList.append(mafEventArgument(mafCore::mafMemento *, mementoVME));
+    mafCore::mafMemento *mem = mementoVME;
+    argList.append(mafEventArgument(mafCore::mafMemento *, mem));
     argList.append(mafEventArgument(QString, test_file));
     argList.append(mafEventArgument(QString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal, &argList);

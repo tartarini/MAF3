@@ -112,8 +112,11 @@ private Q_SLOTS:
         m_DataSource->SetXLength(5);
         m_DataSource->SetYLength(3);
         m_DataSource->SetZLength(8);
+        m_DataSource->Update();
+        m_DataSourceContainer = m_DataSource->GetOutputPort();
+        const QString codecType("VTK");
+        m_DataSourceContainer.setExternalCodecType(codecType);
         m_DataSourceContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
-        m_DataSourceContainer = m_DataSource->GetOutputPort(0);
     }
 
     /// Cleanup test variables memory allocation.
@@ -166,10 +169,12 @@ void mafSerializationVTKTest::mafSerializationVTKSaveTest() {
     argList.append(mafEventArgument(QString, vtk));
     argList.append(mafEventArgument(QString, codecVTK));
     mafEventBusManager::instance()->notifyEvent(plug_codec_id, mafEventTypeLocal, &argList);
-
+    qDebug() << "container: " << &m_DataSourceContainer;
+    
+    mafProxyInterface *container = &m_DataSourceContainer;
     QString encodeType = "VTK";
     argList.clear();
-    argList.append(mafEventArgument(mafCore::mafProxyInterface *, &m_DataSourceContainer));
+    argList.append(mafEventArgument(mafCore::mafProxyInterface *, container));
     argList.append(mafEventArgument(QString, test_file));
     argList.append(mafEventArgument(QString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.export", mafEventTypeLocal, &argList);

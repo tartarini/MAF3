@@ -217,10 +217,11 @@ void mafSerializationRawASCIIExtDataTest::mafSerializationVTKSaveTest() {
     mafMementoVME *mementoVME = (mafMementoVME *)m_Vme->createMemento();
     QVERIFY(mementoVME != NULL);
 
+    mafCore::mafMemento *mem = mementoVME;
     argList.clear();
     encodeType = "RAW_ASCII";
     argList.clear();
-    argList.append(mafEventArgument(mafCore::mafMemento *, mementoVME));
+    argList.append(mafEventArgument(mafCore::mafMemento *, mem));
     argList.append(mafEventArgument(QString, test_file));
     argList.append(mafEventArgument(QString, encodeType));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal, &argList);
