@@ -16,6 +16,7 @@
 #include "mafPluginVTKDefinitions.h"
 #include <mafDataBoundaryAlgorithm.h>
 #include <vtkAlgorithmOutput.h>
+#include <vtkCubeSource.h>
 #include <vtkTransformPolyDataFilter.h>
 
 namespace mafPluginVTK {
@@ -47,6 +48,7 @@ protected:
 
 private:
     mafCore::mafProxy<vtkAlgorithmOutput> m_OutputBoundary; ///< vtkAlgorithmOutput as output of the algorithm.
+    vtkCubeSource *m_Box; ///< Source used as bounding box.
     vtkTransformPolyDataFilter *m_PDataFilter; ///< Filter used to transform the bounding box.
 };
 

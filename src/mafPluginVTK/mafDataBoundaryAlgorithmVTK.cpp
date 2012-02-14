@@ -14,7 +14,6 @@
 #include <vtkSmartPointer.h>
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>
-#include <vtkCubeSource.h>
 #include <vtkTransform.h>
 #include <vtkTransformPolyDataFilter.h>
 #include <vtkAlgorithmOutput.h>
@@ -25,10 +24,14 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafDataBoundaryAlgorithmVTK::mafDataBoundaryAlgorithmVTK(const QString code_location) : mafResources::mafDataBoundaryAlgorithm(code_location), m_PDataFilter(NULL) {
+mafDataBoundaryAlgorithmVTK::mafDataBoundaryAlgorithmVTK(const QString code_location) : mafResources::mafDataBoundaryAlgorithm(code_location), m_Box(NULL), m_PDataFilter(NULL) {
+    m_Box = vtkCubeSource::New();
 }
 
 mafDataBoundaryAlgorithmVTK::~mafDataBoundaryAlgorithmVTK() {
+    if(m_Box != NULL) {
+        m_Box->Delete();
+    }
     if(m_PDataFilter != NULL) {
         m_PDataFilter->Delete();
     }
@@ -51,9 +54,8 @@ mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(mafCo
 }
 
 mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(double bounds[6], mafResources::mafMatrix *matrix) {
-    vtkCubeSource *box = vtkCubeSource::New();
-    box->SetBounds(bounds);
-    box->Update();
+    m_Box->SetBounds(bounds);
+    m_Box->Update();
 
     if(matrix != NULL){
         //Transform box with the mafMatrix
@@ -72,7 +74,7 @@ mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(doubl
         t->SetMatrix(mat);
         t->Update();
         m_PDataFilter = vtkTransformPolyDataFilter::New();
-        m_PDataFilter->SetInputConnection(box->GetOutputPort(0));
+        m_PDataFilter->SetInputConnection(m_Box->GetOutputPort(0));
         m_PDataFilter->SetTransform(t);
         m_PDataFilter->Update();
         t->Delete();
@@ -81,9 +83,8 @@ mafCore::mafProxyInterface *mafDataBoundaryAlgorithmVTK::calculateBoundary(doubl
         m_PDataFilter->GetOutput()->GetBounds(m_Bounds);
 
     } else {
-        m_OutputBoundary = box->GetOutputPort(0);
-        box->GetOutput()->GetBounds(m_Bounds);
+        m_OutputBoundary = m_Box->GetOutputPort(0);
+        m_Box->GetOutput()->GetBounds(m_Bounds);
     }
-    box->Delete();
     return &m_OutputBoundary;
 }
