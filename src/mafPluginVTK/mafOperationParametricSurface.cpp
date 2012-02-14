@@ -10,18 +10,17 @@
  */
 
 #include "mafOperationParametricSurface.h"
-#include <mafProxy.h>
+
 #include <mafVME.h>
 #include <mafDataSet.h>
-
-#include <vtkAlgorithmOutput.h>
+#include <mafProxy.h>
 
 using namespace mafPluginVTK;
 using namespace mafResources;
 using namespace mafEventBus;
 using namespace mafCore;
 
-mafOperationParametricSurface::mafOperationParametricSurface(const QString code_location) : mafOperation(code_location), m_DataSet(NULL) {
+mafOperationParametricSurface::mafOperationParametricSurface(const QString code_location) : mafOperation(code_location) {
     m_UIFilename = "mafParametricSurface.ui";
     m_ParametricSurfaceType = PARAMETRIC_SPHERE;
     m_ParametricSphere = NULL;
@@ -30,22 +29,17 @@ mafOperationParametricSurface::mafOperationParametricSurface(const QString code_
     m_ParametricCylinder = NULL;
     m_ParametricEllipsoid = NULL;
     m_ParametricSurfaceList.clear();
-    m_ParametricContainer = NULL;
-    this->setParametricSurfaceType(m_ParametricSurfaceType);
 }
 
 mafOperationParametricSurface::~mafOperationParametricSurface() {
     m_ParametricSurfaceList.clear();
     mafDEL(m_Output);
-    m_ParametricContainer = NULL;
-    
 
     mafDEL(m_ParametricSphere);
     mafDEL(m_ParametricCube);
     mafDEL(m_ParametricCone);
     mafDEL(m_ParametricCylinder);
     mafDEL(m_ParametricEllipsoid);
-    mafDEL(m_DataSet);
 }
 
 bool mafOperationParametricSurface::initialize() {
@@ -69,7 +63,7 @@ bool mafOperationParametricSurface::initialize() {
         m_ParametricEllipsoid = (mafVTKParametricSurfaceEllipsoid *)mafNEWFromString("mafPluginVTK::mafVTKParametricSurfaceEllipsoid");
         m_ParametricEllipsoid->setParent(this);
         m_ParametricSurfaceList.insert(PARAMETRIC_ELLIPSOID, m_ParametricEllipsoid);
-        
+
         this->visualizeParametricSurface();
         return true;
     }
@@ -78,25 +72,26 @@ bool mafOperationParametricSurface::initialize() {
 
 void mafOperationParametricSurface::visualizeParametricSurface() {
     mafVTKParametricSurface *currentSurface = m_ParametricSurfaceList.at(m_ParametricSurfaceType);
+    m_ParametricContainer = currentSurface->output();
     m_ParametricContainer.setExternalCodecType("VTK");
     m_ParametricContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
-    m_ParametricContainer = currentSurface->output();
 
-    QByteArray ba = m_ParametricContainer.externalDataType().toAscii();
-    char *v = ba.data();
-    
     //Insert data into VME
     this->m_Output = mafNEW(mafResources::mafVME);
     this->m_Output->setObjectName(mafTr("Parametric Surface"));
-    m_DataSet = mafNEW(mafResources::mafDataSet);
-    m_DataSet->setBoundaryAlgorithmName("mafPluginVTK::mafDataBoundaryAlgorithmVTK");
-    m_DataSet->setDataValue(&m_ParametricContainer);
-    ((mafVME *)this->m_Output)->dataSetCollection()->insertItem(m_DataSet, 0);
+    mafDataSet * dataSet = ((mafVME *)this->m_Output)->dataSetCollection()->itemAtCurrentTime();
+   
+    QString dataBoundary = "mafPluginVTK::mafDataBoundaryAlgorithmVTK";
+    dataSet->setBoundaryAlgorithmName(dataBoundary);
+    dataSet->setDataValue(&m_ParametricContainer);
+    
+    
     ((mafVME *)this->m_Output)->dataSetCollection()->setPose(0., 0., 0.);
     ((mafVME *)this->m_Output)->dataSetCollection()->setOrientation(0., 0., 0.);
 
+
     //set the icon file for vme
-    this->m_Output->setProperty("iconFile",  ":/images/surface.png");
+    this->m_Output->setProperty("iconFile", ":/images/surface.png");
     
     //Notify vme add
     mafEventArgumentsList argList;
@@ -108,6 +103,7 @@ void mafOperationParametricSurface::visualizeParametricSurface() {
     argList.append(mafEventArgument(mafCore::mafObjectBase*, m_Output));
     argList.append(mafEventArgument(bool, true));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);
+    
 }
 
 bool mafOperationParametricSurface::acceptObject(mafCore::mafObjectBase *obj) {
