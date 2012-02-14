@@ -23,9 +23,11 @@
 #include <vtkFloatArray.h>
 #include <vtkCellArray.h>
 #include <vtkPointData.h>
+#include <vtkCubeSource.h>
 #include <vtkAlgorithmOutput.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkSmartPointer.h>
+
 
 using namespace mafCore;;
 using namespace mafResources;
@@ -113,5 +115,5 @@ void mafDataBoundaryAlgorithmVTKTest::calculateBoundaryTest() {
 }
 
 
-MAF_REGISTER_TEST(mafDataBoundaryAlgorithmVTKTest);
+//MAF_REGISTER_TEST(mafDataBoundaryAlgorithmVTKTest);
 #include "mafDataBoundaryAlgorithmVTKTest.moc"
