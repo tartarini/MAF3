@@ -75,6 +75,7 @@ int main(int argc, char *argv[]) {
     logic->customizeVisualization("VTK view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("Buttons view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("Slice", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
+    logic->customizeVisualization("Slice", "vtkRectilinearGrid", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
 
     // Example of View customization with a particular widget
     //mafRegisterQtObject(mafOrthoSlice);
