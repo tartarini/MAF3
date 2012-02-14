@@ -16,6 +16,7 @@
 #include <mafSceneNode.h>
 #include <mafDataSet.h>
 #include <mafProxy.h>
+#include <mafBounds.h>
 
 #include <mafToolVTKPlane.h>
 #include <mafToolHandler.h>
@@ -186,9 +187,10 @@ void mafToolVTKPlaneTest::updatePipeTest() {
     for (int i = 0; i < 6; ++i) {
         b[i] = bv.at(i).toDouble();
     }
-    mafBounds bounds = mafBounds(b);
+    mafCore::mafBounds *bounds = new mafCore::mafBounds(b);
     m_ToolPlane->setVOI(bounds);
     m_ToolPlane->setVisibility(true);
+    mafDEL(bounds);
 
     ((mafVTKWidget*)m_RenderWidget)->update();
     m_Renderer->ResetCamera();

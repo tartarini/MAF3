@@ -3,7 +3,7 @@
  *  VTKButtons
  *
  *  Created by Paolo Quadrani on 27/10/11.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -14,12 +14,14 @@
 #include <mafVME.h>
 #include <mafPipeVisual.h>
 #include <mafToolHandler.h>
+#include <mafBounds.h>
+#include <mafPoint.h>
 
 using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace mafCore;
 
-mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafViewCompound(code_location) {
+mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafViewCompound(code_location), m_OrthoPlaneTool(NULL) {
     setConfigurationFile("OrthoSlice.xml");
     m_GUI = new mafOrthoSlice();
     this->setUIRootWidget(m_GUI);
@@ -27,31 +29,23 @@ mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafViewCompo
 }
 
 mafViewOrthoSlice::~mafViewOrthoSlice() {
-    Q_FOREACH(mafToolVTKPlane *plane, m_PlaneTool) {
-        mafDEL(plane);
-    }
+    mafDEL(m_OrthoPlaneTool);
 }
 
 void mafViewOrthoSlice::addPlaneToolsToHandler() {
-    mafCore::mafPoint n[3];
-    mafCore::mafPoint o(m_SlicePosition);
-    n[0] = mafCore::mafPoint(1., 0., 0.);
-    n[1] = mafCore::mafPoint(0., 1., 0.);
-    n[2] = mafCore::mafPoint(0., 0., 1.);
-    for (int t = 0; t < 3; ++t) {
-        mafPluginVTK::mafToolVTKPlane *plane = mafNEW(mafPluginVTK::mafToolVTKPlane);
-        plane->setFollowSelectedObject(false);
-        plane->setFollowSelectedObjectVisibility(false);
-        plane->setNormal(n[t]);
-        plane->setOrigin(o);
-        m_PlaneTool.push_back(plane);
-    }
+    mafCore::mafBounds *b; // Calculate the right bounds using the mafVisitorBounds
+    mafCore::mafPoint *o = new mafCore::mafPoint(m_SlicePosition);
     Q_FOREACH(mafView *v, *viewList()) {
+        m_OrthoPlaneTool = mafNEW(mafToolVTKOrthoPlane);
+        m_OrthoPlaneTool->setFollowSelectedObject(false);
+        m_OrthoPlaneTool->setFollowSelectedObjectVisibility(false);
+        m_OrthoPlaneTool->setOrigin(o);
+        m_OrthoPlaneTool->setVOI(b);
         mafToolHandler *handler = v->toolHandler();
-        handler->addTool(m_PlaneTool.at(0));
-        handler->addTool(m_PlaneTool.at(1));
-        handler->addTool(m_PlaneTool.at(2));
+        handler->addTool(m_OrthoPlaneTool);
     }
+    mafDEL(b);
+    mafDEL(o);
 }
 
 void mafViewOrthoSlice::sliceAtPosition(double *pos) {
@@ -60,10 +54,9 @@ void mafViewOrthoSlice::sliceAtPosition(double *pos) {
     m_SlicePosition[2] = pos[2];
     // Trigger the pipe update
 
-    Q_FOREACH(mafToolVTKPlane *plane, m_PlaneTool) {
-        mafPoint o(m_SlicePosition);
-        plane->setOrigin(o);
-    }
+    mafPoint *o = new mafPoint(m_SlicePosition);
+    m_OrthoPlaneTool->setOrigin(o);
+    mafDEL(o);
     setModified();
     updateView();
 }
@@ -93,15 +86,14 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
             }
         }
     }
-    if (m_PlaneTool.isEmpty()) {
+    if (m_OrthoPlaneTool == NULL) {
         addPlaneToolsToHandler();
     }
-    Q_FOREACH(mafToolVTKPlane *plane, m_PlaneTool) {
-        mafBounds bounds(b);
-        plane->setSceneNode(node);
-        plane->setVOI(bounds);
-        plane->setVisibility(m_VisibleObjects != 0);
-    }
+    mafBounds *bounds = new mafBounds(b);
+    m_OrthoPlaneTool->setSceneNode(node);
+    m_OrthoPlaneTool->setVOI(bounds);
+    m_OrthoPlaneTool->setVisibility(m_VisibleObjects != 0);
+    mafDEL(bounds);
 }
 
 //////////////////////////////////////////////////////////////////////////

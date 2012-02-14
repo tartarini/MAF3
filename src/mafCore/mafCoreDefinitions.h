@@ -81,30 +81,6 @@ struct mafPluggedObjectInformation{
     QString m_ClassType;  ///< Class type of the plugged object.
 };
 
-/// Structure storing information of 3D point
-typedef struct mafPoint {
-    mafPoint() : x(0), y(0), z(0) {}
-    mafPoint(double x_pos, double y_pos, double z_pos) : x(x_pos), y(y_pos), z(z_pos) {}
-    mafPoint(const mafPoint &p) : x(p.x), y(p.y), z(p.z) {}
-    mafPoint(double pos[3]) : x(pos[0]), y(pos[1]), z(pos[2]) {}
-    double x;
-    double y;
-    double z;
-} mafPoint;
-
-/// Structure storing information of 3D bounds (volume of interest)
-typedef struct mafBounds {
-    mafBounds() : xMin(0), yMin(0), zMin(0), xMax(0), yMax(0), zMax(0) {}
-    mafBounds(const mafBounds &p) : xMin(p.xMin), yMin(p.yMin), zMin(p.zMin), xMax(p.xMax), yMax(p.yMax), zMax(p.zMax) {}
-    mafBounds(double pos[6]) : xMin(pos[0]), xMax(pos[1]), yMin(pos[2]), yMax(pos[3]), zMin(pos[4]), zMax(pos[5]) {}
-    double xMin;
-    double yMin;
-    double zMin;
-    double xMax;
-    double yMax;
-    double zMax;
-} mafBounds;
-
 ///< Enum that define the Serialization pattern. For "Composition" or for "Inheritance"
 typedef enum {
   mafSerializationPatternInheritance = 0,
@@ -134,10 +110,7 @@ class mafObjectBase;
 /// Define type associated to the list of objects stored into the mafObjectRegistry and usable to define a list of mafObjectBase generically.
 typedef QList<mafObjectBase *> mafObjectsList;
 
-}  // mafCore
-
-Q_DECLARE_METATYPE(mafCore::mafPoint);
-Q_DECLARE_METATYPE(mafCore::mafBounds);
+}  // namespace mafCore
 
 #endif // MAFDEFINITIONS_H
 

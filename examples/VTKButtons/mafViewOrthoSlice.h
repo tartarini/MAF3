@@ -3,7 +3,7 @@
  *  VTKButtons
  *
  *  Created by Paolo Quadrani on 27/10/11.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -14,7 +14,7 @@
 
 #include <mafViewCompound.h>
 #include <mafSceneNode.h>
-#include <mafToolVTKPlane.h>
+#include "mafToolVTKOrthoPlane.h"
 
 class mafOrthoSlice;
  
@@ -56,7 +56,7 @@ protected:
 private:
     mafOrthoSlice *m_GUI; ///< GUI widget.
     double m_SlicePosition[3]; ///< Current slice position.
-    QList<mafPluginVTK::mafToolVTKPlane *> m_PlaneTool;
+    mafToolVTKOrthoPlane *m_OrthoPlaneTool;
 
     /// Initialize the plane tools
     void addPlaneToolsToHandler();

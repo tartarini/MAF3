@@ -35,11 +35,12 @@ void vtkIOPWCallback::Execute(vtkObject *caller, unsigned long, void*) {
     vtkMAFImplicitPlaneRepresentation *rep = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(planeWidget->GetRepresentation());
     double ori[3];
     rep->GetOrigin(ori);
-    mafCore::mafPoint o(ori);
+    mafCore::mafPoint *o = new mafCore::mafPoint(ori);
     QVariant vo;
-    vo.setValue<mafCore::mafPoint>(o);
+    vo.setValue<mafCore::mafPoint>(*o);
     Tool->setProperty("origin", vo);
     Tool->setModified();
+    mafDEL(o);
 }
 
 //-----------------------------------------------------------------------------------------------------
@@ -53,8 +54,8 @@ mafToolVTKOrthoPlane::mafToolVTKOrthoPlane(const QString code_location) : mafToo
 
     double b[6] = {0,1,0,1,0,1};
 
-    m_Origin = mafPoint(0,0,0);
-    m_VOI = mafBounds(b);
+    m_Origin = new mafPoint(0,0,0);
+    m_VOI = new mafBounds(b);
 
     VTK_CREATE(vtkMAFImplicitPlaneRepresentation, repX);
     repX->SetPlaceFactor(1.25);
@@ -97,17 +98,19 @@ mafToolVTKOrthoPlane::mafToolVTKOrthoPlane(const QString code_location) : mafToo
 }
 
 mafToolVTKOrthoPlane::~mafToolVTKOrthoPlane() {
+    mafDEL(m_Origin);
+    mafDEL(m_VOI);
 }
 
-void mafToolVTKOrthoPlane::setVOI(mafBounds bounds) {
+void mafToolVTKOrthoPlane::setVOI(mafCore::mafBounds *bounds) {
     double b[6];
-    m_VOI = bounds;
-    b[0] = bounds.xMin;
-    b[1] = bounds.xMax;
-    b[2] = bounds.yMin;
-    b[3] = bounds.yMax;
-    b[4] = bounds.zMin;
-    b[5] = bounds.zMax;
+    *m_VOI = *bounds;
+    b[0] = bounds->xMin();
+    b[1] = bounds->xMax();
+    b[2] = bounds->yMin();
+    b[3] = bounds->yMax();
+    b[4] = bounds->zMin();
+    b[5] = bounds->zMax();
     vtkMAFImplicitPlaneRepresentation *repX = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidgetX->GetRepresentation());
     repX->PlaceWidget(b);
     vtkMAFImplicitPlaneRepresentation *repY = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidgetY->GetRepresentation());
@@ -117,14 +120,14 @@ void mafToolVTKOrthoPlane::setVOI(mafBounds bounds) {
     setModified();
 }
 
-void mafToolVTKOrthoPlane::setOrigin(mafCore::mafPoint o) {
-    m_Origin = o;
+void mafToolVTKOrthoPlane::setOrigin(mafCore::mafPoint *o) {
+    *m_Origin = *o;
     vtkMAFImplicitPlaneRepresentation *repX = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidgetX->GetRepresentation());
-    repX->SetOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    repX->SetOrigin(m_Origin->x(), m_Origin->y(), m_Origin->z());
     vtkMAFImplicitPlaneRepresentation *repY = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidgetY->GetRepresentation());
-    repY->SetOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    repY->SetOrigin(m_Origin->x(), m_Origin->y(), m_Origin->z());
     vtkMAFImplicitPlaneRepresentation *repZ = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidgetZ->GetRepresentation());
-    repZ->SetOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    repZ->SetOrigin(m_Origin->x(), m_Origin->y(), m_Origin->z());
     setModified();
 }
 
