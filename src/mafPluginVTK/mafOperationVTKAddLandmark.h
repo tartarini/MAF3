@@ -16,9 +16,9 @@
 #include "mafPluginVTKDefinitions.h"
 #include "mafOperation.h"
 #include "mafVTKParametricSurfaceSphere.h"
+#include <vtkAlgorithmOutput.h>
 
 // Foundation Class forwarding list
-class vtkAlgorithmOutput;
 class vtkPolyData;
 class vtkPolyDataMapper;
 class vtkActor;

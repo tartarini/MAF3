@@ -200,45 +200,42 @@ void mafOperationVTKAddLandmark::internalUpdate()
 
         //vtkAlgorithmOutputs should not be destroyed, so I put them in a list.
         mafCore::mafProxy<vtkAlgorithmOutput> landmarkContainer;
-        landmarkContainer.setExternalCodecType("VTK");
-        landmarkContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         landmarkContainer = m_ParametricSphere->output();
+        const QString codecType("VTK");
+        landmarkContainer.setExternalCodecType(codecType);
+        landmarkContainer.setClassTypeNameFunction(vtkClassTypeNameExtract);
         m_LandmarkContainerList.append(landmarkContainer);
 
         //Insert data into VME
         mafVME *landmarkVME = mafNEW(mafResources::mafVME);
         landmarkVME->setObjectName(mafTr("Landmark_%1").arg(m_VMEList.count()));
-        mafDataSet *landmarkDataSet = mafNEW(mafResources::mafDataSet);
-        landmarkDataSet->setBoundaryAlgorithmName("mafPluginVTK::mafDataBoundaryAlgorithmVTK");
+        mafDataSet * landmarkDataSet = landmarkVME->dataSetCollection()->itemAtCurrentTime();
+        
         landmarkDataSet->setDataValue(&m_LandmarkContainerList.last()/*landmarkContainer*/);
-        landmarkVME->dataSetCollection()->insertItem(landmarkDataSet, 0);
+        QString dataBoundary = "mafPluginVTK::mafDataBoundaryAlgorithmVTK"; 
+        landmarkDataSet->setBoundaryAlgorithmName(dataBoundary);
+
         landmarkVME->dataSetCollection()->setPose(0., 0., 0.);
         landmarkVME->dataSetCollection()->setOrientation(0., 0., 0.);
         landmarkVME->setProperty("visibility", true);
         m_VMEList.append(landmarkVME);
-        mafDEL(landmarkDataSet);
-        //this->m_Output = landmarkVME;
 
-        //Set color of the landmark
-        mafProxy<vtkAlgorithmOutput> *dataSet =  mafProxyPointerTypeCast(vtkAlgorithmOutput, landmarkDataSet->dataValue());
-        vtkAlgorithm *producer = (*dataSet)->GetProducer();
-        vtkDataObject *dataObject = producer->GetOutputDataObject(0);
-        vtkPolyData* vtkData = vtkPolyData::SafeDownCast(dataObject);
 
         // Select input VME before add VME.
-        mafVME *vme = qobject_cast<mafVME *>(input());
+        mafCore::mafObjectBase *vme = input();
         mafEventArgumentsList argList;
         argList.append(mafEventArgument(mafCore::mafObjectBase*, vme));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 
         //Notify vme add
+        vme = landmarkVME;
         argList.clear();
-        argList.append(mafEventArgument(mafCore::mafObjectBase *, landmarkVME));
+        argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
 
         //Visualize vme added
         argList.clear();
-        argList.append(mafEventArgument(mafCore::mafObjectBase*, landmarkVME));
+        argList.append(mafEventArgument(mafCore::mafObjectBase*, vme));
         argList.append(mafEventArgument(bool, true));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.sceneNodeShow", mafEventTypeLocal, &argList);
     }
