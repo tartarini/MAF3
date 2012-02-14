@@ -16,6 +16,7 @@
 #include "mafInteractor.h"
 #include "mafDataBoundaryAlgorithm.h"
 #include "mafInteractorSelection.h"
+#include <mafBounds.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -233,49 +234,48 @@ bool mafVME::dataLoaded() const {
 }
 
 QString mafVME::boundXmin() {
-    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[0].toDouble());
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()->xMin());
 }
 
 QString mafVME::boundXmax() {
-    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[1].toDouble());
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()->xMax());
 }
 
 QString mafVME::boundYmin() {
-    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[2].toDouble());
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()->yMin());
 }
 
 QString mafVME::boundYmax() {
-    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[3].toDouble());
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()->yMax());
 }
 
 QString mafVME::boundZmin() {
-    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[4].toDouble());
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()->zMin());
 }
 
 QString mafVME::boundZmax() {
-    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()[5].toDouble());
+    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()->zMax());
 }
 
 void mafVME::bounds(double b[6], double t) {
-    QVariantList bVariant = this->dataSetCollection()->itemAt(t)->bounds();
-    for (int i = 0; i < 6; ++i) {
-        b[i] = bVariant[i].toDouble();
+    mafBoundsPointer bVariant = this->dataSetCollection()->itemAt(t)->bounds();
+    b[0] = bVariant->xMin();
+    b[1] = bVariant->xMax();
+    b[2] = bVariant->yMin();
+    b[3] = bVariant->yMax();
+    b[4] = bVariant->zMin();
+    b[5] = bVariant->zMax();
+}
+
+
+mafCore::mafBoundsPointer mafVME::bounds() const{
+    mafDataSet *ds = m_DataSetCollection->itemAtCurrentTime();
+    if(ds) {
+        return ds->bounds();
     }
 }
 
 double mafVME::length() {
     mafDataSet *dataset = this->dataSetCollection()->itemAtCurrentTime();
-    QVariantList b;
-    if (dataset->isValidBounds()) {
-        b = dataset->bounds();
-        int i = 0;
-        double b_diff[3];
-        for (; i < 3; ++i) {
-            b_diff[i] = b[2*i + 1].toDouble() - b[2*i].toDouble();
-            b_diff[i] *= b_diff[i];
-        }
-        return sqrtl(b_diff[0] + b_diff[1] + b_diff[2]);
-    }
-
-    return -1;
+    return dataset->bounds()->length();
 }

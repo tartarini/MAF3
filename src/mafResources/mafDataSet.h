@@ -16,6 +16,7 @@
 #include "mafResourcesDefinitions.h"
 #include "mafMementoDataSet.h"
 #include <mafProxyInterface.h>
+#include <mafBounds.h>
 
 namespace mafResources {
 
@@ -34,7 +35,7 @@ class MAFRESOURCESSHARED_EXPORT mafDataSet : public mafCore::mafObject {
     Q_PROPERTY(QString externalDataType READ externalDataType WRITE setExternalDataType)
     Q_PROPERTY(QString externalCodecType READ externalCodecType WRITE setExternalCodecType)
     Q_PROPERTY(QString boundaryAlgorithmName READ boundaryAlgorithmName WRITE setBoundaryAlgorithmName)
-    Q_PROPERTY(QVariantList bounds READ bounds WRITE setBounds)
+    Q_PROPERTY(mafCore::mafBoundsPointer bounds READ bounds WRITE setBounds)
     Q_PROPERTY(QString poseMatrix READ poseMatrixString WRITE setPoseMatrixString)
     
     /// typedef macro.
@@ -91,10 +92,10 @@ public:
     QString boundaryAlgorithmName() const;
 
     /// Set the bounds of the bounding box of the VME.
-    void setBounds(QVariantList bounds);
+    void setBounds(mafCore::mafBoundsPointer bounds);
 
     /// Return the bounds of the bounding box of the VME.
-    QVariantList bounds();
+    mafCore::mafBoundsPointer bounds();
     
     /// check if boundary is valid.
     bool isValidBounds();
@@ -141,7 +142,7 @@ private:
     QString m_ExternalDataType; ///< Type of data contained in the mafDataSet.
     QString m_ExternalCodecType; ///< Type of codec used to encode/decode in the mafDataSet.
     bool m_DataLoaded; ///< Set true when data is loaded in memory.
-    QVariantList m_Bounds; ///< List of bounds value of the binding box.
+    mafCore::mafBoundsPointer m_Bounds; ///< List of bounds value of the binding box.
 
     QString m_FileName; ///< Name of the file containing the datat.
 
@@ -180,14 +181,12 @@ inline bool mafDataSet::dataLoaded() const {
     return m_DataLoaded;
 }
 
-inline QVariantList mafDataSet::bounds()  {
+inline mafCore::mafBoundsPointer mafDataSet::bounds()  {
     return m_Bounds;
 }
 
 inline bool mafDataSet::isValidBounds() {
-    return ((m_Bounds.at(0).toDouble() <= m_Bounds.at(1).toDouble()) && 
-            (m_Bounds.at(2).toDouble() <= m_Bounds.at(3).toDouble()) && 
-            (m_Bounds.at(4).toDouble() <= m_Bounds.at(5).toDouble()));
+    return m_Bounds->isValid();
 }
 
 } //mafResources

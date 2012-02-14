@@ -39,16 +39,16 @@ public:
     mafBounds &operator=(const mafBounds &obj);
 
     /// Object constructor
-	mafBounds(double pos[6], const QString code_location = "");
+	mafBounds(double b[6], const QString code_location = "");
     
     /// Check if the bounds are valid.
 	bool isValid();
 	
 	/// Calculate the union of the given bounds with this one.
-	void unite(const mafBounds &b);
+	void unite(const mafBounds &b, mafBounds &output);
 	
 	/// Calculate the intersection with the given bounds.
-	void intersect(const mafBounds &b);
+	void intersect(const mafBounds &b, mafBounds &output);
 
     /// Test if a 3D point is inside the bounds.
     bool isPointInBounds(mafPoint *p);
@@ -70,6 +70,15 @@ public:
 
     /// Return the maximum Z coordinate
     double zMax() const;
+    
+    /// set the bounds.
+    void setBounds(double b[6]);
+    
+    /// return max diagonal lentgh
+    double length();
+    
+    /// return center of the box
+    void center(double c[3]);
 
 private:
 	double m_XMin; ///< Minimum X value

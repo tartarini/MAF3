@@ -14,10 +14,12 @@
 
 // Includes list
 #include "mafVisitor.h"
-//#include "mafBounds.h"
+
 
 namespace mafCore {
 
+//forward class
+class mafBounds;
 
 /**
  Class name: mafVisitorBounds
@@ -39,15 +41,15 @@ public:
     /*virtual*/ void visit(mafObjectBase *object);
 	
 	/// Return the calculated bounds.
-	//mafBounds bounds() const;
+	mafBounds *bounds() const;
 	
 private:
-	//mafBounds m_Bounds; ///< Store the calculated bounds.
+	mafBounds *m_Bounds; ///< Store the calculated bounds.
 };
-/*
-inline mafBounds mafVisitorBounds::bounds() const {
+
+inline mafBounds *mafVisitorBounds::bounds() const {
 	return m_Bounds;
-}*/
+}
 
 }
 

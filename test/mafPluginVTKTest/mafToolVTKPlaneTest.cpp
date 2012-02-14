@@ -182,15 +182,9 @@ void mafToolVTKPlaneTest::updatePipeTest() {
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, sphere->dataValue());
     m_SphereMapper->SetInputConnection(*dataSet);
 
-    QVariantList bv = sphere->bounds();
-    double b[6];
-    for (int i = 0; i < 6; ++i) {
-        b[i] = bv.at(i).toDouble();
-    }
-    mafCore::mafBounds *bounds = new mafCore::mafBounds(b);
+    mafCore::mafBoundsPointer bounds = sphere->bounds();
     m_ToolPlane->setVOI(bounds);
     m_ToolPlane->setVisibility(true);
-    mafDEL(bounds);
 
     ((mafVTKWidget*)m_RenderWidget)->update();
     m_Renderer->ResetCamera();

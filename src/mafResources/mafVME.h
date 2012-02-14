@@ -18,6 +18,7 @@
 #include "mafMementoVME.h"
 
 #include <mafProxyInterface.h>
+#include <mafBounds.h>
 
 namespace mafResources {
 
@@ -25,7 +26,6 @@ namespace mafResources {
 class mafPipeData;
 class mafMementoDataSet;
 class mafInteractor;
-
 
 /**
 Class name: mafVME
@@ -45,7 +45,8 @@ class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_PROPERTY(QString boundZmax READ boundZmax STORED false)
 
     Q_PROPERTY(QString objectType READ objectType STORED false)
-
+    
+    Q_PROPERTY(mafCore::mafBoundsPointer bounds READ bounds STORED false)
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
 
@@ -120,6 +121,9 @@ public:
 
     /// Fill parameter 'b' with 3D bounds of the VME data at given time. Default value means current time.
     void bounds(double b[6], double t = -1);
+    
+    /// return 3d bounds.
+    mafCore::mafBoundsPointer bounds() const;
 
     /// Return the length of the 3D bounding box of the data at the current timestamp.
     double length();

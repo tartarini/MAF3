@@ -37,7 +37,7 @@ void vtkIOPWCallback::Execute(vtkObject *caller, unsigned long, void*) {
     rep->GetOrigin(ori);
     mafCore::mafPoint *o = new mafCore::mafPoint(ori);
     QVariant vo;
-    vo.setValue<mafCore::mafPoint>(*o);
+    vo.setValue<mafCore::mafPointPointer>(o);
     Tool->setProperty("origin", vo);
     Tool->setModified();
     mafDEL(o);

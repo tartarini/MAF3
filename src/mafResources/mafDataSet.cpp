@@ -17,16 +17,15 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
 
-mafDataSet::mafDataSet(const QString code_location) : mafObject(code_location), m_DataValue(NULL), m_DataBoundary(NULL), m_Matrix(NULL), m_DataBoundaryAlgorithm(NULL), m_DataBoundaryAlgorithmName(), m_ExternalDataType(), m_ExternalCodecType(), m_DataLoaded(false), m_FileName() {
-    for(int i = 0; i < 6; i++) {
-        m_Bounds.append(0);
-    }
+mafDataSet::mafDataSet(const QString code_location) : mafObject(code_location), m_DataValue(NULL), m_DataBoundary(NULL), m_Matrix(NULL), m_DataBoundaryAlgorithm(NULL), m_DataBoundaryAlgorithmName(), m_ExternalDataType(), m_ExternalCodecType(), m_DataLoaded(false), m_FileName(), m_Bounds(NULL) {
+    m_Bounds = new mafCore::mafBounds;
     QObject::connect(this, SIGNAL(loadDataSignal()), this, SLOT(updateDataValue()), Qt::BlockingQueuedConnection);
 }
 
 mafDataSet::~mafDataSet() {
     // External data must be destroyed by the creator if no pointer to destructor function has been given.
     mafDEL(m_DataBoundaryAlgorithm);
+    mafDEL(m_Bounds);
     if(m_Matrix != NULL) {
         delete m_Matrix;
         m_Matrix = NULL;
@@ -236,27 +235,22 @@ void mafDataSet::updateDataValue() {
   }
 }
 
-void mafDataSet::setBounds(QVariantList bounds) {
-    m_Bounds.clear();
-    m_Bounds.append(bounds);
-//    setModified();
+void mafDataSet::setBounds(mafCore::mafBoundsPointer bounds) {
+    if(m_Bounds != bounds) {
+        mafDEL(m_Bounds);
+        m_Bounds = bounds;
+        m_Bounds->retain();
+    }
+
 }
 
 void mafDataSet::updateBounds() {
     mafDataBoundaryAlgorithm *boundary = NULL;
     boundary = this->boundaryAlgorithm();
+    double b[6] = {-1,1,-1,1,-1,1};
     if(boundary != NULL && m_DataValue != NULL){
         boundary->calculateBoundary(m_DataValue);
-        double b[6];
         boundary->bounds(b);
-        int i = 0;
-        for(; i < 6; ++i) {
-            m_Bounds[i] = b[i];
-        }
-    } else {
-        int i = 0;
-        for(; i < 6; ++i) {
-            m_Bounds[i] = (i%2 == 0) ? 1 : -1;
-        }
     }
+    m_Bounds->setBounds(b);
 }

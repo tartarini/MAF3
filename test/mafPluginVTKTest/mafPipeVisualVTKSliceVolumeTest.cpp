@@ -166,11 +166,9 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTest() {
     mafPipeVisualVTKSliceVolume *pipe;
     pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSliceVolume);
     pipe->setInput(m_VME);
-    QVariantList b = m_VME->dataSetCollection()->itemAtCurrentTime()->bounds();
+    mafCore::mafBoundsPointer b = m_VME->dataSetCollection()->itemAtCurrentTime()->bounds();
     double center[3];
-    center[0] = (b[0].toDouble() + b[1].toDouble()) / 2.;
-    center[1] = (b[2].toDouble() + b[3].toDouble()) / 2.;
-    center[2] = (b[4].toDouble() + b[5].toDouble()) / 2.;
+    b->center(center);
     pipe->setProperty("originX", center[0]);
     pipe->setProperty("originY", center[1]);
     pipe->setProperty("originZ", center[2]);
@@ -235,11 +233,9 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTestFromPlugIn() {
     
     //! <snippet>
     mafPipeVisual *visualPipe = (mafPipeVisual *)mafNEWFromString("mafPluginVTK::mafPipeVisualVTKSliceVolume");
-    QVariantList b = m_VME->dataSetCollection()->itemAtCurrentTime()->bounds();
+    mafCore::mafBoundsPointer b = m_VME->dataSetCollection()->itemAtCurrentTime()->bounds();
     double center[3];
-    center[0] = (b[0].toDouble() + b[1].toDouble()) / 2.;
-    center[1] = (b[2].toDouble() + b[3].toDouble()) / 2.;
-    center[2] = (b[4].toDouble() + b[5].toDouble()) / 2.;
+    b->center(center);
     visualPipe->setProperty("originX", center[0]);
     visualPipe->setProperty("originY", center[1]);
     visualPipe->setProperty("originZ", center[2]);

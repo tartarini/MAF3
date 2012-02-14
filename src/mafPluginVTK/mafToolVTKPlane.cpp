@@ -40,8 +40,8 @@ void vtkIPWCallback::Execute(vtkObject *caller, unsigned long, void*) {
     o = new mafCore::mafPoint(ori);
     n = new mafCore::mafPoint(nor);
     QVariant vo, vn;
-    vo.setValue<mafCore::mafPoint>(*o);
-    vn.setValue<mafCore::mafPoint>(*n);
+    vo.setValue<mafCore::mafPointPointer>(o);
+    vn.setValue<mafCore::mafPointPointer>(n);
     Tool->setProperty("origin", vo);
     Tool->setProperty("normal", vn);
     Tool->setModified();

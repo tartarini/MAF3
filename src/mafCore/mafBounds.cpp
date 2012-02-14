@@ -19,7 +19,7 @@ mafBounds::mafBounds(const QString code_location) : mafReferenceCounted(), m_XMi
 // mafBounds::mafBounds(const mafBounds &p) : m_XMin(p.xMin()), m_YMin(p.yMin()), m_ZMin(p.zMin()), m_XMax(p.xMax()), m_YMax(p.yMax()), m_ZMax(p.zMax()) {
 // }
 
-mafBounds::mafBounds(double pos[6], const QString code_location) : m_XMin(pos[0]), m_XMax(pos[1]), m_YMin(pos[2]), m_YMax(pos[3]), m_ZMin(pos[4]), m_ZMax(pos[5]) {
+mafBounds::mafBounds(double b[6], const QString code_location) : m_XMin(b[0]), m_XMax(b[1]), m_YMin(b[2]), m_YMax(b[3]), m_ZMin(b[4]), m_ZMax(b[5]) {
 }
 
 mafBounds::~mafBounds() {
@@ -39,10 +39,50 @@ bool mafBounds::isValid() {
 	return m_XMin <= m_XMax && m_YMin <= m_YMax && m_ZMin <= m_ZMax;
 }
 
-void mafBounds::unite(const mafBounds &b) {
+void mafBounds::unite(const mafBounds &b, mafBounds &output) {
+    double bounds[6];
+    bounds[0] = MIN(this->xMin(), b.xMin());
+    bounds[1] = MAX(this->xMax(), b.xMax());
+    
+    bounds[2] = MIN(this->yMin(), b.yMin());
+    bounds[3] = MAX(this->yMax(), b.yMax());
+    
+    bounds[4] = MIN(this->zMin(), b.zMin());
+    bounds[5] = MAX(this->zMax(), b.zMax());
+    
+    output.setBounds(bounds);
 }
 
-void mafBounds::intersect(const mafBounds &b) {
+void mafBounds::intersect(const mafBounds &b, mafBounds &output) {
+    
+}
+
+void mafBounds::setBounds(double b[6]) {
+    m_XMin = b[0]; 
+    m_XMax = b[1];
+    m_YMin = b[2];
+    m_YMax = b[3];
+    m_ZMin = b[4];
+    m_ZMax = b[5];
+}
+
+double mafBounds::length() {
+    double b_diff[3];
+    double temp;
+    temp = xMax()- xMin();
+    b_diff[0] = temp * temp;
+    temp = yMax()- yMin();
+    b_diff[1] = temp * temp;
+    temp = zMax()- zMin();
+    b_diff[2] = temp * temp;
+    
+    return sqrtl(b_diff[0] + b_diff[1] + b_diff[2]);
+}
+
+void mafBounds::center(double c[3]) {
+    c[0] = (xMin() + xMax()) * .5;
+    c[1] = (yMin() + yMax()) * .5;
+    c[2] = (zMin() + zMax()) * .5;
 }
 
 bool mafBounds::isPointInBounds(mafPoint *p) {
