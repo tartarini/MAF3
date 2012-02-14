@@ -10,6 +10,7 @@
  */
 
 #include "mafTestSuite.h"
+#include <mafPluginManager.h>
 #include <mafLogic.h>
 #include <mafCoreSingletons.h>
 #include <mafObject.h>
@@ -17,6 +18,7 @@
 using namespace mafCore;
 using namespace mafApplicationLogic;
 using namespace mafEventBus;
+using namespace mafResources;
 
 //----------------------------------------------------------------------
 
@@ -53,10 +55,12 @@ private Q_SLOTS:
         qApp->setApplicationName("mafApplicationLogicTest");
         // Create the instance of mafLogic.
         m_Logic = mafNEW(mafApplicationLogic::mafLogic);
+        m_PluginManager = mafPluginManager::instance();
     }
 
     /// Cleanup tes variables memory allocation.
     void cleanupTestCase() {
+        m_PluginManager->shutdown();
         mafDEL(m_Logic);
     }
 
@@ -74,6 +78,7 @@ private Q_SLOTS:
 
 private:
     mafLogic *m_Logic; ///< Test variable.
+    mafPluginManager *m_PluginManager; ///< Test var.
 };
 
 void mafLogicTest::mafLogicAllocationTest() {
