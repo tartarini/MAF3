@@ -22,6 +22,13 @@
 
 #include <mafObjectBase.h>
 
+
+#ifdef __APPLE__
+#define UI_PATH QString(QCoreApplication::instance()->applicationName()).append("/Contents/MacOS/")
+#else
+#define UI_PATH ""
+#endif
+
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafGUI;
@@ -462,7 +469,8 @@ void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
             }
 
             // Show the GUI for the selected VME.
-            QString guiFilename = vme->uiFilename();
+            QString path(UI_PATH);
+            QString guiFilename = path.append(vme->uiFilename());
             m_UILoadedFromFile = !guiFilename.isEmpty();
             if(m_UILoadedFromFile) {
                 // Ask the UI Loader to load the operation's GUI.
@@ -481,7 +489,8 @@ void mafGUIManager::updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeV
             return;
         }
         m_CurrentPipeVisual = pipeVisual;
-        QString guiFilename = pipeVisual->uiFilename();
+        QString path(UI_PATH);
+        QString guiFilename = path.append(pipeVisual->uiFilename());
         m_UILoadedFromFile = !guiFilename.isEmpty();
         if(m_UILoadedFromFile) {
             // Ask the UI Loader to load the view's GUI.
@@ -679,7 +688,8 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
     opMenu->setEnabled(false);
 
     // Get the started operation
-    QString guiFilename = operation->uiFilename();
+    QString path(UI_PATH);
+    QString guiFilename = path.append(operation->uiFilename());
     m_OperationWidget->setOperation(operation);
     operation->setObjectName(m_OperationWidget->operationName());
 
@@ -876,7 +886,8 @@ void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
     }
 
     // Get the selected view's UI file
-    QString guiFilename = view->uiFilename();
+    QString path(UI_PATH);
+    QString guiFilename = path.append(view->uiFilename());
     m_UILoadedFromFile = !guiFilename.isEmpty();
     if(!m_UILoadedFromFile) {
         // Check if there is a custom widget associated with the class...
