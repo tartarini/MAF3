@@ -10,6 +10,7 @@
  */
 
 #include "mafBounds.h"
+#include "mafPoint.h"
 
 using namespace mafCore;
 
@@ -54,7 +55,42 @@ void mafBounds::unite(const mafBounds &b, mafBounds &output) {
 }
 
 void mafBounds::intersect(const mafBounds &b, mafBounds &output) {
+    mafBounds *a = this;
+    /// Xmin check
+    bool bXMinInsideA = b.xMin() >= a->xMin() && b.xMin() <= a->xMax();
+    /// Xmax check
+    bool bXMaxInsideA = b.xMax() >= a->xMin() && b.xMax() <= a->xMax();
+ 
     
+    /// Ymin check
+    bool bYMinInsideA = b.yMin() >= a->yMin() && b.yMin() <= a->yMax();
+    /// Ymax check
+    bool bYMaxInsideA = b.yMax() >= a->yMin() && b.yMax() <= a->yMax();
+ 
+    
+    /// Zmin check
+    bool bZMinInsideA = b.zMin() >= a->zMin() && b.zMin() <= a->zMax();
+    /// Zmax check 
+    bool bZMaxInsideA = b.zMax() >= a->zMin() && b.zMax() <= a->zMax();
+    
+    
+    bool XIntersection = (bXMinInsideA && !bXMaxInsideA) || (bXMinInsideA && bYMaxInsideA) || (!bXMinInsideA && bXMaxInsideA);
+    bool YIntersection = (bYMinInsideA && !bYMaxInsideA) || (bYMinInsideA && bYMaxInsideA) || (!bYMinInsideA && bYMaxInsideA);
+    bool ZIntersection = (bZMinInsideA && !bZMaxInsideA) || (bZMinInsideA && bZMaxInsideA) || (!bZMinInsideA && bZMaxInsideA);
+    
+    double outputBound[6] = {0.,-1,0.,-1,0.,-1};
+    if(XIntersection && YIntersection && ZIntersection) {
+        outputBound[0] = bXMinInsideA ? b.xMin() : a->xMin();
+        outputBound[1] = bXMaxInsideA ? b.xMax() : a->xMax();
+        
+        outputBound[2] = bYMinInsideA ? b.yMin() : a->yMin();
+        outputBound[3] = bYMaxInsideA ? b.yMax() : a->yMax();
+        
+        outputBound[4] = bZMinInsideA ? b.zMin() : a->zMin();
+        outputBound[5] = bZMaxInsideA ? b.zMax() : a->zMax();
+    }
+    
+    output.setBounds(outputBound);
 }
 
 void mafBounds::setBounds(double b[6]) {
@@ -86,7 +122,7 @@ void mafBounds::center(double c[3]) {
 }
 
 bool mafBounds::isPointInBounds(mafPoint *p) {
-    return p->x() >= m_XMin && p->x <= m_XMax &&
+    return p->x() >= m_XMin && p->x() <= m_XMax &&
         p->y() >= m_YMin && p->y() <= m_YMax &&
         p->z() >= m_ZMin && p->z() <= m_ZMax;
 }

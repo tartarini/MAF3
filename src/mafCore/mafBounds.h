@@ -17,6 +17,9 @@
 
 namespace mafCore {
 
+///class forwarding
+class mafPoint;
+    
 /**
  Class name: mafBounds
  This class defines the 3D bounds used by VMEs.
