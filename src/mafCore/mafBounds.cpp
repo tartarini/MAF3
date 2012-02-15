@@ -44,3 +44,9 @@ void mafBounds::unite(const mafBounds &b) {
 
 void mafBounds::intersect(const mafBounds &b) {
 }
+
+bool mafBounds::isPointInBounds(mafPoint *p) {
+    return p->x() >= m_XMin && p->x <= m_XMax &&
+        p->y() >= m_YMin && p->y() <= m_YMax &&
+        p->z() >= m_ZMin && p->z() <= m_ZMax;
+}

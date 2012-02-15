@@ -50,6 +50,9 @@ public:
 	/// Calculate the intersection with the given bounds.
 	void intersect(const mafBounds &b);
 
+    /// Test if a 3D point is inside the bounds.
+    bool isPointInBounds(mafPoint *p);
+
     /// Return the minimum X coordinate
     double xMin() const;
 
