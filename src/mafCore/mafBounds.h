@@ -80,6 +80,9 @@ public:
     /// set the bounds.
     void setBounds(double b[6]);
     
+    /// set the bounds.
+    void setBounds(mafBounds *b);
+    
     /// return max diagonal lentgh
     double length();
     

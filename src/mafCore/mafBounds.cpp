@@ -112,6 +112,15 @@ void mafBounds::setBounds(double b[6]) {
     m_ZMax = b[5];
 }
 
+void mafBounds::setBounds(mafBounds *b) {
+    m_XMin = b->xMin(); 
+    m_XMax = b->xMax();
+    m_YMin = b->yMin();
+    m_YMax = b->yMax();
+    m_ZMin = b->zMin();
+    m_ZMax = b->zMax();
+}
+
 double mafBounds::length() {
     double b_diff[3];
     double temp;
