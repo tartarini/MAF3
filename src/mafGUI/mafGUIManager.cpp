@@ -469,15 +469,17 @@ void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
             }
 
             // Show the GUI for the selected VME.
-            QString path(UI_PATH);
-            QString guiFilename = path.append(vme->uiFilename());
+            QString guiFilename = vme->uiFilename();
             m_UILoadedFromFile = !guiFilename.isEmpty();
             if(m_UILoadedFromFile) {
+                QString path(UI_PATH);
+                guiFilename = path.append(guiFilename);
+                
                 // Ask the UI Loader to load the operation's GUI.
                 m_UILoader->uiLoad(guiFilename, mafGUILoadedTypeVme);
                 return;
             }
-
+            
             showGui(NULL, mafGUILoadedTypeVme);
         }
     }
@@ -489,10 +491,12 @@ void mafGUIManager::updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeV
             return;
         }
         m_CurrentPipeVisual = pipeVisual;
-        QString path(UI_PATH);
-        QString guiFilename = path.append(pipeVisual->uiFilename());
+        QString guiFilename = pipeVisual->uiFilename();
         m_UILoadedFromFile = !guiFilename.isEmpty();
         if(m_UILoadedFromFile) {
+            QString path(UI_PATH);
+            guiFilename = path.append(guiFilename);
+            
             // Ask the UI Loader to load the view's GUI.
             m_UILoader->uiLoad(guiFilename, mafGUILoadedTypeVisualPipe);
             return;
@@ -688,8 +692,7 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
     opMenu->setEnabled(false);
 
     // Get the started operation
-    QString path(UI_PATH);
-    QString guiFilename = path.append(operation->uiFilename());
+    QString guiFilename = operation->uiFilename();
     m_OperationWidget->setOperation(operation);
     operation->setObjectName(m_OperationWidget->operationName());
 
@@ -706,7 +709,10 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
             showGui(&gui, mafGUILoadedTypeOperation);
             return;
         }
-    } else {    
+    } else {
+        QString path(UI_PATH);
+        guiFilename = path.append(guiFilename);
+        
         // Ask the UI Loader to load the operation's GUI.
         m_UILoader->uiLoad(guiFilename, mafGUILoadedTypeOperation);
     }
@@ -886,8 +892,7 @@ void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
     }
 
     // Get the selected view's UI file
-    QString path(UI_PATH);
-    QString guiFilename = path.append(view->uiFilename());
+    QString guiFilename = view->uiFilename();
     m_UILoadedFromFile = !guiFilename.isEmpty();
     if(!m_UILoadedFromFile) {
         // Check if there is a custom widget associated with the class...
@@ -905,6 +910,8 @@ void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
         }
     }
     
+    QString path(UI_PATH);
+    guiFilename = path.append(guiFilename);
     // Ask the UI Loader to load the view's GUI.
     m_UILoader->uiLoad(guiFilename, mafGUILoadedTypeView);
 }
