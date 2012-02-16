@@ -67,6 +67,9 @@ private Q_SLOTS:
     /// point inside/outside bounds test
     void pointInsideOutsideBounds();
     
+    /// unite without a pivot variable
+    void autoUniteTest();
+    
 private:
     mafBounds *m_ObjTestVar; ///< Test variable
     mafBounds *m_ObjTestA; ///< Test variable
@@ -115,6 +118,22 @@ void mafBoundsTest::uniteBoundsTest() {
     mafDEL(checked);
     
 }
+
+void mafBoundsTest::autoUniteTest() {
+    mafBounds *autoTest = new mafCore::mafBounds();
+    autoTest->setBounds(m_ObjTestA);
+    autoTest->unite(*m_ObjTestB, *autoTest);
+    
+    /// check if output bounds are correct
+    double bc[6] = {-2.,3.,-2.,3.,-2.,3.};
+    mafBounds *checked = new mafCore::mafBounds(bc);
+    QVERIFY(*checked == *autoTest);
+    
+    mafDEL(autoTest);
+    mafDEL(checked);
+    
+}
+
 
 void mafBoundsTest::intersectBoundsTest() {
     mafBounds *outputTest = new mafCore::mafBounds();
