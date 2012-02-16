@@ -132,7 +132,7 @@ mafObjectsList *mafObjectRegistry::findObjects(mafVisitorFindObjects *v) {
 }
 
 mafObjectBase *mafObjectRegistry::objectFromHash(const QString &hash) {
-    mafVisitorFindObjectsByHashCode *v = new mafVisitorFindObjectsByHashCode(hash , mafCodeLocation);
+    mafVisitorFindObjectsByHashCode *v = new mafVisitorFindObjectsByHashCode(&hash , mafCodeLocation);
 
     mafObjectsList l = *(findObjectsThreaded(v));
     mafDEL(v);

@@ -54,7 +54,8 @@ private:
 
 void mafVisitorFindObjectsByHashCodeTest::visitTest() {
     //! <snippet>
-    mafVisitorFindObjectsByHashCode *visitorTest = new mafVisitorFindObjectsByHashCode(m_ObjTestVar1->objectHash(), mafCodeLocation);
+    const QString &p = m_ObjTestVar1->objectHash();
+    mafVisitorFindObjectsByHashCode *visitorTest = new mafVisitorFindObjectsByHashCode(&p, mafCodeLocation);
     //! </snippet>
     QVERIFY(visitorTest != NULL);
 

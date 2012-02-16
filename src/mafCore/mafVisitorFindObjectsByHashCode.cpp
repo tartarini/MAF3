@@ -18,7 +18,7 @@ mafVisitorFindObjectsByHashCode::mafVisitorFindObjectsByHashCode(const QString c
 }
 
 
-mafVisitorFindObjectsByHashCode::mafVisitorFindObjectsByHashCode(const QString hash_code, const QString code_location) : mafVisitorFindObjects(code_location) , m_HashCode(hash_code) {
+mafVisitorFindObjectsByHashCode::mafVisitorFindObjectsByHashCode(const QString *hash_code, const QString code_location) : mafVisitorFindObjects(code_location) , m_HashCode(*hash_code) {
 }
 
 mafVisitorFindObjectsByHashCode::~mafVisitorFindObjectsByHashCode() {

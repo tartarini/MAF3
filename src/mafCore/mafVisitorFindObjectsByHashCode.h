@@ -34,7 +34,7 @@ public:
     mafVisitorFindObjectsByHashCode(const QString code_location = "");
 
     /// overloaded object constructor
-    mafVisitorFindObjectsByHashCode(const QString hash_code, const QString code_location = "");
+    mafVisitorFindObjectsByHashCode(const QString *hash_code, const QString code_location = "");
 
     /// Execute the defined operation on visited object passes as argument.
     /*virtual*/ void visit(mafObjectBase *object);
