@@ -186,7 +186,7 @@ inline mafCore::mafBoundsPointer mafDataSet::bounds()  {
 }
 
 inline bool mafDataSet::isValidBounds() {
-    return m_Bounds->isValid();
+    return m_Bounds->isObjectValid();
 }
 
 } //mafResources

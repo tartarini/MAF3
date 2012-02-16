@@ -64,7 +64,7 @@ public:
     The inheriting class should perform defensive checks to make
     sure that it is in a consistent state/
     Also note that this method is only available in the debug build.*/
-    virtual bool isObjectValid() const;
+    /*virtual*/ bool isObjectValid() const;
 
     /// Check if the object is equal to that passed as argument. NB. The objectHash is not considered as argument of comparision.
     virtual bool isEqual(const mafObjectBase *obj) const;

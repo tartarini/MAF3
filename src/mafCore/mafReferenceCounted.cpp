@@ -45,6 +45,10 @@ void mafReferenceCounted::deleteObject() {
     }
 }
 
+bool mafReferenceCounted::isObjectValid() const {
+    return m_ReferenceCount > 0;
+}
+
 void mafReferenceCounted::description() const {
     qDebug() << "Reference Count: " << referenceCount();
 }

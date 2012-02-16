@@ -57,6 +57,15 @@ public:
     /// return the reference count.
     int referenceCount() const;
     
+    /// Used in MAF3 design by contract to check object's validity.
+    /** isObjectValid methods play an important role in checking the consistency
+     of objects in the debug. isObjectValid is defined as a pure virtual function
+     in Object class, thus it needs to be overridden in all inheriting classes.
+     The inheriting class should perform defensive checks to make
+     sure that it is in a consistent state/
+     Also note that this method is only available in the debug build.*/
+    virtual bool isObjectValid() const;
+
     /// dump the description of the object (information, attributes, variables...)
     virtual void description() const;
 
