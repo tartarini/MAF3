@@ -42,3 +42,9 @@ bool mafPoint::operator!=(const mafPoint &obj) const {
     return !(*this == obj);
 }
 
+void mafPoint::pos(double p[3]) {
+    p[0] = m_X;
+    p[1] = m_Y;
+    p[2] = m_Z;
+}
+

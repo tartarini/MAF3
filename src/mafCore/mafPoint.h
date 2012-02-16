@@ -55,6 +55,9 @@ public:
 
     /// Return the Z coordinate.
     double z() const;
+    
+    /// fill the array with current point coordinates.
+    void pos(double p[3]);
 
 private:
 	double m_X; ///< X coordinate
