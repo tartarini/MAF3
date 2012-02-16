@@ -13,6 +13,7 @@
 #define MAFVISITORBOUNDS_H
 
 // Includes list
+#include "mafResourcesDefinitions.h"
 #include <mafVisitor.h>
 #include <mafBounds.h>
 
@@ -28,9 +29,6 @@ class MAFRESOURCESSHARED_EXPORT mafVisitorBounds : public mafCore::mafVisitor {
     mafSuperclassMacro(mafCore::mafVisitor);
 
 public:
-    /// Object destructor.
-    /* virtual */ ~mafVisitorBounds();
-
     /// Object constructor
     mafVisitorBounds(const QString code_location = "");
 
@@ -39,7 +37,11 @@ public:
 	
 	/// Return the calculated bounds.
 	mafCore::mafBounds *bounds() const;
-	
+    
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafVisitorBounds();
+
 private:
 	mafCore::mafBounds *m_Bounds; ///< Store the calculated bounds.
 };

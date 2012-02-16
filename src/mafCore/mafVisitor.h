@@ -28,14 +28,15 @@ class MAFCORESHARED_EXPORT mafVisitor : public mafObjectBase {
     mafSuperclassMacro(mafCore::mafObjectBase);
 
 public:
-    /// Object destructor.
-    /* virtual */ ~mafVisitor();
-
     /// Object constructor
     mafVisitor(const QString code_location = "");
 
     /// Execute the defined operation on visited object passes as argument.
     virtual void visit(mafObjectBase *object) = 0;
+    
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafVisitor();
 };
 
 }
