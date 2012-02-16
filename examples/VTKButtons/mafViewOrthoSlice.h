@@ -15,9 +15,10 @@
 #include <mafViewCompound.h>
 #include <mafSceneNode.h>
 #include "mafToolVTKOrthoPlane.h"
+#include <mafVME.h>
 
 class mafOrthoSlice;
- 
+
 /**
  Class name: mafViewOrthoSlice
  mafView compound with 4 panels containing 4 rendering windows.
@@ -27,9 +28,12 @@ class mafViewOrthoSlice : public mafResources::mafViewCompound {
     mafSuperclassMacro(mafResources::mafViewCompound);
 
 public Q_SLOTS:
-    /// Allows to update slice position forwarding it to the visual pipes.
-    void sliceAtPosition(double *pos);
+    /// calling this when widget has been moved.
+    void widgetUpdatePosition();
 
+    /// calling this when gui sliders have been moved.
+    void guiUpdatePosition(double *pos);
+    
     //////////////////////////////////////////////////////////////////////////
     // Delegate methods
     //////////////////////////////////////////////////////////////////////////
@@ -54,12 +58,17 @@ protected:
     /* virtual */ ~mafViewOrthoSlice();
 
 private:
+    /// internal slice update.
+    void updateSlice(double *pos);
+    
     mafOrthoSlice *m_GUI; ///< GUI widget.
     double m_SlicePosition[3]; ///< Current slice position.
-    mafToolVTKOrthoPlane *m_OrthoPlaneTool;
+    QList<mafToolVTKOrthoPlane *> m_OrthoPlaneTool;
 
     /// Initialize the plane tools
     void addPlaneToolsToHandler();
+    
+    mafCore::mafObjectsList m_VisibleVMEsList;
 };
 
 #endif // MAFVIEWORTHOSLICE_H

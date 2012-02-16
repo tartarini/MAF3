@@ -68,6 +68,15 @@ void mafOrthoSlice::setBounds(double bounds[6]) {
     ui->zPosition->setTickInterval((sliderBounds[5] - sliderBounds[4]) / multiplier);
 }
 
+void mafOrthoSlice::setPosition(double pos[3]) {
+    m_Position[0] = pos[0];
+    m_Position[1] = pos[1];
+    m_Position[2] = pos[2];
+    ui->xPosition->setValue(m_Position[0]);
+    ui->yPosition->setValue(m_Position[1]);
+    ui->zPosition->setValue(m_Position[2]);
+}
+
 void mafOrthoSlice::setDecimalDigits(int decimal) {
     m_Decimals = decimal;
 

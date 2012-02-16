@@ -17,7 +17,7 @@
 #include <vtkCommand.h>
 #include <vtkImplicitPlaneWidget2.h>
 #include <vtkMAFImplicitPlaneRepresentation.h>
-
+#include <vtkProperty.h>
 
 // Callback for the interaction
 // This does the actual work: updates the vtkPlane implicit function.
@@ -65,6 +65,7 @@ mafToolVTKOrthoPlane::mafToolVTKOrthoPlane(const QString code_location) : mafToo
     repX->OutlineTranslationOff();
     repX->SetOrigin(0,0,0);
     repX->NormalToXAxisOn();
+    repX->GetEdgesProperty()->SetColor(1., 0., 0.);
 
     VTK_CREATE(vtkMAFImplicitPlaneRepresentation, repY);
     repY->SetPlaceFactor(1.25);
@@ -74,6 +75,7 @@ mafToolVTKOrthoPlane::mafToolVTKOrthoPlane(const QString code_location) : mafToo
     repY->OutlineTranslationOff();
     repY->SetOrigin(0,0,0);
     repY->NormalToYAxisOn();
+    repY->GetEdgesProperty()->SetColor(0., 1., 0.);
 
     VTK_CREATE(vtkMAFImplicitPlaneRepresentation, repZ);
     repZ->SetPlaceFactor(1.25);
@@ -83,6 +85,7 @@ mafToolVTKOrthoPlane::mafToolVTKOrthoPlane(const QString code_location) : mafToo
     repZ->OutlineTranslationOff();
     repZ->SetOrigin(0,0,0);
     repZ->NormalToZAxisOn();
+    repZ->GetEdgesProperty()->SetColor(0., 0., 1.);
 
     m_PlaneWidgetX = vtkSmartPointer<vtkImplicitPlaneWidget2>::New();
     m_PlaneWidgetX->SetRepresentation(repX);

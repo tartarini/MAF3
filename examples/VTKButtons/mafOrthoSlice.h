@@ -51,6 +51,9 @@ public:
 
     /// Allow to retrieve the position according to the values of the 3 sliders.
     const double *position() const;
+    
+    /// setter for position
+    void setPosition(double pos[3]);
 
     /// Set the number of decimal digits to consider for precision
     void setDecimalDigits(int decimal = 2);

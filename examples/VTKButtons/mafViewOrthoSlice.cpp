@@ -11,52 +11,71 @@
 
 #include "mafViewOrthoSlice.h"
 #include "mafOrthoSlice.h"
-#include <mafVME.h>
 #include <mafPipeVisual.h>
 #include <mafToolHandler.h>
 #include <mafBounds.h>
+#include <mafVisitorBounds.h>
 #include <mafPoint.h>
+#include <mafObjectRegistry.h>
 
 using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace mafCore;
 
-mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafViewCompound(code_location), m_OrthoPlaneTool(NULL) {
+mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafViewCompound(code_location) {
     setConfigurationFile("OrthoSlice.xml");
+    m_OrthoPlaneTool.clear();
     m_GUI = new mafOrthoSlice();
     this->setUIRootWidget(m_GUI);
-    connect(m_GUI, SIGNAL(positionUpdated(double *)), this, SLOT(sliceAtPosition(double *)));
+    connect(m_GUI, SIGNAL(positionUpdated(double *)), this, SLOT(guiUpdatePosition(double *)));
 }
 
 mafViewOrthoSlice::~mafViewOrthoSlice() {
-    mafDEL(m_OrthoPlaneTool);
+    Q_FOREACH(mafToolVTKOrthoPlane *op, m_OrthoPlaneTool) {
+        mafDEL(op);
+    }
+    m_OrthoPlaneTool.clear();
 }
 
 void mafViewOrthoSlice::addPlaneToolsToHandler() {
-    mafCore::mafBounds *b; // Calculate the right bounds using the mafVisitorBounds
     mafCore::mafPoint *o = new mafCore::mafPoint(m_SlicePosition);
     Q_FOREACH(mafView *v, *viewList()) {
-        m_OrthoPlaneTool = mafNEW(mafToolVTKOrthoPlane);
-        m_OrthoPlaneTool->setFollowSelectedObject(false);
-        m_OrthoPlaneTool->setFollowSelectedObjectVisibility(false);
-        m_OrthoPlaneTool->setOrigin(o);
-        m_OrthoPlaneTool->setVOI(b);
+        mafToolVTKOrthoPlane * orthoPlaneTool = mafNEW(mafToolVTKOrthoPlane);
+        orthoPlaneTool->setFollowSelectedObject(false);
+        orthoPlaneTool->setFollowSelectedObjectVisibility(false);
+        orthoPlaneTool->setOrigin(o);
         mafToolHandler *handler = v->toolHandler();
-        handler->addTool(m_OrthoPlaneTool);
+        handler->addTool(orthoPlaneTool);
+        m_OrthoPlaneTool.push_back(orthoPlaneTool);
+        connect(orthoPlaneTool, SIGNAL(modifiedObject()), this, SLOT(widgetUpdatePosition()));
     }
-    mafDEL(b);
     mafDEL(o);
 }
 
-void mafViewOrthoSlice::sliceAtPosition(double *pos) {
+void mafViewOrthoSlice::widgetUpdatePosition() {
+    mafToolVTKOrthoPlane *op = qobject_cast<mafToolVTKOrthoPlane *>(QObject::sender());
+    if(op) {
+        op->origin()->pos(m_SlicePosition);
+        m_GUI->setPosition(m_SlicePosition);
+        updateSlice(m_SlicePosition);
+    }
+}
+
+void mafViewOrthoSlice::guiUpdatePosition(double *pos) {
     m_SlicePosition[0] = pos[0];
     m_SlicePosition[1] = pos[1];
     m_SlicePosition[2] = pos[2];
     // Trigger the pipe update
 
     mafPoint *o = new mafPoint(m_SlicePosition);
-    m_OrthoPlaneTool->setOrigin(o);
+    Q_FOREACH(mafToolVTKOrthoPlane *op, m_OrthoPlaneTool) {
+        op->setOrigin(o);
+    }
     mafDEL(o);
+    updateSlice(m_SlicePosition);
+}
+
+void mafViewOrthoSlice::updateSlice(double *pos) {
     setModified();
     updateView();
 }
@@ -64,8 +83,9 @@ void mafViewOrthoSlice::sliceAtPosition(double *pos) {
 void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
     Superclass::showSceneNode(node, show);
     double b[6];
+    mafVME *vme = node->vme();
+    
     if (show) {
-        mafVME *vme = node->vme();
         vme->bounds(b);
         if (m_VisibleObjects == 1) {
             m_GUI->setBounds(b);
@@ -85,14 +105,28 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
                 vp->updatePipe();
             }
         }
+        //add vme to visible list
+        m_VisibleVMEsList.push_back(vme);
+    } else {
+        m_VisibleVMEsList.removeOne(vme);
     }
-    if (m_OrthoPlaneTool == NULL) {
+    
+    //creation of the widgets
+    if (m_OrthoPlaneTool.isEmpty()) {
         addPlaneToolsToHandler();
     }
-    mafBounds *bounds = new mafBounds(b);
-    m_OrthoPlaneTool->setSceneNode(node);
-    m_OrthoPlaneTool->setVOI(bounds);
-    m_OrthoPlaneTool->setVisibility(m_VisibleObjects != 0);
+    
+    /// update total visible bounds
+    mafVisitorBounds *v = new mafVisitorBounds();
+    mafObjectRegistry::instance()->applyVisitorToObjectListThreaded(v, &m_VisibleVMEsList);
+    
+    mafBounds *bounds = v->bounds();
+    Q_FOREACH(mafToolVTKOrthoPlane *op, m_OrthoPlaneTool) {
+        op->setSceneNode(node);
+        op->setVOI(bounds);
+        op->setVisibility(m_VisibleObjects != 0);
+    }
+    
     mafDEL(bounds);
 }
 
