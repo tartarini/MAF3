@@ -29,23 +29,26 @@ class MAFCORESHARED_EXPORT mafBounds : public mafReferenceCounted {
     mafSuperclassMacro(mafCore::mafReferenceCounted);
 
 public:
-    /// Object destructor.
-    /* virtual */ ~mafBounds();
-
     /// Object constructor
     mafBounds(const QString code_location = "");
 	
     /// Object constructor
-//	mafBounds(const mafBounds &p);
-
+	mafBounds(double b[6], const QString code_location = "");
+    
+    /// Object destructor.
+    /* virtual */ ~mafBounds();
+    
     /// Redefined = operator which allows to copy values from another mafBounds class.
     mafBounds &operator=(const mafBounds &obj);
 
-    /// Object constructor
-	mafBounds(double b[6], const QString code_location = "");
+    /// check if two bounds are equal
+    bool operator==(const mafBounds &obj) const;
     
+    /// check if two bounds are equal
+    bool operator!=(const mafBounds &obj) const;
+        
     /// Check if the bounds are valid.
-	bool isValid();
+	/*virtual*/ bool isObjectValid() const;
 	
 	/// Calculate the union of the given bounds with this one.
 	void unite(const mafBounds &b, mafBounds &output);

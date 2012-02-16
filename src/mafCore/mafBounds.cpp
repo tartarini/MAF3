@@ -36,7 +36,17 @@ mafBounds &mafBounds::operator =(const mafBounds& obj) {
     return *this;
 }
 
-bool mafBounds::isValid() {
+bool mafBounds::operator==(const mafBounds &obj) const {
+    bool res = (mafEquals(m_XMin,obj.xMin()) && mafEquals(m_YMin,obj.yMin()) && mafEquals(m_ZMin,obj.zMin()) &&
+                mafEquals(m_XMax,obj.xMax()) && mafEquals(m_YMax,obj.yMax()) && mafEquals(m_ZMax,obj.zMax()));
+    return res;
+}
+
+bool mafBounds::operator!=(const mafBounds &obj) const {
+    return !(*this == obj);
+}
+
+bool mafBounds::isObjectValid() const {
 	return m_XMin <= m_XMax && m_YMin <= m_YMax && m_ZMin <= m_ZMax;
 }
 

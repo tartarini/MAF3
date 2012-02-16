@@ -26,24 +26,27 @@ class MAFCORESHARED_EXPORT mafPoint : public mafReferenceCounted {
     mafSuperclassMacro(mafCore::mafReferenceCounted);
 
 public:
-    /// Object destructor.
-    /* virtual */ ~mafPoint();
-
-    /// Object constructor
-    mafPoint(const QString code_location = "");
-	
-    /// Object constructor
-//	mafPoint(const mafPoint &p);
-
     /// Object constructor
     mafPoint(double x_pos, double y_pos, double z_pos);
     
     /// Object constructor
 	mafPoint(double pos[3], const QString code_location = "");
 
+    /// Object destructor.
+    /* virtual */ ~mafPoint();
+
+    /// Object constructor
+    mafPoint(const QString code_location = "");	
+    
     /// Redefined = operator which allows to copy values from another mafPoint class.
     mafPoint &operator=(const mafPoint &obj);
+    
+    /// check if two bounds are equal.
+    bool operator==(const mafPoint &obj) const;
 
+    /// check if two bounds are different.
+    bool operator!=(const mafPoint &obj) const;
+    
     /// Return the X coordinate.
     double x() const;
     

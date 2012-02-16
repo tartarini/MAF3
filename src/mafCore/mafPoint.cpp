@@ -20,9 +20,6 @@ mafPoint::mafPoint(double x_pos, double y_pos, double z_pos) : m_X(x_pos), m_Y(y
 
 }
 
-// mafPoint::mafPoint(const mafPoint &p) : m_X(p.m_X), m_Y(p.m_Y), m_Z(p.m_Z) {
-// }
-
 mafPoint::mafPoint(double pos[3], const QString code_location) : m_X(pos[0]), m_Y(pos[1]), m_Z(pos[2]) {
 }
 
@@ -35,3 +32,13 @@ mafPoint &mafPoint::operator =(const mafPoint& obj) {
     m_Z = obj.z();
     return *this;
 }
+
+bool mafPoint::operator==(const mafPoint &obj) const {
+    bool res = mafEquals(m_X, obj.x()) && mafEquals(m_Y, obj.y()) && mafEquals(m_Z, obj.z());
+    return res;
+}
+
+bool mafPoint::operator!=(const mafPoint &obj) const {
+    return !(*this == obj);
+}
+
