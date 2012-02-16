@@ -10,17 +10,24 @@
  */
 
 #include "mafVisitorBounds.h"
-#include "mafBounds.h"
+#include <mafObjectFactory.h>
 
 using namespace mafCore;
+using namespace mafResources;
 
 mafVisitorBounds::mafVisitorBounds(const QString code_location) : m_Bounds(NULL), mafVisitor(code_location) {
 }
 
 mafVisitorBounds::~mafVisitorBounds() {
+    mafDEL(m_Bounds);
 }
 
 void mafVisitorBounds::visit(mafObjectBase *object) {
     mafBounds *b = object->property("bounds").value<mafBoundsPointer>();
+    if(m_Bounds == NULL) {
+        m_Bounds = new mafBounds();
+        m_Bounds->setBounds(b);
+    }
     
+    m_Bounds->unite(*b, *m_Bounds);
 }

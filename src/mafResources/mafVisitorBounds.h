@@ -13,20 +13,17 @@
 #define MAFVISITORBOUNDS_H
 
 // Includes list
-#include "mafVisitor.h"
+#include <mafVisitor.h>
+#include <mafBounds.h>
 
-
-namespace mafCore {
-
-//forward class
-class mafBounds;
+namespace mafResources {
 
 /**
  Class name: mafVisitorBounds
  This is the base class which define an operation to be performed on the elements of an object structure. 
  mafVisitorBounds lets you define a new operation without changing the classes of the elements on which it operates.
  */
-class MAFCORESHARED_EXPORT mafVisitorBounds : public mafVisitor {
+class MAFRESOURCESSHARED_EXPORT mafVisitorBounds : public mafCore::mafVisitor {
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafVisitor);
 
@@ -38,19 +35,19 @@ public:
     mafVisitorBounds(const QString code_location = "");
 
     /// Execute the defined operation on visited object passes as argument.
-    /*virtual*/ void visit(mafObjectBase *object);
+    /*virtual*/ void visit(mafCore::mafObjectBase *object);
 	
 	/// Return the calculated bounds.
-	mafBounds *bounds() const;
+	mafCore::mafBounds *bounds() const;
 	
 private:
-	mafBounds *m_Bounds; ///< Store the calculated bounds.
+	mafCore::mafBounds *m_Bounds; ///< Store the calculated bounds.
 };
 
-inline mafBounds *mafVisitorBounds::bounds() const {
+inline mafCore::mafBounds *mafVisitorBounds::bounds() const {
 	return m_Bounds;
 }
 
-}
+} //end namespace mafResources
 
 #endif  // MAFVISITORBOUNDS_H
