@@ -74,6 +74,8 @@ int main(int argc, char *argv[]) {
     // ... and customize it telling to use mafPipeVisualVTKSurface visual pipe to render vtkPolyData data type.
     logic->customizeVisualization("VTK view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("Buttons view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
+    logic->customizeVisualization("Buttons view", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
+    logic->customizeVisualization("Buttons view", "vtkRectilinearGrid", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
     logic->customizeVisualization("Slice", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
     logic->customizeVisualization("Slice", "vtkRectilinearGrid", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
 
