@@ -39,6 +39,7 @@ mafToolVTKSelection::mafToolVTKSelection(const QString code_location) : mafToolV
     m_Actor->SetPickable(0);
     m_Actor->SetMapper(m_Mapper);
     m_Actor->GetProperty()->SetLineWidth(3);
+    m_Actor->SetVisibility(0);
 }
 
 mafToolVTKSelection::~mafToolVTKSelection() {
