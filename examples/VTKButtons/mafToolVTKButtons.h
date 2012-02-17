@@ -16,6 +16,7 @@
 #include <mafToolVTK.h>
 
 class vtkButtonWidget;
+class vtkButtonCallback;
 
 /**
  Class name: mafToolVTKButtons
@@ -31,6 +32,9 @@ public Q_SLOTS:
     /// Called when the graphic object has been initialized ready to use
     /*virtual*/ void graphicObjectInitialized();
 
+    /// Allow to execute and update the pipeline when something change.
+    /*virtual*/ void updatePipe(double t = -1);
+
 public:
      /// Object constructor.
     mafToolVTKButtons(const QString code_location = "");
@@ -44,6 +48,7 @@ protected:
 
 private:
     vtkButtonWidget *m_ButtonWidget; ///< VTK button widget
+    vtkButtonCallback *myCallback; ///< Callback called by picking on vtkButton
 };
 
 

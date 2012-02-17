@@ -14,13 +14,22 @@
 #include <QImage>
 
 #include <vtkSmartPointer.h>
+#include <vtkAlgorithmOutput.h>
 #include <vtkQImageToImageSource.h>
+#include <mafDataSet.h>
+#include <mafVTKWidget.h>
+#include <vtkRenderer.h>
+
 
 #include <vtkButtonWidget.h>
 #include <vtkEllipticalButtonSource.h>
 #include <vtkTexturedButtonRepresentation.h>
+#include <vtkTexturedButtonRepresentation2D.h>
 
 #include <vtkCommand.h>
+
+using namespace mafCore;
+using namespace mafResources;
 
 // Callback for the interaction
 class vtkButtonCallback : public vtkCommand {
@@ -34,7 +43,21 @@ public:
         vtkTexturedButtonRepresentation *rep = reinterpret_cast<vtkTexturedButtonRepresentation*>(buttonWidget->GetRepresentation());
         int state = rep->GetState();
         qDebug() << QString("state: %1").arg(state);
+
+        mafPluginVTK::mafVTKWidget *widget = qobject_cast<mafPluginVTK::mafVTKWidget *>(this->graphicObject);
+        if (widget) {
+            widget->renderer("tool")->ResetCamera(bounds);
+        }
     }
+    void setBounds(double b[6]) {
+        for (int i = 0; i <6; i++) {
+            bounds[i] = b[i];
+        }
+    }
+
+    vtkButtonCallback():graphicObject(0) {}
+    QObject *graphicObject;
+    double bounds[6];
 };
 
 
@@ -55,29 +78,17 @@ mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK
     imageToVTK2->SetQImage(&image2);
     imageToVTK2->Update();
 
-    VTK_CREATE(vtkEllipticalButtonSource, button);
-    button->TwoSidedOn();
-    button->SetCircumferentialResolution(24);
-    button->SetShoulderResolution(24);
-    button->SetTextureResolution(24);
-
-
-    VTK_CREATE(vtkTexturedButtonRepresentation, rep);
-    rep->SetNumberOfStates(2);
-    rep->SetButtonTexture(0,imageToVTK2->GetOutput());
-    rep->SetButtonTexture(1,imageToVTK1->GetOutput());
-    rep->SetButtonGeometryConnection(button->GetOutputPort());
+    VTK_CREATE(vtkTexturedButtonRepresentation2D, rep);
+    rep->SetNumberOfStates(1);
+    rep->SetButtonTexture(0, imageToVTK2->GetOutput());
     rep->SetPlaceFactor(1);
-    double bds[6];
-    bds[0] = 0.6; bds[1] = 0.75; bds[2] = 0.6; bds[3] = 0.75; bds[4] = 0.6; bds[5] = 0.75;
-    rep->PlaceWidget(bds);
-    rep->FollowCameraOn();
 
-    VTK_CREATE(vtkButtonCallback, myCallback);
+    myCallback = vtkButtonCallback::New();
 
     m_ButtonWidget = vtkButtonWidget::New();
     m_ButtonWidget->SetRepresentation(rep);
     m_ButtonWidget->AddObserver(vtkCommand::StateChangedEvent,myCallback);
+
 }
 
 mafToolVTKButtons::~mafToolVTKButtons() {
@@ -92,4 +103,36 @@ void mafToolVTKButtons::graphicObjectInitialized() {
     // Graphic widget (render window, interactor...) has been created and initialized.
     // now can add the widget.
     addWidget(m_ButtonWidget);
+}
+
+void mafToolVTKButtons::updatePipe(double t) {
+    setModified(false);
+    mafDataSet *data = dataSetForInput(0, t);
+    if(data == NULL) {
+        return;
+    }
+
+    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
+    if (dataSet == NULL) {
+        resetTool();
+        
+    } else {
+        vtkAlgorithm *producer = (*dataSet)->GetProducer();
+        vtkDataObject *dataObject = producer->GetOutputDataObject(0);
+        vtkDataSet* vtkData = vtkDataSet::SafeDownCast(dataObject);
+
+        double b[6];
+        vtkData->GetBounds(b);
+        vtkTexturedButtonRepresentation2D *rep = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(m_ButtonWidget->GetRepresentation());
+        myCallback->graphicObject = this->m_GraphicObject;
+        myCallback->setBounds(b);
+
+        //modify position of the vtkButton on the corner of the bounding box of the VME.
+        double bds[6];
+        bds[0] = b[0]; bds[1] = b[2]; bds[2] = b[4];
+        int size[2]; size[0] = 25; size[1] = 45;
+
+        rep->PlaceWidget(bds,size);
+        m_ButtonWidget->SetRepresentation(rep);
+    }
 }
