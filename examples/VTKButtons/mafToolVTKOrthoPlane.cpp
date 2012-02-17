@@ -120,7 +120,6 @@ void mafToolVTKOrthoPlane::setVOI(mafCore::mafBounds *bounds) {
     repY->PlaceWidget(b);
     vtkMAFImplicitPlaneRepresentation *repZ = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidgetZ->GetRepresentation());
     repZ->PlaceWidget(b);
-    setModified();
 }
 
 void mafToolVTKOrthoPlane::setOrigin(mafCore::mafPoint *o) {
@@ -131,7 +130,6 @@ void mafToolVTKOrthoPlane::setOrigin(mafCore::mafPoint *o) {
     repY->SetOrigin(m_Origin->x(), m_Origin->y(), m_Origin->z());
     vtkMAFImplicitPlaneRepresentation *repZ = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidgetZ->GetRepresentation());
     repZ->SetOrigin(m_Origin->x(), m_Origin->y(), m_Origin->z());
-    setModified();
 }
 
 void mafToolVTKOrthoPlane::resetTool() {
