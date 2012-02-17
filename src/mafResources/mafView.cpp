@@ -237,6 +237,7 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
     }
 
     if (m_ToolHandler) {
+        m_ToolHandler->setActiveSceneNode(node);
         m_ToolHandler->setVisibility(show);
     }
     updateView();
