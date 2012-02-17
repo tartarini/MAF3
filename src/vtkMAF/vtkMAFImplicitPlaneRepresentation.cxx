@@ -124,8 +124,8 @@ int vtkMAFImplicitPlaneRepresentation::RenderOpaqueGeometry(vtkViewport *v)
 		count += this->LineActor->RenderOpaqueGeometry(v);
 		count += this->ConeActor2->RenderOpaqueGeometry(v);
 		count += this->LineActor2->RenderOpaqueGeometry(v);
+        count += this->SphereActor->RenderOpaqueGeometry(v);
 	}
-	count += this->SphereActor->RenderOpaqueGeometry(v);
 	if ( this->DrawPlane )
 	{
 		count += this->CutActor->RenderOpaqueGeometry(v);
@@ -150,8 +150,8 @@ int vtkMAFImplicitPlaneRepresentation::RenderTranslucentPolygonalGeometry(vtkVie
 		count += this->LineActor->RenderTranslucentPolygonalGeometry(v);
 		count += this->ConeActor2->RenderTranslucentPolygonalGeometry(v);
 		count += this->LineActor2->RenderTranslucentPolygonalGeometry(v);
+        count += this->SphereActor->RenderTranslucentPolygonalGeometry(v);
 	}
-	count += this->SphereActor->RenderTranslucentPolygonalGeometry(v);
 	if ( this->DrawPlane )
 	{
 		count += this->CutActor->RenderTranslucentPolygonalGeometry(v);
@@ -176,8 +176,8 @@ int vtkMAFImplicitPlaneRepresentation::HasTranslucentPolygonalGeometry()
 		result |= this->LineActor->HasTranslucentPolygonalGeometry();
 		result |= this->ConeActor2->HasTranslucentPolygonalGeometry();
 		result |= this->LineActor2->HasTranslucentPolygonalGeometry();
+        result |= this->SphereActor->HasTranslucentPolygonalGeometry();
 	}
-	result |= this->SphereActor->HasTranslucentPolygonalGeometry();
 	if ( this->DrawPlane )
 	{
 		result |= this->CutActor->HasTranslucentPolygonalGeometry();
