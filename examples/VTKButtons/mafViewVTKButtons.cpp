@@ -12,7 +12,7 @@
 
 #include "mafViewVTKButtons.h"
 #include "mafToolVTKButtons.h"
-
+#include <mafSceneNode.h>
 #include <mafToolHandler.h>
 
 using namespace mafPluginVTK;
@@ -23,18 +23,19 @@ mafViewVTKButtons::mafViewVTKButtons(const QString code_location) : mafViewVTK(c
 mafViewVTKButtons::~mafViewVTKButtons() {
 }
 
-bool mafViewVTKButtons::initialize() {
-    if (Superclass::initialize()) {
- 
+mafResources::mafSceneNode *mafViewVTKButtons::createSceneNode(mafResources::mafVME *vme) {
+    mafResources::mafSceneNode *sn = Superclass::createSceneNode(vme);
+    if (sn != NULL) {
         //create the instance for selection pipe.
         mafToolVTKButtons *toolButtons = mafNEW(mafToolVTKButtons);
-        //toolButtons->setFollowSelectedObjectVisibility(true);
-        //toolButtons->setFollowSelectedObject(true);
+        toolButtons->setFollowSelectedObjectVisibility(true);
+        toolButtons->setFollowSelectedObject(false);
+        toolButtons->setInput(vme);
+        toolButtons->setVisibility(false);
         m_ToolHandler->addTool(toolButtons);
         mafDEL(toolButtons);
-       
-        return true;
     }
-    return false;
+    return sn;
 }
+
 

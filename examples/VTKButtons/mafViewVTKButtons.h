@@ -17,6 +17,7 @@
 
 
 class mafVTKWidget;
+class mafSceneNode;
 
 /**
  Class name: mafViewVTKButtons
@@ -32,13 +33,12 @@ public:
     /// Object constructor.
     mafViewVTKButtons(const QString code_location = "");
 
-    /// Crete view.
-    /*virtual*/ bool initialize();
-
 
 protected:
     /// Object destructor.
     /* virtual */ ~mafViewVTKButtons();
+
+    /* virtual */ mafResources::mafSceneNode *createSceneNode(mafResources::mafVME *vme);
 
 };
 
