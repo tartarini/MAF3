@@ -68,9 +68,9 @@ void mafView::fillSceneGraph(mafCore::mafHierarchy *hierarchy) {
 }
 
 void mafView::clearScene() {
-//     if (m_ToolHandler) {
-//         m_ToolHandler->setActiveSceneNode(NULL);
-//     }
+    if (m_ToolHandler) {
+        m_ToolHandler->setActiveSceneNode(NULL);
+    }
     mafDEL(m_Scenegraph);
     m_SelectedNode = NULL;
     
