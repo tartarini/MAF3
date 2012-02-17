@@ -12,6 +12,7 @@
 #include "mafToolHandler.h"
 #include "mafTool.h"
 #include "mafSceneNode.h"
+#include "mafVME.h"
 
 #include <mafEventBusManager.h>
 
@@ -78,15 +79,28 @@ void mafToolHandler::setActiveSceneNode(mafSceneNode *node) {
         if (tool->followSelectedObjectVisibility()) {
             bool v = m_SceneNode && m_SceneNode->property("visibility").toBool();
             // ... and update its visibility according to the node visibility.
-            tool->setVisibility(v);
+            if (tool->followSelectedObject()) {
+                //exist 1 instance of tool for ALL VMEs
+                tool->setVisibility(v);
+            } else {
+                //exist 1 instance of tool for EACH VME
+                if (m_SceneNode && tool->input()->isEqual(m_SceneNode->vme())) {
+                    // ... and update its visibility according to the node visibility.
+                    tool->setVisibility(v);
+                }
+            }
         }
         tool->updatedGraphicObject();
+        tool->updatePipe();
     }
 }
 
 void mafToolHandler::setVisibility(bool visible) {
     // Update the visibility flag for all the tools.
     Q_FOREACH(mafTool *tool, m_ToolList) {
-        tool->setVisibility(visible);
+        if (tool->followSelectedObjectVisibility() && m_SceneNode && tool->input()->isEqual(m_SceneNode->vme())) {
+            // ... and update its visibility according to the node visibility.
+            tool->setVisibility(visible);
+        }
     }
 }
