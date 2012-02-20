@@ -27,7 +27,7 @@ public:
 	static vtkIOPWCallback *New() { return new vtkIOPWCallback; }
   	virtual void Execute(vtkObject *caller, unsigned long, void*);
   	vtkIOPWCallback() : Tool(0) {}
-    mafResources::mafTool *Tool;
+    mafToolVTKOrthoPlane *Tool;
 };
 
 void vtkIOPWCallback::Execute(vtkObject *caller, unsigned long, void*) {
@@ -36,9 +36,7 @@ void vtkIOPWCallback::Execute(vtkObject *caller, unsigned long, void*) {
     double ori[3];
     rep->GetOrigin(ori);
     mafCore::mafPoint *o = new mafCore::mafPoint(ori);
-    QVariant vo;
-    vo.setValue<mafCore::mafPointPointer>(o);
-    Tool->setProperty("origin", vo);
+    Tool->setOrigin(o);
     Tool->setModified();
     mafDEL(o);
 }
@@ -124,12 +122,14 @@ void mafToolVTKOrthoPlane::setVOI(mafCore::mafBounds *bounds) {
 
 void mafToolVTKOrthoPlane::setOrigin(mafCore::mafPoint *o) {
     *m_Origin = *o;
+    double pos[3];
+    m_Origin->pos(pos);
     vtkMAFImplicitPlaneRepresentation *repX = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidgetX->GetRepresentation());
-    repX->SetOrigin(m_Origin->x(), m_Origin->y(), m_Origin->z());
+    repX->SetOrigin(pos);
     vtkMAFImplicitPlaneRepresentation *repY = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidgetY->GetRepresentation());
-    repY->SetOrigin(m_Origin->x(), m_Origin->y(), m_Origin->z());
+    repY->SetOrigin(pos);
     vtkMAFImplicitPlaneRepresentation *repZ = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidgetZ->GetRepresentation());
-    repZ->SetOrigin(m_Origin->x(), m_Origin->y(), m_Origin->z());
+    repZ->SetOrigin(pos);
 }
 
 void mafToolVTKOrthoPlane::resetTool() {
