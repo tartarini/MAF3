@@ -168,6 +168,9 @@ void mafView::sceneNodeDestroy() {
 void mafView::removeSceneNode(mafSceneNode *node) {
     REQUIRE(node!= NULL);
 
+    if (m_ToolHandler) {
+        m_ToolHandler->setActiveSceneNode(NULL);
+    }
     // Disconnect the view from the node
     disconnect(node, SIGNAL(destroyNode()),this, SLOT(sceneNodeDestroyed()));
     if(m_Scenegraph != NULL) {
