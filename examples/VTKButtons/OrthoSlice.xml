@@ -4,9 +4,11 @@
 			<view classtype="mafPluginVTK::mafViewVTK" objectName="Perspective" cameraParallel="0">
 				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSurface" datatype="vtkPolyData"></visualpipe>
 				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKIsoSurface" datatype="vtkStructuredPoints"></visualpipe>
+				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKIsoSurface" datatype="vtkImageData"></visualpipe>
+				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKIsoSurface" datatype="vtkRectilinearGrid"></visualpipe>
 			</view>
 			<view classtype="mafPluginVTK::mafViewVTK" objectName="Left" cameraParallel="1" cameraAxes="0">
-				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSliceSurface" datatype="vtkPolyData" normalX="1" normalZ="0"></visualpipe>
+				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSliceSurface" datatype="vtkPolyData" sliceAxes="0"></visualpipe>
 				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSliceVolume" datatype="vtkStructuredPoints" sliceAxes="0"></visualpipe>
                 <visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSliceVolume" datatype="vtkImageData" sliceAxes="0"></visualpipe>
                 <visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSliceVolume" datatype="vtkRectilinearGrid" sliceAxes="0"></visualpipe>
@@ -14,13 +16,13 @@
 		</splitter>
 		<splitter orientation="orizontal" sizes="100, 100" separatorThikness="1" enableSeparator="1">
 			<view classtype="mafPluginVTK::mafViewVTK" objectName="Top" cameraParallel="1" cameraAxes="5">
-				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSliceSurface" datatype="vtkPolyData"></visualpipe>
+				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSliceSurface" datatype="vtkPolyData" sliceAxes="2"></visualpipe>
 				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSliceVolume" datatype="vtkStructuredPoints" sliceAxes="2"></visualpipe>
                 <visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSliceVolume" datatype="vtkImageData" sliceAxes="2"></visualpipe>
                 <visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSliceVolume" datatype="vtkRectilinearGrid" sliceAxes="2"></visualpipe>
 			</view>
 			<view classtype="mafPluginVTK::mafViewVTK" objectName="Front" cameraParallel="1" cameraAxes="1">
-				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSliceSurface" datatype="vtkPolyData" normalY="1" normalZ="0"></visualpipe>
+				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSliceSurface" datatype="vtkPolyData" sliceAxes="1"></visualpipe>
 				<visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSliceVolume" datatype="vtkStructuredPoints" sliceAxes="1"></visualpipe>
                 <visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSliceVolume" datatype="vtkImageData" sliceAxes="1"></visualpipe>
                 <visualpipe classtype="mafPluginVTK::mafPipeVisualVTKSliceVolume" datatype="vtkRectilinearGrid" sliceAxes="1"></visualpipe>
