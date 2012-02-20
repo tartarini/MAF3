@@ -69,9 +69,8 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTKSlice();
 
-private:
-    mafCore::mafPoint m_Normal; ///< Normal of the slicing plane.
-    mafCore::mafPoint m_Origin; ///< Origin of the slicing plane.
+    mafCore::mafPoint *m_Normal; ///< Normal of the slicing plane.
+    mafCore::mafPoint *m_Origin; ///< Origin of the slicing plane.
 };
 
 /////////////////////////////////////////////////////////////
