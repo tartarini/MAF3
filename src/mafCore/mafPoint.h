@@ -55,7 +55,19 @@ public:
 
     /// Return the Z coordinate.
     double z() const;
+
+    /// Assign the X coordinate.
+    void setX(double x_coord);
     
+    /// Assign the Y coordinate.
+    void setY(double y_coord);
+
+    /// Assign the Z coordinate.
+    void setZ(double z_coord);
+
+    /// Reset the point coordinate to 0,0,0.
+    void zero();
+
     /// fill the array with current point coordinates.
     void pos(double p[3]);
 
@@ -79,6 +91,22 @@ inline double mafPoint::y() const {
 
 inline double mafPoint::z() const {
     return m_Z;
+}
+
+inline void mafPoint::setX(double x_coord) {
+    m_X = x_coord;
+}
+
+inline void mafPoint::setY(double y_coord) {
+    m_Y = y_coord;
+}
+
+inline void mafPoint::setZ(double z_coord) {
+    m_Z = z_coord;
+}
+
+inline void mafPoint::zero() {
+    m_X = m_Y = m_Z = 0.;
 }
 
 typedef mafPoint * mafPointPointer;
