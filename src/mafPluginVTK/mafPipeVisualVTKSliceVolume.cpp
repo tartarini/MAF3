@@ -58,8 +58,10 @@ mafPipeVisualVTKSliceVolume::~mafPipeVisualVTKSliceVolume() {
 bool mafPipeVisualVTKSliceVolume::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
+        // VME must be not NULL
         QString dataType = vme->dataSetCollection()->itemAtCurrentTime()->externalDataType();
         if(dataType == "vtkImageData" || dataType == "vtkStructuredPoints" || dataType == "vtkRectilinearGrid") {
+            // and contains only volumetric dataset to be acceptable from this class.
             return true;
         }
     }
@@ -69,11 +71,19 @@ bool mafPipeVisualVTKSliceVolume::acceptObject(mafCore::mafObjectBase *obj) {
 void mafPipeVisualVTKSliceVolume::updatePipe(double t) {
     Superclass::updatePipe(t);
 
+    // Calling 'origin' method instead of using the m_Origin variable directly
+    // will cause that someone else can add itself as delegate of this class and produce
+    // the slice origin outside.
     mafPointPointer o = origin();
+
+    // Assign the input to the data pipe (it could be changed from the lest update).
     m_SlicerPipe->setInput(input());
+    // Assign the origin of the slice.
     m_SlicerPipe->setSliceOrigin(o->x(), o->y(), o->z());
+    // and ask the pipe to perform the cut.
     m_SlicerPipe->updatePipe(t);
 
+    // gather the result from the data pipe and attach it to the mapper to be visualized.
     mafVME *output = m_SlicerPipe->output();
     mafDataSetCollection *collection = output->dataSetCollection();
     mafDataSet *dataSet = collection->itemAt(t);
