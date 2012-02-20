@@ -62,8 +62,8 @@ public:
     /// Remove scene node passed as argument.
     /*virtual*/ void removeSceneNode(mafResources::mafSceneNode *node);
 
-    /// Select a scene node.
-    /*virtual*/ //void selectSceneNode(mafResources::mafSceneNode *node, bool select);
+    /// Called to show/hide the node.
+    /*virtual*/ void showSceneNode(mafResources::mafSceneNode *node, bool show = true);
 
     /// Return the camera parallel flag.
     bool cameraParallel() const;

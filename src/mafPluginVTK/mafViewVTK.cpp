@@ -92,6 +92,14 @@ bool mafViewVTK::initialize() {
     return false;
 }
 
+void mafViewVTK::showSceneNode(mafResources::mafSceneNode *node, bool show /* = true */) {
+    Superclass::showSceneNode(node, show);
+
+    if(show && m_VisibleObjects == 1) {
+        resetVisualization();
+    }
+}
+
 void mafViewVTK::setCameraAxes(int axes) {
     m_CameraAxesDirection = (mafCameraDirection)axes;
     if (m_RenderWidget == NULL) {
@@ -210,10 +218,6 @@ void mafViewVTK::removeSceneNode(mafResources::mafSceneNode *node) {
 }
 
 void mafViewVTK::updateView() {
-    if(m_VisibleObjects == 1) {
-        resetVisualization();
-    }
-
     if (((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()) {
         ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
     }
@@ -226,4 +230,5 @@ void mafViewVTK::resetVisualization(double *bounds) {
     } else {
         m_Renderer->ResetCamera();
     }
+    updateView();
 }
