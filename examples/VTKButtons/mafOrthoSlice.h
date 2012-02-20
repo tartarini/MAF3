@@ -67,6 +67,9 @@ private:
 
     /// Calculate the real value of the position in double precision according to number of decimals.
     double calculateRealValue(int val);
+
+    /// Calculate the value to be given to the slider according to number of decimals.
+    int calculateSliderValue(double val);
 };
 
 inline const double *mafOrthoSlice::position() const {
