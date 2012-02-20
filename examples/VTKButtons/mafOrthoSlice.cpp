@@ -35,8 +35,9 @@ mafOrthoSlice::~mafOrthoSlice() {
 void mafOrthoSlice::setBounds(double bounds[6]) {
     double scaledBound;
     int sliderBounds[6];
-    int multiplier = 1;
+    int multiplier;
     for (int i = 0; i < 6; ++i) {
+        multiplier = 1;
         m_Bounds[i] = bounds[i];
         scaledBound = bounds[i];
         for (int d = 0; d < m_Decimals; ++d) {
@@ -72,9 +73,18 @@ void mafOrthoSlice::setPosition(double pos[3]) {
     m_Position[0] = pos[0];
     m_Position[1] = pos[1];
     m_Position[2] = pos[2];
-    ui->xPosition->setValue(m_Position[0]);
-    ui->yPosition->setValue(m_Position[1]);
-    ui->zPosition->setValue(m_Position[2]);
+    double scaledVal[3];
+    scaledVal[0] = pos[0];
+    scaledVal[1] = pos[1];
+    scaledVal[2] = pos[2];
+    for (int d = 0; d < m_Decimals; ++d) {
+        scaledVal[0] *= 10.;
+        scaledVal[1] *= 10.;
+        scaledVal[2] *= 10.;
+    }
+    ui->xPosition->setValue((int)scaledVal[0]);
+    ui->yPosition->setValue((int)scaledVal[1]);
+    ui->zPosition->setValue((int)scaledVal[2]);
 }
 
 void mafOrthoSlice::setDecimalDigits(int decimal) {
@@ -86,19 +96,16 @@ void mafOrthoSlice::setDecimalDigits(int decimal) {
 
 void mafOrthoSlice::on_xPosition_sliderMoved(int val) {
     m_Position[0] = this->calculateRealValue(val);
-//    qDebug() << QString("X: %1").arg(m_Position[0]);
     Q_EMIT positionUpdated(m_Position);
 }
 
 void mafOrthoSlice::on_yPosition_sliderMoved(int val) {
     m_Position[1] = this->calculateRealValue(val);
-//    qDebug() << QString("Y: %1").arg(m_Position[1]);
     Q_EMIT positionUpdated(m_Position);
 }
 
 void mafOrthoSlice::on_zPosition_sliderMoved(int val) {
     m_Position[2] = this->calculateRealValue(val);
-//    qDebug() << QString("Z: %1").arg(m_Position[2]);
     Q_EMIT positionUpdated(m_Position);
 }
 
@@ -108,4 +115,14 @@ double mafOrthoSlice::calculateRealValue(int val) {
         scaledVal /= 10.;
     }
     return scaledVal;
+}
+
+int mafOrthoSlice::calculateSliderValue(double val) {
+    double scaledVal = val;
+    int sliderVal;
+    for (int d = 0; d < m_Decimals; ++d) {
+        scaledVal *= 10;
+    }
+    sliderVal = (int)scaledVal;
+    return sliderVal;
 }
