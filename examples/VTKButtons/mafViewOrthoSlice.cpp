@@ -55,9 +55,17 @@ void mafViewOrthoSlice::addPlaneToolsToHandler() {
 void mafViewOrthoSlice::widgetUpdatePosition() {
     mafToolVTKOrthoPlane *op = qobject_cast<mafToolVTKOrthoPlane *>(QObject::sender());
     if(op) {
-        op->origin()->pos(m_SlicePosition);
+        PRINT_FUNCTION_NAME_INFORMATION
+        mafPoint *o = op->origin();
+        o->pos(m_SlicePosition);
+        Q_FOREACH(mafToolVTKOrthoPlane *plane, m_OrthoPlaneTool) {
+            if (plane == op) {
+                continue;
+            }
+            plane->setOrigin(o);
+        }
         m_GUI->setPosition(m_SlicePosition);
-        updateSlice(m_SlicePosition);
+        updateSlice();
     }
 }
 
@@ -65,17 +73,20 @@ void mafViewOrthoSlice::guiUpdatePosition(double *pos) {
     m_SlicePosition[0] = pos[0];
     m_SlicePosition[1] = pos[1];
     m_SlicePosition[2] = pos[2];
-    // Trigger the pipe update
-
+    
+    PRINT_FUNCTION_NAME_INFORMATION
+    
     mafPoint *o = new mafPoint(m_SlicePosition);
     Q_FOREACH(mafToolVTKOrthoPlane *op, m_OrthoPlaneTool) {
         op->setOrigin(o);
     }
     mafDEL(o);
-    updateSlice(m_SlicePosition);
+    updateSlice();
 }
 
-void mafViewOrthoSlice::updateSlice(double *pos) {
+void mafViewOrthoSlice::updateSlice() {
+    PRINT_FUNCTION_NAME_INFORMATION
+    // Trigger the pipe update
     setModified();
     updateView();
 }
