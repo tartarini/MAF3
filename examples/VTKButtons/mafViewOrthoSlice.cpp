@@ -38,18 +38,16 @@ mafViewOrthoSlice::~mafViewOrthoSlice() {
 }
 
 void mafViewOrthoSlice::addPlaneToolsToHandler() {
-    mafCore::mafPoint *o = new mafCore::mafPoint(m_SlicePosition);
     Q_FOREACH(mafView *v, *viewList()) {
         mafToolVTKOrthoPlane * orthoPlaneTool = mafNEW(mafToolVTKOrthoPlane);
         orthoPlaneTool->setFollowSelectedObject(false);
         orthoPlaneTool->setFollowSelectedObjectVisibility(false);
-        orthoPlaneTool->setOrigin(o);
+        orthoPlaneTool->setOrigin(&m_SlicePosition);
         mafToolHandler *handler = v->toolHandler();
         handler->addTool(orthoPlaneTool);
         m_OrthoPlaneTool.push_back(orthoPlaneTool);
         connect(orthoPlaneTool, SIGNAL(modifiedObject()), this, SLOT(widgetUpdatePosition()));
     }
-    mafDEL(o);
 }
 
 void mafViewOrthoSlice::widgetUpdatePosition() {
@@ -57,30 +55,28 @@ void mafViewOrthoSlice::widgetUpdatePosition() {
     if(op) {
         PRINT_FUNCTION_NAME_INFORMATION
         mafPoint *o = op->origin();
-        o->pos(m_SlicePosition);
+        m_SlicePosition = *o;
         Q_FOREACH(mafToolVTKOrthoPlane *plane, m_OrthoPlaneTool) {
             if (plane == op) {
                 continue;
             }
-            plane->setOrigin(o);
+            plane->setOrigin(&m_SlicePosition);
         }
-        m_GUI->setPosition(m_SlicePosition);
+        double pos[3];
+        m_SlicePosition.pos(pos);
+        m_GUI->setPosition(pos);
         updateSlice();
     }
 }
 
 void mafViewOrthoSlice::guiUpdatePosition(double *pos) {
-    m_SlicePosition[0] = pos[0];
-    m_SlicePosition[1] = pos[1];
-    m_SlicePosition[2] = pos[2];
+    m_SlicePosition = mafPoint(pos);
     
     PRINT_FUNCTION_NAME_INFORMATION
     
-    mafPoint *o = new mafPoint(m_SlicePosition);
     Q_FOREACH(mafToolVTKOrthoPlane *op, m_OrthoPlaneTool) {
-        op->setOrigin(o);
+        op->setOrigin(&m_SlicePosition);
     }
-    mafDEL(o);
     updateSlice();
 }
 
@@ -100,10 +96,8 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
         vme->bounds(b);
         if (m_VisibleObjects == 1) {
             m_GUI->setBounds(b);
-            const double *p = m_GUI->position();
-            m_SlicePosition[0] = p[0];
-            m_SlicePosition[1] = p[1];
-            m_SlicePosition[2] = p[2];
+            double *p = (double *)m_GUI->position();
+            m_SlicePosition = mafPoint(p, mafCodeLocation);
         }
         mafView *subView;
         QList<mafView *> *vList = viewList();
@@ -132,6 +126,10 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
     mafObjectRegistry::instance()->applyVisitorToObjectListThreaded(v, &m_VisibleVMEsList);
     
     mafBounds *bounds = v->bounds();
+    if (bounds == NULL) {
+        // No objects present into the scene.
+        return;
+    }
     Q_FOREACH(mafToolVTKOrthoPlane *op, m_OrthoPlaneTool) {
         op->setSceneNode(node);
         op->setVOI(bounds);
@@ -144,16 +142,8 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
 //////////////////////////////////////////////////////////////////////////
 // Delegate methods
 //////////////////////////////////////////////////////////////////////////
-QString mafViewOrthoSlice::originX() {
-    return QString::number(m_SlicePosition[0]);
-}
-
-QString mafViewOrthoSlice::originY() {
-    return QString::number(m_SlicePosition[1]);
-}
-
-QString mafViewOrthoSlice::originZ() {
-    return QString::number(m_SlicePosition[2]);
+mafCore::mafPointPointer mafViewOrthoSlice::origin() {
+    return &m_SlicePosition;
 }
 
 bool mafViewOrthoSlice::shouldExecuteLocalCode() {

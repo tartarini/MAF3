@@ -16,6 +16,7 @@
 #include <mafSceneNode.h>
 #include "mafToolVTKOrthoPlane.h"
 #include <mafVME.h>
+#include <mafPoint.h>
 
 class mafOrthoSlice;
 
@@ -38,9 +39,7 @@ public Q_SLOTS:
     // Delegate methods
     //////////////////////////////////////////////////////////////////////////
     /// Get originZ value;
-    QString originX();
-    QString originY();
-    QString originZ();
+    mafCore::mafPointPointer origin();
     //////////////////////////////////////////////////////////////////////////
 
 public:
@@ -62,7 +61,7 @@ private:
     void updateSlice();
     
     mafOrthoSlice *m_GUI; ///< GUI widget.
-    double m_SlicePosition[3]; ///< Current slice position.
+    mafCore::mafPoint m_SlicePosition; ///< Current slice position.
     QList<mafToolVTKOrthoPlane *> m_OrthoPlaneTool;
 
     /// Initialize the plane tools
