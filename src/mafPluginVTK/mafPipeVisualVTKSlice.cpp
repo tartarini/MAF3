@@ -21,11 +21,13 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 
 mafPipeVisualVTKSlice::mafPipeVisualVTKSlice(const QString code_location) : mafPipeVisualVTK(code_location) {
-    m_Origin = mafPoint(0.,0.,0.);
-    m_Normal = mafPoint(0.,0.,1.);
+    m_Origin = NULL;
+    m_Normal = NULL;
 }
 
 mafPipeVisualVTKSlice::~mafPipeVisualVTKSlice() {
+    mafDEL(m_Origin);
+    mafDEL(m_Normal);
 }
 
 mafCore::mafPointPointer mafPipeVisualVTKSlice::origin() {
@@ -42,7 +44,7 @@ mafCore::mafPointPointer mafPipeVisualVTKSlice::origin() {
     }
     //////////////////////////////////////////////////////////////////////////
 
-    return &m_Origin;
+    return m_Origin;
 }
 
 mafCore::mafPointPointer mafPipeVisualVTKSlice::normal() {
@@ -59,22 +61,27 @@ mafCore::mafPointPointer mafPipeVisualVTKSlice::normal() {
     }
     //////////////////////////////////////////////////////////////////////////
 
-    return &m_Normal;
+    return m_Normal;
 }
 
 void mafPipeVisualVTKSlice::updatePipe(double t) {
     Superclass::updatePipe(t);
     
-    // Update origin and normal before 
-    // returning  to the subclass updatePipe method.
-    origin();
-    normal();
+    if (m_Origin == NULL) {
+        double b[6];
+        mafVME *vme = input();
+        vme->bounds(b, t);
+        m_Origin = new mafCore::mafPoint((b[0] + b[1]) / 2., (b[2] + b[3]) / 2., (b[4] + b[5]) / 2.);
+    }
+    if (m_Normal == NULL) {
+        m_Normal = new mafCore::mafPoint(0.,0., 1.);
+    }
 }
 
 void mafPipeVisualVTKSlice::setSlice(mafCore::mafPointPointer o) {
-    m_Origin = *o;
+    *m_Origin = *o;
 }
 
 void mafPipeVisualVTKSlice::setNormal(mafCore::mafPointPointer n) {
-    m_Normal = *n;
+    *m_Normal = *n;
 }
