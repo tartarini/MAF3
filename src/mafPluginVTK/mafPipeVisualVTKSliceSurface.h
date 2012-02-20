@@ -14,7 +14,7 @@
 
 // Includes list
 #include "mafPluginVTKDefinitions.h"
-#include "mafPipeVisualVTK.h"
+#include "mafPipeVisualVTKSlice.h"
 #include "mafPipeDataSliceSurface.h"
 
 #include <vtkSmartPointer.h>
@@ -30,18 +30,13 @@ namespace mafPluginVTK {
  Class name: mafPipeVisualVTKSliceSurface
  This visual pipe allow to extract a contour from a surface data given a cut origin.
 */
-class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSliceSurface : public mafPipeVisualVTK {
+class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSliceSurface : public mafPipeVisualVTKSlice {
     Q_OBJECT
-    Q_PROPERTY(QString originX READ originX WRITE setOriginX)
-    Q_PROPERTY(QString originY READ originY WRITE setOriginY)
-    Q_PROPERTY(QString originZ READ originZ WRITE setOriginZ)
-    Q_PROPERTY(QString normalX READ normalX WRITE setNormalX)
-    Q_PROPERTY(QString normalY READ normalY WRITE setNormalY)
-    Q_PROPERTY(QString normalZ READ normalZ WRITE setNormalZ)
+    Q_PROPERTY(QString sliceAxes READ sliceAxes WRITE setSliceAxes)
     Q_PROPERTY(QString thickness READ thickness WRITE setThickness)
 
     /// typedef macro.
-    mafSuperclassMacro(mafPluginVTK::mafPipeVisualVTK);
+    mafSuperclassMacro(mafPluginVTK::mafPipeVisualVTKSlice);
 
 public:
     /// Object constructor;
@@ -49,12 +44,6 @@ public:
 
     /// Accept function
     static bool acceptObject(mafCore::mafObjectBase *obj);
-
-    /// Set the origin of the slice
-    void setSlice(double *origin);
-
-    /// Set the normal of the slice
-    void setNormal(double *normal);
 
 public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change.
@@ -69,23 +58,11 @@ public Q_SLOTS:
     /// Set originZ value from text box.
     void on_originZ_textEdited(QString stringValue);
 
-    /// Get originX value;
-    QString originX();
+    /// Set the slice axes normal to the slicing plane.
+    QString sliceAxes() const;
 
-    /// Set originX value;
-    void setOriginX(QString stringValue);
-
-    /// Get originY value;
-    QString originY();
-
-    /// Set originY value;
-    void setOriginY(QString stringValue);
-
-    /// Get originZ value;
-    QString originZ();
-
-    /// Set originZ value;
-    void setOriginZ(QString stringValue);
+    /// Assign the slice axes normal to the slicing plane.
+    void setSliceAxes(QString axes);
 
     /// Set normalX value from text box.
     void on_normalX_textEdited(QString stringValue);
@@ -95,24 +72,6 @@ public Q_SLOTS:
 
     /// Set normalZ value from text box.
     void on_normalZ_textEdited(QString stringValue);
-
-    /// Get normalX value;
-    QString normalX();
-
-    /// Set normalX value;
-    void setNormalX(QString value);
-
-    /// Get normalY value;
-    QString normalY();
-
-    /// Set normalY value;
-    void setNormalY(QString value);
-
-    /// Get normalZ value;
-    QString normalZ();
-
-    /// Set normalZ value;
-    void setNormalZ(QString value);
 
     /// Get thickness value;
     QString thickness();
@@ -130,55 +89,13 @@ protected:
 private:
     double m_Thickness; ///< Contour thickness.
 
-    mafPipeDataSliceSurface *m_CutterPipe;    ///< Cutter data pipe.
+    mafPipeDataSliceSurface *m_SlicerPipe;    ///< Cutter data pipe.
     vtkSmartPointer<vtkPolyDataMapper> m_Mapper; ///< Data mapper.
 };
 
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
-
-inline QString mafPipeVisualVTKSliceSurface::originX() {
-    return QString::number(m_CutterPipe->sliceOrigin()[0]);
-}
-
-inline void mafPipeVisualVTKSliceSurface::setOriginX(QString stringValue) {
-    double *o = m_CutterPipe->sliceOrigin();
-    o[0] = stringValue.toDouble();
-    m_CutterPipe->setSliceOrigin(o);
-}
-
-inline void mafPipeVisualVTKSliceSurface::on_originX_textEdited(QString stringValue) {
-    setOriginX(stringValue);
-}
-
-inline QString mafPipeVisualVTKSliceSurface::originY() {
-    return QString::number(m_CutterPipe->sliceOrigin()[1]);
-}
-
-inline void mafPipeVisualVTKSliceSurface::setOriginY(QString stringValue) {
-    double *o = m_CutterPipe->sliceOrigin();
-    o[1] = stringValue.toDouble();
-    m_CutterPipe->setSliceOrigin(o);
-}
-
-inline void mafPipeVisualVTKSliceSurface::on_originY_textEdited(QString stringValue) {
-    setOriginY(stringValue);
-}
-
-inline QString mafPipeVisualVTKSliceSurface::originZ() {
-    return QString::number(m_CutterPipe->sliceOrigin()[2]);
-}
-
-inline void mafPipeVisualVTKSliceSurface::setOriginZ(QString stringValue) {
-    double *o = m_CutterPipe->sliceOrigin();
-    o[2] = stringValue.toDouble();
-    m_CutterPipe->setSliceOrigin(o);
-}
-
-inline void mafPipeVisualVTKSliceSurface::on_originZ_textEdited(QString stringValue) {
-    setOriginZ(stringValue);
-}
 
 inline QString mafPipeVisualVTKSliceSurface::thickness() {
     return QString::number(m_Thickness);
@@ -192,46 +109,43 @@ inline void mafPipeVisualVTKSliceSurface::on_thickness_textEdited(QString string
     m_Thickness = stringValue.toDouble();
 }
 
+inline void mafPipeVisualVTKSliceSurface::on_originX_textEdited(QString stringValue) {
+    m_Origin->setX(stringValue.toDouble());
+    setModified();
+}
+
+inline void mafPipeVisualVTKSliceSurface::on_originY_textEdited(QString stringValue) {
+    m_Origin->setY(stringValue.toDouble());
+    setModified();
+}
+
+inline void mafPipeVisualVTKSliceSurface::on_originZ_textEdited(QString stringValue) {
+    m_Origin->setZ(stringValue.toDouble());
+    setModified();
+}
+
 inline void mafPipeVisualVTKSliceSurface::on_normalX_textEdited(QString stringValue) {
-    setNormalX(stringValue);
+    m_Normal->setX(stringValue.toDouble());
+    setModified();
 }
 
 inline void mafPipeVisualVTKSliceSurface::on_normalY_textEdited(QString stringValue) {
-    setNormalY(stringValue);
+    m_Normal->setY(stringValue.toDouble());
+    setModified();
 }
 
 inline void mafPipeVisualVTKSliceSurface::on_normalZ_textEdited(QString stringValue) {
-    setNormalZ(stringValue);
+    m_Normal->setZ(stringValue.toDouble());
+    setModified();
 }
 
-inline QString mafPipeVisualVTKSliceSurface::normalX() {
-    return QString::number(m_CutterPipe->normal()[0]);
+inline QString mafPipeVisualVTKSliceSurface::sliceAxes() const {
+    return QString::number(m_SlicerPipe->planeNormalAxes());
 }
 
-inline void mafPipeVisualVTKSliceSurface::setNormalX(QString stringValue) {
-    double *n = m_CutterPipe->normal();
-    n[0] = stringValue.toDouble();
-    m_CutterPipe->setNormal(n);
-}
-
-inline QString mafPipeVisualVTKSliceSurface::normalY() {
-    return QString::number(m_CutterPipe->normal()[1]);
-}
-
-inline void mafPipeVisualVTKSliceSurface::setNormalY(QString stringValue) {
-    double *n = m_CutterPipe->normal();
-    n[1] = stringValue.toDouble();
-    m_CutterPipe->setNormal(n);
-}
-
-inline QString mafPipeVisualVTKSliceSurface::normalZ() {
-    return QString::number(m_CutterPipe->normal()[2]);
-}
-
-inline void mafPipeVisualVTKSliceSurface::setNormalZ(QString stringValue) {
-    double *n = m_CutterPipe->normal();
-    n[2] = stringValue.toDouble();
-    m_CutterPipe->setNormal(n);
+inline void mafPipeVisualVTKSliceSurface::setSliceAxes(QString axes) {
+    mafResources::mafPlaneNormal n = (mafResources::mafPlaneNormal)axes.toInt();
+    m_SlicerPipe->setPlaneNormalAxes(n);
 }
 
 } // namespace mafPluginVTK

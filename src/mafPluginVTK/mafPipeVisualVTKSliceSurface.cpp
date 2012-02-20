@@ -31,13 +31,13 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 
 
-mafPipeVisualVTKSliceSurface::mafPipeVisualVTKSliceSurface(const QString code_location) : mafPipeVisualVTK(code_location) {
+mafPipeVisualVTKSliceSurface::mafPipeVisualVTKSliceSurface(const QString code_location) : mafPipeVisualVTKSlice(code_location) {
 //    m_UIFilename = "mafPipeVisualVTKSliceSurface.ui";
 
     m_Thickness = 3.;
 
-    m_CutterPipe = mafNEW(mafPluginVTK::mafPipeDataSliceSurface);
-    m_CutterPipe->setParent(this);
+    m_SlicerPipe = mafNEW(mafPluginVTK::mafPipeDataSliceSurface);
+    m_SlicerPipe->setParent(this);
 
     m_Mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
     m_Mapper->ScalarVisibilityOff();
@@ -49,7 +49,7 @@ mafPipeVisualVTKSliceSurface::mafPipeVisualVTKSliceSurface(const QString code_lo
 }
 
 mafPipeVisualVTKSliceSurface::~mafPipeVisualVTKSliceSurface() {
-    mafDEL(m_CutterPipe);
+    mafDEL(m_SlicerPipe);
 }
 
 bool mafPipeVisualVTKSliceSurface::acceptObject(mafCore::mafObjectBase *obj) {
@@ -66,10 +66,12 @@ bool mafPipeVisualVTKSliceSurface::acceptObject(mafCore::mafObjectBase *obj) {
 void mafPipeVisualVTKSliceSurface::updatePipe(double t) {
     Superclass::updatePipe(t);
 
-    m_CutterPipe->setInput(input());
-    m_CutterPipe->updatePipe(t);
+    mafPointPointer o = origin();
+    m_SlicerPipe->setInput(input());
+    m_SlicerPipe->setSliceOrigin(o->x(), o->y(), o->z());
+    m_SlicerPipe->updatePipe(t);
 
-    mafVME *output = m_CutterPipe->output();
+    mafVME *output = m_SlicerPipe->output();
     mafDataSetCollection *collection = output->dataSetCollection();
     mafDataSet *dataSet = collection->itemAt(t);
     mafProxy<vtkAlgorithmOutput> *data = mafProxyPointerTypeCast(vtkAlgorithmOutput, dataSet->dataValue());
@@ -77,12 +79,4 @@ void mafPipeVisualVTKSliceSurface::updatePipe(double t) {
 
     vtkActor *actor = vtkActor::SafeDownCast(m_Prop3D);
     actor->GetProperty()->SetLineWidth(m_Thickness);
-}
-
-void mafPipeVisualVTKSliceSurface::setSlice(double *origin) {
-    m_CutterPipe->setSliceOrigin(origin);
-}
-
-void mafPipeVisualVTKSliceSurface::setNormal(double *normal) {
-    m_CutterPipe->setNormal(normal);
 }
