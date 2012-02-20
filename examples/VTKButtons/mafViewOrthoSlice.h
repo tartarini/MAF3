@@ -59,7 +59,7 @@ protected:
 
 private:
     /// internal slice update.
-    void updateSlice(double *pos);
+    void updateSlice();
     
     mafOrthoSlice *m_GUI; ///< GUI widget.
     double m_SlicePosition[3]; ///< Current slice position.
