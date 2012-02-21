@@ -24,6 +24,7 @@ using namespace mafCore;
 
 mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafViewCompound(code_location) {
     setConfigurationFile("OrthoSlice.xml");
+
     m_OrthoPlaneTool.clear();
     m_GUI = new mafOrthoSlice();
     this->setUIRootWidget(m_GUI);
@@ -122,22 +123,19 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
     mafObjectRegistry::instance()->applyVisitorToObjectListThreaded(v, &m_VisibleVMEsList);
     
     mafBounds *bounds = v->bounds();
-    if (bounds == NULL) {
-        // No objects present into the scene.
-        return;
-    }
     Q_FOREACH(mafToolVTKOrthoPlane *op, m_OrthoPlaneTool) {
         op->setSceneNode(node);
         op->setVOI(bounds);
         op->setVisibility(m_VisibleObjects != 0);
     }
-    
-    mafDEL(bounds);
+    mafDEL(v);
+    updateView();
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Delegate methods
 //////////////////////////////////////////////////////////////////////////
+
 mafCore::mafPointPointer mafViewOrthoSlice::origin() {
     return &m_SlicePosition;
 }
