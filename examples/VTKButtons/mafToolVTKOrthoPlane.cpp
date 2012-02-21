@@ -47,6 +47,8 @@ using namespace mafPluginVTK;
 using namespace mafCore;
 
 mafToolVTKOrthoPlane::mafToolVTKOrthoPlane(const QString code_location) : mafToolVTK(code_location) {
+    setObjectName("Tool Ortho-Plane");
+
     VTK_CREATE(vtkIOPWCallback, myCallback);
     myCallback->Tool = this;
 
@@ -104,14 +106,17 @@ mafToolVTKOrthoPlane::~mafToolVTKOrthoPlane() {
 }
 
 void mafToolVTKOrthoPlane::setVOI(mafCore::mafBounds *bounds) {
+    if (bounds == NULL) {
+        return;
+    }
     double b[6];
     *m_VOI = *bounds;
-    b[0] = bounds->xMin();
-    b[1] = bounds->xMax();
-    b[2] = bounds->yMin();
-    b[3] = bounds->yMax();
-    b[4] = bounds->zMin();
-    b[5] = bounds->zMax();
+    b[0] = m_VOI->xMin();
+    b[1] = m_VOI->xMax();
+    b[2] = m_VOI->yMin();
+    b[3] = m_VOI->yMax();
+    b[4] = m_VOI->zMin();
+    b[5] = m_VOI->zMax();
     vtkMAFImplicitPlaneRepresentation *repX = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidgetX->GetRepresentation());
     repX->PlaceWidget(b);
     vtkMAFImplicitPlaneRepresentation *repY = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidgetY->GetRepresentation());
