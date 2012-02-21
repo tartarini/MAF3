@@ -13,14 +13,18 @@
 #include <mafSceneNodeVTK.h>
 #include <QImage>
 
+#include "mafAnimateVTK.h"
+
 #include <vtkSmartPointer.h>
 #include <vtkAlgorithmOutput.h>
 #include <vtkQImageToImageSource.h>
 #include <mafDataSet.h>
 #include <mafVTKWidget.h>
 #include <vtkRenderer.h>
+#include <vtkRenderWindow.h>
+#include <vtkCamera.h>
 
-
+#include <vtkMath.h>
 #include <vtkButtonWidget.h>
 #include <vtkEllipticalButtonSource.h>
 #include <vtkTexturedButtonRepresentation.h>
@@ -30,6 +34,8 @@
 
 using namespace mafCore;
 using namespace mafResources;
+using namespace mafPluginVTK;
+
 
 // Callback for the interaction
 class vtkButtonCallback : public vtkCommand {
@@ -42,13 +48,13 @@ public:
         vtkButtonWidget *buttonWidget = reinterpret_cast<vtkButtonWidget*>(caller);
         vtkTexturedButtonRepresentation *rep = reinterpret_cast<vtkTexturedButtonRepresentation*>(buttonWidget->GetRepresentation());
         int state = rep->GetState();
-        qDebug() << QString("state: %1").arg(state);
 
-        mafPluginVTK::mafVTKWidget *widget = qobject_cast<mafPluginVTK::mafVTKWidget *>(this->graphicObject);
-        if (widget) {
-            widget->renderer("tool")->ResetCamera(bounds);
-        }
+        mafVTKWidget *widget = qobject_cast<mafPluginVTK::mafVTKWidget *>(this->graphicObject);
+        mafAnimateVTK *animateCamera = mafNEW(mafPluginVTK::mafAnimateVTK);
+        animateCamera->flyTo(widget, bounds);
+        mafDEL(animateCamera);
     }
+
     void setBounds(double b[6]) {
         for (int i = 0; i <6; i++) {
             bounds[i] = b[i];
