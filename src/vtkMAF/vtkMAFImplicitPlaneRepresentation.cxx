@@ -28,6 +28,8 @@ vtkMAFImplicitPlaneRepresentation::vtkMAFImplicitPlaneRepresentation()
   this->DrawOutlineBox = 1;
 
   this->Picker->AddPickList(this->EdgesActor);
+  this->Picker->DeletePickList(this->CutActor);
+
   this->EdgesActor->SetProperty(this->EdgesProperty);
 }
 
