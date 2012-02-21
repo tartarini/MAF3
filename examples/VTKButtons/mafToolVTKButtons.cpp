@@ -51,7 +51,7 @@ public:
 
         mafVTKWidget *widget = qobject_cast<mafPluginVTK::mafVTKWidget *>(this->graphicObject);
         mafAnimateVTK *animateCamera = mafNEW(mafPluginVTK::mafAnimateVTK);
-        animateCamera->flyTo(widget, bounds);
+        animateCamera->flyTo(widget, bounds, 200);
         mafDEL(animateCamera);
     }
 
