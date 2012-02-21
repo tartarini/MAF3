@@ -29,10 +29,8 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafPipeVisualVTKSliceVolume::mafPipeVisualVTKSliceVolume(const QString code_location) : mafPipeVisualVTK(code_location) {
+mafPipeVisualVTKSliceVolume::mafPipeVisualVTKSliceVolume(const QString code_location) : mafPipeVisualVTKSlice(code_location) {
 //    m_UIFilename = "mafPipeVisualVTKSliceVolume.ui";
-
-    m_Origin[0] = m_Origin[1]= m_Origin[2] = 0.;
 
     m_SlicerPipe = mafNEW(mafPluginVTK::mafPipeDataSliceVolume);
     m_SlicerPipe->setParent(this);
@@ -60,79 +58,32 @@ mafPipeVisualVTKSliceVolume::~mafPipeVisualVTKSliceVolume() {
 bool mafPipeVisualVTKSliceVolume::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
+        // VME must be not NULL
         QString dataType = vme->dataSetCollection()->itemAtCurrentTime()->externalDataType();
         if(dataType == "vtkImageData" || dataType == "vtkStructuredPoints" || dataType == "vtkRectilinearGrid") {
+            // and contains only volumetric dataset to be acceptable from this class.
             return true;
         }
     }
     return false;
 }
 
-QString mafPipeVisualVTKSliceVolume::originX() {
-    //////////////////////////////////////////////////////////////////////////
-    QString sig("originX()");
-    mafCore::mafDelegatePointer delegateObj = delegateObject();
-    if (delegateObj && delegateObj->isMethodDefined(sig)) {
-        QString ret;
-        QGenericReturnArgument ret_val = mafReturnArgument(QString, ret);
-        delegateObj->executeMethod(sig, NULL, &ret_val);
-        if (!delegateObj->shouldExecuteLocalCode()) {
-            return ret;
-        }
-    }
-    //////////////////////////////////////////////////////////////////////////
-
-    return QString::number(m_Origin[0]);
-}
-
-QString mafPipeVisualVTKSliceVolume::originY() {
-    //////////////////////////////////////////////////////////////////////////
-    QString sig("originY()");
-    mafCore::mafDelegatePointer delegateObj = delegateObject();
-    if (delegateObj && delegateObj->isMethodDefined(sig)) {
-        QString ret;
-        QGenericReturnArgument ret_val = mafReturnArgument(QString, ret);
-        delegateObj->executeMethod(sig, NULL, &ret_val);
-        if (!delegateObj->shouldExecuteLocalCode()) {
-            return ret;
-        }
-    }
-    //////////////////////////////////////////////////////////////////////////
-
-    return QString::number(m_Origin[1]);
-}
-
-QString mafPipeVisualVTKSliceVolume::originZ() {
-    //////////////////////////////////////////////////////////////////////////
-    QString sig("originZ()");
-    mafCore::mafDelegatePointer delegateObj = delegateObject();
-    if (delegateObj && delegateObj->isMethodDefined(sig)) {
-        QString ret;
-        QGenericReturnArgument ret_val = mafReturnArgument(QString, ret);
-        delegateObj->executeMethod(sig, NULL, &ret_val);
-        if (!delegateObj->shouldExecuteLocalCode()) {
-            return ret;
-        }
-    }
-    //////////////////////////////////////////////////////////////////////////
-    
-    return QString::number(m_Origin[2]);
-}
-
 void mafPipeVisualVTKSliceVolume::updatePipe(double t) {
     Superclass::updatePipe(t);
 
-    double b[6];
-    mafVME *vme = input();
-    vme->bounds(b, t);
-    m_Origin[0] = (b[0] + b[1]) / 2;
-    m_Origin[1] = (b[2] + b[3]) / 2;
-    m_Origin[2] = (b[4] + b[5]) / 2;
+    // Calling 'origin' method instead of using the m_Origin variable directly
+    // will cause that someone else can add itself as delegate of this class and produce
+    // the slice origin outside.
+    mafPointPointer o = origin();
 
+    // Assign the input to the data pipe (it could be changed from the lest update).
     m_SlicerPipe->setInput(input());
-    m_SlicerPipe->setSliceOrigin(originX().toDouble(), originY().toDouble(), originZ().toDouble());
+    // Assign the origin of the slice.
+    m_SlicerPipe->setSliceOrigin(o->x(), o->y(), o->z());
+    // and ask the pipe to perform the cut.
     m_SlicerPipe->updatePipe(t);
 
+    // gather the result from the data pipe and attach it to the mapper to be visualized.
     mafVME *output = m_SlicerPipe->output();
     mafDataSetCollection *collection = output->dataSetCollection();
     mafDataSet *dataSet = collection->itemAt(t);
@@ -140,12 +91,4 @@ void mafPipeVisualVTKSliceVolume::updatePipe(double t) {
     m_Mapper->SetInputConnection(*data);
 
     vtkActor *actor = vtkActor::SafeDownCast(m_Prop3D);
-}
-
-void mafPipeVisualVTKSliceVolume::setSlice(double *origin) {
-    m_SlicerPipe->setSliceOrigin(origin);
-}
-
-void mafPipeVisualVTKSliceVolume::setNormal(double *normal) {
-    m_SlicerPipe->setNormal(normal);
 }

@@ -31,13 +31,13 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 
 
-mafPipeVisualVTKSliceSurface::mafPipeVisualVTKSliceSurface(const QString code_location) : mafPipeVisualVTK(code_location) {
+mafPipeVisualVTKSliceSurface::mafPipeVisualVTKSliceSurface(const QString code_location) : mafPipeVisualVTKSlice(code_location) {
 //    m_UIFilename = "mafPipeVisualVTKSliceSurface.ui";
 
     m_Thickness = 3.;
 
-    m_CutterPipe = mafNEW(mafPluginVTK::mafPipeDataSliceSurface);
-    m_CutterPipe->setParent(this);
+    m_SlicerPipe = mafNEW(mafPluginVTK::mafPipeDataSliceSurface);
+    m_SlicerPipe->setParent(this);
 
     m_Mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
     m_Mapper->ScalarVisibilityOff();
@@ -49,14 +49,16 @@ mafPipeVisualVTKSliceSurface::mafPipeVisualVTKSliceSurface(const QString code_lo
 }
 
 mafPipeVisualVTKSliceSurface::~mafPipeVisualVTKSliceSurface() {
-    mafDEL(m_CutterPipe);
+    mafDEL(m_SlicerPipe);
 }
 
 bool mafPipeVisualVTKSliceSurface::acceptObject(mafCore::mafObjectBase *obj) {
     mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
+        // VME must be not NULL
         QString dataType = vme->dataSetCollection()->itemAtCurrentTime()->externalDataType();
         if(dataType.startsWith("vtkPolyData", Qt::CaseSensitive)) {
+            // and contains only vtkPolyData dataset to be acceptable from this class.
             return true;
         }
     }
@@ -66,10 +68,20 @@ bool mafPipeVisualVTKSliceSurface::acceptObject(mafCore::mafObjectBase *obj) {
 void mafPipeVisualVTKSliceSurface::updatePipe(double t) {
     Superclass::updatePipe(t);
 
-    m_CutterPipe->setInput(input());
-    m_CutterPipe->updatePipe(t);
+    // Calling 'origin' method instead of using the m_Origin variable directly
+    // will cause that someone else can add itself as delegate of this class and produce
+    // the slice origin outside.
+    mafPointPointer o = origin();
 
-    mafVME *output = m_CutterPipe->output();
+    // Assign the input to the data pipe (it could be changed from the lest update).
+    m_SlicerPipe->setInput(input());
+    // Assign the origin of the slice.
+    m_SlicerPipe->setSliceOrigin(o->x(), o->y(), o->z());
+    // and ask the pipe to perform the cut.
+    m_SlicerPipe->updatePipe(t);
+
+    // gather the result from the data pipe and attach it to the mapper to be visualized.
+    mafVME *output = m_SlicerPipe->output();
     mafDataSetCollection *collection = output->dataSetCollection();
     mafDataSet *dataSet = collection->itemAt(t);
     mafProxy<vtkAlgorithmOutput> *data = mafProxyPointerTypeCast(vtkAlgorithmOutput, dataSet->dataValue());
@@ -77,12 +89,4 @@ void mafPipeVisualVTKSliceSurface::updatePipe(double t) {
 
     vtkActor *actor = vtkActor::SafeDownCast(m_Prop3D);
     actor->GetProperty()->SetLineWidth(m_Thickness);
-}
-
-void mafPipeVisualVTKSliceSurface::setSlice(double *origin) {
-    m_CutterPipe->setSliceOrigin(origin);
-}
-
-void mafPipeVisualVTKSliceSurface::setNormal(double *normal) {
-    m_CutterPipe->setNormal(normal);
 }
