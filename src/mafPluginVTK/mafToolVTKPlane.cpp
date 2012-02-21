@@ -56,6 +56,8 @@ using namespace mafPluginVTK;
 using namespace mafCore;
 
 mafToolVTKPlane::mafToolVTKPlane(const QString code_location) : mafToolVTK(code_location) {
+    setObjectName("Tool Plane");
+
     VTK_CREATE(vtkIPWCallback, myCallback);
     myCallback->Tool = this;
 

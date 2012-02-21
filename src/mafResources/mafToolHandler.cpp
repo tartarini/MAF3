@@ -21,6 +21,7 @@ using namespace mafResources;
 using namespace mafEventBus;
 
 mafToolHandler::mafToolHandler(const QString code_location) : mafCore::mafObjectBase(code_location), m_SceneNode(NULL), m_GraphicObject(NULL) {
+    setObjectName("Tool Handler");
 }
 
 mafToolHandler::~mafToolHandler() {

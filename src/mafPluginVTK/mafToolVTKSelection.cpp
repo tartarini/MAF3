@@ -3,7 +3,7 @@
  *  mafPluginVTK
  *
  *  Created by Paolo Quadrani on 11/11/10.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -29,6 +29,8 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 
 mafToolVTKSelection::mafToolVTKSelection(const QString code_location) : mafToolVTK(code_location) {
+    setObjectName("Tool Selection");
+
     vtkSmartPointer<vtkCompositeDataPipeline> compositeDataPipeline;
 
     m_OutlineCornerFilter = vtkOutlineCornerFilter::New();

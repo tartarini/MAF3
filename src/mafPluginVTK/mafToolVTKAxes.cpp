@@ -18,6 +18,7 @@ using namespace mafPluginVTK;
 
 
 mafToolVTKAxes::mafToolVTKAxes(const QString code_location) : mafToolVTK(code_location) {
+    setObjectName("Tool Axes");
     m_AxesActor = vtkAxesActor::New();
     m_AxesActor->AxisLabelsOff();
     m_AxesActor->SetPickable(0);
