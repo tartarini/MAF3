@@ -33,6 +33,8 @@ public:
     /// Object constructor.
     mafViewVTKButtons(const QString code_location = "");
 
+    /// Remove scene node passed as argument.
+    /*virtual*/ void removeSceneNode(mafResources::mafSceneNode *node);
 
 protected:
     /// Object destructor.

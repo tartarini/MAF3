@@ -13,6 +13,8 @@
 #include "mafViewVTKButtons.h"
 #include "mafToolVTKButtons.h"
 #include <mafSceneNode.h>
+#include <mafVME.h>
+#include <mafTool.h>
 #include <mafToolHandler.h>
 
 using namespace mafPluginVTK;
@@ -36,6 +38,20 @@ mafResources::mafSceneNode *mafViewVTKButtons::createSceneNode(mafResources::maf
         mafDEL(toolButtons);
     }
     return sn;
+}
+
+void mafViewVTKButtons::removeSceneNode(mafResources::mafSceneNode *node) {
+    //When the sceneNode is removed, remove also relative tool.
+    if (node != NULL) {
+        QList<mafResources::mafTool *> *tList = m_ToolHandler->toolList();
+        for (int i = 0; i < tList->count(); i++) {
+            mafResources::mafTool *tool = tList->at(i);
+            if (tool->input()->isEqual(node->vme())) {
+                m_ToolHandler->removeTool(tool);
+            }
+        }
+    }
+    Superclass::removeSceneNode(node);
 }
 
 
