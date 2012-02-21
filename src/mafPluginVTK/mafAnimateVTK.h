@@ -34,7 +34,7 @@ public:
     mafAnimateVTK(const QString code_location = "");
 
     /// Animate the camera to zoom on the passed bounding box.
-    void flyTo(mafVTKWidget *widget, double bounds[6]);
+    void flyTo(mafVTKWidget *widget, double bounds[6], int numberOfSteps = 120);
 
 
 protected:
