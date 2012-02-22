@@ -77,6 +77,9 @@ void mafLoggerFileTest::logMessageTest() {
     m_Logger->logMessage(QtDebugMsg, msg);
     //! </snippet>
 
+    msg = "Warning message";
+    m_Logger->logMessage(QtWarningMsg, msg);
+
 //    QVERIFY(fInfo.size() > 0); // Cannot be verified because the
                                  // file is flushed only when the logger is destroyed.
                                  // I checked the correctness of the file writing manually

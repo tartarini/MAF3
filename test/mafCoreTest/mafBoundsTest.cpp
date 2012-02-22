@@ -56,6 +56,7 @@ private Q_SLOTS:
     /// Test the bound values.
     void boundsTest();
     
+    /// test is two mafBounds objects are equal.
     void equalTest();
     
     /// unite test.
@@ -97,11 +98,18 @@ void mafBoundsTest::boundsTest() {
     double b[6] = {0, 2, 0, 3, 0, 4};
     mafBounds *bounds = new mafBounds(b);
     QVERIFY(bounds->isObjectValid());
+    QVERIFY(mafEquals(bounds->xMin(), 0));
+    QVERIFY(mafEquals(bounds->xMax(), 2));
+    QVERIFY(mafEquals(bounds->yMin(), 0));
+    QVERIFY(mafEquals(bounds->yMax(), 3));
+    QVERIFY(mafEquals(bounds->zMin(), 0));
+    QVERIFY(mafEquals(bounds->zMax(), 4));
     mafDEL(bounds);
 }
 
 void mafBoundsTest::equalTest() {
     QVERIFY(!(*m_ObjTestA == *m_ObjTestB));
+    QVERIFY(*m_ObjTestA != *m_ObjTestB);
 }
 
 
