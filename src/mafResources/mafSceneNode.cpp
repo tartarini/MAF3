@@ -95,6 +95,7 @@ void mafSceneNode::setVMEName(QString name) {
     if(m_VME) {
         m_VME->setProperty("objectName", name);
         setObjectName(name);
+        setModified();
     }
 }
 
