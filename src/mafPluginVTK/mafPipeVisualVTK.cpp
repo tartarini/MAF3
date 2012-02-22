@@ -28,6 +28,7 @@ mafPipeVisualVTK::~mafPipeVisualVTK() {
 void mafPipeVisualVTK::updatedGraphicObject() {
     mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(graphicObject());
     m_Renderer = widget->renderer();
+    widget->GetRenderWindow()->Render();
 }
 
 void mafPipeVisualVTK::setScalarVisibility(bool scalarVisibility) {

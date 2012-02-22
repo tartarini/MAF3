@@ -88,6 +88,7 @@ void mafPipeVisualVTKIsoSurface::updatePipe(double t) {
     m_Mapper->Update();
     //Keep ImmediateModeRendering off: it slows rendering
     //m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
+    updatedGraphicObject();
 }
 
 QString mafPipeVisualVTKIsoSurface::contourValue() {
