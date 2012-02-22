@@ -75,7 +75,7 @@ void mafView::clearScene() {
     m_SelectedNode = NULL;
     
     m_SceneNodeHash.clear();
-    Q_EMIT pipeVisualSelectedSignal(NULL);
+    Q_EMIT pipeVisualSignal(NULL);
 }
 
 mafSceneNode *mafView::createSceneNode(mafVME *vme) {
@@ -185,7 +185,7 @@ void mafView::selectSceneNode(mafSceneNode *node, bool select) {
 
     if(m_SelectedNode) {
         if (m_Selected) {
-            notityVisualPipeSelected();
+            notityVisualPipe();
         }
         if (m_ToolHandler) {
             m_ToolHandler->setActiveSceneNode(m_SelectedNode);
@@ -193,9 +193,13 @@ void mafView::selectSceneNode(mafSceneNode *node, bool select) {
     }
 }
 
-void mafView::notityVisualPipeSelected() {
+void mafView::notityVisualPipe() {
     //Q_EMIT signal to inform about visual pipe of the current node.
-    Q_EMIT pipeVisualSelectedSignal(m_SelectedNode->visualPipe());
+    mafCore::mafObjectBase *pipe = NULL;
+    if(m_SelectedNode && m_SelectedNode->visualPipe()) {
+        pipe = m_SelectedNode->visualPipe()->visibility() ? m_SelectedNode->visualPipe() : NULL;
+    }
+    Q_EMIT pipeVisualSignal(pipe);
 }
 
 void mafView::showSceneNode(mafSceneNode *node, bool show) {
@@ -243,6 +247,8 @@ void mafView::showSceneNode(mafSceneNode *node, bool show) {
         m_ToolHandler->setActiveSceneNode(node);
         m_ToolHandler->setVisibility(show);
     }
+    
+    notityVisualPipe();
     updateView();
 }
 
@@ -255,7 +261,7 @@ mafSceneNode *mafView::sceneNodeFromVme(mafObjectBase *vme) {
 void mafView::select(bool select) {
     m_Selected = select;
     if (select) {
-        notityVisualPipeSelected();
+        notityVisualPipe();
     }
 }
 
