@@ -32,9 +32,6 @@ public:
     /// Object constructor
 	mafPoint(double pos[3], const QString code_location = "");
 
-    /// Object destructor.
-    /* virtual */ ~mafPoint();
-
     /// Object constructor
     mafPoint(const QString code_location = "");	
     
@@ -65,12 +62,19 @@ public:
     /// Assign the Z coordinate.
     void setZ(double z_coord);
 
+    /// set in a one shot all the coordinates.
+    void setPosition(double pos[3]);
+    
     /// Reset the point coordinate to 0,0,0.
     void zero();
 
     /// fill the array with current point coordinates.
     void pos(double p[3]);
 
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafPoint();
+    
 private:
 	double m_X; ///< X coordinate
     double m_Y; ///< Y coordinate
@@ -104,6 +108,13 @@ inline void mafPoint::setY(double y_coord) {
 inline void mafPoint::setZ(double z_coord) {
     m_Z = z_coord;
 }
+
+    
+inline void mafPoint::setPosition(double pos[3]) {
+    m_X = pos[0];
+    m_Y = pos[1];
+    m_Z = pos[2];
+}    
 
 inline void mafPoint::zero() {
     m_X = m_Y = m_Z = 0.;

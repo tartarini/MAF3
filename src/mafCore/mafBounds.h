@@ -35,9 +35,6 @@ public:
     /// Object constructor
 	mafBounds(double b[6], const QString code_location = "");
     
-    /// Object destructor.
-    /* virtual */ ~mafBounds();
-    
     /// Redefined = operator which allows to copy values from another mafBounds class.
     mafBounds &operator=(const mafBounds &obj);
 
@@ -88,7 +85,11 @@ public:
     
     /// return center of the box
     void center(double c[3]);
-
+    
+protected:
+    /// Object destructor.
+    /* virtual */ ~mafBounds();
+    
 private:
 	double m_XMin; ///< Minimum X value
     double m_YMin; ///< Minimum Y value

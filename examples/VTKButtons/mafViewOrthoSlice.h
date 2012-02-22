@@ -61,7 +61,7 @@ private:
     void updateSlice();
     
     mafOrthoSlice *m_GUI; ///< GUI widget.
-    mafCore::mafPoint m_SlicePosition; ///< Current slice position.
+    mafCore::mafPoint *m_SlicePosition; ///< Current slice position.
     QList<mafToolVTKOrthoPlane *> m_OrthoPlaneTool;
 
     /// Initialize the plane tools
