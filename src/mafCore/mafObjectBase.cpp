@@ -16,7 +16,7 @@
 
 using namespace mafCore;
 
-mafObjectBase::mafObjectBase(const QString code_location) : mafDelegate(), m_UIFilename(""), m_UIRootWidget(NULL), m_Modified(false), m_Delegate(NULL) {
+mafObjectBase::mafObjectBase(const QString code_location) : mafDelegate(), m_UIFilename(""), m_Widget(NULL), m_Modified(false), m_Delegate(NULL) {
     mafIdProvider *provider = mafIdProvider::instance();
     m_ObjectId = provider->createNewId();
 

@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
 
     // Example of View customization with a particular widget
     //mafRegisterQtObject(mafOrthoSlice);
-    //logic->customizeViewRootWidget("OrthoSlice", "mafOrthoSlice");
+    //logic->customizeViewWidget("OrthoSlice", "mafOrthoSlice");
 
 //    logic->plugObject("mafResources::mafView", "mafScriptInterpreter::mafViewScriptInterpreterPython", "Python Console");
 

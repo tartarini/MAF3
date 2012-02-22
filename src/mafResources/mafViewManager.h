@@ -26,7 +26,7 @@ class mafPipeVisual;
 Class name: mafViewManager
 This class provides the manager class for MAF3 views. The topics are:
 - maf.local.resources.view.customizeVisualization allows to plug visual pipes associated with VME for a given view type.
-- maf.local.resources.view.customizeViewRootWidget allows to associate a root widget to a specific view.
+- maf.local.resources.view.customizeViewWidget allows to associate a root widget to a specific view.
 - maf.local.resources.view.create allows to create a new View.
 - maf.local.resources.view.created notify all the observers that a new View has been created.
 - maf.local.resources.view.destroy allows to destroy a given View.
@@ -131,7 +131,7 @@ private Q_SLOTS:
     void customPipeVisualForVMEInView(QString view_name, QString data_type, QString pipe_type);
 
     /// Allows to customize a view with a root widget
-    void setRootWidgetForView(QString view_name, QString rootWidget_type);
+    void setWidgetForView(QString view_name, QString widget_type);
 
     /// Called by reparent of items in tree.
     void sceneNodeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectBase *vmeParent);
@@ -162,7 +162,7 @@ private:
     mafResourceList m_CreatedViewList; ///< List of created views.
     mafView *m_SelectedView; ///< Keep trak of the current selected view.
     QHash<QString, QVariantHash* > m_VisualizationBindHash; ///< Hash containing the view type as key and the hash of binds between data type and visual pipe to use for rendering.
-    QHash<QString, QString> m_RootWidgetHash; ///< Hash containing the view name as key and the root widget name for that view.
+    QHash<QString, QString> m_WidgetHash; ///< Hash containing the view name as key and the root widget name for that view.
 };
 
 } // namespace mafResources

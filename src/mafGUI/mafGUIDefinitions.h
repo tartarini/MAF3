@@ -42,6 +42,7 @@ namespace mafGUI {
  @param gui Root widget defining the UI for the corresponding MAF object.
 */
 static void mafConnectObjectWithGUI(mafCore::mafObjectBase *obj, QWidget *gui) {
+    obj->setWidget(gui);
     // Connect automatically the signals of the GUI widgets to the Operation's slots.
     obj->connectObjectSlotsByName((QObject *)gui);
     // and initialize the widgets value with those contained into the operation's properties.

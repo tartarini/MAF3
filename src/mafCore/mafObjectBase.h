@@ -30,7 +30,7 @@ class mafVisitor;
 class MAFCORESHARED_EXPORT mafObjectBase : public mafDelegate {
     Q_OBJECT
     Q_PROPERTY(QString objectHash READ objectHash WRITE setObjectHash)
-    Q_PROPERTY(QObject *uiRootWidget READ uiRootWidget WRITE setUIRootWidget STORED false)
+    Q_PROPERTY(QObject *widget READ widget WRITE setWidget STORED false)
     Q_PROPERTY(mafCore::mafDelegatePointer delegateObject READ delegateObject WRITE setDelegateObject STORED false)
     Q_PROPERTY(QString uiFile READ uiFilename)
     /// typedef macro.
@@ -45,7 +45,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     /// update ui widgets with properties, using USER flag in Q_PROPERTY.
-    void updateUI(QObject *selfUI = NULL);
+    void updateUI(QObject *selfUI);
 
 public:
     /// Object constructor.
@@ -82,12 +82,12 @@ public:
     bool modified() const;
 
     /// Allow to assign a custom widget to the class instead of UI filename to be loaded.
-    /** This method initialize the m_UIRootWidget variable which is in mutual exclusion with m_UIFilename.
+    /** This method initialize the m_Widget variable which may be created from code or loaded from xml.
     Assigning it will cause the m_UIFilename to be overwritten with the empty string.*/
-    void setUIRootWidget(QObject *w);
+    void setWidget(QObject *w);
 
     /// Return the pointer to the root widget associated with the object.
-    QObject *uiRootWidget() const;
+    QObject *widget() const;
 
     /// Return the filename associated to the object's UI.
     const QString uiFilename() const;
@@ -113,9 +113,8 @@ protected:
     and by the serialization mechanism to restore the previous saved object's hash.*/
     void setObjectHash(const QString obj_hash);
    
-    QString m_UIFilename; ///< Filename that define the object's UI written into a .ui XML file. m_UIFilename and m_UIRootWidget are mutually exclusive.
-    QObject *m_UIRootWidget; ///< Root widget of the UI class allocated and given to the mafObjectBase instead of assigning the m_UIFilename of the ".ui" file to load. m_UIFilename and m_UIRootWidget are mutually exclusive.
-
+    QString m_UIFilename; ///< Filename that define the object's UI written into a .ui XML file.
+    QObject *m_Widget; ///<  widget of the UI class allocated and given to the mafObjectBase. It can be obtained from ui file or from a direct instantiation.
     /// Object destructor.
     virtual ~mafObjectBase();
 
@@ -151,13 +150,12 @@ inline const QString mafObjectBase::uiFilename() const {
     return m_UIFilename;
 }
 
-inline void mafObjectBase::setUIRootWidget(QObject *w) {
-    m_UIRootWidget = w;
-    m_UIFilename = "";
+inline void mafObjectBase::setWidget(QObject *w) {
+    m_Widget = w;
 }
 
-inline QObject *mafObjectBase::uiRootWidget() const {
-    return m_UIRootWidget;
+inline QObject *mafObjectBase::widget() const {
+    return m_Widget;
 }
     
 inline mafDelegatePointer mafObjectBase::delegateObject() const {

@@ -104,13 +104,13 @@ void mafPipeVisualVTKIsoSurface::on_contourValue_textEdited(QString stringValue)
 }
 
 void mafPipeVisualVTKIsoSurface::on_contourValue_editingFinished() {
-    updateUI();
+    updateUI(widget());
     updatePipe();
 }
 
 void mafPipeVisualVTKIsoSurface::on_contourValueSlider_valueChanged(int value) {
     m_ContourValue = value;
-    updateUI();
+    updateUI(widget());
 }
 
 void mafPipeVisualVTKIsoSurface::on_contourValueSlider_sliderReleased() {

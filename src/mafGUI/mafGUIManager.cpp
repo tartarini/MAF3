@@ -485,7 +485,7 @@ void mafGUIManager::updateTreeForSelectedVme(mafCore::mafObjectBase *vme) {
     }
 }
 
-void mafGUIManager::updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeVisual) {
+void mafGUIManager::updateGuiForCurrentPipeVisual(mafCore::mafObjectBase *pipeVisual) {
     if (pipeVisual) {
         if (m_CurrentPipeVisual == pipeVisual) {
             return;
@@ -697,7 +697,7 @@ void mafGUIManager::operationDidStart(mafCore::mafObjectBase *operation) {
     operation->setObjectName(m_OperationWidget->operationName());
 
     if(guiFilename.isEmpty()) {
-        QObject *customUI = operation->uiRootWidget();
+        QObject *customUI = operation->widget();
         QWidget *customUIWidget = qobject_cast<QWidget *>(customUI);
         if (customUI == NULL) {
             // No GUI associated with the object...
@@ -864,7 +864,7 @@ void mafGUIManager::createView() {
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, sel_view);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.view.selected", mafEventTypeLocal, NULL, &ret_val);
     if (sel_view) {
-        connect(sel_view, SIGNAL(pipeVisualSelectedSignal(mafCore::mafObjectBase *)), this, SLOT(updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *)));
+        connect(sel_view, SIGNAL(pipeVisualSignal(mafCore::mafObjectBase *)), this, SLOT(updateGuiForCurrentPipeVisual(mafCore::mafObjectBase *)));
     }
 }
 
@@ -896,7 +896,7 @@ void mafGUIManager::viewSelected(mafCore::mafObjectBase *view) {
     m_UILoadedFromFile = !guiFilename.isEmpty();
     if(!m_UILoadedFromFile) {
         // Check if there is a custom widget associated with the class...
-        QObject *customUI = view->uiRootWidget();
+        QObject *customUI = view->widget();
         QWidget *customUIWidget = qobject_cast<QWidget *>(customUI);
         if (customUI == NULL) {
             // No GUI associated with the object...
