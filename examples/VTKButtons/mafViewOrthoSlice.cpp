@@ -109,13 +109,13 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
         }
         //add vme to visible list
         m_VisibleVMEsList.push_back(vme);
+
+        //creation of the widgets
+        if (m_OrthoPlaneTool.isEmpty()) {
+            addPlaneToolsToHandler();
+        }
     } else {
         m_VisibleVMEsList.removeOne(vme);
-    }
-    
-    //creation of the widgets
-    if (m_OrthoPlaneTool.isEmpty()) {
-        addPlaneToolsToHandler();
     }
     
     /// update total visible bounds

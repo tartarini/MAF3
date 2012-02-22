@@ -30,10 +30,11 @@ bool mafDelegate::shouldExecuteLocalCode() {
 
 void mafDelegate::executeMethod(QString signature, mafArgumentList *argList /* = NULL */, QGenericReturnArgument *ret /* = NULL */) const {
     QString method = signature.split("(").at(0);
-    if (method.isEmpty()) {
+    if (signature.indexOf("(") == -1) {
         qWarning() << mafTr("Bad method signature: ").arg(signature);
         return;
     }
+
 
     if (ret == NULL) {
         // return value is NULL => void
