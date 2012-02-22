@@ -24,14 +24,33 @@ class testDelegate : public mafCore::mafDelegate {
 public:
     testDelegate();
 
+    /// Return the value of test variable
+    int myVariable();
+
 public Q_SLOTS:
+    /// Increase the value of internal variable.
     void myCustomMethod();
+
+    /// Assign a value to the internal variable.
+    void setMyVariable(int v);
+
+private:
+    int m_MyVariable; ///< Test var.
 };
 
-testDelegate::testDelegate() : mafCore::mafDelegate() {
+testDelegate::testDelegate() : mafCore::mafDelegate(), m_MyVariable(0) {
 }
 
 void testDelegate::myCustomMethod() {
+    ++m_MyVariable;
+}
+
+int testDelegate::myVariable() {
+    return m_MyVariable;
+}
+
+void testDelegate::setMyVariable(int v) {
+    m_MyVariable = v;
 }
 //-------------------------------------------------------------------------
 
@@ -65,6 +84,9 @@ private Q_SLOTS:
     /// Verify that the shouldExecuteLocalCode return true by default.
     void shouldExecuteLocalCodeTest();
 
+    /// Test the method execution.
+    void executeMethodTest();
+
 private:
     testDelegate *m_Delegate; ///< Test variable.
 };
@@ -87,6 +109,26 @@ void mafDelegateTest::isMethodDefinedTest() {
 
 void mafDelegateTest::shouldExecuteLocalCodeTest() {
     QVERIFY(m_Delegate->shouldExecuteLocalCode());
+}
+
+void mafDelegateTest::executeMethodTest() {
+    m_Delegate->executeMethod("badMethodSignature");
+    // No execution => m_MyVariable is the same as before.
+    int v = m_Delegate->myVariable();
+    QVERIFY(v == 0);
+    
+    m_Delegate->executeMethod("myCustomMethod()");
+    // Method executed correctly.
+    v = m_Delegate->myVariable();
+    QVERIFY(v == 1);
+
+    int val = 3;
+    mafArgumentList argList;
+    argList.append(mafArgument(int, val));
+    m_Delegate->executeMethod("setMyVariable(int)", &argList);
+
+    v = m_Delegate->myVariable();
+    QVERIFY(v == val);
 }
 
 MAF_REGISTER_TEST(mafDelegateTest);
