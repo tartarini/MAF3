@@ -19,6 +19,12 @@ mafOrthoSlice::mafOrthoSlice(QWidget *parent) : QWidget(parent), ui(new Ui::mafO
     ui->xPosition->setEnabled(false);
     ui->yPosition->setEnabled(false);
     ui->zPosition->setEnabled(false);
+    
+    
+    ui->xLabel->setText("<font color='red'>X</font>");
+    ui->yLabel->setText("<font color='green'>Y</font>");
+    ui->zLabel->setText("<font color='blue'>Z</font>");
+    
     m_Bounds[0] = 0.;
     m_Bounds[1] = 1.;
     m_Bounds[2] = 0.;
