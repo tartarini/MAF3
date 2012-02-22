@@ -125,10 +125,10 @@ void mafLogic::customizeVisualization(const QString view_name, const QString dat
 }
 
 
-void mafLogic::customizeViewRootWidget(const QString view_name, QString rootWidget_name) {
-    mafEvent ev("maf.local.resources.view.customizeViewRootWidget");
+void mafLogic::customizeViewWidget(const QString view_name, QString widget_name) {
+    mafEvent ev("maf.local.resources.view.customizeViewWidget");
     ev.addParameter(mafEventArgument(QString, view_name));
-    ev.addParameter(mafEventArgument(QString, rootWidget_name));
+    ev.addParameter(mafEventArgument(QString, widget_name));
     mafEventBusManager::instance()->notifyEvent(ev);
 }
 

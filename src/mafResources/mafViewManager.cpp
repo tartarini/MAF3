@@ -49,7 +49,7 @@ mafViewManager::~mafViewManager() {
     mafUnregisterLocalCallback("maf.local.resources.view.clearViews", this, "clearViews()")
     mafUnregisterLocalCallback("maf.local.resources.view.fillViews", this, "fillViews()")
     mafUnregisterLocalCallback("maf.local.resources.view.customizeVisualization", this, "customPipeVisualForVMEInView(QString, QString, QString)")
-    mafUnregisterLocalCallback("maf.local.resources.view.customizeViewRootWidget", this, "setRootWidgetForView(QString, QString)")
+    mafUnregisterLocalCallback("maf.local.resources.view.customizeViewWidget", this, "setWidgetForView(QString, QString)")
     
     mafUnregisterLocalCallback("maf.local.resources.view.sceneNodeReparent", this, "sceneNodeReparent(mafCore::mafObjectBase *, mafCore::mafObjectBase *)")
 
@@ -66,7 +66,7 @@ mafViewManager::~mafViewManager() {
     mafUnregisterLocalSignal("maf.local.resources.view.clearViews", this, "clearViewsSignal()")
     mafUnregisterLocalSignal("maf.local.resources.view.fillViews", this, "fillViewsSignal()")
     mafUnregisterLocalSignal("maf.local.resources.view.customizeVisualization", this, "customPipeVisualForVMEInViewSignal(QString, QString, QString)")
-    mafUnregisterLocalSignal("maf.local.resources.view.customizeViewRootWidget", this, "setRootWidgetForView(QString, QString)")
+    mafUnregisterLocalSignal("maf.local.resources.view.customizeViewWidget", this, "setWidgetForView(QString, QString)")
 
     
     // Remove IDs...
@@ -82,7 +82,7 @@ mafViewManager::~mafViewManager() {
     provider->removeId("maf.local.resources.view.clearViews");
     provider->removeId("maf.local.resources.view.fillViews");
     provider->removeId("maf.local.resources.view.customizeVisualization");
-    provider->removeId("maf.local.resources.view.customizeViewRootWidget");
+    provider->removeId("maf.local.resources.view.customizeViewWidget");
 }
 
 mafMemento *mafViewManager::createMemento() const {
@@ -122,7 +122,7 @@ void mafViewManager::initializeConnections() {
     provider->createNewId("maf.local.resources.view.clearViews");
     provider->createNewId("maf.local.resources.view.fillViews");
     provider->createNewId("maf.local.resources.view.customizeVisualization");
-    provider->createNewId("maf.local.resources.view.customizeViewRootWidget");
+    provider->createNewId("maf.local.resources.view.customizeViewWidget");
     
     // Register API signals.
     mafRegisterLocalSignal("maf.local.resources.view.create", this, "createViewSignal(QString, QString)")
@@ -136,7 +136,7 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.resources.view.clearViews", this, "clearViewsSignal()")
     mafRegisterLocalSignal("maf.local.resources.view.fillViews", this, "fillViewsSignal()")
     mafRegisterLocalSignal("maf.local.resources.view.customizeVisualization", this, "customPipeVisualForVMEInViewSignal(QString, QString, QString)")
-    mafRegisterLocalSignal("maf.local.resources.view.customizeViewRootWidget", this, "setRootWidgetForView(QString, QString)")
+    mafRegisterLocalSignal("maf.local.resources.view.customizeViewWidget", this, "setWidgetForView(QString, QString)")
 
     // Register private callbacks to the instance of the manager..
     mafRegisterLocalCallback("maf.local.resources.view.create", this, "createView(QString, QString)")
@@ -147,7 +147,7 @@ void mafViewManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.resources.view.clearViews", this, "clearViews()")
     mafRegisterLocalCallback("maf.local.resources.view.fillViews", this, "fillViews()")
     mafRegisterLocalCallback("maf.local.resources.view.customizeVisualization", this, "customPipeVisualForVMEInView(QString, QString, QString)")
-    mafRegisterLocalCallback("maf.local.resources.view.customizeViewRootWidget", this, "setRootWidgetForView(QString, QObject *)")
+    mafRegisterLocalCallback("maf.local.resources.view.customizeViewWidget", this, "setWidgetForView(QString, QObject *)")
     
     // Register callback to allows settings serialization.
     mafRegisterLocalCallback("maf.local.logic.status.viewmanager.store", this, "createMemento()")
@@ -167,9 +167,9 @@ void mafViewManager::customPipeVisualForVMEInView(QString view_name, QString dat
     hash->insert(data_type, pipe_type);
 }
 
-void mafResources::mafViewManager::setRootWidgetForView(QString view_name, QString rootWidget_type) {
-    if (!rootWidget_type.isEmpty()) {
-        m_RootWidgetHash.insert(view_name, rootWidget_type);
+void mafResources::mafViewManager::setWidgetForView(QString view_name, QString widget_type) {
+    if (!widget_type.isEmpty()) {
+        m_WidgetHash.insert(view_name, widget_type);
     }
 }
 
@@ -223,9 +223,9 @@ void mafViewManager::createView(QString view_type, QString view_name) {
             v->setVisualPipeHash(*m_VisualizationBindHash.value(view_name));
         }
 
-        if (m_RootWidgetHash.contains(view_name)) {
-            QObject *widget = mafNEWQtFromString(m_RootWidgetHash.value(view_name));
-            v->setUIRootWidget(widget);
+        if (m_WidgetHash.contains(view_name)) {
+            QObject *widget = mafNEWQtFromString(m_WidgetHash.value(view_name));
+            v->setWidget(widget);
         }
         addViewToCreatedList(v);
         selectView(obj);

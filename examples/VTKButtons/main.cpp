@@ -69,10 +69,15 @@ int main(int argc, char *argv[]) {
 
     // Plug a View into the application
     logic->plugObject("mafResources::mafView", "mafViewOrthoSlice", "OrthoSlice");
+    logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View Iso");
     logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "Slice");
     logic->plugObject("mafResources::mafView", "mafViewVTKButtons", "Buttons view");
     // ... and customize it telling to use mafPipeVisualVTKSurface visual pipe to render vtkPolyData data type.
+    logic->customizeVisualization("View Iso", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
+    logic->customizeVisualization("View Iso", "vtkRectilinearGrid", "mafPluginVTK::mafPipeVisualVTKIsoSurface");
+    logic->customizeVisualization("View Iso", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKIsoSurface");
     logic->customizeVisualization("VTK view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
+    logic->customizeVisualization("VTK view", "vtkImageData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("Buttons view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("Buttons view", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
     logic->customizeVisualization("Buttons view", "vtkRectilinearGrid", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
@@ -81,7 +86,7 @@ int main(int argc, char *argv[]) {
 
     // Example of View customization with a particular widget
     //mafRegisterQtObject(mafOrthoSlice);
-    //logic->customizeViewRootWidget("OrthoSlice", "mafOrthoSlice");
+    //logic->customizeViewWidget("OrthoSlice", "mafOrthoSlice");
 
 //    logic->plugObject("mafResources::mafView", "mafScriptInterpreter::mafViewScriptInterpreterPython", "Python Console");
 

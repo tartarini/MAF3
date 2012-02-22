@@ -230,9 +230,9 @@ private Q_SLOTS:
     /** This method will update all tree widget for the selected VME */
     void updateTreeForSelectedVme(mafCore::mafObjectBase *vme);
 
-    /// Called when a scene node has been selected.
-    /** This method will update GUI for the selected scene node */
-    void updateGuiForSelectedPipeVisual(mafCore::mafObjectBase *pipeVisual);
+    /// Called when a scene node has been selected or show/hide.
+    /** This method will update GUI for the current scene node */
+    void updateGuiForCurrentPipeVisual(mafCore::mafObjectBase *pipeVisual);
     
     /// Slot needed to intercept the started operation and ask it for the GUI filename.
     void operationDidStart(mafCore::mafObjectBase *operation);

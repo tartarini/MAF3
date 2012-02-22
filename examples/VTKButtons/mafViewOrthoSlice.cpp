@@ -27,7 +27,7 @@ mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafViewCompo
     m_SlicePosition = new mafPoint();
     m_OrthoPlaneTool.clear();
     m_GUI = new mafOrthoSlice();
-    this->setUIRootWidget(m_GUI);
+    this->setWidget(m_GUI);
     connect(m_GUI, SIGNAL(positionUpdated(double *)), this, SLOT(guiUpdatePosition(double *)));
 }
 

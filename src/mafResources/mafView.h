@@ -108,7 +108,7 @@ protected:
     void setupSceneGraph();
 
     /// Emit signal to inform about visual pipe of the current node.
-    void notityVisualPipeSelected();
+    void notityVisualPipe();
 
     /// factory method for creating SceneNode.
     virtual mafSceneNode *createSceneNode(mafVME *vme);
@@ -130,9 +130,9 @@ private:
 
 
 Q_SIGNALS:
-    /// Notify selection of a sceneNode. 
-    void pipeVisualSelectedSignal(mafCore::mafObjectBase *pipeVisual);
-        
+    /// Notify selection or show/hide of a sceneNode. 
+    void pipeVisualSignal(mafCore::mafObjectBase *pipeVisual);
+    
 public Q_SLOTS:
     /// Wrap the new VME into a mafSceneNode.
     void vmeAdd(mafCore::mafObjectBase *vme);

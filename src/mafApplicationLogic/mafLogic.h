@@ -127,8 +127,8 @@ public:
     /// Plug the information to customize the visualization for a VME shown into the given view with the associated pipe visual.
     void customizeVisualization(const QString view_name, const QString data_type, const QString pipe_visual_type);
 
-    /// Plug the information to customize the root widget associated to a specific view.
-    void customizeViewRootWidget(const QString view_name, const QString rootWidget_name);
+    /// Plug the information to customize the widget associated to a specific view.
+    void customizeViewWidget(const QString view_name, const QString rootWidget_name);
     
     /// Push a library name in the list of libraries to load in app initialization.
     void pushLibraryToLoad(QString libraryName);
