@@ -49,6 +49,7 @@ void mafViewVTKButtons::removeSceneNode(mafResources::mafSceneNode *node) {
         for (int i = 0; i < tList->count(); i++) {
             mafResources::mafTool *tool = tList->at(i);
             if (tool->input()->isEqual(node->vme())) {
+                //should I check that is a button??
                 m_ToolHandler->removeTool(tool);
             }
         }

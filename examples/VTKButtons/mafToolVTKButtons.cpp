@@ -132,20 +132,28 @@ void mafToolVTKButtons::updatePipe(double t) {
         rep->GetBalloon()->SetBalloonText(vmeName.toAscii());
         vtkTextProperty *textProp = rep->GetBalloon()->GetTextProperty();
         textProp->SetFontSize(12);
-        textProp->ShadowOff();
-        textProp->SetColor(0.9,0.9,0.9);
+        //textProp->SetColor(0.9,0.9,0.9);
 
         //Set label position
         rep->GetBalloon()->SetBalloonLayoutToImageLeft();
 
         //This method allows to set opacity of the background od the label
-        rep->GetBalloon()->GetFrameProperty()->SetOpacity(0);
+        rep->GetBalloon()->GetFrameProperty()->SetOpacity(0.65);
         myCallback->graphicObject = this->m_GraphicObject;
         myCallback->setBounds(b);
 
-        //modify position of the vtkButton on the corner of the bounding box of the VME.
+        //modify position of the vtkButton 
         double bds[6];
-        bds[0] = b[0]; bds[1] = b[2]; bds[2] = b[4];
+
+        //on the corner of the bounding box of the VME.
+        //bds[0] = b[0]; bds[1] = b[2]; bds[2] = b[4];
+
+        //on the center of the bounding box of the VME.
+         bds[0] = (b[0] + b[1]) / 2;
+         bds[1] = (b[2] + b[3]) / 2;
+         bds[2] = (b[4] + b[5]) / 2;
+
+
         int size[2]; size[0] = 25; size[1] = 45;
 
         rep->PlaceWidget(bds,size);
