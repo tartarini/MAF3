@@ -22,6 +22,7 @@
 #include <mafDataSet.h>
 #include <vtkTextProperty.h>
 #include <vtkProperty2D.h>
+#include <vtkRenderer.h>
 
 #include <vtkButtonWidget.h>
 #include <vtkEllipticalButtonSource.h>
@@ -49,7 +50,12 @@ public:
 
         mafVTKWidget *widget = qobject_cast<mafPluginVTK::mafVTKWidget *>(this->graphicObject);
         mafAnimateVTK *animateCamera = mafNEW(mafPluginVTK::mafAnimateVTK);
-        animateCamera->flyTo(widget, bounds, 200);
+        if (flyTo) {
+            animateCamera->flyTo(widget, bounds, 200);
+        } else {
+            widget->renderer()->ResetCamera(bounds);
+        }
+        
         mafDEL(animateCamera);
     }
 
@@ -59,12 +65,17 @@ public:
         }
     }
 
-    vtkButtonCallback():graphicObject(0) {}
+    void setFlyTo(bool fly) {
+        flyTo = fly;
+    }
+
+    vtkButtonCallback():graphicObject(0), flyTo(true) {}
     QObject *graphicObject;
     double bounds[6];
+    bool flyTo;
 };
 
-mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location) {
+mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location), m_ShowLabel(true), m_FlyTo(true), m_OnCenter(false) {
     // Create an image for the button
     QImage image1;
     bool loaded = image1.load(":/images/spe.png");
@@ -128,31 +139,38 @@ void mafToolVTKButtons::updatePipe(double t) {
         vtkData->GetBounds(b);
         vtkTexturedButtonRepresentation2D *rep = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(m_ButtonWidget->GetRepresentation());
 
-        //Add a label to the button and change its text property
-        rep->GetBalloon()->SetBalloonText(vmeName.toAscii());
-        vtkTextProperty *textProp = rep->GetBalloon()->GetTextProperty();
-        textProp->SetFontSize(12);
-        //textProp->SetColor(0.9,0.9,0.9);
+        if (m_ShowLabel) {
+            //Add a label to the button and change its text property
+            rep->GetBalloon()->SetBalloonText(vmeName.toAscii());
+            vtkTextProperty *textProp = rep->GetBalloon()->GetTextProperty();
+            textProp->SetFontSize(12);
+            //textProp->SetColor(0.9,0.9,0.9);
 
-        //Set label position
-        rep->GetBalloon()->SetBalloonLayoutToImageLeft();
+            //Set label position
+            rep->GetBalloon()->SetBalloonLayoutToImageLeft();
 
-        //This method allows to set opacity of the background od the label
-        rep->GetBalloon()->GetFrameProperty()->SetOpacity(0.65);
+            //This method allows to set opacity of the background od the label
+            rep->GetBalloon()->GetFrameProperty()->SetOpacity(0.65);
+        } else {
+            rep->GetBalloon()->SetBalloonText("");
+        }
+
+
         myCallback->graphicObject = this->m_GraphicObject;
         myCallback->setBounds(b);
+        myCallback->setFlyTo(m_FlyTo);
 
         //modify position of the vtkButton 
         double bds[6];
-
-        //on the corner of the bounding box of the VME.
-        //bds[0] = b[0]; bds[1] = b[2]; bds[2] = b[4];
-
-        //on the center of the bounding box of the VME.
-         bds[0] = (b[0] + b[1]) / 2;
-         bds[1] = (b[2] + b[3]) / 2;
-         bds[2] = (b[4] + b[5]) / 2;
-
+        if (m_OnCenter) {
+            //on the center of the bounding box of the VME.
+            bds[0] = (b[0] + b[1]) / 2;
+            bds[1] = (b[2] + b[3]) / 2;
+            bds[2] = (b[4] + b[5]) / 2;
+        } else {
+            //on the corner of the bounding box of the VME.
+            bds[0] = b[0]; bds[1] = b[2]; bds[2] = b[4];
+        }
 
         int size[2]; size[0] = 25; size[1] = 45;
 
