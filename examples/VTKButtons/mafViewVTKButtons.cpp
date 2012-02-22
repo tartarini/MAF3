@@ -29,13 +29,15 @@ mafResources::mafSceneNode *mafViewVTKButtons::createSceneNode(mafResources::maf
     mafResources::mafSceneNode *sn = Superclass::createSceneNode(vme);
     if (sn != NULL) {
         //create the instance for selection pipe.
-        mafToolVTKButtons *toolButtons = mafNEW(mafToolVTKButtons);
-        toolButtons->setFollowSelectedObjectVisibility(true);
-        toolButtons->setFollowSelectedObject(false);
-        toolButtons->setInput(vme);
-        toolButtons->setVisibility(false);
-        m_ToolHandler->addTool(toolButtons);
-        mafDEL(toolButtons);
+        mafToolVTKButtons *toolButton = mafNEW(mafToolVTKButtons);
+        toolButton->setFollowSelectedObjectVisibility(true);
+        toolButton->setFollowSelectedObject(false);
+        toolButton->setInput(vme);
+        toolButton->setVisibility(false);
+        m_ToolHandler->addTool(toolButton);
+        mafDEL(toolButton);
+
+        bool res = connect(sn, SIGNAL(modifiedObject()), toolButton, SLOT(updatePipe()));
     }
     return sn;
 }
