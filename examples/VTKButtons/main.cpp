@@ -73,9 +73,10 @@ int main(int argc, char *argv[]) {
     logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "Slice");
     logic->plugObject("mafResources::mafView", "mafViewVTKButtons", "Buttons view");
     // ... and customize it telling to use mafPipeVisualVTKSurface visual pipe to render vtkPolyData data type.
-    logic->customizeVisualization("View Iso", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKIsoSurface");
+    logic->customizeVisualization("View Iso", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("View Iso", "vtkRectilinearGrid", "mafPluginVTK::mafPipeVisualVTKIsoSurface");
     logic->customizeVisualization("View Iso", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKIsoSurface");
+    logic->customizeVisualization("VTK view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("VTK view", "vtkImageData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("Buttons view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("Buttons view", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
