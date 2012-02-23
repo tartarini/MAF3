@@ -17,8 +17,7 @@
 #include <mafInteractor.h>
 
 // Foundation Class forwarding list
-class vtkRenderer;
-class vtkInteractorObserver;
+class vtkRenderWindowInteractor;
 class vtkMAFInteractorStyleTrackballActor;
 
 namespace mafPluginVTK {
@@ -53,7 +52,7 @@ protected:
 
 private:    
     bool m_DragObject; ///< flag put to true when the mouse button is pressed and to false when it is released.
-    vtkInteractorObserver *m_PreviousVTKInteractor; ///< represents the old interactor.
+    vtkRenderWindowInteractor *m_RenderWindowInteractor; ///< VTK Interactor
     vtkMAFInteractorStyleTrackballActor *m_CurrentVTKInteractor; ///< represents the interactor currently attached
 };
 
