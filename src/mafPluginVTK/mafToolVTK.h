@@ -49,10 +49,10 @@ protected:
     /* virtual */ ~mafToolVTK();
 
 	/// Add a vtkProp3D to the tool layer.
-	virtual void addProp(vtkProp3D *prop);
+	virtual void addProp(vtkProp3D *prop, bool inAssembly = false);
 	
 	/// Remove a vtkProp3D from the tool layer.
-	virtual void removeProp(vtkProp3D *prop);
+	virtual void removeProp(vtkProp3D *prop, bool inAssembly = false);
 	
 	/// Add a VTK widget to the tool layer.
 	virtual void addWidget(vtkInteractorObserver *w);
