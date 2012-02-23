@@ -31,7 +31,7 @@
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafInteractorVTKTransform::mafInteractorVTKTransform(const QString code_location) : mafInteractor(code_location), m_DragObject(false), m_PreviousVTKInteractor(NULL) {
+mafInteractorVTKTransform::mafInteractorVTKTransform(const QString code_location) : mafInteractor(code_location), m_DragObject(false), m_RenderWindowInteractor(NULL) {
     m_Blocking = true;
     m_CurrentVTKInteractor = vtkMAFInteractorStyleTrackballActor::New();
 }
@@ -42,32 +42,27 @@ mafInteractorVTKTransform::~mafInteractorVTKTransform(){
 
 void mafInteractorVTKTransform::mousePress(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
     QMouseEvent *me = (QMouseEvent *) e;
-    if(me->button() != Qt::LeftButton) {
-        return;
+    
+    if (m_RenderWindowInteractor == NULL) {
+        mafVTKWidget *w = qobject_cast<mafVTKWidget *>(m_GraphicObject);
+        if(w == NULL) {
+            return;
+        }
+        m_RenderWindowInteractor = w->GetRenderWindow()->GetInteractor();
     }
     
-    mafVTKWidget *w = qobject_cast<mafVTKWidget *>(m_GraphicObject);
-    if(w == NULL) {
-        return;
-    }
-    
-    vtkRenderWindowInteractor *rwi = w->GetRenderWindow()->GetInteractor();
-    m_PreviousVTKInteractor = rwi->GetInteractorStyle();
-    if(m_PreviousVTKInteractor) {
-        m_PreviousVTKInteractor->Register(NULL);
-    }
-    rwi->SetInteractorStyle(m_CurrentVTKInteractor);
+    m_RenderWindowInteractor->SetInteractorStyle(m_CurrentVTKInteractor);
     m_CurrentVTKInteractor->Register(NULL);
     
     switch(((QMouseEvent *)e)->button()) {
         case Qt::LeftButton:
-            rwi->InvokeEvent(vtkCommand::LeftButtonPressEvent, e);
+            m_RenderWindowInteractor->InvokeEvent(vtkCommand::LeftButtonPressEvent, e);
             break;
         case Qt::MidButton:
-            rwi->InvokeEvent(vtkCommand::MiddleButtonPressEvent, e);
+            m_RenderWindowInteractor->InvokeEvent(vtkCommand::MiddleButtonPressEvent, e);
             break;
         case Qt::RightButton:
-            rwi->InvokeEvent(vtkCommand::RightButtonPressEvent, e);
+            m_RenderWindowInteractor->InvokeEvent(vtkCommand::RightButtonPressEvent, e);
             break;
         default:
             break;
@@ -76,29 +71,20 @@ void mafInteractorVTKTransform::mousePress(double *pickPos, unsigned long modifi
     m_DragObject = true;
 }
 
-
 void mafInteractorVTKTransform::mouseRelease(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
-    mafVTKWidget *w = qobject_cast<mafVTKWidget *>(m_GraphicObject);
-    if(w == NULL) {
-        return;
-    }
-    vtkRenderWindowInteractor *rwi = w->GetRenderWindow()->GetInteractor();
-
     switch(((QMouseEvent *)e)->button()) {
         case Qt::LeftButton:
-            rwi->InvokeEvent(vtkCommand::LeftButtonReleaseEvent, e);
+            m_RenderWindowInteractor->InvokeEvent(vtkCommand::LeftButtonReleaseEvent, e);
             break;
         case Qt::MidButton:
-            rwi->InvokeEvent(vtkCommand::MiddleButtonReleaseEvent, e);
+            m_RenderWindowInteractor->InvokeEvent(vtkCommand::MiddleButtonReleaseEvent, e);
             break;
         case Qt::RightButton:
-            rwi->InvokeEvent(vtkCommand::RightButtonReleaseEvent, e);
+            m_RenderWindowInteractor->InvokeEvent(vtkCommand::RightButtonReleaseEvent, e);
             break;
         default:
             break;
     }
-    
-    rwi->SetInteractorStyle(m_PreviousVTKInteractor);
     
     m_DragObject = false;
 }
@@ -106,18 +92,12 @@ void mafInteractorVTKTransform::mouseRelease(double *pickPos, unsigned long modi
 void mafInteractorVTKTransform::mouseMove(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
     if(!m_DragObject) return;
     
-    mafVTKWidget *w = qobject_cast<mafVTKWidget *>(m_GraphicObject);
-    if(w == NULL) {
-        return;
-    }
-    vtkRenderWindowInteractor *rwi = w->GetRenderWindow()->GetInteractor();
-    
     mafResources::mafVME *vme = qobject_cast<mafResources::mafVME*>(obj);
     if(vme == NULL) {
         return;
     }
     
-    rwi->InvokeEvent(vtkCommand::MouseMoveEvent, e);
+    m_RenderWindowInteractor->InvokeEvent(vtkCommand::MouseMoveEvent, e);
     vtkAssembly *assembly = m_CurrentVTKInteractor->GetInteractionAssembly();
     vtkMatrix4x4 *m = assembly->GetMatrix();
     mafMatrix c;
@@ -128,5 +108,4 @@ void mafInteractorVTKTransform::mouseMove(double *pickPos, unsigned long modifie
     }
     vme->dataSetCollection()->synchronizeItemWithPose(c);
     Q_EMIT(interactingSignal());
-
 }
