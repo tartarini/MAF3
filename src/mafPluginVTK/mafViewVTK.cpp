@@ -74,13 +74,7 @@ bool mafViewVTK::initialize() {
 
         // push camera interactor
         mafInteractorVTKCamera *interactor = mafNEW(mafPluginVTK::mafInteractorVTKCamera);
-        vtkRenderWindowInteractor *iren = ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->GetInteractor();
-        vtkMAFInteractorStyleTrackballCamera *interactorStyle = vtkMAFInteractorStyleTrackballCamera::New();
-        interactorStyle->UseDefaultRendererOn();
-        interactorStyle->SetDefaultRenderer(((mafVTKWidget*)m_RenderWidget)->renderer());
-        iren->SetInteractorStyle(interactorStyle);
-        interactorStyle->Delete();
-        interactor->setInteractorVTK(iren);
+        interactor->setGraphicObject(m_RenderWidget);
         pushInteractor(interactor);
         mafDEL(interactor);
 
