@@ -18,6 +18,7 @@
 
 // Foundation Class forwarding list
 class vtkRenderWindowInteractor;
+class vtkInteractorStyleTrackballCamera;
 
 namespace mafPluginVTK {
 
@@ -35,9 +36,6 @@ public:
     /// Object constructor.
     mafInteractorVTKCamera(const QString code_location = "");
 
-    /// Assign the VTK interactor to use to move the camera.
-    void setInteractorVTK(vtkRenderWindowInteractor *iren);
-
 public Q_SLOTS:
     /// Called when the any mouse button is pressed
     /*virtual*/ void mousePress(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e);
@@ -53,7 +51,8 @@ protected:
     /* virtual */~mafInteractorVTKCamera();
 
 private:
-    vtkRenderWindowInteractor *m_RenderWindowInteractor; ///< VTK Interactor style.
+    vtkRenderWindowInteractor *m_RenderWindowInteractor; ///< VTK Interactor
+    vtkInteractorStyleTrackballCamera *m_CurrentVTKInteractor; ///< VTK Interactor Style
 };
 
 
