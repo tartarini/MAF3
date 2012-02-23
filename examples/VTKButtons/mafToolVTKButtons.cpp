@@ -78,7 +78,7 @@ public:
 mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location), m_ShowLabel(true), m_FlyTo(true), m_OnCenter(false) {
     // Create an image for the button
     QImage image2;
-    bool loaded = image2.load(":/images/fran_cut.png");
+    image2.load(":/images/fran_cut.png");
 
     VTK_CREATE(vtkQImageToImageSource, imageToVTK2);
     imageToVTK2->SetQImage(&image2);
