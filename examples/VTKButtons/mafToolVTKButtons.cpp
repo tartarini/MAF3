@@ -77,14 +77,6 @@ public:
 
 mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location), m_ShowLabel(true), m_FlyTo(true), m_OnCenter(false) {
     // Create an image for the button
-    QImage image1;
-    bool loaded = image1.load(":/images/spe.png");
-
-    VTK_CREATE(vtkQImageToImageSource, imageToVTK1);
-    imageToVTK1->SetQImage(&image1);
-    imageToVTK1->Update();
-
-    // Create an image for the button
     QImage image2;
     loaded = image2.load(":/images/fran_cut.png");
 
@@ -129,7 +121,6 @@ void mafToolVTKButtons::updatePipe(double t) {
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
     if (dataSet == NULL) {
         resetTool();
-        
     } else {
         vtkAlgorithm *producer = (*dataSet)->GetProducer();
         vtkDataObject *dataObject = producer->GetOutputDataObject(0);
@@ -155,11 +146,6 @@ void mafToolVTKButtons::updatePipe(double t) {
             rep->GetBalloon()->SetBalloonText("");
         }
 
-
-        myCallback->graphicObject = this->m_GraphicObject;
-        myCallback->setBounds(b);
-        myCallback->setFlyTo(m_FlyTo);
-
         //modify position of the vtkButton 
         double bds[6];
         if (m_OnCenter) {
@@ -176,5 +162,11 @@ void mafToolVTKButtons::updatePipe(double t) {
 
         rep->PlaceWidget(bds,size);
         m_ButtonWidget->SetRepresentation(rep);
+
+        myCallback->graphicObject = this->m_GraphicObject;
+        myCallback->setBounds(b);
+        myCallback->setFlyTo(m_FlyTo);
     }
+    updatedGraphicObject();
 }
+
