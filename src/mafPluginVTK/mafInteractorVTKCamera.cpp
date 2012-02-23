@@ -12,22 +12,35 @@
 #include <QMouseEvent>
 
 #include "mafInteractorVTKCamera.h"
+#include "mafVTKWidget.h"
 
 #include <vtkCommand.h>
+#include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
-#include <vtkMAFInteractorStyleTrackballActor.h>
+#include <vtkInteractorStyleTrackballCamera.h>
 
 using namespace mafPluginVTK;
 
 mafInteractorVTKCamera::mafInteractorVTKCamera(const QString code_location) : mafResources::mafInteractor(code_location), m_RenderWindowInteractor(NULL) {
+    m_CurrentVTKInteractor = vtkInteractorStyleTrackballCamera::New();
 }
 
 mafInteractorVTKCamera::~mafInteractorVTKCamera() {
+    m_CurrentVTKInteractor->Delete();
 }
 
 void mafInteractorVTKCamera::mousePress(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
+    if (m_RenderWindowInteractor == NULL) {
+        mafVTKWidget *w = qobject_cast<mafVTKWidget *>(m_GraphicObject);
+        if(w == NULL) {
+            return;
+        }
+        m_RenderWindowInteractor = w->GetRenderWindow()->GetInteractor();
+    }
+    m_RenderWindowInteractor->SetInteractorStyle(m_CurrentVTKInteractor);
+    m_CurrentVTKInteractor->Register(NULL);
+
     switch(((QMouseEvent *)e)->button()) {
-        //m_RenderWindowInteractor->FindPokedRenderer(((QMouseEvent *)e)->x(), ((QMouseEvent *)e)->y());
         case Qt::LeftButton:
             m_RenderWindowInteractor->InvokeEvent(vtkCommand::LeftButtonPressEvent, e);
             break;
@@ -60,8 +73,4 @@ void mafInteractorVTKCamera::mouseRelease(double *pickPos, unsigned long modifie
 
 void mafInteractorVTKCamera::mouseMove(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
     m_RenderWindowInteractor->InvokeEvent(vtkCommand::MouseMoveEvent, e);
-}
-
-void mafInteractorVTKCamera::setInteractorVTK(vtkRenderWindowInteractor *iren) {
-    m_RenderWindowInteractor = iren;
 }
