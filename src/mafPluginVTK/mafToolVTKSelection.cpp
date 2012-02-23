@@ -64,7 +64,7 @@ bool mafToolVTKSelection::acceptObject(mafCore::mafObjectBase *obj) {
 void mafToolVTKSelection::graphicObjectInitialized() {
     // Graphic widget (render window, interactor...) has been created and initialized.
     // now can add the tool's actor.
-    addProp(m_Actor);
+    addProp(m_Actor, true);
 }
 
 void mafToolVTKSelection::resetTool() {
