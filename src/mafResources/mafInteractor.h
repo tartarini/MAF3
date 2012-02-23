@@ -34,6 +34,10 @@ class MAFRESOURCESSHARED_EXPORT mafInteractor : public mafCore::mafObjectBase {
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObjectBase);
 
+Q_SIGNALS:
+    /// interacting signal emitted when interactor detect an interaction.
+    void interactingSignal();
+    
 public Q_SLOTS:
     
     /// called when left mouse button is pressed.

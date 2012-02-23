@@ -127,5 +127,6 @@ void mafInteractorVTKTransform::mouseMove(double *pickPos, unsigned long modifie
         }
     }
     vme->dataSetCollection()->synchronizeItemWithPose(c);
-    Q_EMIT(updateGuiSignal(widget()));
+    Q_EMIT(interactingSignal());
+
 }

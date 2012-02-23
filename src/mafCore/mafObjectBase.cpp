@@ -158,8 +158,8 @@ void mafObjectBase::updateUI(QObject *selfUI) {
         bool propertyIsAWidget = true;
         QObject *widget = widgetList.at(i);
         QString widgetName = widget->objectName();
-
-
+        
+        //widget name should be the name of the property of the class
         QVariant value = this->property(widgetName.toAscii());
         if(!value.isValid()) {
             //qWarning(mafTr("Property with name %1 doesn't exist").arg(widgetName).toAscii());
@@ -170,6 +170,7 @@ void mafObjectBase::updateUI(QObject *selfUI) {
          if (propertyIsAWidget) {
             const QMetaObject *metaobject = widget->metaObject();
             int count = metaobject->propertyCount();
+            //check the property and change the value
             for (int i=0; i<count; ++i) {
                 QMetaProperty metaproperty = metaobject->property(i);
                 if(!metaproperty.isUser()) {

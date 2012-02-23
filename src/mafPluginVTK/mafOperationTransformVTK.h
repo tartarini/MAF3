@@ -36,7 +36,6 @@ public:
         
     /// Initialize the operation. Put here the initialization of operation's parameters.
     /*virtual*/ bool initialize();
-
     
 protected:
     /// Object destructor.

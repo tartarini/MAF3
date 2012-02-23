@@ -56,6 +56,9 @@ public Q_SLOTS:
 
     /// Terminate the execution by resetting the m_IsRunning at false.
     void terminate();
+    
+    /// slot called when interactingSignal from connected interactor is emitted.
+    virtual void updateFromInteraction();
 
 private Q_SLOTS:
     /// Terminate the execution.

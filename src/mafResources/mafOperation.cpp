@@ -46,6 +46,11 @@ void mafOperation::terminate() {
     terminated();
 }
 
+
+void mafOperation::updateFromInteraction() {
+    updateUI(widget());
+}
+
 void mafOperation::abort() {
     m_Status = mafOperationStatusAborted;
 }

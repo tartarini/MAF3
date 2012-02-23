@@ -36,7 +36,7 @@ bool mafOperationTransformVTK::initialize() {
     mafInteractorVTKTransform *interactor = mafNEW(mafPluginVTK::mafInteractorVTKTransform);
     mafVME *vme = qobject_cast<mafVME *>(input());
     vme->pushInteractor(interactor);
-    connect(interactor, SIGNAL(updateGuiSignal(QObject *)), this, SLOT(updateUI(QObject *)));
+    connect(interactor, SIGNAL(interactingSignal()), this, SLOT(updateFromInteraction()));
     mafDEL(interactor);
     
     return result;

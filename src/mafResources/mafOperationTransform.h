@@ -25,12 +25,12 @@ class mafDataSetCollection;
   */
 class MAFRESOURCESSHARED_EXPORT mafOperationTransform : public mafOperation {
     Q_OBJECT
-    Q_PROPERTY(QString xPos READ xPos WRITE setXPos)
-    Q_PROPERTY(QString yPos READ yPos WRITE setYPos)
-    Q_PROPERTY(QString zPos READ zPos WRITE setZPos)
-    Q_PROPERTY(QString xRot READ xRot WRITE setXRot)
-    Q_PROPERTY(QString yRot READ yRot WRITE setYRot)
-    Q_PROPERTY(QString zRot READ zRot WRITE setZRot)
+    Q_PROPERTY(QString xPos_text READ xPos WRITE setXPos)
+    Q_PROPERTY(QString yPos_text READ yPos WRITE setYPos)
+    Q_PROPERTY(QString zPos_text READ zPos WRITE setZPos)
+    Q_PROPERTY(QString xRot_text READ xRot WRITE setXRot)
+    Q_PROPERTY(QString yRot_text READ yRot WRITE setYRot)
+    Q_PROPERTY(QString zRot_text READ zRot WRITE setZRot)
 
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafOperation);
