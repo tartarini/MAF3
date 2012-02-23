@@ -34,7 +34,20 @@ public:
     mafViewVTKButtons(const QString code_location = "");
 
     /// Remove scene node passed as argument.
-    /*virtual*/ void removeSceneNode(mafResources::mafSceneNode *node);
+   /*virtual*/ void removeSceneNode(mafResources::mafSceneNode *node);
+
+public Q_SLOTS:
+    /// Show/hide buttons
+    void on_showButtonsCheck_stateChanged(int state);
+
+    /// Show/hide labels
+    void on_showLabelsCheck_stateChanged(int state);
+
+    /// Activate "FlyTo" animation
+    void on_flyToCheck_stateChanged(int state);
+
+    /// Set position on buttons on corner/center
+    void on_positionComboBox_activated(int state);
 
 protected:
     /// Object destructor.

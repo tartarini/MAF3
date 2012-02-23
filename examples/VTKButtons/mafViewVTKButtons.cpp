@@ -20,6 +20,7 @@
 using namespace mafPluginVTK;
 
 mafViewVTKButtons::mafViewVTKButtons(const QString code_location) : mafViewVTK(code_location) {
+    m_UIFilename = "mafVTKButtons.ui";
 }
 
 mafViewVTKButtons::~mafViewVTKButtons() {
@@ -48,13 +49,67 @@ void mafViewVTKButtons::removeSceneNode(mafResources::mafSceneNode *node) {
         QList<mafResources::mafTool *> *tList = m_ToolHandler->toolList();
         for (int i = 0; i < tList->count(); i++) {
             mafResources::mafTool *tool = tList->at(i);
-            if (tool->input()->isEqual(node->vme())) {
-                //should I check that is a button??
-                m_ToolHandler->removeTool(tool);
+            mafToolVTKButtons *button = dynamic_cast<mafToolVTKButtons *>(tool);
+            if (button && button->input()->isEqual(node->vme())) {
+                //remove only mafToolVTKButtons
+                m_ToolHandler->removeTool(button);
             }
         }
     }
     Superclass::removeSceneNode(node);
+}
+
+void mafViewVTKButtons::on_showButtonsCheck_stateChanged(int state) {
+    //Update all mafToolVTKButtons
+    QList<mafResources::mafTool *> *tList = m_ToolHandler->toolList();
+    for (int i = 0; i < tList->count(); i++) {
+        mafResources::mafTool *tool = tList->at(i);
+        mafToolVTKButtons *button = dynamic_cast<mafToolVTKButtons *>(tool);
+        if(button) {
+            //need to control setFollowSelectedObjectVisibility
+            button->setVisibility(state);
+            button->updatePipe();
+        }
+    }
+}
+
+void mafViewVTKButtons::on_showLabelsCheck_stateChanged(int state) {
+    //Update all mafToolVTKButtons
+    QList<mafResources::mafTool *> *tList = m_ToolHandler->toolList();
+    for (int i = 0; i < tList->count(); i++) {
+        mafResources::mafTool *tool = tList->at(i);
+        mafToolVTKButtons *button = dynamic_cast<mafToolVTKButtons *>(tool);
+        if(button) {
+            button->setShowLabel(state);
+            button->updatePipe();
+        }
+    }
+}
+
+void mafViewVTKButtons::on_flyToCheck_stateChanged(int state) {
+    //Update all mafToolVTKButtons
+    QList<mafResources::mafTool *> *tList = m_ToolHandler->toolList();
+    for (int i = 0; i < tList->count(); i++) {
+        mafResources::mafTool *tool = tList->at(i);
+        mafToolVTKButtons *button = dynamic_cast<mafToolVTKButtons *>(tool);
+        if(button) {
+            button->setFlyTo(state);
+            button->updatePipe();
+        }
+    }
+}
+
+void mafViewVTKButtons::on_positionComboBox_activated(int state) {
+    //Update all mafToolVTKButtons
+    QList<mafResources::mafTool *> *tList = m_ToolHandler->toolList();
+    for (int i = 0; i < tList->count(); i++) {
+        mafResources::mafTool *tool = tList->at(i);
+        mafToolVTKButtons *button = dynamic_cast<mafToolVTKButtons *>(tool);
+        if(button) {
+            button->setOnCenter(state);
+            button->updatePipe();
+        }
+    }
 }
 
 
