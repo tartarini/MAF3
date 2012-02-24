@@ -26,6 +26,10 @@ void mafTool::setSceneNode(mafSceneNode *node) {
     if (m_SceneNode != node) {
         m_SceneNode = node;
     }
+    
+    if(node == NULL) {
+        inputList()->clear();
+    }
 }
 
 void mafTool::updatePipe(double t) {

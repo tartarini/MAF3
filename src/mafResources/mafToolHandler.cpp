@@ -85,10 +85,15 @@ void mafToolHandler::setActiveSceneNode(mafSceneNode *node) {
                 tool->setVisibility(v);
             } else {
                 //exist 1 instance of tool for EACH VME
-                if (m_SceneNode && tool->input()->isEqual(m_SceneNode->vme())) {
-                    // ... and update its visibility according to the node visibility.
-                    tool->setVisibility(v);
+                if(m_SceneNode) {
+                    if (tool->input() && tool->input()->isEqual(m_SceneNode->vme())) {
+                        // ... and update its visibility according to the node visibility.
+                        tool->setVisibility(v);
+                    }
+                } else {
+                    tool->setSceneNode(NULL);
                 }
+                
             }
         }
         tool->updatedGraphicObject();
@@ -99,7 +104,7 @@ void mafToolHandler::setActiveSceneNode(mafSceneNode *node) {
 void mafToolHandler::setVisibility(bool visible) {
     // Update the visibility flag for all the tools.
     Q_FOREACH(mafTool *tool, m_ToolList) {
-        if (tool->followSelectedObjectVisibility() && m_SceneNode && tool->input()->isEqual(m_SceneNode->vme())) {
+        if (tool->followSelectedObjectVisibility() && m_SceneNode && tool->input() && tool->input()->isEqual(m_SceneNode->vme())) {
             // ... and update its visibility according to the node visibility.
             tool->setVisibility(visible);
         }

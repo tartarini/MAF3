@@ -41,16 +41,20 @@ void mafToolVTK::updatedGraphicObject() {
     }
 }
 
-void mafToolVTK::addProp(vtkProp3D *prop) {
+void mafToolVTK::addProp(vtkProp3D *prop, bool inAssembly) {
     if (m_RendererTool && prop && !m_PropList.contains(prop)) {
-        m_RendererTool->AddViewProp(prop);
+        if(!inAssembly) {
+            m_RendererTool->AddViewProp(prop);
+        }
         m_PropList.append(prop);
     }
 }
 
-void mafToolVTK::removeProp(vtkProp3D *prop) {
+void mafToolVTK::removeProp(vtkProp3D *prop, bool inAssembly) {
     if (m_RendererTool && prop) {
-        m_RendererTool->RemoveViewProp(prop);
+        if(!inAssembly) {
+            m_RendererTool->RemoveViewProp(prop);
+        }
         m_PropList.removeOne(prop);
     }
 }

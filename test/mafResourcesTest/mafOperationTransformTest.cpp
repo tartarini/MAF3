@@ -96,12 +96,12 @@ void mafOperationTransformTest::testExecute() {
     rz = 60.0;
     
     QVariantMap parameters;
-    parameters.insert( "xPos" , x);
-    parameters.insert( "yPos" , y);
-    parameters.insert( "zPos" , z);
-    parameters.insert( "xRot" , rx);
-    parameters.insert( "yRot" , ry);
-    parameters.insert( "zRot" , rz);
+    parameters.insert( "xPos_text" , x);
+    parameters.insert( "yPos_text" , y);
+    parameters.insert( "zPos_text" , z);
+    parameters.insert( "xRot_text" , rx);
+    parameters.insert( "yRot_text" , ry);
+    parameters.insert( "zRot_text" , rz);
     
     m_OpTransform->setParameters(parameters);
     

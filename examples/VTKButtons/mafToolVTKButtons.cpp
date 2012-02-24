@@ -112,6 +112,10 @@ void mafToolVTKButtons::graphicObjectInitialized() {
 
 void mafToolVTKButtons::updatePipe(double t) {
     mafVME *vme = input();
+    if(vme == NULL) {
+        return;
+    }
+    
     QString vmeName = vme->property("objectName").toString();
     mafDataSet *data = dataSetForInput(0, t);
     if(data == NULL) {
