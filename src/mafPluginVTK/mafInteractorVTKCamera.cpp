@@ -16,7 +16,10 @@
 
 #include <vtkCommand.h>
 #include <vtkRenderWindow.h>
+#include <vtkRendererCollection.h>
 #include <vtkRenderWindowInteractor.h>
+#include <vtkCamera.h>
+#include <vtkRenderer.h>
 #include <vtkMAFInteractorStyleTrackballCamera.h>
 
 using namespace mafPluginVTK;
@@ -72,5 +75,7 @@ void mafInteractorVTKCamera::mouseRelease(double *pickPos, unsigned long modifie
 }
 
 void mafInteractorVTKCamera::mouseMove(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
+    vtkCamera *camera = m_RenderWindowInteractor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+    camera->SetClippingRange(0.1, 1000);
     m_RenderWindowInteractor->InvokeEvent(vtkCommand::MouseMoveEvent, e);
 }
