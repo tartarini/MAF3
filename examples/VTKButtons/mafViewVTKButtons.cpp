@@ -36,7 +36,6 @@ mafResources::mafSceneNode *mafViewVTKButtons::createSceneNode(mafResources::maf
         // set the scenenode because the tool even if doesn't forward a vme, it needs to keep knowledge its scenenode.
         toolButton->setSceneNode(sn);
         toolButton->setInput(vme);
-        toolButton->setVisibility(false);
         m_ToolHandler->addTool(toolButton);
         mafDEL(toolButton);
 
@@ -48,17 +47,48 @@ mafResources::mafSceneNode *mafViewVTKButtons::createSceneNode(mafResources::maf
 void mafViewVTKButtons::removeSceneNode(mafResources::mafSceneNode *node) {
     //When the sceneNode is removed, remove also relative tool.
     if (node != NULL) {
+        QList<mafToolVTKButtons *> buttonsToRemove;
         QList<mafResources::mafTool *> *tList = m_ToolHandler->toolList();
+
+        //First: search for toolButtons inside m_ToolHandler
         for (int i = 0; i < tList->count(); i++) {
             mafResources::mafTool *tool = tList->at(i);
             mafToolVTKButtons *button = dynamic_cast<mafToolVTKButtons *>(tool);
-            if (button && button->input()->isEqual(node->vme())) {
-                //remove only mafToolVTKButtons
-                m_ToolHandler->removeTool(button);
+            if (button && button->input() && button->input()->isEqual(node->vme())) {
+                buttonsToRemove.append(button);
             }
+        }
+
+        //Then: remove toolButtons from m_ToolHandler
+        for (int i = 0; i < buttonsToRemove.count(); i++) {
+            mafToolVTKButtons *button = buttonsToRemove.at(i);
+            button->resetTool();
+            m_ToolHandler->removeTool(button);
         }
     }
     Superclass::removeSceneNode(node);
+}
+
+void mafViewVTKButtons::clearScene() {
+    QList<mafToolVTKButtons *> buttonsToRemove;
+    QList<mafResources::mafTool *> *tList = m_ToolHandler->toolList();
+
+    //First: search for toolButtons inside m_ToolHandler
+    for (int i = 0; i < tList->count(); i++) {
+        mafResources::mafTool *tool = tList->at(i);
+        mafToolVTKButtons *button = dynamic_cast<mafToolVTKButtons *>(tool);
+        if(button) {
+            buttonsToRemove.append(button);
+        }
+    }
+
+    //Then: remove toolButtons from m_ToolHandler
+    for (int i = 0; i < buttonsToRemove.count(); i++) {
+        mafToolVTKButtons *button = buttonsToRemove.at(i);
+        button->resetTool();
+        m_ToolHandler->removeTool(button);
+    }
+    Superclass::clearScene();
 }
 
 void mafViewVTKButtons::on_showButtonsCheck_stateChanged(int state) {
@@ -72,8 +102,10 @@ void mafViewVTKButtons::on_showButtonsCheck_stateChanged(int state) {
             button->setFollowSelectedObjectVisibility(state);
             if (state) {
                 //when showButtons is set to ON, I have to show only buttons of visible SceneNodes
-                bool visibility = button->sceneNode()->property("visibility").toBool();
-                button->setVisibility(visibility);
+                if (button->sceneNode()) {
+                    bool visibility = button->sceneNode()->property("visibility").toBool();
+                    button->setVisibility(visibility);
+                }
             } else {
                 button->setVisibility(state);
             }

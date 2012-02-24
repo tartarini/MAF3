@@ -36,6 +36,9 @@ public:
     /// Remove scene node passed as argument.
    /*virtual*/ void removeSceneNode(mafResources::mafSceneNode *node);
 
+   /// Remove vtkButtons.
+   virtual void clearScene();
+
 public Q_SLOTS:
     /// Show/hide buttons
     void on_showButtonsCheck_stateChanged(int state);
