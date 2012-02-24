@@ -39,6 +39,7 @@ vtkMAFInteractorStyleTrackballCamera::vtkMAFInteractorStyleTrackballCamera()
   this->MotionFactor    = 10.0;
   this->DefaultRenderer = NULL;
   this->UseDefaultRenderer = 0;
+  this->AutoAdjustCameraClippingRange = 0;
 }
 
 //----------------------------------------------------------------------------
