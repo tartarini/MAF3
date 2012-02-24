@@ -113,8 +113,8 @@ void mafAnimateVTK::flyTo(mafVTKWidget *widget, double bounds[6], int numberOfSt
         camera->SetFocalPoint(fly[0],fly[1],fly[2]);
         camera->SetPosition(fly[3],fly[4],fly[5]);
         camera->SetParallelScale(fly[6]);
-        renderer->ResetCameraClippingRange();
         if (widget->GetRenderWindow()) {
+            widget->renderer()->ResetCameraClippingRange();
             widget->GetRenderWindow()->Render();
         }
     }
