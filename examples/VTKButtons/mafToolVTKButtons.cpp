@@ -124,53 +124,53 @@ void mafToolVTKButtons::updatePipe(double t) {
 
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
     if (dataSet == NULL) {
-        resetTool();
-    } else {
-        vtkAlgorithm *producer = (*dataSet)->GetProducer();
-        vtkDataObject *dataObject = producer->GetOutputDataObject(0);
-        vtkDataSet* vtkData = vtkDataSet::SafeDownCast(dataObject);
-
-        double b[6];
-        vtkData->GetBounds(b);
-        vtkTexturedButtonRepresentation2D *rep = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(m_ButtonWidget->GetRepresentation());
-
-        if (m_ShowLabel) {
-            //Add a label to the button and change its text property
-            rep->GetBalloon()->SetBalloonText(vmeName.toAscii());
-            vtkTextProperty *textProp = rep->GetBalloon()->GetTextProperty();
-            textProp->SetFontSize(12);
-            //textProp->SetColor(0.9,0.9,0.9);
-
-            //Set label position
-            rep->GetBalloon()->SetBalloonLayoutToImageLeft();
-
-            //This method allows to set opacity of the background od the label
-            rep->GetBalloon()->GetFrameProperty()->SetOpacity(0.65);
-        } else {
-            rep->GetBalloon()->SetBalloonText("");
-        }
-
-        //modify position of the vtkButton 
-        double bds[6];
-        if (m_OnCenter) {
-            //on the center of the bounding box of the VME.
-            bds[0] = (b[0] + b[1]) / 2;
-            bds[1] = (b[2] + b[3]) / 2;
-            bds[2] = (b[4] + b[5]) / 2;
-        } else {
-            //on the corner of the bounding box of the VME.
-            bds[0] = b[0]; bds[1] = b[2]; bds[2] = b[4];
-        }
-
-        int size[2]; size[0] = 25; size[1] = 45;
-
-        rep->PlaceWidget(bds,size);
-        m_ButtonWidget->SetRepresentation(rep);
-
-        myCallback->graphicObject = this->m_GraphicObject;
-        myCallback->setBounds(b);
-        myCallback->setFlyTo(m_FlyTo);
+        return;
     }
+
+    vtkAlgorithm *producer = (*dataSet)->GetProducer();
+    vtkDataObject *dataObject = producer->GetOutputDataObject(0);
+    vtkDataSet* vtkData = vtkDataSet::SafeDownCast(dataObject);
+
+    double b[6];
+    vtkData->GetBounds(b);
+    vtkTexturedButtonRepresentation2D *rep = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(m_ButtonWidget->GetRepresentation());
+
+    if (m_ShowLabel) {
+        //Add a label to the button and change its text property
+        rep->GetBalloon()->SetBalloonText(vmeName.toAscii());
+        vtkTextProperty *textProp = rep->GetBalloon()->GetTextProperty();
+        textProp->SetFontSize(12);
+        //textProp->SetColor(0.9,0.9,0.9);
+
+        //Set label position
+        rep->GetBalloon()->SetBalloonLayoutToImageLeft();
+
+        //This method allows to set opacity of the background od the label
+        rep->GetBalloon()->GetFrameProperty()->SetOpacity(0.65);
+    } else {
+        rep->GetBalloon()->SetBalloonText("");
+    }
+
+    //modify position of the vtkButton 
+    double bds[6];
+    if (m_OnCenter) {
+        //on the center of the bounding box of the VME.
+        bds[0] = (b[0] + b[1]) / 2;
+        bds[1] = (b[2] + b[3]) / 2;
+        bds[2] = (b[4] + b[5]) / 2;
+    } else {
+        //on the corner of the bounding box of the VME.
+        bds[0] = b[0]; bds[1] = b[2]; bds[2] = b[4];
+    }
+
+    int size[2]; size[0] = 25; size[1] = 45;
+
+    rep->PlaceWidget(bds,size);
+    m_ButtonWidget->SetRepresentation(rep);
+
+    myCallback->graphicObject = this->m_GraphicObject;
+    myCallback->setBounds(b);
+    myCallback->setFlyTo(m_FlyTo);
     updatedGraphicObject();
 }
 
