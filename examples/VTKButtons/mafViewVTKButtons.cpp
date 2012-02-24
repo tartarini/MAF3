@@ -68,8 +68,15 @@ void mafViewVTKButtons::on_showButtonsCheck_stateChanged(int state) {
         mafResources::mafTool *tool = tList->at(i);
         mafToolVTKButtons *button = dynamic_cast<mafToolVTKButtons *>(tool);
         if(button) {
-            //need to control setFollowSelectedObjectVisibility
-            button->setVisibility(state);
+            //need to switch off setFollowSelectedObjectVisibility if showButtonsCheck is false
+            button->setFollowSelectedObjectVisibility(state);
+            if (state) {
+                //when showButtons is set to ON, I have to show only buttons of visible SceneNodes
+                bool visibility = button->sceneNode()->property("visibility").toBool();
+                button->setVisibility(visibility);
+            } else {
+                button->setVisibility(state);
+            }
             button->updatePipe();
         }
     }

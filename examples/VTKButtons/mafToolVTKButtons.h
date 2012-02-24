@@ -42,6 +42,13 @@ public:
     /// Allow to take the tool to the initial conditions.
     /*virtual*/ void resetTool();
 
+    /// Allow to show/hide button
+    void setShowButton(bool show);
+
+    /// Return showLabel flag
+
+    bool showButton() const;
+
     /// Allow to show/hide label
     void setShowLabel(bool show);
 
@@ -68,6 +75,7 @@ protected:
 private:
     vtkButtonWidget *m_ButtonWidget; ///< VTK button widget
     vtkButtonCallback *myCallback; ///< Callback called by picking on vtkButton
+    bool m_ShowButton; ///< Flag to show/hide button
     bool m_ShowLabel; ///< Flag to show/hide label
     bool m_FlyTo; ///< Flag to activate FlyTo animation
     bool m_OnCenter; ///< Flag to set button position on center or on corner (can be refactored with a enum??)
@@ -76,6 +84,14 @@ private:
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
+
+inline void mafToolVTKButtons::setShowButton(bool show) {
+    m_ShowButton = show;
+}
+
+inline bool mafToolVTKButtons::showButton() const {
+    return m_ShowButton;
+}
 
 inline void mafToolVTKButtons::setShowLabel(bool show) {
     m_ShowLabel = show;
