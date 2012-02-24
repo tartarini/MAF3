@@ -66,7 +66,8 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     mafRegisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "setVMECheckState(mafCore::mafObjectBase *, bool)");
 
     m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
-    connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*, int)), this, SLOT(showGui(mafCore::mafProxyInterface*, int)));
+    //connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*, int)), this, SLOT(showGui(mafCore::mafProxyInterface*, int)));
+    mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "showGui(mafCore::mafProxyInterface*, int)");
 }
 
 mafGUIManager::~mafGUIManager() {
