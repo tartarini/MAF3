@@ -50,6 +50,9 @@ public:
     /// Assign the scene node to the tool so to have access to the VME and eventually its visual representation.
     virtual void setSceneNode(mafSceneNode *node);
 
+    /// Return the scene node associated to the tool.
+    virtual mafSceneNode *sceneNode();
+
     /// Allow to take the tool to the initial conditions.
     virtual void resetTool();
 
@@ -93,6 +96,10 @@ inline bool mafTool::followSelectedObjectVisibility() const {
 
 inline void mafTool::setFollowSelectedObjectVisibility(bool follow) {
     m_FollowSelectedObjectVisibility = follow;
+}
+
+inline mafSceneNode *mafTool::sceneNode() {
+    return m_SceneNode;
 }
 
 } //namespace mafResources
