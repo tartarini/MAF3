@@ -17,12 +17,12 @@
 #include <vtkCommand.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
-#include <vtkInteractorStyleTrackballCamera.h>
+#include <vtkMAFInteractorStyleTrackballCamera.h>
 
 using namespace mafPluginVTK;
 
 mafInteractorVTKCamera::mafInteractorVTKCamera(const QString code_location) : mafResources::mafInteractor(code_location), m_RenderWindowInteractor(NULL) {
-    m_CurrentVTKInteractor = vtkInteractorStyleTrackballCamera::New();
+    m_CurrentVTKInteractor = vtkMAFInteractorStyleTrackballCamera::New();
 }
 
 mafInteractorVTKCamera::~mafInteractorVTKCamera() {
