@@ -33,6 +33,8 @@ mafResources::mafSceneNode *mafViewVTKButtons::createSceneNode(mafResources::maf
         mafToolVTKButtons *toolButton = mafNEW(mafToolVTKButtons);
         toolButton->setFollowSelectedObjectVisibility(true);
         toolButton->setFollowSelectedObject(false);
+        // set the scenenode because the tool even if doesn't forward a vme, it needs to keep knowledge its scenenode.
+        toolButton->setSceneNode(sn);
         toolButton->setInput(vme);
         toolButton->setVisibility(false);
         m_ToolHandler->addTool(toolButton);
