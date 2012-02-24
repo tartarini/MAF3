@@ -79,6 +79,7 @@ int main(int argc, char *argv[]) {
     logic->customizeVisualization("View Iso", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKIsoSurface");
     logic->customizeVisualization("VTK view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("VTK view", "vtkImageData", "mafPluginVTK::mafPipeVisualVTKSurface");
+    logic->customizeVisualization("VTK view", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKBox");
     logic->customizeVisualization("Buttons Slice", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("Buttons Slice", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
     logic->customizeVisualization("Buttons Slice", "vtkRectilinearGrid", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
