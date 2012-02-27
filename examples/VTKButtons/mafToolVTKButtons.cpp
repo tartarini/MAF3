@@ -44,10 +44,6 @@ public:
     }
 
     virtual void Execute(vtkObject *caller, unsigned long, void*) {
-        vtkButtonWidget *buttonWidget = reinterpret_cast<vtkButtonWidget*>(caller);
-        vtkTexturedButtonRepresentation *rep = reinterpret_cast<vtkTexturedButtonRepresentation*>(buttonWidget->GetRepresentation());
-        int state = rep->GetState();
-
         mafVTKWidget *widget = qobject_cast<mafPluginVTK::mafVTKWidget *>(this->graphicObject);
         mafAnimateVTK *animateCamera = mafNEW(mafPluginVTK::mafAnimateVTK);
         if (flyTo) {
@@ -87,8 +83,6 @@ mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK
     VTK_CREATE(vtkTexturedButtonRepresentation2D, rep);
     rep->SetNumberOfStates(1);
     rep->SetButtonTexture(0, imageToVTK2->GetOutput());
-    rep->SetPlaceFactor(1);
-
     myCallback = vtkButtonCallback::New();
 
     m_ButtonWidget = vtkButtonWidget::New();
