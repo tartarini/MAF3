@@ -112,8 +112,9 @@ vtkRenderer *mafVTKWidget::createLayer(const QString layerName) {
         // Link the camera to that one present into the base renderer (if available)
         if (m_RendererBase != NULL) {
             vtkCamera *camera = m_RendererBase->GetActiveCamera();
-            camera->SetClippingRange(0.1, 1000);
             renderer->SetActiveCamera(camera);
+            renderer->ResetCameraClippingRange();
+
         }
         // Add the new renderer to the render window
         renWin->AddRenderer(renderer);

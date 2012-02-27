@@ -75,7 +75,6 @@ void mafInteractorVTKCamera::mouseRelease(double *pickPos, unsigned long modifie
 }
 
 void mafInteractorVTKCamera::mouseMove(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
-    vtkCamera *camera = m_RenderWindowInteractor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-    camera->SetClippingRange(0.1, 1000);
+    m_RenderWindowInteractor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCameraClippingRange();
     m_RenderWindowInteractor->InvokeEvent(vtkCommand::MouseMoveEvent, e);
 }
