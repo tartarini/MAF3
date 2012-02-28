@@ -70,14 +70,14 @@ void mafToolHandler::setActiveSceneNode(mafSceneNode *node) {
     m_SceneNode = node;
     Q_FOREACH(mafTool *tool, m_ToolList) {
         // Check the follow flag for each tool
-        if (tool->followSelectedObject()) {
+        if (tool->followSelectedObject()) { // Tool follow the selected node
             // If tool has to be attached to the selected node, pass it to the tool.
             tool->setSceneNode(m_SceneNode);
             if (m_SceneNode) {
                 tool->setInput(m_SceneNode->vme());
             }
         }
-        if (tool->followSelectedObjectVisibility()) {
+        if (tool->followSelectedObjectVisibility()) { // Tool follow the selected node visibility
             bool v = m_SceneNode && m_SceneNode->property("visibility").toBool();
             // ... and update its visibility according to the node visibility.
             if (tool->followSelectedObject()) {
@@ -96,8 +96,8 @@ void mafToolHandler::setActiveSceneNode(mafSceneNode *node) {
                 
             }
         }
-        tool->updatedGraphicObject();
         tool->updatePipe();
+        tool->updatedGraphicObject();
     }
 }
 
