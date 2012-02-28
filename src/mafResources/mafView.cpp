@@ -46,6 +46,7 @@ mafView::mafView(const QString code_location) : mafResource(code_location),
 }
 
 mafView::~mafView() {
+    mafDEL(m_ToolHandler);
     clearScene();
 }
 
