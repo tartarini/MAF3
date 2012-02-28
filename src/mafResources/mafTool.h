@@ -51,7 +51,7 @@ public:
     virtual void setSceneNode(mafSceneNode *node);
 
     /// Return the scene node associated to the tool.
-    virtual mafSceneNode *sceneNode();
+    mafSceneNode *sceneNode();
 
     /// Allow to take the tool to the initial conditions.
     virtual void resetTool();
