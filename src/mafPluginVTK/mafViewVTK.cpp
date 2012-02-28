@@ -48,8 +48,7 @@ bool mafViewVTK::initialize() {
         // Create the instance of the VTK Widget
         m_RenderWidget = new mafVTKWidget();
         m_RenderWidget->setObjectName("VTKWidget");
-        ((mafVTKWidget*)m_RenderWidget)->setToolHandler(m_ToolHandler);
-        m_ToolHandler->release();
+        m_ToolHandler->setGraphicObject((mafVTKWidget*)m_RenderWidget);
         
         QVariant v;
         v.setValue<QObject*>(this);

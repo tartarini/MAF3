@@ -31,13 +31,11 @@ using namespace mafEventBus;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f), m_Axes(NULL), m_InteractionStarted(false), m_RendererBase(NULL), m_RendererTool(NULL), m_View(NULL), m_ToolHandler(NULL) {
+mafVTKWidget::mafVTKWidget(QWidget* parent, Qt::WFlags f) : QVTKWidget(parent, f), m_Axes(NULL), m_InteractionStarted(false), m_RendererBase(NULL), m_RendererTool(NULL), m_View(NULL) {
     initializeConnections();
 }
 
 mafVTKWidget::~mafVTKWidget() {
-    mafDEL(m_ToolHandler);
-
     QHash<QString, vtkRenderer*>::iterator iter;
     for (iter = m_LayerHash.begin(); iter != m_LayerHash.end(); iter++) {
         vtkRenderer *ren = iter.value();
@@ -56,12 +54,6 @@ void mafVTKWidget::initializeConnections() {
     result = connect(this, SIGNAL(mousePressSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mousePress(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
     result = connect(this, SIGNAL(mouseReleaseSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mouseRelease(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
     result= connect(this, SIGNAL(mouseMoveSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mouseMove(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
-}
-
-void mafVTKWidget::setToolHandler(mafResources::mafToolHandler *handler) {
-    m_ToolHandler = handler;
-    m_ToolHandler->setGraphicObject(this);
-    m_ToolHandler->retain();
 }
 
 void mafVTKWidget::removeAllObjects() {
