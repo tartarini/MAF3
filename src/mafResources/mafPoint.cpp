@@ -1,6 +1,6 @@
 /*
  *  mafPoint.cpp
- *  mafCore
+ *  mafResources
  *
  *  Created by Paolo Quadrani on 10/02/12.
  *  Copyright 2012 B3C. All rights reserved.
@@ -12,6 +12,7 @@
 #include "mafPoint.h"
 
 using namespace mafCore;
+using namespace mafResources;
 
 mafPoint::mafPoint(const QString code_location) : mafReferenceCounted(), m_X(0), m_Y(0), m_Z(0) {
 }

@@ -39,7 +39,7 @@ public Q_SLOTS:
     // Delegate methods
     //////////////////////////////////////////////////////////////////////////
     /// Get originZ value;
-    mafCore::mafPointPointer origin();
+    mafResources::mafPointPointer origin();
     //////////////////////////////////////////////////////////////////////////
 
 public:
@@ -61,7 +61,7 @@ private:
     void updateSlice();
     
     mafOrthoSlice *m_GUI; ///< GUI widget.
-    mafCore::mafPoint *m_SlicePosition; ///< Current slice position.
+    mafResources::mafPoint *m_SlicePosition; ///< Current slice position.
     QList<mafToolVTKOrthoPlane *> m_OrthoPlaneTool;
 
     /// Initialize the plane tools

@@ -35,6 +35,9 @@
 #include "mafToolHandler.h"
 #include "mafPipeDataSlice.h"
 #include "mafVisitorBounds.h"
+#include "mafBounds.h"
+#include "mafPoint.h"
+
 
 using namespace mafCore;
 using namespace mafResources;
@@ -69,6 +72,8 @@ void mafResourcesRegistration::registerResourcesObjects() {
     qRegisterMetaType<mafResources::mafMatrix>("mafResources::mafMatrix");
     qRegisterMetaType<mafResources::mafResourceWorkerPointer>("mafResources::mafResourceWorkerPointer");
     qRegisterMetaType<mafExecutionPoolPointer>("mafExecutionPoolPointer");
+    qRegisterMetaType<mafResources::mafPointPointer>("mafResources::mafPointPointer");
+    qRegisterMetaType<mafResources::mafBoundsPointer>("mafResources::mafBoundsPointer");
 }
 
 void mafResourcesRegistration::unregisterResourcesObjects() {

@@ -1,6 +1,6 @@
 /*
  *  mafPointTest.cpp
- *  mafCoreTest
+ *  mafResourcesTest
  *
  *  Created by Paolo Quadrani on 13/12/11.
  *  Copyright 2009 B3C. All rights reserved.
@@ -12,7 +12,7 @@
 #include <mafTestSuite.h>
 #include <mafPoint.h>
 
-using namespace mafCore;
+using namespace mafResources;
 
 /**
  Class name: mafPointTest
@@ -32,7 +32,7 @@ class mafPointTest : public QObject {
 private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
-        m_ObjTestVar = new mafCore::mafPoint();
+        m_ObjTestVar = new mafResources::mafPoint();
     }
 
     /// Cleanup test variables memory allocation.

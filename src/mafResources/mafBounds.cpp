@@ -1,6 +1,6 @@
 /*
  *  mafBounds.cpp
- *  mafCore
+ *  mafResources
  *
  *  Created by Paolo Quadrani on 10/02/12.
  *  Copyright 2012 B3C. All rights reserved.
@@ -13,8 +13,9 @@
 #include "mafPoint.h"
 
 using namespace mafCore;
+using namespace mafResources;
 
-mafBounds::mafBounds(const QString code_location) : mafReferenceCounted(), m_XMin(0), m_YMin(0), m_ZMin(0), m_XMax(-1), m_YMax(-1), m_ZMax(-1) {
+mafBounds::mafBounds(const QString code_location) : mafCore::mafReferenceCounted(), m_XMin(0), m_YMin(0), m_ZMin(0), m_XMax(-1), m_YMax(-1), m_ZMax(-1) {
 }
 
 // mafBounds::mafBounds(const mafBounds &p) : m_XMin(p.xMin()), m_YMin(p.yMin()), m_ZMin(p.zMin()), m_XMax(p.xMax()), m_YMax(p.yMax()), m_ZMax(p.zMax()) {

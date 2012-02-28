@@ -12,7 +12,7 @@
 #include "mafToolVTKButtons.h"
 #include <mafSceneNodeVTK.h>
 #include <QImage>
-#include <QDir.h>
+#include <QDir>
 #include <mafVME.h>
 
 #include "mafAnimateVTK.h"
@@ -120,9 +120,9 @@ void mafToolVTKButtons::updatePipe(double t) {
     if(vme == NULL) {
         return;
     }
-    
+
     QString vmeName = vme->property("objectName").toString();
-    mafDataSet *data = dataSetForInput(0, t);
+    mafDataSet *data = vme->dataSetCollection()->itemAtCurrentTime();
     if(data == NULL) {
         return;
     }
@@ -140,13 +140,12 @@ void mafToolVTKButtons::updatePipe(double t) {
     double b[6];
     vtkData->GetBounds(b);
 
-    //Get absolute pose matrix fomr mafVMEManager
+    //Get absolute pose matrix from mafVMEManager
     mafMatrixPointer absMatrix = NULL;
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafResources::mafMatrixPointer, absMatrix);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.absolutePoseMatrix", mafEventTypeLocal, &argList, &ret_val);
-
 
     double newBounds[6];
     newBounds[0] = b[0] + absMatrix->element(0,3);
@@ -155,11 +154,8 @@ void mafToolVTKButtons::updatePipe(double t) {
     newBounds[3] = b[3] + absMatrix->element(1,3);
     newBounds[4] = b[4] + absMatrix->element(2,3);
     newBounds[5] = b[5] + absMatrix->element(2,3);
-    
-
 
     vtkTexturedButtonRepresentation2D *rep = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(m_ButtonWidget->GetRepresentation());
-
     if (m_ShowLabel) {
         //Add a label to the button and change its text property
         rep->GetBalloon()->SetBalloonText(vmeName.toAscii());

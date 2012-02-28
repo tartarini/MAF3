@@ -30,9 +30,9 @@ namespace mafPluginVTK {
  */
 class MAFPLUGINVTKSHARED_EXPORT mafToolVTKPlane : public mafToolVTK {
     Q_OBJECT
-    Q_PROPERTY(mafCore::mafPointPointer origin READ origin WRITE setOrigin);
-    Q_PROPERTY(mafCore::mafPointPointer normal READ normal WRITE setNormal);
-    Q_PROPERTY(mafCore::mafBoundsPointer voi READ voi WRITE setVOI);
+    Q_PROPERTY(mafResources::mafPointPointer origin READ origin WRITE setOrigin);
+    Q_PROPERTY(mafResources::mafPointPointer normal READ normal WRITE setNormal);
+    Q_PROPERTY(mafResources::mafBoundsPointer voi READ voi WRITE setVOI);
     
     /// typedef macro.
     mafSuperclassMacro(mafPluginVTK::mafToolVTK);
@@ -51,22 +51,22 @@ public:
     /// Allow to assign bounds into which place the plane widget.
     /** The widget will move itself inside the volume of interest (VOI) defined 
     by the bounds passed as argument.*/
-    void setVOI(mafCore::mafBounds *bounds);
+    void setVOI(mafResources::mafBounds *bounds);
 
     /// Return the volume of interest of the widget.
-    mafCore::mafBounds *voi() const;
+    mafResources::mafBounds *voi() const;
 
     /// Return the origin coordinate.
-    mafCore::mafPoint *origin() const;
+    mafResources::mafPoint *origin() const;
 
     /// Assign the origin coordinate.
-    void setOrigin(mafCore::mafPoint *o);
+    void setOrigin(mafResources::mafPoint *o);
 
     /// Return the normal coordinate.
-    mafCore::mafPoint *normal() const;
+    mafResources::mafPoint *normal() const;
 
     /// Assign the normal coordinate.
-    void setNormal(mafCore::mafPoint *n);
+    void setNormal(mafResources::mafPoint *n);
 
 protected:
     /// Object destructor.
@@ -75,24 +75,24 @@ protected:
 private:
     vtkSmartPointer<vtkImplicitPlaneWidget2> m_PlaneWidget; ///> Plane widget.
 
-    mafCore::mafPoint *m_Origin; ///< Origin of the plane tool.
-    mafCore::mafPoint *m_Normal; ///< Normal of the plane tool.
-    mafCore::mafBounds *m_VOI; ///< Volume of interest in which place the plane widget.
+    mafResources::mafPoint *m_Origin; ///< Origin of the plane tool.
+    mafResources::mafPoint *m_Normal; ///< Normal of the plane tool.
+    mafResources::mafBounds *m_VOI; ///< Volume of interest in which place the plane widget.
 };
 
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline mafCore::mafPoint *mafToolVTKPlane::origin() const {
+inline mafResources::mafPoint *mafToolVTKPlane::origin() const {
     return m_Origin;
 }
 
-inline mafCore::mafPoint *mafToolVTKPlane::normal() const {
+inline mafResources::mafPoint *mafToolVTKPlane::normal() const {
     return m_Normal;
 }
 
-inline mafCore::mafBounds *mafToolVTKPlane::voi() const {
+inline mafResources::mafBounds *mafToolVTKPlane::voi() const {
     return m_VOI;
 }
 

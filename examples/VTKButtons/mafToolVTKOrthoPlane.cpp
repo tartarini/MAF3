@@ -35,7 +35,7 @@ void vtkIOPWCallback::Execute(vtkObject *caller, unsigned long, void*) {
     vtkMAFImplicitPlaneRepresentation *rep = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(planeWidget->GetRepresentation());
     double ori[3];
     rep->GetOrigin(ori);
-    mafCore::mafPoint *o = new mafCore::mafPoint(ori);
+    mafResources::mafPoint *o = new mafResources::mafPoint(ori);
     Tool->setOrigin(o);
     Tool->setModified();
     mafDEL(o);
@@ -43,6 +43,7 @@ void vtkIOPWCallback::Execute(vtkObject *caller, unsigned long, void*) {
 
 //-----------------------------------------------------------------------------------------------------
 
+using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace mafCore;
 
@@ -105,7 +106,7 @@ mafToolVTKOrthoPlane::~mafToolVTKOrthoPlane() {
     mafDEL(m_VOI);
 }
 
-void mafToolVTKOrthoPlane::setVOI(mafCore::mafBounds *bounds) {
+void mafToolVTKOrthoPlane::setVOI(mafResources::mafBounds *bounds) {
     if (bounds == NULL) {
         return;
     }
@@ -125,7 +126,7 @@ void mafToolVTKOrthoPlane::setVOI(mafCore::mafBounds *bounds) {
     repZ->PlaceWidget(b);
 }
 
-void mafToolVTKOrthoPlane::setOrigin(mafCore::mafPoint *o) {
+void mafToolVTKOrthoPlane::setOrigin(mafResources::mafPoint *o) {
     *m_Origin = *o;
     double pos[3];
     m_Origin->pos(pos);

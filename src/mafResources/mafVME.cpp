@@ -268,7 +268,7 @@ void mafVME::bounds(double b[6], double t) {
 }
 
 
-mafCore::mafBoundsPointer mafVME::bounds() const{
+mafResources::mafBoundsPointer mafVME::bounds() const{
     mafDataSet *ds = m_DataSetCollection->itemAtCurrentTime();
     if(ds) {
         return ds->bounds();

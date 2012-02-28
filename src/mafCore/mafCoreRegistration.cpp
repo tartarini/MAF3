@@ -24,8 +24,7 @@
 #include "mafMementoHierarchy.h"
 #include "mafProxyInterface.h"
 #include "mafVisitorFindObjectsByHashCode.h"
-#include "mafBounds.h"
-#include "mafPoint.h"
+
 
 using namespace mafCore;
 
@@ -68,8 +67,6 @@ void mafCoreRegistration::registerCoreObjects() {
     qRegisterMetaType<mafCore::mafProxyInterfacePointer>("mafCore::mafProxyInterfacePointer");
     qRegisterMetaType<mafCore::mafProxyInterface>("mafCore::mafProxyInterface");
     qRegisterMetaType<mafCore::mafProxyInterface>("mafCore::mafDelegatePointer");
-    qRegisterMetaType<mafCore::mafPointPointer>("mafCore::mafPointPointer");
-    qRegisterMetaType<mafCore::mafBoundsPointer>("mafCore::mafBoundsPointer");
 }
 
 void mafCoreRegistration::unregisterCoreObjects() {

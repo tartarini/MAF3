@@ -35,7 +35,7 @@ class MAFRESOURCESSHARED_EXPORT mafDataSet : public mafCore::mafObject {
     Q_PROPERTY(QString externalDataType READ externalDataType WRITE setExternalDataType)
     Q_PROPERTY(QString externalCodecType READ externalCodecType WRITE setExternalCodecType)
     Q_PROPERTY(QString boundaryAlgorithmName READ boundaryAlgorithmName WRITE setBoundaryAlgorithmName)
-    Q_PROPERTY(mafCore::mafBoundsPointer bounds READ bounds WRITE setBounds)
+    Q_PROPERTY(mafResources::mafBoundsPointer bounds READ bounds WRITE setBounds)
     Q_PROPERTY(QString poseMatrix READ poseMatrixString WRITE setPoseMatrixString)
     
     /// typedef macro.
@@ -92,10 +92,10 @@ public:
     QString boundaryAlgorithmName() const;
 
     /// Set the bounds of the bounding box of the VME.
-    void setBounds(mafCore::mafBoundsPointer bounds);
+    void setBounds(mafResources::mafBoundsPointer bounds);
 
     /// Return the bounds of the bounding box of the VME.
-    mafCore::mafBoundsPointer bounds();
+    mafResources::mafBoundsPointer bounds();
     
     /// check if boundary is valid.
     bool isValidBounds();
@@ -142,7 +142,7 @@ private:
     QString m_ExternalDataType; ///< Type of data contained in the mafDataSet.
     QString m_ExternalCodecType; ///< Type of codec used to encode/decode in the mafDataSet.
     bool m_DataLoaded; ///< Set true when data is loaded in memory.
-    mafCore::mafBoundsPointer m_Bounds; ///< List of bounds value of the binding box.
+    mafResources::mafBoundsPointer m_Bounds; ///< List of bounds value of the binding box.
 
     QString m_FileName; ///< Name of the file containing the datat.
 
@@ -181,7 +181,7 @@ inline bool mafDataSet::dataLoaded() const {
     return m_DataLoaded;
 }
 
-inline mafCore::mafBoundsPointer mafDataSet::bounds()  {
+inline mafResources::mafBoundsPointer mafDataSet::bounds()  {
     return m_Bounds;
 }
 

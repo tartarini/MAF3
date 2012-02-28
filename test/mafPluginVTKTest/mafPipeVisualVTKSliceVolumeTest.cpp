@@ -166,7 +166,7 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTest() {
     mafPipeVisualVTKSliceVolume *pipe;
     pipe = mafNEW(mafPluginVTK::mafPipeVisualVTKSliceVolume);
     pipe->setInput(m_VME);
-    mafCore::mafBoundsPointer b = m_VME->dataSetCollection()->itemAtCurrentTime()->bounds();
+    mafResources::mafBoundsPointer b = m_VME->dataSetCollection()->itemAtCurrentTime()->bounds();
     double center[3];
     b->center(center);
     pipe->setProperty("originX", center[0]);
@@ -233,7 +233,7 @@ void mafPipeVisualVTKSliceVolumeTest::updatePipeTestFromPlugIn() {
     
     //! <snippet>
     mafPipeVisual *visualPipe = (mafPipeVisual *)mafNEWFromString("mafPluginVTK::mafPipeVisualVTKSliceVolume");
-    mafCore::mafBoundsPointer b = m_VME->dataSetCollection()->itemAtCurrentTime()->bounds();
+    mafResources::mafBoundsPointer b = m_VME->dataSetCollection()->itemAtCurrentTime()->bounds();
     double center[3];
     b->center(center);
     visualPipe->setProperty("originX", center[0]);

@@ -182,7 +182,7 @@ void mafToolVTKPlaneTest::updatePipeTest() {
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, sphere->dataValue());
     m_SphereMapper->SetInputConnection(*dataSet);
 
-    mafCore::mafBoundsPointer bounds = sphere->bounds();
+    mafResources::mafBoundsPointer bounds = sphere->bounds();
     m_ToolPlane->setVOI(bounds);
     m_ToolPlane->setVisibility(true);
 

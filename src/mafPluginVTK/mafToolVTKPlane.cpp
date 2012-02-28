@@ -36,12 +36,12 @@ void vtkIPWCallback::Execute(vtkObject *caller, unsigned long, void*) {
     double ori[3], nor[3];
     rep->GetOrigin(ori);
     rep->GetNormal(nor);
-    mafCore::mafPoint *o, *n;
-    o = new mafCore::mafPoint(ori);
-    n = new mafCore::mafPoint(nor);
+    mafResources::mafPoint *o, *n;
+    o = new mafResources::mafPoint(ori);
+    n = new mafResources::mafPoint(nor);
     QVariant vo, vn;
-    vo.setValue<mafCore::mafPointPointer>(o);
-    vn.setValue<mafCore::mafPointPointer>(n);
+    vo.setValue<mafResources::mafPointPointer>(o);
+    vn.setValue<mafResources::mafPointPointer>(n);
     Tool->setProperty("origin", vo);
     Tool->setProperty("normal", vn);
     Tool->setModified();
@@ -52,6 +52,7 @@ void vtkIPWCallback::Execute(vtkObject *caller, unsigned long, void*) {
 
 //-----------------------------------------------------------------------------------------------------
 
+using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace mafCore;
 
@@ -87,7 +88,7 @@ mafToolVTKPlane::~mafToolVTKPlane() {
     mafDEL(m_VOI);
 }
 
-void mafToolVTKPlane::setVOI(mafCore::mafBounds *bounds) {
+void mafToolVTKPlane::setVOI(mafResources::mafBounds *bounds) {
     *m_VOI = *bounds;
     vtkMAFImplicitPlaneRepresentation *rep = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidget->GetRepresentation());
     double b[6];
@@ -101,14 +102,14 @@ void mafToolVTKPlane::setVOI(mafCore::mafBounds *bounds) {
     setModified();
 }
 
-void mafToolVTKPlane::setOrigin(mafCore::mafPoint *o) {
+void mafToolVTKPlane::setOrigin(mafResources::mafPoint *o) {
     *m_Origin = *o;
     vtkMAFImplicitPlaneRepresentation *rep = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidget->GetRepresentation());
     rep->SetOrigin(m_Origin->x(), m_Origin->y(), m_Origin->z());
     setModified();
 }
 
-void mafToolVTKPlane::setNormal(mafCore::mafPoint *n) {
+void mafToolVTKPlane::setNormal(mafResources::mafPoint *n) {
     *m_Normal = *n;
     vtkMAFImplicitPlaneRepresentation *rep = reinterpret_cast<vtkMAFImplicitPlaneRepresentation*>(m_PlaneWidget->GetRepresentation());
     rep->SetNormal(m_Normal->x(), m_Normal->y(), m_Normal->z());

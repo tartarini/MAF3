@@ -32,8 +32,8 @@ namespace mafPluginVTK {
 */
 class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSlice : public mafPipeVisualVTK {
     Q_OBJECT
-    Q_PROPERTY(mafCore::mafPointPointer origin READ origin)
-    Q_PROPERTY(mafCore::mafPointPointer normal READ normal)
+    Q_PROPERTY(mafResources::mafPointPointer origin READ origin)
+    Q_PROPERTY(mafResources::mafPointPointer normal READ normal)
 //     Q_PROPERTY(QString sliceAxes READ sliceAxes WRITE setSliceAxes)
     
     /// typedef macro.
@@ -44,20 +44,20 @@ public:
     mafPipeVisualVTKSlice(const QString code_location = "");
 
     /// Set the origin of the slice
-    void setSlice(mafCore::mafPointPointer o);
+    void setSlice(mafResources::mafPointPointer o);
 
     /// Set plane normal vector;
-    void setNormal(mafCore::mafPointPointer val);
+    void setNormal(mafResources::mafPointPointer val);
 
 public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change.
     /*virtual*/ void updatePipe(double t = -1);
 
     /// Return the pointer to the origin of the slicing plane.
-    mafCore::mafPointPointer origin();
+    mafResources::mafPointPointer origin();
 
     /// Return the pointer to the normal of the slicing plane.
-    mafCore::mafPointPointer normal();
+    mafResources::mafPointPointer normal();
 
     /// Set the slice axes normal to the slicing plane.
 //     QString sliceAxes() const;
@@ -69,8 +69,8 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTKSlice();
 
-    mafCore::mafPoint *m_Normal; ///< Normal of the slicing plane.
-    mafCore::mafPoint *m_Origin; ///< Origin of the slicing plane.
+    mafResources::mafPoint *m_Normal; ///< Normal of the slicing plane.
+    mafResources::mafPoint *m_Origin; ///< Origin of the slicing plane.
 };
 
 /////////////////////////////////////////////////////////////

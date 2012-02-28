@@ -18,7 +18,7 @@ using namespace mafEventBus;
 using namespace mafResources;
 
 mafDataSet::mafDataSet(const QString code_location) : mafObject(code_location), m_DataValue(NULL), m_DataBoundary(NULL), m_Matrix(NULL), m_DataBoundaryAlgorithm(NULL), m_DataBoundaryAlgorithmName(), m_ExternalDataType(), m_ExternalCodecType(), m_DataLoaded(false), m_FileName(), m_Bounds(NULL) {
-    m_Bounds = new mafCore::mafBounds;
+    m_Bounds = new mafResources::mafBounds;
     QObject::connect(this, SIGNAL(loadDataSignal()), this, SLOT(updateDataValue()), Qt::BlockingQueuedConnection);
 }
 
@@ -235,7 +235,7 @@ void mafDataSet::updateDataValue() {
   }
 }
 
-void mafDataSet::setBounds(mafCore::mafBoundsPointer bounds) {
+void mafDataSet::setBounds(mafResources::mafBoundsPointer bounds) {
     if(m_Bounds != bounds) {
         mafDEL(m_Bounds);
         m_Bounds = bounds;

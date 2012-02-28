@@ -36,17 +36,17 @@ public:
     /*virtual*/ void visit(mafCore::mafObjectBase *object);
 	
 	/// Return the calculated bounds.
-	mafCore::mafBounds *bounds() const;
+	mafResources::mafBounds *bounds() const;
     
 protected:
     /// Object destructor.
     /* virtual */ ~mafVisitorBounds();
 
 private:
-	mafCore::mafBounds *m_Bounds; ///< Store the calculated bounds.
+	mafResources::mafBounds *m_Bounds; ///< Store the calculated bounds.
 };
 
-inline mafCore::mafBounds *mafVisitorBounds::bounds() const {
+inline mafResources::mafBounds *mafVisitorBounds::bounds() const {
 	return m_Bounds;
 }
 

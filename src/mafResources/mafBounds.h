@@ -1,6 +1,6 @@
 /*
  *  mafBounds.h
- *  mafCore
+ *  mafResources
  *
  *  Created by Paolo Quadrani on 10/02/12.
  *  Copyright 2012 B3C. All rights reserved.
@@ -13,9 +13,10 @@
 #define MAFBOUNDS_H
 
 // Includes list
-#include "mafReferenceCounted.h"
+#include "mafResourcesDefinitions.h"
+#include <mafReferenceCounted.h>
 
-namespace mafCore {
+namespace mafResources {
 
 ///class forwarding
 class mafPoint;
@@ -24,7 +25,7 @@ class mafPoint;
  Class name: mafBounds
  This class defines the 3D bounds used by VMEs.
  */
-class MAFCORESHARED_EXPORT mafBounds : public mafReferenceCounted {
+class MAFRESOURCESSHARED_EXPORT mafBounds : public mafCore::mafReferenceCounted {
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafReferenceCounted);
 
@@ -130,8 +131,8 @@ inline double mafBounds::zMax() const {
 
 typedef mafBounds * mafBoundsPointer;
 
-} // namespace mafCore
+} // namespace mafResources
 
-Q_DECLARE_METATYPE(mafCore::mafBoundsPointer);
+Q_DECLARE_METATYPE(mafResources::mafBoundsPointer);
 
 #endif  // MAFBOUNDS_H

@@ -1,6 +1,6 @@
 /*
  *  mafBoundsTest.cpp
- *  mafCoreTest
+ *  mafResourcesTest
  *
  *  Created by Paolo Quadrani on 13/12/11.
  *  Copyright 2009 B3C. All rights reserved.
@@ -13,7 +13,7 @@
 #include <mafBounds.h>
 #include <mafPoint.h>
 
-using namespace mafCore;
+using namespace mafResources;
 
 /**
  Class name: mafBoundsTest
@@ -33,12 +33,12 @@ class mafBoundsTest : public QObject {
 private Q_SLOTS:
     /// Initialize test variables
     void initTestCase() {
-        m_ObjTestVar = new mafCore::mafBounds();
+        m_ObjTestVar = new mafResources::mafBounds();
         
         double a[6] = {-2,2,-2,2,-2,2};
         double b[6] = {-1,3,-1,3,-1,3};
-        m_ObjTestA = new mafCore::mafBounds(a); 
-        m_ObjTestB = new mafCore::mafBounds(b);
+        m_ObjTestA = new mafResources::mafBounds(a); 
+        m_ObjTestB = new mafResources::mafBounds(b);
 
     }
 
@@ -114,12 +114,12 @@ void mafBoundsTest::equalTest() {
 
 
 void mafBoundsTest::uniteBoundsTest() {
-    mafBounds *outputTest = new mafCore::mafBounds();
+    mafBounds *outputTest = new mafResources::mafBounds();
     m_ObjTestA->unite(*m_ObjTestB, *outputTest);
     
     /// check if output bounds are correct
     double bc[6] = {-2.,3.,-2.,3.,-2.,3.};
-    mafBounds *checked = new mafCore::mafBounds(bc);
+    mafBounds *checked = new mafResources::mafBounds(bc);
     QVERIFY(*checked == *outputTest);
     
     mafDEL(outputTest);
@@ -128,13 +128,13 @@ void mafBoundsTest::uniteBoundsTest() {
 }
 
 void mafBoundsTest::autoUniteTest() {
-    mafBounds *autoTest = new mafCore::mafBounds();
+    mafBounds *autoTest = new mafResources::mafBounds();
     autoTest->setBounds(m_ObjTestA);
     autoTest->unite(*m_ObjTestB, *autoTest);
     
     /// check if output bounds are correct
     double bc[6] = {-2.,3.,-2.,3.,-2.,3.};
-    mafBounds *checked = new mafCore::mafBounds(bc);
+    mafBounds *checked = new mafResources::mafBounds(bc);
     QVERIFY(*checked == *autoTest);
     
     mafDEL(autoTest);
@@ -144,12 +144,12 @@ void mafBoundsTest::autoUniteTest() {
 
 
 void mafBoundsTest::intersectBoundsTest() {
-    mafBounds *outputTest = new mafCore::mafBounds();
+    mafBounds *outputTest = new mafResources::mafBounds();
     m_ObjTestA->intersect(*m_ObjTestB, *outputTest);
     
     /// check if output bounds are correct
     double bc[6] = {-1.,2.,-1.,2.,-1.,2.};
-    mafBounds *checked = new mafCore::mafBounds(bc);
+    mafBounds *checked = new mafResources::mafBounds(bc);
     QVERIFY(*checked == *outputTest);
     
     mafDEL(outputTest);
@@ -158,13 +158,13 @@ void mafBoundsTest::intersectBoundsTest() {
 
 void mafBoundsTest::pointInsideOutsideBounds() {
     double o[3] = {0.,0.,0.};
-    mafPoint *origin = new mafCore::mafPoint(o);
+    mafPoint *origin = new mafResources::mafPoint(o);
     bool result = m_ObjTestA->isPointInBounds(origin);
     QVERIFY(result);
     mafDEL(origin);
     
     double c[3] = {10.,10.,10.};
-    mafPoint *custom = new mafCore::mafPoint(c);
+    mafPoint *custom = new mafResources::mafPoint(c);
     result = m_ObjTestA->isPointInBounds(custom);
     QVERIFY(!result);
 }

@@ -30,13 +30,13 @@ mafPipeVisualVTKSlice::~mafPipeVisualVTKSlice() {
     mafDEL(m_Normal);
 }
 
-mafCore::mafPointPointer mafPipeVisualVTKSlice::origin() {
+mafResources::mafPointPointer mafPipeVisualVTKSlice::origin() {
     //////////////////////////////////////////////////////////////////////////
     QString sig("origin()");
     mafCore::mafDelegatePointer delegateObj = delegateObject();
     if (delegateObj && delegateObj->isMethodDefined(sig)) {
-        mafCore::mafPointPointer ret;
-        QGenericReturnArgument ret_val = mafReturnArgument(mafCore::mafPointPointer, ret);
+        mafResources::mafPointPointer ret;
+        QGenericReturnArgument ret_val = mafReturnArgument(mafResources::mafPointPointer, ret);
         delegateObj->executeMethod(sig, NULL, &ret_val);
         if (!delegateObj->shouldExecuteLocalCode()) {
             return ret;
@@ -47,13 +47,13 @@ mafCore::mafPointPointer mafPipeVisualVTKSlice::origin() {
     return m_Origin;
 }
 
-mafCore::mafPointPointer mafPipeVisualVTKSlice::normal() {
+mafResources::mafPointPointer mafPipeVisualVTKSlice::normal() {
     //////////////////////////////////////////////////////////////////////////
     QString sig("normal()");
     mafCore::mafDelegatePointer delegateObj = delegateObject();
     if (delegateObj && delegateObj->isMethodDefined(sig)) {
-        mafCore::mafPointPointer ret;
-        QGenericReturnArgument ret_val = mafReturnArgument(mafCore::mafPointPointer, ret);
+        mafResources::mafPointPointer ret;
+        QGenericReturnArgument ret_val = mafReturnArgument(mafResources::mafPointPointer, ret);
         delegateObj->executeMethod(sig, NULL, &ret_val);
         if (!delegateObj->shouldExecuteLocalCode()) {
             return ret;
@@ -71,17 +71,17 @@ void mafPipeVisualVTKSlice::updatePipe(double t) {
         double b[6];
         mafVME *vme = input();
         vme->bounds(b, t);
-        m_Origin = new mafCore::mafPoint((b[0] + b[1]) / 2., (b[2] + b[3]) / 2., (b[4] + b[5]) / 2.);
+        m_Origin = new mafResources::mafPoint((b[0] + b[1]) / 2., (b[2] + b[3]) / 2., (b[4] + b[5]) / 2.);
     }
     if (m_Normal == NULL) {
-        m_Normal = new mafCore::mafPoint(0.,0., 1.);
+        m_Normal = new mafResources::mafPoint(0.,0., 1.);
     }
 }
 
-void mafPipeVisualVTKSlice::setSlice(mafCore::mafPointPointer o) {
+void mafPipeVisualVTKSlice::setSlice(mafResources::mafPointPointer o) {
     *m_Origin = *o;
 }
 
-void mafPipeVisualVTKSlice::setNormal(mafCore::mafPointPointer n) {
+void mafPipeVisualVTKSlice::setNormal(mafResources::mafPointPointer n) {
     *m_Normal = *n;
 }

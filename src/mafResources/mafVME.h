@@ -46,7 +46,7 @@ class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
 
     Q_PROPERTY(QString objectType READ objectType STORED false)
     
-    Q_PROPERTY(mafCore::mafBoundsPointer bounds READ bounds STORED false)
+    Q_PROPERTY(mafResources::mafBoundsPointer bounds READ bounds STORED false)
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
 
@@ -123,7 +123,7 @@ public:
     void bounds(double b[6], double t = -1);
     
     /// return 3d bounds.
-    mafCore::mafBoundsPointer bounds() const;
+    mafResources::mafBoundsPointer bounds() const;
 
     /// Return the length of the 3D bounding box of the data at the current timestamp.
     double length();

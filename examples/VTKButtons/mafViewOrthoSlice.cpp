@@ -139,7 +139,7 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
 // Delegate methods
 //////////////////////////////////////////////////////////////////////////
 
-mafCore::mafPointPointer mafViewOrthoSlice::origin() {
+mafResources::mafPointPointer mafViewOrthoSlice::origin() {
     return m_SlicePosition;
 }
 

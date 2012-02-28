@@ -1,6 +1,6 @@
 /*
  *  mafPoint.h
- *  mafCore
+ *  mafResources
  *
  *  Created by Paolo Quadrani on 10/02/12.
  *  Copyright 2012 B3C. All rights reserved.
@@ -13,15 +13,16 @@
 #define MAFPOINT_H
 
 // Includes list
-#include "mafReferenceCounted.h"
+#include "mafResourcesDefinitions.h"
+#include <mafReferenceCounted.h>
 
-namespace mafCore {
+namespace mafResources {
 
 /**
  Class name: mafPoint
  This class defines the 3D point.
  */
-class MAFCORESHARED_EXPORT mafPoint : public mafReferenceCounted {
+    class MAFRESOURCESSHARED_EXPORT mafPoint : public mafCore::mafReferenceCounted {
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafReferenceCounted);
 
@@ -122,8 +123,8 @@ inline void mafPoint::zero() {
 
 typedef mafPoint * mafPointPointer;
 
-} // namespace mafCore
+} // namespace mafResources
 
-Q_DECLARE_METATYPE(mafCore::mafPointPointer);
+Q_DECLARE_METATYPE(mafResources::mafPointPointer);
 
 #endif  // MAFPOINT_H

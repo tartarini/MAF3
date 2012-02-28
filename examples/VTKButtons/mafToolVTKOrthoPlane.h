@@ -28,8 +28,8 @@ class vtkImplicitPlaneWidget2;
  */
 class mafToolVTKOrthoPlane : public mafPluginVTK::mafToolVTK {
     Q_OBJECT
-    Q_PROPERTY(mafCore::mafPoint *origin READ origin WRITE setOrigin);
-    Q_PROPERTY(mafCore::mafBounds *voi READ voi WRITE setVOI);
+    Q_PROPERTY(mafResources::mafPoint *origin READ origin WRITE setOrigin);
+    Q_PROPERTY(mafResources::mafBounds *voi READ voi WRITE setVOI);
     
     /// typedef macro.
     mafSuperclassMacro(mafPluginVTK::mafToolVTK);
@@ -48,16 +48,16 @@ public:
     /// Allow to assign bounds into which place the plane widget.
     /** The widget will move itself inside the volume of interest (VOI) defined 
     by the bounds passed as argument.*/
-    void setVOI(mafCore::mafBounds *bounds);
+    void setVOI(mafResources::mafBounds *bounds);
 
     /// Return the volume of interest of the widget.
-    mafCore::mafBounds *voi() const;
+    mafResources::mafBounds *voi() const;
 
     /// Return the origin coordinate.
-    mafCore::mafPoint *origin() const;
+    mafResources::mafPoint *origin() const;
 
     /// Assign the origin coordinate.
-    void setOrigin(mafCore::mafPoint *o);
+    void setOrigin(mafResources::mafPoint *o);
 
 protected:
     /// Object destructor.
@@ -68,19 +68,19 @@ private:
     vtkSmartPointer<vtkImplicitPlaneWidget2> m_PlaneWidgetY; ///> Plane widget.
     vtkSmartPointer<vtkImplicitPlaneWidget2> m_PlaneWidgetZ; ///> Plane widget.
 
-    mafCore::mafPoint *m_Origin; ///< Origin of the plane tool.
-    mafCore::mafBounds *m_VOI; ///< Volume of interest in which place the plane widget.
+    mafResources::mafPoint *m_Origin; ///< Origin of the plane tool.
+    mafResources::mafBounds *m_VOI; ///< Volume of interest in which place the plane widget.
 };
 
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline mafCore::mafPoint *mafToolVTKOrthoPlane::origin() const {
+inline mafResources::mafPoint *mafToolVTKOrthoPlane::origin() const {
     return m_Origin;
 }
 
-inline mafCore::mafBounds *mafToolVTKOrthoPlane::voi() const {
+inline mafResources::mafBounds *mafToolVTKOrthoPlane::voi() const {
     return m_VOI;
 }
 
