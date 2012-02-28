@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/fran_cut.png</file>
+        <file>images/buttonIcon.png</file>
         <file>images/spe.png</file>
     </qresource>
 </RCC>
