@@ -12,6 +12,7 @@
 #include "mafToolVTKButtons.h"
 #include <mafSceneNodeVTK.h>
 #include <QImage>
+#include <QDir.h>
 #include <mafVME.h>
 
 #include "mafAnimateVTK.h"
@@ -33,8 +34,10 @@
 #include <vtkCommand.h>
 
 using namespace mafCore;
+using namespace mafEventBus;
 using namespace mafResources;
 using namespace mafPluginVTK;
+
 
 // Callback for the interaction
 class vtkButtonCallback : public vtkCommand {
@@ -72,9 +75,17 @@ public:
 };
 
 mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location), m_ShowLabel(true), m_FlyTo(true), m_OnCenter(false) {
+
+    bool loaded = false;
     // Create an image for the button
     QImage image2;
-    image2.load(":/images/fran_cut.png");
+    
+    QString pathStr = QDir::currentPath();
+    loaded = image2.load(pathStr + "/" + "buttonIcon.png");
+
+    if (!loaded) {
+        image2.load(":/images/buttonIcon.png");
+    }
 
     VTK_CREATE(vtkQImageToImageSource, imageToVTK2);
     imageToVTK2->SetQImage(&image2);
@@ -115,7 +126,7 @@ void mafToolVTKButtons::updatePipe(double t) {
     if(data == NULL) {
         return;
     }
-
+    
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
     if (dataSet == NULL) {
         return;
@@ -124,9 +135,29 @@ void mafToolVTKButtons::updatePipe(double t) {
     vtkAlgorithm *producer = (*dataSet)->GetProducer();
     vtkDataObject *dataObject = producer->GetOutputDataObject(0);
     vtkDataSet* vtkData = vtkDataSet::SafeDownCast(dataObject);
+    
 
     double b[6];
     vtkData->GetBounds(b);
+
+    //Get absolute pose matrix fomr mafVMEManager
+    mafMatrixPointer absMatrix = NULL;
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafResources::mafMatrixPointer, absMatrix);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.absolutePoseMatrix", mafEventTypeLocal, &argList, &ret_val);
+
+
+    double newBounds[6];
+    newBounds[0] = b[0] + absMatrix->element(0,3);
+    newBounds[1] = b[1] + absMatrix->element(0,3);
+    newBounds[2] = b[2] + absMatrix->element(1,3);
+    newBounds[3] = b[3] + absMatrix->element(1,3);
+    newBounds[4] = b[4] + absMatrix->element(2,3);
+    newBounds[5] = b[5] + absMatrix->element(2,3);
+    
+
+
     vtkTexturedButtonRepresentation2D *rep = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(m_ButtonWidget->GetRepresentation());
 
     if (m_ShowLabel) {
@@ -146,15 +177,15 @@ void mafToolVTKButtons::updatePipe(double t) {
     }
 
     //modify position of the vtkButton 
-    double bds[6];
+    double bds[3];
     if (m_OnCenter) {
         //on the center of the bounding box of the VME.
-        bds[0] = (b[0] + b[1]) / 2;
-        bds[1] = (b[2] + b[3]) / 2;
-        bds[2] = (b[4] + b[5]) / 2;
+        bds[0] = (newBounds[0] + newBounds[1]) / 2;
+        bds[1] = (newBounds[2] + newBounds[3]) / 2;
+        bds[2] = (newBounds[4] + newBounds[5]) / 2;
     } else {
         //on the corner of the bounding box of the VME.
-        bds[0] = b[0]; bds[1] = b[2]; bds[2] = b[4];
+        bds[0] = newBounds[0]; bds[1] = newBounds[2]; bds[2] = newBounds[4];
     }
 
     int size[2]; size[0] = 25; size[1] = 45;
@@ -163,7 +194,7 @@ void mafToolVTKButtons::updatePipe(double t) {
     m_ButtonWidget->SetRepresentation(rep);
 
     myCallback->graphicObject = this->m_GraphicObject;
-    myCallback->setBounds(b);
+    myCallback->setBounds(newBounds);
     myCallback->setFlyTo(m_FlyTo);
     updatedGraphicObject();
 }
