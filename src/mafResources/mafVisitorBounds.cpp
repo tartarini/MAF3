@@ -23,11 +23,14 @@ mafVisitorBounds::~mafVisitorBounds() {
 }
 
 void mafVisitorBounds::visit(mafObjectBase *object) {
-    mafBounds *b = object->property("bounds").value<mafBoundsPointer>();
-    if(m_Bounds == NULL) {
-        m_Bounds = new mafBounds();
-        m_Bounds->setBounds(b);
+    QVariant boundsProp = object->property("bounds");
+    if (boundsProp.isValid()) {
+        mafBounds *b = boundsProp.value<mafBoundsPointer>();
+        if(m_Bounds == NULL) {
+            m_Bounds = new mafBounds();
+            m_Bounds->setBounds(b);
+        }
+
+        m_Bounds->unite(*b, *m_Bounds);
     }
-    
-    m_Bounds->unite(*b, *m_Bounds);
 }
