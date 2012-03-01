@@ -113,6 +113,10 @@ Q_SIGNALS:
     void mouseReleaseSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
     /// signal for mouse move event
     void mouseMoveSignal(double *pos, unsigned long modifiers, mafCore::mafProxyInterface *proxy, QEvent *e);
+    /// signal for mouse wheel forward event
+    void mouseWheelForwardSignal(unsigned long modifiers, QEvent *e);
+    /// signal for mouse wheel backward event
+    void mouseWheelBackwardSignal(unsigned long modifiers, QEvent *e);
 
 protected:
     /// Object destructor.
