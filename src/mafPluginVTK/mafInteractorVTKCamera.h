@@ -3,7 +3,7 @@
  *  mafPluginVTK
  *
  *  Created by Daniele Giunchi - Paolo Quadrani on 7/7/11.
- *  Copyright 2011 B3C.s All rights reserved.
+ *  Copyright 2012 B3C.s All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -45,6 +45,12 @@ public Q_SLOTS:
 
     /// Called when mouse is moved
     /*virtual*/ void mouseMove(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e);
+
+    /// called when the wheel is moving forward.
+    /*virtual*/ void mouseWheelForward(unsigned long modifiers, QEvent *e);
+
+    /// called when the wheel is moving backward.
+    /*virtual*/ void mouseWheelBackward(unsigned long modifiers, QEvent *e);
 
 protected:
     /// Object destructor.
