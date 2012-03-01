@@ -53,7 +53,9 @@ void mafVTKWidget::initializeConnections() {
     bool result(false);
     result = connect(this, SIGNAL(mousePressSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mousePress(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
     result = connect(this, SIGNAL(mouseReleaseSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mouseRelease(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
-    result= connect(this, SIGNAL(mouseMoveSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mouseMove(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
+    result = connect(this, SIGNAL(mouseMoveSignal(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)), mafInteractionManager::instance(), SLOT(mouseMove(double *, unsigned long, mafCore::mafProxyInterface *, QEvent *)));
+    result = connect(this, SIGNAL(mouseWheelBackwardSignal(unsigned long, QEvent *)), mafInteractionManager::instance(), SLOT(mouseWheelBackward(unsigned long, QEvent *)));
+    result = connect(this, SIGNAL(mouseWheelForwardSignal(unsigned long, QEvent *)), mafInteractionManager::instance(), SLOT(mouseWheelForward(unsigned long, QEvent *)));
 }
 
 void mafVTKWidget::removeAllObjects() {
@@ -264,17 +266,13 @@ void mafVTKWidget::wheelEvent(QWheelEvent* e) {
                                    (e->modifiers() & Qt::ShiftModifier ) > 0 ? 1 : 0);
 
     this->getModifiers(iren);
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(unsigned long, m_Modifiers));
-
-    //wheel event signal need to be created
 
     // invoke VTK event
     // if delta is positive, it is a forward wheel event
     if(e->delta() > 0) {
-        iren->InvokeEvent(vtkCommand::MouseWheelForwardEvent, e); //Move into InteractorManager?
+        Q_EMIT mouseWheelForwardSignal(m_Modifiers, e);
     } else {
-        iren->InvokeEvent(vtkCommand::MouseWheelBackwardEvent, e); //Move into InteractorManager?
+        Q_EMIT mouseWheelBackwardSignal(m_Modifiers, e);
     }
 }
 
@@ -338,13 +336,15 @@ void mafVTKWidget::mouseRelease(vtkRenderWindowInteractor* iren, QEvent *e) {
     double posPicked[3];
     mafCore::mafProxy<vtkProp> actorPicked;
     
-    pickProp(iren, e, &actorPicked, posPicked);    Q_EMIT mouseReleaseSignal(posPicked, m_Modifiers, &actorPicked, e);
+    pickProp(iren, e, &actorPicked, posPicked);
+    Q_EMIT mouseReleaseSignal(posPicked, m_Modifiers, &actorPicked, e);
 }
 void mafVTKWidget::mouseMove(vtkRenderWindowInteractor* iren, QEvent *e) {
     double posPicked[3];
     mafCore::mafProxy<vtkProp> actorPicked;
     
-    pickProp(iren, e, &actorPicked, posPicked);    Q_EMIT mouseMoveSignal(posPicked, m_Modifiers, &actorPicked, e);
+    pickProp(iren, e, &actorPicked, posPicked);
+    Q_EMIT mouseMoveSignal(posPicked, m_Modifiers, &actorPicked, e);
 }
 
 // overloaded resize handler
