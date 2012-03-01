@@ -146,3 +146,58 @@ bool mafBounds::isPointInBounds(mafPoint *p) {
         p->y() >= m_YMin && p->y() <= m_YMax &&
         p->z() >= m_ZMin && p->z() <= m_ZMax;
 }
+
+void mafResources::mafBounds::transformBounds(mafMatrix *matrix) {
+    //find center of the bounding box
+    double oldCenter[3];
+    oldCenter[0] = (xMin() + xMax()) / 2;
+    oldCenter[1] = (yMin() + yMax()) / 2;
+    oldCenter[2] = (zMin() + zMax()) / 2;
+
+    //move the center to the origin
+    double origin[3] = {0., 0., 0.};
+
+
+    //apply the transform to the center
+    mafPoint *originPoint = new mafPoint(origin);
+    originPoint->transformPoint(matrix);
+
+    //new transformed center
+    double newOrigin[3];
+    newOrigin[0] = originPoint->x();
+    newOrigin[1] = originPoint->y();
+    newOrigin[2] = originPoint->z();
+
+    //extract the rotation sub-matrix and calculate the angles considering the Yaw-Pitch-Roll convention.
+    double x0, x1, x2;
+    double y0, y1, y2;
+    double z0, z1, z2;
+
+    x0 = matrix->element(0,0);
+    x1 = matrix->element(1,0);
+    x2 = matrix->element(2,0);
+    y0 = matrix->element(0,1);
+    y1 = matrix->element(1,1);
+    y2 = matrix->element(2,1);
+    z0 = matrix->element(0,2);
+    z1 = matrix->element(1,2);
+    z2 = matrix->element(2,2);
+
+    //move back center to original center position
+    newOrigin[0] = newOrigin[0] + oldCenter[0];
+    newOrigin[1] = newOrigin[1] + oldCenter[1];
+    newOrigin[2] = newOrigin[2] + oldCenter[2];
+
+    double xOffset = (xMax()-xMin())/2;
+    double yOffset = (yMax()-yMin())/2;
+    double zOffset = (zMax()-zMin())/2;
+
+    double newBounds[6];
+    newBounds[0] = newOrigin[0] - ((xOffset*x0) + (xOffset*x1) + (xOffset*x2));
+    newBounds[1] = newOrigin[0] + ((xOffset*x0) + (xOffset*x1) + (xOffset*x2));
+    newBounds[2] = newOrigin[1] - ((yOffset*y0) + (yOffset*y1) + (yOffset*y2));
+    newBounds[3] = newOrigin[1] + ((yOffset*y0) + (yOffset*y1) + (yOffset*y2));
+    newBounds[4] = newOrigin[2] - ((zOffset*z0) + (zOffset*z1) + (zOffset*z2));
+    newBounds[5] = newOrigin[2] + ((zOffset*z0) + (zOffset*z1) + (zOffset*z2));
+    this->setBounds(newBounds);
+}
