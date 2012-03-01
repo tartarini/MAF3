@@ -66,7 +66,6 @@ private Q_SLOTS:
 
         m_ToolHandler = mafNEW(mafResources::mafToolHandler);
         m_ToolHandler->setGraphicObject((mafVTKWidget*)m_RenderWidget);
-        m_ToolHandler->release();
 
         m_ToolPlane = mafNEW(mafPluginVTK::mafToolVTKPlane);
         m_ToolPlane->setFollowSelectedObject(false);

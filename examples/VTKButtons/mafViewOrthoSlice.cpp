@@ -130,6 +130,7 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
         op->setSceneNode(node);
         op->setVOI(bounds);
         op->setVisibility(m_VisibleObjects != 0);
+        op->setOrigin(m_SlicePosition);
     }
     mafDEL(v);
     updateView();
