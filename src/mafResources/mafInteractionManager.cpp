@@ -171,5 +171,3 @@ void mafInteractionManager::vmePicked(double *pos, unsigned long modifiers, mafV
 void mafInteractionManager::vmeSelect(mafObjectBase *node) {
     m_VME = (mafVME *) node;
 }
-
-
