@@ -140,10 +140,11 @@ void mafToolVTKButtons::updatePipe(double t) {
     double b[6];
     vtkData->GetBounds(b);
 
+    mafObjectBase *obj = vme;
     //Get absolute pose matrix from mafVMEManager
     mafMatrixPointer absMatrix = NULL;
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, vme));
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, obj));
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafResources::mafMatrixPointer, absMatrix);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.absolutePoseMatrix", mafEventTypeLocal, &argList, &ret_val);
 
