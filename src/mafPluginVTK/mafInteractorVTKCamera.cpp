@@ -78,3 +78,17 @@ void mafInteractorVTKCamera::mouseMove(double *pickPos, unsigned long modifiers,
     m_RenderWindowInteractor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCameraClippingRange();
     m_RenderWindowInteractor->InvokeEvent(vtkCommand::MouseMoveEvent, e);
 }
+
+void mafInteractorVTKCamera::mouseWheelForward(unsigned long modifiers, QEvent *e) {
+    m_RenderWindowInteractor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCameraClippingRange();
+    m_RenderWindowInteractor->InvokeEvent(vtkCommand::MouseWheelForwardEvent, e);
+    m_RenderWindowInteractor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCameraClippingRange();
+    m_RenderWindowInteractor->GetRenderWindow()->Render();
+}
+
+void mafInteractorVTKCamera::mouseWheelBackward(unsigned long modifiers, QEvent *e) {
+    m_RenderWindowInteractor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCameraClippingRange();
+    m_RenderWindowInteractor->InvokeEvent(vtkCommand::MouseWheelBackwardEvent, e);
+    m_RenderWindowInteractor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCameraClippingRange();
+    m_RenderWindowInteractor->GetRenderWindow()->Render();
+}
