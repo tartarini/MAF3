@@ -49,3 +49,16 @@ void mafPoint::pos(double p[3]) {
     p[2] = m_Z;
 }
 
+
+void mafPoint::transformPoint(mafMatrix *matrix) {
+    // Homogeneous transformation
+    double x = matrix->element(0,0)*this->x() + matrix->element(0,1)*this->y() + matrix->element(0,2)*this->z() + matrix->element(0,3);
+    double y = matrix->element(1,0)*this->x() + matrix->element(1,1)*this->y() + matrix->element(1,2)*this->z() + matrix->element(1,3);
+    double z = matrix->element(2,0)*this->x() + matrix->element(2,1)*this->y() + matrix->element(2,2)*this->z() + matrix->element(2,3);
+    double w = matrix->element(3,0)*this->x() + matrix->element(3,1)*this->y() + matrix->element(3,2)*this->z() + matrix->element(3,3);
+
+    double f = 1.0/w;
+    this->setX(x*f); 
+    this->setY(y*f); 
+    this->setZ(z*f);
+}

@@ -72,6 +72,9 @@ public:
     /// fill the array with current point coordinates.
     void pos(double p[3]);
 
+    /// Transform point applying the pose matrix.
+    void transformPoint(mafMatrix *matrix);
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafPoint();

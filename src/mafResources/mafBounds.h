@@ -86,6 +86,9 @@ public:
     
     /// return center of the box
     void center(double c[3]);
+
+    /// Transform bounds applying the pose matrix.
+    void transformBounds(mafMatrix *matrix);
     
 protected:
     /// Object destructor.
