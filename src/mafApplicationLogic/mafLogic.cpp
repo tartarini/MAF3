@@ -35,7 +35,7 @@ using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafApplicationLogic;
 
-mafLogic::mafLogic(const QString code_location) : mafLogicLight(code_location), m_WorkingDirectory(""), m_ApplicationName("") {
+mafLogic::mafLogic(const QString code_location) : mafLogicLight(code_location), m_WorkingDirectory(""), m_ApplicationName(""), m_Hierarchy(NULL) {
     m_LibrariesList.clear();
 }
 
@@ -112,7 +112,7 @@ mafCore::mafHierarchy *mafLogic::requestNewHierarchy() {
     ev.setReturnValue(mafEventReturnArgument(mafCore::mafHierarchyPointer, m_Hierarchy));
 
     mafEventBusManager::instance()->notifyEvent(ev);
-    
+   
     return m_Hierarchy;
 }
 
