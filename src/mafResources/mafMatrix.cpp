@@ -28,7 +28,7 @@ mafMatrix::mafMatrix(int rows, int cols) {
 
 mafMatrix::mafMatrix(const mafMatrix &m) {
     // Copy constructor for 4x4 double value matrix.
-    m_Matrix = cvCreateMat(4, 4, CV_64FC1);
+    m_Matrix = cvCreateMat(m.m_Matrix->rows, m.m_Matrix->cols, CV_64FC1);
     *this = m;
 }
 

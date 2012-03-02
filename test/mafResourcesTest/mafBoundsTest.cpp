@@ -3,7 +3,7 @@
  *  mafResourcesTest
  *
  *  Created by Paolo Quadrani on 13/12/11.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -11,7 +11,7 @@
 
 #include <mafTestSuite.h>
 #include <mafBounds.h>
-#include <mafPoint.h>
+#include <mafMatrix.h>
 
 using namespace mafResources;
 
@@ -70,6 +70,9 @@ private Q_SLOTS:
     
     /// unite without a pivot variable
     void autoUniteTest();
+
+    /// Transform test.
+    void transformBoundsTest();
     
 private:
     mafBounds *m_ObjTestVar; ///< Test variable
@@ -142,7 +145,6 @@ void mafBoundsTest::autoUniteTest() {
     
 }
 
-
 void mafBoundsTest::intersectBoundsTest() {
     mafBounds *outputTest = new mafResources::mafBounds();
     m_ObjTestA->intersect(*m_ObjTestB, *outputTest);
@@ -167,6 +169,35 @@ void mafBoundsTest::pointInsideOutsideBounds() {
     mafPoint *custom = new mafResources::mafPoint(c);
     result = m_ObjTestA->isPointInBounds(custom);
     QVERIFY(!result);
+    mafDEL(custom);
+}
+
+void mafBoundsTest::transformBoundsTest() {
+    // Create a test bounds
+    double b[6] = {0, 1, 0, 2, 0, 4};
+    mafBounds *b0 = new mafBounds(b, mafCodeLocation);
+
+    // Create a transformation matrix.
+    mafMatrix m;
+    m.setIdentity();
+    m.setElement(0, 3, 3);
+    m.setElement(1, 3, 2);
+    m.setElement(2, 3, 1);
+
+    // Transform the bounds using the matrix.
+    b0->transformBounds(&m);
+
+    // Create the result bounds.
+    double bRes[6] = {3, 4, 2, 4, 1, 5};
+    mafBounds *b0Res = new mafBounds(bRes, mafCodeLocation);
+
+    // Check that are equals.
+    bool res = (*b0) == (*b0Res);
+    QVERIFY(res);
+
+    // Free the allocated memory.
+    mafDEL(b0);
+    mafDEL(b0Res);
 }
 
 MAF_REGISTER_TEST(mafBoundsTest);
