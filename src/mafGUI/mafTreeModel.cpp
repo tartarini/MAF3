@@ -119,6 +119,7 @@ void mafTreeModel::setHierarchy(mafHierarchy *hierarchy) {
         connect(m_Hierarchy, SIGNAL(itemReparent(QObject*,QObject*)), this, SLOT(itemReparent(QObject*,QObject*)));
         connect(m_Hierarchy, SIGNAL(clearTree()), this, SLOT(clearModel()));
         connect(m_Hierarchy, SIGNAL(destroyed()), this, SLOT(hierarchyDestroyed()));
+        connect(this, SIGNAL(itemSelected(QObject *)), m_Hierarchy, SLOT(moveTreeIteratorToNode(QObject *)));
 
         initialize();
     }
@@ -208,6 +209,7 @@ void mafTreeModel::selectItem(const QItemSelection &selected, const QItemSelecti
         return;
     }
     m_CurrentItem = (mafTreeItem *)this->itemFromIndex(selected.indexes().at(0));
+    Q_EMIT itemSelected(m_CurrentItem->data());
 }
 
 

@@ -54,7 +54,9 @@ public Q_SLOTS:
 Q_SIGNALS:
     /// signal emitted when an item has been added to the hierarchy.
     void itemAdded(QModelIndex index);
-    //void save();
+    
+    /// signal emitted when an item has been selected from the mafTreeView.
+    void itemSelected(QObject *obj);
     
 public:
     /// enum for the type of insertion
