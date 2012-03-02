@@ -273,6 +273,7 @@ mafResources::mafBoundsPointer mafVME::bounds() const{
     if(ds) {
         return ds->bounds();
     }
+    return NULL;
 }
 
 double mafVME::length() {
