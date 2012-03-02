@@ -31,6 +31,26 @@ class MAFCORESHARED_EXPORT mafHierarchy : public mafObject {
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafObject);
 
+public Q_SLOTS:
+    /// Move the tree iterator to the given node
+    void moveTreeIteratorToNode(QObject *node);
+
+Q_SIGNALS:
+        /// Signal emitted when a new item is attached to the hierarchy.
+        void itemAttached(QObject *item, QObject *parent);
+
+        /// Signal emitted when an item is removed form the hierarchy.
+        void itemDetached(QObject *item);
+
+        /// Signal emitted to replace root item.
+        void rootReplaced();
+
+        /// Signal emitted when an item is reparent to another item.
+        void itemReparent(QObject *item, QObject *parent);
+
+        /// Signal emitted when the tree is cleared.
+        void clearTree();
+
 public:
     /// Object constructor.
     mafHierarchy(const QString code_location = "");
@@ -52,9 +72,6 @@ public:
     
     /// if the node has't parent (is root) return false, otherwise true.
     bool hasParent();
-
-    /// Move the tree iterator to the given node
-    void moveTreeIteratorToNode(QObject *node);
 
     /// Move the tree iterator to the indexed child of the current position pointed
     void moveTreeIteratorToNthChild(unsigned int childIndex = 0);
@@ -93,22 +110,6 @@ public:
     The 'deep_memento' flag is used to avoid the copy of the object unique hash in normal operation like
     undo or copy/paste operations. The complete object save is instead needed for serialization pourposes.*/
     /*virtual*/ void setMemento(mafCore::mafMemento *memento, bool deep_memento = false);
-
-Q_SIGNALS:
-    /// Signal emitted when a new item is attached to the hierarchy.
-    void itemAttached(QObject *item, QObject *parent);
-
-    /// Signal emitted when an item is removed form the hierarchy.
-    void itemDetached(QObject *item);
-
-    /// Signal emitted to replace root item.
-    void rootReplaced();
-
-    /// Signal emitted when an item is reparent to another item.
-    void itemReparent(QObject *item, QObject *parent);
-
-    /// Signal emitted when the tree is cleared.
-    void clearTree();
 
 protected:
     /// Object destructor.

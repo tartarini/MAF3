@@ -190,7 +190,15 @@ void mafHierarchy::printInformation(QString &string) {
         mafTreeNode<QObject *> *n = i.simplify().node();
         QObject *obj = n->m_data;
         if(obj != NULL) {
+            if (n->m_parent) {
+                QObject *objParent = n->m_parent->m_data;
+                string.append(objParent->objectName());
+                string.append("->");
+            }
             string.append(obj->objectName());
+            if (m_TreeIterator.node() == n) {
+                string.append("<-current");
+            }
             string.append("\n");
         }
     }
