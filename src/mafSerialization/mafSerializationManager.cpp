@@ -229,11 +229,12 @@ void mafSerializationManager::exportExternalData(mafCore::mafProxyInterface *ext
     char *outputString = codec->encode();
 
     //write binary data
-    stream.writeBytes(outputString, codec->stringSize());
+    stream.writeRawData(outputString, codec->stringSize());
 
     // Finally close the connection.
     ser->closeDevice();
 
+    delete[] outputString;
     mafDEL(codec);
     mafDEL(ser);
 }
@@ -255,10 +256,16 @@ mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const Q
         return NULL;
     }
 
+
+
     QString s = u.scheme();
     QString serializer_type = m_SerializerHash[s];
 
-    qDebug() << u;
+    unsigned int size;
+
+    QFileInfo fileInfo(url);
+    size = fileInfo.size();
+    char *inputString = new char[size+1];
     
     // Create the instance of correct serializer
     mafSerializer *ser = (mafSerializer *)mafNEWFromString(serializer_type);
@@ -267,10 +274,8 @@ mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const Q
     // ... and open the input connection.
     ser->openDevice(mafSerializerOpenModeIn);
 
-    unsigned int size;
-    char * inputString;
     QDataStream stream(ser->ioDevice());
-    stream.readBytes(inputString, size);
+    stream.readRawData(inputString, size);
 
     // Finally close the connection.
     ser->closeDevice();
@@ -282,6 +287,8 @@ mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const Q
     
     m_CurrentExternalDataCodec->setStringSize(size);
     m_CurrentExternalDataCodec->decode(inputString);
+
+    delete[] inputString;
 
     return m_CurrentExternalDataCodec->externalData();
 }
