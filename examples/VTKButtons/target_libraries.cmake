@@ -36,8 +36,10 @@ SET(target_libraries
   mafCore
   mafEventBus
   mafApplicationLogic
-  mafGUI
   mafResources
+  mafSerialization
+  mafScriptInterpreter
+  mafGUI
   ${VTK_LIBRARIES}
   mafPluginVTK
   )
