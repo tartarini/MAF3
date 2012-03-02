@@ -15,11 +15,11 @@
 // Includes list
 #include "mafResourcesDefinitions.h"
 #include <mafReferenceCounted.h>
+#include "mafPoint.h"
 
 namespace mafResources {
 
 ///class forwarding
-class mafPoint;
     
 /**
  Class name: mafBounds
@@ -81,15 +81,21 @@ public:
     /// set the bounds.
     void setBounds(mafBounds *b);
     
-    /// return max diagonal lentgh
+    /// return max diagonal length
     double length();
     
     /// return center of the box
     void center(double c[3]);
 
+    /// Return the center of the bounds as mafPoint.
+     void center(mafPoint &p);
+
     /// Transform bounds applying the pose matrix.
     void transformBounds(mafMatrix *matrix);
     
+    /// dump the description of the object (information, attributes, variables...)
+    /*virtual*/ void description() const;
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafBounds();
