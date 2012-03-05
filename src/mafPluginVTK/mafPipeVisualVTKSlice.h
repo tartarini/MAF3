@@ -34,6 +34,13 @@ class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSlice : public mafPipeVisualVTK 
     Q_OBJECT
     Q_PROPERTY(mafResources::mafPointPointer origin READ origin)
     Q_PROPERTY(mafResources::mafPointPointer normal READ normal)
+    Q_PROPERTY(QString positionValue READ positionValue WRITE setPositionValue)
+    Q_PROPERTY(int positionValueSlider_minimum READ minimum)
+    Q_PROPERTY(int positionValueSlider_maximum READ maximum)
+    Q_PROPERTY(int positionValueSlider_value READ value)
+    
+    
+    
 //     Q_PROPERTY(QString sliceAxes READ sliceAxes WRITE setSliceAxes)
     
     /// typedef macro.
@@ -59,6 +66,31 @@ public Q_SLOTS:
     /// Return the pointer to the normal of the slicing plane.
     mafResources::mafPointPointer normal();
 
+    /// Set contour value from text box.
+    void on_positionValue_textEdited(QString stringValue);
+
+    /// Update pipe when when editing is finished.
+    void on_positionValue_editingFinished();
+
+    /// Set position value from slider.
+    void on_positionValueSlider_sliderMoved(int value);
+
+
+    /// Get contour value;
+    QString positionValue();
+
+    /// Set contour value;
+    void setPositionValue(QString value);
+
+    /// Set minimum of slider.
+    int minimum();
+
+    /// Set maximum of slider.
+    int maximum();
+
+    /// Set Slider postion;
+    int value();
+
     /// Set the slice axes normal to the slicing plane.
 //     QString sliceAxes() const;
 
@@ -71,11 +103,25 @@ protected:
 
     mafResources::mafPoint *m_Normal; ///< Normal of the slicing plane.
     mafResources::mafPoint *m_Origin; ///< Origin of the slicing plane.
+    double m_PositionValue; ///< Position of the slicing plane.
+    double m_Range[2]; ///Contour range.
 };
 
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
+
+inline int mafPipeVisualVTKSlice::minimum() {
+    return m_Range[0];
+}    
+
+inline int mafPipeVisualVTKSlice::maximum() {
+    return m_Range[1];
+}  
+
+inline int mafPipeVisualVTKSlice::value() {
+    return m_PositionValue;
+}  
 
 // inline QString mafPipeVisualVTKSlice::sliceAxes() const {
 //     return QString::number(m_SlicerPipe->planeNormalAxes());
