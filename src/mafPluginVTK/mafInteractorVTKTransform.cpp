@@ -52,6 +52,7 @@ void mafInteractorVTKTransform::mousePress(double *pickPos, unsigned long modifi
     }
     
     m_RenderWindowInteractor->SetInteractorStyle(m_CurrentVTKInteractor);
+    m_CurrentVTKInteractor->StopState();
     m_CurrentVTKInteractor->Register(NULL);
     
     switch(((QMouseEvent *)e)->button()) {
@@ -87,6 +88,7 @@ void mafInteractorVTKTransform::mouseRelease(double *pickPos, unsigned long modi
     }
     
     m_DragObject = false;
+    m_CurrentVTKInteractor->StopState();
 }
 
 void mafInteractorVTKTransform::mouseMove(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {

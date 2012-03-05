@@ -41,6 +41,7 @@ void mafInteractorVTKCamera::mousePress(double *pickPos, unsigned long modifiers
         m_RenderWindowInteractor = w->GetRenderWindow()->GetInteractor();
     }
     m_RenderWindowInteractor->SetInteractorStyle(m_CurrentVTKInteractor);
+    m_CurrentVTKInteractor->StopState();
     m_CurrentVTKInteractor->Register(NULL);
 
     switch(((QMouseEvent *)e)->button()) {
@@ -72,6 +73,7 @@ void mafInteractorVTKCamera::mouseRelease(double *pickPos, unsigned long modifie
         default:
             break;
     }
+    m_CurrentVTKInteractor->StopState();
 }
 
 void mafInteractorVTKCamera::mouseMove(double *pickPos, unsigned long modifiers, mafCore::mafObjectBase *obj, QEvent *e) {
