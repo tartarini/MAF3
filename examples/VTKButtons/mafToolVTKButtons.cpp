@@ -124,25 +124,10 @@ void mafToolVTKButtons::updatePipe(double t) {
     if(vme == NULL) {
         return;
     }
-
     QString vmeName = vme->property("objectName").toString();
-    mafDataSet *data = vme->dataSetCollection()->itemAtCurrentTime();
-    if(data == NULL) {
-        return;
-    }
-    
-    mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
-    if (dataSet == NULL) {
-        return;
-    }
-
-    vtkAlgorithm *producer = (*dataSet)->GetProducer();
-    vtkDataObject *dataObject = producer->GetOutputDataObject(0);
-    vtkDataSet* vtkData = vtkDataSet::SafeDownCast(dataObject);
-    
 
     double b[6];
-    vtkData->GetBounds(b);
+    vme->bounds(b, t);
 
     mafObjectBase *obj = vme;
     //Get absolute pose matrix from mafVMEManager
@@ -151,7 +136,6 @@ void mafToolVTKButtons::updatePipe(double t) {
     argList.append(mafEventArgument(mafCore::mafObjectBase *, obj));
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafResources::mafMatrixPointer, absMatrix);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.absolutePoseMatrix", mafEventTypeLocal, &argList, &ret_val);
-
 
     mafBounds *newBounds = new mafBounds(b);
     newBounds->transformBounds(absMatrix);
@@ -189,10 +173,12 @@ void mafToolVTKButtons::updatePipe(double t) {
 
     rep->PlaceWidget(bds, size);
     m_ButtonWidget->SetRepresentation(rep);
+    m_ButtonWidget->Render();
 
     myCallback->graphicObject = this->m_GraphicObject;
     myCallback->setBounds(newBounds);
     myCallback->setFlyTo(m_FlyTo);
     updatedGraphicObject();
 }
+
 
