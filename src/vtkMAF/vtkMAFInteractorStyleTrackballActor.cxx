@@ -38,6 +38,7 @@ vtkMAFInteractorStyleTrackballActor::vtkMAFInteractorStyleTrackballActor()
 {
   this->MotionFactor    = 10.0;
   this->InteractionAssembly = NULL;
+  this->DefaultRenderer = NULL;
   this->InteractionPicker = vtkCellPicker::New();
   this->InteractionPicker->SetTolerance(0.001);
 }
@@ -45,7 +46,24 @@ vtkMAFInteractorStyleTrackballActor::vtkMAFInteractorStyleTrackballActor()
 //----------------------------------------------------------------------------
 vtkMAFInteractorStyleTrackballActor::~vtkMAFInteractorStyleTrackballActor() 
 {
-  this->InteractionPicker->Delete();
+    SetDefaultRenderer(NULL);
+    this->InteractionPicker->Delete();
+}
+
+//----------------------------------------------------------------------------
+void vtkMAFInteractorStyleTrackballActor::SetDefaultRenderer(vtkRenderer *ren) {
+    if (ren != this->DefaultRenderer) {
+        if (this->DefaultRenderer)
+        {
+            this->DefaultRenderer->UnRegister(NULL);
+        }
+        this->DefaultRenderer = ren;
+        if (this->DefaultRenderer)
+        {
+            this->DefaultRenderer->Register(NULL);
+        }
+        this->SetCurrentRenderer(DefaultRenderer);
+    }
 }
 
 //----------------------------------------------------------------------------
@@ -67,37 +85,29 @@ void vtkMAFInteractorStyleTrackballActor::FindInteractiveRenderer(int x, int y) 
 //----------------------------------------------------------------------------
 void vtkMAFInteractorStyleTrackballActor::OnMouseMove() 
 {
-//  int x = this->Interactor->GetEventPosition()[0];
-//  int y = this->Interactor->GetEventPosition()[1];
-
-  switch (this->State) 
+    switch (this->State) 
     {
     case VTKIS_ROTATE:
-//      this->FindInteractiveRenderer(x, y);
       this->Rotate();
       this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
       break;
 
     case VTKIS_PAN:
-//      this->FindInteractiveRenderer(x, y);
       this->Pan();
-//      this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
+      this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
       break;
 
     case VTKIS_DOLLY:
-//      this->FindInteractiveRenderer(x, y);
       this->Dolly();
       this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
       break;
 
     case VTKIS_SPIN:
-//      this->FindInteractiveRenderer(x, y);
       this->Spin();
       this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
       break;
 
     case VTKIS_USCALE:
-//      this->FindInteractiveRenderer(x, y);
       this->UniformScale();
       this->InvokeEvent(vtkCommand::InteractionEvent, NULL);
       break;
