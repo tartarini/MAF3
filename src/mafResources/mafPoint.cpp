@@ -51,14 +51,25 @@ void mafPoint::pos(double p[3]) {
 
 
 void mafPoint::transformPoint(mafMatrix *matrix) {
-    // Homogeneous transformation
-    double x = matrix->element(0,0)*this->x() + matrix->element(0,1)*this->y() + matrix->element(0,2)*this->z() + matrix->element(0,3);
-    double y = matrix->element(1,0)*this->x() + matrix->element(1,1)*this->y() + matrix->element(1,2)*this->z() + matrix->element(1,3);
-    double z = matrix->element(2,0)*this->x() + matrix->element(2,1)*this->y() + matrix->element(2,2)*this->z() + matrix->element(2,3);
-    double w = matrix->element(3,0)*this->x() + matrix->element(3,1)*this->y() + matrix->element(3,2)*this->z() + matrix->element(3,3);
+    mafMatrix p0(4,1);
+    p0.setElement(0,0, m_X);
+    p0.setElement(1,0, m_Y);
+    p0.setElement(2,0, m_Z);
+    p0.setElement(3,0, 1.);
 
-    double f = 1.0/w;
-    this->setX(x*f); 
-    this->setY(y*f); 
-    this->setZ(z*f);
+    mafMatrix pt0 = (*matrix) * p0;
+    m_X = pt0.element(0, 0);
+    m_Y = pt0.element(1, 0);
+    m_Z = pt0.element(2, 0);
+
+    // Homogeneous transformation
+//     double x = matrix->element(0,0)*this->x() + matrix->element(0,1)*this->y() + matrix->element(0,2)*this->z() + matrix->element(0,3);
+//     double y = matrix->element(1,0)*this->x() + matrix->element(1,1)*this->y() + matrix->element(1,2)*this->z() + matrix->element(1,3);
+//     double z = matrix->element(2,0)*this->x() + matrix->element(2,1)*this->y() + matrix->element(2,2)*this->z() + matrix->element(2,3);
+//     double w = matrix->element(3,0)*this->x() + matrix->element(3,1)*this->y() + matrix->element(3,2)*this->z() + matrix->element(3,3);
+// 
+//     double f = 1.0/w;
+//     this->setX(x*f); 
+//     this->setY(y*f); 
+//     this->setZ(z*f);
 }
