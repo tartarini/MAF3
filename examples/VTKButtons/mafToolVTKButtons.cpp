@@ -160,13 +160,12 @@ void mafToolVTKButtons::updatePipe(double t) {
     //modify position of the vtkButton 
     double bds[3];
     if (m_OnCenter) {
-        //on the center of the bounding box of the VME.
-        bds[0] = (newBounds->xMin() + newBounds->xMax()) / 2;
-        bds[1] = (newBounds->yMin() + newBounds->yMax()) / 2;
-        bds[2] = (newBounds->zMin() + newBounds->zMax()) / 2;
+        newBounds->center(bds);
     } else {
         //on the corner of the bounding box of the VME.
-        bds[0] = newBounds->xMin(); bds[1] = newBounds->yMin(); bds[2] = newBounds->zMin();
+        bds[0] = newBounds->xMin();
+        bds[1] = newBounds->yMin(); 
+        bds[2] = newBounds->zMin();
     }
 
     int size[2]; size[0] = 25; size[1] = 45;

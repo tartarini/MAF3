@@ -173,6 +173,7 @@ void mafDataSetCollection::synchronizeItemWithPose(const mafMatrix &matrix, doub
         return;
     }
     *m = matrix;
+    setModified();
 }
 
 mafMatrix *mafDataSetCollection::poseMatrix(double t) {
