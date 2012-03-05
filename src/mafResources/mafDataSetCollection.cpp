@@ -95,7 +95,6 @@ void mafDataSetCollection::setOrientation(double rx, double ry, double rz, doubl
     }
     // Write the orientation into the found matrix.
     writeOrientation(rx, ry, rz, m);
-//    Q_EMIT modifiedObject();
     setModified();
 }
 
@@ -140,7 +139,6 @@ void mafDataSetCollection::setPosition(double x, double y, double z, double t) {
     }
     // Write the position vector into the found matrix.
     writePosition(x, y, z, m);
-//    Q_EMIT modifiedObject();
     setModified();
 }
 
