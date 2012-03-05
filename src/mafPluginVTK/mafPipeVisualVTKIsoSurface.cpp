@@ -32,7 +32,7 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace std;
 
-mafPipeVisualVTKIsoSurface::mafPipeVisualVTKIsoSurface(const QString code_location) : mafPipeVisualVTK(code_location), m_Mapper(NULL), m_ContourFilter(NULL), m_ContourValue(1000) {
+mafPipeVisualVTKIsoSurface::mafPipeVisualVTKIsoSurface(const QString code_location) : mafPipeVisualVTK(code_location), m_Mapper(NULL), m_ContourFilter(NULL), m_ContourValue(NULL) {
     m_UIFilename = "mafPipeVisualIsoSurface.ui";
 
     m_ContourFilter = vtkContourFilter::New();
@@ -73,7 +73,7 @@ void mafPipeVisualVTKIsoSurface::updatePipe(double t) {
     vtkDataSet* vtkData = vtkDataSet::SafeDownCast(dataObject);
     vtkData->GetScalarRange(m_Range);
 
-    if (m_ContourFilter == NULL) {
+    if (m_ContourValue == NULL) {
         m_ContourValue = (m_Range[1] - m_Range[0])/2;
     }
 
@@ -108,7 +108,7 @@ void mafPipeVisualVTKIsoSurface::on_contourValue_editingFinished() {
     updatePipe();
 }
 
-void mafPipeVisualVTKIsoSurface::on_contourValueSlider_valueChanged(int value) {
+void mafPipeVisualVTKIsoSurface::on_contourValueSlider_sliderMoved(int value) {
     m_ContourValue = value;
     updateUI(widget());
 }

@@ -58,7 +58,7 @@ public Q_SLOTS:
     void on_contourValue_editingFinished();
 
     /// Set contour value from slider.
-    void on_contourValueSlider_valueChanged(int value);
+    void on_contourValueSlider_sliderMoved(int value);
 
     /// Update pipe when slider is released.
     void on_contourValueSlider_sliderReleased();
