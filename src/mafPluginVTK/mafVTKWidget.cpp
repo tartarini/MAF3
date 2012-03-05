@@ -80,7 +80,7 @@ void mafVTKWidget::setCameraParameters(double position[3], double focalPoint[3],
     camera->SetViewUp(viewUp);
 }
 
-void mafPluginVTK::mafVTKWidget::initializeLayers() {
+void mafVTKWidget::initializeLayers() {
     vtkRenderWindow *renWin = GetRenderWindow();
     // Set the number of layers for the render window.
     //renWin->SetNumberOfLayers(2);
