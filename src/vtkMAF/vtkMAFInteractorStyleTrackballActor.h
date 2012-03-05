@@ -75,6 +75,8 @@ public:
   virtual void UniformScale();
 
   vtkAssembly *GetInteractionAssembly();
+
+  /*virtual*/ void SetDefaultRenderer(vtkRenderer *ren);
     
 protected:
   vtkMAFInteractorStyleTrackballActor();
