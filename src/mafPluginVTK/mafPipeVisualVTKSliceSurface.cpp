@@ -89,4 +89,5 @@ void mafPipeVisualVTKSliceSurface::updatePipe(double t) {
 
     vtkActor *actor = vtkActor::SafeDownCast(m_Prop3D);
     actor->GetProperty()->SetLineWidth(m_Thickness);
+    updatedGraphicObject();
 }

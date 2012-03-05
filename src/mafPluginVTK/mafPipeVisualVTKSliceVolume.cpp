@@ -91,4 +91,5 @@ void mafPipeVisualVTKSliceVolume::updatePipe(double t) {
     m_Mapper->SetInputConnection(*data);
 
     vtkActor *actor = vtkActor::SafeDownCast(m_Prop3D);
+    updatedGraphicObject();
 }
