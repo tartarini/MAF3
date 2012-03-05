@@ -151,7 +151,7 @@ void mafToolVTKButtons::updatePipe(double t) {
         //Set label position
         rep->GetBalloon()->SetBalloonLayoutToImageLeft();
 
-        //This method allows to set opacity of the background od the label
+        //This method allows to set the labe's background opacity
         rep->GetBalloon()->GetFrameProperty()->SetOpacity(0.65);
     } else {
         rep->GetBalloon()->SetBalloonText("");
@@ -171,8 +171,8 @@ void mafToolVTKButtons::updatePipe(double t) {
     int size[2]; size[0] = 25; size[1] = 45;
 
     rep->PlaceWidget(bds, size);
+    rep->Modified();
     m_ButtonWidget->SetRepresentation(rep);
-    m_ButtonWidget->Render();
 
     myCallback->graphicObject = this->m_GraphicObject;
     myCallback->setBounds(newBounds);
