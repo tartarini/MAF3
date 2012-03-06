@@ -211,8 +211,6 @@ mafCore::mafHierarchyPointer mafVMEManager::newVMEHierarchy() {
 mafMatrixPointer mafVMEManager::absolutePoseMatrix(mafCore::mafObjectBase *vme) {
     //calculate absolute matrix navigating hierarchy from leaf to root and compose the absolute pose matrix 
     //for vme.
-    
-    mafMatrix *matrixRoot = qobject_cast<mafVME *>(m_Root)->dataSetCollection()->itemAtCurrentTime()->poseMatrix();
     mafMatrix *matrix = qobject_cast<mafVME *>(vme)->dataSetCollection()->itemAtCurrentTime()->poseMatrix();
     mafMatrix *result = matrix->clone();
     
