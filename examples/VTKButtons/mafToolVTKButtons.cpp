@@ -151,7 +151,7 @@ void mafToolVTKButtons::updatePipe(double t) {
         //Set label position
         rep->GetBalloon()->SetBalloonLayoutToImageLeft();
 
-        //This method allows to set the labe's background opacity
+        //This method allows to set the label's background opacity
         rep->GetBalloon()->GetFrameProperty()->SetOpacity(0.65);
     } else {
         rep->GetBalloon()->SetBalloonText("");
