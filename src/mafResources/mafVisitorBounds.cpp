@@ -29,7 +29,6 @@ void mafVisitorBounds::visit(mafObjectBase *object) {
     if (boundsProp.isValid()) {
         mafBounds *b = boundsProp.value<mafBoundsPointer>();
         if(m_AbsolutePoseFlag) {
-            
             mafMatrixPointer absMatrix = NULL;
             mafEventArgumentsList argList;
             argList.append(mafEventArgument(mafCore::mafObjectBase *, object));
@@ -37,11 +36,14 @@ void mafVisitorBounds::visit(mafObjectBase *object) {
             mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.absolutePoseMatrix", mafEventTypeLocal, &argList, &ret_val);
             
             qDebug() << object->objectName();
-            //absMatrix->description();
-            //b->transformBounds(absMatrix);
+            b->transformBounds(absMatrix);
+            b->description();
+            delete absMatrix;
+            absMatrix = NULL;
         }
         
         if(m_Bounds == NULL) {
+            qDebug() << "New bounds...";
             m_Bounds = new mafBounds();
             m_Bounds->setBounds(b);
         }
