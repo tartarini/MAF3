@@ -198,7 +198,7 @@ void mafDataSetCollectionTest::collectionSynchronizePoseTest() {
     m_Collection->synchronizeItemWithPose(m);
     
     res = m_PoseObserver->isModified();
-    QVERIFY(!res);
+    QVERIFY(res);
 }
 
 void mafDataSetCollectionTest::collectionInsertItemTest() {
