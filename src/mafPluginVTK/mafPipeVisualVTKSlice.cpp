@@ -75,10 +75,8 @@ void mafPipeVisualVTKSlice::updatePipe(double t) {
 
     //To use double values with QSlider, creates a number of steps in function
     //of range of Z bounds
-    //int steps = (abs(b[4]) + abs(b[5]))*100;
-    int steps = (b[5]-b[4])*100;
     m_Range[0] = 0;
-    m_Range[1] = steps*100; 
+    m_Range[1] = (b[5]-b[4])*100; 
 
     if (m_SliderPosition == NULL && m_PositionValue == NULL){
         m_SliderPosition = m_Range[1] / 2.;
@@ -121,7 +119,7 @@ void mafPipeVisualVTKSlice::on_positionValue_editingFinished() {
     zMin = vme->dataSetCollection()->itemAtCurrentTime()->bounds()->zMin();
     zMax = vme->dataSetCollection()->itemAtCurrentTime()->bounds()->zMax();
 
-    m_SliderPosition =   (m_PositionValue-zMin)/(zMax-zMin)*m_Range[1];
+    m_SliderPosition = (m_PositionValue-zMin)/(zMax-zMin)*m_Range[1];
     mafPoint *originPoint = new mafPoint(xMin, yMin, m_PositionValue);
     
     setSlice(originPoint);
