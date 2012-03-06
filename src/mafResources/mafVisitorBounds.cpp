@@ -11,11 +11,13 @@
 
 #include "mafVisitorBounds.h"
 #include <mafObjectFactory.h>
+#include <mafEventBusManager.h>
 
 using namespace mafCore;
+using namespace mafEventBus;
 using namespace mafResources;
 
-mafVisitorBounds::mafVisitorBounds(const QString code_location) : m_Bounds(NULL), mafVisitor(code_location) {
+mafVisitorBounds::mafVisitorBounds(const QString code_location) : m_Bounds(NULL), m_AbsolutePoseFlag(false), mafVisitor(code_location) {
 }
 
 mafVisitorBounds::~mafVisitorBounds() {
@@ -26,6 +28,19 @@ void mafVisitorBounds::visit(mafObjectBase *object) {
     QVariant boundsProp = object->property("bounds");
     if (boundsProp.isValid()) {
         mafBounds *b = boundsProp.value<mafBoundsPointer>();
+        if(m_AbsolutePoseFlag) {
+            
+            mafMatrixPointer absMatrix = NULL;
+            mafEventArgumentsList argList;
+            argList.append(mafEventArgument(mafCore::mafObjectBase *, object));
+            QGenericReturnArgument ret_val = mafEventReturnArgument(mafResources::mafMatrixPointer, absMatrix);
+            mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.absolutePoseMatrix", mafEventTypeLocal, &argList, &ret_val);
+            
+            qDebug() << object->objectName();
+            //absMatrix->description();
+            //b->transformBounds(absMatrix);
+        }
+        
         if(m_Bounds == NULL) {
             m_Bounds = new mafBounds();
             m_Bounds->setBounds(b);

@@ -38,17 +38,33 @@ public:
 	/// Return the calculated bounds.
 	mafResources::mafBounds *bounds() const;
     
+    /// modify the criteria of calculate the bounds using the absolute position.
+    void setAbsolutePoseFlag(bool flag);
+
+    /// retrieve absolute pose flag.
+    bool getAbsolutePoseFlag();
+    
 protected:
     /// Object destructor.
     /* virtual */ ~mafVisitorBounds();
 
 private:
 	mafResources::mafBounds *m_Bounds; ///< Store the calculated bounds.
+    bool m_AbsolutePoseFlag;
 };
 
 inline mafResources::mafBounds *mafVisitorBounds::bounds() const {
 	return m_Bounds;
 }
+    
+inline void mafVisitorBounds::setAbsolutePoseFlag(bool flag) {
+    m_AbsolutePoseFlag = flag;
+}
+
+inline bool mafVisitorBounds::getAbsolutePoseFlag() {
+    return m_AbsolutePoseFlag;
+}
+    
 
 } //end namespace mafResources
 
