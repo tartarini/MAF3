@@ -96,9 +96,11 @@ void mafInteractorVTKTransform::mouseMove(double *pickPos, unsigned long modifie
     
     mafResources::mafVME *vme = qobject_cast<mafResources::mafVME*>(obj);
     if(vme == NULL) {
+        qWarning() << mafTr("No VME attached to the interactor...");
         return;
     }
     
+    m_RenderWindowInteractor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCameraClippingRange();
     m_RenderWindowInteractor->InvokeEvent(vtkCommand::MouseMoveEvent, e);
     vtkAssembly *assembly = m_CurrentVTKInteractor->GetInteractionAssembly();
     vtkMatrix4x4 *m = assembly->GetMatrix();
