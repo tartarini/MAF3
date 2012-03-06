@@ -76,7 +76,7 @@ void mafPipeVisualVTKSlice::updatePipe(double t) {
     //To use double values with QSlider, creates a number of steps in function
     //of range of Z bounds
     m_Range[0] = 0;
-    m_Range[1] = (b[5]-b[4])*100; 
+    m_Range[1] = (b[5]-b[4])*1000; 
 
     if (m_SliderPosition == NULL && m_PositionValue == NULL){
         m_SliderPosition = m_Range[1] / 2.;
