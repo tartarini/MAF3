@@ -103,7 +103,7 @@ protected:
 
     mafResources::mafPoint *m_Normal; ///< Normal of the slicing plane.
     mafResources::mafPoint *m_Origin; ///< Origin of the slicing plane.
-    double m_PositionValue; ///< Position of the slicing plane.
+    int m_PositionValue; ///< Position of the slicing plane.
     double m_Range[2]; ///Contour range.
 };
 
