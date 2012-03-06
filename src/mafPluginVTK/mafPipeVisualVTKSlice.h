@@ -103,8 +103,9 @@ protected:
 
     mafResources::mafPoint *m_Normal; ///< Normal of the slicing plane.
     mafResources::mafPoint *m_Origin; ///< Origin of the slicing plane.
-    int m_PositionValue; ///< Position of the slicing plane.
+    int m_SliderPosition; ///< Position on the slider widget.
     double m_Range[2]; ///Contour range.
+    double m_PositionValue; ///< Position of the slicing plane
 };
 
 /////////////////////////////////////////////////////////////
@@ -120,7 +121,7 @@ inline int mafPipeVisualVTKSlice::maximum() {
 }  
 
 inline int mafPipeVisualVTKSlice::value() {
-    return m_PositionValue;
+    return m_SliderPosition;
 }  
 
 // inline QString mafPipeVisualVTKSlice::sliceAxes() const {

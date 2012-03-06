@@ -21,7 +21,7 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 
 
-mafPipeVisualVTKSlice::mafPipeVisualVTKSlice(const QString code_location) : mafPipeVisualVTK(code_location), m_PositionValue(NULL) {
+mafPipeVisualVTKSlice::mafPipeVisualVTKSlice(const QString code_location) : mafPipeVisualVTK(code_location), m_SliderPosition(NULL), m_PositionValue(NULL) {
     m_UIFilename = "mafPipeVisualSlice.ui";
     m_Origin = NULL;
     m_Normal = NULL;
@@ -73,16 +73,16 @@ void mafPipeVisualVTKSlice::updatePipe(double t) {
     mafVME *vme = input();
     vme->bounds(b, t);
 
-    //m_Range[0] = b[4];
-    //m_Range[1] = b[5];
-
-    //set m_Range form 0 to maximum step of QSlider 
-    int steps = (abs(b[4]) + abs(b[5]))*100;
+    //To use double values with QSlider, creates a number of steps in function
+    //of range of Z bounds
+    //int steps = (abs(b[4]) + abs(b[5]))*100;
+    int steps = (b[5]-b[4])*100;
     m_Range[0] = 0;
     m_Range[1] = steps*100; 
 
-    if (m_PositionValue == NULL){
-        m_PositionValue = m_Range[1] / 2.;
+    if (m_SliderPosition == NULL && m_PositionValue == NULL){
+        m_SliderPosition = m_Range[1] / 2.;
+        m_PositionValue = (b[5]-b[4])*(m_SliderPosition/m_Range[1])+b[4];
     }
     
     if (m_Origin == NULL) {
@@ -101,7 +101,6 @@ void mafPipeVisualVTKSlice::setNormal(mafResources::mafPointPointer n) {
     *m_Normal = *n;
 }
 
-
 QString mafPipeVisualVTKSlice::positionValue() {
     return QString::number(m_PositionValue);
 }
@@ -115,13 +114,16 @@ void mafPipeVisualVTKSlice::on_positionValue_textEdited(QString stringValue) {
 }
 
 void mafPipeVisualVTKSlice::on_positionValue_editingFinished() {
-    double xMin;
-    double yMin;
+    double xMin,yMin, zMax, zMin;
     mafVME *vme = input();
     xMin = vme->dataSetCollection()->itemAtCurrentTime()->bounds()->xMin();
     yMin = vme->dataSetCollection()->itemAtCurrentTime()->bounds()->yMin();
+    zMin = vme->dataSetCollection()->itemAtCurrentTime()->bounds()->zMin();
+    zMax = vme->dataSetCollection()->itemAtCurrentTime()->bounds()->zMax();
 
+    m_SliderPosition =   (m_PositionValue-zMin)/(zMax-zMin)*m_Range[1];
     mafPoint *originPoint = new mafPoint(xMin, yMin, m_PositionValue);
+    
     setSlice(originPoint);
     updateUI(widget());
     updatePipe();
@@ -131,20 +133,17 @@ void mafPipeVisualVTKSlice::on_positionValue_editingFinished() {
 }
 
 void mafPipeVisualVTKSlice::on_positionValueSlider_sliderMoved(int value) {
-    m_PositionValue = value;
+    m_SliderPosition = value;
 
-    double xMin;
-    double yMin;
-    double zMax, zMin;
+    double xMin,yMin, zMax, zMin;
     mafVME *vme = input();
     xMin = vme->dataSetCollection()->itemAtCurrentTime()->bounds()->xMin();
     yMin = vme->dataSetCollection()->itemAtCurrentTime()->bounds()->yMin();
     zMin = vme->dataSetCollection()->itemAtCurrentTime()->bounds()->zMin();
     zMax = vme->dataSetCollection()->itemAtCurrentTime()->bounds()->zMax();
 
-    //double slicePos = (zMin+zMax)*(value/m_Range[1])+zMin;
-    double slicePos = (zMax-zMin)*(value/m_Range[1])+zMin;
-    mafPoint *originPoint = new mafPoint(xMin, yMin, slicePos);
+    m_PositionValue = (zMax-zMin)*(m_SliderPosition/m_Range[1])+zMin;
+    mafPoint *originPoint = new mafPoint(xMin, yMin, m_PositionValue);
     setSlice(originPoint);
     updatePipe();
     updateUI(widget());
