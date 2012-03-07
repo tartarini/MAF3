@@ -124,7 +124,7 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
     /// update total visible bounds
     mafVisitorBounds *v = new mafVisitorBounds();
     v->setAbsolutePoseFlag(true);
-//     mafObjectRegistry::instance()->applyVisitorToObjectListThreaded(v, &m_VisibleVMEsList);
+//    mafObjectRegistry::instance()->applyVisitorToObjectListThreaded(v, &m_VisibleVMEsList);
     mafObjectRegistry::instance()->applyVisitorToObjectList(v, &m_VisibleVMEsList);
     
     mafBounds *bounds = v->bounds();
