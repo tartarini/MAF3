@@ -138,7 +138,11 @@ void mafToolVTKButtons::updatePipe(double t) {
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.absolutePoseMatrix", mafEventTypeLocal, &argList, &ret_val);
 
     mafBounds *newBounds = new mafBounds(b);
-    newBounds->transformBounds(absMatrix);
+    if (absMatrix) {
+        newBounds->transformBounds(absMatrix);
+        delete absMatrix;
+        absMatrix = NULL;
+    }
 
     vtkTexturedButtonRepresentation2D *rep = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(m_ButtonWidget->GetRepresentation());
     if (m_ShowLabel) {
