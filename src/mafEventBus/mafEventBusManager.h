@@ -3,9 +3,9 @@
  *  mafEventBus
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2009-2011 B3C. All rights reserved.
+ *  Copyright 2009-2012 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -36,7 +36,7 @@ public:
     static mafEventBusManager *instance();
 
     /// Add a new event property (observer or event) to the event bus hash.
-    /** Return true if observer has beed added correctly, false otherwise.
+    /** Return true if observer has been added correctly, false otherwise.
     This method check before adding a new observer that it has not already been inserted into the events' Hash with the same id and callback signature.*/
     bool addEventProperty(const mafEvent &props) const;
 
@@ -59,12 +59,12 @@ public:
     void notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList = NULL, QGenericReturnArgument *returnArg = NULL) const;
 
     /// Notify event associated to the given id locally to the application.
-    void notifyEvent(const QString topic, mafEventType ev_type = mafEventTypeLocal, mafEventArgumentsList *argList = NULL, QGenericReturnArgument *returnArg = NULL) const;
+    void notifyEvent(const QString topic, mafEventType ev_type = mafEventTypeLocal, mafEventArgumentsList *argList = NULL, QGenericReturnArgument *returnArg = NULL, bool synch = true) const;
 
     /// Enable/Disable event logging to allow dumping events notification into the selected logging output stream.
     void enableEventLogging(bool enable = true);
 
-    /// When logging is enabled, allows logging events releted to specific id (require a valid topic).
+    /// When logging is enabled, allows logging events related to specific id (require a valid topic).
     void logEventTopic(const QString topic);
 
     /// When enabled, allows logging all events. It reset the value for m_LogEventId to -1 (the default)
@@ -92,7 +92,7 @@ public:
     bool createClient(const QString &communication_protocol, const QString &server_host, unsigned int port);
 
 public Q_SLOTS:
-    /// Intercepts objects deletation and detach them from the event bus.
+    /// Intercepts objects deletion and detach them from the event bus.
     void detachObjectFromBus();
 
 private:
