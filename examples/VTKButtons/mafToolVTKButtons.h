@@ -75,6 +75,7 @@ protected:
 private:
     vtkButtonWidget *m_ButtonWidget; ///< VTK button widget
     vtkButtonCallback *myCallback; ///< Callback called by picking on vtkButton
+    QString m_IconFileName; ///< File name of the imahe to be applied to the button.
     bool m_ShowButton; ///< Flag to show/hide button
     bool m_ShowLabel; ///< Flag to show/hide label
     bool m_FlyTo; ///< Flag to activate FlyTo animation

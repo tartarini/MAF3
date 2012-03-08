@@ -79,7 +79,6 @@ public:
 };
 
 mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location), m_ShowLabel(true), m_FlyTo(true), m_OnCenter(false) {
-
     bool loaded = false;
     VTK_CREATE(vtkTexturedButtonRepresentation2D, rep);
     rep->SetNumberOfStates(1);
@@ -127,19 +126,18 @@ void mafToolVTKButtons::updatePipe(double t) {
     if(vme == NULL) {
         return;
     }
-    QString vmeName = vme->property("objectName").toString();
-
-    double b[6];
-    vme->bounds(b, t);
-
-    mafObjectBase *obj = vme;
+    
     //Get absolute pose matrix from mafVMEManager
+    mafObjectBase *obj = vme;
     mafMatrixPointer absMatrix = NULL;
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase *, obj));
     QGenericReturnArgument ret_val = mafEventReturnArgument(mafResources::mafMatrixPointer, absMatrix);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.absolutePoseMatrix", mafEventTypeLocal, &argList, &ret_val);
 
+    //Transform bounds with absMatrix
+    double b[6];
+    vme->bounds(b, t);
     mafBounds *newBounds = new mafBounds(b);
     if (absMatrix) {
         newBounds->transformBounds(absMatrix);
@@ -149,20 +147,24 @@ void mafToolVTKButtons::updatePipe(double t) {
 
     vtkTexturedButtonRepresentation2D *rep = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(m_ButtonWidget->GetRepresentation());
 
-    QImage image;
-    QString iconType = vme->property("iconType").toString();
-    QString iconFileName = mafIconFromObjectType(iconType);
-    image.load(iconFileName);
-    VTK_CREATE(vtkQImageToImageSource, imageToVTK);
-    imageToVTK->SetQImage(&image);
-    imageToVTK->Update();
-    rep->SetButtonTexture(0, imageToVTK->GetOutput());
+    //Load image only the one time
+    if (m_IconFileName.isEmpty()) {
+        QImage image;
+        QString iconType = vme->property("iconType").toString();
+        m_IconFileName = mafIconFromObjectType(iconType);
+        image.load(m_IconFileName);
+        VTK_CREATE(vtkQImageToImageSource, imageToVTK);
+        imageToVTK->SetQImage(&image);
+        imageToVTK->Update();
+        rep->SetButtonTexture(0, imageToVTK->GetOutput());
+    }
 
     int size[2]; size[0] = 16; size[1] = 16;
     rep->GetBalloon()->SetImageSize(size);
 
     if (m_ShowLabel) {
         //Add a label to the button and change its text property
+        QString vmeName = vme->property("objectName").toString();
         rep->GetBalloon()->SetBalloonText(vmeName.toAscii());
         vtkTextProperty *textProp = rep->GetBalloon()->GetTextProperty();
         rep->GetBalloon()->SetPadding(2);
