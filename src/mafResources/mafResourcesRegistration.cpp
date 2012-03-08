@@ -74,6 +74,10 @@ void mafResourcesRegistration::registerResourcesObjects() {
     qRegisterMetaType<mafExecutionPoolPointer>("mafExecutionPoolPointer");
     qRegisterMetaType<mafResources::mafPointPointer>("mafResources::mafPointPointer");
     qRegisterMetaType<mafResources::mafBoundsPointer>("mafResources::mafBoundsPointer");
+
+    //Associate icon file name to object
+    mafBindObjectToIcon("mafRoot", ":/images/root.png");
+
 }
 
 void mafResourcesRegistration::unregisterResourcesObjects() {

@@ -90,6 +90,10 @@ mafPluginRegistrator::mafPluginRegistrator() {
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafToolVTKSelection);
     mafRegisterObject(mafPluginVTK::mafToolVTKAxes);
     mafRegisterObject(mafPluginVTK::mafToolVTKPlane);
+
+    //Associate icon to object
+    mafBindObjectToIcon("mafVMESurfaceVTK", ":/images/surface.png");
+    mafBindObjectToIcon("mafVMEVolumeVTK", ":/images/volume.png");
 }
 
 mafPluginRegistrator::~mafPluginRegistrator() {
