@@ -157,27 +157,82 @@ void mafBounds::transformBounds(mafMatrix *matrix) {
     if (matrix == NULL) {
         return;
     }
+
+    mafMatrix boundsMatrix(4, 8);
+
     mafMatrix p0(4,1);
     p0.setElement(0,0, m_XMin);
     p0.setElement(1,0, m_YMin);
     p0.setElement(2,0, m_ZMin);
     p0.setElement(3,0, 1.);
+    boundsMatrix.setColumn(p0, 0);
 
     mafMatrix p1(4,1);
     p1.setElement(0,0, m_XMax);
-    p1.setElement(1,0, m_YMax);
-    p1.setElement(2,0, m_ZMax);
+    p1.setElement(1,0, m_YMin);
+    p1.setElement(2,0, m_ZMin);
     p1.setElement(3,0, 1.);
-    
-    mafMatrix pt0 = (*matrix) * p0;
-    mafMatrix pt1 = (*matrix) * p1;
+    boundsMatrix.setColumn(p1, 1);
 
-    m_XMin = pt0.element(0, 0);
-    m_YMin = pt0.element(1, 0);
-    m_ZMin = pt0.element(2, 0);
-    m_XMax = pt1.element(0, 0);
-    m_YMax = pt1.element(1, 0);
-    m_ZMax = pt1.element(2, 0);
+    mafMatrix p2(4,1);
+    p2.setElement(0,0, m_XMax);
+    p2.setElement(1,0, m_YMax);
+    p2.setElement(2,0, m_ZMin);
+    p2.setElement(3,0, 1.);
+    boundsMatrix.setColumn(p2, 2);
+
+    mafMatrix p3(4,1);
+    p3.setElement(0,0, m_XMin);
+    p3.setElement(1,0, m_YMax);
+    p3.setElement(2,0, m_ZMin);
+    p3.setElement(3,0, 1.);
+    boundsMatrix.setColumn(p3, 3);
+
+    mafMatrix p4(4,1);
+    p4.setElement(0,0, m_XMin);
+    p4.setElement(1,0, m_YMin);
+    p4.setElement(2,0, m_ZMax);
+    p4.setElement(3,0, 1.);
+    boundsMatrix.setColumn(p4, 4);
+
+    mafMatrix p5(4,1);
+    p5.setElement(0,0, m_XMax);
+    p5.setElement(1,0, m_YMin);
+    p5.setElement(2,0, m_ZMax);
+    p5.setElement(3,0, 1.);
+    boundsMatrix.setColumn(p5, 5);
+
+    mafMatrix p6(4,1);
+    p6.setElement(0,0, m_XMax);
+    p6.setElement(1,0, m_YMax);
+    p6.setElement(2,0, m_ZMax);
+    p6.setElement(3,0, 1.);
+    boundsMatrix.setColumn(p6, 6);
+
+    mafMatrix p7(4,1);
+    p7.setElement(0,0, m_XMin);
+    p7.setElement(1,0, m_YMax);
+    p7.setElement(2,0, m_ZMax);
+    p7.setElement(3,0, 1.);
+    boundsMatrix.setColumn(p7, 7);
+
+    mafMatrix transformedBounds = (*matrix) * boundsMatrix;
+
+    m_XMax = m_XMin = transformedBounds.element(0, 0);
+    m_YMax = m_YMin = transformedBounds.element(1, 0);
+    m_ZMax = m_ZMin = transformedBounds.element(2, 0);
+    double x, y, z;
+    for (int i = 1; i < 8; ++i) {
+        x = transformedBounds.element(0, i);
+        m_XMin = x < m_XMin ? x : m_XMin;
+        m_XMax = x > m_XMax ? x : m_XMax;
+        y = transformedBounds.element(1, i);
+        m_YMin = y < m_YMin ? y : m_YMin;
+        m_YMax = y > m_YMax ? y : m_YMax;
+        z = transformedBounds.element(2, i);
+        m_ZMin = z < m_ZMin ? z : m_ZMin;
+        m_ZMax = z > m_ZMax ? z : m_ZMax;
+    }
 }
 
 void mafBounds::description() const {
