@@ -62,6 +62,9 @@ private Q_SLOTS:
     /// smart pointer creation test case.
     void instantiateSmartObjectTest();
 
+    /// smart pointer creation test case.
+    void bindObjectToIconTest();
+
 private:
 };
 
@@ -131,6 +134,19 @@ void mafObjectFactoryTest::instantiateSmartObjectTest() {
     mafRegisterObject(mafCore::mafObjectBase);
     mafSmartPointer<mafObjectBase> obj = mafCreateSmartObject(mafCore::mafObjectBase);
     QVERIFY(obj.isNull() == false);
+}
+
+void mafObjectFactoryTest::bindObjectToIconTest() {
+    // Bind an object type with a file name
+    QString objectType = "mafTestType";
+    QString testFileName = "testFileName";
+
+    mafBindObjectToIcon(objectType, testFileName);
+
+    // Verify if the bind has worked, getting the file name form object type
+    QString returnFileName = mafIconFromObjectType(objectType);
+
+    QVERIFY(testFileName.compare(returnFileName) == 0);
 }
 
 MAF_REGISTER_TEST(mafObjectFactoryTest);
