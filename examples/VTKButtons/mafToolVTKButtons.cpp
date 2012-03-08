@@ -25,6 +25,7 @@
 #include <vtkTextProperty.h>
 #include <vtkProperty2D.h>
 #include <vtkRenderer.h>
+#include <vtkRenderWindow.h>
 
 #include <vtkButtonWidget.h>
 #include <vtkEllipticalButtonSource.h>
@@ -81,23 +82,26 @@ public:
 mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location), m_ShowLabel(true), m_FlyTo(true), m_OnCenter(false) {
 
     bool loaded = false;
-    // Create an image for the button
-    QImage image;
-    
-    QString pathStr = QDir::currentPath();
-    loaded = image.load(pathStr + "/" + "buttonIcon.png");
-
-    if (!loaded) {
-        image.load(":/images/buttonIcon.png");
-    }
-
-    VTK_CREATE(vtkQImageToImageSource, imageToVTK2);
-    imageToVTK2->SetQImage(&image);
-    imageToVTK2->Update();
-
     VTK_CREATE(vtkTexturedButtonRepresentation2D, rep);
     rep->SetNumberOfStates(1);
-    rep->SetButtonTexture(0, imageToVTK2->GetOutput());
+
+    // Decomment this code to use a standard circle icon 
+    // Create an image for the button
+//     QImage image;
+//     
+//     QString pathStr = QDir::currentPath();
+//     loaded = image.load(pathStr + "/" + "buttonIcon.png");
+// 
+//     if (!loaded) {
+//         image.load(":/images/buttonIcon.png");
+//     }
+// 
+//     VTK_CREATE(vtkQImageToImageSource, imageToVTK2);
+//     imageToVTK2->SetQImage(&image);
+//     imageToVTK2->Update();
+
+
+    //rep->SetButtonTexture(0, imageToVTK2->GetOutput());
     myCallback = vtkButtonCallback::New();
 
     m_ButtonWidget = vtkButtonWidget::New();
@@ -141,15 +145,31 @@ void mafToolVTKButtons::updatePipe(double t) {
     newBounds->transformBounds(absMatrix);
 
     vtkTexturedButtonRepresentation2D *rep = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(m_ButtonWidget->GetRepresentation());
+
+    QImage image;
+    QString iconType = vme->property("iconType").toString();
+    QString iconFileName = mafIconFromObjectType(iconType);
+    image.load(iconFileName);
+    VTK_CREATE(vtkQImageToImageSource, imageToVTK);
+    imageToVTK->SetQImage(&image);
+    imageToVTK->Update();
+    rep->SetButtonTexture(0, imageToVTK->GetOutput());
+
+    int size[2]; size[0] = 16; size[1] = 16;
+    rep->GetBalloon()->SetImageSize(size);
+
     if (m_ShowLabel) {
         //Add a label to the button and change its text property
         rep->GetBalloon()->SetBalloonText(vmeName.toAscii());
         vtkTextProperty *textProp = rep->GetBalloon()->GetTextProperty();
-        textProp->SetFontSize(12);
+        rep->GetBalloon()->SetPadding(2);
+        textProp->SetFontSize(13);
+        textProp->BoldOff();
         //textProp->SetColor(0.9,0.9,0.9);
 
         //Set label position
         rep->GetBalloon()->SetBalloonLayoutToImageLeft();
+        
 
         //This method allows to set the label's background opacity
         rep->GetBalloon()->GetFrameProperty()->SetOpacity(0.65);
@@ -167,8 +187,6 @@ void mafToolVTKButtons::updatePipe(double t) {
         bds[1] = newBounds->yMin(); 
         bds[2] = newBounds->zMin();
     }
-
-    int size[2]; size[0] = 25; size[1] = 45;
 
     rep->PlaceWidget(bds, size);
     rep->Modified();
