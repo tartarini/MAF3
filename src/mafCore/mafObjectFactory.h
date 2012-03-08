@@ -70,6 +70,12 @@
 #define mafCreateSmartObject(maf_object_type) \
     mafCore::mafObjectFactory::instance()->instantiateSmartObject<maf_object_type>(#maf_object_type);
 
+#define mafBindObjectToIcon(objectType, iconFileName) \
+    mafCore::mafObjectFactory::instance()->bindObjectToIcon(objectType, iconFileName);
+
+#define mafIconFromObjectType(objectType) \
+    mafCore::mafObjectFactory::instance()->iconFromObjectType(objectType);
+
 namespace mafCore {
 
 /**
@@ -128,6 +134,13 @@ public:
     /// Allows creation of mafSmartPointer object given the class type of the object to allocate.
     template <typename T> mafSmartPointer<T> instantiateSmartObject( const QString& className );
 
+    /// Allows to bind a MAF objects to an icon file name.
+    MAFCORESHARED_EXPORT void bindObjectToIcon( const QString objectType, const QString iconFileName );
+
+    /// Allows to unregister MAF objects from the factory.
+    MAFCORESHARED_EXPORT QString iconFromObjectType( const QString objectType );
+
+
 protected:
     
 private:
@@ -142,6 +155,9 @@ private:
 
     typedef QHash<QString, mafQtObjectFactoryInterface*> mafQtObjectFactoryMapType;
     mafQtObjectFactoryMapType m_QtObjectMap; ///< Hash table used for storing Qt registered objects.
+
+    typedef QHash<QString, QString> mafObjectIconHash;
+    mafObjectIconHash m_ObjectIconHash; ///< Hash to associate objects type with an icon.
 
 };
 
@@ -191,6 +207,7 @@ mafSmartPointer<T> mafObjectFactory::instantiateSmartObject( const QString& clas
     T *p = qobject_cast<T *>(obj);
     return mafSmartPointer<T>(p);
 }
+
 
 }
 

@@ -70,3 +70,11 @@ QObject *mafObjectFactory::instantiateQtObjectFromString( const QString &classNa
         return NULL;
     }
 }
+
+void mafObjectFactory::bindObjectToIcon( const QString objectType, const QString iconFileName ) {
+    m_ObjectIconHash.insert(objectType, iconFileName);
+}
+
+QString mafObjectFactory::iconFromObjectType( const QString objectType ) {
+    return m_ObjectIconHash.value(objectType);
+}
