@@ -25,7 +25,6 @@
 #include <vtkTextProperty.h>
 #include <vtkProperty2D.h>
 #include <vtkRenderer.h>
-#include <vtkRenderWindow.h>
 
 #include <vtkButtonWidget.h>
 #include <vtkEllipticalButtonSource.h>
