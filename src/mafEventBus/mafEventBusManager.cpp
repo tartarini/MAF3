@@ -3,7 +3,7 @@
  *  mafEventBus
  *
  *  Created by Paolo Quadrani on 27/03/09.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -171,7 +171,7 @@ bool mafEventBusManager::removeEventProperty(const mafEvent &props) const {
     return result;
 }
 
-void mafEventBusManager::notifyEvent(const QString topic, mafEventType ev_type, mafEventArgumentsList *argList, QGenericReturnArgument *returnArg) const {
+void mafEventBusManager::notifyEvent(const QString topic, mafEventType ev_type, mafEventArgumentsList *argList, QGenericReturnArgument *returnArg, bool synch /*= true*/) const {
     QMutex mutex;
     QMutexLocker locker(&mutex);
     if(m_EnableEventLogging) {
@@ -181,7 +181,7 @@ void mafEventBusManager::notifyEvent(const QString topic, mafEventType ev_type, 
     }
 
     //event dispatched in local channel
-    mafEvent *event_dic = new mafEvent(topic, ev_type);
+    mafEvent *event_dic = new mafEvent(topic, ev_type, synch);
     notifyEvent(*event_dic, argList, returnArg);
     delete event_dic;
 }

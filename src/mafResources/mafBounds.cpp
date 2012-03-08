@@ -154,6 +154,9 @@ bool mafBounds::isPointInBounds(mafPoint *p) {
 }
 
 void mafBounds::transformBounds(mafMatrix *matrix) {
+    if (matrix == NULL) {
+        return;
+    }
     mafMatrix p0(4,1);
     p0.setElement(0,0, m_XMin);
     p0.setElement(1,0, m_YMin);

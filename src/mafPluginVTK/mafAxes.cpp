@@ -82,6 +82,8 @@ void mafAxes::askAbsolutePoseMatrix() {
     vtkMatrix4x4 *m = vtkMatrix4x4::New();
     if (absMatrix) {
         m->DeepCopy(absMatrix->rawData());
+        delete absMatrix;
+        absMatrix = NULL;
     }
 
     ((vtkLocalAxisCoordinate*) m_Coord)->SetMatrix(m);
