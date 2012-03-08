@@ -198,6 +198,29 @@ void mafBoundsTest::transformBoundsTest() {
     // Free the allocated memory.
     mafDEL(b0);
     mafDEL(b0Res);
+
+    // Create a cubed bounds
+    double bCube[6] = {-.5, .5, -.5, .5, -.5, .5};
+    mafBounds *boundsCube = new mafBounds(bCube, mafCodeLocation);
+
+    mafMatrix *transformMatrix = new mafMatrix();
+    transformMatrix->setIdentity();
+    transformMatrix->setElement(0,0,0.707);
+    transformMatrix->setElement(0,1,-.707);
+    transformMatrix->setElement(1,0,.707);
+    transformMatrix->setElement(1,1,.707);
+
+    boundsCube->transformBounds(transformMatrix);
+    double x_min = boundsCube->xMin();
+    double x_max = boundsCube->xMax();
+    double y_min = boundsCube->yMin();
+    double y_max = boundsCube->yMax();
+    double z_min = boundsCube->zMin();
+    double z_max = boundsCube->zMax();
+
+    mafDEL(boundsCube);
+    delete transformMatrix;
+    transformMatrix = NULL;
 }
 
 MAF_REGISTER_TEST(mafBoundsTest);
