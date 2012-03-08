@@ -280,7 +280,7 @@ void mafView::updateSceneNodesInformation() {
         
         /// @@TODO re-factor memento vme for handling Properties before adding vme. (can be a new signal for example load)
         sn->setObjectName(sn->vme()->objectName());
-        sn->setProperty("iconFile", sn->vme()->property("iconFile"));
+        sn->setProperty("iconType", sn->vme()->property("iconType"));
         ++iter;
     }
 }

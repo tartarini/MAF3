@@ -16,7 +16,7 @@
 
 using namespace mafCore;
 
-mafObject::mafObject(const QString code_location) : mafObjectBase(code_location), m_IconFile(""), m_LockStatus(mafObjectLockNone), m_ProgressStatus(0),  m_TagList(NULL), m_Dictionary(NULL) {
+mafObject::mafObject(const QString code_location) : mafObjectBase(code_location), m_IconType(""), m_LockStatus(mafObjectLockNone), m_ProgressStatus(0),  m_TagList(NULL), m_Dictionary(NULL) {
     m_TagList = new QVariantList();
     m_ScriptList = new QVariantList();
     m_Dictionary = new QVariantMap;
@@ -28,8 +28,8 @@ mafObject::~mafObject() {
     delete m_Dictionary;
 }
 
-void mafObject::setIconFile(QString icon_file) {
-    m_IconFile = icon_file;
+void mafObject::setIconType(QString icon_type) {
+    m_IconType = icon_type;
 }
 
 mafMemento *mafObject::createMemento() const {

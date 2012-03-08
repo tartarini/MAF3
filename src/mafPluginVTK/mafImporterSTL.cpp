@@ -53,7 +53,7 @@ void mafImporterSTL::execute() {
     //set the default boundary algorithm for VTK vme
     mafResources::mafVME * vme = qobject_cast<mafResources::mafVME *> (this->m_Output);
     vme->dataSetCollection()->itemAtCurrentTime()->setBoundaryAlgorithmName("mafPluginVTK::mafDataBoundaryAlgorithmVTK");
-    vme->setProperty("iconFile",  ":/images/surface.png");
+    vme->setProperty("iconType", "mafVMESurfaceVTK");
     
     Q_EMIT executionEnded();
 }

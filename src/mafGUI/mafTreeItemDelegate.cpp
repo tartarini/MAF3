@@ -80,7 +80,13 @@ void mafTreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
     //Get lock status
     uint lockStatus = objItem->property("lockStatus").toUInt();
     if (lockStatus & mafCore::mafObjectLockNone) {
-        iconPixmap = QPixmap(objItem->property("iconFile").toString());
+        QString iconFileName = mafIconFromObjectType(objItem->property("iconType").toString());
+        if (!iconFileName.isEmpty()) {
+            //setIcon(QIcon(iconType));
+            iconPixmap = QPixmap(iconFileName);
+        }
+
+        //iconPixmap = QPixmap(objItem->property("iconType").toString());
         if(!isEditing) {
             item->setIcon(QIcon(iconPixmap));
         } 

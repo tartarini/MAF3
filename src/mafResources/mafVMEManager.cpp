@@ -124,6 +124,7 @@ void mafVMEManager::vmeAdd(mafObjectBase *vme) {
         qWarning("%s", ba.data());
         return;
     }
+
     // VME has been added.
     connect(vme, SIGNAL(destroyed()), this, SLOT(vmeDestroyed()), Qt::DirectConnection);
     if(m_VMEHierarchy) {
@@ -189,7 +190,7 @@ mafCore::mafHierarchyPointer mafVMEManager::requestVMEHierarchy() {
         //Create a new root.
         m_Root = mafNEW(mafResources::mafVME);
         m_Root->setObjectName("root");
-        m_Root->setProperty("iconFile", ":/images/root.png");
+        m_Root->setProperty("iconType", "mafRoot");
 
         //Add root to hierarchy
         mafEventArgumentsList argList;

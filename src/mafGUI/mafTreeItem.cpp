@@ -9,12 +9,18 @@
  *
  */
 
+#include "mafGUIDefinitions.h"
 #include "mafTreeItem.h"
 
 using namespace mafGUI;
 
 mafTreeItem::mafTreeItem(QObject *obj) : QStandardItem(obj->objectName()), m_Data(obj) {
-    setIcon(QIcon(obj->property("iconFile").toString()));
+    QString iconType = obj->property("iconType").toString();
+    QString iconFileName = mafIconFromObjectType(iconType);
+    if (!iconFileName.isEmpty()) {
+        setIcon(QIcon(iconFileName));
+    }
+    
     setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|
              Qt::ItemIsEditable);
     setStatus(mafItemStatusNotCheckable, false);

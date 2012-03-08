@@ -29,7 +29,7 @@ class mafMemento;
  */
 class MAFCORESHARED_EXPORT mafObject : public mafObjectBase {
     Q_OBJECT
-    Q_PROPERTY(QString iconFile READ iconFile WRITE setIconFile)
+    Q_PROPERTY(QString iconType READ iconType WRITE setIconType)
     Q_PROPERTY(int lockStatus READ lockStatus)
     Q_PROPERTY(int progressStatus READ progressStatus WRITE setProgressStatus)
 
@@ -52,11 +52,11 @@ public:
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
 
-        /// Allow to set the filename representing the icon file associated with the object.
-    void setIconFile(QString icon_file);
+        /// Allow to set the icon type representing the icon file associated with the object.
+    void setIconType(QString icon_type);
 
-    /// Return the filename associated with the object.
-    QString iconFile() const;
+    /// Return the icon type associated with the object.
+    QString iconType() const;
 
     /// Return the instance of the object's status. The caller has to delete the allocated memento memory he asked for.
     virtual mafMemento *createMemento() const;
@@ -135,7 +135,7 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafObject();
     bool m_Selected; ///< Flag used to store the selection flag of the owned VME.
-    QString m_IconFile; ///< Filename associated to the icon file to use with the object.
+    QString m_IconType; ///< Filename associated to the icon file to use with the object.
     mafObjectLockStatus m_LockStatus; ///< Contains the status of object lock.
     int m_ProgressStatus; ///< Contains the progress status.
 
@@ -149,8 +149,8 @@ private:
 // Inline methods
 /////////////////////////////////////////////////////////////
 
-inline QString mafObject::iconFile() const {
-    return m_IconFile;
+inline QString mafObject::iconType() const {
+    return m_IconType;
 }
 
 inline const QVariantList *mafObject::tagList() const {

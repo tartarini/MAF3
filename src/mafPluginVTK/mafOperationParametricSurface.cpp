@@ -91,7 +91,7 @@ void mafOperationParametricSurface::visualizeParametricSurface() {
 
 
     //set the icon file for vme
-    this->m_Output->setProperty("iconFile", ":/images/surface.png");
+    this->m_Output->setProperty("iconType", "mafVMESurfaceVTK");
     
     //Notify vme add
     mafEventArgumentsList argList;

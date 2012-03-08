@@ -44,7 +44,7 @@ bool mafSceneNode::initialize() {
     if (Superclass::initialize()) {
         REQUIRE(m_VME);
         connect(m_VME, SIGNAL(detatched()), this, SIGNAL(destroyNode()));
-        this->setProperty("iconFile",m_VME->property("iconFile"));
+        this->setProperty("iconType",m_VME->property("iconType"));
         this->setObjectName(m_VME->objectName());
         return true;
     }
