@@ -118,14 +118,13 @@ void mafBoundsTest::equalTest() {
 
 void mafBoundsTest::uniteBoundsTest() {
     mafBounds *outputTest = new mafResources::mafBounds();
-    m_ObjTestA->unite(*m_ObjTestB, *outputTest);
+    m_ObjTestA->unite(*m_ObjTestB);
     
     /// check if output bounds are correct
     double bc[6] = {-2.,3.,-2.,3.,-2.,3.};
     mafBounds *checked = new mafResources::mafBounds(bc);
-    QVERIFY(*checked == *outputTest);
+    QVERIFY(*checked == *m_ObjTestA);
     
-    mafDEL(outputTest);
     mafDEL(checked);
     
 }
@@ -133,7 +132,7 @@ void mafBoundsTest::uniteBoundsTest() {
 void mafBoundsTest::autoUniteTest() {
     mafBounds *autoTest = new mafResources::mafBounds();
     autoTest->setBounds(m_ObjTestA);
-    autoTest->unite(*m_ObjTestB, *autoTest);
+    autoTest->unite(*m_ObjTestB);
     
     /// check if output bounds are correct
     double bc[6] = {-2.,3.,-2.,3.,-2.,3.};

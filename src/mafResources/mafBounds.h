@@ -96,6 +96,9 @@ public:
     /// Transform bounds applying the pose matrix.
     void transformBounds(mafMatrix *matrix);
     
+    /// return the transformation matrix
+    mafMatrix *transformation() const;
+    
     /// dump the description of the object (information, attributes, variables...)
     /*virtual*/ void description() const;
 
@@ -110,6 +113,7 @@ private:
     double m_XMax; ///< Maximum X value
     double m_YMax; ///< Maximum Y value
     double m_ZMax; ///< Maximum Z value
+    mafMatrix *m_TransformationMatrix; /// current transformation matrix
 };
 
 
@@ -141,6 +145,11 @@ inline double mafBounds::zMax() const {
     return m_ZMax;
 }
 
+    
+inline mafMatrix *mafBounds::transformation() const {
+    return m_TransformationMatrix;
+}
+    
 typedef mafBounds * mafBoundsPointer;
 
 } // namespace mafResources

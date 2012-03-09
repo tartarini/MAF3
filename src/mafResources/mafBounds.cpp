@@ -10,21 +10,26 @@
  */
 
 #include "mafBounds.h"
-
+#include "mafMatrix.h"
 
 using namespace mafCore;
 using namespace mafResources;
 
 mafBounds::mafBounds(const QString code_location) : mafCore::mafReferenceCounted(), m_XMin(0), m_YMin(0), m_ZMin(0), m_XMax(-1), m_YMax(-1), m_ZMax(-1) {
+    m_TransformationMatrix = new mafMatrix(4,4);
+    m_TransformationMatrix->setIdentity();
 }
 
 // mafBounds::mafBounds(const mafBounds &p) : m_XMin(p.xMin()), m_YMin(p.yMin()), m_ZMin(p.zMin()), m_XMax(p.xMax()), m_YMax(p.yMax()), m_ZMax(p.zMax()) {
 // }
 
 mafBounds::mafBounds(double b[6], const QString code_location) : m_XMin(b[0]), m_XMax(b[1]), m_YMin(b[2]), m_YMax(b[3]), m_ZMin(b[4]), m_ZMax(b[5]) {
+    m_TransformationMatrix = new mafMatrix(4,4);
+    m_TransformationMatrix->setIdentity();
 }
 
 mafBounds::~mafBounds() {
+    delete m_TransformationMatrix;
 }
 
 mafBounds &mafBounds::operator =(const mafBounds& obj) {
@@ -34,6 +39,7 @@ mafBounds &mafBounds::operator =(const mafBounds& obj) {
     m_YMax = obj.yMax();
     m_ZMin = obj.zMin();
     m_ZMax = obj.zMax();
+    m_TransformationMatrix = obj.transformation()->clone();
     return *this;
 }
 
@@ -63,6 +69,8 @@ void mafBounds::unite(const mafBounds &b) {
     bounds[5] = MAX(this->zMax(), b.zMax());
     
     this->setBounds(bounds);
+    
+    m_TransformationMatrix->setIdentity();
 }
 
 void mafBounds::intersect(const mafBounds &b, mafBounds &output) {
@@ -102,6 +110,7 @@ void mafBounds::intersect(const mafBounds &b, mafBounds &output) {
     }
     
     output.setBounds(outputBound);
+    output.transformation()->setIdentity();
 }
 
 void mafBounds::bounds(double *b) {
@@ -121,6 +130,7 @@ void mafBounds::setBounds(double b[6]) {
     m_YMax = b[3];
     m_ZMin = b[4];
     m_ZMax = b[5];
+    m_TransformationMatrix->setIdentity();
 }
 
 void mafBounds::setBounds(mafBounds *b) {
@@ -130,6 +140,8 @@ void mafBounds::setBounds(mafBounds *b) {
     m_YMax = b->yMax();
     m_ZMin = b->zMin();
     m_ZMax = b->zMax();
+    delete m_TransformationMatrix;
+    m_TransformationMatrix = b->transformation()->clone();
 }
 
 double mafBounds::length() {
@@ -168,6 +180,8 @@ void mafBounds::transformBounds(mafMatrix *matrix) {
         return;
     }
 
+    (*m_TransformationMatrix) = (*matrix) * (*m_TransformationMatrix);
+    
     mafMatrix boundsMatrix(4, 8);
 
     mafMatrix p0(4,1);
@@ -250,4 +264,7 @@ void mafBounds::description() const {
     qDebug() << "X Min: " << m_XMin << " X Max: " << m_XMax;
     qDebug() << "Y Min: " << m_YMin << " Y Max: " << m_YMax;
     qDebug() << "Z Min: " << m_ZMin << " Z Max: " << m_ZMax;
+    
+    qDebug() << "Transform Matrix: ";
+    m_TransformationMatrix->description();
 }
