@@ -38,13 +38,13 @@ void mafVisitorBounds::visit(mafObjectBase *object) {
             
             qDebug() << object->objectName();
             b->transformBounds(absMatrix);
-            b->description();
+            //b->description();
             delete absMatrix;
             absMatrix = NULL;
         }
         
         if(m_Bounds == NULL) {
-            qDebug() << "New bounds...";
+            //qDebug() << "New bounds...";
             m_Bounds = new mafBounds();
             m_Bounds->setBounds(b);
         }
