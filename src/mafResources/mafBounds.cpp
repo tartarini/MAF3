@@ -51,7 +51,7 @@ bool mafBounds::isObjectValid() const {
 	return m_XMin <= m_XMax && m_YMin <= m_YMax && m_ZMin <= m_ZMax;
 }
 
-void mafBounds::unite(const mafBounds &b, mafBounds &output) {
+void mafBounds::unite(const mafBounds &b) {
     double bounds[6];
     bounds[0] = MIN(this->xMin(), b.xMin());
     bounds[1] = MAX(this->xMax(), b.xMax());
@@ -62,7 +62,7 @@ void mafBounds::unite(const mafBounds &b, mafBounds &output) {
     bounds[4] = MIN(this->zMin(), b.zMin());
     bounds[5] = MAX(this->zMax(), b.zMax());
     
-    output.setBounds(bounds);
+    this->setBounds(bounds);
 }
 
 void mafBounds::intersect(const mafBounds &b, mafBounds &output) {

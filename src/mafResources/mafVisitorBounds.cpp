@@ -27,7 +27,8 @@ mafVisitorBounds::~mafVisitorBounds() {
 void mafVisitorBounds::visit(mafObjectBase *object) {
     QVariant boundsProp = object->property("bounds");
     if (boundsProp.isValid()) {
-        mafBounds *b = boundsProp.value<mafBoundsPointer>();
+        mafBounds *b = new mafBounds();
+        b->setBounds(boundsProp.value<mafBoundsPointer>());
         if(m_AbsolutePoseFlag) {
             mafMatrixPointer absMatrix = NULL;
             mafEventArgumentsList argList;
@@ -48,6 +49,7 @@ void mafVisitorBounds::visit(mafObjectBase *object) {
             m_Bounds->setBounds(b);
         }
 
-        m_Bounds->unite(*b, *m_Bounds);
+        m_Bounds->unite(*b);
+        mafDEL(b);
     }
 }

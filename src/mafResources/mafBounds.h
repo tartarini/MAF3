@@ -49,7 +49,7 @@ public:
 	/*virtual*/ bool isObjectValid() const;
 	
 	/// Calculate the union of the given bounds with this one.
-	void unite(const mafBounds &b, mafBounds &output);
+	void unite(const mafBounds &b);
 	
 	/// Calculate the intersection with the given bounds.
 	void intersect(const mafBounds &b, mafBounds &output);
