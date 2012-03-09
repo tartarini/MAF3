@@ -75,6 +75,9 @@ public:
     /// Return the maximum Z coordinate
     double zMax() const;
     
+    /// retrieve bounds as double array.
+    void bounds(double *b);
+    
     /// set the bounds.
     void setBounds(double b[6]);
     

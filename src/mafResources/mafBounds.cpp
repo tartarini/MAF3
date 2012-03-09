@@ -104,6 +104,16 @@ void mafBounds::intersect(const mafBounds &b, mafBounds &output) {
     output.setBounds(outputBound);
 }
 
+void mafBounds::bounds(double *b) {
+    REQUIRE(b);
+    b[0] = m_XMin; 
+    b[1] = m_XMax;
+    b[2] = m_YMin;
+    b[3] = m_YMax;
+    b[4] = m_ZMin;
+    b[5] = m_ZMax;
+}
+
 void mafBounds::setBounds(double b[6]) {
     m_XMin = b[0]; 
     m_XMax = b[1];
