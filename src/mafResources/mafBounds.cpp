@@ -73,7 +73,7 @@ void mafBounds::unite(const mafBounds &b) {
     m_TransformationMatrix->setIdentity();
 }
 
-void mafBounds::intersect(const mafBounds &b, mafBounds &output) {
+void mafBounds::intersect(const mafBounds &b) {
     mafBounds *a = this;
     /// Xmin check
     bool bXMinInsideA = b.xMin() >= a->xMin() && b.xMin() <= a->xMax();
@@ -109,8 +109,8 @@ void mafBounds::intersect(const mafBounds &b, mafBounds &output) {
         outputBound[5] = bZMaxInsideA ? b.zMax() : a->zMax();
     }
     
-    output.setBounds(outputBound);
-    output.transformation()->setIdentity();
+    this->setBounds(outputBound);
+    this->transformation()->setIdentity();
 }
 
 void mafBounds::bounds(double *b) {

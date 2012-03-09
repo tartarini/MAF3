@@ -52,7 +52,7 @@ public:
 	void unite(const mafBounds &b);
 	
 	/// Calculate the intersection with the given bounds.
-	void intersect(const mafBounds &b, mafBounds &output);
+	void intersect(const mafBounds &b);
 
     /// Test if a 3D point is inside the bounds.
     bool isPointInBounds(mafPoint *p);
