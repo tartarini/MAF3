@@ -144,25 +144,32 @@ void mafMatrix::setRow(mafMatrix &row, int row_index) {
 }
 
 mafMatrix mafMatrix::extractColumn(unsigned int col) {
+    mafMatrix m(m_Matrix->rows, 1);
+    
     if (col < m_Matrix->cols) {
-        mafMatrix m(1, m_Matrix->rows);
         for (int i = 0; i < m_Matrix->cols; ++i) {
             m.setElement(i, 0, element(i, col));
         }
-        return m;
+    } else {
+        qWarning() << mafTr("Column index %1 is out of range.").arg(col);
+        for (int i = 0; i < m_Matrix->cols; ++i) {
+            m.setElement(i, 0, 0.);
+        }
     }
-    qWarning() << mafTr("Column index %1 is out of range.").arg(col);
-    return mafMatrix();
+    return m;
 }
 
 mafMatrix mafMatrix::extractRow(unsigned int row) {
+    mafMatrix m(1, m_Matrix->cols);
     if (row < m_Matrix->rows) {
-        mafMatrix m(1, m_Matrix->cols);
         for (int i = 0; i < m_Matrix->cols; ++i) {
             m.setElement(0, i, element(row, i));
         }
-        return m;
+    } else {
+        qWarning() << mafTr("Row index %1 is out of range.").arg(row);
+        for (int i = 0; i < m_Matrix->cols; ++i) {
+            m.setElement(0, i, 0.);
+        }
     }
-    qWarning() << mafTr("Row index %1 is out of range.").arg(row);
-    return mafMatrix();
+    return m;
 }
