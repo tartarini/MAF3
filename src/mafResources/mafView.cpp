@@ -263,6 +263,8 @@ void mafView::select(bool select) {
     m_Selected = select;
     if (select) {
         notityVisualPipe();
+    } else {
+        Q_EMIT pipeVisualSignal(NULL);
     }
 }
 
