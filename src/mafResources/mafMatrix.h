@@ -62,9 +62,15 @@ public:
 
     /// Set the given column into the matrix at the given index.
     void setColumn(mafMatrix &col, int col_index);
+
+    /// Return the column at the given index.
+    mafMatrix extractColumn(unsigned int col);
     
     /// Set the given row into the matrix at the given index.
     void setRow(mafMatrix &row, int row_index);
+
+    /// Return the row at the given index.
+    mafMatrix extractRow(unsigned int row);
 
     /// check if the matrix parameter is equal.
     bool isEqual(const mafMatrix &mat);
