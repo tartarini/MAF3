@@ -117,23 +117,23 @@ void mafBoundsTest::equalTest() {
 
 
 void mafBoundsTest::uniteBoundsTest() {
-    mafBounds *outputTest = new mafResources::mafBounds();
-    m_ObjTestA->unite(*m_ObjTestB, *outputTest);
+    m_ObjTestA->unite(*m_ObjTestB);
     
     /// check if output bounds are correct
     double bc[6] = {-2.,3.,-2.,3.,-2.,3.};
     mafBounds *checked = new mafResources::mafBounds(bc);
-    QVERIFY(*checked == *outputTest);
+    QVERIFY(*checked == *m_ObjTestA);
     
-    mafDEL(outputTest);
     mafDEL(checked);
     
 }
 
 void mafBoundsTest::autoUniteTest() {
     mafBounds *autoTest = new mafResources::mafBounds();
+    double a[6] = {-2,2,-2,2,-2,2};
+    m_ObjTestA->setBounds(a);
     autoTest->setBounds(m_ObjTestA);
-    autoTest->unite(*m_ObjTestB, *autoTest);
+    autoTest->unite(*m_ObjTestB);
     
     /// check if output bounds are correct
     double bc[6] = {-2.,3.,-2.,3.,-2.,3.};
@@ -146,15 +146,15 @@ void mafBoundsTest::autoUniteTest() {
 }
 
 void mafBoundsTest::intersectBoundsTest() {
-    mafBounds *outputTest = new mafResources::mafBounds();
-    m_ObjTestA->intersect(*m_ObjTestB, *outputTest);
+    double a[6] = {-2,2,-2,2,-2,2};
+    m_ObjTestA->setBounds(a);
+    m_ObjTestA->intersect(*m_ObjTestB);
     
     /// check if output bounds are correct
     double bc[6] = {-1.,2.,-1.,2.,-1.,2.};
     mafBounds *checked = new mafResources::mafBounds(bc);
-    QVERIFY(*checked == *outputTest);
+    QVERIFY(*checked == *m_ObjTestA);
     
-    mafDEL(outputTest);
     mafDEL(checked);    
 }
 
@@ -198,6 +198,29 @@ void mafBoundsTest::transformBoundsTest() {
     // Free the allocated memory.
     mafDEL(b0);
     mafDEL(b0Res);
+
+    // Create a cubed bounds
+    double bCube[6] = {-.5, .5, -.5, .5, -.5, .5};
+    mafBounds *boundsCube = new mafBounds(bCube, mafCodeLocation);
+
+    mafMatrix *transformMatrix = new mafMatrix();
+    transformMatrix->setIdentity();
+    transformMatrix->setElement(0,0,0.707);
+    transformMatrix->setElement(0,1,-.707);
+    transformMatrix->setElement(1,0,.707);
+    transformMatrix->setElement(1,1,.707);
+
+    boundsCube->transformBounds(transformMatrix);
+    double x_min = boundsCube->xMin();
+    double x_max = boundsCube->xMax();
+    double y_min = boundsCube->yMin();
+    double y_max = boundsCube->yMax();
+    double z_min = boundsCube->zMin();
+    double z_max = boundsCube->zMax();
+
+    mafDEL(boundsCube);
+    delete transformMatrix;
+    transformMatrix = NULL;
 }
 
 MAF_REGISTER_TEST(mafBoundsTest);

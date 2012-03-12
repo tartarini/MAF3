@@ -111,6 +111,7 @@ void mafMatrix::setIdentity() {
 mafMatrix mafMatrix::operator *(const mafMatrix &mat) {
     // Overload of the '*' operator to perform the matrix multiplication.
     mafMatrix result(m_Matrix->rows, mat.m_Matrix->cols);
+    result.setIdentity();
     cvMatMul(m_Matrix, mat.m_Matrix, result.m_Matrix);
     
     return result;
@@ -124,4 +125,20 @@ void mafMatrix::setElement(int row, int col, double value) {
 double mafMatrix::element(int row, int col) {
     // Return the element located at (row, col)
     return cvmGet(m_Matrix, row, col);
+}
+
+void mafMatrix::setColumn(mafMatrix &col, int col_index) {
+    if (m_Matrix->rows == col.m_Matrix->rows && col_index < m_Matrix->cols && col_index >= 0) {
+        for (int r = 0; r < m_Matrix->rows; ++r) {
+            setElement(r, col_index, col.element(r, 0));
+        }
+    }
+}
+
+void mafMatrix::setRow(mafMatrix &row, int row_index) {
+    if (m_Matrix->cols == row.m_Matrix->cols && row_index < m_Matrix->rows && row_index >= 0) {
+        for (int c = 0; c < m_Matrix->cols; ++c) {
+            setElement(row_index, c, row.element(0, c));
+        }
+    }
 }

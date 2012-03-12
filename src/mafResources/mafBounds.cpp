@@ -10,21 +10,26 @@
  */
 
 #include "mafBounds.h"
-
+#include "mafMatrix.h"
 
 using namespace mafCore;
 using namespace mafResources;
 
 mafBounds::mafBounds(const QString code_location) : mafCore::mafReferenceCounted(), m_XMin(0), m_YMin(0), m_ZMin(0), m_XMax(-1), m_YMax(-1), m_ZMax(-1) {
+    m_TransformationMatrix = new mafMatrix(4,4);
+    m_TransformationMatrix->setIdentity();
 }
 
 // mafBounds::mafBounds(const mafBounds &p) : m_XMin(p.xMin()), m_YMin(p.yMin()), m_ZMin(p.zMin()), m_XMax(p.xMax()), m_YMax(p.yMax()), m_ZMax(p.zMax()) {
 // }
 
 mafBounds::mafBounds(double b[6], const QString code_location) : m_XMin(b[0]), m_XMax(b[1]), m_YMin(b[2]), m_YMax(b[3]), m_ZMin(b[4]), m_ZMax(b[5]) {
+    m_TransformationMatrix = new mafMatrix(4,4);
+    m_TransformationMatrix->setIdentity();
 }
 
 mafBounds::~mafBounds() {
+    delete m_TransformationMatrix;
 }
 
 mafBounds &mafBounds::operator =(const mafBounds& obj) {
@@ -34,6 +39,7 @@ mafBounds &mafBounds::operator =(const mafBounds& obj) {
     m_YMax = obj.yMax();
     m_ZMin = obj.zMin();
     m_ZMax = obj.zMax();
+    m_TransformationMatrix = obj.transformation()->clone();
     return *this;
 }
 
@@ -51,7 +57,7 @@ bool mafBounds::isObjectValid() const {
 	return m_XMin <= m_XMax && m_YMin <= m_YMax && m_ZMin <= m_ZMax;
 }
 
-void mafBounds::unite(const mafBounds &b, mafBounds &output) {
+void mafBounds::unite(const mafBounds &b) {
     double bounds[6];
     bounds[0] = MIN(this->xMin(), b.xMin());
     bounds[1] = MAX(this->xMax(), b.xMax());
@@ -62,10 +68,12 @@ void mafBounds::unite(const mafBounds &b, mafBounds &output) {
     bounds[4] = MIN(this->zMin(), b.zMin());
     bounds[5] = MAX(this->zMax(), b.zMax());
     
-    output.setBounds(bounds);
+    this->setBounds(bounds);
+    
+    m_TransformationMatrix->setIdentity();
 }
 
-void mafBounds::intersect(const mafBounds &b, mafBounds &output) {
+void mafBounds::intersect(const mafBounds &b) {
     mafBounds *a = this;
     /// Xmin check
     bool bXMinInsideA = b.xMin() >= a->xMin() && b.xMin() <= a->xMax();
@@ -101,7 +109,18 @@ void mafBounds::intersect(const mafBounds &b, mafBounds &output) {
         outputBound[5] = bZMaxInsideA ? b.zMax() : a->zMax();
     }
     
-    output.setBounds(outputBound);
+    this->setBounds(outputBound);
+    this->transformation()->setIdentity();
+}
+
+void mafBounds::bounds(double *b) {
+    REQUIRE(b);
+    b[0] = m_XMin; 
+    b[1] = m_XMax;
+    b[2] = m_YMin;
+    b[3] = m_YMax;
+    b[4] = m_ZMin;
+    b[5] = m_ZMax;
 }
 
 void mafBounds::setBounds(double b[6]) {
@@ -111,6 +130,7 @@ void mafBounds::setBounds(double b[6]) {
     m_YMax = b[3];
     m_ZMin = b[4];
     m_ZMax = b[5];
+    m_TransformationMatrix->setIdentity();
 }
 
 void mafBounds::setBounds(mafBounds *b) {
@@ -120,6 +140,8 @@ void mafBounds::setBounds(mafBounds *b) {
     m_YMax = b->yMax();
     m_ZMin = b->zMin();
     m_ZMax = b->zMax();
+    delete m_TransformationMatrix;
+    m_TransformationMatrix = b->transformation()->clone();
 }
 
 double mafBounds::length() {
@@ -157,27 +179,84 @@ void mafBounds::transformBounds(mafMatrix *matrix) {
     if (matrix == NULL) {
         return;
     }
+
+    (*m_TransformationMatrix) = (*matrix) * (*m_TransformationMatrix);
+    
+    mafMatrix boundsMatrix(4, 8);
+
     mafMatrix p0(4,1);
     p0.setElement(0,0, m_XMin);
     p0.setElement(1,0, m_YMin);
     p0.setElement(2,0, m_ZMin);
     p0.setElement(3,0, 1.);
+    boundsMatrix.setColumn(p0, 0);
 
     mafMatrix p1(4,1);
     p1.setElement(0,0, m_XMax);
-    p1.setElement(1,0, m_YMax);
-    p1.setElement(2,0, m_ZMax);
+    p1.setElement(1,0, m_YMin);
+    p1.setElement(2,0, m_ZMin);
     p1.setElement(3,0, 1.);
-    
-    mafMatrix pt0 = (*matrix) * p0;
-    mafMatrix pt1 = (*matrix) * p1;
+    boundsMatrix.setColumn(p1, 1);
 
-    m_XMin = pt0.element(0, 0);
-    m_YMin = pt0.element(1, 0);
-    m_ZMin = pt0.element(2, 0);
-    m_XMax = pt1.element(0, 0);
-    m_YMax = pt1.element(1, 0);
-    m_ZMax = pt1.element(2, 0);
+    mafMatrix p2(4,1);
+    p2.setElement(0,0, m_XMax);
+    p2.setElement(1,0, m_YMax);
+    p2.setElement(2,0, m_ZMin);
+    p2.setElement(3,0, 1.);
+    boundsMatrix.setColumn(p2, 2);
+
+    mafMatrix p3(4,1);
+    p3.setElement(0,0, m_XMin);
+    p3.setElement(1,0, m_YMax);
+    p3.setElement(2,0, m_ZMin);
+    p3.setElement(3,0, 1.);
+    boundsMatrix.setColumn(p3, 3);
+
+    mafMatrix p4(4,1);
+    p4.setElement(0,0, m_XMin);
+    p4.setElement(1,0, m_YMin);
+    p4.setElement(2,0, m_ZMax);
+    p4.setElement(3,0, 1.);
+    boundsMatrix.setColumn(p4, 4);
+
+    mafMatrix p5(4,1);
+    p5.setElement(0,0, m_XMax);
+    p5.setElement(1,0, m_YMin);
+    p5.setElement(2,0, m_ZMax);
+    p5.setElement(3,0, 1.);
+    boundsMatrix.setColumn(p5, 5);
+
+    mafMatrix p6(4,1);
+    p6.setElement(0,0, m_XMax);
+    p6.setElement(1,0, m_YMax);
+    p6.setElement(2,0, m_ZMax);
+    p6.setElement(3,0, 1.);
+    boundsMatrix.setColumn(p6, 6);
+
+    mafMatrix p7(4,1);
+    p7.setElement(0,0, m_XMin);
+    p7.setElement(1,0, m_YMax);
+    p7.setElement(2,0, m_ZMax);
+    p7.setElement(3,0, 1.);
+    boundsMatrix.setColumn(p7, 7);
+
+    mafMatrix transformedBounds = (*matrix) * boundsMatrix;
+
+    m_XMax = m_XMin = transformedBounds.element(0, 0);
+    m_YMax = m_YMin = transformedBounds.element(1, 0);
+    m_ZMax = m_ZMin = transformedBounds.element(2, 0);
+    double x, y, z;
+    for (int i = 1; i < 8; ++i) {
+        x = transformedBounds.element(0, i);
+        m_XMin = x < m_XMin ? x : m_XMin;
+        m_XMax = x > m_XMax ? x : m_XMax;
+        y = transformedBounds.element(1, i);
+        m_YMin = y < m_YMin ? y : m_YMin;
+        m_YMax = y > m_YMax ? y : m_YMax;
+        z = transformedBounds.element(2, i);
+        m_ZMin = z < m_ZMin ? z : m_ZMin;
+        m_ZMax = z > m_ZMax ? z : m_ZMax;
+    }
 }
 
 void mafBounds::description() const {
@@ -185,4 +264,7 @@ void mafBounds::description() const {
     qDebug() << "X Min: " << m_XMin << " X Max: " << m_XMax;
     qDebug() << "Y Min: " << m_YMin << " Y Max: " << m_YMax;
     qDebug() << "Z Min: " << m_ZMin << " Z Max: " << m_ZMax;
+    
+    qDebug() << "Transform Matrix: ";
+    m_TransformationMatrix->description();
 }

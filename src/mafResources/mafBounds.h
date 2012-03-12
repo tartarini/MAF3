@@ -49,10 +49,10 @@ public:
 	/*virtual*/ bool isObjectValid() const;
 	
 	/// Calculate the union of the given bounds with this one.
-	void unite(const mafBounds &b, mafBounds &output);
+	void unite(const mafBounds &b);
 	
 	/// Calculate the intersection with the given bounds.
-	void intersect(const mafBounds &b, mafBounds &output);
+	void intersect(const mafBounds &b);
 
     /// Test if a 3D point is inside the bounds.
     bool isPointInBounds(mafPoint *p);
@@ -75,6 +75,9 @@ public:
     /// Return the maximum Z coordinate
     double zMax() const;
     
+    /// retrieve bounds as double array.
+    void bounds(double *b);
+    
     /// set the bounds.
     void setBounds(double b[6]);
     
@@ -93,6 +96,9 @@ public:
     /// Transform bounds applying the pose matrix.
     void transformBounds(mafMatrix *matrix);
     
+    /// return the transformation matrix
+    mafMatrix *transformation() const;
+    
     /// dump the description of the object (information, attributes, variables...)
     /*virtual*/ void description() const;
 
@@ -107,6 +113,7 @@ private:
     double m_XMax; ///< Maximum X value
     double m_YMax; ///< Maximum Y value
     double m_ZMax; ///< Maximum Z value
+    mafMatrix *m_TransformationMatrix; /// current transformation matrix
 };
 
 
@@ -138,6 +145,11 @@ inline double mafBounds::zMax() const {
     return m_ZMax;
 }
 
+    
+inline mafMatrix *mafBounds::transformation() const {
+    return m_TransformationMatrix;
+}
+    
 typedef mafBounds * mafBoundsPointer;
 
 } // namespace mafResources

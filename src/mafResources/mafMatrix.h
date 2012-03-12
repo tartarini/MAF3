@@ -59,7 +59,13 @@ public:
     
     /// return the element at the given row and column.
     double element(int row, int col);
+
+    /// Set the given column into the matrix at the given index.
+    void setColumn(mafMatrix &col, int col_index);
     
+    /// Set the given row into the matrix at the given index.
+    void setRow(mafMatrix &row, int row_index);
+
     /// check if the matrix parameter is equal.
     bool isEqual(const mafMatrix &mat);
     
