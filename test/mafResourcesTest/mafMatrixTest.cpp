@@ -66,6 +66,9 @@ private Q_SLOTS:
     /// test rawData matrix extraction
     void mafMatrixRawDataExtractionTest();
 
+    /// Test the row and column extraction.
+    void mafMatrixRowColumnExtractionTest();
+
 private:
     mafMatrix *m_Matrix; ///< Test var.
 };
@@ -145,6 +148,36 @@ void mafMatrixTest::mafMatrixRawDataExtractionTest() {
     ok = val[12] == 1.0;
     QVERIFY(ok);
     ok = val[14] == 2.0;
+    QVERIFY(ok);
+}
+
+void mafMatrixTest::mafMatrixRowColumnExtractionTest() {
+    // | 2.0 2.0 0.0 2.0 |
+    // | 3.0 2.0 2.0 2.0 |
+    // | 0.0 2.0 2.0 5.0 |
+    // | 1.0 0.0 2.0 2.0 |
+    mafMatrix matrtix;
+    matrtix.setElement(0, 0, 2.0); matrtix.setElement(0, 1, 2.0); matrtix.setElement(0, 2, 0.0); matrtix.setElement(0, 3, 2.0);
+    matrtix.setElement(1, 0, 3.0); matrtix.setElement(1, 1, 2.0); matrtix.setElement(1, 2, 2.0); matrtix.setElement(1, 3, 2.0);
+    matrtix.setElement(2, 0, 0.0); matrtix.setElement(2, 1, 2.0); matrtix.setElement(2, 2, 2.0); matrtix.setElement(2, 3, 5.0);
+    matrtix.setElement(3, 0, 1.0); matrtix.setElement(3, 1, 0.0); matrtix.setElement(3, 2, 2.0); matrtix.setElement(3, 3, 2.0);
+
+    // Extract a row in the range of matrix.
+    mafMatrix resultRowMatrix(1,4);
+    resultRowMatrix.setElement(0, 0, 2.0); resultRowMatrix.setElement(0, 1, 2.0); resultRowMatrix.setElement(0, 2, 0.0); resultRowMatrix.setElement(0, 3, 2.0);
+
+    mafMatrix mRow = matrtix.extractRow(0);
+    bool ok = mRow.isEqual(resultRowMatrix);
+    QVERIFY(ok);
+
+    mafMatrix resultColMatrix(4,1);
+    resultColMatrix.setElement(0, 0, 2.0);
+    resultColMatrix.setElement(1, 0, 3.0);
+    resultColMatrix.setElement(2, 0, 0.0);
+    resultColMatrix.setElement(3, 0, 1.0);
+
+    mafMatrix mCol = matrtix.extractColumn(0);
+    ok = mCol.isEqual(resultColMatrix);
     QVERIFY(ok);
 }
 
