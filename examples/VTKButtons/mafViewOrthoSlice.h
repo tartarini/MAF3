@@ -38,8 +38,8 @@ public Q_SLOTS:
     //////////////////////////////////////////////////////////////////////////
     // Delegate methods
     //////////////////////////////////////////////////////////////////////////
-    /// Get originZ value;
-    mafResources::mafPointPointer origin();
+    /// Get transform matrix
+    mafResources::mafMatrixPointer transformMatrix();
     //////////////////////////////////////////////////////////////////////////
 
 public:
@@ -61,7 +61,9 @@ private:
     void updateSlice();
     
     mafOrthoSlice *m_GUI; ///< GUI widget.
+    mafResources::mafMatrix *m_TransformMatrix; ///< current transform of the vme
     mafResources::mafPoint *m_SlicePosition; ///< Current slice position.
+    mafResources::mafPoint *m_Normal;   ///< Current orientation of Z axis in the local reference system.
     QList<mafToolVTKOrthoPlane *> m_OrthoPlaneTool;
 
     /// Initialize the plane tools

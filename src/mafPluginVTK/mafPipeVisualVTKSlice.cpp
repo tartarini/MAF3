@@ -25,11 +25,16 @@ mafPipeVisualVTKSlice::mafPipeVisualVTKSlice(const QString code_location) : mafP
     m_UIFilename = "mafPipeVisualSlice.ui";
     m_Origin = NULL;
     m_Normal = NULL;
+    m_TransformMatrix = new mafMatrix();
+    m_TransformMatrix->setIdentity();
 }
 
 mafPipeVisualVTKSlice::~mafPipeVisualVTKSlice() {
     mafDEL(m_Origin);
     mafDEL(m_Normal);
+    if(m_TransformMatrix) {
+        delete m_TransformMatrix;
+    }
 }
 
 mafResources::mafPointPointer mafPipeVisualVTKSlice::origin() {
@@ -66,18 +71,39 @@ mafResources::mafPointPointer mafPipeVisualVTKSlice::normal() {
     return m_Normal;
 }
 
+mafMatrixPointer mafPipeVisualVTKSlice::transformMatrix() {
+    //////////////////////////////////////////////////////////////////////////
+    QString sig("transformMatrix()");
+    mafCore::mafDelegatePointer delegateObj = delegateObject();
+    if (delegateObj && delegateObj->isMethodDefined(sig)) {
+        mafResources::mafMatrixPointer ret;
+        QGenericReturnArgument ret_val = mafReturnArgument(mafResources::mafMatrixPointer, ret);
+        delegateObj->executeMethod(sig, NULL, &ret_val);
+        if (!delegateObj->shouldExecuteLocalCode()) {
+            return ret;
+        }
+    }
+    //////////////////////////////////////////////////////////////////////////
+    return m_TransformMatrix;
+}
+
 void mafPipeVisualVTKSlice::updatePipe(double t) {
     Superclass::updatePipe(t);
 
+    mafMatrix *tMatrix = transformMatrix();
+    
     double b[6];
     mafVME *vme = input();
     vme->bounds(b, t);
-
+    mafBounds *bounds = new mafBounds(b);
+    bounds->transformBounds(tMatrix);
+    bounds->bounds(b);
+    
     //To use double values with QSlider, creates a number of steps in function
     //of range of Z bounds
     m_Range[0] = 0;
     m_Range[1] = (b[5]-b[4])*1000; 
-
+    
     if (m_SliderPosition == NULL && m_PositionValue == NULL){
         m_SliderPosition = m_Range[1] / 2.;
         m_PositionValue = (b[5]-b[4])*(m_SliderPosition/m_Range[1])+b[4];
@@ -86,8 +112,12 @@ void mafPipeVisualVTKSlice::updatePipe(double t) {
     if (m_Origin == NULL) {
         m_Origin = new mafResources::mafPoint((b[0] + b[1]) / 2., (b[2] + b[3]) / 2., (b[4] + b[5]) / 2.);
     }
+    
+    bounds->center(*m_Origin);
+    
     if (m_Normal == NULL) {
         m_Normal = new mafResources::mafPoint(0., 0., 1.);
+        m_Normal->transformPoint(tMatrix);
     }
 }
 
@@ -97,6 +127,10 @@ void mafPipeVisualVTKSlice::setSlice(mafResources::mafPointPointer o) {
 
 void mafPipeVisualVTKSlice::setNormal(mafResources::mafPointPointer n) {
     *m_Normal = *n;
+}
+
+void mafPipeVisualVTKSlice::setTransformMatrix(mafResources::mafMatrixPointer mat) {
+    *m_TransformMatrix = *mat;
 }
 
 QString mafPipeVisualVTKSlice::positionValue() {

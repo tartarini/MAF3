@@ -21,10 +21,13 @@
 using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace mafCore;
+using namespace mafEventBus;
 
 mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafViewCompound(code_location) {
     setConfigurationFile("OrthoSlice.xml");
     m_SlicePosition = new mafPoint();
+    m_Normal = new mafPoint();
+    m_TransformMatrix = new mafMatrix(4,4);
     m_OrthoPlaneTool.clear();
     m_GUI = new mafOrthoSlice();
     this->setWidget(m_GUI);
@@ -33,6 +36,10 @@ mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafViewCompo
 
 mafViewOrthoSlice::~mafViewOrthoSlice() {
     mafDEL(m_SlicePosition);
+    mafDEL(m_Normal);
+    if (m_TransformMatrix) {
+        delete m_TransformMatrix;
+    }
     Q_FOREACH(mafToolVTKOrthoPlane *op, m_OrthoPlaneTool) {
         mafDEL(op);
     }
@@ -109,8 +116,19 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
     }
     m_GUI->setBounds(b);
     double *p = (double *)m_GUI->position();
+
+    /// set origin
     m_SlicePosition->setPosition(p);
 
+    ///set transform matrix
+    mafMatrixPointer absMatrix = NULL;
+    mafObjectBase *obj = vme;
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, obj));
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafResources::mafMatrixPointer, absMatrix);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.absolutePoseMatrix", mafEventTypeLocal, &argList, &ret_val);
+    m_TransformMatrix = absMatrix;
+    
     if (show) {
         mafView *subView;
         QList<mafView *> *vList = viewList();
@@ -144,8 +162,8 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
 // Delegate methods
 //////////////////////////////////////////////////////////////////////////
 
-mafResources::mafPointPointer mafViewOrthoSlice::origin() {
-    return m_SlicePosition;
+mafResources::mafMatrixPointer mafViewOrthoSlice::transformMatrix() {
+    return m_TransformMatrix;
 }
 
 bool mafViewOrthoSlice::shouldExecuteLocalCode() {

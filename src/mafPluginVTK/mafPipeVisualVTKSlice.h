@@ -39,8 +39,6 @@ class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSlice : public mafPipeVisualVTK 
     Q_PROPERTY(int positionValueSlider_maximum READ maximum)
     Q_PROPERTY(int positionValueSlider_value READ value)
     
-    
-    
 //     Q_PROPERTY(QString sliceAxes READ sliceAxes WRITE setSliceAxes)
     
     /// typedef macro.
@@ -55,6 +53,9 @@ public:
 
     /// Set plane normal vector;
     void setNormal(mafResources::mafPointPointer val);
+    
+    /// Set Matrix Transofrmation.
+    void setTransformMatrix(mafResources::mafMatrixPointer mat);
 
 public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change.
@@ -66,6 +67,9 @@ public Q_SLOTS:
     /// Return the pointer to the normal of the slicing plane.
     mafResources::mafPointPointer normal();
 
+    /// Return the pointer to the normal of the slicing plane.
+    mafResources::mafMatrixPointer transformMatrix();
+    
     /// Set contour value from text box.
     void on_positionValue_textEdited(QString stringValue);
 
@@ -101,6 +105,7 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTKSlice();
 
+    mafResources::mafMatrix *m_TransformMatrix; ///< matrix transformation.    
     mafResources::mafPoint *m_Normal; ///< Normal of the slicing plane.
     mafResources::mafPoint *m_Origin; ///< Origin of the slicing plane.
     int m_SliderPosition; ///< Position on the slider widget.
