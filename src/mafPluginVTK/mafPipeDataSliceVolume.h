@@ -24,6 +24,7 @@
 class vtkMAFVolumeSlicer;
 class vtkImageData;
 class vtkPolyData;
+class vtkMatrixToLinearTransform;
 
 namespace mafPluginVTK {
 
@@ -59,6 +60,7 @@ protected:
 
 private:
     vtkSmartPointer<vtkMAFVolumeSlicer> m_Slicer; ///< Volume slicer for the input volume data.
+    vtkSmartPointer<vtkMatrixToLinearTransform> m_Transform; ///< Transform to apply the slice.
     mafCore::mafProxy<vtkAlgorithmOutput> m_OutputPolygonal; ///< Output value coming from the elaboration data pipe.
     mafCore::mafProxy<vtkAlgorithmOutput> m_OutputTexture; ///< Output texture coming from the elaboration data pipe.
 };

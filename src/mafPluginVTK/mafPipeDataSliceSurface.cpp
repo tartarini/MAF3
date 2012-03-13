@@ -54,8 +54,12 @@ void mafPipeDataSliceSurface::updatePipe(double t) {
         return;
     }
 
+    mafMatrix *matrix = inputDataSet->poseMatrix();
+
     m_Plane->SetOrigin(sliceOrigin());
     m_Plane->SetNormal(normal());
+    m_Plane->SetTransform(matrix->rawData());
+    m_Plane->Modified();
 
     //Get data contained in the mafProxy
     mafProxy<vtkAlgorithmOutput> *surface = mafProxyPointerTypeCast(vtkAlgorithmOutput, inputDataSet->dataValue());

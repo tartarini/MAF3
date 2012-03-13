@@ -73,6 +73,12 @@ public:
     /// Allows to move the slice along its normal of 'distance' amount.
     void pushSlice(double distance);
 
+    /// Assign the transform matrix to use for the cut.
+    void setTransformMatrix(mafMatrix &m);
+
+    /// Return the transform matrix used for the cut.
+    const mafMatrix *transformMatrix() const;
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeDataSlice();
@@ -88,6 +94,8 @@ private:
     double m_Normal[3]; ///< Normal vector of the slice.
     double m_XVector[3];
     double m_YVector[3];
+
+    mafMatrix m_TransformMatrix; ///< Transformation Matrix to use for the cut.
 
     mafPlaneNormal m_PlaneNormalAxes; ///< Constant indicating the axes on which lies the plane normal.
 };
@@ -129,6 +137,10 @@ inline const double *mafPipeDataSlice::xVector() const {
 
 inline const double *mafPipeDataSlice::yVector() const {
     return &m_YVector[0];
+}
+
+inline const mafMatrix *mafPipeDataSlice::transformMatrix() const {
+    return &m_TransformMatrix;
 }
 
 } // namespace mafResources

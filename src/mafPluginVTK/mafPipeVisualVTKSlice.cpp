@@ -3,7 +3,7 @@
  *  mafPluginVTK
  *
  *  Created by Paolo Quadrani on 17/02/12.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -14,12 +14,13 @@
 #include <mafVME.h>
 #include <mafDataSet.h>
 #include <mafDataSetCollection.h>
+#include <mafEventBusManager.h>
 
 
 using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
-
+using namespace mafEventBus;
 
 mafPipeVisualVTKSlice::mafPipeVisualVTKSlice(const QString code_location) : mafPipeVisualVTK(code_location), m_SliderPosition(NULL), m_PositionValue(NULL) {
     m_UIFilename = "mafPipeVisualSlice.ui";
@@ -84,6 +85,17 @@ mafMatrixPointer mafPipeVisualVTKSlice::transformMatrix() {
         }
     }
     //////////////////////////////////////////////////////////////////////////
+    // Request of ABS matrix should be optimized using a cached matrix that updates
+    // only when a matrix changes on the hierarchy, otherwise returned the last 
+    // abs matrix calculated.
+    mafMatrixPointer absMatrix = NULL;
+    mafObjectBase *obj = input();
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, obj));
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafResources::mafMatrixPointer, absMatrix);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.absolutePoseMatrix", mafEventTypeLocal, &argList, &ret_val);
+    m_TransformMatrix = absMatrix;
+
     return m_TransformMatrix;
 }
 
@@ -110,7 +122,8 @@ void mafPipeVisualVTKSlice::updatePipe(double t) {
     }
     
     if (m_Origin == NULL) {
-        m_Origin = new mafResources::mafPoint((b[0] + b[1]) / 2., (b[2] + b[3]) / 2., (b[4] + b[5]) / 2.);
+        m_Origin = new mafResources::mafPoint(/*(b[0] + b[1]) / 2., (b[2] + b[3]) / 2., (b[4] + b[5]) / 2.*/);
+        vme->bounds()->center(*m_Origin);
     }
     
     bounds->center(*m_Origin);
