@@ -126,8 +126,6 @@ void mafPipeVisualVTKSlice::updatePipe(double t) {
         vme->bounds()->center(*m_Origin);
     }
     
-    bounds->center(*m_Origin);
-    
     if (m_Normal == NULL) {
         m_Normal = new mafResources::mafPoint(0., 0., 1.);
         m_Normal->transformPoint(tMatrix);
