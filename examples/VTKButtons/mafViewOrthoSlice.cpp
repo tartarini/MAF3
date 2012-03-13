@@ -26,8 +26,6 @@ using namespace mafEventBus;
 mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafViewCompound(code_location) {
     setConfigurationFile("OrthoSlice.xml");
     m_SlicePosition = new mafPoint();
-    m_Normal = new mafPoint();
-    m_TransformMatrix = new mafMatrix(4,4);
     m_OrthoPlaneTool.clear();
     m_GUI = new mafOrthoSlice();
     this->setWidget(m_GUI);
@@ -36,10 +34,7 @@ mafViewOrthoSlice::mafViewOrthoSlice(const QString code_location) : mafViewCompo
 
 mafViewOrthoSlice::~mafViewOrthoSlice() {
     mafDEL(m_SlicePosition);
-    mafDEL(m_Normal);
-    if (m_TransformMatrix) {
-        delete m_TransformMatrix;
-    }
+
     Q_FOREACH(mafToolVTKOrthoPlane *op, m_OrthoPlaneTool) {
         mafDEL(op);
     }
@@ -106,7 +101,7 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
     /// update total visible bounds
     mafVisitorBounds *v = new mafVisitorBounds();
     v->setAbsolutePoseFlag(true);
-    //    mafObjectRegistry::instance()->applyVisitorToObjectListThreaded(v, &m_VisibleVMEsList);
+//    mafObjectRegistry::instance()->applyVisitorToObjectListThreaded(v, &m_VisibleVMEsList);
     mafObjectRegistry::instance()->applyVisitorToObjectList(v, &m_VisibleVMEsList);    
     mafBounds *bounds = v->bounds();
     
@@ -119,15 +114,6 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
 
     /// set origin
     m_SlicePosition->setPosition(p);
-
-    ///set transform matrix
-    mafMatrixPointer absMatrix = NULL;
-    mafObjectBase *obj = vme;
-    mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase *, obj));
-    QGenericReturnArgument ret_val = mafEventReturnArgument(mafResources::mafMatrixPointer, absMatrix);
-    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.absolutePoseMatrix", mafEventTypeLocal, &argList, &ret_val);
-    m_TransformMatrix = absMatrix;
     
     if (show) {
         mafView *subView;
@@ -162,8 +148,8 @@ void mafViewOrthoSlice::showSceneNode(mafSceneNode *node, bool show) {
 // Delegate methods
 //////////////////////////////////////////////////////////////////////////
 
-mafResources::mafMatrixPointer mafViewOrthoSlice::transformMatrix() {
-    return m_TransformMatrix;
+mafPointPointer mafViewOrthoSlice::origin() {
+    return m_SlicePosition;
 }
 
 bool mafViewOrthoSlice::shouldExecuteLocalCode() {

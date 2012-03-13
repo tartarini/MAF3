@@ -12,9 +12,10 @@
 #ifndef MAFVIEWORTHOSLICE_H
 #define MAFVIEWORTHOSLICE_H
 
+#include "mafToolVTKOrthoPlane.h"
+
 #include <mafViewCompound.h>
 #include <mafSceneNode.h>
-#include "mafToolVTKOrthoPlane.h"
 #include <mafVME.h>
 #include <mafPoint.h>
 
@@ -32,14 +33,14 @@ public Q_SLOTS:
     /// calling this when widget has been moved.
     void widgetUpdatePosition();
 
-    /// calling this when gui sliders have been moved.
+    /// calling this when GUI sliders have been moved.
     void guiUpdatePosition(double *pos);
     
     //////////////////////////////////////////////////////////////////////////
     // Delegate methods
     //////////////////////////////////////////////////////////////////////////
-    /// Get transform matrix
-    mafResources::mafMatrixPointer transformMatrix();
+    /// Return the pointer to the origin of the slicing plane.
+    mafResources::mafPointPointer origin();
     //////////////////////////////////////////////////////////////////////////
 
 public:
@@ -61,9 +62,7 @@ private:
     void updateSlice();
     
     mafOrthoSlice *m_GUI; ///< GUI widget.
-    mafResources::mafMatrix *m_TransformMatrix; ///< current transform of the vme
     mafResources::mafPoint *m_SlicePosition; ///< Current slice position.
-    mafResources::mafPoint *m_Normal;   ///< Current orientation of Z axis in the local reference system.
     QList<mafToolVTKOrthoPlane *> m_OrthoPlaneTool;
 
     /// Initialize the plane tools
