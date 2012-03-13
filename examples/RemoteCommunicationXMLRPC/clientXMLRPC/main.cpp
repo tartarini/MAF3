@@ -40,25 +40,25 @@ int main(int argc, char *argv[]) {
 
     //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
     QVariantList dataParameters;
-    //dataParameters.append("mafAlgorithm");
+    dataParameters.append("mafAlgorithmBoneRemodelling");
     
     //log parameters
-    dataParameters.append("mafOperationLogger");
+    //dataParameters.append("mafOperationLogger");
         
     QVariantMap operationParameters;
     
      //log parameters
-     operationParameters.insert("dataBaseName", argv[3]);
+     /*operationParameters.insert("dataBaseName", argv[3]);
      operationParameters.insert("tableName", "logTable");
      operationParameters.insert("workflowId", argv[4]);
      operationParameters.insert("serviceName", argv[5]);
-     
-    /*
+     */
+    
     operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
     operationParameters.insert("myFirstParameter", 2.3);
     operationParameters.insert("mySecondParameter", "ughetto");
     operationParameters.insert("workflowId", "GUQFEFQUYWJGQJWQBHWGJHWBQHBW");
-    */
+    
     
     //QStringList inputFiles;
     //inputFiles << "input_01" << "input_02" << "input_03";
