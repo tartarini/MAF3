@@ -128,7 +128,10 @@ void mafPipeVisualVTKSlice::updatePipe(double t) {
     
     if (m_Normal == NULL) {
         m_Normal = new mafResources::mafPoint(0., 0., 1.);
-        m_Normal->transformPoint(tMatrix);
+        
+        if(tMatrix) {
+            m_Normal->transformPoint(tMatrix);
+        }
     }
 }
 
