@@ -5,7 +5,7 @@
  Language:  C++
  Date:      $Date: 2008-07-03 11:27:45 $
  Version:   $Revision: 1.1 $
- Authors:   Alexander Savenko
+ Authors:   Alexander Savenko, Paolo Quadrani
  Project:   MultiMod Project (www.ior.it/multimod)
  
  ==========================================================================

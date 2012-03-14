@@ -215,6 +215,10 @@ mafMatrixPointer mafVMEManager::absolutePoseMatrix(mafCore::mafObjectBase *vme) 
     mafMatrix *matrix = qobject_cast<mafVME *>(vme)->dataSetCollection()->itemAtCurrentTime()->poseMatrix();
     mafMatrix *result = matrix->clone();
     
+    if(m_VMEHierarchy == NULL) {
+        return NULL;
+    }
+    
     QObject *selectedNode = m_VMEHierarchy->currentData();
     m_VMEHierarchy->moveTreeIteratorToNode(vme);
     while(m_VMEHierarchy->hasParent()) {
