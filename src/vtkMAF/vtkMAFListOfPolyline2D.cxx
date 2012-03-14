@@ -14,6 +14,7 @@ All rights reserved.
 
 #include "vtkMAFListOfPolyline2D.h"
 #include "vtkMAFPolyline2D.h"
+#include <math.h>
 
 //------------------------------------------------------------------------------
 // Clear the list of polylines
