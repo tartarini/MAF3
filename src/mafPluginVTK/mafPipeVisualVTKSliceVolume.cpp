@@ -76,6 +76,8 @@ void mafPipeVisualVTKSliceVolume::updatePipe(double t) {
     // the slice origin outside.
     mafPointPointer o = origin();
 
+    //Set the ABS matrix
+    m_SlicerPipe->setTransformMatrix(*m_TransformMatrix);
     // Assign the input to the data pipe (it could be changed from the lest update).
     m_SlicerPipe->setInput(input());
     // Assign the origin of the slice.

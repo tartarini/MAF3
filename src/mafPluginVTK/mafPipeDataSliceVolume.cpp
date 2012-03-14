@@ -29,7 +29,7 @@ using namespace mafPluginVTK;
 mafPipeDataSliceVolume::mafPipeDataSliceVolume(const QString code_location) : mafPipeDataSlice(code_location) {
     m_Slicer = vtkSmartPointer<vtkMAFVolumeSlicer>::New();
     m_Transform = vtkSmartPointer<vtkMatrixToLinearTransform>::New();
-    m_Slicer->SetSliceTransform(m_Transform);
+    //m_Slicer->SetSliceTransform(m_Transform);
 
     m_OutputPolygonal = m_Slicer->GetOutputPort();
     m_OutputTexture   = m_Slicer->GetTexturedOutputPort();
@@ -62,20 +62,18 @@ void mafPipeDataSliceVolume::updatePipe(double t) {
     //Get data contained in the mafProxy
     mafProxy<vtkAlgorithmOutput> *volume = mafProxyPointerTypeCast(vtkAlgorithmOutput, inputDataSet->dataValue());
 
-    mafMatrix *matrix = inputDataSet->poseMatrix();
-
     vtkMatrix4x4 *mat = vtkMatrix4x4::New();
-    mat->DeepCopy(matrix->rawData());
+    mat->DeepCopy(m_TransformMatrix.rawData());
     m_Transform->SetInput(mat);
     mat->Delete();
-
+    
     m_Slicer->SetInputConnection(*volume);
     m_Slicer->SetPlaneOrigin(sliceOrigin());
 
     m_Slicer->SetPlaneAxisX(xVector());
     m_Slicer->SetPlaneAxisY(yVector());
-    m_Slicer->SetSliceTransform(m_Transform);
-
+    
+    //m_Slicer->SetSliceTransform(m_Transform);
     m_Slicer->Update();
 
     output(t)->dataSetCollection()->itemAt(t)->setDataValue(&m_OutputPolygonal);

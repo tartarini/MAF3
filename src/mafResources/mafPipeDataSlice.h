@@ -89,13 +89,13 @@ protected:
     /// Return the Y vector that defines the slicing plane.
     const double *yVector() const;
 
+    mafMatrix m_TransformMatrix; ///< Transformation Matrix to use for the cut.
+
 private:
     double m_SliceOrigin[3]; ///< Origin of the slice.
     double m_Normal[3]; ///< Normal vector of the slice.
     double m_XVector[3];
     double m_YVector[3];
-
-    mafMatrix m_TransformMatrix; ///< Transformation Matrix to use for the cut.
 
     mafPlaneNormal m_PlaneNormalAxes; ///< Constant indicating the axes on which lies the plane normal.
 };
