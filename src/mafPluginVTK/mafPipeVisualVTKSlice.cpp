@@ -107,9 +107,6 @@ void mafPipeVisualVTKSlice::updatePipe(double t) {
     double b[6];
     mafVME *vme = input();
     vme->bounds(b, t);
-    mafBounds *bounds = new mafBounds(b);
-    bounds->transformBounds(tMatrix);
-    bounds->bounds(b);
     
     //To use double values with QSlider, creates a number of steps in function
     //of range of Z bounds
@@ -120,6 +117,11 @@ void mafPipeVisualVTKSlice::updatePipe(double t) {
         m_SliderPosition = m_Range[1] / 2.;
         m_PositionValue = (b[5]-b[4])*(m_SliderPosition/m_Range[1])+b[4];
     }
+
+    mafBounds *bounds = new mafBounds(b);
+    bounds->transformBounds(tMatrix);
+    bounds->bounds(b);
+
     
     if (m_Origin == NULL) {
         m_Origin = new mafResources::mafPoint(/*(b[0] + b[1]) / 2., (b[2] + b[3]) / 2., (b[4] + b[5]) / 2.*/);
