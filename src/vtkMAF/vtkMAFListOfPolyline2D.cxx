@@ -96,7 +96,7 @@ bool vtkMAFListOfPolyline2D::IsInside(int x, int y, int polylineLengthThreshold)
         const short pointX   = polyline->vertices[p].xy[0];
         const short pointY   = polyline->vertices[p].xy[1];
 
-        if (fabs(pointX - sx) <= 4 && fabs(pointY - sy) <= 4) {
+        if (fabs((float)(pointX - sx)) <= 4 && fabs((float)(pointY - sy)) <= 4) {
           break;
 		  }
       }
@@ -138,7 +138,7 @@ vtkMAFPolyline2D *vtkMAFListOfPolyline2D::FindContour(int x, int y, int polyline
       const short pointX   = polyline->vertices[p].xy[0];
       const short pointY   = polyline->vertices[p].xy[1];
 
-      if (fabs(pointX - sx) <= distance && fabs(pointY - sy) <= distance) {
+      if (fabs((float)(pointX - sx)) <= distance && fabs((float)(pointY - sy)) <= distance) {
         return polyline;
 		}
     }
