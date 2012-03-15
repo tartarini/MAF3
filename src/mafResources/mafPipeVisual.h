@@ -27,6 +27,8 @@ class MAFRESOURCESSHARED_EXPORT mafPipeVisual : public mafPipe {
     Q_OBJECT
     Q_PROPERTY(QObject *graphicObject READ graphicObject WRITE setGraphicObject)
     Q_PROPERTY(int status READ status WRITE setStatus)
+    Q_PROPERTY(QString opacityValue READ opacityValue)
+    Q_PROPERTY(int opacityValueSlider_sliderPosition READ sliderPosition)
     
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafPipe);
@@ -63,14 +65,15 @@ protected:
 
     mafCore::mafProxyInterface *m_Output; ///< Output for visual pipe.
     QObject *m_GraphicObject; ///< represents the graphic object for render the scene.
+    double m_OpacityValue; ///< Opacity value.
     
 private:
     /// Register signals and slots connections with the event bus.
     void initializeConnections();
 
     bool m_Visibility; ///< Contains the visibility status of the owned object/s
-
     int m_Status; ///< Contains the status (LOCAL or GLOBAL)
+
     
 Q_SIGNALS:
     /// signal emitted when the pick already happened. The information will be forwarded to the Interaction Manager.
@@ -83,6 +86,15 @@ public Q_SLOTS:
     /// Called when a new graphic object has been set.
     /** This method has to be re-defined to update stuff linked to the graphic object.*/
     virtual void updatedGraphicObject();
+
+    /// Set opacity value from slider.
+    void on_opacityValueSlider_sliderMoved(int value);
+
+    /// Get opacity value;
+    QString opacityValue();
+
+    /// Set Slider postion;
+    int sliderPosition();
 
 private Q_SLOTS:
     /// Forward the vmePick event if the pick hits the current visualized VME.
@@ -112,6 +124,10 @@ inline void mafPipeVisual::setStatus(int status) {
 inline int mafPipeVisual::status() const {
     return m_Status;
 }
+
+inline int mafPipeVisual::sliderPosition() {
+    return (m_OpacityValue*100);
+}   
 
 } //namespace mafResources
 

@@ -21,7 +21,7 @@ using namespace mafEventBus;
 using namespace mafResources;
 
 
-mafPipeVisual::mafPipeVisual(const QString code_location) : mafPipe(code_location), m_Output(NULL), m_GraphicObject(NULL), m_Visibility(false), m_Status(LOCAL) {
+mafPipeVisual::mafPipeVisual(const QString code_location) : mafPipe(code_location), m_Output(NULL), m_GraphicObject(NULL), m_Visibility(false), m_Status(LOCAL), m_OpacityValue(1) {
     initializeConnections();
 }
 
@@ -86,4 +86,15 @@ void mafPipeVisual::setGraphicObject(QObject *graphicObject) {
 
 void mafPipeVisual::updatedGraphicObject() {
     qDebug() << mafTr("Graphic object updated...");
+}
+
+QString mafPipeVisual::opacityValue() {
+    return QString::number(m_OpacityValue);
+}
+
+
+void mafPipeVisual::on_opacityValueSlider_sliderMoved(int value) {
+    m_OpacityValue = value/100.;
+    updateUI(widget());
+    updatePipe();
 }
