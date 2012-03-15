@@ -26,6 +26,7 @@ namespace mafResources {
 class MAFRESOURCESSHARED_EXPORT mafPipeVisual : public mafPipe {
     Q_OBJECT
     Q_PROPERTY(QObject *graphicObject READ graphicObject WRITE setGraphicObject)
+    Q_PROPERTY(int status READ status WRITE setStatus)
     
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafPipe);
@@ -46,6 +47,12 @@ public:
 
     /// return the graphic object used for paint the scene.
     QObject *graphicObject() const;
+
+    /// Set the status (LOCAL or GLOBAL) to modify its behavour
+    void setStatus(int status);
+
+    /// return the status of the pipe visual (LOCAL or GLOBAL);
+    int status() const;
         
 protected:
     /// Object destructor.
@@ -62,6 +69,8 @@ private:
     void initializeConnections();
 
     bool m_Visibility; ///< Contains the visibility status of the owned object/s
+
+    int m_Status; ///< Contains the status (LOCAL or GLOBAL)
     
 Q_SIGNALS:
     /// signal emitted when the pick already happened. The information will be forwarded to the Interaction Manager.
@@ -94,6 +103,14 @@ inline bool mafPipeVisual::visibility() const {
     
 inline QObject *mafPipeVisual::graphicObject() const {
     return m_GraphicObject;
+}
+
+inline void mafPipeVisual::setStatus(int status) {
+    m_Status = status;
+}
+
+inline int mafPipeVisual::status() const {
+    return m_Status;
 }
 
 } //namespace mafResources
