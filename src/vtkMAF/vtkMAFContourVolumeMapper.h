@@ -102,18 +102,14 @@ namespace vtkMAFContourVolumeMapperNamespace
 
 
 // container type for sorting depth values
-class Idepth
+struct Idepth
 {
-public:
   float depth ;
   int index ;
   bool operator < (const Idepth &b) const {return this->depth < b.depth ;}
 };
 
-
-
 using namespace vtkMAFContourVolumeMapperNamespace ;
-
 
 //------------------------------------------------------------------------------
 // class vtkMAFContourVolumeMapper

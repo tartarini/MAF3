@@ -1001,14 +1001,18 @@ void mafGUIManager::updateRecentFileActions() {
 
     int numRecentFiles = qMin(files.size(), (int)m_MaxRecentFiles);
 
+    int numExistingRecentFiles = 0;
     for (int i = 0; i < numRecentFiles; ++i) {
         //Remove comment if don't want the full path in open recent menu
         //QString text = tr("&%1 %2").arg(i + 1).arg(strippedName(files[i]));
-        m_RecentFileActs.at(i)->setText(files[i]/*text*/);
-        m_RecentFileActs.at(i)->setData(files[i]);
-        m_RecentFileActs.at(i)->setVisible(true);
+        if (QFile::exists(files[i])) {
+            m_RecentFileActs.at(numExistingRecentFiles)->setText(files[i]/*text*/);
+            m_RecentFileActs.at(numExistingRecentFiles)->setData(files[i]);
+            m_RecentFileActs.at(numExistingRecentFiles)->setVisible(true);
+            ++numExistingRecentFiles;
+        }
     }
-    for (int j = numRecentFiles;  j < m_MaxRecentFiles; ++j)
+    for (int j = numExistingRecentFiles;  j < m_MaxRecentFiles; ++j)
         m_RecentFileActs.at(j)->setVisible(false);
 
     //m_RecentFilesSeparatorAct->setVisible(numRecentFiles > 0);

@@ -58,6 +58,7 @@ void mafInteractionManager::mousePress(double *pos, unsigned long modifiers, maf
         }
     }
 
+    m_DefaultInteractor = activeView->activeInteractor();
     // m_VME is initialized with the picked VME if any otherwise it remains NULL
     if(m_VME && m_VME->activeInteractor()) {
         m_VME->activeInteractor()->mousePress(pos, modifiers, m_VME, e);
@@ -66,7 +67,6 @@ void mafInteractionManager::mousePress(double *pos, unsigned long modifiers, maf
         }
     } else if (activeView) {
         // Initialize the default interactor for the picked view.
-        m_DefaultInteractor = activeView->activeInteractor();
         if (m_DefaultInteractor) {
             connect(m_DefaultInteractor, SIGNAL(destroyed()), this, SLOT(resetDefaultInteractor()));
             m_DefaultInteractor->mousePress(pos, modifiers, m_VME, e);

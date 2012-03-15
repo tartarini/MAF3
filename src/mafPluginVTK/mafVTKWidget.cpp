@@ -25,6 +25,7 @@
 #include <vtkProp.h>
 #include <vtkCamera.h>
 #include <vtkMath.h>
+#include <QVTKInteractor.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -107,7 +108,7 @@ vtkRenderer *mafVTKWidget::createLayer(const QString layerName) {
         if (m_RendererBase != NULL) {
             vtkCamera *camera = m_RendererBase->GetActiveCamera();
             renderer->SetActiveCamera(camera);
-            renderer->ResetCameraClippingRange();
+            camera->SetClippingRange(0.0001, 1000);
 
         }
         // Add the new renderer to the render window
@@ -115,6 +116,7 @@ vtkRenderer *mafVTKWidget::createLayer(const QString layerName) {
         // ... and to the layer hash.
         m_LayerHash.insert(layerName, renderer);
     }
+    
     return renderer;
 }
 
@@ -169,7 +171,7 @@ void mafVTKWidget::showAxes(bool show) {
 }
 
 void mafVTKWidget::mousePressEvent(QMouseEvent* e) {
-    Superclass::mousePressEvent(e);
+    //Superclass::mousePressEvent(e);
 
     vtkRenderWindowInteractor* iren = NULL;
     if(this->mRenWin) {
@@ -197,7 +199,7 @@ void mafVTKWidget::mousePressEvent(QMouseEvent* e) {
 }
 
 void mafVTKWidget::mouseReleaseEvent(QMouseEvent* e) {
-    Superclass::mouseReleaseEvent(e);
+    //Superclass::mouseReleaseEvent(e);
 
     vtkRenderWindowInteractor* iren = NULL;
     if(this->mRenWin) {
@@ -223,7 +225,7 @@ void mafVTKWidget::mouseReleaseEvent(QMouseEvent* e) {
 }
 
 void mafVTKWidget::mouseMoveEvent(QMouseEvent* e) {
-    Superclass::mouseMoveEvent(e);
+    //Superclass::mouseMoveEvent(e);
 
     vtkRenderWindowInteractor* iren = NULL;
     if(this->mRenWin) {
