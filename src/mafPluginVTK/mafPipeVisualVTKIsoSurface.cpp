@@ -80,7 +80,8 @@ void mafPipeVisualVTKIsoSurface::updatePipe(double t) {
 //    m_ContourFilter->Update();
 
     
-    m_Mapper->SetInput(vtkData);
+    //m_Mapper->SetInput(vtkData);
+    m_Mapper->SetInputConnection(0, *dataSet);
     m_Mapper->SetContourValue(m_ContourValue);
     
     //Get data contained in the mafProxy

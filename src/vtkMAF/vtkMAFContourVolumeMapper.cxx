@@ -224,18 +224,24 @@ float vtkMAFContourVolumeMapper::EstimateRelevantVolume(const double contourValu
 // Template function corresponding to EstimateRelevantVolume()
 // Calls PrepareAccelerationDataTemplate() to set up the blocks,
 // and returns the fraction of blocks which contain the contour.
-template <typename DataType> float vtkMAFContourVolumeMapper::EstimateRelevantVolumeTemplate(const DataType ContourValue)
+template <typename T> float vtkMAFContourVolumeMapper::EstimateRelevantVolumeTemplate(const T ContourValue)
 //------------------------------------------------------------------------------
 {
-    if (this->GetInput() == NULL || this->GetInput()->GetPointData() == NULL || this->GetInput()->GetPointData()->GetScalars() == NULL)
+    vtkAlgorithm *producer = GetInputConnection(0, 0)->GetProducer();
+    if(!producer) return 0.;
+    vtkDataObject *dataObject = producer->GetOutputDataObject(0);
+    if(!dataObject) return 0.;
+    vtkDataSet* dataset = vtkDataSet::SafeDownCast(dataObject);
+
+    if (dataset == NULL || dataset->GetPointData() == NULL || dataset->GetPointData()->GetScalars() == NULL)
         return 0.f;
 
-    const DataType *dataPointer = (const DataType *)this->GetInput()->GetPointData()->GetScalars()->GetVoidPointer(0);
-    PrepareAccelerationDataTemplate((const DataType*)dataPointer);
+    const T *dataPointer = (const T *)dataset->GetPointData()->GetScalars()->GetVoidPointer(0);
+    PrepareAccelerationDataTemplate((const T*)dataPointer);
 
     // go through the blocks now
     int relevant = 0;
-    const DataType (*BlockMinMax)[2] = (DataType (*)[2])this->BlockMinMax;
+    const T (*BlockMinMax)[2] = (T (*)[2])this->BlockMinMax;
     for (int bzi = 0; bzi < this->NumBlocks[2]; bzi++) {
         const int zblockSize = (((bzi + 1) < this->NumBlocks[2]) ? VoxelBlockSize : (this->DataDimensions[2] - 1 - (bzi << VoxelBlockSizeLog)));
 
@@ -265,7 +271,13 @@ template <typename DataType> float vtkMAFContourVolumeMapper::EstimateRelevantVo
 void vtkMAFContourVolumeMapper::Render(vtkRenderer *renderer, vtkVolume *volume)
 //------------------------------------------------------------------------------
 {
-    if (this->GetInput() == NULL || this->GetInput()->GetPointData() == NULL || this->GetInput()->GetPointData()->GetScalars() == NULL) {
+    vtkAlgorithm *producer = GetInputConnection(0, 0)->GetProducer();
+    if(!producer) return;
+    vtkDataObject *dataObject = producer->GetOutputDataObject(0);
+    if(!dataObject) return;
+    vtkDataSet* dataset = vtkDataSet::SafeDownCast(dataObject);
+
+    if (dataset == NULL || dataset->GetPointData() == NULL || dataset->GetPointData()->GetScalars() == NULL) {
         vtkErrorMacro(<< "No data for rendering");
         return;
     }
@@ -283,7 +295,7 @@ void vtkMAFContourVolumeMapper::Render(vtkRenderer *renderer, vtkVolume *volume)
         return;
     }
 
-    const void *dataPointer = this->GetInput()->GetPointData()->GetScalars()->GetVoidPointer(0);
+    const void *dataPointer = dataset->GetPointData()->GetScalars()->GetVoidPointer(0);
 
     switch (this->GetDataType()) {
     case VTK_CHAR:
@@ -317,26 +329,31 @@ void vtkMAFContourVolumeMapper::Render(vtkRenderer *renderer, vtkVolume *volume)
 // Gets data extents
 // Calculates coords of every voxel, and offsets between neighboring voxels
 // Divides volume into 8x8x8 blocks and calculates the min and max of each block.
-template <typename DataType> bool vtkMAFContourVolumeMapper::PrepareAccelerationDataTemplate(const DataType *dataPointer)
+template <typename T> bool vtkMAFContourVolumeMapper::PrepareAccelerationDataTemplate(const T *dataPointer)
 //------------------------------------------------------------------------------
 {
     int lod ;
+    vtkAlgorithm *producer = GetInputConnection(0, 0)->GetProducer();
+    if(!producer) return false;
+    vtkDataObject *dataObject = producer->GetOutputDataObject(0);
+    if(!dataObject) return false;
+    vtkDataSet* dataset = vtkDataSet::SafeDownCast(dataObject);
 
     // Is data the same?
-    if (this->GetInput() != NULL && this->GetInput()->GetMTime() > this->BuildTime)
+    if (dataset != NULL && dataset->GetMTime() > this->BuildTime)
         this->ReleaseData();
     else if (this->BlockMinMax != NULL)
         return true; // nothing to do
 
     // check the data
-    if (this->GetInput() && this->GetInput()->GetDataReleased())
-        this->GetInput()->Update(); // ensure that the data is loaded
+    if (dataset && dataset->GetDataReleased())
+        dataset->Update(); // ensure that the data is loaded
     if (!this->IsDataValid(true))
         return false;
 
     // cast the input to image or rectilinear grid (one will be valid, one should be NULL)
-    vtkImageData       *imageData = vtkImageData::SafeDownCast(this->GetInput());
-    vtkRectilinearGrid *gridData  = vtkRectilinearGrid::SafeDownCast(this->GetInput());
+    vtkImageData       *imageData = vtkImageData::SafeDownCast(dataset);
+    vtkRectilinearGrid *gridData  = vtkRectilinearGrid::SafeDownCast(dataset);
 
     // find data extent (dims, origin, spacing)
     // For each axis, calculates coords of the voxels, with padding of one VoxelBlockSize at end of array.
@@ -408,17 +425,17 @@ template <typename DataType> bool vtkMAFContourVolumeMapper::PrepareAcceleration
     // delete and reallocate array of block mins and maxes
     // declare a local BlockMinMax which is this->BlockMinMax cast to 2D array of correct type
     delete [] this->BlockMinMax;
-    this->BlockMinMax = new DataType [2 * this->NumBlocks[0] * this->NumBlocks[1] * this->NumBlocks[2]];
-    DataType (*BlockMinMax)[2] = (DataType (*)[2])this->BlockMinMax;    // create local variable which is 
+    this->BlockMinMax = new T [2 * this->NumBlocks[0] * this->NumBlocks[1] * this->NumBlocks[2]];
+    T (*BlockMinMax)[2] = (T (*)[2])this->BlockMinMax;    // create local variable which is 
 
 
     // set the mins and maxes to extreme values of the appropriate data type
     if (this->GetDataType() == VTK_UNSIGNED_CHAR || this->GetDataType() == VTK_UNSIGNED_SHORT) { // unsigned  
         for (int ii = 0, ilen = this->NumBlocks[0] * this->NumBlocks[1] * this->NumBlocks[2]; ii < ilen; ii++)
-            BlockMinMax[ii][0] = (DataType)VTK_UNSIGNED_SHORT_MAX, BlockMinMax[ii][1] = 0;
+            BlockMinMax[ii][0] = (T)VTK_UNSIGNED_SHORT_MAX, BlockMinMax[ii][1] = 0;
     } else if (this->GetDataType() != VTK_FLOAT) { // signed
         for (int ii = 0, ilen = this->NumBlocks[0] * this->NumBlocks[1] * this->NumBlocks[2]; ii < ilen; ii++)
-            BlockMinMax[ii][0] = (DataType)VTK_SHORT_MAX, BlockMinMax[ii][1] = (DataType)VTK_SHORT_MIN;
+            BlockMinMax[ii][0] = (T)VTK_SHORT_MAX, BlockMinMax[ii][1] = (T)VTK_SHORT_MIN;
     } else { 
         float (*BlockMinMax)[2] = (float (*)[2])this->BlockMinMax;
         for (int ii = 0, ilen = this->NumBlocks[0] * this->NumBlocks[1] * this->NumBlocks[2]; ii < ilen; ii++)
@@ -444,13 +461,13 @@ template <typename DataType> bool vtkMAFContourVolumeMapper::PrepareAcceleration
                     xi ? ((xi - 1) >> VoxelBlockSizeLog) : 0};
                 const int xblocks = (xblockI[0] == xblockI[1]) ? 1 : 2;
 
-                const DataType val = dataPointer[vi];    // pointer to scalar values was passed as an argument to this function
+                const T val = dataPointer[vi];    // pointer to scalar values was passed as an argument to this function
 
                 // update the min/max for each block which the voxel is in.
                 for (int zz = 0; zz < zblocks; zz++) {
                     for (int yy = 0; yy < yblocks; yy++) {
                         for (int xx = 0; xx < xblocks; xx++) {
-                            DataType (&minMax)[2] = BlockMinMax[xblockI[xx] + yblockI[yy] + zblockI[zz]];    // minMax is a just a reference for BlockMinMax[i]
+                            T (&minMax)[2] = BlockMinMax[xblockI[xx] + yblockI[yy] + zblockI[zz]];    // minMax is a just a reference for BlockMinMax[i]
                             if (minMax[0] > val) // min
                                 minMax[0] = val;
                             if (minMax[1] < val) // max
@@ -509,11 +526,17 @@ void vtkMAFContourVolumeMapper::EnableClipPlanes(bool enable)
 void vtkMAFContourVolumeMapper::Update()
 //------------------------------------------------------------------------------
 {
-    if (vtkImageData::SafeDownCast(this->GetInput()) != NULL || 
-        vtkRectilinearGrid::SafeDownCast(this->GetInput()) != NULL) {
-            this->GetInput()->UpdateInformation();
-            this->GetInput()->SetUpdateExtentToWholeExtent();
-            this->GetInput()->Update();
+    vtkAlgorithm *producer = GetInputConnection(0, 0)->GetProducer();
+    if(!producer) return;
+    vtkDataObject *dataObject = producer->GetOutputDataObject(0);
+    if(!dataObject) return;
+    vtkDataSet* dataset = vtkDataSet::SafeDownCast(dataObject);
+    
+    if (vtkImageData::SafeDownCast(dataset) != NULL || 
+        vtkRectilinearGrid::SafeDownCast(dataset) != NULL) {
+            dataset->UpdateInformation();
+            dataset->SetUpdateExtentToWholeExtent();
+            dataset->Update();
     }
 }
 
@@ -521,7 +544,12 @@ void vtkMAFContourVolumeMapper::Update()
 bool vtkMAFContourVolumeMapper::IsDataValid(bool warnings)
 //------------------------------------------------------------------------------
 {
-    vtkDataSet         *inputData = this->GetInput();
+    vtkAlgorithm *producer = GetInputConnection(0, 0)->GetProducer();
+    if(!producer) return false;
+    vtkDataObject *dataObject = producer->GetOutputDataObject(0);
+    if(!dataObject) return false;
+    vtkDataSet* inputData = vtkDataSet::SafeDownCast(dataObject);
+    
     vtkImageData       *imageData = vtkImageData::SafeDownCast(inputData);
     vtkRectilinearGrid *gridData  = vtkRectilinearGrid::SafeDownCast(inputData);
 
@@ -584,12 +612,19 @@ bool vtkMAFContourVolumeMapper::IsDataValid(bool warnings)
 int vtkMAFContourVolumeMapper::GetDataType()
 //------------------------------------------------------------------------------
 {
-    vtkDataSet *dataset = GetInput();
+    
+    vtkAlgorithm *producer = GetInputConnection(0, 0)->GetProducer();
+    if(!producer) return VTK_VOID;
+    vtkDataObject *dataObject = producer->GetOutputDataObject(0);
+    if(!dataObject) return VTK_VOID;
+    vtkDataSet* dataset = vtkDataSet::SafeDownCast(dataObject);
 
     if(dataset) {
         int dataType = dataset->GetPointData()->GetScalars()->GetDataType();
         return dataType;
     }
+    
+    
     
     return VTK_VOID;
 }
@@ -602,12 +637,18 @@ int vtkMAFContourVolumeMapper::GetDataType()
 vtkPolyData *vtkMAFContourVolumeMapper::GetOutput(int level, vtkPolyData *data)
 //------------------------------------------------------------------------------
 {
+    vtkAlgorithm *producer = GetInputConnection(0, 0)->GetProducer();
+    if(!producer) return NULL;
+    vtkDataObject *dataObject = producer->GetOutputDataObject(0);
+    if(!dataObject) return NULL;
+    vtkDataSet* dataset = vtkDataSet::SafeDownCast(dataObject);
+
     // check that level is in correct range
     if (level < 0 || level >= NumberOfLods)
         return NULL;
 
     // check that volume data is valid
-    if (this->GetInput() == NULL || this->GetInput()->GetPointData() == NULL || this->GetInput()->GetPointData()->GetScalars() == NULL) {
+    if (dataset == NULL || dataset->GetPointData() == NULL || dataset->GetPointData()->GetScalars() == NULL) {
         vtkErrorMacro(<< "No data");
         return NULL;
     }
@@ -615,7 +656,7 @@ vtkPolyData *vtkMAFContourVolumeMapper::GetOutput(int level, vtkPolyData *data)
     // use input polydata or allocate if none
     vtkPolyData *polydata = (data == NULL) ? vtkPolyData::New() : data;
 
-    const void *dataPointer = this->GetInput()->GetPointData()->GetScalars()->GetVoidPointer(0);
+    const void *dataPointer = dataset->GetPointData()->GetScalars()->GetVoidPointer(0);
 
     switch (this->GetDataType()) {
     case VTK_CHAR:
@@ -798,7 +839,7 @@ void vtkMAFContourVolumeMapper::DrawCache(vtkRenderer *renderer, vtkVolume *volu
 // Constructs triangles and renders them.
 // Predicts no. of triangles and time to draw before rendering, and chooses appropriate level of detail.
 // Triangles are cached if possible.
-template<typename DataType> void vtkMAFContourVolumeMapper::RenderMCubes(vtkRenderer *renderer, vtkVolume *volume, const DataType *dataPointer)
+template<typename T> void vtkMAFContourVolumeMapper::RenderMCubes(vtkRenderer *renderer, vtkVolume *volume, const T *dataPointer)
 //------------------------------------------------------------------------------
 {
     int lod ;
@@ -879,8 +920,8 @@ template<typename DataType> void vtkMAFContourVolumeMapper::RenderMCubes(vtkRend
     glInterleavedArrays(GL_N3F_V3F, 0, this->TriangleCache[LODLevel]);
 
     // define local variables to reduce overheads and improve readability
-    const DataType (*BlockMinMax)[2] = (DataType (*)[2])this->BlockMinMax;
-    DataType ContourValue = (DataType)this->ContourValue;
+    const T (*BlockMinMax)[2] = (T (*)[2])this->BlockMinMax;
+    T ContourValue = (T)this->ContourValue;
 
     float *verticeArray[NumberOfLods] ;
     float *normalArray[NumberOfLods] ;
@@ -1039,14 +1080,14 @@ template<typename DataType> void vtkMAFContourVolumeMapper::RenderMCubes(vtkRend
                                 const float fxSizeNorm = 1.f / (this->VoxelCoordinates[0][x + 1] - fx);
 
                                 const int voxelI = voxelIBlock + zi * sliceSize + yi * rowSize + xi;    // index of current voxel
-                                const DataType * const voxelPtr = dataPointer + voxelI;                 // pointer to current voxel
+                                const T * const voxelPtr = dataPointer + voxelI;                 // pointer to current voxel
                                 const float fxyzSize[3] = { fxSize, fySize, fzSize };                   // size (LOD size) of current voxel
 
 
                                 // Find the marching cubes case
 
                                 // get value of voxel and neighbors (VoxelOffsets was set earlier to normal or LOD sized cube)
-                                const DataType voxelVals[8] = {voxelPtr[0], voxelPtr[VoxelOffsets[1]], voxelPtr[VoxelOffsets[2]], voxelPtr[VoxelOffsets[3]],
+                                const T voxelVals[8] = {voxelPtr[0], voxelPtr[VoxelOffsets[1]], voxelPtr[VoxelOffsets[2]], voxelPtr[VoxelOffsets[3]],
                                     voxelPtr[VoxelOffsets[4]], voxelPtr[VoxelOffsets[5]], voxelPtr[VoxelOffsets[6]], voxelPtr[VoxelOffsets[7]]};
 
                                 // calculate case, each bit of caseIndex is set if corner > contour value
@@ -1138,7 +1179,7 @@ template<typename DataType> void vtkMAFContourVolumeMapper::RenderMCubes(vtkRend
                                             for (int vi = 0; vi < 2; vi++) {
                                                 // calculate pointer to vert0 or vert1
                                                 // you can check that this corresponds to (vx,vy,vz) using PointerFromIndices()
-                                                const DataType * const verticePtr = voxelPtr + VoxelOffsets[vi == 0 ? vert0 : vert1];
+                                                const T * const verticePtr = voxelPtr + VoxelOffsets[vi == 0 ? vert0 : vert1];
 
                                                 // gradient in x
                                                 const int vx = x + lodxy*vertIndeces[vi][0];    // x index of vertex
@@ -1272,7 +1313,7 @@ template<typename DataType> void vtkMAFContourVolumeMapper::RenderMCubes(vtkRend
 //
 // NB This function must not alter the cache data, eg this->NumberofTriangles or this->PrevContourValue
 // or DrawCache() will crash.
-template<typename DataType> void vtkMAFContourVolumeMapper::CreateMCubes(int LODLevel, vtkPolyData *polydata, const DataType *dataPointer)
+template<typename T> void vtkMAFContourVolumeMapper::CreateMCubes(int LODLevel, vtkPolyData *polydata, const T *dataPointer)
 //------------------------------------------------------------------------------
 {
     // select LOD
@@ -1297,8 +1338,8 @@ template<typename DataType> void vtkMAFContourVolumeMapper::CreateMCubes(int LOD
     vertexNormals->Allocate(3 * estimatedNumberOfTriangles);    // allocates space for this many floats, so have to multiply by 3 yourself this time
 
     // define local variables to reduce overheads and improve readability
-    const DataType (*BlockMinMax)[2] = (DataType (*)[2])this->BlockMinMax;
-    DataType ContourValue = (DataType)this->ContourValue;
+    const T (*BlockMinMax)[2] = (T (*)[2])this->BlockMinMax;
+    T ContourValue = (T)this->ContourValue;
 
     // process blocks and voxels
     this->SkippedVoxelBlocks = 0;
@@ -1437,14 +1478,14 @@ template<typename DataType> void vtkMAFContourVolumeMapper::CreateMCubes(int LOD
                         const float fxSizeNorm = 1.f / (this->VoxelCoordinates[0][x + 1] - fx);
 
                         const int voxelI = voxelIBlock + zi * sliceSize + yi * rowSize + xi;    // index of current voxel
-                        const DataType * const voxelPtr = dataPointer + voxelI;                 // pointer to current voxel
+                        const T * const voxelPtr = dataPointer + voxelI;                 // pointer to current voxel
                         const float fxyzSize[3] = { fxSize, fySize, fzSize };                   // size (LOD size) of current voxel
 
 
                         // Find the marching cubes case
 
                         // get value of voxel and neighbors (VoxelOffsets was set earlier to normal or LOD sized cube)
-                        const DataType voxelVals[8] = {voxelPtr[0], voxelPtr[VoxelOffsets[1]], voxelPtr[VoxelOffsets[2]], voxelPtr[VoxelOffsets[3]],
+                        const T voxelVals[8] = {voxelPtr[0], voxelPtr[VoxelOffsets[1]], voxelPtr[VoxelOffsets[2]], voxelPtr[VoxelOffsets[3]],
                             voxelPtr[VoxelOffsets[4]], voxelPtr[VoxelOffsets[5]], voxelPtr[VoxelOffsets[6]], voxelPtr[VoxelOffsets[7]]};
 
                         // calculate case, each bit of caseIndex is set if corner > contour value
@@ -1531,7 +1572,7 @@ template<typename DataType> void vtkMAFContourVolumeMapper::CreateMCubes(int LOD
                                     for (int vi = 0; vi < 2; vi++) {
                                         // calculate pointer to vert0 or vert1
                                         // you can check that this corresponds to (vx,vy,vz) using PointerFromIndices()
-                                        const DataType * const verticePtr = voxelPtr + VoxelOffsets[vi == 0 ? vert0 : vert1];
+                                        const T * const verticePtr = voxelPtr + VoxelOffsets[vi == 0 ? vert0 : vert1];
 
                                         // gradient in x
                                         const int vx = x + lodxy*vertIndeces[vi][0];    // x index of vertex
@@ -1942,11 +1983,11 @@ void vtkMAFContourVolumeMapper::PrepareContours(const int slice, const void *ima
 
 //------------------------------------------------------------------------------
 // Prepare contours
-template<typename DataType> void vtkMAFContourVolumeMapper::PrepareContoursTemplate(const int slice, const DataType *imageData) 
+template<typename T> void vtkMAFContourVolumeMapper::PrepareContoursTemplate(const int slice, const T *imageData) 
 //------------------------------------------------------------------------------
 {
-    const DataType (* const BlockMinMax)[2] = (DataType (*)[2])((DataType *)this->BlockMinMax + 2 * (slice >> VoxelBlockSizeLog) * this->NumBlocks[0] * this->NumBlocks[1]);
-    const DataType ContourValue = (DataType)this->ContourValue;
+    const T (* const BlockMinMax)[2] = (T (*)[2])((T *)this->BlockMinMax + 2 * (slice >> VoxelBlockSizeLog) * this->NumBlocks[0] * this->NumBlocks[1]);
+    const T ContourValue = (T)this->ContourValue;
     const int lastXBlock = this->NumBlocks[0] - 1, lastYBlock = this->NumBlocks[1] - 1;
     const int lastXBlockSize = this->DataDimensions[0] - 1 - (lastXBlock << VoxelBlockSizeLog), lastYBlockSize = this->DataDimensions[1] - 1 - (lastYBlock << VoxelBlockSizeLog);
 
@@ -1964,14 +2005,14 @@ template<typename DataType> void vtkMAFContourVolumeMapper::PrepareContoursTempl
 
             const int xBlock = (bxi << VoxelBlockSizeLog);
             const int yBlock = (byi << VoxelBlockSizeLog);
-            const DataType *imageBlock = imageData + yBlock * this->DataDimensions[0] + xBlock;
+            const T *imageBlock = imageData + yBlock * this->DataDimensions[0] + xBlock;
 
             // build the contours
             for (int yi = 0; yi < yblockSize; yi++, imageBlock += this->DataDimensions[0]) {
                 for (int xi = 0; xi < xblockSize; xi++) {
-                    const DataType * const voxelPtr = imageBlock + xi;
+                    const T * const voxelPtr = imageBlock + xi;
 
-                    const DataType voxelVals[4] = {voxelPtr[0], voxelPtr[1], voxelPtr[this->DataDimensions[0] + 1], voxelPtr[this->DataDimensions[0]]};
+                    const T voxelVals[4] = {voxelPtr[0], voxelPtr[1], voxelPtr[this->DataDimensions[0] + 1], voxelPtr[this->DataDimensions[0]]};
                     int caseIndex = voxelVals[0] > ContourValue; 
                     caseIndex |= (voxelVals[1] > ContourValue) << 1;
                     caseIndex |= (voxelVals[2] > ContourValue) << 2;
@@ -2165,7 +2206,7 @@ void vtkMAFContourVolumeMapper::SortTriangles(int lod, bool sortall)
 // Calculate data pointer from x y z indices
 // dataPointer is the pointer to (0,0,0) in the volume
 // Useful in debugging to check correspondence between pointer and (x,y,z)
-template<typename DataType> const DataType* vtkMAFContourVolumeMapper::PointerFromIndices(const DataType* dataPointer, int x, int y, int z)
+template<typename T> const T* vtkMAFContourVolumeMapper::PointerFromIndices(const T* dataPointer, int x, int y, int z)
 //------------------------------------------------------------------------------
 {
     int rowSize = this->DataDimensions[0];
@@ -2178,7 +2219,7 @@ template<typename DataType> const DataType* vtkMAFContourVolumeMapper::PointerFr
 // Calculate x y z indices from data pointer
 // dataPointer is the pointer to (0,0,0) in the volume
 // Useful in debugging to check correspondence between pointer and (x,y,z)
-template<typename DataType> void vtkMAFContourVolumeMapper::IndicesFromPointer(const DataType* dataPointer, const DataType* p, int *x, int *y, int *z)
+template<typename T> void vtkMAFContourVolumeMapper::IndicesFromPointer(const T* dataPointer, const T* p, int *x, int *y, int *z)
 //------------------------------------------------------------------------------
 {
     int rowSize = this->DataDimensions[0];
