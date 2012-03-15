@@ -18,11 +18,11 @@
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkImageData.h>
-#include <vtkPolyDataMapper.h>
+#include <vtkMAFContourVolumeMapper.h>
 #include <vtkContourFilter.h>
 #include <vtkDataArray.h>
 #include <vtkPointData.h>
-#include <vtkActor.h>
+#include <vtkVolume.h>
 #include <vtkAlgorithmOutput.h>
 #include <vtkDecimatePro.h>
 #include <vtkInformation.h>
@@ -32,22 +32,18 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace std;
 
-mafPipeVisualVTKIsoSurface::mafPipeVisualVTKIsoSurface(const QString code_location) : mafPipeVisualVTK(code_location), m_Mapper(NULL), m_ContourFilter(NULL), m_ContourValue(NULL) {
+mafPipeVisualVTKIsoSurface::mafPipeVisualVTKIsoSurface(const QString code_location) : mafPipeVisualVTK(code_location), m_Mapper(NULL), m_ContourValue(NULL) {
     m_UIFilename = "mafPipeVisualIsoSurface.ui";
-
-    m_ContourFilter = vtkContourFilter::New();
     
-    m_Mapper = vtkPolyDataMapper::New();
-    m_Mapper->SetInputConnection(m_ContourFilter->GetOutputPort());
+    m_Mapper = vtkMAFContourVolumeMapper::New();
     
-    m_Prop3D = vtkActor::New();
-    m_Prop3D.setDestructionFunction(&vtkActor::Delete);
-    vtkActor::SafeDownCast(m_Prop3D)->SetMapper(m_Mapper);
+    m_Prop3D = vtkVolume::New();
+    m_Prop3D.setDestructionFunction(&vtkVolume::Delete);
+    vtkVolume::SafeDownCast(m_Prop3D)->SetMapper(m_Mapper);
     m_Output = &m_Prop3D;
 }
 
 mafPipeVisualVTKIsoSurface::~mafPipeVisualVTKIsoSurface() {
-    m_ContourFilter->Delete();
     m_Mapper->Delete();
 }
 
@@ -76,15 +72,18 @@ void mafPipeVisualVTKIsoSurface::updatePipe(double t) {
     if (m_ContourValue == NULL) {
         m_ContourValue = (m_Range[1] - m_Range[0])/2;
     }
+//
+//    m_ContourFilter->UseScalarTreeOn();
+//    m_ContourFilter->SetInputConnection(*dataSet);
+//    m_ContourFilter->SetNumberOfContours(1);
+//    m_ContourFilter->SetValue(0, m_ContourValue);
+//    m_ContourFilter->Update();
 
-    m_ContourFilter->UseScalarTreeOn();
-    m_ContourFilter->SetInputConnection(*dataSet);
-    m_ContourFilter->SetNumberOfContours(1);
-    m_ContourFilter->SetValue(0, m_ContourValue);
-    m_ContourFilter->Update();
+    
+    m_Mapper->SetInput(vtkData);
+    m_Mapper->SetContourValue(m_ContourValue);
     
     //Get data contained in the mafProxy
-    m_Mapper->SetScalarVisibility(m_ScalarVisibility);
     m_Mapper->Update();
     //Keep ImmediateModeRendering off: it slows rendering
     //m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
@@ -98,6 +97,7 @@ QString mafPipeVisualVTKIsoSurface::contourValue() {
 void mafPipeVisualVTKIsoSurface::setContourValue(QString value) {
     m_ContourValue = value.toInt();
 }
+
 
 void mafPipeVisualVTKIsoSurface::on_contourValue_textEdited(QString stringValue) {
     m_ContourValue = stringValue.toInt();

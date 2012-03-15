@@ -584,19 +584,13 @@ bool vtkMAFContourVolumeMapper::IsDataValid(bool warnings)
 int vtkMAFContourVolumeMapper::GetDataType()
 //------------------------------------------------------------------------------
 {
-    vtkAlgorithmOutput *ao = this->GetInputConnection(0,0);
-    if (ao) {
-        vtkAlgorithm *producer = ao->GetProducer();
-        if(producer) {
-            vtkDataObject *data = producer->GetInputDataObject(0, 0);
-            vtkDataSet *dataset = vtkDataSet::SafeDownCast(data);
-            if(dataset) {
-                int dataType = dataset->GetPointData()->GetScalars()->GetDataType();
-                return dataType;
-            }
-        }
-    }
+    vtkDataSet *dataset = GetInput();
 
+    if(dataset) {
+        int dataType = dataset->GetPointData()->GetScalars()->GetDataType();
+        return dataType;
+    }
+    
     return VTK_VOID;
 }
 
