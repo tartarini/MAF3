@@ -30,6 +30,7 @@
 #include <vtkPiecewiseFunction.h>
 #include <vtkColorTransferFunction.h>
 #include <vtkVolumeProperty.h>
+#include <vtkProperty.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -82,6 +83,7 @@ bool mafPipeVisualVTKMIPVolume::acceptObject(mafCore::mafObjectBase *obj) {
 
 void mafPipeVisualVTKMIPVolume::updatePipe(double t) {
     Superclass::updatePipe(t);
+    vtkActor::SafeDownCast(m_Prop3D)->GetProperty()->SetOpacity(m_OpacityValue);
 
     mafDataSet *data = dataSetForInput(0, t);
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());

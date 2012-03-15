@@ -26,6 +26,7 @@
 #include <vtkAlgorithmOutput.h>
 #include <vtkDecimatePro.h>
 #include <vtkInformation.h>
+#include <vtkProperty.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -64,6 +65,7 @@ bool mafPipeVisualVTKIsoSurface::acceptObject(mafCore::mafObjectBase *obj) {
 
 void mafPipeVisualVTKIsoSurface::updatePipe(double t) {
     Superclass::updatePipe(t);
+    vtkActor::SafeDownCast(m_Prop3D)->GetProperty()->SetOpacity(m_OpacityValue);
 
     mafDataSet *data = dataSetForInput(0, t);
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
@@ -86,6 +88,7 @@ void mafPipeVisualVTKIsoSurface::updatePipe(double t) {
     //Get data contained in the mafProxy
     m_Mapper->SetScalarVisibility(m_ScalarVisibility);
     m_Mapper->Update();
+
     //Keep ImmediateModeRendering off: it slows rendering
     //m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
     updatedGraphicObject();

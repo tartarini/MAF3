@@ -22,6 +22,7 @@
 #include <vtkDataArray.h>
 #include <vtkPointData.h>
 #include <vtkActor.h>
+#include <vtkProperty.h>
 
 using namespace mafCore;
 using namespace mafResources;
@@ -29,6 +30,7 @@ using namespace mafPluginVTK;
 using namespace std;
 
 mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : mafPipeVisualVTK(code_location), m_Mapper(NULL) {
+    m_UIFilename = "mafPipeVisualSurface.ui";
     m_Mapper = vtkPolyDataMapper::New();
     m_Prop3D = vtkActor::New();
     m_Prop3D.setDestructionFunction(&vtkActor::Delete);
@@ -54,6 +56,7 @@ bool mafPipeVisualVTKSurface::acceptObject(mafCore::mafObjectBase *obj) {
 void mafPipeVisualVTKSurface::updatePipe(double t) {
     // This call will set the modified state of the pipe to false.
     Superclass::updatePipe(t);
+    vtkActor::SafeDownCast(m_Prop3D)->GetProperty()->SetOpacity(m_OpacityValue);
 
     mafDataSet *data = dataSetForInput(0, t);
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());
@@ -63,4 +66,6 @@ void mafPipeVisualVTKSurface::updatePipe(double t) {
     m_Mapper->SetScalarVisibility(m_ScalarVisibility);
     //Keep ImmediateModeRendering off: it slows rendering
     //m_Mapper->SetImmediateModeRendering(m_ImmediateRendering);
+    updatedGraphicObject();
 }
+
