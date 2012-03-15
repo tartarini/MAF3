@@ -102,7 +102,7 @@ namespace vtkMAFContourVolumeMapperNamespace
 
 
 // container type for sorting depth values
-class Idepth
+struct Idepth
 {
 public:
   float depth ;
