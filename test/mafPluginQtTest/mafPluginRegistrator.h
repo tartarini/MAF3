@@ -12,7 +12,7 @@
 #ifndef MAFPLUGINQTREGISTRATOR_H
 #define MAFPLUGINQTREGISTRATOR_H
 
-#include "mafPluginQtDefinitions.h"
+#include "mafPluginQtTestDefinitions.h"
 
 namespace mafPluginQtTest {
 
@@ -22,7 +22,7 @@ namespace mafPluginQtTest {
  by sending the message through the mafEventBus using the macro mafRegisterPluginEvent.
  @sa mafEventBusManager, mafPluginManager
  */
-class MAFPLUGINQTSHARED_EXPORT mafPluginRegistrator : public QObject, mafResources::mafPluginQtInterface {
+class MAFPLUGINQTTESTSHARED_EXPORT mafPluginRegistrator : public QObject, mafResources::mafPluginQtInterface {
     Q_OBJECT
     Q_INTERFACES(mafResources::mafPluginQtInterface)
     

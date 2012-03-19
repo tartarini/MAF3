@@ -13,7 +13,7 @@
 #define MAFDATAPIPESURFACEQTPLUGINTEST_H
 
 // Includes list
-#include "mafPluginQtDefinitions.h"
+#include "mafPluginQtTestDefinitions.h"
 #include <mafPipeData.h>
 
 namespace mafPluginQtTest {
@@ -22,7 +22,7 @@ namespace mafPluginQtTest {
  Class name: mafPipeDataSurfaceQtPluginTest
  This class is an example data pipe that is plugged into the framework as Qt plug-in.
  */
-class MAFPLUGINQTSHARED_EXPORT mafPipeDataSurfaceQtPluginTest : public mafResources::mafPipeData {
+class MAFPLUGINQTTESTSHARED_EXPORT mafPipeDataSurfaceQtPluginTest : public mafResources::mafPipeData {
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafPipeData);
