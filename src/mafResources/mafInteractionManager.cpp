@@ -55,10 +55,10 @@ void mafInteractionManager::mousePress(double *pos, unsigned long modifiers, maf
         QObject *view = renderWidget->property("viewObject").value<QObject *>();
         if (view) {
             activeView = qobject_cast<mafView *>(view);
+            m_DefaultInteractor = activeView->activeInteractor();
         }
     }
 
-    m_DefaultInteractor = activeView->activeInteractor();
     // m_VME is initialized with the picked VME if any otherwise it remains NULL
     if(m_VME && m_VME->activeInteractor()) {
         m_VME->activeInteractor()->mousePress(pos, modifiers, m_VME, e);

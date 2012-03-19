@@ -41,7 +41,7 @@ mafPipeVisualVTKMIPVolume::mafPipeVisualVTKMIPVolume(const QString code_location
     m_UIFilename = "mafPipeVisualMIPVolume.ui";
     
     // Create transfer mapping scalar value to opacity
-   m_PieceWiseTransferFunction = vtkPiecewiseFunction::New();
+    m_PieceWiseTransferFunction = vtkPiecewiseFunction::New();
     //vtkColorTransferFunction* colorTransferFunction = vtkColorTransferFunction::New();
      
     // The property describes how the data will look
@@ -83,7 +83,6 @@ bool mafPipeVisualVTKMIPVolume::acceptObject(mafCore::mafObjectBase *obj) {
 
 void mafPipeVisualVTKMIPVolume::updatePipe(double t) {
     Superclass::updatePipe(t);
-    vtkActor::SafeDownCast(m_Prop3D)->GetProperty()->SetOpacity(m_OpacityValue);
 
     mafDataSet *data = dataSetForInput(0, t);
     mafProxy<vtkAlgorithmOutput> *dataSet = mafProxyPointerTypeCast(vtkAlgorithmOutput, data->dataValue());

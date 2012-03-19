@@ -171,10 +171,11 @@ public:
   Returns the fraction of blocks which contain the contour. */
   float EstimateRelevantVolume(const double value);
 
-  /** To set the value of transparency */
-  void SetAlpha(double alpha){m_Alpha=alpha;};
+  /** To set the value of opacity */
+  void SetOpacity(double opacity);
 
-  void SetMaxScalar(double scalar){m_MAXScalar=scalar;};
+  /** Set limit of the scalar value */
+  void SetMaxScalar(double scalar);
 
   /** Return the index increments in xy and z given the lod index
   For lod = 0,1,2,3... lodxy = 2^n = 1,2,4,8...
@@ -310,9 +311,9 @@ private:
   int            AutoLODCreate;          ///< enable level of detail when extracting polydata
   int            EnableContourAnalysis;  ///< shall we optimize the surface?
 
-  // to set the alpha parameter
-  double         m_Alpha;
-  double         m_MAXScalar;
+  // to set the opacity parameter
+  double         Opacity;
+  double         MAXScalar;
 
   // volume info
   double         DataOrigin[3];
@@ -346,5 +347,18 @@ private:
 
   vtkMAFListOfPolyline2D *Polylines; // This should be a parameter of a method but VStudio have problems with template argument in template function.
 };
+
+/////////////////////////////////////////////////////////////
+// Inline methods
+/////////////////////////////////////////////////////////////
+
+inline void vtkMAFContourVolumeMapper::SetOpacity(double opacity){
+    Opacity = opacity;
+};
+
+inline void vtkMAFContourVolumeMapper::SetMaxScalar(double scalar){
+    MAXScalar = scalar;
+};
+
 
 #endif
