@@ -19,6 +19,7 @@ namespace mafResources {
 
 // Class forwarding list
 class mafPlugin;
+class mafPluginQt;
 
 /**
 Class name: mafPluginManager
@@ -94,8 +95,10 @@ private:
 
     /// Hash of plugins by their associated file names
     typedef QHash<QString, mafPlugin *> mafPluginHash;
+    typedef QHash<QString, mafPluginQt *> mafPluginQtHash;
 
-    mafPluginHash m_PluginsHash;  ///< Association of filenames with all plugins handlers.
+    mafPluginHash m_PluginsHash;  ///< Association of filenames with MAF plugins handlers.
+    mafPluginQtHash m_PluginsQtHash;  ///< Association of filenames with Qt plugins handlers.
     mafCore::mafPluggedObjectsHash m_PluggedObjectsHash; ///< Association of base MAF3 objects and the list of plugged objects.
     mafCore::mafPluggedObjectsHash m_ReverseObjectsHash; ///< Hash needed for reverse association of plugged objects type and base class extended.
 };

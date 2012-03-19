@@ -19,6 +19,7 @@ endif(${MAF_SERIALIZATION})
 
 if(${MAF_RESOURCES})
   ADD_SUBDIRECTORY(mafPluginTest)
+  ADD_SUBDIRECTORY(mafPluginQtTest)
   ADD_SUBDIRECTORY(mafResourcesTest)
 endif(${MAF_RESOURCES})
 

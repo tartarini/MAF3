@@ -18,6 +18,7 @@
 #include <mafPlugin.h>
 
 #define TEST_LIBRARY_NAME "mafPluginTest.mafplugin"
+#define TEST_QTLIBRARY_NAME "libmafPluginQtTest.mafplugin"
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -103,7 +104,8 @@ private Q_SLOTS:
 
         // Initialize the plug-in name with prefix and extension.
         m_PluginName.append(TEST_LIBRARY_NAME);
-
+        m_QtPluginName.append(TEST_QTLIBRARY_NAME);
+        
         //! <snippet>
         m_PluginManager = mafPluginManager::instance();
         //! </snippet>
@@ -125,12 +127,15 @@ private Q_SLOTS:
     void mafPluginManagerAllocationTest();
     /// Test loading plug-in compiled as dynamic library
     void mafPluginManagerLoadPluginTest();
+    /// Test loading plug-in compiled as dynamic library
+    void mafPluginManagerLoadQtPluginTest();
     /// Test the unload mechanism for the plugin manager.
 //    void mafPluginManagerUnloadTest();
 
 private:
     mafPluginManager *m_PluginManager; ///< Test var.
     QString m_PluginName; ///< Test var.
+    QString m_QtPluginName; ///< Test var.
     testPluginObserver *m_Observer; ///< Test observer.
 };
 
@@ -184,6 +189,59 @@ void mafPluginManagerTest::mafPluginManagerLoadPluginTest() {
     QString res("mafResources::mafPipeData");
     QCOMPARE(res, objInfo.m_ClassType);
 }
+
+void mafPluginManagerTest::mafPluginManagerLoadQtPluginTest() {
+    // Load the library containing the objects that I want to plug-in.
+    //! <snippet>
+    qDebug() << m_QtPluginName;
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(QString, m_QtPluginName));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.loadLibrary", mafEventTypeLocal, &argList);
+    //! </snippet>
+    
+    // Dump the plug-in information.
+    mafPluginInfo info = m_PluginManager->pluginInformation(m_QtPluginName);
+    qDebug() << "Plug-in Information:";
+    qDebug() << "Varsion: " << info.m_Version;
+    qDebug() << "Author: " << info.m_Author;
+    qDebug() << "Vendor: " << info.m_Vendor;
+    qDebug() << "Description: " << info.m_Description;
+    
+    mafPipeData *dp = m_Observer->pluggedPipe();
+    QVERIFY(dp != NULL);
+    
+    argList.clear();
+    QString baseClassType("mafResources::mafPipeData");
+    argList.append(mafEventArgument(QString, baseClassType));
+    mafPluggedObjectInformationList *pluggedObjectList = NULL;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafPluggedObjectInformationList *, pluggedObjectList);
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.plugin.resourcesQuery", mafEventTypeLocal, &argList, &ret_val);
+    
+    QVERIFY(pluggedObjectList != NULL);
+    
+    int size = pluggedObjectList->count();
+    QVERIFY(size > 0);
+    
+    delete pluggedObjectList;
+    pluggedObjectList = NULL;
+    
+    mafPluggedObjectInformationList baseClassList;
+    QString pluggedClassType("mafPluginQtTest::mafPipeDataSurfaceQtPluginTest");
+    m_PluginManager->queryBaseClassType(pluggedClassType, &baseClassList);
+    
+    size = baseClassList.count();
+    QVERIFY(size == 1);
+    
+    mafPluggedObjectInformation objInfo = baseClassList.first();
+    QString res("mafResources::mafPipeData");
+
+        qDebug() << "vero res:" <<res;
+    qDebug() << "vero expected:" <<objInfo.m_ClassType;
+    
+    QCOMPARE(res, objInfo.m_ClassType);
+}
+
+
 
 //void mafPluginManagerTest::mafPluginManagerUnloadTest() {
     // Unload the plug-in library.
