@@ -18,7 +18,6 @@ using namespace mafResources;
 
 mafPluginQt::mafPluginQt(const QString &pluginFilename, const QString code_location) : mafObjectBase(code_location), m_PluginRegistrator(0), m_RefCount(0), m_Loaded(false)  {
     // Try to load the plugin as a dynamic library
-    qDebug() << pluginFilename;
     QPluginLoader pluginLoader(pluginFilename);
     QObject *pg = pluginLoader.instance();
     m_PluginRegistrator = qobject_cast<mafPluginQtInterface *>(pg);
