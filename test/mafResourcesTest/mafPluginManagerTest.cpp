@@ -3,9 +3,9 @@
  *  mafResourcesTest
  *
  *  Created by Paolo Quadrani on 22/09/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -18,7 +18,12 @@
 #include <mafPlugin.h>
 
 #define TEST_LIBRARY_NAME "mafPluginTest.mafplugin"
+
+#ifdef _WIN32
+#define TEST_QTLIBRARY_NAME "mafPluginQtTest.mafplugin"
+#else
 #define TEST_QTLIBRARY_NAME "libmafPluginQtTest.mafplugin"
+#endif
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -89,7 +94,7 @@ mafPipeData *testPluginObserver::pluggedPipe() {
 //! </title>
 //! <description>
 //mafPluginManager provides the engine for loading plug-ins and define
-//the ID: REGISTER_PLUGIN used by external libraries to register their splugged objects.
+//the ID: REGISTER_PLUGIN used by external libraries to register their plugged objects.
 //! </description>
 
 class mafPluginManagerTest : public QObject {
@@ -129,8 +134,6 @@ private Q_SLOTS:
     void mafPluginManagerLoadPluginTest();
     /// Test loading plug-in compiled as dynamic library
     void mafPluginManagerLoadQtPluginTest();
-    /// Test the unload mechanism for the plugin manager.
-//    void mafPluginManagerUnloadTest();
 
 private:
     mafPluginManager *m_PluginManager; ///< Test var.
@@ -240,13 +243,6 @@ void mafPluginManagerTest::mafPluginManagerLoadQtPluginTest() {
     
     QCOMPARE(res, objInfo.m_ClassType);
 }
-
-
-
-//void mafPluginManagerTest::mafPluginManagerUnloadTest() {
-    // Unload the plug-in library.
-//    m_PluginManager->unLoadPlugin(m_PluginName);
-//}
 
 MAF_REGISTER_TEST(mafPluginManagerTest);
 #include "mafPluginManagerTest.moc"
