@@ -31,7 +31,6 @@
 #include <vtkTexturedButtonRepresentation.h>
 #include <vtkTexturedButtonRepresentation2D.h>
 #include <vtkBalloonRepresentation.h>
-
 #include <vtkCommand.h>
 
 using namespace mafCore;
@@ -40,7 +39,7 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 
 
-// Callback for the interaction
+// Callback respondign to vtkCommand::StateChangedEvent
 class vtkButtonCallback : public vtkCommand {
 public:
     static vtkButtonCallback *New() { 
@@ -78,12 +77,38 @@ public:
     bool flyTo;
 };
 
+// Callback respondign to vtkCommand::HighlightEvent
+class vtkButtonHighLightCallback : public vtkCommand {
+public:
+    static vtkButtonHighLightCallback *New() { 
+        return new vtkButtonHighLightCallback; 
+    }
+
+    virtual void Execute(vtkObject *caller, unsigned long, void*) {
+        vtkTexturedButtonRepresentation2D *rep = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(caller);
+        int highlightState = rep->GetHighlightState();
+        
+        if ( highlightState == vtkButtonRepresentation::HighlightHovering ) {
+            highligthButtonRepresentation->SetVisibility(1);
+        } else if ( highlightState == vtkButtonRepresentation::HighlightNormal ) {
+            highligthButtonRepresentation->SetVisibility(0);
+        }
+    }
+
+    vtkButtonHighLightCallback():highligthButtonRepresentation(NULL){}
+    vtkTexturedButtonRepresentation2D *highligthButtonRepresentation;
+    
+};
+
 mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location), m_ShowLabel(true), m_FlyTo(true), m_OnCenter(false) {
     bool loaded = false;
     VTK_CREATE(vtkTexturedButtonRepresentation2D, rep);
     rep->SetNumberOfStates(1);
 
-    // Decomment this code to use a standard circle icon 
+    VTK_CREATE(vtkTexturedButtonRepresentation2D, repTooltip);
+    repTooltip->SetNumberOfStates(1);
+
+    // Uncomment this code to use a standard circle icon 
     // Create an image for the button
 //     QImage image;
 //     
@@ -100,25 +125,35 @@ mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK
 
 
     //rep->SetButtonTexture(0, imageToVTK2->GetOutput());
-    myCallback = vtkButtonCallback::New();
+    buttonCallback = vtkButtonCallback::New();
+    highlightCallback = vtkButtonHighLightCallback::New();
 
     m_ButtonWidget = vtkButtonWidget::New();
     m_ButtonWidget->SetRepresentation(rep);
-    m_ButtonWidget->AddObserver(vtkCommand::StateChangedEvent,myCallback);
+    m_ButtonWidget->AddObserver(vtkCommand::StateChangedEvent,buttonCallback);
+
+    m_TooltipWidget = vtkButtonWidget::New();
+    m_TooltipWidget->SetRepresentation(repTooltip);
+    repTooltip->SetVisibility(0);
+    highlightCallback->highligthButtonRepresentation = repTooltip;
+    rep->AddObserver(vtkCommand::HighlightEvent,highlightCallback);
 }
 
 mafToolVTKButtons::~mafToolVTKButtons() {
     m_ButtonWidget->Delete();
+    m_TooltipWidget->Delete();
 }
 
 void mafToolVTKButtons::resetTool() {
     removeWidget(m_ButtonWidget);
+    removeWidget(m_TooltipWidget);
 }
 
 void mafToolVTKButtons::graphicObjectInitialized() {
     // Graphic widget (render window, interactor...) has been created and initialized.
     // now can add the widget.
     addWidget(m_ButtonWidget);
+    addWidget(m_TooltipWidget);
 }
 
 void mafToolVTKButtons::updatePipe(double t) {
@@ -145,9 +180,10 @@ void mafToolVTKButtons::updatePipe(double t) {
         absMatrix = NULL;
     }
 
+    ///////////-------- BUTTON WIDGET -----------////////////
     vtkTexturedButtonRepresentation2D *rep = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(m_ButtonWidget->GetRepresentation());
 
-    //Load image only the one time
+    //Load image only the first time
     if (m_IconFileName.isEmpty()) {
         QImage image;
         QString iconType = vme->property("iconType").toString();
@@ -174,7 +210,6 @@ void mafToolVTKButtons::updatePipe(double t) {
 
         //Set label position
         rep->GetBalloon()->SetBalloonLayoutToImageLeft();
-        
 
         //This method allows to set the label's background opacity
         rep->GetBalloon()->GetFrameProperty()->SetOpacity(0.65);
@@ -192,14 +227,45 @@ void mafToolVTKButtons::updatePipe(double t) {
         bds[1] = newBounds->yMin(); 
         bds[2] = newBounds->zMin();
     }
-
     rep->PlaceWidget(bds, size);
     rep->Modified();
     m_ButtonWidget->SetRepresentation(rep);
+    ///////////-------- BUTTON WIDGET -----------////////////
 
-    myCallback->graphicObject = this->m_GraphicObject;
-    myCallback->setBounds(newBounds);
-    myCallback->setFlyTo(m_FlyTo);
+    ///////////-------- TOOLTIP WIDGET -----------////////////
+    vtkTexturedButtonRepresentation2D *repTooltip = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(m_TooltipWidget->GetRepresentation());
+    //Add text to the tooltip
+    QString tooltipString("Data type: ");
+    tooltipString.append(vme->dataSetCollection()->itemAtCurrentTime()->externalDataType());
+    tooltipString.append("\nPose matrix: ");
+    tooltipString.append(vme->dataSetCollection()->itemAtCurrentTime()->poseMatrixString());
+    repTooltip->GetBalloon()->SetBalloonText(tooltipString.toAscii());
+    vtkTextProperty *textPropTooltip = repTooltip->GetBalloon()->GetTextProperty();
+    repTooltip->GetBalloon()->SetPadding(2);
+    textPropTooltip->SetFontSize(10);
+    textPropTooltip->BoldOff();
+    //textProp->SetColor(0.9,0.9,0.9);
+
+    //Set label position
+    repTooltip->GetBalloon()->SetBalloonLayoutToImageLeft();
+
+    //Set the label's background property
+    //repTooltip->GetBalloon()->GetFrameProperty()->SetColor(0.77, 0.88, 1.0);
+    repTooltip->GetBalloon()->GetFrameProperty()->SetOpacity(0.65);
+
+    //Set position on the Tooltip under the button
+    bds[1] = bds[1] - 0.2;
+    repTooltip->PlaceWidget(bds, size);
+
+    repTooltip->Modified();
+    m_TooltipWidget->SetRepresentation(repTooltip);
+    ///////////-------- TOOLTIP WIDGET -----------////////////
+
+
+    buttonCallback->graphicObject = this->m_GraphicObject;
+    buttonCallback->setBounds(newBounds);
+    buttonCallback->setFlyTo(m_FlyTo);
+
     updatedGraphicObject();
 }
 
