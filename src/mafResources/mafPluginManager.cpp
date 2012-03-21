@@ -53,20 +53,11 @@ mafPluginManager::~mafPluginManager() {
     // Delete all references of plug-ins.
     mafPluginHash::iterator iter = m_PluginsHash.begin();
     while(iter != m_PluginsHash.end()) {
-        mafPlugin *p = iter.value();
+        mafPluginInterface *p = iter.value();
         mafDEL(p);
         ++iter;
     }
     m_PluginsHash.clear();
-    
-    mafPluginQtHash::iterator iterQt = m_PluginsQtHash.begin();
-    while(iterQt != m_PluginsQtHash.end()) {
-        mafPluginQt *p = iterQt.value();
-        mafDEL(p);
-        ++iterQt;
-    }
-    m_PluginsQtHash.clear();
-    
     
     // Unregister callbacks...
     mafUnregisterLocalCallback("maf.local.resources.plugin.loadLibrary", this, "loadPlugin(const QString &)");
@@ -86,29 +77,28 @@ mafPluginManager::~mafPluginManager() {
 }
 
 void mafPluginManager::loadPlugin( const QString &pluginFilename ) {
+    mafPluginInterface *plugin;
     // load Qt plugin  
-    if(!m_PluginsQtHash.contains(pluginFilename)) {
-        mafPluginQt *plugin = new mafPluginQt(pluginFilename, mafCodeLocation);
+    if(!m_PluginsHash.contains(pluginFilename)) {
+        // Try to load the plugin as Qt-Plugin
+        plugin = new mafPluginQt(pluginFilename, mafCodeLocation);
         if(plugin->loaded()) {
-            m_PluginsQtHash.insert(pluginFilename, plugin);
+            m_PluginsHash.insert(pluginFilename, plugin);
             plugin->registerPlugin();
             qDebug() << mafTr("Qt plugin loaded.");
             return;
         } else {
+            // Not a Qt-Plugin; try as MAF3-Plugin
             mafDEL(plugin);
+            plugin = new mafPlugin(pluginFilename, mafCodeLocation);
+            if(plugin->loaded()) {
+                m_PluginsHash.insert(pluginFilename, plugin).value()->registerPlugin();
+                qDebug() << mafTr("MAF3 plugin loaded.");
+            } else {
+                qCritical() << mafTr("Problem on loading plugin: ") << pluginFilename;
+                mafDEL(plugin);
+            }
         }
-    }
-    
-    
-    // load MAF plugin  
-    if(!m_PluginsHash.contains(pluginFilename)) {
-          mafPlugin *plugin = new mafPlugin(pluginFilename, mafCodeLocation);
-          if(plugin->loaded()) {
-              m_PluginsHash.insert(pluginFilename, plugin).value()->registerPlugin();
-          } else {
-              qCritical() << "Problem on loading plugin: " << pluginFilename;
-              mafDEL(plugin);
-          }
     }
 }
 
@@ -119,11 +109,8 @@ void mafPluginManager::loadPlugin( const QString &pluginFilename ) {
 //}
 
 mafPluginInfo mafPluginManager::pluginInformation(QString plugin_name) {
-    if(m_PluginsQtHash.contains(plugin_name)) {
-        mafPluginQt *p = m_PluginsQtHash.value(plugin_name);
-        return p->pluginInfo();        
-    } else if (m_PluginsHash.contains(plugin_name)) {
-        mafPlugin *p = m_PluginsHash.value(plugin_name);
+    if (m_PluginsHash.contains(plugin_name)) {
+        mafPluginInterface *p = m_PluginsHash.value(plugin_name);
         return p->pluginInfo();
     }
     

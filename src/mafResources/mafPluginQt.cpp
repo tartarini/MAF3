@@ -10,13 +10,12 @@
  */
 
 #include "mafPluginQt.h"
-#include "mafPluginQtInterface.h"
 #include <stdexcept>
 
 using namespace mafCore;
 using namespace mafResources;
 
-mafPluginQt::mafPluginQt(const QString &pluginFilename, const QString code_location) : mafObjectBase(code_location), m_PluginRegistrator(0), m_RefCount(0), m_Loaded(false)  {
+mafPluginQt::mafPluginQt(const QString &pluginFilename, const QString code_location) : mafPluginInterface(pluginFilename, code_location), m_PluginRegistrator(0) {
     // Try to load the plugin as a dynamic library
     QPluginLoader pluginLoader(pluginFilename);
     QObject *pg = pluginLoader.instance();
@@ -31,8 +30,7 @@ mafPluginQt::mafPluginQt(const QString &pluginFilename, const QString code_locat
     m_RefCount = new size_t(1);
 } 
 
-mafPluginQt::mafPluginQt(const mafPluginQt &Other, const QString code_location) : mafObjectBase(code_location), m_PluginRegistrator(Other.m_PluginRegistrator), m_RefCount(Other.m_RefCount) {
-    ++*m_RefCount; // Increase DLL reference counter
+mafPluginQt::mafPluginQt(const mafPluginQt &Other, const QString code_location) : mafPluginInterface(Other, code_location), m_PluginRegistrator(Other.m_PluginRegistrator) {
 }
 
 mafPluginQt::~mafPluginQt() {

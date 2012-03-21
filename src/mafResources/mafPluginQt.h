@@ -14,20 +14,18 @@
 
 // Includes list
 #include "mafResourcesDefinitions.h"
+#include "mafPluginQtInterface.h"
+#include "mafPluginInterface.h"
 
 namespace mafResources {
-
-// Class forwarding list
-class mafPluginManager;
-class mafPluginQtInterface;
 
 /**
 Class name: mafPluginQt
 This class provides the way MAF3 extend its objects through plug-ins.
 */
-class MAFRESOURCESSHARED_EXPORT mafPluginQt : public mafCore::mafObjectBase {
+class MAFRESOURCESSHARED_EXPORT mafPluginQt : public mafPluginInterface {
     /// typedef macro.
-    mafSuperclassMacro(mafCore::mafObjectBase);
+    mafSuperclassMacro(mafResources::mafPluginInterface);
 
 public:
     /// Object Constructor
@@ -42,13 +40,10 @@ public:
     mafPluginQt(const mafPluginQt &Other, const QString code_location = "");
 
     /// Query the plugin for its expected engine version
-    mafPluginInfo pluginInfo() const;
+    /*virtual*/ mafPluginInfo pluginInfo() const;
 
     /// Register the plug-in to a kernel.
-    void registerPlugin();
-
-    /// Return true if plug in has been loaded.
-    bool loaded();
+    /*virtual*/ void registerPlugin();
 
 protected:
     /// Destroys the plugin, unloading its library when no more references to it exist.
@@ -56,15 +51,7 @@ protected:
 
 private:
     mafPluginQtInterface *m_PluginRegistrator; ///< Qt Plugin Library handle
-    size_t               *m_RefCount;   ///< Number of references to the dynamic library
-    bool                  m_Loaded; ///< True if plug in has been correctly loaded.
 };
-
-
-inline bool mafPluginQt::loaded() {
-  return m_Loaded;
-}
-
 
 } // mafResources
 
