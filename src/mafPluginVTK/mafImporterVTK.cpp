@@ -55,7 +55,7 @@ void mafImporterVTK::execute() {
     mafResources::mafVME * vme = qobject_cast<mafResources::mafVME *> (this->m_Output);
     vme->dataSetCollection()->itemAtCurrentTime()->setBoundaryAlgorithmName("mafPluginVTK::mafDataBoundaryAlgorithmVTK");
 
-    if (dataType.compare("vykPolyData") == 0) {
+    if (dataType.compare("vtkPolyData") == 0) {
         vme->setProperty("iconType", "mafVMESurfaceVTK");
     } else {
         vme->setProperty("iconType", "mafVMEVolumeVTK");
