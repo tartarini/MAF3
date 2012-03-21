@@ -20,6 +20,8 @@
 #include "mafOperationWidget.h"
 #include "mafViewCompoundConfigurator.h"
 
+#include <QToolTip>
+
 #include <mafObjectBase.h>
 
 
@@ -68,6 +70,14 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
     //connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*, int)), this, SLOT(showGui(mafCore::mafProxyInterface*, int)));
     mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "showGui(mafCore::mafProxyInterface*, int)");
+
+    //Tooltip connect
+    mafRegisterLocalSignal("maf.local.gui.showTooltip", this, "showTooltipSignal(const QPoint &, const QString &)")
+    mafRegisterLocalCallback("maf.local.gui.showTooltip", this, "showTooltip(const QPoint &, const QString &)");
+
+    mafRegisterLocalSignal("maf.local.gui.hideTooltip", this, "hideTooltipSignal()")
+    mafRegisterLocalCallback("maf.local.gui.hideTooltip", this, "hideTooltip()");
+
 }
 
 mafGUIManager::~mafGUIManager() {
@@ -1131,4 +1141,12 @@ QObject *mafGUIManager::dataObject(QModelIndex index) {
     }
     
     return obj;
+}
+
+void mafGUIManager::showTooltip(const QPoint &point, const QString &text) {
+    QToolTip::showText(point, text);
+}
+
+void mafGUIManager::hideTooltip() {
+    QToolTip::hideText();
 }

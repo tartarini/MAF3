@@ -49,6 +49,8 @@ class mafGUIApplicationSettingsPage;
  - maf.local.gui.action.paste
  - maf.local.gui.action.about
  - maf.local.gui.compoundWidgetConfigure
+ - maf.local.gui.showTooltip
+ - maf.local.gui.hideTooltip
  */
 class MAFGUISHARED_EXPORT mafGUIManager : public mafCore::mafObjectBase {
     Q_OBJECT
@@ -175,6 +177,12 @@ Q_SIGNALS:
     /// Signal that allows to trigger the parse of compound widget's layout and return the root object
     QObject *parseCompoundLayoutFileSignal(QString layoutFile);
 
+    /// Signal to show tooltip
+    void showTooltipSignal(const QPoint &point, const QString &text);
+
+    /// Signal to hide tooltip
+    void hideTooltipSignal();
+
 public Q_SLOTS:
     /// Fill the operation and view menu with the plugged objects.
     void fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash pluginHash);
@@ -196,6 +204,12 @@ public Q_SLOTS:
 
     /// Slot called when the UI is loaded from the mafUILoaderQt, and the GUI is shown.
     void showGui(mafCore::mafProxyInterface *guiWidget, int ui_type);
+
+    /// Slot called to show tooltip in a point of the screen.
+    void showTooltip(const QPoint &point, const QString &text);
+
+    /// Slot called to hide visible tooltip.
+    void hideTooltip();
 
 private Q_SLOTS:
     /// Start the operation associated with the operation's action activated.
