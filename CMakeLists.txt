@@ -86,8 +86,8 @@ else(${MAF_DATA_DIR})
   set(MAF_DATA_DIR "${MAF_SOURCE_DIR}/../maf3data")
 endif(${MAF_DATA_DIR})
   
-### set modules interdependencies
 include(CMake/mafUtilities.cmake)
+### set modules interdependencies
 if(MAF_PLUGINVTK)
   SET( MAF_RESOURCES ON ) 
   SET( VTK_MAF ON ) 
@@ -96,7 +96,6 @@ if(MAF_PLUGINVTK)
 endif(MAF_PLUGINVTK)
 
 ### set modules interdependencies
-include(CMake/mafUtilities.cmake)
 if(MAF_PLUGINCTK)
   SET( MAF_RESOURCES ON ) 
   SET( MAF_QTGUI ON ) 
