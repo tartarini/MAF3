@@ -17,6 +17,7 @@
 
 class vtkButtonWidget;
 class vtkButtonCallback;
+class vtkButtonHighLightCallback;
 
 /**
  Class name: mafToolVTKButtons
@@ -55,7 +56,7 @@ public:
     /// Return showLabel flag
     bool showLabel() const;
 
-    /// Allow to ativate FlyTo animation
+    /// Allow to activate FlyTo animation
     void setFlyTo(bool active);
 
     /// Return FlyTo flag
@@ -73,8 +74,11 @@ protected:
     /* virtual */ ~mafToolVTKButtons();
 
 private:
-    vtkButtonWidget *m_ButtonWidget; ///< VTK button widget
-    vtkButtonCallback *myCallback; ///< Callback called by picking on vtkButton
+    vtkButtonWidget *m_ButtonWidget; ///< VTK button widget.
+    vtkButtonWidget *m_TooltipWidget; ///< VTK button widget used as information Tooltip.
+    vtkButtonCallback *buttonCallback; ///< Callback called by picking on vtkButton
+    vtkButtonHighLightCallback *highlightCallback; ///< Callback called by hovering over the button.
+    
     QString m_IconFileName; ///< File name of the imahe to be applied to the button.
     bool m_ShowButton; ///< Flag to show/hide button
     bool m_ShowLabel; ///< Flag to show/hide label

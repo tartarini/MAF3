@@ -46,6 +46,7 @@ void mafImporterSTL::execute() {
     m_ImportedData = m_Reader->GetOutputPort();
     m_ImportedData.setExternalCodecType("VTK");
     m_ImportedData.setClassTypeNameFunction(vtkClassTypeNameExtract);
+    QString dataType = m_ImportedData.externalDataType();
     
     //here set the mafDataset with the VTK data
     importedData(&m_ImportedData);
@@ -53,7 +54,12 @@ void mafImporterSTL::execute() {
     //set the default boundary algorithm for VTK vme
     mafResources::mafVME * vme = qobject_cast<mafResources::mafVME *> (this->m_Output);
     vme->dataSetCollection()->itemAtCurrentTime()->setBoundaryAlgorithmName("mafPluginVTK::mafDataBoundaryAlgorithmVTK");
-    vme->setProperty("iconType", "mafVMESurfaceVTK");
+
+    if (dataType.compare("vtkPolyData") == 0) {
+        vme->setProperty("iconType", "mafVMESurfaceVTK");
+    } else {
+        vme->setProperty("iconType", "mafVMEVolumeVTK");
+    }
     
     Q_EMIT executionEnded();
 }
