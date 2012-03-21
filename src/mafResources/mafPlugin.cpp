@@ -15,11 +15,9 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafPlugin::mafPlugin(const QString &pluginFilename, const QString code_location) : mafObjectBase(code_location), m_LibraryHandler(0),
-                                                          m_RefCount(0),
+mafPlugin::mafPlugin(const QString &pluginFilename, const QString code_location) : mafPluginInterface(pluginFilename, code_location), m_LibraryHandler(0),
                                                           m_PluginInfo(0),
-                                                          m_RegisterPlugin(0), 
-                                                          m_Loaded(false)  {
+                                                          m_RegisterPlugin(0) {
     // Try to load the plugin as a dynamic library
     m_LibraryHandler = new QLibrary(pluginFilename);
     if(!m_LibraryHandler->load()) {
@@ -58,11 +56,10 @@ mafPlugin::mafPlugin(const QString &pluginFilename, const QString code_location)
     m_Loaded = true;
 } 
 
-mafPlugin::mafPlugin(const mafPlugin &Other, const QString code_location) : mafObjectBase(code_location), m_LibraryHandler(Other.m_LibraryHandler),
-                                               m_RefCount(Other.m_RefCount) ,
+mafPlugin::mafPlugin(const mafPlugin &Other, const QString code_location) : mafPluginInterface(Other, code_location), m_LibraryHandler(Other.m_LibraryHandler),
                                                m_PluginInfo(Other.m_PluginInfo),
                                                m_RegisterPlugin(Other.m_RegisterPlugin) {
-    ++*m_RefCount; // Increase DLL reference counter
+    
 }
 
 mafPlugin::~mafPlugin() {
@@ -74,4 +71,12 @@ mafPlugin::~mafPlugin() {
         delete m_LibraryHandler;
         m_LibraryHandler = NULL;
     }
+}
+
+mafPluginInfo mafPlugin::pluginInfo() const {
+    return m_PluginInfo();
+}
+
+void mafPlugin::registerPlugin() {
+    m_RegisterPlugin();
 }
