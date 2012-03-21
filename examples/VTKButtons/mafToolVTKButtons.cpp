@@ -32,6 +32,7 @@
 #include <vtkBalloonRepresentation.h>
 #include <vtkCommand.h>
 
+
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
@@ -48,8 +49,6 @@ public:
     virtual void Execute(vtkObject *caller, unsigned long, void*) {
         mafVTKWidget *widget = qobject_cast<mafPluginVTK::mafVTKWidget *>(this->graphicObject);
         mafAnimateVTK *animateCamera = mafNEW(mafPluginVTK::mafAnimateVTK);
-        //on zooming, don't show tooltip
-        highligthButtonRepresentation->SetVisibility(0);
         if (flyTo) {
             animateCamera->flyTo(widget, bounds, 200);
         } else {
@@ -71,9 +70,8 @@ public:
         flyTo = fly;
     }
 
-    vtkButtonCallback():graphicObject(0), highligthButtonRepresentation(NULL), flyTo(true) {}
+    vtkButtonCallback(): graphicObject(0), flyTo(true) {}
     QObject *graphicObject;
-    vtkTexturedButtonRepresentation2D *highligthButtonRepresentation;
     double bounds[6];
     bool flyTo;
 };
@@ -88,47 +86,21 @@ public:
     virtual void Execute(vtkObject *caller, unsigned long, void*) {
         vtkTexturedButtonRepresentation2D *rep = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(caller);
         int highlightState = rep->GetHighlightState();
-        
-        if ( highlightState == vtkButtonRepresentation::HighlightHovering ) {
-            highligthButtonRepresentation->SetVisibility(1);
+       
+        if ( highlightState == vtkButtonRepresentation::HighlightHovering && previousHighlightState == vtkButtonRepresentation::HighlightNormal ) {
+            //show tooltip (not if previous state was selecting
+            toolButton->showTooltip();        
         } else if ( highlightState == vtkButtonRepresentation::HighlightNormal) {
-            highligthButtonRepresentation->SetVisibility(0);
-        }
-
-        mafVTKWidget *widget = qobject_cast<mafPluginVTK::mafVTKWidget *>(this->graphicObject);
-        vtkRenderer *ren = widget->renderer();
-
-        double pos[3];
-        ren->SetWorldPoint(bounds[0], bounds[2], bounds[4], 1.0);
-        ren->WorldToDisplay();
-        ren->GetDisplayPoint(pos);
-
-        //Set position of the Tooltip under the button
-        double position[6];
-        position[0] = pos[0];
-        position[1] = pos[0];
-        position[2] = pos[1]-35;
-        position[3] = pos[1];
-        position[4] = 0.0;
-        position[5] = 0.0;
-        highligthButtonRepresentation->PlaceWidget(position);
-
+            //hide tooltip
+            toolButton->hideTooltip();
+        } 
+        previousHighlightState = highlightState;
     }
 
-    void setBounds(mafBounds *b) {
-        bounds[0] = b->xMin(); 
-        bounds[1] = b->xMax();
-        bounds[2] = b->yMin();
-        bounds[3] = b->yMax();
-        bounds[4] = b->zMin();
-        bounds[5] = b->zMax();
-    }
-
-    vtkButtonHighLightCallback():graphicObject(0), highligthButtonRepresentation(NULL){}
-    QObject *graphicObject;
-    vtkTexturedButtonRepresentation2D *highligthButtonRepresentation;
-    double bounds[6];
-    
+    vtkButtonHighLightCallback():toolButton(NULL), previousHighlightState(0) {}
+    mafToolVTKButtons *toolButton;
+    int previousHighlightState;
+        
 };
 
 mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location), m_ShowLabel(true), m_FlyTo(true), m_OnCenter(false) {
@@ -136,58 +108,29 @@ mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK
     VTK_CREATE(vtkTexturedButtonRepresentation2D, rep);
     rep->SetNumberOfStates(1);
 
-    VTK_CREATE(vtkTexturedButtonRepresentation2D, repTooltip);
-    repTooltip->SetNumberOfStates(1);
-
-    // Uncomment this code to use a standard circle icon 
-    // Create an image for the button
-//     QImage image;
-//     
-//     QString pathStr = QDir::currentPath();
-//     loaded = image.load(pathStr + "/" + "buttonIcon.png");
-// 
-//     if (!loaded) {
-//         image.load(":/images/buttonIcon.png");
-//     }
-// 
-//     VTK_CREATE(vtkQImageToImageSource, imageToVTK2);
-//     imageToVTK2->SetQImage(&image);
-//     imageToVTK2->Update();
-
-
-    //rep->SetButtonTexture(0, imageToVTK2->GetOutput());
     buttonCallback = vtkButtonCallback::New();
     
-    buttonCallback->highligthButtonRepresentation = repTooltip;
     highlightCallback = vtkButtonHighLightCallback::New();
-    highlightCallback->highligthButtonRepresentation = repTooltip;
+    highlightCallback->toolButton = this;
 
     m_ButtonWidget = vtkButtonWidget::New();
     m_ButtonWidget->SetRepresentation(rep);
     m_ButtonWidget->AddObserver(vtkCommand::StateChangedEvent,buttonCallback);
-
-    m_TooltipWidget = vtkButtonWidget::New();
-    m_TooltipWidget->SetRepresentation(repTooltip);
-    repTooltip->SetVisibility(0);
-    
     rep->AddObserver(vtkCommand::HighlightEvent,highlightCallback);
 }
 
 mafToolVTKButtons::~mafToolVTKButtons() {
     m_ButtonWidget->Delete();
-    m_TooltipWidget->Delete();
 }
 
 void mafToolVTKButtons::resetTool() {
     removeWidget(m_ButtonWidget);
-    removeWidget(m_TooltipWidget);
 }
 
 void mafToolVTKButtons::graphicObjectInitialized() {
     // Graphic widget (render window, interactor...) has been created and initialized.
     // now can add the widget.
     addWidget(m_ButtonWidget);
-    addWidget(m_TooltipWidget);
 }
 
 void mafToolVTKButtons::updatePipe(double t) {
@@ -266,42 +209,48 @@ void mafToolVTKButtons::updatePipe(double t) {
     m_ButtonWidget->SetRepresentation(rep);
     ///////////-------- BUTTON WIDGET -----------////////////
 
-    ///////////-------- TOOLTIP WIDGET -----------////////////
-    vtkTexturedButtonRepresentation2D *repTooltip = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(m_TooltipWidget->GetRepresentation());
-    //Add text to the tooltip
-    QString tooltipString("Data type: ");
-    tooltipString.append(vme->dataSetCollection()->itemAtCurrentTime()->externalDataType());
-    tooltipString.append("\nPose matrix: ");
-    tooltipString.append(vme->dataSetCollection()->itemAtCurrentTime()->poseMatrixString());
-    repTooltip->GetBalloon()->SetBalloonText(tooltipString.toAscii());
-    vtkTextProperty *textPropTooltip = repTooltip->GetBalloon()->GetTextProperty();
-    repTooltip->GetBalloon()->SetPadding(2);
-    textPropTooltip->SetFontSize(10);
-    textPropTooltip->BoldOff();
-    //textProp->SetColor(0.9,0.9,0.9);
-
-    //Set label position
-    repTooltip->GetBalloon()->SetBalloonLayoutToImageLeft();
-
-    //Set the label's background property
-    //repTooltip->GetBalloon()->GetFrameProperty()->SetColor(0.77, 0.88, 1.0);
-    repTooltip->GetBalloon()->GetFrameProperty()->SetOpacity(0.65);
-
-//     //Set position on the Tooltip under the button
-//     bds[1] = bds[1] - 0.2;
-//     repTooltip->PlaceWidget(bds, size);
-
-    repTooltip->Modified();
-    m_TooltipWidget->SetRepresentation(repTooltip);
-    ///////////-------- TOOLTIP WIDGET -----------////////////
-
-    highlightCallback->graphicObject = this->m_GraphicObject;
-    highlightCallback->setBounds(newBounds);
-    
+   
     buttonCallback->graphicObject = this->m_GraphicObject;
     buttonCallback->setBounds(newBounds);
     buttonCallback->setFlyTo(m_FlyTo);
     updatedGraphicObject();
 }
 
+void mafToolVTKButtons::showTooltip() {
+    mafVME *vme = input();
+    if(vme == NULL) {
+        return;
+    }
 
+    QString matrixString = vme->dataSetCollection()->itemAtCurrentTime()->poseMatrixString();
+    QString text("<b>Data type</b>: ");
+    text.append(vme->dataSetCollection()->itemAtCurrentTime()->externalDataType());
+    text.append("<br>");
+    text.append("<b>Pose Matrix</b>: <br>");
+
+    QStringList list = matrixString.split(" ");
+    int numElement = list.count();
+    int i = 0;
+    int n = 0;
+    bool ok;
+    for ( ; i < numElement; i++ ) {
+        n++;
+        text.append(list[i]);
+        text.append(" ");
+        if (n == 4 && i != numElement-1) {
+            text.append("<br>");
+            n = 0;
+        }
+    }
+
+    QPoint p = QCursor::pos();
+    mafEventBus::mafEventArgumentsList argList;
+    argList.append(mafEventArgument(QPoint , p));
+    argList.append(mafEventArgument(QString , text));
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.gui.showTooltip", mafEventBus::mafEventTypeLocal, &argList);
+}
+
+void mafToolVTKButtons::hideTooltip() {
+    mafEventBus::mafEventArgumentsList argList;
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.gui.hideTooltip", mafEventBus::mafEventTypeLocal, &argList);
+}

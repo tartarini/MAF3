@@ -68,6 +68,12 @@ public:
     /// Return OnCenter flag
     bool OnCenter() const;
 
+    /// Show tooltip
+    void showTooltip();
+
+    /// Hide tooltip
+    void hideTooltip();
+
 
 protected:
     /// Object destructor.
@@ -75,7 +81,6 @@ protected:
 
 private:
     vtkButtonWidget *m_ButtonWidget; ///< VTK button widget.
-    vtkButtonWidget *m_TooltipWidget; ///< VTK button widget used as information Tooltip.
     vtkButtonCallback *buttonCallback; ///< Callback called by picking on vtkButton
     vtkButtonHighLightCallback *highlightCallback; ///< Callback called by hovering over the button.
     
