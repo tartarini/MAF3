@@ -27,7 +27,6 @@
 #include <vtkRenderer.h>
 
 #include <vtkButtonWidget.h>
-#include <vtkEllipticalButtonSource.h>
 #include <vtkTexturedButtonRepresentation.h>
 #include <vtkTexturedButtonRepresentation2D.h>
 #include <vtkBalloonRepresentation.h>
@@ -49,12 +48,13 @@ public:
     virtual void Execute(vtkObject *caller, unsigned long, void*) {
         mafVTKWidget *widget = qobject_cast<mafPluginVTK::mafVTKWidget *>(this->graphicObject);
         mafAnimateVTK *animateCamera = mafNEW(mafPluginVTK::mafAnimateVTK);
+        //on zooming, don't show tooltip
+        highligthButtonRepresentation->SetVisibility(0);
         if (flyTo) {
             animateCamera->flyTo(widget, bounds, 200);
         } else {
             widget->renderer()->ResetCamera(bounds);
         }
-        
         mafDEL(animateCamera);
     }
 
@@ -71,8 +71,9 @@ public:
         flyTo = fly;
     }
 
-    vtkButtonCallback():graphicObject(0), flyTo(true) {}
+    vtkButtonCallback():graphicObject(0), highligthButtonRepresentation(NULL), flyTo(true) {}
     QObject *graphicObject;
+    vtkTexturedButtonRepresentation2D *highligthButtonRepresentation;
     double bounds[6];
     bool flyTo;
 };
@@ -90,13 +91,43 @@ public:
         
         if ( highlightState == vtkButtonRepresentation::HighlightHovering ) {
             highligthButtonRepresentation->SetVisibility(1);
-        } else if ( highlightState == vtkButtonRepresentation::HighlightNormal ) {
+        } else if ( highlightState == vtkButtonRepresentation::HighlightNormal) {
             highligthButtonRepresentation->SetVisibility(0);
         }
+
+        mafVTKWidget *widget = qobject_cast<mafPluginVTK::mafVTKWidget *>(this->graphicObject);
+        vtkRenderer *ren = widget->renderer();
+
+        double pos[3];
+        ren->SetWorldPoint(bounds[0], bounds[2], bounds[4], 1.0);
+        ren->WorldToDisplay();
+        ren->GetDisplayPoint(pos);
+
+        //Set position of the Tooltip under the button
+        double position[6];
+        position[0] = pos[0];
+        position[1] = pos[0];
+        position[2] = pos[1]-35;
+        position[3] = pos[1];
+        position[4] = 0.0;
+        position[5] = 0.0;
+        highligthButtonRepresentation->PlaceWidget(position);
+
     }
 
-    vtkButtonHighLightCallback():highligthButtonRepresentation(NULL){}
+    void setBounds(mafBounds *b) {
+        bounds[0] = b->xMin(); 
+        bounds[1] = b->xMax();
+        bounds[2] = b->yMin();
+        bounds[3] = b->yMax();
+        bounds[4] = b->zMin();
+        bounds[5] = b->zMax();
+    }
+
+    vtkButtonHighLightCallback():graphicObject(0), highligthButtonRepresentation(NULL){}
+    QObject *graphicObject;
     vtkTexturedButtonRepresentation2D *highligthButtonRepresentation;
+    double bounds[6];
     
 };
 
@@ -126,7 +157,10 @@ mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK
 
     //rep->SetButtonTexture(0, imageToVTK2->GetOutput());
     buttonCallback = vtkButtonCallback::New();
+    
+    buttonCallback->highligthButtonRepresentation = repTooltip;
     highlightCallback = vtkButtonHighLightCallback::New();
+    highlightCallback->highligthButtonRepresentation = repTooltip;
 
     m_ButtonWidget = vtkButtonWidget::New();
     m_ButtonWidget->SetRepresentation(rep);
@@ -135,7 +169,7 @@ mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK
     m_TooltipWidget = vtkButtonWidget::New();
     m_TooltipWidget->SetRepresentation(repTooltip);
     repTooltip->SetVisibility(0);
-    highlightCallback->highligthButtonRepresentation = repTooltip;
+    
     rep->AddObserver(vtkCommand::HighlightEvent,highlightCallback);
 }
 
@@ -253,19 +287,20 @@ void mafToolVTKButtons::updatePipe(double t) {
     //repTooltip->GetBalloon()->GetFrameProperty()->SetColor(0.77, 0.88, 1.0);
     repTooltip->GetBalloon()->GetFrameProperty()->SetOpacity(0.65);
 
-    //Set position on the Tooltip under the button
-    bds[1] = bds[1] - 0.2;
-    repTooltip->PlaceWidget(bds, size);
+//     //Set position on the Tooltip under the button
+//     bds[1] = bds[1] - 0.2;
+//     repTooltip->PlaceWidget(bds, size);
 
     repTooltip->Modified();
     m_TooltipWidget->SetRepresentation(repTooltip);
     ///////////-------- TOOLTIP WIDGET -----------////////////
 
-
+    highlightCallback->graphicObject = this->m_GraphicObject;
+    highlightCallback->setBounds(newBounds);
+    
     buttonCallback->graphicObject = this->m_GraphicObject;
     buttonCallback->setBounds(newBounds);
     buttonCallback->setFlyTo(m_FlyTo);
-
     updatedGraphicObject();
 }
 
