@@ -10,91 +10,14 @@
 #
 
 MACRO(mafMacroWrapTargetFiles) 
-  SET(filepath ${CMAKE_CURRENT_SOURCE_DIR}/target_wrap_files.cmake)
 
-  # Check if "target_wrap_files.cmake" file exists
-  IF(NOT EXISTS ${filepath})
-    MESSAGE(FATAL_ERROR "${filepath} doesn't exists !")
-  ENDIF()
-
-  # Make sure the variable is cleared
-  SET(file_to_wrap )
-  SET(wrap_list )
-  set(WRAP_LIST_FOUND )
-
-  IF(EXISTS ${filepath})
-    # Let's make sure target_wrap_files contains only strings
-    FILE(STRINGS "${filepath}" stringtocheck) # read content of 'filepath' into 'stringtocheck'
-    STRING(REGEX MATCHALL "[^\\#]\\$\\{.*\\}" incorrect_elements ${stringtocheck})
-    FOREACH(incorrect_element ${incorrect_elements})
-      STRING(REGEX REPLACE "\\$|\\{|\\}" "" correct_element ${incorrect_element})
-      MESSAGE(FATAL_ERROR "In ${filepath}, ${incorrect_element} should be replaced by ${correct_element}")
-    ENDFOREACH()
-
-    INCLUDE(${filepath})
-    # Loop over all target files, let's resolve the variable to access its content
-    FOREACH(wfile ${file_to_wrap})
-      LIST(APPEND wrap_list ${CMAKE_CURRENT_SOURCE_DIR}/${wfile})
-    ENDFOREACH()
-  ENDIF()
-  
-  # Wrapping step
-  set(${PROJECT_NAME}_SOURCES_WRAP)
-
-  list(LENGTH wrap_list length)
-  
-#  if(SWIG_FOUND AND ${length})
-#    set(WRAP_LIST_FOUND 1)
-#    set(${PROJECT_NAME}_WRAP_DEPENDS ${wrap_list})
-   
-#    SET(i_filepath ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i)
-#    IF(EXISTS ${i_filepath})
-#      if(PYTHONLIBS_FOUND)
-#      #message("************** >${PROJECT_NAME}< >${PROJECT_NAME}_SOURCES_WRAP< >${PROJECT_NAME}< python >${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i< >${${PROJECT_NAME}_WRAP_DEPENDS}<")
-#        mafMacroWrap(${PROJECT_NAME} ${PROJECT_NAME}_SOURCES_WRAP ${PROJECT_NAME} python ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i ${${PROJECT_NAME}_WRAP_DEPENDS})
-#        SET(PROJECT_SRCS 
-#          ${PROJECT_SRCS}
-#          ${${PROJECT_NAME}_SOURCES_WRAP}
-#        )
-
-#      endif(PYTHONLIBS_FOUND)
-#     ENDIF()
-    
-#  endif(SWIG_FOUND AND ${length})
+find_package(PythonInterp)
+execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${MAF_ROOT_BINARY_DIR}/wrap/mafPythonQtDecorators/${PROJECT_NAME})
+execute_process(COMMAND ${PYTHON_EXECUTABLE} ${MAF_ROOT_BINARY_DIR}/wrap/pyMAF/mafPythonWrapper.py ${MAF_SOURCE_DIR}/src/${PROJECT_NAME}/target_wrap_files ${MAF_ROOT_BINARY_DIR}/doc/DocOutput/xml ${MAF_ROOT_BINARY_DIR}/wrap/mafPythonQtDecorators/${PROJECT_NAME})
 
 ENDMACRO()
 
 MACRO(mafMacroWrapBuild)
-  if(${WRAP_LIST_FOUND})
-	
-    if(PYTHONLIBS_FOUND)
-      target_link_libraries(${PROJECT_NAME} ${PYTHON_LIBRARIES})
-    endif(PYTHONLIBS_FOUND)
-
-    ## #################################################################
-    ## Handling of generated script modules
-    ## #################################################################
-
-    set(${PROJECT_NAME}_MODULES)
-
   
-    if(BUILD_WRAP AND PYTHONLIBS_FOUND)
-      set(lib_pref "")
-      if(WIN32)
-        set(lib_ext ".dll")
-        set(wrap_lib_ext ".pyd")
-      else(WIN32)
-        set(lib_pref "lib")
-        set(wrap_lib_ext ".so")
-        if(APPLE)
-          set(lib_ext ".dylib")
-        else(APPLE)
-          set(lib_ext ".so")
-        endif(APPLE)
-      endif(WIN32)
-        
-
-    endif(BUILD_WRAP AND PYTHONLIBS_FOUND)
-  endif(${WRAP_LIST_FOUND})
   
 ENDMACRO()
