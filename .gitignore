@@ -48,4 +48,9 @@ Release
 
 #ignore pyc files
 *.pyc
-src/mafPluginVTK/mafOperationParametricSurface.cpp.orig
+
+#ignore diff produced files
+*.orig
+
+#ignore pycharm files
+.idea
