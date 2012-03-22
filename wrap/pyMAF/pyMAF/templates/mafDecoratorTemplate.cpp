@@ -21,6 +21,6 @@ public Q_SLOTS:
     {% endif %}
   {% endfor %}
   void delete_{{compoundname}}({{compoundname}}* selfObj) {
-    {% if destructor_method %} delete selfObj;{% else %} selfObj->{{destructor_method}}();{%endif%}
+    {% if public_destructor %} delete selfObj;{% else %}selfObj->{{destructor_method}}();{%endif%}
   }
 };
