@@ -64,11 +64,8 @@ SET(PythonQt_DEPENDS)
     #IF(${proj}_REVISION_TAG)
     #  SET(revision_tag ${${proj}_REVISION_TAG})
     #ENDIF()
-
+    
     ExternalProject_Add(${proj}
-      #SOURCE_DIR ${CMAKE_BINARY_DIR}/${proj}
-      #BINARY_DIR ${proj}-build
-      PREFIX ${proj}${ep_suffix}
       GIT_REPOSITORY "${git_protocol}://github.com/b3c/PythonQt.git"
       GIT_TAG "origin/master"
       CMAKE_GENERATOR ${gen}
@@ -88,8 +85,7 @@ SET(PythonQt_DEPENDS)
       DEPENDS
         ${proj_DEPENDENCIES}
       )
-    SET(PYTHONQT_INSTALL_DIR ${ep_install_dir})
-
+    SET(PYTHONQT_DIR ${ep_build_dir}/${proj})
     # Since the full path of PythonQt library is used, there is not need to add
     # its corresponding library output directory to CTK_EXTERNAL_LIBRARY_DIRS
 

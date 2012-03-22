@@ -74,10 +74,6 @@ set(sep "^^")
 ### Establish Target Dependencies based on Selected Options
 #############################################################################################
 
-#if(MAF_USE_PYTHONQT)
-#  list(APPEND MAF_DEPENDENCIES python)
-#endif()
-
 #DEPENDENCIES
 set(MAF_DEPENDENCIES)
 
@@ -106,8 +102,8 @@ endif(MAF_PLUGINCTK)
 
 
 if(BUILD_WRAP)
-#  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} PythonQt)
-#  include(CMakeExternals/External_PythonQt.cmake)
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} PythonQt)
+  include(CMakeExternals/External_PythonQt.cmake)
 endif(BUILD_WRAP)
 
 
@@ -173,7 +169,7 @@ SET(MAF_cmake_boolean_args
   BUILD_TESTING
   BUILD_SHARED_LIBS
   MAF_USE_QT
-  #MAF_USE_PYTHONQT
+  MAF_USE_PYTHONQT
   #MAF_BUILD_NUMPY
   # Deprecated
   MAF_USE_PYTHON

@@ -43,24 +43,24 @@ MACRO(mafMacroWrapTargetFiles)
 
   list(LENGTH wrap_list length)
   
-  if(SWIG_FOUND AND ${length})
-    set(WRAP_LIST_FOUND 1)
-    set(${PROJECT_NAME}_WRAP_DEPENDS ${wrap_list})
+#  if(SWIG_FOUND AND ${length})
+#    set(WRAP_LIST_FOUND 1)
+#    set(${PROJECT_NAME}_WRAP_DEPENDS ${wrap_list})
    
-    SET(i_filepath ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i)
-    IF(EXISTS ${i_filepath})
-      if(PYTHONLIBS_FOUND)
-      #message("************** >${PROJECT_NAME}< >${PROJECT_NAME}_SOURCES_WRAP< >${PROJECT_NAME}< python >${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i< >${${PROJECT_NAME}_WRAP_DEPENDS}<")
-        mafMacroWrap(${PROJECT_NAME} ${PROJECT_NAME}_SOURCES_WRAP ${PROJECT_NAME} python ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i ${${PROJECT_NAME}_WRAP_DEPENDS})
-        SET(PROJECT_SRCS 
-          ${PROJECT_SRCS}
-          ${${PROJECT_NAME}_SOURCES_WRAP}
-        )
+#    SET(i_filepath ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i)
+#    IF(EXISTS ${i_filepath})
+#      if(PYTHONLIBS_FOUND)
+#      #message("************** >${PROJECT_NAME}< >${PROJECT_NAME}_SOURCES_WRAP< >${PROJECT_NAME}< python >${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i< >${${PROJECT_NAME}_WRAP_DEPENDS}<")
+#        mafMacroWrap(${PROJECT_NAME} ${PROJECT_NAME}_SOURCES_WRAP ${PROJECT_NAME} python ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i ${${PROJECT_NAME}_WRAP_DEPENDS})
+#        SET(PROJECT_SRCS 
+#          ${PROJECT_SRCS}
+#          ${${PROJECT_NAME}_SOURCES_WRAP}
+#        )
 
-      endif(PYTHONLIBS_FOUND)
-     ENDIF()
+#      endif(PYTHONLIBS_FOUND)
+#     ENDIF()
     
-  endif(SWIG_FOUND AND ${length})
+#  endif(SWIG_FOUND AND ${length})
 
 ENDMACRO()
 
@@ -78,7 +78,7 @@ MACRO(mafMacroWrapBuild)
     set(${PROJECT_NAME}_MODULES)
 
   
-    if(SWIG_FOUND AND PYTHONLIBS_FOUND)
+    if(BUILD_WRAP AND PYTHONLIBS_FOUND)
       set(lib_pref "")
       if(WIN32)
         set(lib_ext ".dll")
@@ -93,45 +93,8 @@ MACRO(mafMacroWrapBuild)
         endif(APPLE)
       endif(WIN32)
         
-      SET(realName)
-      SET(pyName "${PROJECT_NAME}")
-      #if(CMAKE_BUILD_TYPE MATCHES Debug)
-      #  if(WIN32)
-      #      SET(realName "${PROJECT_NAME}_d" )    
-      #  else(WIN32)
-      #      SET(realName "${PROJECT_NAME}_debug" )
-      #  endif(WIN32)
-      #else(CMAKE_BUILD_TYPE MATCHES Debug)
-            SET(realName "${PROJECT_NAME}" )
-      #endif(CMAKE_BUILD_TYPE MATCHES Debug)
 
-      set(lib_name ${lib_pref}${realName}${lib_ext})
-	  set(wrap_lib_prefix "_")
-      set(wrap_lib_name ${wrap_lib_prefix}${realName}${wrap_lib_ext})
-      
-      set(SHARED_LIB_COPY_COMMAND)
-
-      ##########################################################
-      ### Use ${PROJECT_NAME} target to extract the TAGET LOCATION 
-      ### according to the current compilation configuration:
-      ### Debug, Release, ...
-      ##########################################################
-      set(TARGET_LOC)
-      set(CUR_ABSOLUTE_DIR)
-      get_target_property(TARGET_LOC ${PROJECT_NAME} LOCATION)
-      get_filename_component(CUR_ABSOLUTE_DIR ${TARGET_LOC} PATH)
-      set(SHARED_LIB_COPY_SOURCE ${CUR_ABSOLUTE_DIR}/${lib_name})
-      
-      add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.i
-        COMMAND ${CMAKE_COMMAND} ARGS -E  make_directory ${CMAKE_BINARY_DIR}/modules
-        COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${${PROJECT_NAME}_BINARY_DIR}/${pyName}.py ${CMAKE_BINARY_DIR}/modules
-        COMMAND ${CMAKE_COMMAND} ARGS -E  copy ${SHARED_LIB_COPY_SOURCE} ${CMAKE_BINARY_DIR}/modules/${wrap_lib_name}
-        COMMENT "-- Moving python modules to ${CMAKE_BINARY_DIR}/modules")
-
-      set(${PROJECT_NAME}_MODULES ${CMAKE_BINARY_DIR}/modules/${pyName}.py)
-
-    endif(SWIG_FOUND AND PYTHONLIBS_FOUND)
+    endif(BUILD_WRAP AND PYTHONLIBS_FOUND)
   endif(${WRAP_LIST_FOUND})
   
 ENDMACRO()
