@@ -3,9 +3,9 @@
  *  mafScriptEditor
  *
  *  Created by Daniele Giunchi and Paolo Quadrani on 08/11.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -22,8 +22,7 @@ namespace mafScriptInterpreter {
     Class Name: mafScriptEditorPythonModuleManager
     Manages Python Interpreter.
 */
-class MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditorPythonModuleManager : public QObject
-{
+class MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditorPythonModuleManager : public QObject {
     /// pointer to the initializer function
     typedef int (*mafScriptEditorModuleInitializer)(void);
 
@@ -48,10 +47,10 @@ protected:
     ~mafScriptEditorPythonModuleManager(void) {}
 
 private:
-    QList<mafScriptEditorModuleInitializer> initializers; ///< list of initializer functions
-    QList<QString> commands; /// list of commands.
+    QList<mafScriptEditorModuleInitializer> m_Initializers; ///< list of initializer functions
+    QList<QString> m_Commands; /// list of commands.
 
-    static mafScriptEditorPythonModuleManager *m_instance; /// singleton instance.
+    static mafScriptEditorPythonModuleManager *m_Instance; /// singleton instance.
 };
 
 /////////////////////////////////////////////////////////////
@@ -59,11 +58,11 @@ private:
 /////////////////////////////////////////////////////////////
 
 inline void mafScriptEditorPythonModuleManager::registerInitializer(mafScriptEditorModuleInitializer initializer) {
-    initializers << initializer;
+    m_Initializers << initializer;
 }
 
 inline void mafScriptEditorPythonModuleManager::registerCommand(QString command) {
-    commands << command;
+    m_Commands << command;
 }
 
 } // end namespace
