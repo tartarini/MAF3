@@ -50,7 +50,7 @@ class mafClassExtractor():
         for key in ['public_func']:
             for sectiondef in doxygen.iterfind('./compounddef/sectiondef[@kind="%s"]' % key.replace("_","-"), namespaces=doxygen.nsmap):
                 for memberdef in sectiondef.getchildren():
-                    element = {'param':[], 'operator':False, 'destructor': False}
+                    element = {'param':[], 'operator':False, 'destructor': False, 'macro':False}
 
                     for attr in memberdef.attrib.keys():
                         element[attr] = memberdef.attrib[attr]
@@ -61,6 +61,10 @@ class mafClassExtractor():
                             for memberdef_grandchild in memberdef_child.getchildren():
                                 if len(memberdef_grandchild.getchildren()):
                                     param[ memberdef_grandchild.tag ] = memberdef_grandchild[0].text + '*'
+
+                                    #TODO a better check here for all pointer typedef
+                                    if not memberdef_grandchild[0].text.lower().count('pointer'):
+                                        param[ memberdef_grandchild.tag ] += '*'
                                 else:
                                     param[ memberdef_grandchild.tag ] = memberdef_grandchild.text
                             element['param'].append(param)
@@ -84,6 +88,8 @@ class mafClassExtractor():
                                     classDetails['destructor_method'] = 'release'
                                 elif classDetails['compoundname'].startswith('vtk'):
                                     classDetails['destructor_method'] = 'Delete'
+                            if memberdef_child.text.lower().count('macro'):
+                                element['macro'] = True
 
 
 
