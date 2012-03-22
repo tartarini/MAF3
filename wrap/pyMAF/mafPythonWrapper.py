@@ -96,6 +96,7 @@ def usage():
     print "\tUsage: %s <absolute_path_to_wrap_class_file_list> <absolute_path_doxygen_source_xml_directory> <absolute_path_destination_directory> \n" % sys.argv[0]
     print "\t\t%s will look for a 'target_wrap_files' with the list of the classes to be wrapped" % sys.argv[0]
     print "\t\tIf 'target_wrap_files' not found: no files will be wrapped\n\n"
+    print "arguments: ", sys.argv
 
 if __name__ == '__main__':
 

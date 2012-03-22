@@ -154,10 +154,14 @@ if(BUILD_QA)
     mafDependentOption(BUILD_DOCUMENTATION "Build Documentation for QA." ON BUILD_QA ON)
 endif(BUILD_QA)
 
+include(${MAF_SOURCE_DIR}/GenerateMAFConfig.cmake)
+
 #############################################################################################
 ### Wrapping
 #############################################################################################
 if(BUILD_WRAP)
+  set( BUILD_DOCUMENTATION ON ) 
+  mafDependentOption(BUILD_DOCUMENTATION "Build XML doxygen output for Wrapping." ON BUILD_WRAP ON)
   include(CMake/mafMacroFindWrap.cmake)
 endif(BUILD_WRAP)
 
@@ -169,10 +173,19 @@ if(MAF_SCRIPT_INTERPRETER AND NOT BUILD_WRAP)
 endif(MAF_SCRIPT_INTERPRETER AND NOT BUILD_WRAP)
 
 #############################################################################################
+### DOCUMENTATION
+#############################################################################################
+if(BUILD_DOCUMENTATION)
+  add_subdirectory(doc)
+  if(BUILD_WRAP)
+    add_subdirectory(wrap)
+  endif(BUILD_WRAP)
+endif(BUILD_DOCUMENTATION)
+
+#############################################################################################
 ### Superbuild execution
 #############################################################################################
 
-include(${MAF_SOURCE_DIR}/GenerateMAFConfig.cmake)
 configure_file(${MAF_SOURCE_DIR}/UseMAF.cmake.in
   ${MAF_BINARY_DIR}/UseMAF.cmake COPYONLY IMMEDIATE)
   
@@ -211,12 +224,4 @@ endif(BUILD_TEST_SUITE)
 if(BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif(BUILD_EXAMPLES)
-
-#############################################################################################
-### DOCUMENTATION
-#############################################################################################
-
-if(BUILD_DOCUMENTATION)
-  add_subdirectory(doc)
-endif(BUILD_DOCUMENTATION)
 
