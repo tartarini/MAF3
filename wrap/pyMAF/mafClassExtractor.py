@@ -60,7 +60,7 @@ class mafClassExtractor():
                             param = {}
                             for memberdef_grandchild in memberdef_child.getchildren():
                                 if len(memberdef_grandchild.getchildren()):
-                                    param[ memberdef_grandchild.tag ] = memberdef_grandchild[0].text + '*'
+                                    param[ memberdef_grandchild.tag ] = memberdef_grandchild[0].text
 
                                     #TODO a better check here for all pointer typedef
                                     if not memberdef_grandchild[0].text.lower().count('pointer'):
