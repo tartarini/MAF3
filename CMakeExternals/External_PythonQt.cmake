@@ -1,7 +1,6 @@
 #
 # PythonQt
 #
-SET(PythonQt_DEPENDS)
 #IF(${add_project})
 
   # Sanity checks
@@ -14,20 +13,19 @@ SET(PythonQt_DEPENDS)
   SET(proj PythonQt)
   SET(proj_DEPENDENCIES)
 
-  SET(PythonQt_DEPENDS ${proj})
-
+  
   IF(NOT DEFINED PYTHONQT_INSTALL_DIR)
   #   MESSAGE(STATUS "Adding project:${proj}")
 
     SET(ep_PythonQt_args)
 
     # Should PythonQt use VTK
-    IF(CTK_LIB_Scripting/Python/Core_PYTHONQT_USE_VTK)
-      LIST(APPEND proj_DEPENDENCIES VTK)
-      LIST(APPEND ep_PythonQt_args -DVTK_DIR:PATH=${VTK_DIR})
-    ENDIF()
+    #IF(CTK_LIB_Scripting/Python/Core_PYTHONQT_USE_VTK)
+    #  LIST(APPEND proj_DEPENDENCIES VTK)
+    #  LIST(APPEND ep_PythonQt_args -DVTK_DIR:PATH=${VTK_DIR})
+    #ENDIF()
     LIST(APPEND ep_PythonQt_args -DPythonQt_USE_VTK:BOOL=${CTK_LIB_Scripting/Python/Core_PYTHONQT_USE_VTK})
-
+    
     # Enable Qt libraries PythonQt wrapping if required
     foreach(qtlib core gui network opengl sql svg uitools webkit xml xmlpatterns)
       STRING(TOUPPER ${qtlib} qtlib_uppercase)

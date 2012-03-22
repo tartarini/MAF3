@@ -29,8 +29,15 @@ set(BUILD_QA "@BUILD_QA@")
 # build maf quality assurance
 set(DATA_TEST "@DATA_TEST@")
 
+# build wrap 
+set(BUILD_WRAP "@BUILD_WRAP@")
+
+#build documentation
+set(BUILD_DOCUMENTATION "@BUILD_DOCUMENTATION@")
+
 # The CMake macros dir.
 set(MAF_ROOT_DIR "@MAF_ROOT_DIR@")
+set(MAF_ROOT_BINARY_DIR "@MAF_ROOT_BINARY_DIR@")
 
 # MAF Internal Build dir contains internal builds of MAF modules
 set(MAF_INTERNAL_BUILD_DIR "@MAF_INTERNAL_BUILD_DIR@")
