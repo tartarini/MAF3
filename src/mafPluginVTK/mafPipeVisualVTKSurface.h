@@ -53,6 +53,9 @@ private:
 public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change.
     /*virtual*/ void updatePipe(double t = -1);
+
+    // Open color dialog
+    void on_colorButton_released();
 };
 
 } // namespace mafPluginVTK

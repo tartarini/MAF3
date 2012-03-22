@@ -24,6 +24,9 @@
 #include <vtkActor.h>
 #include <vtkProperty.h>
 
+#include <QColorDialog>
+#include <QColor>
+
 using namespace mafCore;
 using namespace mafResources;
 using namespace mafPluginVTK;
@@ -69,3 +72,13 @@ void mafPipeVisualVTKSurface::updatePipe(double t) {
     updatedGraphicObject();
 }
 
+
+void mafPipeVisualVTKSurface::on_colorButton_released() {
+    double col[3];
+    vtkActor::SafeDownCast(m_Prop3D)->GetProperty()->GetDiffuseColor(col);
+    QColor color = QColorDialog::getColor(QColor(col[0]*255, col[1]*255, col[2]*255));
+    double r = color.toRgb().red()/255.;
+    double g = color.toRgb().green()/255.;
+    double b = color.toRgb().blue()/255.;
+    vtkActor::SafeDownCast(m_Prop3D)->GetProperty()->SetDiffuseColor(r, g, b);
+}

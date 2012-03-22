@@ -247,7 +247,7 @@ void mafToolVTKButtons::showTooltip() {
      text.append("</table>");
 
     mafBounds *bounds = vme->dataSetCollection()->itemAtCurrentTime()->bounds();
-    text.append("<br><b>Bounds: (min - max)</b>:");
+    text.append("<b>Bounds: (min - max)</b>:");
     text.append("<table border=\"0.2\">");
     text.append("<tr>");
     text.append("<td>" + QString::number(bounds->xMin()) +"</td>");
