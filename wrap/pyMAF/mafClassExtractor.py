@@ -20,6 +20,7 @@ class mafClassExtractor():
         classDetails = {'namespace':'',
                         'compoundname':'',
                         'location':'',
+                        'public_destructor':False,
                         'destructor_method':'release',
                         'property':[],
                         'protected_attrib':[],
@@ -84,10 +85,9 @@ class mafClassExtractor():
                                 element['operator'] = True
                             if memberdef_child.text.count("~"):
                                 element['destructor'] = True
-                                if classDetails['compoundname'].startswith('maf'):
-                                    classDetails['destructor_method'] = 'release'
-                                elif classDetails['compoundname'].startswith('vtk'):
+                                if classDetails['compoundname'].startswith('vtk'):
                                     classDetails['destructor_method'] = 'Delete'
+
                             if memberdef_child.text.lower().count('macro'):
                                 element['macro'] = True
 
