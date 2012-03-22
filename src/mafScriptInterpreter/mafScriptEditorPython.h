@@ -56,7 +56,9 @@ public:
     /*virtual*/ void registerVariable(double &var, QString name, QString description = "");
     /// Register a char type variable with value, name and a description.
     /*virtual*/ void registerVariable(char * &var, QString name, QString description = "");
-    
+    /// Register a QObject type variable with value, name and a description.
+    /*virtual*/ void registerVariable(QObject &var, QString name, QString description = "");
+
     /// Unregister a variable.
     /*virtual*/ void unregisterVariable(QString name);
 
