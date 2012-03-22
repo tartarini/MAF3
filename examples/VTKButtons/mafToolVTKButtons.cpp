@@ -243,9 +243,7 @@ void mafToolVTKButtons::showTooltip() {
         }
     }
 
-    QPoint p = QCursor::pos();
     mafEventBus::mafEventArgumentsList argList;
-    argList.append(mafEventArgument(QPoint , p));
     argList.append(mafEventArgument(QString , text));
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.gui.showTooltip", mafEventBus::mafEventTypeLocal, &argList);
 }

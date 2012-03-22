@@ -178,7 +178,7 @@ Q_SIGNALS:
     QObject *parseCompoundLayoutFileSignal(QString layoutFile);
 
     /// Signal to show tooltip
-    void showTooltipSignal(const QPoint &point, const QString &text);
+    void showTooltipSignal(const QString &text);
 
     /// Signal to hide tooltip
     void hideTooltipSignal();
@@ -206,7 +206,7 @@ public Q_SLOTS:
     void showGui(mafCore::mafProxyInterface *guiWidget, int ui_type);
 
     /// Slot called to show tooltip in a point of the screen.
-    void showTooltip(const QPoint &point, const QString &text);
+    void showTooltip(const QString &text);
 
     /// Slot called to hide visible tooltip.
     void hideTooltip();

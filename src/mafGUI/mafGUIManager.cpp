@@ -72,8 +72,8 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
     mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "showGui(mafCore::mafProxyInterface*, int)");
 
     //Tooltip connect
-    mafRegisterLocalSignal("maf.local.gui.showTooltip", this, "showTooltipSignal(const QPoint &, const QString &)")
-    mafRegisterLocalCallback("maf.local.gui.showTooltip", this, "showTooltip(const QPoint &, const QString &)");
+    mafRegisterLocalSignal("maf.local.gui.showTooltip", this, "showTooltipSignal(const QString &)")
+    mafRegisterLocalCallback("maf.local.gui.showTooltip", this, "showTooltip(const QString &)");
 
     mafRegisterLocalSignal("maf.local.gui.hideTooltip", this, "hideTooltipSignal()")
     mafRegisterLocalCallback("maf.local.gui.hideTooltip", this, "hideTooltip()");
@@ -1143,8 +1143,9 @@ QObject *mafGUIManager::dataObject(QModelIndex index) {
     return obj;
 }
 
-void mafGUIManager::showTooltip(const QPoint &point, const QString &text) {
-    QToolTip::showText(point, text);
+void mafGUIManager::showTooltip(const QString &text) {
+    //show tooltip near the current mouse position
+    QToolTip::showText(QCursor::pos(), text);
 }
 
 void mafGUIManager::hideTooltip() {
