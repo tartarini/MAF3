@@ -20,7 +20,7 @@ class mafClassExtractor():
         classDetails = {'namespace':'',
                         'compoundname':'',
                         'location':'',
-                        'destructor_method':None,
+                        'destructor_method':'release',
                         'property':[],
                         'protected_attrib':[],
                         'private_attrib':[],
