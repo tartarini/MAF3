@@ -230,18 +230,37 @@ void mafToolVTKButtons::showTooltip() {
 
     QStringList list = matrixString.split(" ");
     int numElement = list.count();
-    int i = 0;
     int n = 0;
-    bool ok;
+    int i = 0;
     for ( ; i < numElement; i++ ) {
         n++;
         text.append(list[i]);
         text.append(" ");
-        if (n == 4 && i != numElement-1) {
+        if (n == 4 ) {
             text.append("<br>");
             n = 0;
         }
     }
+
+
+    mafBounds *bounds = vme->dataSetCollection()->itemAtCurrentTime()->bounds();
+    text.append("<b>Xmin</b>: ");
+    text.append(QString::number(bounds->xMin()));
+    text.append(" <b>Xmax</b>: ");
+    text.append(QString::number(bounds->xMax()));
+    text.append("<br>");
+
+    text.append("<b>Ymin</b>: ");
+    text.append(QString::number(bounds->yMin()));
+    text.append(" <b>Ymax</b>: ");
+    text.append(QString::number(bounds->yMax()));
+    text.append("<br>");
+
+    text.append("<b>Zmin</b>: ");
+    text.append(QString::number(bounds->zMin()));
+    text.append(" <b>Zmax</b>: ");
+    text.append(QString::number(bounds->zMax()));
+ 
 
     mafEventBus::mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString , text));
