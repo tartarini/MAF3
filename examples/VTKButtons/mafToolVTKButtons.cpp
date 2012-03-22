@@ -226,42 +226,43 @@ void mafToolVTKButtons::showTooltip() {
     QString text("<b>Data type</b>: ");
     text.append(vme->dataSetCollection()->itemAtCurrentTime()->externalDataType());
     text.append("<br>");
-    text.append("<b>Pose Matrix</b>: <br>");
 
-    QStringList list = matrixString.split(" ");
-    int numElement = list.count();
-    int n = 0;
-    int i = 0;
-    for ( ; i < numElement; i++ ) {
-        n++;
-        text.append(list[i]);
-        text.append(" ");
-        if (n == 4 ) {
-            text.append("<br>");
-            n = 0;
-        }
-    }
+     QStringList list = matrixString.split(" ");
+     int numElement = list.count();
+     int i = 0;
 
+     text.append("<b>Pose Matrix</b>:");
+     text.append("<table border=\"0.2\">");
+     for ( ; i < numElement; i++ ) {
+         text.append("<tr>");
+         text.append("<td>" + list[i] +"</td>");
+         i++;
+         text.append("<td>" + list[i] +"</td>");
+         i++;
+         text.append("<td>" + list[i] +"</td>");
+         i++;
+         text.append("<td>" + list[i] +"</td>");
+         text.append("</tr>");
+     }
+     text.append("</table>");
 
     mafBounds *bounds = vme->dataSetCollection()->itemAtCurrentTime()->bounds();
-    text.append("<b>Xmin</b>: ");
-    text.append(QString::number(bounds->xMin()));
-    text.append(" <b>Xmax</b>: ");
-    text.append(QString::number(bounds->xMax()));
-    text.append("<br>");
-
-    text.append("<b>Ymin</b>: ");
-    text.append(QString::number(bounds->yMin()));
-    text.append(" <b>Ymax</b>: ");
-    text.append(QString::number(bounds->yMax()));
-    text.append("<br>");
-
-    text.append("<b>Zmin</b>: ");
-    text.append(QString::number(bounds->zMin()));
-    text.append(" <b>Zmax</b>: ");
-    text.append(QString::number(bounds->zMax()));
+    text.append("<br><b>Bounds: (min - max)</b>:");
+    text.append("<table border=\"0.2\">");
+    text.append("<tr>");
+    text.append("<td>" + QString::number(bounds->xMin()) +"</td>");
+    text.append("<td>" + QString::number(bounds->xMax()) +"</td>");
+    text.append("</tr>");
+    text.append("<tr>");
+    text.append("<td>" + QString::number(bounds->yMin()) +"</td>");
+    text.append("<td>" + QString::number(bounds->yMax()) +"</td>");
+    text.append("</tr>");
+    text.append("<tr>");
+    text.append("<td>" + QString::number(bounds->zMin()) +"</td>");
+    text.append("<td>" + QString::number(bounds->zMax()) +"</td>");
+    text.append("</tr>");
+    text.append("</table>");
  
-
     mafEventBus::mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString , text));
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.gui.showTooltip", mafEventBus::mafEventTypeLocal, &argList);
