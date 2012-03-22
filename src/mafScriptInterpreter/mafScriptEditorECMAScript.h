@@ -1,44 +1,29 @@
 /*
- *  mafScriptEditorPython.h
+ *  mafScriptEditorECMAScript.h
  *  mafScriptEditor
  *
- *  Created by Daniele Giunchi and Paolo Quadrani on 08/11.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Created by Paolo Quadrani on 21/03/12.
+ *  Copyright 2012 B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#ifndef MAFSCRIPTEDITORPYTHON_H
-#define MAFSCRIPTEDITORPYTHON_H
+#ifndef MAFSCRIPTEDITORECMASCRIPT_H
+#define MAFSCRIPTEDITORECMESCRIPT_H
 
 #include "mafScriptInterpreter_global.h"
 
 #include <mafScriptEditor.h>
-
-#undef _POSIX_C_SOURCE
-#undef _XOPEN_SOURCE
-
-#ifdef _DEBUG
-#undef _DEBUG
-#define READD_DEBUG
-#endif // _DEBUG
-#include <Python.h>
-#ifdef READD_DEBUG
-#define _DEBUG
-#undef READD_DEBUG
-#endif // READD_DEBUG
-
+#include <QScriptEngine>
 
 namespace mafScriptInterpreter {
 
-class mafScriptEditorPythonPrivate;
-
 /**
- Class name: mafScriptEditorPython
- This class represents the bridge class to python editor.
+ Class name: mafScriptEditorECMAScript
+ This class represents the bridge class to ECMAScript-262 editor.
  */
-class MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditorPython : public mafScriptEditor
+class MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditorECMAScript : public mafScriptEditor
 {
     Q_OBJECT
     /// typedef macro.
@@ -46,7 +31,7 @@ class MAFSCRIPTINTERPRETERSHARED_EXPORT mafScriptEditorPython : public mafScript
 
 public:
     /// Object Constructor.
-     mafScriptEditorPython(const QString code_location = "");
+     mafScriptEditorECMAScript(const QString code_location = "");
 
     /// Register a boolean type variable with value, name and a description.
     /*virtual*/ void registerVariable(bool   &var, QString name, QString description = "");
@@ -62,11 +47,6 @@ public:
     /// Unregister a variable.
     /*virtual*/ void unregisterVariable(QString name);
 
-    /// Permits all threads to run.
-    void allowThreads(void);
-    /// Execute threads in blocking mode.
-    void blockThreads(void);
-
 public Q_SLOTS:
     /// Interpret command string.
     virtual QString interpret(const QString& command, int *stat);
@@ -75,16 +55,15 @@ public Q_SLOTS:
     
 protected:
     /// Object Destructor.
-    ~mafScriptEditorPython(void);
+    ~mafScriptEditorECMAScript(void);
 
     /// Return prompt string.
     static char *prompt(void);
 
 private:
-    mafScriptEditorPythonPrivate *m_PrivateClassPointer; /// pimpl pattern.
-    PyObject *m_PythonModule; /// temporary python module.
+    QScriptEngine m_Engine; /// ECMAScript engine.
 };
 
 } // end namespace
     
-#endif // MAFSCRIPTEDITORPYTHON_H
+#endif // MAFSCRIPTEDITORPYTHONECMASCRIPT_H

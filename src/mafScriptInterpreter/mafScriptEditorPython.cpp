@@ -81,6 +81,10 @@ void mafScriptEditorPython::registerVariable(char * &var, QString name, QString 
 
 }
 
+void mafScriptEditorPython::registerVariable(QObject &var, QString name, QString description) {
+
+}
+
 void mafScriptEditorPython::unregisterVariable(QString name) {
 
 }
