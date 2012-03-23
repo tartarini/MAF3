@@ -15,6 +15,7 @@
 // Includes list
 #include "mafPluginVTKDefinitions.h"
 #include "mafPipeVisualVTK.h"
+#include <QPalette>
 
 // Foundation Class forwarding list
 class vtkPolyDataMapper;
@@ -30,8 +31,11 @@ namespace mafPluginVTK {
 
 class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKSurface : public mafPipeVisualVTK {
     Q_OBJECT
+    Q_PROPERTY(QPalette colorFrame_palette READ palette)
+
     /// typedef macro.
     mafSuperclassMacro(mafPluginVTK::mafPipeVisualVTK);
+
 
 public:
     /// Object constructor;
@@ -49,6 +53,7 @@ private:
     vtkRenderer * m_Renderer; ///< Current VTK Renderer. 
     bool m_ScalarVisibility; ///< Flag to activate scalar visibility.
     bool m_ImmediateRendering; ///< Flag to activate immediate rendering mode.
+    QPalette m_Palette; ///< Palette of the colorFrame widget.
 
 public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change.
@@ -56,6 +61,9 @@ public Q_SLOTS:
 
     // Open color dialog
     void on_colorButton_released();
+
+    /// Read QPalette;
+    QPalette palette();
 };
 
 } // namespace mafPluginVTK
