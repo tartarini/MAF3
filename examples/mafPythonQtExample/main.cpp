@@ -42,6 +42,7 @@
 #include <PythonQt.h>
 #include <gui/PythonQtScriptingConsole.h>
 #include <mafObjectBaseDecorator.h>
+#include <mafObjectDecorator.h>
 
 #include <QApplication>
 
@@ -56,6 +57,9 @@ int main( int argc, char **argv )
   
   PythonQt::self()->addDecorators(new mafObjectBaseDecorator());
   PythonQt::self()->registerCPPClass("mafObjectBase");
+  PythonQt::self()->addDecorators(new mafObjectDecorator());
+  PythonQt::self()->registerCPPClass("mafObject");
+
   //PythonQt::self()->registerClass(&QPushButton::staticMetaObject);
   //PythonQt::self()->registerCPPClass("YourCPPObject");
 
