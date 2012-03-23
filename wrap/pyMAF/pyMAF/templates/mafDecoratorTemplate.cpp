@@ -23,4 +23,13 @@ public Q_SLOTS:
   void delete_{{compoundname}}({{compoundname}}* selfObj) {
     {% if public_destructor %} delete selfObj;{% else %}selfObj->{{destructor_method}}();{%endif%}
   }
+  
+  QVariant property({{compoundname}}* selfObj, const char *name) {
+    return selfObj->property(name);
+  }
+  
+  void setProperty({{compoundname}}* selfObj, const char *name, QVariant value) {
+    return selfObj->setProperty(name, value);
+  }
+  
 };
