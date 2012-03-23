@@ -93,13 +93,10 @@ void mafPipeVisualVTKSurface::on_colorButton_released() {
 
     //open color dialog
     QColor color = QColorDialog::getColor(QColor(col[0]*255, col[1]*255, col[2]*255));
-     double r = color.toRgb().red()/255.;
-     double g = color.toRgb().green()/255.;
-     double b = color.toRgb().blue()/255.;
-//     vtkActor::SafeDownCast(m_Prop3D)->GetProperty()->SetDiffuseColor(r, g, b);
-    //m_Palette.setColor(QPalette::Background,QColor(col[0]*255, col[1]*255, col[2]*255));
-    //updateUI(widget());
-    
+    double r = color.toRgb().red()/255.;
+    double g = color.toRgb().green()/255.;
+    double b = color.toRgb().blue()/255.;
+
     mafVME *vme = input();
     if(vme == NULL) {
         return;
