@@ -72,10 +72,15 @@ def main( target_wrap_file_path, source_dir, target_dir):
 
         generated = decorator_template.render( classDetails )
 
-        output_file_name = classDetails['compoundname'] + "Decorator.cpp"
+        output_file_name = classDetails['compoundname'] + "Decorator.h"
         output_file = open( os.path.join( target_dir, output_file_name  ), 'w' )
         output_file.write( generated )
         output_file.close()
+        
+        output_source_file = classDetails['compoundname'] + "Decorator.cpp"
+        output_source_file = open( os.path.join( target_dir, output_source_file  ), 'w' )
+        output_source_file.write( "#include \"" + output_file_name + "\"")
+        output_source_file.close() 
 
         print "\n\t - written file %s" % os.path.join( target_dir, output_file_name  )
 

@@ -17,6 +17,8 @@ include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_OpenCV.cmake)
 
+find_package(PythonLibs)
+
 ## #################################################################
 ## Init Project
 ## #################################################################

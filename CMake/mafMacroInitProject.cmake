@@ -35,11 +35,8 @@ MACRO(mafMacroInitProject test)
 
   PROJECT(${DIR_NAME})
 
-
-
   FILE(GLOB input_include_file_list "${PROJECT_SOURCE_DIR}/*.h")
   filterForMoc(include_file_list "${input_include_file_list}")
-  
 
   FILE(GLOB implementation_file_list "${PROJECT_SOURCE_DIR}/*.cpp")
   FILE(GLOB implementation_file_list_vtkMAF "${PROJECT_SOURCE_DIR}/*.cxx")
@@ -49,17 +46,19 @@ MACRO(mafMacroInitProject test)
   FILE(GLOB resource_file_list "${PROJECT_SOURCE_DIR}/*.qrc")
   FILE(GLOB ui_file_list "${PROJECT_SOURCE_DIR}/*.ui")
 
+  set(decorator_file_list)
   if(BUILD_WRAP)
     mafMacroWrapTargetFiles()
     FILE(GLOB decorator_file_list "${MAF_ROOT_BINARY_DIR}/wrap/mafPythonQtDecorators/${PROJECT_NAME}/*.cpp")
-    set(implementation_file_list ${implementation_file_list} ${decorator_file_list}
-  )
+    FILE(GLOB decorator_file_header_list "${MAF_ROOT_BINARY_DIR}/wrap/mafPythonQtDecorators/${PROJECT_NAME}/*.cpp")
+    set(implementation_file_list ${implementation_file_list} ${decorator_file_list})
+    set(include_file_list ${include_file_list} ${decorator_file_header_list})
   endif(BUILD_WRAP)
 
+  
   # Set your list of sources here.
 
   SET(PROJECT_SRCS
-
 	${implementation_file_list}
 	${implementation_file_list_vtkMAF}
 
@@ -116,9 +115,10 @@ MACRO(mafMacroInitProject test)
     # generate rules for building source files from the resources
     QT4_ADD_RESOURCES(QtApp_RCC_SRCS ${resource_file_list})
     ## Moc the library's .h files
+
     QT4_WRAP_CPP(MY_MOC_CXX ${include_file_list})
+    
   endif(${test})
-  
   SET(PROJECT_SRCS 
     ${PROJECT_SRCS}
     ${MY_MOC_CXX}

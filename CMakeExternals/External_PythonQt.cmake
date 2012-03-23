@@ -84,6 +84,8 @@
         ${proj_DEPENDENCIES}
       )
     SET(PYTHONQT_DIR ${ep_build_dir}/${proj})
+    SET(PYTHONQT_SOURCE_DIR ${ep_source_dir}/${proj})
+
     # Since the full path of PythonQt library is used, there is not need to add
     # its corresponding library output directory to CTK_EXTERNAL_LIBRARY_DIRS
 
