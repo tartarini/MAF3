@@ -50,11 +50,12 @@ int main( int argc, char **argv )
   QApplication qapp(argc, argv);
 
   PythonQt::init(PythonQt::IgnoreSiteModule | PythonQt::RedirectStdOut);
-  mafObjectBase *dio = new mafObjectBase("");
+
   PythonQtObjectPtr  mainContext = PythonQt::self()->getMainModule();
   PythonQtScriptingConsole console(NULL, mainContext);
   
   PythonQt::self()->addDecorators(new mafObjectBaseDecorator());
+  PythonQt::self()->registerCPPClass("mafObjectBase");
   //PythonQt::self()->registerClass(&QPushButton::staticMetaObject);
   //PythonQt::self()->registerCPPClass("YourCPPObject");
 
