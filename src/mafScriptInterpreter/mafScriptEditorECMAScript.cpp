@@ -72,34 +72,13 @@ QString mafScriptEditorECMAScript::interpret(const QString& command, int *stat) 
 }
 
 QString mafScriptEditorECMAScript::interpret(const QString& command, const QStringList& args, int *stat) {
-    QString result = "";
-
-/*    blockThreads();
-
-    PyObject *modname = PyString_FromString("__main__");
-    PyObject *mod = PyImport_Import(modname);
-    if (mod) {
-	    PyObject *mdict = PyModule_GetDict(mod);
-        QByteArray ba = command.toAscii();
-	    PyObject *func = PyDict_GetItemString(mdict, ba.constData());
-	    if (func) {
-	        if (PyCallable_Check(func)) {
-		        PyObject *args = PyTuple_New(0);
-		        PyObject *rslt = PyObject_CallObject(func, args);
-		            if (rslt) {
-		            result = QString(PyString_AsString(rslt));
-		            Py_XDECREF(rslt);
-		        }
-		        Py_XDECREF(args);
-	        }
-	    }        
-	    Py_XDECREF(mod);
+    QScriptValue scriptToExecute = m_Engine.evaluate(command);
+    QScriptValueList argsScript;
+    Q_FOREACH(QString arg, args) {
+        argsScript << arg;
     }
-    Py_XDECREF(modname);
-
-    allowThreads();*/
-
-    return result;
+    QScriptValue threeAgain = scriptToExecute.call(QScriptValue(), argsScript);
+    return threeAgain.toString();
 }
 
 char *mafScriptEditorECMAScript::prompt(void) {
