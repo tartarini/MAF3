@@ -79,6 +79,7 @@ void mafSceneNode::setVisualPipe(QString visualPipeType) {
 bool mafSceneNode::createVisualPipe() {
     mafDEL(this->m_VisualPipe);
     this->m_VisualPipe = (mafPipeVisual *)mafNEWFromString(m_VisualPipeType);
+    this->m_VisualPipe->setProperty("scalarVisibility", true);
     if(m_VisualPipe == NULL) {
         qWarning() << mafTr("No visual pipe type '") << m_VisualPipeType << mafTr("'' registered!!");
         return false;
