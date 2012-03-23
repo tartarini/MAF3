@@ -44,6 +44,10 @@ class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_PROPERTY(QString boundYmax READ boundYmax STORED false)
     Q_PROPERTY(QString boundZmax READ boundZmax STORED false)
 
+    Q_PROPERTY(double colorR READ colorR WRITE  setColorR)
+    Q_PROPERTY(double colorG READ colorG WRITE  setColorG)
+    Q_PROPERTY(double colorB READ colorB WRITE  setColorB)
+
     Q_PROPERTY(QString objectType READ objectType STORED false)
     
     Q_PROPERTY(mafResources::mafBoundsPointer bounds READ bounds STORED false)
@@ -119,6 +123,24 @@ public:
     /// Return 3D bound of the current dataset containing the external data of the VME.
     QString boundZmax();
 
+    /// Return red component of vme color.
+    double colorR() const;
+
+    /// Return green component of vme color.
+    double colorG() const;
+
+    /// Return blue component of vme color.
+    double colorB() const;
+
+    /// set red component of vme color.
+    void setColorR(double colorR);
+
+    /// set green component of vme color.
+    void setColorG(double colorG);
+
+    /// set blue component of vme color.
+    void setColorB(double colorB);
+
     /// Fill parameter 'b' with 3D bounds of the VME data at given time. Default value means current time.
     void bounds(double b[6], double t = -1);
     
@@ -158,6 +180,10 @@ private:
     QHash<mafMementoDataSet *, double> m_MementoDataSetHash; ///< Hash of memento dataset and time.
     bool m_CanRead;                     ///< Flag used to indicate if the VME is readable.
     bool m_CanWrite;                    ///< Flag indicating if the vme is writable.
+    double m_ColorR;                    ///< Red component of vme color.
+    double m_ColorG;                    ///< Green component of vme color.
+    double m_ColorB;                    ///< Blue component of vme color.
+
 };
 
 /////////////////////////////////////////////////////////////
@@ -178,7 +204,30 @@ inline bool mafVME::canWrite() const {
     QReadLocker locker(m_Lock);
     return m_CanWrite;
 }
-    
+
+inline double mafVME::colorR() const {
+    return m_ColorR;
+}
+
+inline double mafVME::colorG() const {
+    return m_ColorG;
+}
+
+inline double mafVME::colorB() const {
+    return m_ColorB;
+}
+
+inline void mafVME::setColorR(double colorR) {
+    m_ColorR = colorR;
+}
+
+inline void mafVME::setColorG(double colorG) {
+    m_ColorG = colorG;
+}
+
+inline void mafVME::setColorB(double colorB) {
+    m_ColorB = colorB;
+}
     
 inline QString mafVME::objectType() const{
     QString str(this->metaObject()->className());

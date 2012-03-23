@@ -24,6 +24,9 @@ using namespace mafEventBus;
 
 mafVME::mafVME(const QString code_location) : mafResource(code_location), m_DataSetCollection(NULL), m_DataPipe(NULL), m_CanRead(true), m_CanWrite(true) {
     m_UIFilename = "vmeGeneric.ui";
+    m_ColorR = 1;
+    m_ColorG = 1;
+    m_ColorB = 1;
     mafId time_set_id = mafIdProvider::instance()->idValue("TIME_SET");
     if(time_set_id != -1) {
         mafRegisterLocalCallback("TIME_SET", this, "setTimestamp(double)")
