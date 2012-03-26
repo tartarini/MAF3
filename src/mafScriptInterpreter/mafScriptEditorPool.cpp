@@ -13,6 +13,7 @@
 #include "mafScriptEditorPool.h"
 
 #include "mafScriptEditorPython.h"
+#include "mafScriptEditorECMAScript.h"
 
 #include <mafObjectFactory.h>
 
@@ -33,7 +34,6 @@ mafScriptEditorPool *mafScriptEditorPool::instance(void) {
 }
 
 void mafScriptEditorPool::shutdown() {
-
 }
 
 mafScriptEditor *mafScriptEditorPool::console(QString type) {
@@ -57,7 +57,9 @@ void mafScriptEditorPool::registerEditor(QString type, QString classType) {
 
 mafScriptEditorPool::mafScriptEditorPool(void) : QObject(), m_PrivateClassPointer(new mafScriptEditorPoolPrivate) {
     mafRegisterObject(mafScriptInterpreter::mafScriptEditorPython);
+    mafRegisterObject(mafScriptInterpreter::mafScriptEditorECMAScript);
     registerEditor("python", "mafScriptInterpreter::mafScriptEditorPython");
+    registerEditor("ecma", "mafScriptInterpreter::mafScriptEditorECMAScript");
 }
 
 mafScriptEditorPool::~mafScriptEditorPool(void) {
