@@ -110,3 +110,9 @@ void mafPipeVisualVTKSurface::on_colorButton_released() {
 QPalette mafPipeVisualVTKSurface::palette() {
     return m_Palette;
 }
+
+void mafPipeVisualVTKSurface::on_scalarCheck_stateChanged(int state){
+    m_ScalarVisibility = state;
+    m_Mapper->SetScalarVisibility(m_ScalarVisibility);
+    updatedGraphicObject();
+}

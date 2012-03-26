@@ -64,6 +64,9 @@ public Q_SLOTS:
 
     /// Read QPalette;
     QPalette palette();
+
+    /// Set On/Off scalar visibility
+    void on_scalarCheck_stateChanged(int state);
 };
 
 } // namespace mafPluginVTK
