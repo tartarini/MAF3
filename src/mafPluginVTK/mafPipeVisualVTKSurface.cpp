@@ -33,7 +33,7 @@ using namespace mafResources;
 using namespace mafPluginVTK;
 using namespace std;
 
-mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : mafPipeVisualVTK(code_location), m_Mapper(NULL) {
+mafPipeVisualVTKSurface::mafPipeVisualVTKSurface(const QString code_location) : mafPipeVisualVTK(code_location), m_Mapper(NULL), m_ScalarVisibility(true) {
     m_UIFilename = "mafPipeVisualSurface.ui";
     m_Palette = QPalette();
     m_Mapper = vtkPolyDataMapper::New();
