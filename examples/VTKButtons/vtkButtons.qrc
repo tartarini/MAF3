@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>images/buttonIcon.png</file>
         <file>images/spe.png</file>
+        <file>images/icon_vtkButtons.png</file>
     </qresource>
 </RCC>
