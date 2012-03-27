@@ -187,15 +187,15 @@ mafSyntaxHighlighterPython::mafSyntaxHighlighterPython(QTextDocument *parent) : 
     insertRule("function",QRegExp("\\b[A-Za-z0-9_]+(?=\\()"), format);
     
     //Quotation
-    format.setForeground(Qt::darkGreen);
+    format.setForeground(Qt::red);
     insertRule("quotation",QRegExp("(\".*\")|('.*')"), format);
     
-    //Singleline comment
-    format.setForeground(Qt::red);
+    //Single-line comment
+    format.setForeground(Qt::darkGreen);
     insertRule("singleLineComment",QRegExp("#[^\n]*"), format);
     
-    //Multiline comment
-    format.setForeground(Qt::red);
+    //Multi-line comment
+    format.setForeground(Qt::darkGreen);
     setMultilineRule(QRegExp("(\"\"\")"), QRegExp("(\"\"\")"),  format);
     
     //Integer
@@ -213,6 +213,6 @@ mafSyntaxHighlighterPython::mafSyntaxHighlighterPython(QTextDocument *parent) : 
     insertRule("octal",QRegExp("\\b0[0-7]+([Uu]([Ll]|LL|ll)?|([Ll]|LL|ll)[Uu]?)?\\b"), format);
     
     //Hex number
-    format.setForeground(Qt::green);
+    format.setForeground(Qt::gray);
     insertRule("hexadecimal",QRegExp("\\b0[xX][0-9a-fA-F]+([Uu]([Ll]|LL|ll)?|([Ll]|LL|ll)[Uu]?)?\\b"), format);
 }
