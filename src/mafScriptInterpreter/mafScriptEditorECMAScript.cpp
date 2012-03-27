@@ -51,6 +51,11 @@ QScriptValue mafScriptEditorECMAScript::variable(QString name) {
 void mafScriptEditorECMAScript::unregisterVariable(QString name) {
 }
 
+void mafScriptEditorECMAScript::setupHighliter(QTextDocument *doc) {
+    /// Create the syntax highlighter for ECMAScript and instantiate here...
+    Q_UNUSED(doc);
+}
+
 QString mafScriptEditorECMAScript::interpret(const QString& command, int *stat) {
     QScriptSyntaxCheckResult chkRes = m_Engine.checkSyntax(command);
     int s = chkRes.state();

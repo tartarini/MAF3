@@ -68,10 +68,14 @@ public:
     void blockThreads(void);
 
 public Q_SLOTS:
+    /// Setup the text highlighter.
+    /*virtual*/ void setupHighliter(QTextDocument *doc);
+
     /// Interpret command string.
-    virtual QString interpret(const QString& command, int *stat);
+    /*virtual*/ QString interpret(const QString& command, int *stat);
+    
     /// Interpret command string with parameters.
-    virtual QString interpret(const QString& command, const QStringList& args, int *stat);
+    /*virtual*/ QString interpret(const QString& command, const QStringList& args, int *stat);
     
 protected:
     /// Object Destructor.

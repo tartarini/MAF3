@@ -12,6 +12,8 @@
 #include "mafScriptEditorPython.h"
 #include <mafThreadSynchronizer.h>
 #include "mafScriptEditorPythonModuleManager.h"
+#include <mafSyntaxHighlighterPython.h>
+
 #include <iostream>
 
 using namespace mafScriptInterpreter;
@@ -101,6 +103,13 @@ void mafScriptEditorPython::blockThreads(void) {
         PyEval_RestoreThread(m_PrivateClassPointer->thread_state);
 
     m_PrivateClassPointer->thread_level++;
+}
+
+void mafScriptEditorPython::setupHighliter(QTextDocument *doc) {
+    mafGUI::mafSyntaxHighlighter *highlighter = NULL;
+    highlighter = new mafSyntaxHighlighterPython(doc);
+
+    Q_UNUSED(highlighter);
 }
 
 QString mafScriptEditorPython::interpret(const QString& command, int *stat) {
