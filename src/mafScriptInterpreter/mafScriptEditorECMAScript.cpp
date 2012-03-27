@@ -10,8 +10,8 @@
  */
 
 #include "mafScriptEditorECMAScript.h"
+#include "mafSyntaxHighlighterECMAScript.h"
 #include <mafThreadSynchronizer.h>
-//#include "mafScriptEditorPythonModuleManager.h"
 #include <iostream>
 
 using namespace mafScriptInterpreter;
@@ -52,8 +52,10 @@ void mafScriptEditorECMAScript::unregisterVariable(QString name) {
 }
 
 void mafScriptEditorECMAScript::setupHighliter(QTextDocument *doc) {
-    /// Create the syntax highlighter for ECMAScript and instantiate here...
-    Q_UNUSED(doc);
+    mafGUI::mafSyntaxHighlighter *highlighter = NULL;
+    highlighter = new mafSyntaxHighlighterECMAScript(doc);
+
+    Q_UNUSED(highlighter);
 }
 
 QString mafScriptEditorECMAScript::interpret(const QString& command, int *stat) {

@@ -12,7 +12,7 @@
 #include "mafScriptEditorPython.h"
 #include <mafThreadSynchronizer.h>
 #include "mafScriptEditorPythonModuleManager.h"
-#include <mafSyntaxHighlighterPython.h>
+#include "mafSyntaxHighlighterPython.h"
 
 #include <iostream>
 
