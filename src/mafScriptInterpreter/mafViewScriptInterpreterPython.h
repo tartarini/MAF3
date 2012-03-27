@@ -3,11 +3,14 @@
  *  mafScriptInterpreter
  *
  *  Created by Paolo Quadrani on 03/10/11.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
+
+#ifndef MAFVIEWSCRIPTINTERPRETERPYTHON_H
+#define MAFVIEWSCRIPTINTERPRETERPYTHON_H
 
 #include "mafViewScriptInterpreter.h"
  
@@ -37,3 +40,5 @@ protected:
 };
 
 } // namespace mafScriptInterpreter
+
+#endif // MAFVIEWSCRIPTINTERPRETERPYTHON_H
