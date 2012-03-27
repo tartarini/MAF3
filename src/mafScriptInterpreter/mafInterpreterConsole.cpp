@@ -3,15 +3,14 @@
  *  mafGui
  *
  *  Created by Paolo Quadrani - Daniele Giunchi on 10/06/11.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2012 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include "mafScriptEditorPython.h"
+#include "mafScriptEditor.h"
 
-#include <mafSyntaxHighlighterPython.h>
 #include <mafInterpreterConsole.h>
 
 
@@ -96,13 +95,7 @@ void mafInterpreterConsole::registerInterpreter(mafScriptEditor *interpreter) {
     connect(this, SIGNAL( save(const QString&)),        m_Interpreter,    SLOT(     save(const QString&)));
     connect(this, SIGNAL(stopped(void)),                m_Interpreter,  SIGNAL(  stopped(void)));
 
-    mafSyntaxHighlighter *highlighter = NULL;
-
-    if(dynamic_cast<mafScriptEditorPython *>(m_Interpreter)) {
-        highlighter = new mafSyntaxHighlighterPython(this->document());
-    }
-
-    Q_UNUSED(highlighter);
+    m_Interpreter->setupHighliter(this->document());
 
     this->appendPlainText(filter(m_Interpreter->prompt()));
 }
