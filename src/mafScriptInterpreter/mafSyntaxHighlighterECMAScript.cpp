@@ -1,10 +1,21 @@
+/*
+ *  mafSyntaxHighlighterECMAScript.cpp
+ *  mafScriptEditor
+ *
+ *  Created by Paolo Quadrani on 27/03/12.
+ *  Copyright 2012 B3C. All rights reserved.
+ *
+ *  See License at: http://tiny.cc/QXJ4D
+ *
+ */
+
 #include "mafSyntaxHighlighterECMAScript.h"
 
 using namespace mafScriptInterpreter;
 
 mafSyntaxHighlighterECMAScript::mafSyntaxHighlighterECMAScript(QTextDocument *parent) : mafGUI::mafSyntaxHighlighter(parent)
 {
-	// Python keywords
+	// ECMAScript keywords
     QStringList keywords;
     keywords 
         << "\\bvar\\b"

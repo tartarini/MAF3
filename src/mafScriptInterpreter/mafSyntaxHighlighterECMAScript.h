@@ -1,3 +1,14 @@
+/*
+ *  mafSyntaxHighlighterECMAScript.h
+ *  mafScriptEditor
+ *
+ *  Created by Paolo Quadrani on 27/03/12.
+ *  Copyright 2012 B3C. All rights reserved.
+ *
+ *  See License at: http://tiny.cc/QXJ4D
+ *
+ */
+
 #ifndef MAFSYNTAXHIGHLIGHTERECMASCRIPT_H
 #define MAFSYNTAXHIGHLIGHTERECMASCRIPT_H
 
