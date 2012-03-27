@@ -73,16 +73,17 @@ mafSyntaxHighlighterECMAScript::mafSyntaxHighlighterECMAScript(QTextDocument *pa
     insertRule("function",QRegExp("\\b[A-Za-z0-9_]+(?=\\()"), format);
     
     //Quotation
-    format.setForeground(Qt::darkGreen);
+    format.setForeground(Qt::red);
     insertRule("quotation",QRegExp("(\".*\")|('.*')"), format);
     
     //Single-line comment
-    format.setForeground(Qt::red);
-    insertRule("singleLineComment",QRegExp("//[^\n]*"), format);
+    format.setForeground(Qt::darkGreen);
+     insertRule("singleLineComment",QRegExp("//[^\n]*"), format);
     
     //Multi-line comment
-    format.setForeground(Qt::red);
-    setMultilineRule(QRegExp("(/*)"), QRegExp("(*/)"),  format);
+     format.setForeground(Qt::darkGreen);
+//     setMultilineRule(QRegExp("(/*)"), QRegExp("(*/)"),  format);
+    setMultilineRule(QRegExp("(\"\"\")"), QRegExp("(\"\"\")"),  format);
     
     //Integer
     format.setForeground(Qt::darkYellow);
@@ -97,6 +98,6 @@ mafSyntaxHighlighterECMAScript::mafSyntaxHighlighterECMAScript(QTextDocument *pa
     insertRule("octal",QRegExp("\\b0[0-7]+([Uu]([Ll]|LL|ll)?|([Ll]|LL|ll)[Uu]?)?\\b"), format);
     
     //Hex number
-    format.setForeground(Qt::green);
+    format.setForeground(Qt::gray);
     insertRule("hexadecimal",QRegExp("\\b0[xX][0-9a-fA-F]+([Uu]([Ll]|LL|ll)?|([Ll]|LL|ll)[Uu]?)?\\b"), format);
 }
