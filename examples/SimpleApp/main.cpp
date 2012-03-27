@@ -8,6 +8,7 @@
 
 #include "mafOperationSimpleApp.h"
 #include <mafViewScriptInterpreterPython.h>
+#include <mafViewScriptInterpreterECMAScript.h>
 #include "mafApplicationSettingsPageConfigurations.h"
 
 #include <mafMainWindow.h>
@@ -49,6 +50,7 @@ int main(int argc, char *argv[]) {
     // mafRegisterObject(myNamespace::myClassCustom);
     mafRegisterObjectAndAcceptBind(mafOperationSimpleApp);
     mafRegisterObject(mafScriptInterpreter::mafViewScriptInterpreterPython);
+    mafRegisterObject(mafScriptInterpreter::mafViewScriptInterpreterECMAScript);
     // Plug the object's information into the framework
 //    logic->plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
 //    logic->plugObject("mafResources::mafOperation", "mafResources::mafOperationTransform", "Transform");
@@ -64,6 +66,8 @@ int main(int argc, char *argv[]) {
     logic->customizeVisualization("VTK view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
 
     logic->plugObject("mafResources::mafView", "mafScriptInterpreter::mafViewScriptInterpreterPython", "Python Console");
+    logic->plugObject("mafResources::mafView", "mafScriptInterpreter::mafViewScriptInterpreterECMAScript", "ECMAScript Console");
+
     // Create the instance of the main window and pass to it the application's logic.
     // In this way the mafMainWondow class will also load the plug-ins present
     // in the default 'plugins' directory.
