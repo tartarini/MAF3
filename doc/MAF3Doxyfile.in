@@ -577,7 +577,8 @@ INPUT                  = . \
                          @CMAKE_SOURCE_DIR@/src/mafResources \
                          @CMAKE_SOURCE_DIR@/src/mafPluginVTK \
                          @CMAKE_SOURCE_DIR@/src/mafApplicationLogic \
-                         @CMAKE_SOURCE_DIR@/src/mafGUI
+                         @CMAKE_SOURCE_DIR@/src/mafGUI \
+						 @CMAKE_SOURCE_DIR@/src/mafScriptInterpreter
 
 # This tag can be used to specify the character encoding of the source files 
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is 
