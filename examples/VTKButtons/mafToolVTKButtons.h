@@ -74,6 +74,9 @@ public:
     /// Hide tooltip
     void hideTooltip();
 
+    /// Select VME connected to button pressed
+    void selectVME();
+
 
 protected:
     /// Object destructor.

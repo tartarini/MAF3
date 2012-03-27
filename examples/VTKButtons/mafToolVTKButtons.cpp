@@ -55,6 +55,7 @@ public:
             widget->renderer()->ResetCamera(bounds);
         }
         mafDEL(animateCamera);
+        toolButton->selectVME();
     }
 
     void setBounds(mafBounds *b) {
@@ -70,7 +71,8 @@ public:
         flyTo = fly;
     }
 
-    vtkButtonCallback(): graphicObject(0), flyTo(true) {}
+    vtkButtonCallback():toolButton(NULL), graphicObject(0), flyTo(true) {}
+    mafToolVTKButtons *toolButton;
     QObject *graphicObject;
     double bounds[6];
     bool flyTo;
@@ -109,6 +111,7 @@ mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK
     rep->SetNumberOfStates(1);
 
     buttonCallback = vtkButtonCallback::New();
+    buttonCallback->toolButton = this;
     
     highlightCallback = vtkButtonHighLightCallback::New();
     highlightCallback->toolButton = this;
@@ -271,4 +274,16 @@ void mafToolVTKButtons::showTooltip() {
 void mafToolVTKButtons::hideTooltip() {
     mafEventBus::mafEventArgumentsList argList;
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.gui.hideTooltip", mafEventBus::mafEventTypeLocal, &argList);
+}
+
+void mafToolVTKButtons::selectVME() {
+    //select the VME associated to the button pressed
+    mafVME *vme = input();
+    if(vme == NULL) {
+        return;
+    }
+    mafCore::mafObjectBase *objBase = vme;
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafObjectBase*, objBase));
+    mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 }
