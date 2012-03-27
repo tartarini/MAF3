@@ -52,7 +52,7 @@ public:
     /// Check if the object is equal to that passed as argument.
     /* virtual */ bool isEqual(const mafObjectBase *obj) const;
 
-        /// Allow to set the icon type representing the icon file associated with the object.
+    /// Allow to set the icon type representing the icon file associated with the object.
     void setIconType(QString icon_type);
 
     /// Return the icon type associated with the object.
@@ -89,12 +89,12 @@ public:
     /** This method create the dictionary needed for the script list and contains the following keys:
     - script: indicate the script as file path or as script string.
     - type:   indicate the type of script (mafScriptTypeFilePath or mafScriptTypeStringScript)
-    - interpreter: indicate the interpreter needed to execute the script (Python, Tcl, ...)
+    - interpreter: indicate the interpreter needed to execute the script (python, ecma, ...)
     The standard work-flow usage is to ask the object generate a new script information 
     dictionary (by calling this method), customize its information and add it to the list 
     by calling the addScript method.
     */
-    QVariantHash *scriptDictionary();
+    QVariantHash *scriptDictionary(QString interpreter = "python");
 
     /// Add a script to the scriptList.
     bool addScript(QVariantHash *script);
@@ -173,11 +173,11 @@ inline int mafObject::progressStatus() const {
     return m_ProgressStatus;
 }
 
-inline QVariantHash *mafObject::scriptDictionary() {
+inline QVariantHash *mafObject::scriptDictionary(QString interpreter) {
     QVariantHash *dic = new QVariantHash();
     dic->insert(mafScriptKey, QVariant(""));
     dic->insert(mafScriptTypeKey, QVariant(mafScriptSourceTypeStringScript));
-    dic->insert(mafScriptInterpreterKey, QVariant("python"));
+    dic->insert(mafScriptInterpreterKey, QVariant(interpreter));
     return dic;
 }
 
