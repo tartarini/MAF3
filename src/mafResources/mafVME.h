@@ -37,12 +37,12 @@ class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_PROPERTY(bool canRead READ canRead WRITE setCanRead STORED false)
     Q_PROPERTY(bool canWrite READ canWrite WRITE setCanWrite STORED false)
     Q_PROPERTY(bool dataLoaded READ dataLoaded STORED false)
-    Q_PROPERTY(QString boundXmin READ boundXmin STORED false)
-    Q_PROPERTY(QString boundYmin READ boundYmin STORED false)
-    Q_PROPERTY(QString boundZmin READ boundZmin STORED false)
-    Q_PROPERTY(QString boundXmax READ boundXmax STORED false)
-    Q_PROPERTY(QString boundYmax READ boundYmax STORED false)
-    Q_PROPERTY(QString boundZmax READ boundZmax STORED false)
+    Q_PROPERTY(QString boundXmin READ boundXmin WRITE setBoundXmin)
+    Q_PROPERTY(QString boundYmin READ boundYmin WRITE setBoundYmin)
+    Q_PROPERTY(QString boundZmin READ boundZmin WRITE setBoundZmin)
+    Q_PROPERTY(QString boundXmax READ boundXmax WRITE setBoundXmax)
+    Q_PROPERTY(QString boundYmax READ boundYmax WRITE setBoundYmax)
+    Q_PROPERTY(QString boundZmax READ boundZmax WRITE setBoundZmax)
 
     Q_PROPERTY(double colorR READ colorR WRITE  setColorR)
     Q_PROPERTY(double colorG READ colorG WRITE  setColorG)
@@ -123,6 +123,24 @@ public:
     /// Return 3D bound of the current dataset containing the external data of the VME.
     QString boundZmax();
 
+    /// Set 3D bound of the current dataset containing the external data of the VME.
+    void  setBoundXmin(QString bound);
+
+    /// Set 3D bound of the current dataset containing the external data of the VME.
+    void  setBoundYmin(QString bound);
+
+    /// Set 3D bound of the current dataset containing the external data of the VME.
+    void  setBoundZmin(QString bound);
+
+    /// Set 3D bound of the current dataset containing the external data of the VME.
+    void  setBoundXmax(QString bound);
+
+    /// Set 3D bound of the current dataset containing the external data of the VME.
+    void  setBoundYmax(QString bound);
+
+    /// Set 3D bound of the current dataset containing the external data of the VME.
+    void  setBoundZmax(QString bound);
+
     /// Return red component of vme color.
     double colorR() const;
 
@@ -167,6 +185,9 @@ public Q_SLOTS:
     /// Execute the resource algorithm.
     /*virtual*/ void execute();
 
+    /// Update bounds of the VME
+    void updateBounds();
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafVME();
@@ -183,6 +204,13 @@ private:
     double m_ColorR;                    ///< Red component of vme color.
     double m_ColorG;                    ///< Green component of vme color.
     double m_ColorB;                    ///< Blue component of vme color.
+    QString m_BoundXmin;                ///< 3D bound of the current dataset
+    QString m_BoundYmin;                ///< 3D bound of the current dataset
+    QString m_BoundZmin;                ///< 3D bound of the current dataset
+    QString m_BoundXmax;                ///< 3D bound of the current dataset
+    QString m_BoundYmax;                ///< 3D bound of the current dataset
+    QString m_BoundZmax;                ///< 3D bound of the current dataset
+
 
 };
 
@@ -232,6 +260,30 @@ inline void mafVME::setColorB(double colorB) {
 inline QString mafVME::objectType() const{
     QString str(this->metaObject()->className());
     return str.split("::").last();
+}
+
+inline void mafVME::setBoundXmin(QString bound) {
+    m_BoundXmin = bound;
+}
+
+inline void mafVME::setBoundYmin(QString bound) {
+    m_BoundYmin = bound;
+}
+
+inline void mafVME::setBoundZmin(QString bound) {
+    m_BoundZmin = bound;
+}
+
+inline void mafVME::setBoundXmax(QString bound) {
+    m_BoundXmax = bound;
+}
+
+inline void mafVME::setBoundYmax(QString bound) {
+    m_BoundYmax = bound;
+}
+
+inline void mafVME::setBoundZmax(QString bound) {
+    m_BoundZmax = bound;
 }
 
 } // mafResources
