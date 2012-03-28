@@ -335,6 +335,7 @@ mafDataSet *mafDataSetCollection::itemAt(double t) {
         item->setPoseMatrix(m);
         insertItem(item, ts);
         item->release();
+        connect(item, SIGNAL(modifiedObject()), this, SIGNAL(modifiedObject()));
         delete m;
         m = NULL;
     }

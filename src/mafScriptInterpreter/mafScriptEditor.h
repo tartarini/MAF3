@@ -2,10 +2,10 @@
  *  mafScriptEditor.h
  *  mafScriptInterpreter
  *
- *  Created by Daniele Giunchi on 08/11.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Created by Daniele Giunchi - Paolo Quadrani on 08/11.
+ *  Copyright 2012 B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -14,10 +14,6 @@
 
 #include "mafScriptInterpreter_global.h"
 #include <mafObjectBase.h>
-
-class mafAbstractData;
-class mafAbstractProcess;
-class mafAbstractView;
 
 namespace mafScriptInterpreter {
 
@@ -40,11 +36,16 @@ public Q_SLOTS:
 
     /// Start the console.
     void start(void);
+
     /// Stop the console.
     void stop(void);
 
+    /// Setup the text highlighter.
+    virtual void setupHighliter(QTextDocument *doc) = 0;
+
     /// Interpret the string after click enter.
     virtual QString interpret(const QString& command, int *stat) = 0;
+
     /// Interpret the string after click enter using a parameter list.
     virtual QString interpret(const QString& command, const QStringList& args, int *stat) = 0;
 
@@ -106,7 +107,7 @@ protected:
     void unregisterFunctionDescription(QString name);
 
 private:
-    mafScriptEditorPrivate *m_PrivateClassPointer; /// pimpl pattern.
+    mafScriptEditorPrivate *m_PrivateClassPointer; /// Pimpl pattern.
 };
     
 } // end namespace

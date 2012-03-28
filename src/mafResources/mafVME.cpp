@@ -145,6 +145,7 @@ mafDataSetCollection *mafVME::dataSetCollection() {
         m_DataSetCollection = new mafDataSetCollection(mafCodeLocation);
         m_DataSetCollection->setParent(this);
         //connect the data collection modified to the updateBounds slot
+        connect(m_DataSetCollection, SIGNAL(modifiedObject()), this, SLOT(updateBounds()));
     }
     return m_DataSetCollection;
 }
@@ -237,27 +238,27 @@ bool mafVME::dataLoaded() const {
 }
 
 QString mafVME::boundXmin() {
-    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()->xMin());
+    return m_BoundXmin;
 }
 
 QString mafVME::boundXmax() {
-    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()->xMax());
+    return m_BoundXmax;
 }
 
 QString mafVME::boundYmin() {
-    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()->yMin());
+    return m_BoundYmin;
 }
 
 QString mafVME::boundYmax() {
-    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()->yMax());
+    return m_BoundYmax;
 }
 
 QString mafVME::boundZmin() {
-    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()->zMin());
+    return m_BoundZmin;
 }
 
 QString mafVME::boundZmax() {
-    return QString::number(this->dataSetCollection()->itemAtCurrentTime()->bounds()->zMax());
+    return m_BoundZmax;
 }
 
 void mafVME::bounds(double b[6], double t) {
@@ -282,4 +283,17 @@ mafResources::mafBoundsPointer mafVME::bounds() const{
 double mafVME::length() {
     mafDataSet *dataset = this->dataSetCollection()->itemAtCurrentTime();
     return dataset->bounds()->length();
+}
+
+void mafVME::updateBounds() {
+    mafDataSet *data = this->dataSetCollection()->itemAtCurrentTime();
+    if (data) {
+        mafBoundsPointer bVariant = data->bounds();
+        m_BoundXmin = QString::number(bVariant->xMin());
+        m_BoundXmax = QString::number(bVariant->xMax());
+        m_BoundYmin = QString::number(bVariant->yMin());
+        m_BoundYmax = QString::number(bVariant->yMax());
+        m_BoundZmin = QString::number(bVariant->zMin());
+        m_BoundZmax = QString::number(bVariant->zMax());
+    }
 }

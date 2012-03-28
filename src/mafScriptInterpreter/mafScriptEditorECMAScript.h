@@ -43,15 +43,21 @@ public:
     /*virtual*/ void registerVariable(char * &var, QString name, QString description = "");
     /// Register a QObject type variable with value, name and a description.
     /*virtual*/ void registerVariable(QObject &var, QString name, QString description = "");
+    /// Return the value of a registered variable.
+    QScriptValue variable(QString name);
 
     /// Unregister a variable.
     /*virtual*/ void unregisterVariable(QString name);
 
 public Q_SLOTS:
+    /// Setup the text highlighter.
+    /*virtual*/ void setupHighliter(QTextDocument *doc);
+
     /// Interpret command string.
-    virtual QString interpret(const QString& command, int *stat);
+    /*virtual*/ QString interpret(const QString& command, int *stat);
+
     /// Interpret command string with parameters.
-    virtual QString interpret(const QString& command, const QStringList& args, int *stat);
+    /*virtual*/ QString interpret(const QString& command, const QStringList& args, int *stat);
     
 protected:
     /// Object Destructor.

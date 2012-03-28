@@ -9,6 +9,9 @@
  *
  */
 
+#ifndef MAFVIEWSCRIPTINTERPRETER_H
+#define MAFVIEWSCRIPTINTERPRETER_H
+
 #include <mafView.h>
  
 #include "mafScriptInterpreter_global.h"
@@ -37,3 +40,5 @@ protected:
 };
 
 } // namespace mafScriptInterpreter
+
+#endif // MAFVIEWSCRIPTINTERPRETER_H

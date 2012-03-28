@@ -35,6 +35,8 @@ int main(int argc, char *argv[]) {
     a.setOrganizationDomain("scsolutions.org");
     a.setApplicationName(QString("VTKButtons").append(BUNDLE_SUFFIX));
     a.setApplicationVersion("1.0");
+    
+    a.setWindowIcon(QIcon(":/images/icon_vtkButtons.png"));
 
     // Create the application's logic instance
     mafApplicationLogic::mafLogic *logic = new mafApplicationLogic::mafLogic();

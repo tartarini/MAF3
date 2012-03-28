@@ -19,7 +19,7 @@ using namespace mafResources;
 
 mafDataSet::mafDataSet(const QString code_location) : mafObject(code_location), m_DataValue(NULL), m_DataBoundary(NULL), m_Matrix(NULL), m_DataBoundaryAlgorithm(NULL), m_DataBoundaryAlgorithmName(), m_ExternalDataType(), m_ExternalCodecType(), m_DataLoaded(false), m_FileName(), m_Bounds(NULL) {
     m_Bounds = new mafResources::mafBounds;
-    QObject::connect(this, SIGNAL(loadDataSignal()), this, SLOT(updateDataValue()), Qt::BlockingQueuedConnection);
+    //QObject::connect(this, SIGNAL(loadDataSignal()), this, SLOT(updateDataValue()), Qt::BlockingQueuedConnection);
 }
 
 mafDataSet::~mafDataSet() {
@@ -47,7 +47,7 @@ QString mafDataSet::poseMatrixString() {
         m_Matrix->setIdentity();
     }
     QString matrixString;
-    //Create a string with the values of matrix element separeted by a blank space.
+    //Create a string with the values of matrix element separated by a blank space.
     int r = 0;
     for ( ; r < 4; ++r) {
         int c = 0;
@@ -241,7 +241,6 @@ void mafDataSet::setBounds(mafResources::mafBoundsPointer bounds) {
         m_Bounds = bounds;
         m_Bounds->retain();
     }
-
 }
 
 void mafDataSet::updateBounds() {
