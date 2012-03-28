@@ -39,6 +39,9 @@ bool mafObjectBase::initialize() {
 }
 
 void mafObjectBase::setModified(bool m) {
+    if (m_Modified == m) {
+        return;
+    }
     m_Modified = m;
     if (m_Modified) {
         Q_EMIT modifiedObject();
