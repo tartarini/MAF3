@@ -104,6 +104,11 @@ if(MAF_PLUGINCTK)
   #include(CMakeExternals/External_CTK.cmake)
 endif(MAF_PLUGINCTK)
 
+if(MAF_PLUGINFieldML)
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} FieldML-API)
+  include(CMakeExternals/External_FieldML-API.cmake)
+endif(MAF_PLUGINFieldML)
+
 
 if(BUILD_WRAP)
 #  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} PythonQt)
@@ -249,6 +254,8 @@ ExternalProject_Add(${proj}
     -DOpenCV_DIR:PATH=${OpenCV_DIR} # FindOpenCV expects OpenCV_DIR variable to be defined
     # CTK
     -DCTK_DIR:PATH=${CTK_DIR}
+    #FieldML-API
+    -DFieldML-API_DIR=${FieldML-API_DIR}
   INSTALL_COMMAND ""
   )
   

@@ -42,6 +42,10 @@ if(${MAF_PLUGINCTK})
   #ADD_SUBDIRECTORY(mafPluginCTK)
 endif(${MAF_PLUGINCTK})
 
+if(${MAF_PLUGINFieldML})
+  ADD_SUBDIRECTORY(mafPluginFieldML)
+endif(${MAF_PLUGINFieldML})
+
 
 #ADD_SUBDIRECTORY(mafPluginGimias)
 
