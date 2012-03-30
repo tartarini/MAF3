@@ -46,7 +46,7 @@ private:
     //vtkSTLReader *m_Reader; ///< Reader of the external data.
 };
 
-} // namespace mafPluginVTK
+} // namespace mafPluginFieldML
 
 
 #endif // MAFIMPORTERFIELDML_H

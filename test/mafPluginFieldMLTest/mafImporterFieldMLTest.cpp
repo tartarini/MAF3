@@ -66,7 +66,9 @@ private Q_SLOTS:
         m_EventBus = mafEventBusManager::instance();
         
         m_FieldMLFile = MAF_DATA_DIR;
-        m_FieldMLFile.append("/FieldML/mafImporterFieldMLTestData");
+        m_FieldMLFile.append("/FieldML/cube.xml");
+
+        mafRegisterObject(mafPluginFieldML::mafImporterFieldML);
 
         m_VMEManager = mafVMEManager::instance();
         m_EventBus->notifyEvent("maf.local.resources.hierarchy.request");
@@ -85,6 +87,8 @@ private Q_SLOTS:
         
         //restore vme manager status
         m_EventBus->notifyEvent("maf.local.resources.hierarchy.request");
+        
+        mafUnregisterObject(mafPluginFieldML::mafImporterFieldML);
         
         m_EventBus->shutdown();
         mafMessageHandler::instance()->shutdown();

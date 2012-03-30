@@ -18,6 +18,7 @@ if(NOT ${BUILD_SHARED_LIBS})
 endif(NOT ${BUILD_SHARED_LIBS})
 
 set(FIELDML_LIB
+  xml2
   fieldml_api
   fieldml_io_api
 )
