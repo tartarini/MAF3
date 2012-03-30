@@ -27,6 +27,10 @@ if(${MAF_PLUGINVTK})
   ADD_SUBDIRECTORY(mafPluginVTKTest)
 endif(${MAF_PLUGINVTK})
 
+if(${MAF_PLUGINFieldML})
+  ADD_SUBDIRECTORY(mafPluginFieldMLTest)
+endif(${MAF_PLUGINFieldML})
+
 if(${VTK_MAF})
   ADD_SUBDIRECTORY(vtkMAFTest)
 endif(${VTK_MAF})
