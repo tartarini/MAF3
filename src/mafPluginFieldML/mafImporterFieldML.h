@@ -20,6 +20,13 @@
 
 namespace mafPluginFieldML {
 
+
+class FieldMLDataInformation {
+public:
+    int numberOfMesh;
+    int firstMeshDimension;
+};
+
 /**
  Class Name: mafImporterFieldML
  This class allows to import STL data into a mafVME.
@@ -42,7 +49,9 @@ protected:
     /* virtual */ ~mafImporterFieldML();
     
 private:
-    //mafCore::mafProxy<vtkAlgorithmOutput> m_ImportedData; ///< Container of the Data Source
+    FieldMLDataInformation m_DataInformation;
+    
+    mafCore::mafProxy<FieldMLDataInformation> m_ImportedData; ///< Container of the Data Source
     //vtkSTLReader *m_Reader; ///< Reader of the external data.
 };
 

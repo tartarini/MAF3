@@ -17,6 +17,7 @@
 #include <mafVMEManager.h>
 #include <mafOperationManager.h>
 #include <mafProxy.h>
+#include <mafResourcesRegistration.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -46,10 +47,10 @@ void testFieldMLVMEAddObserver::vmeImported(mafCore::mafObjectBase *vme) {
     
     mafVME *v = qobject_cast<mafVME *>(vme);
     mafDataSet *dataset = v->dataSetCollection()->itemAtCurrentTime();
-    /*mafProxy<vtkAlgorithmOutput> *output = mafProxyPointerTypeCast(vtkAlgorithmOutput, dataset->dataValue());
-    vtkAlgorithm *producer = (*output)->GetProducer();
-    vtkDataObject *data = producer->GetOutputDataObject(0);
-    QVERIFY(data);*/
+   
+    mafProxy<FieldMLDataInformation> *data = mafProxyPointerTypeCast(mafPluginFieldML::FieldMLDataInformation, dataset->dataValue());
+    qDebug() << "firstMeshDimension: " << (*data)->firstMeshDimension;
+    QVERIFY(data && (*data)->numberOfMesh);
 }
 
 /**
@@ -64,6 +65,8 @@ private Q_SLOTS:
     void initTestCase() {
         mafMessageHandler::instance()->installMessageHandler();        
         m_EventBus = mafEventBusManager::instance();
+        
+        mafResourcesRegistration::registerResourcesObjects();
         
         m_FieldMLFile = MAF_DATA_DIR;
         m_FieldMLFile.append("/FieldML/cube.xml");

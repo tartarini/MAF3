@@ -63,6 +63,28 @@ void mafImporterFieldML::execute() {
 			Fieldml_FreeString(error_string);
 			
 		}
+		// fill m_ImportedData with some information for now.
+		const int meshCount = Fieldml_GetObjectCount(fmlSession, FHT_MESH_TYPE);
+		m_DataInformation.numberOfMesh = meshCount;
+		
+		
+		FmlObjectHandle fmlMeshType = Fieldml_GetObject(fmlSession, FHT_MESH_TYPE, 1);
+		
+		char *meshName = Fieldml_GetObjectName(fmlSession, fmlMeshType);
+		qDebug() << "Mesh of this type: " << meshName;
+        Fieldml_FreeString(meshName);
+        
+		FmlObjectHandle fmlMeshChartType = Fieldml_GetMeshChartType(fmlSession, fmlMeshType);
+		FmlObjectHandle fmlMeshChartComponentType = Fieldml_GetTypeComponentEnsemble(fmlSession, fmlMeshChartType);
+		int meshDimension = Fieldml_GetMemberCount(fmlSession, fmlMeshChartComponentType);
+		m_DataInformation.firstMeshDimension = meshDimension;
+		
+		m_ImportedData = &m_DataInformation;
+		
+		importedData(&m_ImportedData);
+		
+
+		
 		Fieldml_Destroy(fmlSession);
 	}
        
