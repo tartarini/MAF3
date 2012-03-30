@@ -9,15 +9,15 @@
  *
  */
 
-#ifndef MAFPLUGINQTDEFINITIONS_H
-#define MAFPLUGINQTDEFINITIONS_H
+#ifndef MAFPLUGINFIELDMLDEFINITIONS_H
+#define MAFPLUGINFIELDMLDEFINITIONS_H
 
 
 // Includes list
-#include "mafPluginQtTest_global.h"
+#include "mafPluginFieldML_global.h"
 #include <mafResourcesRegistration.h>
 #include <mafResourcesDefinitions.h>
 #include <mafPluginQtInterface.h>
 
 
-#endif // MAFPLUGINTESTDEFINITIONS_H
+#endif // MAFPLUGINFIELDMLDEFINITIONS_H

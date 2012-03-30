@@ -1,6 +1,6 @@
 /*
  *  mafPluginRegistrator.h
- *  mafPluginQt
+ *  mafPluginFieldML
  *
  *  Created by Paolo Quadrani on 19/03/12.
  *  Copyright 2012 B3C. All rights reserved.
@@ -9,12 +9,12 @@
  *
  */
 
-#ifndef MAFPLUGINQTREGISTRATOR_H
-#define MAFPLUGINQTREGISTRATOR_H
+#ifndef MAFPLUGINFIELDMLREGISTRATOR_H
+#define MAFPLUGINFIELDMLREGISTRATOR_H
 
-#include "mafPluginQtTestDefinitions.h"
+#include "mafPluginFieldMLDefinitions.h"
 
-namespace mafPluginQtTest {
+namespace mafPluginFieldML {
 
 /**
  Class name: mafPluginRegistrator
@@ -22,7 +22,7 @@ namespace mafPluginQtTest {
  by sending the message through the mafEventBus using the macro mafRegisterPluginEvent.
  @sa mafEventBusManager, mafPluginManager
  */
-class MAFPLUGINQTTESTSHARED_EXPORT mafPluginRegistrator : public QObject, mafResources::mafPluginQtInterface {
+class MAFPLUGINFIELDMLSHARED_EXPORT mafPluginRegistrator : public QObject, mafResources::mafPluginQtInterface {
     Q_OBJECT
     Q_INTERFACES(mafResources::mafPluginQtInterface)
     
@@ -36,28 +36,6 @@ public:
     /*virtual*/ void registerObjects();
 };
 
-/** Retrieve the engine version we're going to expect*/
-//extern "C" MAFPLUGINQTSHARED_EXPORT mafResources::mafPluginInfo pluginInfo() {
-//    mafResources::mafPluginInfo info;
-//    info.m_Version = 1.0;
-//    info.m_PluginName = "Plugin Qt";
-//    info.m_Author = "Paolo Quadrani";
-//    info.m_Vendor = "B3C";
-//    info.m_VendorHomepage = "http:///www.biomedtown.org/";
-//    info.m_Description = "Qt plugin: created only for testing plugin manager";
-//
-//    return info;
-//}
+} // namespace mafPluginFieldML
 
-// MAF required version function.
-// XML file for the UI. Also with switch possibility between different levels of complexity.
-//mafPluginRegistrator registrator;
-
-/** Tells us to register our functionality to an engine kernel*/
-//extern "C" MAFPLUGINQTSHARED_EXPORT void registerPlugin() {
-//    registrator.registerObjects();
-//}
-
-} // namespace mafPluginTest
-
-#endif // MAFPLUGINQTREGISTRATOR_H
+#endif // MAFPLUGINFIELDMLREGISTRATOR_H

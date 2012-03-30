@@ -10,29 +10,25 @@
  */
 
 #include "mafPluginRegistrator.h"
-#include "mafPipeDataSurfaceQtPluginTest.h"
-
+#include "mafImporterFieldML.h"
 
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
-using namespace mafPluginQtTest;
-
+using namespace mafPluginFieldML;
 
 mafPluginRegistrator::~mafPluginRegistrator() {
-    mafUnregisterObject(mafPluginQtTest::mafPipeDataSurfaceQtPluginTest);
+    mafUnregisterObject(mafPluginFieldML::mafImporterFieldML);
 }
 
 void mafPluginRegistrator::registerObjects() {
     /// register in maf factory
-    mafRegisterObject(mafPluginQtTest::mafPipeDataSurfaceQtPluginTest);
-    
+    mafRegisterObject(mafPluginFieldML::mafImporterFieldML);
     
     mafPluggedObjectsHash pluginHash;
 
-    mafPluggedObjectInformation dataPipeSurfacePluginQt("Data pipe Surface Qt Plugin Test", "mafPluginQtTest::mafPipeDataSurfaceQtPluginTest");
-
-    pluginHash.insertMulti("mafResources::mafPipeData", dataPipeSurfacePluginQt);
+    mafPluggedObjectInformation importerFieldML("Importer for FieldML data", "mafPluginFieldML::mafImporterFieldML");
+    pluginHash.insertMulti("mafResources::mafImporter", importerFieldML);
 
 
     mafEventBus::mafEventArgumentsList argList;
@@ -43,13 +39,13 @@ void mafPluginRegistrator::registerObjects() {
 mafResources::mafPluginInfo mafPluginRegistrator::pluginInfo() {
     mafResources::mafPluginInfo info;
     info.m_Version = 1.0;
-    info.m_PluginName = "Plugin Qt";
-    info.m_Author = "Paolo Quadrani & Daniele Giunchi";
-    info.m_Vendor = "B3C";
-    info.m_VendorHomepage = "http:///www.openmaf.org/";
-    info.m_Description = "Qt plugin: created only for be compliant to Qt plugins";
+    info.m_PluginName = "FieldML Plugin";
+    info.m_Author = "Richard Christie";
+    info.m_Vendor = "Auckland Bioengineering Institute";
+    info.m_VendorHomepage = "http:///www.fieldml.org/";
+    info.m_Description = "FieldML plugin: provide importer and exporter operation";
 
     return info;
 }
 
-Q_EXPORT_PLUGIN2(mafPluginQtTest, mafPluginQtTest::mafPluginRegistrator)
+Q_EXPORT_PLUGIN2(mafPluginFieldML, mafPluginFieldML::mafPluginRegistrator)

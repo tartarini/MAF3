@@ -17,10 +17,15 @@ if(NOT ${BUILD_SHARED_LIBS})
 )
 endif(NOT ${BUILD_SHARED_LIBS})
 
+set(FIELDML_LIB
+  fieldml_api
+  fieldml_io_api
+)
 
 SET(target_libraries
   ${MAF_BASE_LIBRARIES}
   ${foundation_libraries}
+  ${FIELDML_LIB}
   mafCore
   mafEventBus
   mafResources
