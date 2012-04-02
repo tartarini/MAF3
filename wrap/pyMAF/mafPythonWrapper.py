@@ -35,7 +35,8 @@ def main( target_wrap_file_path, source_dir, target_dir):
 
     # load jinja environment variable
     env = Environment(loader=PackageLoader('pyMAF', 'templates'))
-    decorator_template = env.get_template('mafDecoratorTemplate.cpp')
+    decorator_template_header = env.get_template('mafDecoratorTemplate.h')
+    decorator_template_source = env.get_template('mafDecoratorTemplate.cpp')
 
     # create extractor
     extractor = mafClassExtractor()
@@ -70,19 +71,17 @@ def main( target_wrap_file_path, source_dir, target_dir):
             debugClassDetails = classDetails
 
 
-        generated = decorator_template.render( classDetails )
+        # generate decorator header file
+        output_file_name = os.path.join( target_dir, classDetails['compoundname'] + "Decorator.h"  )
+        decorator_template_header.stream(classDetails).dump(output_file_name)
 
-        output_file_name = classDetails['compoundname'] + "Decorator.h"
-        output_file = open( os.path.join( target_dir, output_file_name  ), 'w' )
-        output_file.write( generated )
-        output_file.close()
-        
-        output_source_file = classDetails['compoundname'] + "Decorator.cpp"
-        output_source_file = open( os.path.join( target_dir, output_source_file  ), 'w' )
-        output_source_file.write( "#include \"" + output_file_name + "\"")
-        output_source_file.close() 
+        print "\n\t - written file %s" % output_file_name
 
-        print "\n\t - written file %s" % os.path.join( target_dir, output_file_name  )
+        # generate decorator source file
+        output_file_name = os.path.join( target_dir, classDetails['compoundname'] + "Decorator.cpp"  )
+        decorator_template_source.stream(classDetails).dump(output_file_name)
+
+        print "\n\t - written file %s" % output_file_name
 
 
     if DEBUG:
