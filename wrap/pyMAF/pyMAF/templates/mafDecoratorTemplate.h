@@ -1,9 +1,11 @@
+
+#include <{{ namespace }}_global.h>
 #include <{{ compoundname }}.h>
 
 {% if namespace %}using namespace {{ namespace }}; {% endif %}
 
 // {{ compoundname }} decorator
-class {{compoundname}}Decorator : public QObject
+class {{ export_macro }} {{compoundname}}Decorator : public QObject
 {
   Q_OBJECT
 
@@ -22,7 +24,7 @@ public Q_SLOTS:
   void delete_{{compoundname}}({{compoundname}}* selfObj) {
     {% if public_destructor %} delete selfObj;{% else %}selfObj->{{destructor_method}}();{%endif%}
   }
-  {% if not public_destructor %}
+  {% if has_properties %}
   QVariant property({{compoundname}}* selfObj, const char *name) {
     return selfObj->property(name);
   }

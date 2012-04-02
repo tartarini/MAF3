@@ -31,20 +31,29 @@ class mafClassExtractor():
                         'signal':[],
                         'public_slot':[],
                         'protected_func':[],
+                        'has_properties': False,
+                        'export_macro':''
                         }
 
         compoundname = doxygen.find("./compounddef/compoundname", namespaces=doxygen.nsmap)
 
         # class general attributes
-
         if compoundname.text.count("::"):
             classDetails['namespace'], classDetails['compoundname' ] = compoundname.text.split("::")
         else:
             classDetails['compoundname' ] = compoundname.text
 
+        classDetails['export_macro'] = classDetails['namespace'].upper() + 'SHARED_EXPORT'
+
         location = doxygen.find("./compounddef/location", namespaces=doxygen.nsmap)
         if location is not None:
             classDetails['location'] = location.attrib["file"]
+
+        # check if the class inherites from qobject and has to provide properties setter, getter
+        for node in doxygen.iterfind('./compounddef/inheritancegraph/node'):
+            if node[0].text.count('mafReferenceCounted'):
+                classDetails['has_properties'] = True
+                break
 
 
         # methods attributes
