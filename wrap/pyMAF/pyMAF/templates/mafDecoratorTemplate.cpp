@@ -1,2 +1,2 @@
 
-#include <{{ compoundname }}Decorator.h>
+#include "{{ compoundname }}Decorator.h"
