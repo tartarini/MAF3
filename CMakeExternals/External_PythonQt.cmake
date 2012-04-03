@@ -45,10 +45,10 @@
     )
     
     #lxml
-    execute_process(COMMAND ${PYTHON_EXECUTABLE} " import lxml "
+    execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import lxml"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   RESULT_VARIABLE RTL)
-                  
+             
     if(RTL MATCHES "0")
     else(RTL MATCHES "0")
       execute_process(COMMAND ${EI_EXECUTABLE} " lxml "
@@ -61,7 +61,7 @@
     endif(RTL MATCHES "0")
 
     #jinja2
-    execute_process(COMMAND ${PYTHON_EXECUTABLE} " import jinja2 "
+    execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import jinja2"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   RESULT_VARIABLE RTJ)
                   
