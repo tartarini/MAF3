@@ -56,7 +56,7 @@
       RESULT_VARIABLE RTLI)
       if(RTLI MATCHES "0")
       else(RTLI MATCHES "0")
-	    message(FATAL_ERROR "Install in Python distribution library lxml, automatic install failed. Install setuplibs , and then type : easy_install lxml")
+	    message(FATAL_ERROR "Install in Python distribution library lxml, automatic install failed. Install setuplibs, check the permissions, and then type : easy_install lxml")
       endif(RTLI MATCHES "0")    
     endif(RTL MATCHES "0")
 
@@ -72,7 +72,7 @@
       RESULT_VARIABLE RTJI)
       if(RTJI MATCHES "0")
       else(RTJI MATCHES "0")
-	    message(FATAL_ERROR "Install in Python distribution library jinja2, automatic install failed. Install setuplibs , and then type : easy_install jinja2")
+	    message(FATAL_ERROR "Install in Python distribution library jinja2, automatic install failed. Install setuplibs, check the permissions , and then type : easy_install jinja2")
       endif(RTJI MATCHES "0")    
     endif(RTJ MATCHES "0")
 
