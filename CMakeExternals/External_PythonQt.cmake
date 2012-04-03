@@ -34,6 +34,7 @@
 
     # Python is required
     FIND_PACKAGE(PythonLibs)
+    FIND_PACKAGE(PythonInterp)
     IF(NOT PYTHONLIBS_FOUND)
       MESSAGE(FATAL_ERROR "error: Python is required to build ${PROJECT_NAME}")
     ENDIF()
