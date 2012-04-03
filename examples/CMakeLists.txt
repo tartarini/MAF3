@@ -16,6 +16,9 @@
 
 include(${MAF_USE_FILE_CONFIG})
 
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/mafApplicationConfig.h.in ${CMAKE_CURRENT_BINARY_DIR}/mafApplicationConfig.h)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 
 ADD_SUBDIRECTORY(qaCheck)
 ADD_SUBDIRECTORY(RemoteCommunicationXMLRPC)

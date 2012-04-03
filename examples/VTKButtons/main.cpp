@@ -24,11 +24,6 @@
 #include "mafViewVTKButtons.h"
 #include "mafOrthoSlice.h"
 
-
-//#include <mafViewScriptInterpreterPython.h>
-//#include <mafInterpreterPreferencesWidget.h>
-
-
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     a.setOrganizationName("SCS");
@@ -62,7 +57,7 @@ int main(int argc, char *argv[]) {
     // If the plugged object hasn't the acceptObject defined, the registration
     // to the mafObjectFactory can be done using the following macro:
     // mafRegisterObject(myNamespace::myClassCustom);
-//    mafRegisterObject(mafScriptInterpreter::mafViewScriptInterpreterPython);
+
     mafRegisterObject(mafViewOrthoSlice);
     mafRegisterObject(mafViewVTKButtons);
 
@@ -95,16 +90,10 @@ int main(int argc, char *argv[]) {
     //mafRegisterQtObject(mafOrthoSlice);
     //logic->customizeViewWidget("OrthoSlice", "mafOrthoSlice");
 
-//    logic->plugObject("mafResources::mafView", "mafScriptInterpreter::mafViewScriptInterpreterPython", "Python Console");
-
     // Create the instance of the main window and pass to it the application's logic.
     // In this way the mafMainWondow class will also load the plug-ins present
     // in the default 'plugins' directory.
     mafMainWindow w(logic);
-
-    // plug custom application's setting page
-//    mafScriptInterpreter::mafInterpreterPreferencesWidget *interpreterPrefs = new mafScriptInterpreter::mafInterpreterPreferencesWidget();
-//    w.plugApplicationSettingsPage(interpreterPrefs);
 
     // Eventually call the loadPlugins method with custom directory to allow the application
     // load custom plugins located in custom directories.

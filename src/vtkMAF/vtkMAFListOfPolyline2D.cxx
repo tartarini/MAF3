@@ -144,5 +144,5 @@ vtkMAFPolyline2D *vtkMAFListOfPolyline2D::FindContour(int x, int y, int polyline
     }
   }
 
-  return NULL;
+  return 0;
 }

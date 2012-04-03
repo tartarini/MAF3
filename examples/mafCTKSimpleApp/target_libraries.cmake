@@ -25,5 +25,11 @@ SET(target_libraries
   mafApplicationLogic
   mafResources
   mafGUI
-  mafScriptInterpreter
-  )
+)
+
+if(${BUILD_WRAP})
+set( target_libraries 
+     ${target_libraries} 
+     mafScriptInterpreter
+)
+endif(${BUILD_WRAP})

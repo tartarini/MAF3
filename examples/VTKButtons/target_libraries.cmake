@@ -38,8 +38,14 @@ SET(target_libraries
   mafApplicationLogic
   mafResources
   mafSerialization
-  mafScriptInterpreter
   mafGUI
   ${VTK_LIBRARIES}
   mafPluginVTK
   )
+
+if(${BUILD_WRAP})
+set( target_libraries 
+     ${target_libraries} 
+     mafScriptInterpreter
+)
+endif(${BUILD_WRAP})
