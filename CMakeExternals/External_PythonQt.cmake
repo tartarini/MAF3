@@ -37,6 +37,44 @@
     IF(NOT PYTHONLIBS_FOUND)
       MESSAGE(FATAL_ERROR "error: Python is required to build ${PROJECT_NAME}")
     ENDIF()
+    
+    #need to install lxml and jinja2 python packages
+    #lxml
+    SET ( EI_EXECUTABLE
+    "easy_install"
+    )
+    
+    #lxml
+    execute_process(COMMAND ${PYTHON_EXECUTABLE} " import lxml "
+                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                  RESULT_VARIABLE RTL)
+                  
+    if(RTL MATCHES "0")
+    else(RTL MATCHES "0")
+      execute_process(COMMAND ${EI_EXECUTABLE} " lxml "
+      WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+      RESULT_VARIABLE RTLI)
+      if(RTLI MATCHES "0")
+      else(RTLI MATCHES "0")
+	    message(FATAL_ERROR "Install in Python distribution library lxml, automatic install failed. Install setuplibs , and then type : easy_install lxml")
+      endif(RTLI MATCHES "0")    
+    endif(RTL MATCHES "0")
+
+    #jinja2
+    execute_process(COMMAND ${PYTHON_EXECUTABLE} " import jinja2 "
+                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                  RESULT_VARIABLE RTJ)
+                  
+    if(RTJ MATCHES "0")
+    else(RTJ MATCHES "0")
+      execute_process(COMMAND ${EI_EXECUTABLE} " jinja2 "
+      WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+      RESULT_VARIABLE RTJI)
+      if(RTJI MATCHES "0")
+      else(RTJI MATCHES "0")
+	    message(FATAL_ERROR "Install in Python distribution library jinja2, automatic install failed. Install setuplibs , and then type : easy_install jinja2")
+      endif(RTJI MATCHES "0")    
+    endif(RTJ MATCHES "0")
 
     # Set CMake OSX variable to pass down the external project
     set(CMAKE_OSX_EXTERNAL_PROJECT_ARGS)
