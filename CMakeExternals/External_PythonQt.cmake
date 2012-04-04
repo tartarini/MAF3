@@ -52,7 +52,7 @@
              
     if(RTL MATCHES "0")
     else(RTL MATCHES "0")
-      execute_process(COMMAND ${EI_EXECUTABLE} " lxml "
+      execute_process(COMMAND ${EI_EXECUTABLE} " lxml==2.2.2 "
       WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
       RESULT_VARIABLE RTLI)
       if(RTLI MATCHES "0")
