@@ -35,7 +35,9 @@ class mafClassExtractor():
                         'export_macro':''
                         }
 
-        compoundname = doxygen.find("./compounddef/compoundname", namespaces=doxygen.nsmap)
+
+        #compoundname = doxygen.find("./compounddef/compoundname", namespaces=doxygen.nsmap)
+        compoundname = doxygen.find("./compounddef/compoundname")
 
         # class general attributes
         if compoundname.text.count("::"):
@@ -45,7 +47,8 @@ class mafClassExtractor():
 
         classDetails['export_macro'] = classDetails['namespace'].upper() + 'SHARED_EXPORT'
 
-        location = doxygen.find("./compounddef/location", namespaces=doxygen.nsmap)
+        #location = doxygen.find("./compounddef/location", namespaces=doxygen.nsmap)
+        location = doxygen.find("./compounddef/location")
         if location is not None:
             classDetails['location'] = location.attrib["file"]
 
@@ -58,7 +61,8 @@ class mafClassExtractor():
 
         # methods attributes
         for key in ['public_func']:
-            for sectiondef in doxygen.iterfind('./compounddef/sectiondef[@kind="%s"]' % key.replace("_","-"), namespaces=doxygen.nsmap):
+            #for sectiondef in doxygen.iterfind('./compounddef/sectiondef[@kind="%s"]' % key.replace("_","-"), namespaces=doxygen.nsmap):
+             for sectiondef in doxygen.iterfind('./compounddef/sectiondef[@kind="%s"]' % key.replace("_","-")):
                 for memberdef in sectiondef.getchildren():
                     element = {'param':[], 'operator':False, 'destructor': False, 'macro':False}
 

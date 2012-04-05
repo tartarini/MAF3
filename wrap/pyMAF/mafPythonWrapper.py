@@ -57,8 +57,12 @@ def main( target_wrap_file_path, source_dir, target_dir):
     for file_to_parse in files_to_parse:
 
         doxygen = etree.fromstring( open(file_to_parse, 'r').read() )
-
-        classDetails = extractor.extractFromDoxygen( doxygen )
+        
+        try:
+          classDetails = extractor.extractFromDoxygen( doxygen )
+        except Exception as e:
+          print e
+          continue
 
         if not classDetails['compoundname'] in wrap_class_list:
             continue
@@ -104,10 +108,8 @@ def usage():
 
 if __name__ == '__main__':
 
-
-    usage()
-
     if len(sys.argv) < 4:
+        usage()
         print "please provide all inputs!"
         sys.exit( -1 )
 

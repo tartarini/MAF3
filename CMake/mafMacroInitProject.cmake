@@ -47,6 +47,7 @@ MACRO(mafMacroInitProject test)
   FILE(GLOB ui_file_list "${PROJECT_SOURCE_DIR}/*.ui")
 
   set(decorator_file_list)
+  
   if(BUILD_WRAP)
     mafMacroWrapTargetFiles()
     FILE(GLOB decorator_file_list "${MAF_ROOT_BINARY_DIR}/wrap/mafPythonQtDecorators/${PROJECT_NAME}/*.cpp")
