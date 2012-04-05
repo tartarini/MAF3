@@ -5,8 +5,8 @@
 # 
 
 SET(foundation_libraries
+  ${PYTHON_LIBRARY}
   PythonQt
-  ${PYTHON_LIBRARIES}
 )
 
 SET(target_libraries

@@ -14,5 +14,5 @@ SET(target_libraries
   mafCore
   mafGUI
   mafResources
-  ${PYTHON_LIBRARIES}
+  ${PYTHON_LIBRARY}
   )
