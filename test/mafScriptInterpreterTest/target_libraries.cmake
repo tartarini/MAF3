@@ -1,5 +1,5 @@
 SET(foundation_libraries 
- ${PYTHON_LIBRARIES}
+ ${PYTHON_LIBRARY}
 )
 
 SET(target_libraries

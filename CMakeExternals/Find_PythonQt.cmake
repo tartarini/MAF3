@@ -12,5 +12,9 @@ SET(PYTHONQT_SOURCE_DIR "${MAF_EXTERNAL_BUILD_DIR}/Source/PythonQt")
 #  MESSAGE(FATAL_ERROR "error: Python is required to build ${PROJECT_NAME}")
 #ENDIF()
 
+#python inclusion files
+include_directories("${PYTHON_INCLUDE_DIR}")
+
+
 include_directories("${PYTHONQT_SOURCE_DIR}/src")
 link_directories(${PYTHONQT_DIR})
