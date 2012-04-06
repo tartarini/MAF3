@@ -16,6 +16,7 @@
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_OpenCV.cmake)
+include(${MAF_SOURCE_DIR}/CMakeExternals/Find_PythonQt.cmake)
 
 find_package(PythonLibs)
 
@@ -47,7 +48,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 ## copy PythonQt libraries
 ## #################################################################
 
-mafCopySharedLibrariesInInstallDir("${PythonQt_DIR}")
+mafCopySharedLibrariesInInstallDir("${PYTHONQT_DIR}")
 
 ## #################################################################
 ## copy mnu file
