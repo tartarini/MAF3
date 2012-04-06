@@ -154,8 +154,6 @@ if(BUILD_QA)
     mafDependentOption(BUILD_DOCUMENTATION "Build Documentation for QA." ON BUILD_QA ON)
 endif(BUILD_QA)
 
-include(${MAF_SOURCE_DIR}/GenerateMAFConfig.cmake)
-
 #############################################################################################
 ### Wrapping
 #############################################################################################
@@ -171,6 +169,8 @@ endif(BUILD_WRAP)
 if(MAF_SCRIPT_INTERPRETER AND NOT BUILD_WRAP)
   include(CMake/mafMacroFindPython.cmake)
 endif(MAF_SCRIPT_INTERPRETER AND NOT BUILD_WRAP)
+
+include(${MAF_SOURCE_DIR}/GenerateMAFConfig.cmake)
 
 #############################################################################################
 ### DOCUMENTATION
