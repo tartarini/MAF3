@@ -11,6 +11,11 @@ SET(foundation_libraries
 
 
 SET(target_libraries
-  ${MAF_BASE_LIBRARIES}
-  ${foundation_libraries}
-  )
+  if(MINGW)
+    ${foundation_libraries}
+    ${MAF_BASE_LIBRARIES}    
+   else()
+    ${MAF_BASE_LIBRARIES}
+    ${foundation_libraries}   
+   endif(MINGW)  
+)
