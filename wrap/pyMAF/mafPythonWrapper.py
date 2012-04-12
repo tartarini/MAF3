@@ -60,7 +60,7 @@ def main( target_wrap_file_path, source_dir, target_dir):
         
         try:
           classDetails = extractor.extractFromDoxygen( doxygen )
-        except Exception as e:
+        except Exception, e:
           print e
           continue
 
