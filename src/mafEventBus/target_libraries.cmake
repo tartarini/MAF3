@@ -9,13 +9,7 @@ SET(foundation_libraries
   QtSOAP
 )
 
-
 SET(target_libraries
-  if(MINGW)
     ${foundation_libraries}
-    ${MAF_BASE_LIBRARIES}    
-   else()
-    ${MAF_BASE_LIBRARIES}
-    ${foundation_libraries}   
-   endif(MINGW)  
+    ${MAF_BASE_LIBRARIES}       
 )
