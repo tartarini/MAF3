@@ -185,16 +185,31 @@ void mafNetworkConnectorQXMLRPC::send(const QString event_id, mafEventArgumentsL
             QString typeArgument;
             typeArgument = argList->at(i).name();
             if (!externalSend) {
-                if(typeArgument != "QVariantList") {
-                    ba = mafTr("Remote Dispatcher need to have arguments that are QVariantList").toAscii();
+                void *vp = argList->at(i).data();
+                if(typeArgument == "QString"){
+                    QString v;
+                    v = *((QString*)vp);
+                    var.setValue(v);
+                } else if(typeArgument == "double"){
+                    double *v = (double*)vp;
+                    var.setValue(*v);
+                } else if (typeArgument == "int") {
+                    int *v = (int*)vp;
+                    var.setValue(*v);
+                } else if (typeArgument == "QVariantMap") {
+                    QVariantMap *v;
+                    v = (QVariantMap *)vp;
+                    var.setValue(*v);
+                } else if (typeArgument == "QVariantList") {
+                    QVariantList *v;
+                    v = (QVariantList *)vp;
+                    var.setValue(*v);
+                } else {
+                    ba = mafTr("Remote Dispatcher needs to have compatible arguments ").toAscii();
                     qWarning("%s", ba.data());
                     delete vl;
                     return;
-                }
-                void *vp = argList->at(i).data();
-                QVariantList *l;
-                l = (QVariantList *)vp;
-                var.setValue(*l);
+                }                
             } else {
                 void *vp = argList->at(i).data();
                 if(typeArgument == "QString"){
