@@ -55,10 +55,10 @@ int main(int argc, char *argv[]) {
 //     operationParameters.insert("serviceName", argv[5]);
      
     
-    //operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
-    //operationParameters.insert("myFirstParameter", 2.3);
-    //operationParameters.insert("mySecondParameter", "ughetto");
-    //operationParameters.insert("workflowId", "GUQFEFQUYWJGQJWQBHWGJHWBQHBW");
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    operationParameters.insert("workflowId", "GUQFEFQUYWJGQJWQBHWGJHWBQHBW");
     
     
     QStringList inputFiles;
