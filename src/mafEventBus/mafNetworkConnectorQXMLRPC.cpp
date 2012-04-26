@@ -251,12 +251,13 @@ void mafNetworkConnectorQXMLRPC::xmlrpcSend(const QString &methodName, QList<xml
 
 void mafNetworkConnectorQXMLRPC::processReturnValue( int requestId, QVariant value ) {
     Q_UNUSED( requestId );
-    //Q_ASSERT( value.canConvert( QVariant::Map ) );
-    //QByteArray ba = value.toMap().value("returnValue").toString().toAscii();
-    //qDebug("%s", ba.data());
+    
+    Q_EMIT( updatedResponseSignal( value ));
+    
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(QVariant, value));
     mafEventBusManager::instance()->notifyEvent("maf.local.eventBus.remoteCommunicationDone", mafEventTypeLocal, &argList);
+    
 }
 
 void mafNetworkConnectorQXMLRPC::processFault( int requestId, int errorCode, QString errorString ) {
