@@ -4,12 +4,12 @@
 
 set(proj CTK)
 
-execute_process(COMMAND ${GIT_EXECUTABLE} remote show "http://github.com/commontk/CTK.git"
-                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-                  RESULT_VARIABLE RESULT)
-IF(RESULT)
+#execute_process(COMMAND ${GIT_EXECUTABLE} remote show "http://github.com/commontk/CTK.git"
+#                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+#                  RESULT_VARIABLE RESULT)
+#IF(RESULT)
     #to be implemented  
-ELSE(RESULT)
+#ELSE(RESULT)
     # Sanity checks
   IF(DEFINED CTK_DIR AND NOT EXISTS ${CTK_DIR})
     MESSAGE(FATAL_ERROR "CTK_DIR variable is defined but corresponds to non-existing directory")
@@ -77,5 +77,5 @@ ELSE(RESULT)
     
   ENDIF()
 
-ENDIF(RESULT) 
+#ENDIF(RESULT) 
 
