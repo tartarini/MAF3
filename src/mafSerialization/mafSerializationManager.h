@@ -29,6 +29,7 @@ namespace mafSerialization {
  - maf.local.serialization.ignoreModified
  - maf.local.serialization.export: topic used for calling an external data codec which encode into a specific file format, defined by the codec itself. The final result will be a new file which contains the internal structure of the custom data.
  - maf.local.serialization.import: topic used for calling an external data codec which decode from a specific file format, defined by the codec itself. The final result will be a memory allocation which contains the custom data structure loaded from the file.
+ - maf.local.serialization.update: topic used for calling an external data codec which update / decode from a specific file format, defined by the codec itself. The final result will be a memory allocation wich contains the updated custom data structure loaded from the file.
  - maf.local.serialization.extDataImported
  - maf.local.serialization.mementoLoaded
  related to 'load' and 'save' slots and 'mementoLoaded' signal.
@@ -51,6 +52,9 @@ Q_SIGNALS:
 
     /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
     mafCore::mafProxyInterface * importData(const QString &url, const QString &encode_type);
+
+    /// Signals that defines the API for the serialization manager. These will call private slots to do the right work.
+    void updateData(mafCore::mafProxyInterface *externalData, const QString &url, const QString &encode_type = "RAW");
 
     /// Alert all the observers that a new external data has been loaded from the media.
     void extDataImported(mafCore::mafProxyInterface *data);
@@ -89,6 +93,9 @@ private Q_SLOTS:
 
     /// Manage the import of an external data from the given URL and decode it according to the given encoding type.
     mafCore::mafProxyInterface * importExternalData(const QString &url, const QString &encode_type);
+
+    /// Manage the update of an external data from the given URL and decode it according to the required data on demand.
+    void updateExternalData(mafCore::mafProxyInterface *externalData, const QString &url, const QString &encode_type);
 
     /// Plug a new codec into the codec hash for the given object type (encoding_type eg. "VTK") (codec_type eg. mafCodecVTK).
     void plugCodec(const QString &encoding_type, const QString &codecType = "RAW");

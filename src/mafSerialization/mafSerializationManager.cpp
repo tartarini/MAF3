@@ -31,8 +31,8 @@ mafSerializationManager::mafSerializationManager(const QString code_location) : 
 
     plugCodec("XML","mafSerialization::mafCodecXML");
     plugCodec("RAW","mafSerialization::mafCodecRawBinary");
-    plugCodec("VOLUME_LOD","mafSerialization::mafCodecRawVolume");
-    plugCodec("VOLUME_BRICKED_LOD","mafSerialization::mafCodecBrickedVolume");
+    plugCodec("RAW_LOD","mafSerialization::mafCodecRawVolume");
+    plugCodec("RAW_BRICKED_LOD","mafSerialization::mafCodecBrickedVolume");
     plugSerializer("file", "mafSerialization::mafSerializerFileSystem");
 }
 
@@ -51,6 +51,7 @@ void mafSerializationManager::initializeConnections() {
     provider->createNewId("maf.local.serialization.load");
     provider->createNewId("maf.local.serialization.export");
     provider->createNewId("maf.local.serialization.import");
+    provider->createNewId("maf.local.serialization.update");
     provider->createNewId("maf.local.serialization.request.workingDirectory");
 
     // Register API signals.
@@ -62,6 +63,7 @@ void mafSerializationManager::initializeConnections() {
     mafRegisterLocalSignal("maf.local.serialization.load", this, "load(const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.export", this, "exportData(mafCore::mafProxyInterface *, const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.import", this, "importData(const QString &, const QString &)");
+    mafRegisterLocalSignal("maf.local.serialization.update", this, "updateData(mafCore::mafProxyInterface *, const QString &, const QString &)");
     mafRegisterLocalSignal("maf.local.serialization.request.workingDirectory", this, "requestWorkingDirectorySignal()");
     
     // Register private callbacks.
@@ -73,6 +75,7 @@ void mafSerializationManager::initializeConnections() {
     mafRegisterLocalCallback("maf.local.serialization.load", this, "loadMemento(const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.export", this, "exportExternalData(mafCore::mafProxyInterface *, const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.import", this, "importExternalData(const QString &, const QString &)");
+    mafRegisterLocalCallback("maf.local.serialization.update", this, "updateExternalData(mafCore::mafProxyInterface *, const QString &, const QString &)");
     mafRegisterLocalCallback("maf.local.serialization.request.workingDirectory", this, "requestWorkingDirectory()");
 }
 
@@ -229,12 +232,11 @@ void mafSerializationManager::exportExternalData(mafCore::mafProxyInterface *ext
     char *outputString = codec->encode();
 
     //write binary data
-    stream.writeRawData(outputString, codec->stringSize());
+    stream.writeBytes(outputString, codec->stringSize());
 
     // Finally close the connection.
     ser->closeDevice();
 
-    delete[] outputString;
     mafDEL(codec);
     mafDEL(ser);
 }
@@ -256,16 +258,10 @@ mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const Q
         return NULL;
     }
 
-
-
     QString s = u.scheme();
     QString serializer_type = m_SerializerHash[s];
 
-    unsigned int size;
-
-    QFileInfo fileInfo(url);
-    size = fileInfo.size();
-    char *inputString = new char[size+1];
+    qDebug() << u;
     
     // Create the instance of correct serializer
     mafSerializer *ser = (mafSerializer *)mafNEWFromString(serializer_type);
@@ -274,8 +270,10 @@ mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const Q
     // ... and open the input connection.
     ser->openDevice(mafSerializerOpenModeIn);
 
+    unsigned int size;
+    char * inputString;
     QDataStream stream(ser->ioDevice());
-    stream.readRawData(inputString, size);
+    stream.readBytes(inputString, size);
 
     // Finally close the connection.
     ser->closeDevice();
@@ -288,9 +286,20 @@ mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const Q
     m_CurrentExternalDataCodec->setStringSize(size);
     m_CurrentExternalDataCodec->decode(inputString);
 
-    delete[] inputString;
-
     return m_CurrentExternalDataCodec->externalData();
+}
+
+void mafSerializationManager::updateExternalData(mafCore::mafProxyInterface *externalData, const QString &url, const QString &encode_type) {
+    REQUIRE(externalData != NULL);
+
+    QString codecType = m_CodecHash[encode_type];
+    mafDEL(m_CurrentExternalDataCodec);
+    m_CurrentExternalDataCodec = (mafExternalDataCodec *)mafNEWFromString(codecType);
+
+    m_CurrentExternalDataCodec->setExternalData(externalData);
+    m_CurrentExternalDataCodec->decode("");
+
+    mafDEL(m_CurrentExternalDataCodec);
 }
 
 void mafSerializationManager::plugCodec(const QString &encoding_type, const QString &codecType) {

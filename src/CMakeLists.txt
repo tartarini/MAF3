@@ -42,6 +42,9 @@ if(${MAF_PLUGINCTK})
   #ADD_SUBDIRECTORY(mafPluginCTK)
 endif(${MAF_PLUGINCTK})
 
+if(${MAF_PLUGIN_OUTOFCORE})
+  ADD_SUBDIRECTORY(mafPluginOutOfCore)
+endif(${MAF_PLUGIN_OUTOFCORE})
 
 #ADD_SUBDIRECTORY(mafPluginGimias)
 

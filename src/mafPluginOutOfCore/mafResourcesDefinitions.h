@@ -62,12 +62,6 @@ enum {
     Z_AXIS
 };
 
-///< Enumeration that define the local/global behaviour of a pipe visual.
-enum {
-    LOCAL = 0,
-    GLOBAL
-};
-
 /// Typedef to define the operation's status
 typedef enum {
     mafOperationStatusIdle,
