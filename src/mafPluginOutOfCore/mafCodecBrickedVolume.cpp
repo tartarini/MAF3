@@ -17,6 +17,7 @@
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafSerialization;
+using namespace mafPluginOutOfCore;
 
 mafCodecBrickedVolume::mafCodecBrickedVolume(const QString code_location) : mafCodecRaw(code_location) {
     m_EncodingType = "RAW_BRICKED_LOD";
@@ -683,7 +684,7 @@ int mafCodecBrickedVolume::getByteNum(int dataType) {
     int byteNum = 0;
     switch(dataType) {
         case mafUnsignedChar:
-        case QChar:
+        //case QChar:
             byteNum = 1;
             break;
         case mafUnsignedShort:
@@ -745,9 +746,9 @@ void mafCodecBrickedVolume::resample(void *originalData, void *resampledData, in
         case mafUnsignedChar:
             resampleVolume<unsigned char>((unsigned char*)originalData, (unsigned char*)resampledData, componentNum, dimensions);
             break;
-        case QChar:
+        /*case QChar:
             resampleVolume<char>((char*)originalData, (char*)resampledData, componentNum, dimensions);
-            break;
+            break;*/
         case mafUnsignedShort:
             resampleVolume<unsigned short>((unsigned short*)originalData, (unsigned short*)resampledData, componentNum, dimensions);
             break;
@@ -838,8 +839,8 @@ bool mafCodecBrickedVolume::voxelsEqualInBrick(char *brickData, int dataType, in
     switch(dataType) {
         case mafUnsignedChar:
             return allVoxelsEqual<unsigned char>((unsigned char *)brickData, componentNum, brickSize);
-        case QChar:
-            return allVoxelsEqual<char>((char *)brickData, componentNum, brickSize);
+        /*case QChar:
+            return allVoxelsEqual<char>((char *)brickData, componentNum, brickSize);*/
         case mafUnsignedShort:
             return allVoxelsEqual<unsigned short>((unsigned short *)brickData, componentNum, brickSize);
         case mafShort:

@@ -16,6 +16,7 @@
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafSerialization;
+using namespace mafPluginOutOfCore;
 
 mafCodecVolume::mafCodecVolume(const QString code_location) : mafCodecRaw(code_location) {
     m_EncodingType = "RAW_LOD";
@@ -669,7 +670,7 @@ int mafCodecVolume::getByteNum(int dataType) {
     int byteNum = 0;
     switch(dataType) {
         case mafUnsignedChar:
-        case QChar:
+        //case QChar:
             byteNum = 1;
             break;
         case mafUnsignedShort:
@@ -731,9 +732,9 @@ void mafCodecVolume::resample(void *originalData, void *resampledData, int dataT
         case mafUnsignedChar:
             resampleVolume<unsigned char>((unsigned char*)originalData, (unsigned char*)resampledData, componentNum, dimensions);
             break;
-        case QChar:
+        /*case QChar:
             resampleVolume<char>((char*)originalData, (char*)resampledData, componentNum, dimensions);
-            break;
+            break;*/
         case mafUnsignedShort:
             resampleVolume<unsigned short>((unsigned short*)originalData, (unsigned short*)resampledData, componentNum, dimensions);
             break;

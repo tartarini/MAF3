@@ -12,9 +12,10 @@
 #define mafCodecBrickedVolume_H
 
 // Includes list
-#include "mafCodecRaw.h"
+#include "mafPluginOutOfCoreDefinitions.h"
+#include <mafCodecRaw.h>
 
-namespace mafSerialization {
+namespace mafPluginOutOfCore {
 
 /**
  * Class name: mafCodecBrickedVolume
@@ -38,7 +39,7 @@ namespace mafSerialization {
  * 
  * @sa mafCodec, mafSerializationManager
  */
-class MAFSERIALIZATIONSHARED_EXPORT mafCodecBrickedVolume : public mafCodecRaw {
+class MAFPLUGINOUTOFCORESHARED_EXPORT mafCodecBrickedVolume : public mafSerialization::mafCodecRaw {
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafCodecRaw);
@@ -197,6 +198,6 @@ private:
     QDataStream m_DataStreamWrite;
 };
 
-} // mafSerialization
+} // mafPluginOutOfCore
 
 #endif // MAFCODECBRICKEDVOLUME_H

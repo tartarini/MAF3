@@ -10,31 +10,31 @@
  */
 
 #include "mafPluginRegistrator.h"
-#include "mafImporterCTKDICOM.h"
+#include "mafMementoVolume.h"
 
 #include <mafPluginConfigurator.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
-using namespace mafPluginCTK;
 using namespace mafResources;
+using namespace mafPluginOutOfCore;
 
 mafPluginRegistrator::mafPluginRegistrator() {
     // Register to the mafObjectFactory the plug-in object's types.
-    mafRegisterObjectAndAcceptBind(mafPluginCTK::mafImporterCTKDICOM);
+    mafRegisterObject(mafPluginOutOfCore::mafMementoVolume);
 }
 
 mafPluginRegistrator::~mafPluginRegistrator() {
     // When the library is Un-Loaded it has to remove from the mafObjectFactory its object's types.
-    mafUnregisterObjectAndAcceptUnbind(mafPluginCTK::mafImporterCTKDICOM);
+    mafUnregisterObject(mafPluginOutOfCore::mafMementoVolume);
 }
 
 void mafPluginRegistrator::registerAllObjects() {
     mafPluggedObjectsHash pluginHash;
 
-    mafPluggedObjectInformation importerCTKDICOM("CTK DICOM Importer", "mafPluginCTK::mafImporterCTKDICOM");
+    mafPluggedObjectInformation mementoVolume("Memento Volume", "mafPluginOutOfCore::mafMementoVolume");
     
-    pluginHash.insertMulti("mafResources::mafImporter", importerCTKDICOM);
+    pluginHash.insertMulti("mafCore::mafMemento", mementoVolume);
     
     mafEventBus::mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, pluginHash));
@@ -43,7 +43,7 @@ void mafPluginRegistrator::registerAllObjects() {
 
 void mafPluginRegistrator::registerObjects() {
     mafPluginConfigurator configurator;
-    if (!configurator.parseConfigurationFile("mafPluginCTK.xml")) {
+    if (!configurator.parseConfigurationFile("mafPluginOutOfCore.xml")) {
         registerAllObjects();
         return;
     }

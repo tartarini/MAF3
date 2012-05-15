@@ -12,10 +12,10 @@
 #ifndef MAFPLUGINREGISTRATOR_H
 #define MAFPLUGINREGISTRATOR_H
 
-#include "mafPluginCTKDefinitions.h"
+#include "mafPluginOutOfCoreDefinitions.h"
 
 
-namespace mafPluginCTK {
+namespace mafPluginOutOfCore {
 
 /**
  Class name: mafPluginRegistrator
@@ -23,7 +23,7 @@ namespace mafPluginCTK {
  by sending the message through the mafEventBus using the macro mafRegisterPluginEvent.
  @sa mafEventBusManager, mafPluginManager
  */
-class MAFPLUGINCTKSHARED_EXPORT mafPluginRegistrator {
+class MAFPLUGINOUTOFCORESHARED_EXPORT mafPluginRegistrator {
 public:
     /// Object constructor
     mafPluginRegistrator();
@@ -40,14 +40,14 @@ private:
 };
 
 /** Retrieve the engine version we're going to expect*/
-extern "C" MAFPLUGINCTKSHARED_EXPORT mafResources::mafPluginInfo pluginInfo() {
+extern "C" MAFPLUGINOUTOFCORESHARED_EXPORT mafResources::mafPluginInfo pluginInfo() {
     mafResources::mafPluginInfo info;
     info.m_Version = 1.0;
-    info.m_PluginName = "Plugin CTK";
+    info.m_PluginName = "Plugin OutOfCore";
     info.m_Author = "Daniele Giunchi";
     info.m_Vendor = "SCS";
     info.m_VendorHomepage = "http:///www.biomedtown.org/";
-    info.m_Description = "Plugin library which contain pipes, views and operations based on CTK Library";
+    info.m_Description = "Plugin library which contain elements for out of core";
 
     return info;
 }
@@ -57,10 +57,10 @@ extern "C" MAFPLUGINCTKSHARED_EXPORT mafResources::mafPluginInfo pluginInfo() {
 mafPluginRegistrator registrator;
 
 /** Tells us to register our functionality to an engine kernel*/
-extern "C" MAFPLUGINCTKSHARED_EXPORT void registerPlugin() {
+extern "C" MAFPLUGINOUTOFCORESHARED_EXPORT void registerPlugin() {
     registrator.registerObjects();
 }
 
-} // namespace mafPluginCTK
+} // namespace mafPluginOutOfCore
 
 #endif // MAFPLUGINREGISTRATOR_H

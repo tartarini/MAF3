@@ -15,6 +15,7 @@
 using namespace mafCore;
 using namespace mafResources;
 using namespace mafSerialization;
+using namespace mafPluginOutOfCore;
 
 mafExternalDataCodecVolume::mafExternalDataCodecVolume(const QString code_location) : mafExternalDataCodec(code_location) {
 }
@@ -23,7 +24,7 @@ mafExternalDataCodecVolume::~mafExternalDataCodecVolume() {
 }
 
 char *mafExternalDataCodecVolume::encode(bool binary) {
-    mafResources::mafVolume *volume = dynamic_cast<mafProxy<mafVolume>*>(m_ExternalData)->externalData();
+    mafVolume *volume = dynamic_cast<mafProxy<mafVolume>*>(m_ExternalData)->externalData();
 
     // open file
     QString url = volume->fileName();
@@ -58,7 +59,7 @@ char *mafExternalDataCodecVolume::encode(bool binary) {
 }
 
 void mafExternalDataCodecVolume::decode(const char *input_string, bool binary) {
-    mafResources::mafVolume *volume = dynamic_cast<mafProxy<mafVolume>*>(m_ExternalData)->externalData();
+    mafVolume *volume = dynamic_cast<mafProxy<mafVolume>*>(m_ExternalData)->externalData();
 
     // check whether the updating is required
     if (!volume->updateDataValueRequired()) return;
@@ -103,7 +104,7 @@ void mafExternalDataCodecVolume::decode(const char *input_string, bool binary) {
 }
 
 void * mafExternalDataCodecVolume::decode(int startPos[3], int dimensions[3], int level) {
-    mafResources::mafVolume *volume = dynamic_cast<mafProxy<mafVolume>*>(m_ExternalData)->externalData();
+    mafVolume *volume = dynamic_cast<mafProxy<mafVolume>*>(m_ExternalData)->externalData();
 
     // open file
     QString url = volume->fileName();

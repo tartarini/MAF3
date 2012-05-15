@@ -15,6 +15,7 @@ SET(target_libraries
   ${foundation_libraries}
   mafCore
   mafEventBus
+  mafSerialization
   mafResources
   )
 

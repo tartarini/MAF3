@@ -10,11 +10,12 @@
  */
 
 #include "mafExternalDataCodecBrickedVolume.h"
-#include <mafVolume.h>
+#include "mafVolume.h"
 
 using namespace mafCore;
 using namespace mafResources;
 using namespace mafSerialization;
+using namespace mafPluginOutOfCore;
 
 mafExternalDataCodecBrickedVolume::mafExternalDataCodecBrickedVolume(const QString code_location) : mafExternalDataCodec(code_location) {
 }
@@ -23,7 +24,7 @@ mafExternalDataCodecBrickedVolume::~mafExternalDataCodecBrickedVolume() {
 }
 
 char *mafExternalDataCodecBrickedVolume::encode(bool binary) {
-    mafResources::mafVolume *volume = dynamic_cast<mafProxy<mafVolume>*>(m_ExternalData)->externalData();
+    mafVolume *volume = dynamic_cast<mafProxy<mafVolume>*>(m_ExternalData)->externalData();
 
     // open all files
     QString url = volume->fileName();
@@ -104,7 +105,7 @@ char *mafExternalDataCodecBrickedVolume::encode(bool binary) {
 }
 
 void mafExternalDataCodecBrickedVolume::decode(const char *input_string, bool binary) {
-    mafResources::mafVolume *volume = dynamic_cast<mafProxy<mafVolume>*>(m_ExternalData)->externalData();
+    mafVolume *volume = dynamic_cast<mafProxy<mafVolume>*>(m_ExternalData)->externalData();
 
     // check whether the updating is required
     if (!volume->updateDataValueRequired()) return;
@@ -245,7 +246,7 @@ void mafExternalDataCodecBrickedVolume::fillVolumeWithBrick(char *volumeData, ch
 }
 
 void * mafExternalDataCodecBrickedVolume::decode(int startPos[3], int dimensions[3], int level) {
-    mafResources::mafVolume *volume = dynamic_cast<mafProxy<mafVolume>*>(m_ExternalData)->externalData();
+    mafVolume *volume = dynamic_cast<mafProxy<mafVolume>*>(m_ExternalData)->externalData();
     
     // open all files
     QString url = volume->fileName();

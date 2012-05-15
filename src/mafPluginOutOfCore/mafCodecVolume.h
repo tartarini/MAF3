@@ -13,9 +13,10 @@
 #define mafCodecVolume_H
 
 // Includes list
-#include "mafCodecRaw.h"
+#include "mafPluginOutOfCoreDefinitions.h"
+#include <mafCodecRaw.h>
 
-namespace mafSerialization {
+namespace mafPluginOutOfCore {
 
 /**
  * Class name: mafCodecVolume
@@ -25,7 +26,7 @@ namespace mafSerialization {
  * In the decode, the memory limit is used to determine which level of the volume data to be loaded.
  * @sa mafCodec, mafSerializationManager
  */
-class MAFSERIALIZATIONSHARED_EXPORT mafCodecVolume : public mafCodecRaw {
+class MAFPLUGINOUTOFCORESHARED_EXPORT mafCodecVolume : public mafSerialization::mafCodecRaw {
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafCodecRaw);
@@ -134,6 +135,6 @@ private:
     QDataStream m_DataStreamWrite;
 };
 
-} // mafSerialization
+} // mafPluginOutOfCore
 
 #endif // mafCodecVolume_H

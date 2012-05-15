@@ -13,15 +13,16 @@
 #define MAFVOLUME_H
 
 // Includes list
-#include "mafResourcesDefinitions.h"
+#include <mafPluginOutOfCoreDefinitions.h>
+#include <mafMatrix.h>
 
-namespace mafResources {
+namespace mafPluginOutOfCore {
 
 /**
  Class name: mafVolume
  This is the MAF3 Volume class.
  */
-class MAFRESOURCESSHARED_EXPORT mafVolume : public mafCore::mafObject {
+class MAFPLUGINOUTOFCORESHARED_EXPORT mafVolume : public mafCore::mafObject {
     Q_OBJECT
     // properties of the original volume
     //Q_PROPERTY(mafDataType    dataType           READ dataType           WRITE setDataType)
@@ -141,10 +142,10 @@ public:
     void setSpacing(float *spacing);
 
     /// Set the pose for the current data.
-    void setPoseMatrix(const mafMatrix *matrix);
+    void setPoseMatrix(const mafResources::mafMatrix *matrix);
 
     /// Return the pose matrix of the current data.
-    mafMatrix *poseMatrix();
+    mafResources::mafMatrix *poseMatrix();
 
     /// Return the start positions of the volume in the mafVolume.
     int *startPositions(); 
@@ -226,7 +227,7 @@ private:
     int          m_ComponentNum;            ///< Number of the compoent in each voxel, such as 3 for RGB color volume.
     int          m_OriginalDimensions[3];   ///< Dimensions of the volume in the volume file.
     float        m_Spacing[3];              ///< Spacing of the volume.
-    mafMatrix *  m_Matrix;                  ///< Pose matrix.
+    mafResources::mafMatrix *  m_Matrix;                  ///< Pose matrix.
 
     int          m_StartPositions[3];       ///< Start positions of the volume in memory in the current level.
     int          m_Dimensions[3];           ///< dimensions of the volume in memory in the current level.
@@ -397,6 +398,6 @@ inline void mafVolume::setFileName(QString fileName) {
     m_FileName = fileName;
 }
 
-} //mafResources
+} //mafPluginOutOfCore
 
 #endif // MAFVOLUME_H

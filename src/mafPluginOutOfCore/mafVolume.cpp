@@ -16,6 +16,7 @@
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
+using namespace mafPluginOutOfCore;
 
 mafVolume::mafVolume(const QString code_location) : mafObject(code_location) {
     m_DataValue             = NULL;

@@ -16,6 +16,7 @@
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
+using namespace mafPluginOutOfCore;
 
 mafMementoVolume::mafMementoVolume(const QString code_location) : mafMemento(code_location) {
 
@@ -23,7 +24,7 @@ mafMementoVolume::mafMementoVolume(const QString code_location) : mafMemento(cod
 
 mafMementoVolume::mafMementoVolume(const mafObject *obj, bool binary, const QString code_location) : mafMemento(obj, code_location) {
     m_EncodeType = "RAW";   // mafSerialization::mafCodecRawBinary
-    m_DataSet = const_cast<mafResources::mafVolume*>(qobject_cast<const mafResources::mafVolume*>(obj));
+    m_DataSet = const_cast<mafPluginOutOfCore::mafVolume*>(qobject_cast<const mafPluginOutOfCore::mafVolume*>(obj));
 
     QVariantList varList;
     mafMementoPropertyItem item;

@@ -13,10 +13,10 @@
 #define MAFMEMENTOVOLUME_H
 
 // Includes list
-#include "mafResourcesDefinitions.h"
+#include "mafPluginOutOfCoreDefinitions.h"
 #include <mafMemento.h>
 
-namespace mafResources {
+namespace mafPluginOutOfCore {
 
 // Class forwarding list
 class mafVolume;
@@ -27,7 +27,7 @@ This class defines the MAF3 memento class for storing a mafDataSet state.
  This is used to restore a previous stored DataSet state (undo mechanism or serialization porpouses).
  @sa mafCore::mafMemento mafResources::mafMementoResource
 */
-class MAFRESOURCESSHARED_EXPORT mafMementoVolume : public mafCore::mafMemento {
+class MAFPLUGINOUTOFCORESHARED_EXPORT mafMementoVolume : public mafCore::mafMemento {
     Q_OBJECT
     //Q_PROPERTY(double timeStamp READ timeStamp WRITE setTimeStamp)
     /// typedef macro.
@@ -58,6 +58,6 @@ private:
     mafVolume *m_DataSet; ///< Data set to be stored.
 };
 
-} // namespace mafResources
+} // namespace mafPluginOutOfCore
 
 #endif // MAFMEMENTOVOLUME_H

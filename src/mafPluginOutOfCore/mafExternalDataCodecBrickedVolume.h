@@ -13,13 +13,13 @@
 #define MAFEXTERNALDATACODECBRICKEDVOLUME_H
 
 // Includes list
-#include <mafSerialization_global.h>
+#include "mafPluginOutOfCoreDefinitions.h"
 #include <mafExternalDataCodec.h>
 #include <mafProxy.h>
 
 // Class forwarding list
 
-namespace mafSerialization {
+namespace mafPluginOutOfCore {
 
 /**
  * Codec to Encode/Decode mafVolume into a bricked raw memory dump using multiresolution.
@@ -41,7 +41,7 @@ namespace mafSerialization {
  * 
  * @sa mafVolume,mafExternalDataCodec, mafSerializationManager
  */
-class MAFSERIALIZATIONSHARED_EXPORT mafExternalDataCodecBrickedVolume : public mafCore::mafExternalDataCodec {
+class MAFPLUGINOUTOFCORESHARED_EXPORT mafExternalDataCodecBrickedVolume : public mafCore::mafExternalDataCodec {
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafExternalDataCodec);

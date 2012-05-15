@@ -13,13 +13,13 @@
 #define MAFEXTERNALDATACODECVOLUME_H
 
 // Includes list
-#include <mafSerialization_global.h>
+#include "mafPluginOutOfCoreDefinitions.h"
 #include <mafExternalDataCodec.h>
 #include <mafProxy.h>
 
 // Class forwarding list
 
-namespace mafSerialization {
+namespace mafPluginOutOfCore {
 
 /**
  * Class name: mafExternalDataCodecVolume
@@ -28,7 +28,7 @@ namespace mafSerialization {
  * In the decode, the memory limit is used to determine which level of the volume data to be loaded.
  * @sa mafVolume, mafExternalDataCodec, mafSerializationManager
  */
-class MAFSERIALIZATIONSHARED_EXPORT mafExternalDataCodecVolume : public mafCore::mafExternalDataCodec {
+class MAFPLUGINOUTOFCORESHARED_EXPORT mafExternalDataCodecVolume : public mafCore::mafExternalDataCodec {
     Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafExternalDataCodec);

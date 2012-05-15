@@ -1,6 +1,6 @@
 /*
- *  mafPluginCTK_Global.h
- *  mafPluginCTK
+ *  mafPluginOutOfCore_Global.h
+ *  mafPluginOutOfCore
  *
  *  Created by Daniele Giunchi && Roberto Mucci on 30/12/11.
  *  Copyright 2011 B3C. All rights reserved.
@@ -9,15 +9,15 @@
  *
  */
 
-#ifndef MAFPLUGINCTK_GLOBAL_H
-#define MAFPLUGINCTK_GLOBAL_H
+#ifndef MAFPLUGINOUTOFCORE_GLOBAL_H
+#define MAFPLUGINOUTOFCORE_GLOBAL_H
 
 #include <QtCore/qglobal.h>
 
-#if defined(mafPluginCTK_EXPORTS)
-#  define MAFPLUGINCTKSHARED_EXPORT Q_DECL_EXPORT
+#if defined(mafPluginOutOfCore_EXPORTS)
+#  define MAFPLUGINOUTOFCORESHARED_EXPORT Q_DECL_EXPORT
 #else
-#  define MAFPLUGINCTKSHARED_EXPORT Q_DECL_IMPORT
+#  define MAFPLUGINOUTOFCORESHARED_EXPORT Q_DECL_IMPORT
 #endif
 
-#endif // MAFPLUGINCTK_GLOBAL_H
+#endif // MAFPLUGINOUTOFCORE_GLOBAL_H
