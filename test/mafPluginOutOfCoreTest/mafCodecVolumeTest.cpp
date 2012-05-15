@@ -17,6 +17,7 @@
 
 using namespace mafCore;
 using namespace mafSerialization;
+using namespace mafPluginOutOfCore;
 
 /**
  Class name: mafCodecVolumeTest
@@ -85,7 +86,7 @@ void mafCodecVolumeTest::initTestCase() {
     m_LoadedRGBMemento  = 0;
 
     // init the test variable
-    m_CodecRawVolume = mafNEW(mafSerialization::mafCodecVolume);
+    m_CodecRawVolume = mafNEW(mafPluginOutOfCore::mafCodecVolume);
 
     m_GrayMemento = new mafMemento();
     // init the volume data (single component, unsigned short)
@@ -729,8 +730,9 @@ void mafCodecVolumeTest::verifyGrayMemento(mafMemento *memento, int level, int s
         } else if (item.m_Name == "dimensions") {
             QVariantList list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
-            for (int i = 0; i < 3; ++i)
-                QVERIFY(list[i].toInt() == dimensions[i]);
+            for (int i = 0; i < 3; ++i) {
+                QCOMPARE(list[i].toInt(), dimensions[i]);
+            }
         } else if (item.m_Name == "dataValue") {
             int scale = pow(2.f, level - 1);
             unsigned short *readData     = (unsigned short *)item.m_Value.value<void *>();
@@ -772,8 +774,9 @@ void mafCodecVolumeTest::verifyRGBMemento(mafMemento *memento, int level, int st
         } else if (item.m_Name == "dimensions") {
             QVariantList list = item.m_Value.toList();
             QVERIFY(list.size() == 3);
-            for (int i = 0; i < 3; ++i)
-                QVERIFY(list[i].toInt() == dimensions[i]);
+            for (int i = 0; i < 3; ++i) {
+                QCOMPARE(list[i].toInt(), dimensions[i]);
+                }
         } else if (item.m_Name == "dataValue") {
             int scale = pow(2.f, level - 1);
             unsigned char *readData     = (unsigned char *)item.m_Value.value<void *>();

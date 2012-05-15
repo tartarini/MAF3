@@ -17,6 +17,7 @@
 
 using namespace mafCore;
 using namespace mafSerialization;
+using namespace mafPluginOutOfCore;
 
 /**
  Class name: mafCodecBrickedVolumeTest
@@ -93,7 +94,7 @@ void mafCodecBrickedVolumeTest::initTestCase() {
     m_LoadedFloatMemento= 0;
 
     // init the test variable
-    m_CodecBrickedVolume = mafNEW(mafSerialization::mafCodecBrickedVolume);
+    m_CodecBrickedVolume = mafNEW(mafPluginOutOfCore::mafCodecBrickedVolume);
 
     m_GrayMemento = new mafMemento();
     // init the volume data (single component, unsigned short)
