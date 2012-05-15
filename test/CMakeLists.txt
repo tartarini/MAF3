@@ -47,4 +47,8 @@ if(${MAF_PLUGINCTK})
   #ADD_SUBDIRECTORY(mafPluginCTKTest)
 endif(${MAF_PLUGINCTK})
 
+if(${MAF_PLUGINOUTOFCORE})
+  #ADD_SUBDIRECTORY(mafPluginOutOfCoreTest)
+endif(${MAF_PLUGINOUTOFCORE})
+
 #message (".......................... Exiting ${CMAKE_CURRENT_LIST_FILE} ............................")
