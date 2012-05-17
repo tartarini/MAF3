@@ -151,10 +151,12 @@ void mafExternalDataCodecBrickedVolumeTest::initTestCase() {
     // create before the instance of the Serialization manager, which will register signals.
     m_SerializationHandle = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
     QVERIFY(m_SerializationHandle != NULL);
+    
+    mafRegisterObject(mafPluginOutOfCore::mafExternalDataCodecBrickedVolume);
 
     // register external codec
     QString encodeType = "VOLUME_BRICKED_LOD";
-    QString codec = "mafSerialization::mafExternalDataCodecBrickedVolume";
+    QString codec = "mafPluginOutOfCore::mafExternalDataCodecBrickedVolume";
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString, encodeType));
     argList.append(mafEventArgument(QString, codec));
