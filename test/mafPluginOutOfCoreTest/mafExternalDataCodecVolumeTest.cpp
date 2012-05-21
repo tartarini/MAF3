@@ -586,7 +586,16 @@ void mafExternalDataCodecVolumeTest::initRGBVolume() {
     // create the RGB volume (unsigned char)
     m_RGBVolume        = mafNEW(mafPluginOutOfCore::mafVolume);
     m_DecodedRGBVolume = mafNEW(mafPluginOutOfCore::mafVolume);
-    m_RGBFileName      = "/RGB716458.lod";   // Meta-data file name
+    
+    QString tmp = QDir::tempPath();
+    tmp.append("/data");
+    QDir data_dir(tmp);
+    if(!data_dir.exists()) {
+        data_dir.mkpath(tmp);
+    }
+    tmp.append("/RGB716458.lod");
+    
+    m_RGBFileName      = tmp;   // Meta-data file name
 
     int dimensions[3] = { 71, 64, 58 };
     float spacing[3]  = { 0.1f, 0.11f, 0.13f };
@@ -620,7 +629,16 @@ void mafExternalDataCodecVolumeTest::initFloatVolume() {
     // create the Float volume (float)
     m_FloatVolume        = mafNEW(mafPluginOutOfCore::mafVolume);
     m_DecodedFloatVolume = mafNEW(mafPluginOutOfCore::mafVolume);
-    m_FloatFileName      = "/Float1024.lod";   // Meta-data file name
+    
+    QString tmp = QDir::tempPath();
+    tmp.append("/data");
+    QDir data_dir(tmp);
+    if(!data_dir.exists()) {
+        data_dir.mkpath(tmp);
+    }
+    tmp.append("/Float1024.lod");
+    
+    m_FloatFileName      = tmp;   // Meta-data file name
 
     int dimensions[3] = { 1024, 1024, 1024 };
     float spacing[3]  = { 0.1f, 0.1f, 0.1f };
