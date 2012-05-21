@@ -174,25 +174,51 @@ void mafExternalDataCodecBrickedVolumeTest::initTestCase() {
 
 void mafExternalDataCodecBrickedVolumeTest::cleanupTestCase() {
     QFile::remove(m_GrayFileName);
-    QFile::remove("/" + m_GrayVolume->fileName());
-    QFile::remove("/" + m_GrayVolume->fileName() + ".bpi");
-    QFile::remove("/" + m_GrayVolume->fileName() + ".bev");
-    QFile::remove("/" + m_GrayVolume->fileName() + ".bv");
+    
+    QString tmp = QDir::tempPath();
+    tmp.append("/data");
+    QDir data_dir(tmp);
+    if(!data_dir.exists()) {
+        data_dir.mkpath(tmp);
+    }
+    QString tmp1 = tmp;
+    tmp1.append("/" + m_GrayVolume->fileName());
+    
+    QFile::remove(tmp);
+    QFile::remove(tmp + ".bpi");
+    QFile::remove(tmp + ".bev");
+    QFile::remove(tmp + ".bv");
+    
     QFile::remove(m_RGBFileName);
-    QFile::remove("/" + m_RGBVolume->fileName());
-    QFile::remove("/" + m_RGBVolume->fileName() + ".bpi");
-    QFile::remove("/" + m_RGBVolume->fileName() + ".bev");
-    QFile::remove("/" + m_RGBVolume->fileName() + ".bv");
+    
+    QString tmp2 = tmp;
+    tmp2.append("/" + m_RGBVolume->fileName());
+    
+    QFile::remove(tmp2);
+    QFile::remove(tmp2 + ".bpi");
+    QFile::remove(tmp2 + ".bev");
+    QFile::remove(tmp2 + ".bv");
+    
     QFile::remove(m_FloatEqualFileName);
-    QFile::remove("/" + m_FloatEqualVolume->fileName());
-    QFile::remove("/" + m_FloatEqualVolume->fileName() + ".bpi");
-    QFile::remove("/" + m_FloatEqualVolume->fileName() + ".bev");
-    QFile::remove("/" + m_FloatEqualVolume->fileName() + ".bv");
+    
+    QString tmp3 = tmp;
+    tmp3.append("/" + m_FloatEqualVolume->fileName());
+    
+    QFile::remove(tmp3);
+    QFile::remove(tmp3 + ".bpi");
+    QFile::remove(tmp3 + ".bev");
+    QFile::remove(tmp3 + ".bv");
+    
     QFile::remove(m_FloatLargeFileName);
-    QFile::remove("/" + m_FloatLargeVolume->fileName());
-    QFile::remove("/" + m_FloatLargeVolume->fileName() + ".bpi");
-    QFile::remove("/" + m_FloatLargeVolume->fileName() + ".bev");
-    QFile::remove("/" + m_FloatLargeVolume->fileName() + ".bv");
+    
+    QString tmp4 = tmp;
+    tmp4.append("/" + m_FloatLargeVolume->fileName());
+    
+    QFile::remove(tmp4);
+    QFile::remove(tmp4 + ".bpi");
+    QFile::remove(tmp4 + ".bev");
+    QFile::remove(tmp4 + ".bv");
+    
     mafDEL(m_CodecVolume);
     mafDEL(m_GrayVolume);
     mafDEL(m_DecodedGrayVolume);
