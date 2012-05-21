@@ -12,11 +12,13 @@
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafEventBusManager.h>
+#include <mafExternalDataCodecVolume.h>
 #include <mafVMEManager.h>
 #include <mafVolume.h>
 #include <mafMementoVolume.h>
 #include <mafExternalDataCodecVolume.h>
 #include <mafResourcesRegistration.h>
+
 
 #ifdef WIN32
     #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
@@ -133,10 +135,12 @@ void mafExternalDataCodecVolumeTest::initTestCase() {
     // create before the instance of the Serialization manager, which will register signals.
     m_SerializationHandle = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
     QVERIFY(m_SerializationHandle != NULL);
+    
+    mafRegisterObject(mafPluginOutOfCore::mafExternalDataCodecVolume);
 
     // register external codec
     QString encodeType = "VOLUME_LOD";
-    QString codec = "mafSerialization::mafExternalDataCodecVolume";
+    QString codec = "mafPluginOutOfCore::mafExternalDataCodecVolume";
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString, encodeType));
     argList.append(mafEventArgument(QString, codec));
@@ -554,8 +558,17 @@ void mafExternalDataCodecVolumeTest::initGrayVolume() {
     // create the Gray volume (unsigned short)
     m_GrayVolume        = mafNEW(mafPluginOutOfCore::mafVolume);
     m_DecodedGrayVolume = mafNEW(mafPluginOutOfCore::mafVolume);
-    m_GrayFileName      = "/Gray716458.lod";   // Meta-data file name
-
+    
+    QString tmp = QDir::tempPath();
+    tmp.append("/data");
+    QDir data_dir(tmp);
+    if(!data_dir.exists()) {
+        data_dir.mkpath(tmp);
+    }
+    tmp.append("/Gray716458.lod");
+    
+    m_GrayFileName      = tmp;   // Meta-data file name
+    qDebug() << m_GrayFileName;
     int dimensions[3] = { 71, 64, 58 };
     float spacing[3]  = { 0.1f, 0.11f, 0.13f };
     m_GrayVolume->setDataType(mafPluginOutOfCore::mafVolUnsignedShort);

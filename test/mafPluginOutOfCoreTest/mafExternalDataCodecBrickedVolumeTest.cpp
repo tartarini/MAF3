@@ -252,7 +252,6 @@ void mafExternalDataCodecBrickedVolumeTest::encodeGrayVolumeTest() {
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafMemento *, memento));
     argList.append(mafEventArgument(QString, m_GrayFileName));
-    qDebug() << m_GrayFileName;
     argList.append(mafEventArgument(QString, memento->encodeType()));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal, &argList);
 
