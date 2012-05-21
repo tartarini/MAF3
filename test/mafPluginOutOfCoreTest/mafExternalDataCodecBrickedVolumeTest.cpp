@@ -140,6 +140,7 @@ private:
     QString m_RGBFileName;                              ///< The file name of m_RGBVolume.
     QString m_FloatEqualFileName;                       ///< The file name of m_FloatEqualVolume.
     QString m_FloatLargeFileName;                       ///< The file name of m_FloatLargeVolume.
+    QString m_WorkingDirectory;                         ///< The working directory
     QLibrary *m_SerializationHandle;
 };
 
@@ -165,6 +166,19 @@ void mafExternalDataCodecBrickedVolumeTest::initTestCase() {
     // create mafExternalDataCodecVolume var
     m_CodecVolume = mafNEW(mafPluginOutOfCore::mafExternalDataCodecBrickedVolume);
 
+    // get the working directory
+    QGenericReturnArgument path_val = mafEventReturnArgument(QString, m_WorkingDirectory);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.request.workingDirectory", mafEventTypeLocal, NULL, &path_val);
+    if (m_WorkingDirectory.size() == 0) {
+        m_WorkingDirectory = QDir::tempPath();
+        m_WorkingDirectory.append("/data");
+    }
+    QDir data_dir(m_WorkingDirectory);
+    if(!data_dir.exists()) {
+        data_dir.mkpath(m_WorkingDirectory);
+    }
+    m_WorkingDirectory += "/";
+
     // initialize the volumes
     initGrayVolume();
     initRGBVolume();
@@ -174,50 +188,28 @@ void mafExternalDataCodecBrickedVolumeTest::initTestCase() {
 
 void mafExternalDataCodecBrickedVolumeTest::cleanupTestCase() {
     QFile::remove(m_GrayFileName);
-    
-    QString tmp = QDir::tempPath();
-    tmp.append("/data");
-    QDir data_dir(tmp);
-    if(!data_dir.exists()) {
-        data_dir.mkpath(tmp);
-    }
-    QString tmp1 = tmp;
-    tmp1.append("/" + m_GrayVolume->fileName());
-    
-    QFile::remove(tmp);
-    QFile::remove(tmp + ".bpi");
-    QFile::remove(tmp + ".bev");
-    QFile::remove(tmp + ".bv");
+    QFile::remove(m_WorkingDirectory + m_GrayVolume->fileName());
+    QFile::remove(m_WorkingDirectory + m_GrayVolume->fileName() + ".bpi");
+    QFile::remove(m_WorkingDirectory + m_GrayVolume->fileName() + ".bev");
+    QFile::remove(m_WorkingDirectory + m_GrayVolume->fileName() + ".bv");
     
     QFile::remove(m_RGBFileName);
-    
-    QString tmp2 = tmp;
-    tmp2.append("/" + m_RGBVolume->fileName());
-    
-    QFile::remove(tmp2);
-    QFile::remove(tmp2 + ".bpi");
-    QFile::remove(tmp2 + ".bev");
-    QFile::remove(tmp2 + ".bv");
+    QFile::remove(m_WorkingDirectory + m_RGBVolume->fileName());
+    QFile::remove(m_WorkingDirectory + m_RGBVolume->fileName() + ".bpi");
+    QFile::remove(m_WorkingDirectory + m_RGBVolume->fileName() + ".bev");
+    QFile::remove(m_WorkingDirectory + m_RGBVolume->fileName() + ".bv");
     
     QFile::remove(m_FloatEqualFileName);
-    
-    QString tmp3 = tmp;
-    tmp3.append("/" + m_FloatEqualVolume->fileName());
-    
-    QFile::remove(tmp3);
-    QFile::remove(tmp3 + ".bpi");
-    QFile::remove(tmp3 + ".bev");
-    QFile::remove(tmp3 + ".bv");
+    QFile::remove(m_WorkingDirectory + m_FloatEqualVolume->fileName());
+    QFile::remove(m_WorkingDirectory + m_FloatEqualVolume->fileName() + ".bpi");
+    QFile::remove(m_WorkingDirectory + m_FloatEqualVolume->fileName() + ".bev");
+    QFile::remove(m_WorkingDirectory + m_FloatEqualVolume->fileName() + ".bv");
     
     QFile::remove(m_FloatLargeFileName);
-    
-    QString tmp4 = tmp;
-    tmp4.append("/" + m_FloatLargeVolume->fileName());
-    
-    QFile::remove(tmp4);
-    QFile::remove(tmp4 + ".bpi");
-    QFile::remove(tmp4 + ".bev");
-    QFile::remove(tmp4 + ".bv");
+    QFile::remove(m_WorkingDirectory + m_FloatLargeVolume->fileName());
+    QFile::remove(m_WorkingDirectory + m_FloatLargeVolume->fileName() + ".bpi");
+    QFile::remove(m_WorkingDirectory + m_FloatLargeVolume->fileName() + ".bev");
+    QFile::remove(m_WorkingDirectory + m_FloatLargeVolume->fileName() + ".bv");
     
     mafDEL(m_CodecVolume);
     mafDEL(m_GrayVolume);
@@ -260,26 +252,18 @@ void mafExternalDataCodecBrickedVolumeTest::encodeGrayVolumeTest() {
     QFileInfo metaFileInfo(m_GrayFileName);
     QVERIFY(metaFileInfo.size() > 0);
     
-    QString tmp = QDir::tempPath();
-    tmp.append("/data");
-    QDir data_dir(tmp);
-    if(!data_dir.exists()) {
-        data_dir.mkpath(tmp);
-    }
-    tmp.append("/" + m_GrayVolume->fileName());
-    
     // volume data bpi file
-    QVERIFY(QFile::exists(tmp + ".bpi"));
-    QFileInfo dataBPIFileInfo(tmp + ".bpi");
+    QVERIFY(QFile::exists(m_WorkingDirectory + m_GrayVolume->fileName() + ".bpi"));
+    QFileInfo dataBPIFileInfo(m_WorkingDirectory + m_GrayVolume->fileName() + ".bpi");
     QVERIFY(dataBPIFileInfo.size() > 0);
 
     // volume data bev file
-    QVERIFY(QFile::exists(tmp + ".bev"));
-    QFileInfo dataBEVFileInfo(tmp + ".bev");
+    QVERIFY(QFile::exists(m_WorkingDirectory + m_GrayVolume->fileName() + ".bev"));
+    QFileInfo dataBEVFileInfo(m_WorkingDirectory + m_GrayVolume->fileName() + ".bev");
 
     // volume data bv file
-    QVERIFY(QFile::exists(tmp + ".bv"));
-    QFileInfo dataBVFileInfo(tmp + ".bv");
+    QVERIFY(QFile::exists(m_WorkingDirectory + m_GrayVolume->fileName() + ".bv"));
+    QFileInfo dataBVFileInfo(m_WorkingDirectory + m_GrayVolume->fileName() + ".bv");
     QVERIFY(dataBVFileInfo.size() > 0);
 
     mafDEL(memento);
@@ -401,27 +385,19 @@ void mafExternalDataCodecBrickedVolumeTest::encodeRGBVolumeTest() {
     QVERIFY(QFile::exists(m_RGBFileName));
     QFileInfo metaFileInfo(m_RGBFileName);
     QVERIFY(metaFileInfo.size() > 0);
-    
-    QString tmp = QDir::tempPath();
-    tmp.append("/data");
-    QDir data_dir(tmp);
-    if(!data_dir.exists()) {
-        data_dir.mkpath(tmp);
-    }
-    tmp.append("/" + m_RGBVolume->fileName());
 
     // volume data bpi file
-    QVERIFY(QFile::exists(tmp + ".bpi"));
-    QFileInfo dataBPIFileInfo(tmp + ".bpi");
+    QVERIFY(QFile::exists(m_WorkingDirectory + m_RGBVolume->fileName() + ".bpi"));
+    QFileInfo dataBPIFileInfo(m_WorkingDirectory + m_RGBVolume->fileName() + ".bpi");
     QVERIFY(dataBPIFileInfo.size() > 0);
 
     // volume data bev file
-    QVERIFY(QFile::exists(tmp + ".bev"));
-    QFileInfo dataBEVFileInfo(tmp + ".bev");
+    QVERIFY(QFile::exists(m_WorkingDirectory + m_RGBVolume->fileName() + ".bev"));
+    QFileInfo dataBEVFileInfo(m_WorkingDirectory + m_RGBVolume->fileName() + ".bev");
 
     // volume data bv file
-    QVERIFY(QFile::exists(tmp + ".bv"));
-    QFileInfo dataBVFileInfo(tmp + ".bv");
+    QVERIFY(QFile::exists(m_WorkingDirectory + m_RGBVolume->fileName() + ".bv"));
+    QFileInfo dataBVFileInfo(m_WorkingDirectory + m_RGBVolume->fileName() + ".bv");
     QVERIFY(dataBVFileInfo.size() > 0);
 
     mafDEL(memento);
@@ -542,28 +518,20 @@ void mafExternalDataCodecBrickedVolumeTest::encodeFloatEqualVolumeTest() {
     QVERIFY(QFile::exists(m_FloatEqualFileName));
     QFileInfo metaFileInfo(m_FloatEqualFileName);
     QVERIFY(metaFileInfo.size() > 0);
-    
-    QString tmp = QDir::tempPath();
-    tmp.append("/data");
-    QDir data_dir(tmp);
-    if(!data_dir.exists()) {
-        data_dir.mkpath(tmp);
-    }
-    tmp.append("/" + m_FloatEqualVolume->fileName());
 
     // volume data bpi file
-    QVERIFY(QFile::exists(tmp + ".bpi"));
-    QFileInfo dataBPIFileInfo(tmp + ".bpi");
+    QVERIFY(QFile::exists(m_WorkingDirectory + m_FloatEqualVolume->fileName() + ".bpi"));
+    QFileInfo dataBPIFileInfo(m_WorkingDirectory + m_FloatEqualVolume->fileName() + ".bpi");
     QVERIFY(dataBPIFileInfo.size() > 0);
 
     // volume data bev file
-    QVERIFY(QFile::exists(tmp + ".bev"));
-    QFileInfo dataBEVFileInfo(tmp + ".bev");
+    QVERIFY(QFile::exists(m_WorkingDirectory + m_FloatEqualVolume->fileName() + ".bev"));
+    QFileInfo dataBEVFileInfo(m_WorkingDirectory + m_FloatEqualVolume->fileName() + ".bev");
     QVERIFY(dataBEVFileInfo.size() > 0);
 
     // volume data bv file
-    QVERIFY(QFile::exists(tmp + ".bv"));
-    QFileInfo dataBVFileInfo(tmp + ".bv");
+    QVERIFY(QFile::exists(m_WorkingDirectory + m_FloatEqualVolume->fileName() + ".bv"));
+    QFileInfo dataBVFileInfo(m_WorkingDirectory + m_FloatEqualVolume->fileName() + ".bv");
     QVERIFY(dataBVFileInfo.size() > 0);
 
     mafDEL(memento);
@@ -661,27 +629,19 @@ void mafExternalDataCodecBrickedVolumeTest::encodeFloatLargeVolumeTest() {
     QVERIFY(QFile::exists(m_FloatLargeFileName));
     QFileInfo metaFileInfo(m_FloatLargeFileName);
     QVERIFY(metaFileInfo.size() > 0);
-    
-    QString tmp = QDir::tempPath();
-    tmp.append("/data");
-    QDir data_dir(tmp);
-    if(!data_dir.exists()) {
-        data_dir.mkpath(tmp);
-    }
-    tmp.append("/" + m_FloatLargeVolume->fileName());
 
     // volume data bpi file
-    QVERIFY(QFile::exists(tmp + ".bpi"));
-    QFileInfo dataBPIFileInfo(tmp + ".bpi");
+    QVERIFY(QFile::exists(m_WorkingDirectory + m_FloatLargeVolume->fileName() + ".bpi"));
+    QFileInfo dataBPIFileInfo(m_WorkingDirectory + m_FloatLargeVolume->fileName() + ".bpi");
     QVERIFY(dataBPIFileInfo.size() > 0);
 
     // volume data bev file
-    QVERIFY(QFile::exists(tmp + ".bev"));
-    QFileInfo dataBEVFileInfo(tmp + ".bev");
+    QVERIFY(QFile::exists(m_WorkingDirectory + m_FloatLargeVolume->fileName() + ".bev"));
+    QFileInfo dataBEVFileInfo(m_WorkingDirectory + m_FloatLargeVolume->fileName() + ".bev");
 
     // volume data bv file
-    QVERIFY(QFile::exists(tmp + ".bv"));
-    QFileInfo dataBVFileInfo(tmp + ".bv");
+    QVERIFY(QFile::exists(m_WorkingDirectory + m_FloatLargeVolume->fileName() + ".bv"));
+    QFileInfo dataBVFileInfo(m_WorkingDirectory + m_FloatLargeVolume->fileName() + ".bv");
     QVERIFY(dataBVFileInfo.size() > 0);
 
     mafDEL(memento);
@@ -708,9 +668,9 @@ void mafExternalDataCodecBrickedVolumeTest::decodeFloatLargeVolumeTest() {
 }
 
 void mafExternalDataCodecBrickedVolumeTest::updateFloatLargeVolumeTest() {
-    //if (!QFile::exists(m_DecodedFloatLargeVolume->fileName() + ".bpi") || 
-    //    !QFile::exists(m_DecodedFloatLargeVolume->fileName() + ".bev") || 
-    //    !QFile::exists(m_DecodedFloatLargeVolume->fileName() + ".bv")) // no data
+    //if (!QFile::exists(m_WorkingDirectory + m_DecodedFloatLargeVolume->fileName() + ".bpi") || 
+    //    !QFile::exists(m_WorkingDirectory + m_DecodedFloatLargeVolume->fileName() + ".bev") || 
+    //    !QFile::exists(m_WorkingDirectory + m_DecodedFloatLargeVolume->fileName() + ".bv")) // no data
     //    return;
 
     int  startPos[3], dimensions[3];
@@ -788,16 +748,7 @@ void mafExternalDataCodecBrickedVolumeTest::initGrayVolume() {
     // create the Gray volume (unsigned short)
     m_GrayVolume        = mafNEW(mafPluginOutOfCore::mafVolume);
     m_DecodedGrayVolume = mafNEW(mafPluginOutOfCore::mafVolume);
-    
-    QString tmp = QDir::tempPath();
-    tmp.append("/data");
-    QDir data_dir(tmp);
-    if(!data_dir.exists()) {
-        data_dir.mkpath(tmp);
-    }
-    tmp.append("/Gray716458.lod");
-    
-    m_GrayFileName      = tmp;   // Meta-data file name
+    m_GrayFileName      = m_WorkingDirectory + "Gray716458.lod";   // Meta-data file name
 
     int dimensions[3] = { 71, 64, 58 };
     float spacing[3]  = { 0.1f, 0.11f, 0.13f };
@@ -831,16 +782,7 @@ void mafExternalDataCodecBrickedVolumeTest::initRGBVolume() {
     // create the RGB volume (unsigned char)
     m_RGBVolume        = mafNEW(mafPluginOutOfCore::mafVolume);
     m_DecodedRGBVolume = mafNEW(mafPluginOutOfCore::mafVolume);
-    
-    QString tmp = QDir::tempPath();
-    tmp.append("/data");
-    QDir data_dir(tmp);
-    if(!data_dir.exists()) {
-        data_dir.mkpath(tmp);
-    }
-    tmp.append("/RGB716458.lod");
-    
-    m_RGBFileName      = tmp;   // Meta-data file name
+    m_RGBFileName      = m_WorkingDirectory + "RGB716458.lod";   // Meta-data file name
 
     int dimensions[3] = { 71, 64, 58 };
     float spacing[3]  = { 0.1f, 0.11f, 0.13f };
@@ -876,16 +818,7 @@ void mafExternalDataCodecBrickedVolumeTest::initFloatEqualVolume() {
     // create the Float Equal volume (float)
     m_FloatEqualVolume        = mafNEW(mafPluginOutOfCore::mafVolume);
     m_DecodedFloatEqualVolume = mafNEW(mafPluginOutOfCore::mafVolume);
-    
-    QString tmp = QDir::tempPath();
-    tmp.append("/data");
-    QDir data_dir(tmp);
-    if(!data_dir.exists()) {
-        data_dir.mkpath(tmp);
-    }
-    tmp.append("/Equal716458.lod");
-    
-    m_FloatEqualFileName      = tmp;   // Meta-data file name
+    m_FloatEqualFileName      = m_WorkingDirectory + "Equal716458.lod";   // Meta-data file name
 
     int dimensions[3] = { 71, 64, 58 };
     float spacing[3]  = { 0.1f, 0.11f, 0.13f };
@@ -924,16 +857,7 @@ void mafExternalDataCodecBrickedVolumeTest::initFloatLargeVolume() {
     // create the Float Large volume (float)
     m_FloatLargeVolume        = mafNEW(mafPluginOutOfCore::mafVolume);
     m_DecodedFloatLargeVolume = mafNEW(mafPluginOutOfCore::mafVolume);
-    
-    QString tmp = QDir::tempPath();
-    tmp.append("/data");
-    QDir data_dir(tmp);
-    if(!data_dir.exists()) {
-        data_dir.mkpath(tmp);
-    }
-    tmp.append("/FloatBrick1024.lod");
-
-    m_FloatLargeFileName      = tmp;   // Meta-data file name
+    m_FloatLargeFileName      = m_WorkingDirectory + "FloatBrick1024.lod";   // Meta-data file name
 
     int dimensions[3] = { 1024, 1024, 1024 };
     float spacing[3]  = { 0.1f, 0.1f, 0.1f };
@@ -954,15 +878,7 @@ void mafExternalDataCodecBrickedVolumeTest::initFloatLargeVolume() {
 }
 
 void mafExternalDataCodecBrickedVolumeTest::encodeFloatLargeVolume() {
-    QString tmp = QDir::tempPath();
-    tmp.append("/data");
-    QDir data_dir(tmp);
-    if(!data_dir.exists()) {
-        data_dir.mkpath(tmp);
-    }
-    tmp.append("/" + m_FloatLargeVolume->fileName());
-    
-    QString url = tmp ;
+    QString url = m_WorkingDirectory + m_FloatLargeVolume->fileName();
     QFile bpiFile(url + ".bpi"), bevFile(url + ".bev"), bvFile(url + ".bv");
     if (!bpiFile.open(QIODevice::WriteOnly)) {
         qDebug() << ("Not able to open file " + url + ".bpi");

@@ -124,6 +124,7 @@ private:
     QString m_GrayFileName;                     ///< The file name of m_GrayVolume.
     QString m_RGBFileName;                      ///< The file name of m_RGBVolume.
     QString m_FloatFileName;                    ///< The file name of m_FloatVolume.
+    QString m_WorkingDirectory;                 ///< The working directory
     QLibrary *m_SerializationHandle;
 };
 
@@ -146,6 +147,19 @@ void mafExternalDataCodecVolumeTest::initTestCase() {
     argList.append(mafEventArgument(QString, codec));
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal, &argList);
 
+    // get the working directory
+    QGenericReturnArgument path_val = mafEventReturnArgument(QString, m_WorkingDirectory);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.request.workingDirectory", mafEventTypeLocal, NULL, &path_val);
+    if (m_WorkingDirectory.size() == 0) {
+        m_WorkingDirectory = QDir::tempPath();
+        m_WorkingDirectory.append("/data");
+    }
+    QDir data_dir(m_WorkingDirectory);
+    if(!data_dir.exists()) {
+        data_dir.mkpath(m_WorkingDirectory);
+    }
+    m_WorkingDirectory += "/";
+
     // create mafExternalDataCodecVolume var
     m_CodecVolume = mafNEW(mafPluginOutOfCore::mafExternalDataCodecVolume);
 
@@ -157,11 +171,11 @@ void mafExternalDataCodecVolumeTest::initTestCase() {
 
 void mafExternalDataCodecVolumeTest::cleanupTestCase() {
     QFile::remove(m_GrayFileName);
-    QFile::remove("/" + m_GrayVolume->fileName());
+    QFile::remove(m_WorkingDirectory + m_GrayVolume->fileName());
     QFile::remove(m_RGBFileName);
-    QFile::remove("/" + m_RGBVolume->fileName());
+    QFile::remove(m_WorkingDirectory + m_RGBVolume->fileName());
     QFile::remove(m_FloatFileName);
-    QFile::remove("/" + m_FloatVolume->fileName());
+    QFile::remove(m_WorkingDirectory + m_FloatVolume->fileName());
     mafDEL(m_CodecVolume);
     mafDEL(m_GrayVolume);
     mafDEL(m_DecodedGrayVolume);
@@ -200,8 +214,8 @@ void mafExternalDataCodecVolumeTest::encodeGrayVolumeTest() {
     QVERIFY(metaFileInfo.size() > 0);
 
     // volume data file
-    QVERIFY(QFile::exists("/" + m_GrayVolume->fileName()));
-    QFileInfo dataFileInfo("/" + m_GrayVolume->fileName());
+    QVERIFY(QFile::exists(m_WorkingDirectory + m_GrayVolume->fileName()));
+    QFileInfo dataFileInfo(m_WorkingDirectory + m_GrayVolume->fileName());
     QVERIFY(dataFileInfo.size() > 0);
 
     mafDEL(memento);
@@ -325,8 +339,8 @@ void mafExternalDataCodecVolumeTest::encodeRGBVolumeTest() {
     QVERIFY(metaFileInfo.size() > 0);
 
     // volume data file
-    QVERIFY(QFile::exists("/" + m_RGBVolume->fileName()));
-    QFileInfo dataFileInfo("/" + m_RGBVolume->fileName());
+    QVERIFY(QFile::exists(m_WorkingDirectory + m_RGBVolume->fileName()));
+    QFileInfo dataFileInfo(m_WorkingDirectory + m_RGBVolume->fileName());
     QVERIFY(dataFileInfo.size() > 0);
 
     mafDEL(memento);
@@ -452,8 +466,8 @@ void mafExternalDataCodecVolumeTest::encodeFloatVolumeTest() {
     QVERIFY(metaFileInfo.size() > 0);
 
     // volume data file
-    QVERIFY(QFile::exists("/" + m_FloatVolume->fileName()));
-    QFileInfo dataFileInfo("/" + m_FloatVolume->fileName());
+    QVERIFY(QFile::exists(m_WorkingDirectory + m_FloatVolume->fileName()));
+    QFileInfo dataFileInfo(m_WorkingDirectory + m_FloatVolume->fileName());
     QVERIFY(dataFileInfo.size() > 0);
 
     mafDEL(memento);
@@ -558,17 +572,8 @@ void mafExternalDataCodecVolumeTest::initGrayVolume() {
     // create the Gray volume (unsigned short)
     m_GrayVolume        = mafNEW(mafPluginOutOfCore::mafVolume);
     m_DecodedGrayVolume = mafNEW(mafPluginOutOfCore::mafVolume);
+    m_GrayFileName      = m_WorkingDirectory + "Gray716458.lod";   // Meta-data file name
     
-    QString tmp = QDir::tempPath();
-    tmp.append("/data");
-    QDir data_dir(tmp);
-    if(!data_dir.exists()) {
-        data_dir.mkpath(tmp);
-    }
-    tmp.append("/Gray716458.lod");
-    
-    m_GrayFileName      = tmp;   // Meta-data file name
-    qDebug() << m_GrayFileName;
     int dimensions[3] = { 71, 64, 58 };
     float spacing[3]  = { 0.1f, 0.11f, 0.13f };
     m_GrayVolume->setDataType(mafPluginOutOfCore::mafVolUnsignedShort);
@@ -599,16 +604,7 @@ void mafExternalDataCodecVolumeTest::initRGBVolume() {
     // create the RGB volume (unsigned char)
     m_RGBVolume        = mafNEW(mafPluginOutOfCore::mafVolume);
     m_DecodedRGBVolume = mafNEW(mafPluginOutOfCore::mafVolume);
-    
-    QString tmp = QDir::tempPath();
-    tmp.append("/data");
-    QDir data_dir(tmp);
-    if(!data_dir.exists()) {
-        data_dir.mkpath(tmp);
-    }
-    tmp.append("/RGB716458.lod");
-    
-    m_RGBFileName      = tmp;   // Meta-data file name
+    m_RGBFileName      = m_WorkingDirectory + "RGB716458.lod";   // Meta-data file name
 
     int dimensions[3] = { 71, 64, 58 };
     float spacing[3]  = { 0.1f, 0.11f, 0.13f };
@@ -642,16 +638,7 @@ void mafExternalDataCodecVolumeTest::initFloatVolume() {
     // create the Float volume (float)
     m_FloatVolume        = mafNEW(mafPluginOutOfCore::mafVolume);
     m_DecodedFloatVolume = mafNEW(mafPluginOutOfCore::mafVolume);
-    
-    QString tmp = QDir::tempPath();
-    tmp.append("/data");
-    QDir data_dir(tmp);
-    if(!data_dir.exists()) {
-        data_dir.mkpath(tmp);
-    }
-    tmp.append("/Float1024.lod");
-    
-    m_FloatFileName      = tmp;   // Meta-data file name
+    m_FloatFileName      = m_WorkingDirectory + "Float1024.lod";   // Meta-data file name
 
     int dimensions[3] = { 1024, 1024, 1024 };
     float spacing[3]  = { 0.1f, 0.1f, 0.1f };
@@ -671,7 +658,7 @@ void mafExternalDataCodecVolumeTest::initFloatVolume() {
 
 void mafExternalDataCodecVolumeTest::encodeFloatVolume()
 {
-    QString url = "/" + m_FloatVolume->fileName();
+    QString url = m_WorkingDirectory + m_FloatVolume->fileName();
     QFile file(url);
 
     if (!file.open(QIODevice::WriteOnly)) {
