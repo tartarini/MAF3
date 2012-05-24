@@ -672,14 +672,14 @@ void mafExternalDataCodecVolumeTest::encodeFloatVolume()
     float *data = new float[dimensions[0] * dimensions[1]];
     
     for (int level = 0; level < levels; ++level) {
-        int xDim = dimensions[0] / scale;
-        int yDim = dimensions[1] / scale;
-        int zDim = dimensions[2] / scale;
+        qint64 xDim = dimensions[0] / scale;
+        qint64 yDim = dimensions[1] / scale;
+        qint64 zDim = dimensions[2] / scale;
         for (int z = 0; z < zDim; ++z) {
             for (int y = 0; y < yDim; ++y) {
                 for (int x = 0; x < xDim; ++x) {
-                    int index = ((z * dimensions[1] + y) * dimensions[0] + x) * scale;
-                    data[y * xDim + x] = index / 100.f;
+                    qint64 index = ((z * dimensions[1] + y) * dimensions[0] + x) * scale;
+                    data[y * xDim + x] = index * 0.01;
                 }
             }
             file.write((const char*)data, sizeof(float) * xDim * yDim);

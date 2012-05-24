@@ -919,7 +919,7 @@ void mafExternalDataCodecBrickedVolumeTest::encodeFloatLargeVolume() {
                             for (int x = 0; x < brickSize; ++x) {
                                 int indexBrick = (z * brickSize + y) * brickSize + x;
                                 int indexData  = (((zStart + z) * dimensions[1] + (yStart + y)) * dimensions[0] + (xStart + x)) * scale;
-                                data[indexBrick] = indexData / 100.f;
+                                data[indexBrick] = indexData * 0.01;
                             }
                         }
                     }
