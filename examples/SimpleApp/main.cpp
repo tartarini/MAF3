@@ -5,17 +5,19 @@
 #endif
 
 #include <QtGui/QApplication>
-
+#include "mafApplicationConfig.h"
 #include "mafOperationSimpleApp.h"
+
+#ifdef BUILD_WRAP
+#include <mafInterpreterPreferencesWidget.h>
 #include <mafViewScriptInterpreterPython.h>
 #include <mafViewScriptInterpreterECMAScript.h>
+#endif //BUILD_WRAP
+
 #include "mafApplicationSettingsPageConfigurations.h"
 
 #include <mafMainWindow.h>
 #include <mafLogic.h>
-
-
-#include <mafInterpreterPreferencesWidget.h>
 
 
 int main(int argc, char *argv[]) {
@@ -49,8 +51,10 @@ int main(int argc, char *argv[]) {
     // to the mafObjectFactory can be done using the following macro:
     // mafRegisterObject(myNamespace::myClassCustom);
     mafRegisterObjectAndAcceptBind(mafOperationSimpleApp);
+#ifdef BUILD_WRAP
     mafRegisterObject(mafScriptInterpreter::mafViewScriptInterpreterPython);
     mafRegisterObject(mafScriptInterpreter::mafViewScriptInterpreterECMAScript);
+#endif //BUILD_WRAP
     // Plug the object's information into the framework
 //    logic->plugObject("mafResources::mafOperation", "mafOperationSimpleApp", "Demo Operation");
 //    logic->plugObject("mafResources::mafOperation", "mafResources::mafOperationTransform", "Transform");
@@ -65,8 +69,10 @@ int main(int argc, char *argv[]) {
 
     logic->customizeVisualization("VTK view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
 
+#ifdef BUILD_WRAP
     logic->plugObject("mafResources::mafView", "mafScriptInterpreter::mafViewScriptInterpreterPython", "Python Console");
     logic->plugObject("mafResources::mafView", "mafScriptInterpreter::mafViewScriptInterpreterECMAScript", "ECMAScript Console");
+#endif //BUILD_WRAP
 
     // Create the instance of the main window and pass to it the application's logic.
     // In this way the mafMainWondow class will also load the plug-ins present
@@ -77,8 +83,10 @@ int main(int argc, char *argv[]) {
     mafApplicationSettingsPageConfigurations *page = new mafApplicationSettingsPageConfigurations();
     w.plugApplicationSettingsPage(page);
 
+#ifdef BUILD_WRAP
     mafScriptInterpreter::mafInterpreterPreferencesWidget *interpreterPrefs = new mafScriptInterpreter::mafInterpreterPreferencesWidget();
     w.plugApplicationSettingsPage(interpreterPrefs);
+#endif //BUILD_WRAP
 
     // Eventually call the loadPlugins method with custom directory to allow the application
     // load custom plugins located in custom directories.

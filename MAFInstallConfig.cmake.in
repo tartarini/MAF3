@@ -29,6 +29,9 @@ set(MAF_BUILD_SHARED "@BUILD_SHARED_LIBS@")
 # MAF options
 #set(MAF_USE_PYTHON "@MAF_USE_PYTHON@")
 
+# XML output dir of doxygen
+set(MAF_XML_DOXYGEN "@MAF_XML_DOXYGEN@")
+
 # MAF could be installed anywhere, so set all paths based on where 
 # this file was found (which should be the lib/MAF3 directory of the 
 # installation)

@@ -79,6 +79,7 @@ option(MAF_SCRIPT_INTERPRETER "Build mafScriptInterpreter module. mafCore, mafEv
 option(MAF_PLUGINCTK "Build mafPluginCTK module. mafCore and mafEventBus will be built anyway."               ON)
 option(MAF_PLUGINFieldML "Build FieldML module. mafCore and mafEventBus will be built anyway."               ON)
 
+option(MAF_PLUGIN_OUTOFCORE "Build mafPluginOutOfCore module. mafCore and mafEventBus will be built anyway."               ON)
 
 set(MAF_DATA_DIR)
 find_path(MAF_DATA_DIR "README.txt" PATHS "${MAF_SOURCE_DIR}/../maf3data")
@@ -102,6 +103,11 @@ if(MAF_PLUGINFieldML)
   SET( MAF_RESOURCES ON ) 
   mafDependentOption(MAF_RESOURCES "Build mafResources module." ON MAF_PLUGINFieldML ON)
 endif(MAF_PLUGINFieldML)
+
+if(MAF_PLUGIN_OUTOFCORE)
+  SET( MAF_RESOURCES ON ) 
+  mafDependentOption(MAF_RESOURCES "Build mafResources module." ON MAF_PLUGIN_OUTOFCORE ON)
+endif(MAF_PLUGIN_OUTOFCORE)
 
 if(MAF_PLUGINCTK)
   SET( MAF_RESOURCES ON ) 
@@ -151,6 +157,9 @@ if(BUILD_EXAMPLES)
 
     set( MAF_PLUGINFieldML ON ) 
     mafDependentOption(MAF_PLUGINFieldML "Build Test module for mafGUI." ON BUILD_EXAMPLES ON)
+    set( MAF_PLUGIN_OUTOFCORE ON ) 
+    mafDependentOption(MAF_PLUGIN_OUTOFCORE "Build Test module for mafGUI." ON BUILD_EXAMPLES ON)
+
 endif(BUILD_EXAMPLES)
 
 ### examples dependencies 
@@ -165,9 +174,11 @@ if(BUILD_QA)
 endif(BUILD_QA)
 
 #############################################################################################
-### Wrapping (find swig, python ...)
+### Wrapping
 #############################################################################################
 if(BUILD_WRAP)
+  set( BUILD_DOCUMENTATION ON ) 
+  mafDependentOption(BUILD_DOCUMENTATION "Build XML doxygen output for Wrapping." ON BUILD_WRAP ON)
   include(CMake/mafMacroFindWrap.cmake)
 endif(BUILD_WRAP)
 
@@ -178,11 +189,22 @@ if(MAF_SCRIPT_INTERPRETER AND NOT BUILD_WRAP)
   include(CMake/mafMacroFindPython.cmake)
 endif(MAF_SCRIPT_INTERPRETER AND NOT BUILD_WRAP)
 
+include(${MAF_SOURCE_DIR}/GenerateMAFConfig.cmake)
+
+#############################################################################################
+### DOCUMENTATION
+#############################################################################################
+if(BUILD_DOCUMENTATION)
+  add_subdirectory(doc)
+  if(BUILD_WRAP)
+    add_subdirectory(wrap)
+  endif(BUILD_WRAP)
+endif(BUILD_DOCUMENTATION)
+
 #############################################################################################
 ### Superbuild execution
 #############################################################################################
 
-include(${MAF_SOURCE_DIR}/GenerateMAFConfig.cmake)
 configure_file(${MAF_SOURCE_DIR}/UseMAF.cmake.in
   ${MAF_BINARY_DIR}/UseMAF.cmake COPYONLY IMMEDIATE)
   
@@ -221,12 +243,4 @@ endif(BUILD_TEST_SUITE)
 if(BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif(BUILD_EXAMPLES)
-
-#############################################################################################
-### DOCUMENTATION
-#############################################################################################
-
-if(BUILD_DOCUMENTATION)
-  add_subdirectory(doc)
-endif(BUILD_DOCUMENTATION)
 

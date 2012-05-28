@@ -173,9 +173,9 @@ void mafDataSetCollectionTest::collectionPoseMatrixTest() {
     double pose[3];
     m_Collection->orientations(pose);
 
-    QCOMPARE(pose[0], rx);
-    QCOMPARE(pose[1], ry);
-    QCOMPARE(pose[2], rz);
+    QVERIFY(mafEquals(pose[0], rx, 1e-7));
+    QVERIFY(mafEquals(pose[1], ry, 1e-7));
+    QVERIFY(mafEquals(pose[2], rz, 1e-7));
 }
 
 void mafDataSetCollectionTest::collectionSynchronizePoseTest() {

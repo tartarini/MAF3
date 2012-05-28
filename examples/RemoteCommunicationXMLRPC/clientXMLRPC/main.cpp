@@ -40,19 +40,20 @@ int main(int argc, char *argv[]) {
 
     //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
     QVariantList dataParameters;
-    dataParameters.append("mafAlgorithmBoneRemodelling");
+    dataParameters.append("mafAlgorithmInterventionalSimulation");
     
     //log parameters
     //dataParameters.append("mafOperationLogger");
-        
+//    dataParameters.append("mafOperationManageLog");
+    
     QVariantMap operationParameters;
     
      //log parameters
-     /*operationParameters.insert("dataBaseName", argv[3]);
-     operationParameters.insert("tableName", "logTable");
-     operationParameters.insert("workflowId", argv[4]);
-     operationParameters.insert("serviceName", argv[5]);
-     */
+//     operationParameters.insert("dataBaseName", argv[3]);
+//     operationParameters.insert("tableName", "logTable");
+//     operationParameters.insert("workflowId", argv[4]);
+//     operationParameters.insert("serviceName", argv[5]);
+     
     
     operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
     operationParameters.insert("myFirstParameter", 2.3);
@@ -60,12 +61,12 @@ int main(int argc, char *argv[]) {
     operationParameters.insert("workflowId", "GUQFEFQUYWJGQJWQBHWGJHWBQHBW");
     
     
-    //QStringList inputFiles;
-    //inputFiles << "input_01" << "input_02" << "input_03";
-    //operationParameters.insert("inputFileList", inputFiles);
-    //QStringList outputFiles;
-    //outputFiles << "output_01" << "output_02" << "output_03"; 
-    //operationParameters.insert("outputFileList", outputFiles);
+    QStringList inputFiles;
+    inputFiles << "L1004024_mesh.cdb" << "component_L1004024_mesh.cdb" << "4024_L1.xml";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "out.cdb" << "out.dat"; 
+    operationParameters.insert("outputFileList", outputFiles);
     
     dataParameters.push_back(operationParameters);
 

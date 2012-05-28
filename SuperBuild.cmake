@@ -74,10 +74,6 @@ set(sep "^^")
 ### Establish Target Dependencies based on Selected Options
 #############################################################################################
 
-#if(MAF_USE_PYTHONQT)
-#  list(APPEND MAF_DEPENDENCIES python)
-#endif()
-
 #DEPENDENCIES
 set(MAF_DEPENDENCIES)
 
@@ -111,8 +107,8 @@ endif(MAF_PLUGINFieldML)
 
 
 if(BUILD_WRAP)
-#  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} PythonQt)
-#  include(CMakeExternals/External_PythonQt.cmake)
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} PythonQt)
+  include(CMakeExternals/External_PythonQt.cmake)
 endif(BUILD_WRAP)
 
 
@@ -178,11 +174,15 @@ SET(MAF_cmake_boolean_args
   BUILD_TESTING
   BUILD_SHARED_LIBS
   MAF_USE_QT
-  #MAF_USE_PYTHONQT
+  MAF_USE_PYTHONQT
   #MAF_BUILD_NUMPY
   # Deprecated
   MAF_USE_PYTHON
 )
+
+if(BUILD_WRAP)
+  set(MAF_DEPENDENCIES wrap ${MAF_DEPENDENCIES})
+endif(BUILD_WRAP)
   
 SET(MAF_superbuild_boolean_args)
 FOREACH(MAF_cmake_arg ${MAF_cmake_boolean_args})
@@ -219,6 +219,7 @@ ExternalProject_Add(${proj}
     -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
     -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
     -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
+    -DBUILD_DOCUMENTATION:BOOL=${DBUILD_DOCUMENTATION}
     -DBUILD_WRAP:BOOL=${BUILD_WRAP}
     #-DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
     #-DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}

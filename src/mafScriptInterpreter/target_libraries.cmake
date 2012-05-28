@@ -5,7 +5,7 @@
 # 
 
 SET(foundation_libraries 
- 
+   ${PYTHON_LIBRARY}
 )
 
 SET(target_libraries
@@ -14,5 +14,4 @@ SET(target_libraries
   mafCore
   mafGUI
   mafResources
-  ${PYTHON_LIBRARIES}
   )

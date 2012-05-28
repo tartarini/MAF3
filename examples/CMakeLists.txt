@@ -16,10 +16,19 @@
 
 include(${MAF_USE_FILE_CONFIG})
 
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/mafApplicationConfig.h.in ${CMAKE_CURRENT_BINARY_DIR}/mafApplicationConfig.h)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 
 ADD_SUBDIRECTORY(qaCheck)
 ADD_SUBDIRECTORY(RemoteCommunicationXMLRPC)
 ADD_SUBDIRECTORY(SimpleApp)
+
+
+if(BUILD_WRAP)
+ADD_SUBDIRECTORY(mafPythonQtExample)
+endif(BUILD_WRAP)
+
 #ADD_SUBDIRECTORY(mafCTKSimpleApp)
 #ADD_SUBDIRECTORY(mafCTKHostedApplication)
 #ADD_SUBDIRECTORY(mapReduceExample)

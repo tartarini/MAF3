@@ -9,8 +9,7 @@ SET(foundation_libraries
   QtSOAP
 )
 
-
 SET(target_libraries
-  ${MAF_BASE_LIBRARIES}
-  ${foundation_libraries}
-  )
+    ${foundation_libraries}
+    ${MAF_BASE_LIBRARIES}       
+)
