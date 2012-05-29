@@ -41,11 +41,12 @@ mafMacroWrapTargetFiles()
 ## #################################################################
 
 # Create the library.
-if(${BUILD_SHARED_LIBS})
+#if(${BUILD_SHARED_LIBS})
   ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
-else(${BUILD_SHARED_LIBS})
-  ADD_LIBRARY(${PROJECT_NAME} STATIC ${PROJECT_SRCS})
-endif(${BUILD_SHARED_LIBS})  
+#else(${BUILD_SHARED_LIBS})
+#  ADD_LIBRARY(${PROJECT_NAME} STATIC ${PROJECT_SRCS})
+#endif(${BUILD_SHARED_LIBS})  
+
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 LINK_DIRECTORIES(${VTK_LIBRARY_DIRS})
