@@ -9,6 +9,7 @@
  *
  */
 
+#include "mafTestConfig.h"
 #include <mafTestSuite.h>
 #include <mafCoreSingletons.h>
 #include <mafEventBusManager.h>
@@ -170,7 +171,8 @@ void mafExternalDataCodecBrickedVolumeTest::initTestCase() {
     QGenericReturnArgument path_val = mafEventReturnArgument(QString, m_WorkingDirectory);
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.request.workingDirectory", mafEventTypeLocal, NULL, &path_val);
     if (m_WorkingDirectory.size() == 0) {
-        m_WorkingDirectory = QDir::tempPath();
+        //m_WorkingDirectory = QDir::tempPath();
+        m_WorkingDirectory = MAF_DATA_DIR;
         m_WorkingDirectory.append("/data");
     }
     QDir data_dir(m_WorkingDirectory);
