@@ -62,7 +62,11 @@ void mafNetworkConnectorQXMLRPC::createClient(const QString hostName, const unsi
         }
     }
 
-    m_Client->setHost( hostName, port );
+    QHttp::ConnectionMode cm = QHttp::ConnectionModeHttp;
+    if(advancedParameters && advancedParameters->contains("connectionmode")) {
+        cm = (QHttp::ConnectionMode) advancedParameters->value("connectionmode").toInt();
+    }
+    m_Client->setHost( hostName, cm, port );
 
 	// set advanced paramters
 	if ( advancedParameters && advancedParameters->count() ){
