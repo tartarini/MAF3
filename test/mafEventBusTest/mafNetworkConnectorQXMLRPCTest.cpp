@@ -101,6 +101,9 @@ private Q_SLOTS:
     /// Check the communication of the mafNetworkConnectorQXMLRPCe with an header QMap as third parameter.
     void mafNetworkConnectorQXMLRPCCommunictionWithHeaderMapTest();
 
+    /// Check the communication of the mafNetworkConnectorQXMLRPCe using https
+    void httpsTest();
+    
 private:
     mafEventBusManager *m_EventBus; ///< event bus instance
     mafNetworkConnectorQXMLRPC *m_NetWorkConnectorQXMLRPC; ///< EventBus test variable instance.
@@ -183,6 +186,71 @@ void mafNetworkConnectorQXMLRPCTest::mafNetworkConnectorQXMLRPCCommunictionWithH
     }
 }
 
+void mafNetworkConnectorQXMLRPCTest::httpsTest() {
+    if (m_NetWorkConnectorQXMLRPC) {
+        delete m_NetWorkConnectorQXMLRPC;
+    }
+    mafNetworkConnectorQXMLRPC *m_NetWorkConnectorQXMLRPC = new mafEventBus::mafNetworkConnectorQXMLRPC;
+
+    QMap<QString, QVariant> advancedParameters;
+    advancedParameters.insert("connectionmode", 1);
+
+    QString serviceURL("www.physiomespace.com");
+    //serviceURL.append("/?ticket=");
+    //serviceURL.append(m_ConnectionInfo["sessionTicket"]);
+    // Prepare to submit request.
+    m_NetWorkConnectorQXMLRPC->createClient(serviceURL, 443, &advancedParameters);
+    
+    
+    mafEventArgumentsList myList; // create list to send
+	//inside there is ONE hash which has name, value
+
+	QVariantMap values;
+        
+    //ticket for poors
+	QVariant v0("");
+	//set the name and the value
+	values.insert("sessionTicket", v0);
+        
+    //criteria
+	QVariant v1(".cdb");
+	//set the name and the value
+	values.insert("criteria", v1);
+
+    //criteria
+	QVariant v2("averageQuadraticDistance");
+	//set the name and the value
+	values.insert("similarityFunction", v2);
+
+    //criteria
+	QVariant v3("data_12345");
+	//set the name and the value
+	values.insert("dataresource", v3);
+        
+	//append inside the list
+	myList.push_back(mafEventArgument(QVariantMap,values));
+        
+        
+	// register respose callback
+	QObject::connect(m_NetWorkConnectorQXMLRPC, SIGNAL(updatedResponseSignal(QVariant)), this, SLOT(consumeResponse(QVariant)), Qt::DirectConnection);
+        
+	// send call 
+    bool externalSend = true;
+	m_NetWorkConnectorQXMLRPC->send("searchService", &myList, externalSend);
+        
+	// wait for response consumtion, but handle server timeout
+        
+	QEventLoop eventLoop;
+    QTimer timer;
+	QObject::connect(&timer, SIGNAL(timeout()), &eventLoop, SLOT(quit()), Qt::DirectConnection);
+        
+	// set timeout to 10 minutes
+	timer.setSingleShot(true);
+	timer.start( 10000 );
+        
+    eventLoop.exec();
+        
+}
 MAF_REGISTER_TEST(mafNetworkConnectorQXMLRPCTest);
 #include "mafNetworkConnectorQXMLRPCTest.moc"
 
