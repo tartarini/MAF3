@@ -37,13 +37,14 @@ if(NOT GIT_FOUND)
   message(FATAL_ERROR "error: Install Git and try to re-configure")
 endif()
 
-
-FIND_PACKAGE(Subversion)
-if(NOT Subversion_FOUND)
-  message(STATUS "error: Install Subversion for enable tests.")
-  set(BUILD_TEST_SUITE OFF)
-  set(DATA_TEST OFF)
-endif()
+if(BUILD_TEST_SUITE)
+	FIND_PACKAGE(Subversion)
+	if(NOT Subversion_FOUND)
+	  message(STATUS "error: Install Subversion for enable tests.")
+	  set(BUILD_TEST_SUITE OFF)
+	  set(DATA_TEST OFF)
+	endif()
+endif(BUILD_TEST_SUITE)
 
 # git protocol to be used
 set(git_protocol "git")
@@ -170,7 +171,7 @@ endif(BUILD_QA)
 if(BUILD_WRAP)
   set( BUILD_DOCUMENTATION ON ) 
   mafDependentOption(BUILD_DOCUMENTATION "Build XML doxygen output for Wrapping." ON BUILD_WRAP ON)
-  include(CMake/mafMacroFindWrap.cmake)
+  include(CMake/mafMacroFindPython.cmake)
 endif(BUILD_WRAP)
 
 #############################################################################################
