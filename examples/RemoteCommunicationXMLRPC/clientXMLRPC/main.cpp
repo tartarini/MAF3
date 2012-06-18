@@ -13,6 +13,9 @@
 #include <mafCoreSingletons.h>
 #include "mafClientXMLRPC.h"
 
+#define Operation
+//#define Log
+
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
     QByteArray ba;
@@ -35,31 +38,20 @@ int main(int argc, char *argv[]) {
     //remote event parameters
     mafEventBus::mafEventArgumentsList listToSend;
     QVariantList eventParameters;
+    QVariantList dataParameters;
+    
+#ifdef Operation    
     eventParameters.append("maf.local.resources.operation.executeWithParameters");
     listToSend.append(Q_ARG(QVariantList, eventParameters));
 
     //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
-    QVariantList dataParameters;
     dataParameters.append("mafAlgorithmInterventionalSimulation");
     
-    //log parameters
-    //dataParameters.append("mafOperationLogger");
-//    dataParameters.append("mafOperationManageLog");
-    
     QVariantMap operationParameters;
-    
-     //log parameters
-//     operationParameters.insert("dataBaseName", argv[3]);
-//     operationParameters.insert("tableName", "logTable");
-//     operationParameters.insert("workflowId", argv[4]);
-//     operationParameters.insert("serviceName", argv[5]);
-     
-    
     operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
     operationParameters.insert("myFirstParameter", 2.3);
     operationParameters.insert("mySecondParameter", "ughetto");
     operationParameters.insert("workflowId", "GUQFEFQUYWJGQJWQBHWGJHWBQHBW");
-    
     
     QStringList inputFiles;
     inputFiles << "L1004024_mesh.cdb" << "component_L1004024_mesh.cdb" << "4024_L1.xml";
@@ -67,11 +59,26 @@ int main(int argc, char *argv[]) {
     QStringList outputFiles;
     outputFiles << "out.cdb" << "out.dat"; 
     operationParameters.insert("outputFileList", outputFiles);
+#endif
+    
+#ifdef Log    
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+    
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    //dataParameters.append("mafOperationManageLog");
+    dataParameters.append("mafOperationLogger");
+    
+    QVariantMap operationParameters;
+    operationParameters.insert("dataBaseName", argv[3]);
+    operationParameters.insert("tableName", "logTable");
+    operationParameters.insert("workflowId", argv[4]);
+    operationParameters.insert("serviceName", argv[5]);
+    
+#endif
     
     dataParameters.push_back(operationParameters);
-
     listToSend.append(Q_ARG(QVariantList, dataParameters));
-
 
     client.sendRequestToServer(&event_dictionary, &listToSend);
 
