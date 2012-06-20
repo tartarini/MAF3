@@ -1,6 +1,6 @@
 /*
  *  mafPipeVisualVTKIsoSurfaceOutOfCore.h
- *  mafPluginOutOfCore
+ *  mafPluginVTK
  *
  *  Created by Yubo Tao on 18/06/12.
  *  Copyright 2012 University of Bedfordshire. All rights reserved.
@@ -13,16 +13,20 @@
 #define MAFVISUALPIPEVTKISOSURFACEOUTOFCORE_H
 
 // Includes list
-#include "mafPluginOutOfCoreDefinitions.h"
-#include <mafPluginVTKDefinitions.h>
+#include <mafPluginOutOfCoreDefinitions.h>
+#include "mafPluginVTKDefinitions.h"
 #include <mafPipeVisualVTK.h>
 
 // Foundation Class forwarding list
+class vtkImageData;
 class vtkActor;
 class vtkRenderer;
 class vtkMAFContourVolumeMapper;
-
 namespace mafPluginOutOfCore {
+    class mafVolume;
+}
+
+namespace mafPluginVTK {
 
 /**
  Class name: mafPipeVisualVTKIsoSurfaceOutOfCore
@@ -30,7 +34,7 @@ namespace mafPluginOutOfCore {
  given a threshold value. The value is extracted according to the scalar values 
  present into the volume data. The iso-surface is extracted in real time*/
 
-class MAFPLUGINOUTOFCORESHARED_EXPORT mafPipeVisualVTKIsoSurfaceOutOfCore : public mafPluginVTK::mafPipeVisualVTK {
+class MAFPLUGINVTKSHARED_EXPORT mafPipeVisualVTKIsoSurfaceOutOfCore : public mafPluginVTK::mafPipeVisualVTK {
     Q_OBJECT
     Q_PROPERTY(QString contourValue READ contourValue WRITE setContourValue)
     Q_PROPERTY(int contourValueSlider_minimum READ minimum)
@@ -81,6 +85,9 @@ public Q_SLOTS:
 protected:
     /// Object destructor.
     /* virtual */ ~mafPipeVisualVTKIsoSurfaceOutOfCore();
+
+    /// Transform the volume data from mafVolume to vtkImageData
+    void toVTKImageData(mafCore::mafProxy<mafPluginOutOfCore::mafVolume> *volume, vtkImageData *vtkData);
 
 private:
     vtkMAFContourVolumeMapper  *m_Mapper; ///< Class that maps polygonal data.

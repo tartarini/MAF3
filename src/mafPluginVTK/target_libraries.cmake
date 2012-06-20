@@ -29,6 +29,7 @@ SET(target_libraries
   mafCore
   mafEventBus
   mafResources
+  mafPluginOutOfCore
   vtkMAF
   )
 

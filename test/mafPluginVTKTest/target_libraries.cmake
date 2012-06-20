@@ -23,7 +23,9 @@ SET(target_libraries
   mafCore
   mafEventBus
   mafResources
+  mafSerialization
   mafPluginVTK
+  mafPluginOutOfCore
   mafQA
   ${VTK_LIBRARY}
   )
