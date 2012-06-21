@@ -47,36 +47,10 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
 
     mafCore::mafMessageHandler::instance()->setActiveLogger(m_Logger);
 
-    mafRegisterLocalSignal("maf.local.gui.new", this, "newWorkinSessioneSignal()");
-    mafRegisterLocalCallback("maf.local.gui.new", this, "newWorkingSession()");
-
-    mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)")
-
-    mafRegisterLocalSignal("maf.local.gui.compoundWidgetConfigure", this, "parseCompoundLayoutFileSignal(QString)");
-    mafRegisterLocalCallback("maf.local.gui.compoundWidgetConfigure", this, "parseCompoundLayoutFile(QString)")
-
-    // VME selection callbacks.
-    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateMenuForSelectedVme(mafCore::mafObjectBase *)")
-    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateTreeForSelectedVme(mafCore::mafObjectBase *)")
-    
-    // OperationManager's callback
-    mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
-    
-    // ViewManager's callback.
-    mafRegisterLocalCallback("maf.local.resources.view.select", this, "viewSelected(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("maf.local.resources.view.noneViews", this, "viewDestroyed()");
-    mafRegisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "setVMECheckState(mafCore::mafObjectBase *, bool)");
-
     m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
-    //connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*, int)), this, SLOT(showGui(mafCore::mafProxyInterface*, int)));
-    mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "showGui(mafCore::mafProxyInterface*, int)");
 
-    //Tooltip connect
-    mafRegisterLocalSignal("maf.local.gui.showTooltip", this, "showTooltipSignal(const QString &)")
-    mafRegisterLocalCallback("maf.local.gui.showTooltip", this, "showTooltip(const QString &)");
-
-    mafRegisterLocalSignal("maf.local.gui.hideTooltip", this, "hideTooltipSignal()")
-    mafRegisterLocalCallback("maf.local.gui.hideTooltip", this, "hideTooltip()");
+    registerSignals();
+    registerCallbacks();
 
 }
 
@@ -1150,4 +1124,41 @@ void mafGUIManager::showTooltip(const QString &text) {
 
 void mafGUIManager::hideTooltip() {
     QToolTip::hideText();
+}
+
+void mafGUI::mafGUIManager::registerCallbacks()
+{
+    mafRegisterLocalCallback("maf.local.gui.new", this, "newWorkingSession()");
+
+    mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)");
+    mafRegisterLocalCallback("maf.local.gui.compoundWidgetConfigure", this, "parseCompoundLayoutFile(QString)");
+
+      // VME selection callbacks.
+    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateMenuForSelectedVme(mafCore::mafObjectBase *)")
+    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateTreeForSelectedVme(mafCore::mafObjectBase *)")
+
+      // OperationManager's callback
+    mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
+
+    // ViewManager's callback.
+    mafRegisterLocalCallback("maf.local.resources.view.select", this, "viewSelected(mafCore::mafObjectBase *)");
+    mafRegisterLocalCallback("maf.local.resources.view.noneViews", this, "viewDestroyed()");
+    mafRegisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "setVMECheckState(mafCore::mafObjectBase *, bool)");
+
+    //connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*, int)), this, SLOT(showGui(mafCore::mafProxyInterface*, int)));
+    mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "showGui(mafCore::mafProxyInterface*, int)");
+
+    //Tooltip connect
+    mafRegisterLocalCallback("maf.local.gui.showTooltip", this, "showTooltip(const QString &)");
+    mafRegisterLocalCallback("maf.local.gui.hideTooltip", this, "hideTooltip()");
+
+    mafRegisterLocalCallback("maf.local.gui.action.saveAs",this,"saveAs()");
+}
+
+void mafGUI::mafGUIManager::registerSignals()
+{
+    mafRegisterLocalSignal("maf.local.gui.new", this, "newWorkinSessioneSignal()");
+    mafRegisterLocalSignal("maf.local.gui.showTooltip", this, "showTooltipSignal(const QString &)");
+    mafRegisterLocalSignal("maf.local.gui.hideTooltip", this, "hideTooltipSignal()");
+    mafRegisterLocalSignal("maf.local.gui.compoundWidgetConfigure", this, "parseCompoundLayoutFileSignal(QString)");
 }
