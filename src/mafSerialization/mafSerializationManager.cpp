@@ -277,7 +277,12 @@ mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const Q
 
     char * inputString = new char[size+1];
     QDataStream stream(ser->ioDevice());
-    stream.readRawData(inputString, size);
+    stream.readRawData(inputString,size);
+
+//     QString str(inputString);
+//     str = str.left(size);
+
+    inputString[size] = '\0';
 
     // Finally close the connection.
     ser->closeDevice();
