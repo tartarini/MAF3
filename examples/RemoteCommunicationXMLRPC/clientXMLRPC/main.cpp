@@ -13,7 +13,8 @@
 #include <mafCoreSingletons.h>
 #include "mafClientXMLRPC.h"
 
-#define Operation
+//#define Operation
+#define ProgrammableOperation
 //#define Log
 
 int main(int argc, char *argv[]) {
@@ -60,6 +61,31 @@ int main(int argc, char *argv[]) {
     outputFiles << "out.cdb" << "out.dat"; 
     operationParameters.insert("outputFileList", outputFiles);
 #endif
+
+#ifdef ProgrammableOperation
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    dataParameters.append("mafAlgorithmProgrammable");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    operationParameters.insert("workflowId", "GHPHFPAHFPAHSFAHSPFAPHTP");
+
+    QStringList inputFiles;
+//    inputFiles << "L1004024_mesh.cdb" << "component_L1004024_mesh.cdb" << "4024_L1.xml";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "result.txt" << "myresult.txt";
+    operationParameters.insert("outputFileList", outputFiles);
+    QStringList scriptFiles;
+    scriptFiles << "test.py" << "myTest.m";
+    operationParameters.insert("scriptFileList", scriptFiles);
+#endif
+
     
 #ifdef Log    
     eventParameters.append("maf.local.resources.operation.executeWithParameters");
