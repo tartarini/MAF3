@@ -63,14 +63,17 @@ void mafMementoDataSet::encodeItem(mafMementoPropertyItem *item) {
         
         QTextStream(&url) << path << "/" << fileName;
         mafProxyInterface *container = m_DataSet->dataValue();
-        QString encodeType = container->externalCodecType();
-
-        mafEventArgumentsList argList;
-        argList.append(mafEventArgument(mafCore::mafProxyInterface *, container));
-        argList.append(mafEventArgument(QString, url));
-        argList.append(mafEventArgument(QString, encodeType));
-        mafEventBusManager::instance()->notifyEvent("maf.local.serialization.export", mafEventTypeLocal, &argList);
-        m_DataSet->setModified(false);
+        if (container)
+        {
+	        QString encodeType = container->externalCodecType();
+	
+	        mafEventArgumentsList argList;
+	        argList.append(mafEventArgument(mafCore::mafProxyInterface *, container));
+	        argList.append(mafEventArgument(QString, url));
+	        argList.append(mafEventArgument(QString, encodeType));
+	        mafEventBusManager::instance()->notifyEvent("maf.local.serialization.export", mafEventTypeLocal, &argList);
+	        m_DataSet->setModified(false);
+        }
     }
 }
 
