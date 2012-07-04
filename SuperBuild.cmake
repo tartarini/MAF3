@@ -100,6 +100,11 @@ if(MAF_PLUGINCTK)
   #include(CMakeExternals/External_CTK.cmake)
 endif(MAF_PLUGINCTK)
 
+if(MAF_PLUGIN_ZIP)
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} QuaZIP)
+  include(CMakeExternals/External_QuaZIP.cmake)
+endif(MAF_PLUGIN_ZIP)
+
 
 if(BUILD_WRAP)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} PythonQt)
@@ -250,6 +255,9 @@ ExternalProject_Add(${proj}
     -DOpenCV_DIR:PATH=${OpenCV_DIR} # FindOpenCV expects OpenCV_DIR variable to be defined
     # CTK
     -DCTK_DIR:PATH=${CTK_DIR}
+    # QuaZIP
+    -DQuaZIP_DIR:PATH=${QuaZIP_DIR}
+    -DQuaZIP_SOURCE_DIR:PATH=${QuaZIP_SOURCE_DIR}
   INSTALL_COMMAND ""
   )
   
