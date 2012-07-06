@@ -46,6 +46,10 @@ if(${MAF_PLUGIN_OUTOFCORE})
   ADD_SUBDIRECTORY(mafPluginOutOfCore)
 endif(${MAF_PLUGIN_OUTOFCORE})
 
+if(${MAF_PLUGIN_ZIP})
+  ADD_SUBDIRECTORY(mafPluginZip)
+endif(${MAF_PLUGIN_ZIP})
+
 #ADD_SUBDIRECTORY(mafPluginGimias)
 
 
