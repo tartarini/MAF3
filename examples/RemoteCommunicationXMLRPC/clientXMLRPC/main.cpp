@@ -79,10 +79,12 @@ int main(int argc, char *argv[]) {
 //    inputFiles << "L1004024_mesh.cdb" << "component_L1004024_mesh.cdb" << "4024_L1.xml";
     operationParameters.insert("inputFileList", inputFiles);
     QStringList outputFiles;
-    outputFiles << "result.txt" << "myresult.txt";
+//    outputFiles << "result.txt" << "myresult.txt";
+    outputFiles << "result.txt";
     operationParameters.insert("outputFileList", outputFiles);
     QStringList scriptFiles;
-    scriptFiles << "test.py" << "myTest.m";
+//    scriptFiles << "script.py" << "test.py" << "myTest.m";
+    scriptFiles << "script.py";
     operationParameters.insert("scriptFileList", scriptFiles);
 #endif
 
