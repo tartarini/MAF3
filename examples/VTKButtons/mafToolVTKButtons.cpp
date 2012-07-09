@@ -16,7 +16,7 @@
 #include <mafVME.h>
 #include <mafPoint.h>
 
-#include "mafAnimateVTK.h"
+#include <msvQVTKButtons.h>
 
 #include <vtkSmartPointer.h>
 #include <vtkAlgorithmOutput.h>
@@ -38,106 +38,36 @@ using namespace mafEventBus;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
+mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location)/*, m_ShowLabel(true), m_FlyTo(true), m_OnCenter(false)*/ {
 
-// Callback respondign to vtkCommand::StateChangedEvent
-class vtkButtonCallback : public vtkCommand {
-public:
-    static vtkButtonCallback *New() { 
-        return new vtkButtonCallback; 
+}
+
+msvQVTKButtons *mafToolVTKButtons::button() {
+    if(m_Button == NULL) {
+        m_Button = new msvQVTKButtons();
+        QObject::connect(this, SIGNAL(hideTooltipSignal), m_Button, SIGNAL(hideTooltip));
     }
-
-    virtual void Execute(vtkObject *caller, unsigned long, void*) {
-        mafVTKWidget *widget = qobject_cast<mafPluginVTK::mafVTKWidget *>(this->graphicObject);
-        mafAnimateVTK *animateCamera = mafNEW(mafPluginVTK::mafAnimateVTK);
-        if (flyTo) {
-            animateCamera->flyTo(widget, bounds, 200);
-        } else {
-            widget->renderer()->ResetCamera(bounds);
-        }
-        mafDEL(animateCamera);
-        toolButton->selectVME();
-    }
-
-    void setBounds(mafBounds *b) {
-        bounds[0] = b->xMin(); 
-        bounds[1] = b->xMax();
-        bounds[2] = b->yMin();
-        bounds[3] = b->yMax();
-        bounds[4] = b->zMin();
-        bounds[5] = b->zMax();
-    }
-
-    void setFlyTo(bool fly) {
-        flyTo = fly;
-    }
-
-    vtkButtonCallback():toolButton(NULL), graphicObject(0), flyTo(true) {}
-    mafToolVTKButtons *toolButton;
-    QObject *graphicObject;
-    double bounds[6];
-    bool flyTo;
-};
-
-// Callback respondign to vtkCommand::HighlightEvent
-class vtkButtonHighLightCallback : public vtkCommand {
-public:
-    static vtkButtonHighLightCallback *New() { 
-        return new vtkButtonHighLightCallback; 
-    }
-
-    virtual void Execute(vtkObject *caller, unsigned long, void*) {
-        vtkTexturedButtonRepresentation2D *rep = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(caller);
-        int highlightState = rep->GetHighlightState();
-       
-        if ( highlightState == vtkButtonRepresentation::HighlightHovering && previousHighlightState == vtkButtonRepresentation::HighlightNormal ) {
-            //show tooltip (not if previous state was selecting
-            toolButton->showTooltip();        
-        } else if ( highlightState == vtkButtonRepresentation::HighlightNormal) {
-            //hide tooltip
-            toolButton->hideTooltip();
-        } 
-        previousHighlightState = highlightState;
-    }
-
-    vtkButtonHighLightCallback():toolButton(NULL), previousHighlightState(0) {}
-    mafToolVTKButtons *toolButton;
-    int previousHighlightState;
-        
-};
-
-mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location), m_ShowLabel(true), m_FlyTo(true), m_OnCenter(false) {
-    bool loaded = false;
-    VTK_CREATE(vtkTexturedButtonRepresentation2D, rep);
-    rep->SetNumberOfStates(1);
-
-    buttonCallback = vtkButtonCallback::New();
-    buttonCallback->toolButton = this;
-    
-    highlightCallback = vtkButtonHighLightCallback::New();
-    highlightCallback->toolButton = this;
-
-    m_ButtonWidget = vtkButtonWidget::New();
-    m_ButtonWidget->SetRepresentation(rep);
-    m_ButtonWidget->AddObserver(vtkCommand::StateChangedEvent,buttonCallback);
-    rep->AddObserver(vtkCommand::HighlightEvent,highlightCallback);
+    return m_Button;
 }
 
 mafToolVTKButtons::~mafToolVTKButtons() {
-    m_ButtonWidget->Delete();
+    if(m_Button) {
+        delete m_Button;
+    }
 }
 
 void mafToolVTKButtons::resetTool() {
-    removeWidget(m_ButtonWidget);
+    removeWidget(m_Button->button());
 }
 
 void mafToolVTKButtons::graphicObjectInitialized() {
     // Graphic widget (render window, interactor...) has been created and initialized.
     // now can add the widget.
-    addWidget(m_ButtonWidget);
+    addWidget(m_Button->button());
 }
 
 void mafToolVTKButtons::updatePipe(double t) {
-    mafVME *vme = input();
+    /*mafVME *vme = input();
     if(vme == NULL) {
         return;
     }
@@ -216,7 +146,7 @@ void mafToolVTKButtons::updatePipe(double t) {
     buttonCallback->graphicObject = this->m_GraphicObject;
     buttonCallback->setBounds(newBounds);
     buttonCallback->setFlyTo(m_FlyTo);
-    updatedGraphicObject();
+    updatedGraphicObject();*/
 }
 
 void mafToolVTKButtons::showTooltip() {
@@ -266,6 +196,7 @@ void mafToolVTKButtons::showTooltip() {
     text.append("</tr>");
     text.append("</table>");
  
+    button()->setToolTip(text);
     mafEventBus::mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString , text));
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.gui.showTooltip", mafEventBus::mafEventTypeLocal, &argList);
@@ -286,4 +217,36 @@ void mafToolVTKButtons::selectVME() {
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafObjectBase*, objBase));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+}
+
+void mafToolVTKButtons::setShowButton(bool show) {
+    button()->setShowButton(show);
+}
+
+bool mafToolVTKButtons::showButton() {
+    return button()->showButton();
+}
+
+void mafToolVTKButtons::setShowLabel(bool show) {
+    button()->setShowLabel(show);
+}
+
+bool mafToolVTKButtons::showLabel() {
+    return button()->showLabel();
+}
+
+void mafToolVTKButtons::setFlyTo(bool active) {
+    button()->setFlyTo(active);
+}
+
+bool mafToolVTKButtons::FlyTo() {
+    return button()->FlyTo();
+}
+
+void mafToolVTKButtons::setOnCenter(bool onCenter) {
+    button()->setOnCenter(onCenter);
+}
+
+bool mafToolVTKButtons::OnCenter() {
+    return button()->OnCenter();
 }

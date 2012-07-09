@@ -1,0 +1,13 @@
+# need ${MSVTK_DIR} that is set by ExternalProject_Add for ctk
+set(MSVTK_SUPERBUILD_DIR "${MAF_EXTERNAL_BUILD_DIR}/Build/MSVTK")
+set(MSVTK_SOURCE_DIR "${MAF_EXTERNAL_BUILD_DIR}/Source/MSVTK")
+set(MSVTK_BINARY_DIR "${MSVTK_SUPERBUILD_DIR}/MSVTK-build")
+set(MSVTK_DIR "${MSVTK_SUPERBUILD_DIR}")
+FIND_PACKAGE(MSVTK REQUIRED)
+
+set(MSVTK_USE_FILE "${MSVTK_SUPERBUILD_DIR}/UseMSVTK.cmake")
+include("${MSVTK_SUPERBUILD_DIR}/MSVTKConfig.cmake")
+#include(${MSVTK_USE_FILE})
+
+include_directories(${MSVTK_INCLUDE_DIRS})
+link_directories(${MSVTK_LIBRARY_DIRS})
