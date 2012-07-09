@@ -15,10 +15,7 @@
 // Includes list
 #include <mafToolVTK.h>
 
-class vtkButtonWidget;
-class vtkButtonCallback;
-class vtkButtonHighLightCallback;
-
+class msvQVTKButtons;
 /**
  Class name: mafToolVTKButtons
  This is the tool representing a VTK buttons.
@@ -35,100 +32,39 @@ public Q_SLOTS:
 
     /// Allow to execute and update the pipeline when something change.
     /*virtual*/ void updatePipe(double t = -1);
+    
+    void showTooltip();
+    
+    void hideTooltip();
 
 public:
+    msvQVTKButtons *button();
+    
      /// Object constructor.
     mafToolVTKButtons(const QString code_location = "");
 
     /// Allow to take the tool to the initial conditions.
     /*virtual*/ void resetTool();
 
-    /// Allow to show/hide button
-    void setShowButton(bool show);
-
-    /// Return showLabel flag
-
-    bool showButton() const;
-
-    /// Allow to show/hide label
-    void setShowLabel(bool show);
-
-    /// Return showLabel flag
-    bool showLabel() const;
-
-    /// Allow to activate FlyTo animation
-    void setFlyTo(bool active);
-
-    /// Return FlyTo flag
-    bool FlyTo() const;
-
-    /// Allow to set button position on center or on corner
-    void setOnCenter(bool onCenter);
-
-    /// Return OnCenter flag
-    bool OnCenter() const;
-
-    /// Show tooltip
-    void showTooltip();
-
-    /// Hide tooltip
-    void hideTooltip();
-
     /// Select VME connected to button pressed
     void selectVME();
 
-
+    
+    void setShowButton(bool show);
+    bool showButton();    
+    void setShowLabel(bool show);
+    bool showLabel();
+    void setFlyTo(bool active);    
+    bool FlyTo();
+    void setOnCenter(bool onCenter);
+    bool OnCenter();    
+  
 protected:
     /// Object destructor.
     /* virtual */ ~mafToolVTKButtons();
 
 private:
-    vtkButtonWidget *m_ButtonWidget; ///< VTK button widget.
-    vtkButtonCallback *buttonCallback; ///< Callback called by picking on vtkButton
-    vtkButtonHighLightCallback *highlightCallback; ///< Callback called by hovering over the button.
-    
-    QString m_IconFileName; ///< File name of the imahe to be applied to the button.
-    bool m_ShowButton; ///< Flag to show/hide button
-    bool m_ShowLabel; ///< Flag to show/hide label
-    bool m_FlyTo; ///< Flag to activate FlyTo animation
-    bool m_OnCenter; ///< Flag to set button position on center or on corner (can be refactored with a enum??)
+    msvQVTKButtons *m_Button;
 };
-
-/////////////////////////////////////////////////////////////
-// Inline methods
-/////////////////////////////////////////////////////////////
-
-inline void mafToolVTKButtons::setShowButton(bool show) {
-    m_ShowButton = show;
-}
-
-inline bool mafToolVTKButtons::showButton() const {
-    return m_ShowButton;
-}
-
-inline void mafToolVTKButtons::setShowLabel(bool show) {
-    m_ShowLabel = show;
-}
-
-inline bool mafToolVTKButtons::showLabel() const {
-    return m_ShowLabel;
-}
-
-inline void mafToolVTKButtons::setFlyTo(bool active) {
-    m_FlyTo = active;
-}
-
-inline bool mafToolVTKButtons::FlyTo() const {
-    return m_FlyTo;
-}
-
-inline void mafToolVTKButtons::setOnCenter(bool onCenter) {
-    m_OnCenter = onCenter;
-}
-
-inline bool mafToolVTKButtons::OnCenter() const {
-    return m_OnCenter;
-}
-
 
 #endif // MAFTOOLVTKBUTTONS_H

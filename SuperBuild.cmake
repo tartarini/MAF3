@@ -100,6 +100,9 @@ if(MAF_PLUGINCTK)
   #include(CMakeExternals/External_CTK.cmake)
 endif(MAF_PLUGINCTK)
 
+#experimental
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} MSVTK)
+  include(CMakeExternals/External_MSVTK.cmake)
 
 if(BUILD_WRAP)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} PythonQt)
@@ -250,6 +253,9 @@ ExternalProject_Add(${proj}
     -DOpenCV_DIR:PATH=${OpenCV_DIR} # FindOpenCV expects OpenCV_DIR variable to be defined
     # CTK
     -DCTK_DIR:PATH=${CTK_DIR}
+    # MSVTK
+    -DMSVTK_DIR:PATH=${MSVTK_DIR}
+
   INSTALL_COMMAND ""
   )
   
