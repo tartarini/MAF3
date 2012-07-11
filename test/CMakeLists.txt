@@ -51,4 +51,8 @@ if(${MAF_PLUGIN_OUTOFCORE})
   ADD_SUBDIRECTORY(mafPluginOutOfCoreTest)
 endif(${MAF_PLUGIN_OUTOFCORE})
 
+if(${MAF_PLUGIN_ZIP})
+  ADD_SUBDIRECTORY(mafPluginZipTest)
+endif(${MAF_PLUGIN_ZIP})
+
 #message (".......................... Exiting ${CMAKE_CURRENT_LIST_FILE} ............................")
