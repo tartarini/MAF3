@@ -32,13 +32,17 @@ mafMacroInitProject(0)
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 
-LINK_DIRECTORIES(${VTK_LIBRARY_DIRS})
-
 ## #################################################################
 ## copy ui files and xml configuration file
 ## #################################################################
 
 mafCopyFilesFromExtension("xml" "mafPluginZip")
+
+## #################################################################
+## copy QuaZIP libraries
+## #################################################################
+
+mafCopySharedLibrariesInInstallDir(${QuaZip_LIBRARY_DIR})
 
 ## #################################################################
 ## Installation

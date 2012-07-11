@@ -4,7 +4,7 @@
 # This file should list the libraries required to build the current MAF module.
 # 
 
-SET(foundation_libraries
+SET(foundation_libraries 
 )
 
 if(NOT ${BUILD_SHARED_LIBS})
@@ -21,5 +21,6 @@ SET(target_libraries
   mafCore
   mafEventBus
   mafResources
-  QuaZIP
+  mafPluginZip
+  mafQA
   )
