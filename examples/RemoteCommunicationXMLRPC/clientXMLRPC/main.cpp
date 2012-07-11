@@ -73,16 +73,18 @@ int main(int argc, char *argv[]) {
     operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
     operationParameters.insert("myFirstParameter", 2.3);
     operationParameters.insert("mySecondParameter", "ughetto");
-    operationParameters.insert("workflowId", "GHPHFPAHFPAHSFAHSPFAPHTP");
+//    operationParameters.insert("workflowId", "GHPHFPAHFPAHSFAHSPFAPHTP");
+    operationParameters.insert("workflowId", "AGJHAGHFAHFASHFIAHSDFHIASDAHSDGI");
 
     QStringList inputFiles;
-//    inputFiles << "L1004024_mesh.cdb" << "component_L1004024_mesh.cdb" << "4024_L1.xml";
     operationParameters.insert("inputFileList", inputFiles);
     QStringList outputFiles;
-    outputFiles << "result.txt" << "myresult.txt";
+//    outputFiles << "result.txt";
+    outputFiles << "load_cases.txt";
     operationParameters.insert("outputFileList", outputFiles);
     QStringList scriptFiles;
-    scriptFiles << "test.py" << "myTest.m";
+//    scriptFiles << "script.py";
+    scriptFiles << "fromCHA2samp_v2.m";
     operationParameters.insert("scriptFileList", scriptFiles);
 #endif
 
