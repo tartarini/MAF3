@@ -32,6 +32,7 @@
 #include <QTemporaryFile>
 #include <QPainter>
 
+
 // CTK includes
 #include "ctkDICOMImage.h"
 #include "mafCTKExampleDicomAppLogic_p.h"
@@ -40,12 +41,17 @@
 // DCMTK includes
 #include <dcmimage.h>
 
+// MAF includes
+#include <mafVME.h>
+#include <mafDataSet.h>
+
+using namespace mafEventBus;
+using namespace ctkDicomAppHosting;
+
 //----------------------------------------------------------------------------
 mafCTKExampleDicomAppLogic::mafCTKExampleDicomAppLogic():
-ctkDicomAbstractApp(mafCTKExampleDicomAppPlugin::getPluginContext()), AppWidget(0)
+    ctkDicomAbstractApp(mafCTKExampleDicomAppPlugin::getPluginContext()), AppWidget(0), Logic(0)
 {
-
-
   connect(this, SIGNAL(startProgress()), this, SLOT(onStartProgress()), Qt::QueuedConnection);
   connect(this, SIGNAL(resumeProgress()), this, SLOT(onResumeProgress()), Qt::QueuedConnection);
   connect(this, SIGNAL(suspendProgress()), this, SLOT(onSuspendProgress()), Qt::QueuedConnection);
@@ -89,27 +95,67 @@ bool mafCTKExampleDicomAppLogic::bringToFront(const QRect& requestedScreenArea)
 //----------------------------------------------------------------------------
 void mafCTKExampleDicomAppLogic::do_something()
 {
-  AppWidget = new QWidget;
+    Logic = new mafApplicationLogic::mafLogic();
+      // and initialize it. This initialization will load dynamically the mafResources Library.
+    Logic->setApplicationName(qApp->applicationName());
+
+      /// push libraries to load during initialization.
+    Logic->pushLibraryToLoad("mafResources");
+    Logic->pushLibraryToLoad("mafSerialization");
+
+      // and initialize it. This initialization will load dynamically the mafResources Library.
+    bool ok = Logic->initialize();
+    if(!ok) {
+        qDebug() << "Problem on Initializing Logic!";
+        exit(1);
+    }
+
+
+    ///////
+
+    Logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View MIP");
+    Logic->customizeVisualization("View MIP", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
+    Logic->customizeVisualization("View MIP", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKMIPVolume");
+
+    Logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "View Iso");
+    Logic->customizeVisualization("View Iso", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
+    Logic->customizeVisualization("View Iso", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKIsoSurface");
+
+    Logic->customizeVisualization("VTK view", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
+
+
+   AppWidget = new mafMainWindow(Logic);
+   Logic->loadPlugins(); //need to be present the gui manager!
+
+   this->Dialog = new QDialog(AppWidget);
   
-  ui.setupUi(AppWidget);
+  ui.setupUi(Dialog);
 
   connect(ui.LoadDataButton, SIGNAL(clicked()), this, SLOT(onLoadDataClicked()));
   connect(ui.CreateSecondaryCaptureButton, SIGNAL(clicked()), this, SLOT(onCreateSecondaryCapture()));
   try
     {
-    QRect preferred(50,50,100,100);
+    QRect preferred(100,100,100,100);
     qDebug() << "  Asking:getAvailableScreen";
     QRect rect = getHostInterface()->getAvailableScreen(preferred);
     qDebug() << "  got sth:" << rect.top();
-    this->AppWidget->move(rect.topLeft());
-    this->AppWidget->resize(rect.size());
+    this->Dialog->move(rect.topLeft());
+    this->Dialog->resize(rect.size());
     }
   catch (const std::runtime_error& e)
     {
     qCritical() << e.what();
     return;
     }
-  this->AppWidget->show();
+
+    AppWidget->setupMainWindow();
+    //this->Dialog->setModal(true);
+    this->Dialog->topLevelWidget();
+    this->Dialog->show();
+
+    AppWidget->resize(800,600);
+    this->Dialog->resize(600,400);
+
 }
 
 //----------------------------------------------------------------------------
@@ -164,8 +210,8 @@ void mafCTKExampleDicomAppLogic::onCancelProgress()
 void mafCTKExampleDicomAppLogic::onExitHostedApp()
 {
   //useless move, but correct:
-  setInternalState(ctkDicomAppHosting::EXIT);
-  getHostInterface()->notifyStateChanged(ctkDicomAppHosting::EXIT);
+  //setInternalState(ctkDicomAppHosting::EXIT);
+  //getHostInterface()->notifyStateChanged(ctkDicomAppHosting::EXIT);
   qDebug() << "Exiting";
   //die
   qApp->exit(0);
@@ -283,7 +329,21 @@ void mafCTKExampleDicomAppLogic::onLoadDataClicked()
 
 void mafCTKExampleDicomAppLogic::onCreateSecondaryCapture()
 {
-  const QPixmap* pixmap = ui.PlaceHolderForImage->pixmap();
+    //delete (this->Dialog);
+
+    mafResources::mafVME *vme = mafNEW(mafResources::mafVME);
+    vme->setObjectName("Burrito-VME");
+    mafResources::mafDataSet *dataset = mafNEW(mafResources::mafDataSet);
+    dataset->setBoundaryAlgorithm(NULL);
+    vme->dataSetCollection()->insertItem(dataset, 0);
+
+   mafCore::mafObjectBase *toSend = vme;
+   mafEventBus::mafEventArgumentsList argList;
+   argList.append(mafEventArgument(mafCore::mafObjectBase *, toSend));
+   mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
+
+
+  /*const QPixmap* pixmap = ui.PlaceHolderForImage->pixmap();
   if(pixmap!=NULL)
   {
     QStringList preferredProtocols;
@@ -309,6 +369,6 @@ void mafCTKExampleDicomAppLogic::onCreateSecondaryCapture()
     }
     else
       qDebug() << "Creating temporary file failed.";
-  }
+  }*/
 
 }

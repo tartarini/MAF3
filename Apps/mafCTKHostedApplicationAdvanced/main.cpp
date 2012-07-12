@@ -30,8 +30,6 @@
 #include <QDebug>
 
 //MAF
-#include <mafMainWindow.h>
-#include <mafLogic.h>
 
 // CTK includes
 #include <ctkConfig.h>
@@ -74,27 +72,7 @@ int main(int argv, char** argc)
   parser.addArgument("applicationURL", "", QVariant::String, "Hosted Application URL");
   parser.addArgument("help", "h", QVariant::Bool, "Show this help text");
 
-  mafApplicationLogic::mafLogic *logic = new mafApplicationLogic::mafLogic();
-    // and initialize it. This initialization will load dynamically the mafResources Library.
-  logic->setApplicationName(qApp->applicationName());
-
-    /// push libraries to load during initialization.
-  logic->pushLibraryToLoad("mafResources");
-  logic->pushLibraryToLoad("mafSerialization");
-    
-    // and initialize it. This initialization will load dynamically the mafResources Library.
-  bool ok = logic->initialize();
-  if(!ok) {
-      qDebug() << "Problem on Initializing Logic!";
-      exit(1);
-  }
-
-  qDebug() << "Start Application...";
-  
-  //mafMainWindow w(logic);
-  //qDebug() << "Create MainWindow...";
-  
-  ok = false;
+  bool ok = false;
   QHash<QString, QVariant> parsedArgs = parser.parseArguments(QCoreApplication::arguments(), &ok);
   if (!ok)
     {
@@ -211,6 +189,5 @@ int main(int argv, char** argc)
   //w.setupMainWindow();
   int result = app.exec();
 
-  mafDEL(logic);
   return result;
 }

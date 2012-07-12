@@ -1,6 +1,17 @@
+############################################################
+# MAF Dependencies Inclusions
+############################################################
 include(${MAF_USE_FILE_CONFIG})
+include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
+include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
+include(${MAF_SOURCE_DIR}/CMakeExternals/Find_OpenCV.cmake)
+#include(${MAF_SOURCE_DIR}/CMakeExternals/Find_VTK.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_CTK.cmake)
 
+
+############################################################
+# CTK target libraries 
+############################################################
 #> Extract all library names starting with org_mydomain_
 macro(GetMyTargetLibraries all_target_libraries varname)
   set(re_ctkplugin "^org_maf_[a-zA-Z0-9_]+$")

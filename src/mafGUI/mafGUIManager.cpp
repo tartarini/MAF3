@@ -604,6 +604,13 @@ void mafGUIManager::createDefaultMenus() {
     createDefaultToolbars();
 }
 
+void mafGUIManager::addCustomMenu(QMenu *customMenu, int position) {
+    QMenuBar *menuBar = m_MainWindow->menuBar();
+    menuBar->addSeparator();
+    m_MenuItemList.insert(position, customMenu);
+    //to complete
+}
+
 void mafGUIManager::createMenus() {
     int errorLine, errorColumn;
     QString errorMsg;

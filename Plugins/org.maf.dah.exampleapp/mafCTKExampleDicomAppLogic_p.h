@@ -35,9 +35,11 @@
 // ui of this application
 #include "ui_mafCTKExampleDicomAppWidget.h"
 
-struct ctkDicomHostInterface;
+// MAF includes
+#include <mafLogic.h>
+#include <mafMainWindow.h>
 
-class QWidget;
+struct ctkDicomHostInterface;
 
 class mafCTKExampleDicomAppLogic : public ctkDicomAbstractApp
 {
@@ -83,7 +85,6 @@ public:
   /** Test function for checking */
   void do_something();
 
-
 protected slots:
 
   void onStartProgress();
@@ -95,10 +96,12 @@ protected slots:
 
   void onLoadDataClicked();
   void onCreateSecondaryCapture();
-private:
-  QWidget * AppWidget;
-  Ui::mafCTKExampleDicomAppWidget ui;
 
+private:
+  mafMainWindow *AppWidget; //the main window
+  QDialog *Dialog;
+  mafApplicationLogic::mafLogic *Logic;
+  Ui::mafCTKExampleDicomAppWidget ui;
   QUuid uuid;
 
 }; // mafCTKExampleDicomAppLogic

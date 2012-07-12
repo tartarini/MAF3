@@ -8,3 +8,4 @@ SET(target_libraries
   CTKDICOMCore
   CTKDICOMWidgets
   )
+

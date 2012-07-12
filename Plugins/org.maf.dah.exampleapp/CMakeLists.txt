@@ -36,3 +36,6 @@ ctkMacroBuildPlugin(
   RESOURCES ${PLUGIN_resources}
   TARGET_LIBRARIES ${PLUGIN_target_libraries}
 )
+
+# here link the target libraries for maf
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} mafCore mafEventBus mafApplicationLogic mafResources mafGUI)

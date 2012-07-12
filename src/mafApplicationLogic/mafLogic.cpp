@@ -175,6 +175,7 @@ void mafLogic::loadPlugins(QString plugin_dir) {
             char *v = ba.data();
             mafEvent ev("maf.local.resources.plugin.loadLibrary");
             ev.addParameter(mafEventArgument(QString, file));
+
             mafEventBusManager::instance()->notifyEvent(ev);
         }
     }

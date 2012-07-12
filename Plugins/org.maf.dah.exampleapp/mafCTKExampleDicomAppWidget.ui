@@ -6,24 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>322</height>
+    <width>600</width>
+    <height>423</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>DICOM MAF Hosted App</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <widget class="QPushButton" name="LoadDataButton">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="text">
-      <string>Load Data</string>
-     </property>
-    </widget>
-   </item>
    <item>
     <widget class="QLabel" name="ReceivedDataInformation">
      <property name="sizePolicy">
@@ -54,9 +44,19 @@
     </widget>
    </item>
    <item>
+    <widget class="QPushButton" name="LoadDataButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Load Data</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QPushButton" name="CreateSecondaryCaptureButton">
      <property name="text">
-      <string>Create Secondary Capture</string>
+      <string>Create VME</string>
      </property>
     </widget>
    </item>

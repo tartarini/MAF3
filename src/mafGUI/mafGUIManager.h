@@ -68,6 +68,9 @@ public:
     /// Create the menu for the vertical application.
     virtual void createMenus();
 
+    /// add a custom menu to the application.
+    void addCustomMenu(QMenu *customMenu, int position);
+
     /// Create the toolbar for the vertical application and add them to the main window.
     virtual void createDefaultToolbars();
 
