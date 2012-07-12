@@ -88,6 +88,7 @@ bool mafLogic::initialize() {
             soLibName.append(so);
             soLibName.append(SHARED_OBJECT_SUFFIX);
             handler = mafInitializeModule(soLibName);
+            qDebug() << "Loading... " << soLibName;
             if(handler) {
                 m_LibraryHandlersHash.insert(soLibName, handler);
             } 

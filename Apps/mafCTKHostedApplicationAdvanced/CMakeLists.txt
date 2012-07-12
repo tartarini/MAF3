@@ -45,7 +45,7 @@ IF(WIN32)
 ENDIF(WIN32)
 # Set some Apple MacOS Specific settings
 IF (APPLE)
-    #SET(GUI_TYPE MACOSX_BUNDLE)
+    SET(GUI_TYPE MACOSX_BUNDLE)
 ENDIF (APPLE)
 
 # Create the executable.

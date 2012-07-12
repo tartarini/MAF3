@@ -41,6 +41,12 @@
 #include <ctkPluginException.h>
 #include <ctkPluginContext.h>
 
+#define BUNDLE_SUFFIX ""
+
+#ifdef __APPLE__
+    #define BUNDLE_SUFFIX ".app"
+#endif
+
 // For testing purposes use:
 // --hostURL http://localhost:8081/host --applicationURL http://localhost:8082/app dicomapp
 
@@ -58,7 +64,7 @@ int main(int argv, char** argc)
 
   qApp->setOrganizationName("MAF");
   qApp->setOrganizationDomain("commontk.org");
-  qApp->setApplicationName("ctkExampleHostedApp");
+  qApp->setApplicationName(QString("mafCTKHostedApplicationAdvanced").append(BUNDLE_SUFFIX));
 
   ctkCommandLineParser parser;
   parser.setArgumentPrefix("--", "-"); // Use Unix-style argument names
@@ -70,11 +76,18 @@ int main(int argv, char** argc)
 
   mafApplicationLogic::mafLogic *logic = new mafApplicationLogic::mafLogic();
     // and initialize it. This initialization will load dynamically the mafResources Library.
+  logic->setApplicationName(qApp->applicationName());
+
+    /// push libraries to load during initialization.
+  logic->pushLibraryToLoad("mafResources");
+  logic->pushLibraryToLoad("mafSerialization");
+    
+    // and initialize it. This initialization will load dynamically the mafResources Library.
   bool ok = logic->initialize();
-    if(!ok) {
-    	qDebug() << "Problem on Initializing Logic!";
-        exit(1);
-    }
+  if(!ok) {
+      qDebug() << "Problem on Initializing Logic!";
+      exit(1);
+  }
 
   qDebug() << "Start Application...";
   
@@ -132,12 +145,13 @@ int main(int argv, char** argc)
 #else
   QString pluginPath = CTK_PLUGIN_DIR;
 #endif
-
+  //pluginPath = "/Users/dannox/Projects/MAF.Makefiles/build/bin/mafCTKHostedApplicationAdvanced.app/Contents/MacOS/";
   qApp->addLibraryPath(pluginPath);
 
   // Construct the name of the plugin with the business logic
   // (thus the actual logic of the hosted app)
-  QString pluginName("org_commontk_dah_exampleapp");
+
+  QString pluginName("org_maf_dah_exampleapp");
   if(parser.unparsedArguments().count() > 0)
     {
     pluginName = parser.unparsedArguments().at(0);
@@ -148,14 +162,16 @@ int main(int argv, char** argc)
   QSharedPointer<ctkPlugin> appPlugin;
   QStringList libFilter;
   libFilter << "*.dll" << "*.so" << "*.dylib";
+  
   QDirIterator dirIter(pluginPath, libFilter, QDir::Files);
   while(dirIter.hasNext())
     {
     try
       {
       QString fileLocation = dirIter.next();
-      if (fileLocation.contains("org_commontk_dah"))
+      if (fileLocation.contains("org_commontk_dah") || fileLocation.contains("org_maf_dah"))
         {
+        qDebug() << "****** " << QUrl::fromLocalFile(fileLocation);
         QSharedPointer<ctkPlugin> plugin = framework->getPluginContext()->installPlugin(QUrl::fromLocalFile(fileLocation));
         if (fileLocation.contains(pluginName))
           {

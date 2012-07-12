@@ -13,7 +13,7 @@ SET(CTK_LIBRARIES
   CTKDICOMCore
   CTKDICOMWidgets
   CTKPluginFramework
-  org_commontk_dah_app
+  org_commontk_dah_hostedapp
   )
 
 SET(target_libraries
@@ -43,7 +43,7 @@ SET(CTK_LIBRARIES
   CTKDICOMCore
   CTKDICOMWidgets
   CTKPluginFramework
-  org_commontk_dah_app
+  org_commontk_dah_hostedapp
   )
 
 SET(target_libraries

@@ -31,7 +31,7 @@ set(proj CTK)
 
   IF(NOT DEFINED CTK_DIR)
     
-    #SET(revision_tag 107ffad7)
+    SET(revision_tag dah)
 
     #SET(revision_tag 3a63315)
     IF(${proj}_REVISION_TAG)
@@ -61,7 +61,7 @@ set(proj CTK)
         -DCTK_LIB_DICOM/Widgets:BOOL=ON
         -DCTK_LIB_PluginFramework:BOOL=ON
         -DCTK_LIB_Widgets:BOOL=ON
-        -DCTK_PLUGIN_org.commontk.dah.app:BOOL=ON
+        -DCTK_PLUGIN_org.commontk.dah.hostedapp:BOOL=ON
         -DCTK_PLUGIN_org.commontk.dah.core:BOOL=ON
         -DCTK_PLUGIN_org.commontk.dah.exampleapp:BOOL=ON
         -DCTK_PLUGIN_org.commontk.dah.examplehost:BOOL=ON

@@ -96,8 +96,8 @@ if(VTK_MAF)
 endif(VTK_MAF)
 
 if(MAF_PLUGINCTK)
-  #set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} CTK)
-  #include(CMakeExternals/External_CTK.cmake)
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} CTK)
+  include(CMakeExternals/External_CTK.cmake)
 endif(MAF_PLUGINCTK)
 
 
