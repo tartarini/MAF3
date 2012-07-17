@@ -282,7 +282,7 @@ bool mafDataSetCollection::setDataSet(mafDataSet *data, double t) {
             // Modify the already present item and free the memory
             item->setDataValue(data->dataValue());
             item->setPoseMatrix(data->poseMatrix());
-            mafDEL(data);
+            // mafDEL(data);
 
 //            Q_EMIT modifiedObject();
             setModified();
