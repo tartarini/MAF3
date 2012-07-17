@@ -1153,6 +1153,7 @@ void mafGUI::mafGUIManager::registerCallbacks()
     mafRegisterLocalCallback("maf.local.gui.hideTooltip", this, "hideTooltip()");
 
     mafRegisterLocalCallback("maf.local.gui.action.saveAs",this,"saveAs()");
+    mafRegisterLocalCallback("maf.local.gui.action.save",this,"save()");
 }
 
 void mafGUI::mafGUIManager::registerSignals()
