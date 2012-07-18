@@ -14,7 +14,8 @@
 #include "mafClientXMLRPC.h"
 
 //#define Operation
-#define ProgrammableOperation
+//#define ProgrammableOperation
+#define ProgrammableOpenClinicaSearch
 //#define Log
 
 int main(int argc, char *argv[]) {
@@ -68,6 +69,7 @@ int main(int argc, char *argv[]) {
 
     //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
     dataParameters.append("mafAlgorithmProgrammable");
+//    dataParameters.append("mafAlgorithmCHA2Samp");
 
     QVariantMap operationParameters;
     operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
@@ -77,6 +79,7 @@ int main(int argc, char *argv[]) {
     operationParameters.insert("workflowId", "AGJHAGHFAHFASHFIAHSDFHIASDAHSDGI");
 
     QStringList inputFiles;
+    inputFiles << "load_cases_CHA.csv";
     operationParameters.insert("inputFileList", inputFiles);
     QStringList outputFiles;
 //    outputFiles << "result.txt";
@@ -86,6 +89,33 @@ int main(int argc, char *argv[]) {
 //    scriptFiles << "script.py";
     scriptFiles << "fromCHA2samp_v2.m";
     operationParameters.insert("scriptFileList", scriptFiles);
+#endif
+
+#ifdef ProgrammableOpenClinicaSearch
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    //dataParameters.append("mafAlgorithmProgrammable");
+    dataParameters.append("mafAlgorithmOpenClinicaSearch");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    operationParameters.insert("workflowId", "GHPHFPAHFPAHSFAHSPFAPHTP");
+
+    operationParameters.insert("domain", "openclinica");
+    operationParameters.insert("operation", "search");
+    operationParameters.insert("requestor", "Charite");
+    operationParameters.insert("patientId", "171");
+
+    QStringList inputFiles;
+    inputFiles << " ";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "resultValue.txt";
+    operationParameters.insert("outputFileList", outputFiles);
 #endif
 
     
