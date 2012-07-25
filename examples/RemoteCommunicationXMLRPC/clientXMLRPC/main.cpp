@@ -13,7 +13,9 @@
 #include <mafCoreSingletons.h>
 #include "mafClientXMLRPC.h"
 
-#define Operation
+//#define Operation
+//#define ProgrammableOperation
+#define ProgrammableOpenClinicaSearch
 //#define Log
 
 int main(int argc, char *argv[]) {
@@ -60,6 +62,62 @@ int main(int argc, char *argv[]) {
     outputFiles << "out.cdb" << "out.dat"; 
     operationParameters.insert("outputFileList", outputFiles);
 #endif
+
+#ifdef ProgrammableOperation
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    dataParameters.append("mafAlgorithmProgrammable");
+//    dataParameters.append("mafAlgorithmCHA2Samp");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+//    operationParameters.insert("workflowId", "GHPHFPAHFPAHSFAHSPFAPHTP");
+    operationParameters.insert("workflowId", "AGJHAGHFAHFASHFIAHSDFHIASDAHSDGI");
+
+    QStringList inputFiles;
+    inputFiles << "load_cases_CHA.csv";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+//    outputFiles << "result.txt";
+    outputFiles << "load_cases.txt";
+    operationParameters.insert("outputFileList", outputFiles);
+    QStringList scriptFiles;
+//    scriptFiles << "script.py";
+    scriptFiles << "fromCHA2samp_v2.m";
+    operationParameters.insert("scriptFileList", scriptFiles);
+#endif
+
+#ifdef ProgrammableOpenClinicaSearch
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    //dataParameters.append("mafAlgorithmProgrammable");
+    dataParameters.append("mafAlgorithmOpenClinicaSearch");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    operationParameters.insert("workflowId", "GHPHFPAHFPAHSFAHSPFAPHTP");
+
+    operationParameters.insert("domain", "openclinica");
+    operationParameters.insert("operation", "search");
+    operationParameters.insert("requestor", "Charite");
+    operationParameters.insert("patientId", "171");
+
+    QStringList inputFiles;
+    inputFiles << " ";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "resultValue.txt";
+    operationParameters.insert("outputFileList", outputFiles);
+#endif
+
     
 #ifdef Log    
     eventParameters.append("maf.local.resources.operation.executeWithParameters");

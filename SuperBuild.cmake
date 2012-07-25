@@ -103,6 +103,11 @@ endif(MAF_PLUGINCTK)
 #experimental
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} MSVTK)
   include(CMakeExternals/External_MSVTK.cmake)
+if(MAF_PLUGIN_ZIP)
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} QuaZIP)
+  include(CMakeExternals/External_QuaZIP.cmake)
+endif(MAF_PLUGIN_ZIP)
+
 
 if(BUILD_WRAP)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} PythonQt)
@@ -256,6 +261,9 @@ ExternalProject_Add(${proj}
     # MSVTK
     -DMSVTK_DIR:PATH=${MSVTK_DIR}
 
+    # QuaZIP
+    -DQuaZIP_DIR:PATH=${QuaZIP_DIR}
+    -DQuaZIP_SOURCE_DIR:PATH=${QuaZIP_SOURCE_DIR}
   INSTALL_COMMAND ""
   )
   

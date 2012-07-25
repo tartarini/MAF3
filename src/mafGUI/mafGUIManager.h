@@ -130,6 +130,12 @@ private:
     /// Update recent file menu
     void updateRecentFileMenu(QString fileName);
 
+    /// Register signals.
+    void registerSignals();
+
+    /// Register callbacks.
+    void registerCallbacks();
+
     QMenu *m_RecentFilesMenu; ///< Reference to 'Recent File' menu.
     QMenu *m_CurrentMenu; ///< Current menu that has been created during the mnu file parsing.
 

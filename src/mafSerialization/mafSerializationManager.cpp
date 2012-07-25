@@ -232,7 +232,7 @@ void mafSerializationManager::exportExternalData(mafCore::mafProxyInterface *ext
     char *outputString = codec->encode();
 
     //write binary data
-    stream.writeBytes(outputString, codec->stringSize());
+    stream.writeRawData(outputString, codec->stringSize());
 
     // Finally close the connection.
     ser->closeDevice();
@@ -271,9 +271,18 @@ mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const Q
     ser->openDevice(mafSerializerOpenModeIn);
 
     unsigned int size;
-    char * inputString;
+
+    QFileInfo fileinfo(url);
+    size =fileinfo.size();
+
+    char * inputString = new char[size+1];
     QDataStream stream(ser->ioDevice());
-    stream.readBytes(inputString, size);
+    stream.readRawData(inputString,size);
+
+//     QString str(inputString);
+//     str = str.left(size);
+
+    inputString[size] = '\0';
 
     // Finally close the connection.
     ser->closeDevice();
@@ -285,6 +294,8 @@ mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const Q
     
     m_CurrentExternalDataCodec->setStringSize(size);
     m_CurrentExternalDataCodec->decode(inputString);
+
+    delete []inputString;
 
     return m_CurrentExternalDataCodec->externalData();
 }
