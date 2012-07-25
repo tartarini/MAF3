@@ -16,7 +16,7 @@
 include(${MAF_ROOT_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
 include(${MAF_ROOT_DIR}/CMakeExternals/Find_QtSOAP.cmake)
 include(${MAF_ROOT_DIR}/CMakeExternals/Find_OpenCV.cmake)
-include(${QuaZIP_SOURCE_DIR}/FindQuaZip.cmake)
+include(${MAF_ROOT_DIR}/CMakeExternals/Find_QuaZip.cmake)
 
 ## #################################################################
 ## Init Project
