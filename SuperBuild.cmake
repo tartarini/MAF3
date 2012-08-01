@@ -93,6 +93,9 @@ endif(MAF_RESOURCES)
 if(VTK_MAF)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VTK)
   include(CMakeExternals/External_VTK.cmake)
+
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} MSVTK)
+  include(CMakeExternals/External_MSVTK.cmake)
 endif(VTK_MAF)
 
 if(MAF_PLUGINCTK)
@@ -100,9 +103,6 @@ if(MAF_PLUGINCTK)
   #include(CMakeExternals/External_CTK.cmake)
 endif(MAF_PLUGINCTK)
 
-#experimental
-  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} MSVTK)
-  include(CMakeExternals/External_MSVTK.cmake)
 if(MAF_PLUGIN_ZIP)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} QuaZIP)
   include(CMakeExternals/External_QuaZIP.cmake)
