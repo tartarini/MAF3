@@ -14,8 +14,10 @@
 
 // Includes list
 #include <mafToolVTK.h>
+#include <QImage>
 
 class msvQVTKButtons;
+class vtkQImageToImageSource;
 /**
  Class name: mafToolVTKButtons
  This is the tool representing a VTK buttons.
@@ -33,13 +35,11 @@ public Q_SLOTS:
     /// Allow to execute and update the pipeline when something change.
     /*virtual*/ void updatePipe(double t = -1);
     
-    void showTooltip();
+    void showTooltip(QString tooltip);
     
     void hideTooltip();
 
 public:
-    msvQVTKButtons *button();
-    
      /// Object constructor.
     mafToolVTKButtons(const QString code_location = "");
 
@@ -49,22 +49,26 @@ public:
     /// Select VME connected to button pressed
     void selectVME();
 
-    
-    void setShowButton(bool show);
-    bool showButton();    
+    /// Set the visibility of its rendering scene.
+    /*virtual*/ void setVisibility(bool visible);
+
     void setShowLabel(bool show);
     bool showLabel();
     void setFlyTo(bool active);    
     bool FlyTo();
     void setOnCenter(bool onCenter);
-    bool OnCenter();    
+    bool onCenter();    
   
 protected:
     /// Object destructor.
     /* virtual */ ~mafToolVTKButtons();
 
+    msvQVTKButtons *button();
 private:
+    vtkQImageToImageSource *imageToVTK;
+    QImage image;
     msvQVTKButtons *m_Button;
+    bool isLoaded;
 };
 
 #endif // MAFTOOLVTKBUTTONS_H

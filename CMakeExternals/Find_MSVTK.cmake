@@ -11,3 +11,4 @@ include("${MSVTK_SUPERBUILD_DIR}/MSVTKConfig.cmake")
 
 include_directories(${MSVTK_INCLUDE_DIRS})
 link_directories(${MSVTK_LIBRARY_DIRS})
+
