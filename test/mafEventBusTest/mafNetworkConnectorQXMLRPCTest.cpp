@@ -113,7 +113,7 @@ private Q_SLOTS:
     void httpsTest();
 
     /// Check the communication of the mafNetworkConnectorQXMLRPCe using https without parameters
-    void httpsTestWithoutParameters();
+    void httpsWithoutParametersTest();
     
 private:
     mafEventBusManager *m_EventBus; ///< event bus instance
@@ -273,7 +273,7 @@ void mafNetworkConnectorQXMLRPCTest::httpsTest() {
         
 }
 
-void mafNetworkConnectorQXMLRPCTest::httpsTestWithoutParameters() {
+void mafNetworkConnectorQXMLRPCTest::httpsWithoutParametersTest() {
     if (m_NetWorkConnectorQXMLRPC) {
         delete m_NetWorkConnectorQXMLRPC;
     }
