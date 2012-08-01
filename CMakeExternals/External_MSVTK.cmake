@@ -33,7 +33,7 @@ set(proj MSVTK)
     
     #SET(revision_tag 107ffad7)
 
-    SET(revision_tag MSVTKConfig)
+    #SET(revision_tag MSVTKConfig)
     IF(${proj}_REVISION_TAG)
       SET(revision_tag ${${proj}_REVISION_TAG})
     ENDIF()
@@ -48,7 +48,7 @@ set(proj MSVTK)
     ExternalProject_Add(${proj}
       GIT_REPOSITORY "git://github.com/dgiunchi/MSVTK.git"
       #GIT_REPOSITORY "https://github.com/MSV-Project/MSVTK.git"
-      GIT_TAG ${revision_tag}
+      #GIT_TAG ${revision_tag}
       #BINARY_DIR ${proj}-build
       INSTALL_COMMAND ""
       CMAKE_GENERATOR ${gen}

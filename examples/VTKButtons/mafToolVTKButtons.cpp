@@ -32,20 +32,23 @@
 #include <vtkBalloonRepresentation.h>
 #include <vtkCommand.h>
 
+#include <mafVTKWidget.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location)/*, m_ShowLabel(true), m_FlyTo(true), m_OnCenter(false)*/ {
+mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location), isLoaded(false), m_Button(NULL){
 
 }
 
 msvQVTKButtons *mafToolVTKButtons::button() {
     if(m_Button == NULL) {
         m_Button = new msvQVTKButtons();
-        QObject::connect(this, SIGNAL(hideTooltipSignal), m_Button, SIGNAL(hideTooltip));
+        m_Button->setShowButton(true);
+        bool result = QObject::connect(m_Button, SIGNAL(showTooltip(QString)), this, SLOT(showTooltip(QString)));
+        result = QObject::connect(m_Button, SIGNAL(hideTooltip()), this, SLOT(hideTooltip()));
     }
     return m_Button;
 }
@@ -57,17 +60,17 @@ mafToolVTKButtons::~mafToolVTKButtons() {
 }
 
 void mafToolVTKButtons::resetTool() {
-    removeWidget(m_Button->button());
+    removeWidget(button()->button());
 }
 
 void mafToolVTKButtons::graphicObjectInitialized() {
     // Graphic widget (render window, interactor...) has been created and initialized.
     // now can add the widget.
-    addWidget(m_Button->button());
+    addWidget(button()->button());
 }
 
 void mafToolVTKButtons::updatePipe(double t) {
-    /*mafVME *vme = input();
+    mafVME *vme = input();
     if(vme == NULL) {
         return;
     }
@@ -91,45 +94,39 @@ void mafToolVTKButtons::updatePipe(double t) {
     }
 
     ///////////-------- BUTTON WIDGET -----------////////////
-    vtkTexturedButtonRepresentation2D *rep = reinterpret_cast<vtkTexturedButtonRepresentation2D*>(m_ButtonWidget->GetRepresentation());
+    vtkTexturedButtonRepresentation2D *rep = static_cast<vtkTexturedButtonRepresentation2D *> (button()->button()->GetRepresentation());
 
     //Load image only the first time
-    if (m_IconFileName.isEmpty()) {
-        QImage image;
+    if (isLoaded == false) {
         QString iconType = vme->property("iconType").toString();
-        m_IconFileName = mafIconFromObjectType(iconType);
-        image.load(m_IconFileName);
-        VTK_CREATE(vtkQImageToImageSource, imageToVTK);
+        //QString iconFileName = mafIconFromObjectType(iconType);
+        QString iconFileName = ":/images/buttonIcon.png";
+
+        /*image.load(iconFileName);
+        imageToVTK = vtkQImageToImageSource::New();
         imageToVTK->SetQImage(&image);
         imageToVTK->Update();
-        rep->SetButtonTexture(0, imageToVTK->GetOutput());
+        rep->SetButtonTexture(0, imageToVTK->GetOutput());*/
+
+        button()->setIconFileName(iconFileName);
+
+        isLoaded = true;
     }
 
     int size[2]; size[0] = 16; size[1] = 16;
     rep->GetBalloon()->SetImageSize(size);
 
-    if (m_ShowLabel) {
-        //Add a label to the button and change its text property
+    if (showLabel()) {
         QString vmeName = vme->property("objectName").toString();
-        rep->GetBalloon()->SetBalloonText(vmeName.toAscii());
-        vtkTextProperty *textProp = rep->GetBalloon()->GetTextProperty();
-        rep->GetBalloon()->SetPadding(2);
-        textProp->SetFontSize(13);
-        textProp->BoldOff();
-        //textProp->SetColor(0.9,0.9,0.9);
-
-        //Set label position
-        rep->GetBalloon()->SetBalloonLayoutToImageLeft();
-
-        //This method allows to set the label's background opacity
-        rep->GetBalloon()->GetFrameProperty()->SetOpacity(0.65);
+        button()->setLabel(vmeName);
     } else {
-        rep->GetBalloon()->SetBalloonText("");
+        QString emptyString;
+        button()->setLabel(emptyString);
     }
 
     //modify position of the vtkButton 
     double bds[3];
-    if (m_OnCenter) {
+    if (onCenter()) {
         newBounds->center(bds);
     } else {
         //on the corner of the bounding box of the VME.
@@ -139,17 +136,20 @@ void mafToolVTKButtons::updatePipe(double t) {
     }
     rep->PlaceWidget(bds, size);
     rep->Modified();
-    m_ButtonWidget->SetRepresentation(rep);
+    button()->button()->SetRepresentation(rep);
     ///////////-------- BUTTON WIDGET -----------////////////
 
-   
-    buttonCallback->graphicObject = this->m_GraphicObject;
-    buttonCallback->setBounds(newBounds);
-    buttonCallback->setFlyTo(m_FlyTo);
-    updatedGraphicObject();*/
+    mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(this->graphicObject());
+
+    button()->setCurrentRenderer(widget->renderer());
+    double b6[6];
+    newBounds->bounds(b6);
+    button()->setBounds(b6);
+    button()->setFlyTo(FlyTo());
+    updatedGraphicObject();
 }
 
-void mafToolVTKButtons::showTooltip() {
+void mafToolVTKButtons::showTooltip(QString tooltip) {
     mafVME *vme = input();
     if(vme == NULL) {
         return;
@@ -196,7 +196,6 @@ void mafToolVTKButtons::showTooltip() {
     text.append("</tr>");
     text.append("</table>");
  
-    button()->setToolTip(text);
     mafEventBus::mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString , text));
     mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.gui.showTooltip", mafEventBus::mafEventTypeLocal, &argList);
@@ -219,14 +218,11 @@ void mafToolVTKButtons::selectVME() {
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 }
 
-void mafToolVTKButtons::setShowButton(bool show) {
-    button()->setShowButton(show);
+void mafToolVTKButtons::setVisibility(bool visible) {
+    button()->setShowButton(visible);
+    Superclass::setVisibility(visible);
+    button()->update();
 }
-
-bool mafToolVTKButtons::showButton() {
-    return button()->showButton();
-}
-
 void mafToolVTKButtons::setShowLabel(bool show) {
     button()->setShowLabel(show);
 }
@@ -247,6 +243,6 @@ void mafToolVTKButtons::setOnCenter(bool onCenter) {
     button()->setOnCenter(onCenter);
 }
 
-bool mafToolVTKButtons::OnCenter() {
+bool mafToolVTKButtons::onCenter() {
     return button()->OnCenter();
 }
