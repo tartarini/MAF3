@@ -99,15 +99,7 @@ void mafToolVTKButtons::updatePipe(double t) {
     //Load image only the first time
     if (isLoaded == false) {
         QString iconType = vme->property("iconType").toString();
-        //QString iconFileName = mafIconFromObjectType(iconType);
-        QString iconFileName = ":/images/buttonIcon.png";
-
-        /*image.load(iconFileName);
-        imageToVTK = vtkQImageToImageSource::New();
-        imageToVTK->SetQImage(&image);
-        imageToVTK->Update();
-        rep->SetButtonTexture(0, imageToVTK->GetOutput());*/
-
+        QString iconFileName = mafIconFromObjectType(iconType);
         button()->setIconFileName(iconFileName);
 
         isLoaded = true;
