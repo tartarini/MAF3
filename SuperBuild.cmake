@@ -91,12 +91,19 @@ if(MAF_RESOURCES)
 endif(MAF_RESOURCES)
 
 if(VTK_MAF)
-  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VTK)
-  include(CMakeExternals/External_VTK.cmake)
+  
+    if(APPLE)
+      set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VTK)
+      set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} MSVTK)
+    endif(APPLE)
+  
+    if(UNIX)
+        set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} MSVTK)
+        set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VTK)
+    endif(UNIX)  
+    include(CMakeExternals/External_VTK.cmake)
+    include(CMakeExternals/External_MSVTK.cmake)
 
-#experimental
-  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} MSVTK)
-  include(CMakeExternals/External_MSVTK.cmake)
 endif(VTK_MAF)
 
 if(MAF_PLUGINCTK)
