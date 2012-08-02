@@ -250,8 +250,20 @@ void mafNetworkConnectorQXMLRPC::send(const QString event_id, mafEventArgumentsL
         }
     }
 
-   xmlrpcSend(event_id, *vl);
-   delete vl;
+    if(vl == NULL && externalSend) {
+        QList<xmlrpc::Variant> params;
+        xmlrpcSend(event_id, params);
+        return;
+    }
+
+    if(vl == NULL) {
+        qWarning() << "An EventBus message needs a list as argument";
+        return;
+    }
+
+    xmlrpcSend(event_id, *vl);
+    delete vl;
+
 }
 
 void mafNetworkConnectorQXMLRPC::xmlrpcSend(const QString &methodName, QList<xmlrpc::Variant> parameters) {
