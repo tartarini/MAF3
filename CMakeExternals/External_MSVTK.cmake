@@ -46,7 +46,12 @@ set(proj MSVTK)
     ENDFOREACH()
 
     ExternalProject_Add(${proj}
+<<<<<<< HEAD
       GIT_REPOSITORY "https://github.com/MSV-Project/MSVTK.git"
+=======
+      GIT_REPOSITORY "git://github.com/dgiunchi/MSVTK.git"
+      #GIT_REPOSITORY "https://github.com/MSV-Project/MSVTK.git"
+>>>>>>> mergeVTKButtonsExte
       #GIT_TAG ${revision_tag}
       #BINARY_DIR ${proj}-build
       INSTALL_COMMAND ""

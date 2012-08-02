@@ -15,7 +15,8 @@
 
 //#define Operation
 //#define ProgrammableOperation
-#define ProgrammableOpenClinicaSearch
+//#define ProgrammableOpenClinicaSearch
+#define SimJobQsub
 //#define Log
 
 int main(int argc, char *argv[]) {
@@ -118,6 +119,27 @@ int main(int argc, char *argv[]) {
     operationParameters.insert("outputFileList", outputFiles);
 #endif
 
+#ifdef SimJobQsub
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    dataParameters.append("mafAlgorithmSimJobQsub");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    operationParameters.insert("jobsNumber", 4);
+    operationParameters.insert("workflowId", "QFHPHAFSPHFAPSHFPHFPSDHF");
+
+    QStringList inputFiles;
+    inputFiles << "load_cases.txt";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "outCases.txt";
+    operationParameters.insert("outputFileList", outputFiles);
+#endif
     
 #ifdef Log    
     eventParameters.append("maf.local.resources.operation.executeWithParameters");
