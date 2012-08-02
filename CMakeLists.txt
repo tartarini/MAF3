@@ -49,7 +49,7 @@ endif(BUILD_TEST_SUITE)
 # git protocol to be used
 set(git_protocol "git")
 if(NOT MAF_USE_GIT_PROTOCOL)
-  set(git_protocol "http")
+  set(git_protocol "https")
 endif()
 
 

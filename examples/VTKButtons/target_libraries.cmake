@@ -41,6 +41,9 @@ SET(target_libraries
   mafGUI
   ${VTK_LIBRARIES}
   mafPluginVTK
+  msvVTKParallel
+  msvVTKWidgets
+  msvQtWidgets
   )
 
 if(${BUILD_WRAP})

@@ -93,6 +93,9 @@ endif(MAF_RESOURCES)
 if(VTK_MAF)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VTK)
   include(CMakeExternals/External_VTK.cmake)
+
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} MSVTK)
+  include(CMakeExternals/External_MSVTK.cmake)
 endif(VTK_MAF)
 
 if(MAF_PLUGINCTK)
@@ -255,6 +258,9 @@ ExternalProject_Add(${proj}
     -DOpenCV_DIR:PATH=${OpenCV_DIR} # FindOpenCV expects OpenCV_DIR variable to be defined
     # CTK
     -DCTK_DIR:PATH=${CTK_DIR}
+    # MSVTK
+    -DMSVTK_DIR:PATH=${MSVTK_DIR}
+
     # QuaZIP
     -DQuaZIP_DIR:PATH=${QuaZIP_DIR}
     -DQuaZIP_SOURCE_DIR:PATH=${QuaZIP_SOURCE_DIR}
