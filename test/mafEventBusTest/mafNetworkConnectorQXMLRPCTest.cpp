@@ -295,7 +295,7 @@ void mafNetworkConnectorQXMLRPCTest::httpsWithoutParametersTest() {
     // send call
     bool externalSend = true;
     //nome servizio = "searchService", chiedere a Matteo il nome del servizio nuovo
-    m_NetWorkConnectorQXMLRPC->send("searchService", NULL, externalSend);
+    m_NetWorkConnectorQXMLRPC->send("maf3TestXMLRPC", NULL, externalSend);
 
     // wait for response consumtion, but handle server timeout
 
