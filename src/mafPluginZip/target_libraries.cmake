@@ -21,5 +21,5 @@ SET(target_libraries
   mafCore
   mafEventBus
   mafResources
-  QuaZIP
+  quazip
   )
