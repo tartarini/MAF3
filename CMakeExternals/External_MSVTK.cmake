@@ -15,7 +15,7 @@ set(proj MSVTK)
     MESSAGE(FATAL_ERROR "MSVTK_DIR variable is defined but corresponds to non-existing directory")
   ENDIF()
 
-  SET(proj_DEPENDENCIES )
+  SET(proj_DEPENDENCIES VTK)
   SET(MSVTK_DEPENDS ${proj})
   
   SET(ep_base "${MAF_EXTERNAL_BUILD_DIR}")
