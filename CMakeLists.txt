@@ -80,6 +80,8 @@ option(MAF_SCRIPT_INTERPRETER "Build mafScriptInterpreter module. mafCore, mafEv
 option(MAF_PLUGINCTK "Build mafPluginCTK module. mafCore and mafEventBus will be built anyway."               ON)
 option(MAF_PLUGIN_OUTOFCORE "Build mafPluginOutOfCore module. mafCore and mafEventBus will be built anyway."               ON)
 option(MAF_PLUGIN_ZIP "Build mafPluginZip module. mafCore and mafEventBus will be built anyway."               OFF)
+option(MAF_MSV_EXTENSION "Build MSV Extension. mafCore and mafEventBus will be built anyway."               ON)
+
 
 set(MAF_DATA_DIR)
 find_path(MAF_DATA_DIR "README.txt" PATHS "${MAF_SOURCE_DIR}/../maf3data")
