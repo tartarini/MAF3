@@ -52,11 +52,17 @@ public:
     /// Set the visibility of its rendering scene.
     /*virtual*/ void setVisibility(bool visible);
 
+    /// show label for the Buttons, use update to renderize.
     void setShowLabel(bool show);
+    /// retrieve show status of the label.
     bool showLabel();
-    void setFlyTo(bool active);    
+    /// modify the behaviour to FlyTo or ResetCamera.
+    void setFlyTo(bool active);
+    /// return the current behavior status.
     bool FlyTo();
+    /// set if the buttons should stay on the center of the data.
     void setOnCenter(bool onCenter);
+    /// return status of the position of the button.
     bool onCenter();    
   
 protected:
@@ -65,8 +71,6 @@ protected:
 
     msvQVTKButtons *button();
 private:
-    vtkQImageToImageSource *imageToVTK;
-    QImage image;
     msvQVTKButtons *m_Button;
     bool isLoaded;
 };
