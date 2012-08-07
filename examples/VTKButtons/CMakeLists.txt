@@ -44,7 +44,7 @@ ADD_EXECUTABLE(${PROJECT_NAME} ${GUI_TYPE} ${PROJECT_SRCS})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 
 ## #################################################################
-## copy VTK libraries
+## copy MSVTK libraries
 ## #################################################################
 
 mafCopySharedLibrariesInInstallDir("${MSVTK_DIR}/MSVTK-build/bin")
