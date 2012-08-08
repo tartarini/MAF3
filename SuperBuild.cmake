@@ -93,9 +93,10 @@ endif(MAF_RESOURCES)
 if(VTK_MAF)
     set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VTK)
     include(CMakeExternals/External_VTK.cmake)
-    
-    set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} MSVTK)
-    include(CMakeExternals/External_MSVTK.cmake)
+    if(MAF_MSV_EXTENSION)
+      set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} MSVTK)
+      include(CMakeExternals/External_MSVTK.cmake)
+    endif(MAF_MSV_EXTENSION)
 endif(VTK_MAF)
 
 if(MAF_PLUGINCTK)
