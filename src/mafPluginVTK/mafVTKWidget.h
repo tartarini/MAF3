@@ -74,7 +74,7 @@ public:
     double *visibleBounds(QString layerName = "base");
 
     /// Allows to retrieve the bounds for visible objects in all the created layers.
-    double *visibleBoundsOnAllLayers();
+    void visibleBoundsOnAllLayers(double bounds[6]);
 
     /// Allow to remove all objects from all layers.
     void removeAllObjects();
