@@ -37,15 +37,6 @@ if(NOT GIT_FOUND)
   message(FATAL_ERROR "error: Install Git and try to re-configure")
 endif()
 
-if(BUILD_TEST_SUITE)
-	FIND_PACKAGE(Subversion)
-	if(NOT Subversion_FOUND)
-	  message(STATUS "error: Install Subversion for enable tests.")
-	  set(BUILD_TEST_SUITE OFF)
-	  set(DATA_TEST OFF)
-	endif()
-endif(BUILD_TEST_SUITE)
-
 # git protocol to be used
 set(git_protocol "git")
 if(NOT MAF_USE_GIT_PROTOCOL)

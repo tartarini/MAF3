@@ -1,14 +1,8 @@
 MACRO (mafDataTestDownload)
-  set(_SvnCredPart)
-  set(_SvnUserPart)
-  set(_SvnPassPart)
-
-  set(SVN_REPOSITORY "http://svn.scsolutions.it/maf3data")
+  set(GIT_REPOSITORY "git://github.com/b3c/maf3data.git")
 
   execute_process(
-    COMMAND "${Subversion_SVN_EXECUTABLE}" --non-interactive
-    ${_SvnCredPart} ${_SvnUserPart} ${_SvnPassPart}
-    checkout ${SVN_REPOSITORY} ${MAF_DATA_DIR}
+    COMMAND "${GIT_EXECUTABLE}" clone ${GIT_REPOSITORY} ${MAF_DATA_DIR}
     OUTPUT_VARIABLE _out
     ERROR_VARIABLE _err
     RESULT_VARIABLE _res)
