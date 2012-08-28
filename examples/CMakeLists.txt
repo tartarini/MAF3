@@ -11,7 +11,7 @@
 
 
 #############################################################################################
-### find project subdirs avoiding the svn directory and make the SUBDIR CMake command on them.
+### find project subdirs 
 #############################################################################################
 
 include(${MAF_USE_FILE_CONFIG})
