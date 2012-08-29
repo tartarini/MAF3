@@ -129,6 +129,14 @@ MACRO(mafMacroInitProject test)
 
   # List libraries that are needed by this project.
   mafMacroGetTargetLibraries(dependency_libraries)
+  
+  if(LINUX)
+    if(BUILD_QA AND gperftools_FOUND)
+      set(dependency_libraries ${dependency_libraries} tcmalloc)
+      find_path(gperftools_INCLUDE_DIR tcmalloc.h /usr/include /usr/local/include)
+    endif(BUILD_QA AND gperftools_FOUND)
+  endif(LINUX)
+  
   SET(PROJECT_LIBS ${dependency_libraries})
 
 ENDMACRO()
