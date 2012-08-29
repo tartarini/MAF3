@@ -136,9 +136,9 @@ MACRO(mafMacroInitProject test)
   endif(UNIX)
 
   # configure files 
-  if(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in)
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in")
       CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.h)
-  endif(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in)
+  endif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in")
   # List libraries that are needed by this project.
   mafMacroGetTargetLibraries(dependency_libraries)
   
