@@ -14,6 +14,7 @@
 
 // Includes list
 #include "mafUtilities.h"
+#include "mafCoreConfig.h"
 
 // Qt includes
 #include <QtCore>

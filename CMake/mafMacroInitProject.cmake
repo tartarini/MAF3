@@ -127,15 +127,22 @@ MACRO(mafMacroInitProject test)
     ${QtApp_RCC_SRCS}
     )
 
-  # List libraries that are needed by this project.
-  mafMacroGetTargetLibraries(dependency_libraries)
-  
-  if(LINUX)
+  if(UNIX)
     if(BUILD_QA AND gperftools_FOUND)
       set(dependency_libraries ${dependency_libraries} tcmalloc)
       find_path(gperftools_INCLUDE_DIR tcmalloc.h /usr/include /usr/local/include)
+    set(GPERFTOOLS_ENABLE 1)
     endif(BUILD_QA AND gperftools_FOUND)
-  endif(LINUX)
+  endif(UNIX)
+
+  # configure files 
+  if(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in)
+      CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.h)
+  endif(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in)
+  # List libraries that are needed by this project.
+  mafMacroGetTargetLibraries(dependency_libraries)
+  
+  
   
   SET(PROJECT_LIBS ${dependency_libraries})
 

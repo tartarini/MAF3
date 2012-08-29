@@ -1,0 +1,7 @@
+//gperftools inclusion for heap checking
+#cmakedefine GPERFTOOLS_ENABLE "@GPERFTOOLS_ENABLE@"
+
+#ifdef GPERFTOOLS_ENABLE
+#include <gperftools/heap-checker.h>
+#endif //GPERFTOOLS_ENABLE
+
