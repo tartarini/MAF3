@@ -89,6 +89,13 @@ FOREACH(dir_name ${dir_list})
 	ENDIF(IS_DIRECTORY ${dir_name})
 ENDFOREACH(dir_name ${dir_list})
 
+FOREACH(dir_name ${dir_list})
+  get_filename_component(internal_path ${dir_name} NAME)
+  IF(IS_DIRECTORY "${MAF_INTERNAL_BUILD_DIR}/src/${internal_path}")
+   INCLUDE_DIRECTORIES("${MAF_INTERNAL_BUILD_DIR}/src/${internal_path}")
+  ENDIF(IS_DIRECTORY "${MAF_INTERNAL_BUILD_DIR}/src/${internal_path}")
+ENDFOREACH(dir_name ${dir_list})
+
 IF(PYTHONLIBS_FOUND)
   INCLUDE_DIRECTORIES("${PYTHON_INCLUDE_DIR}")
 ENDIF(PYTHONLIBS_FOUND)
