@@ -122,7 +122,6 @@ private Q_SLOTS:
 
         mafDEL(m_VME);
         mafDEL(m_SceneNode);
-        mafDEL(m_ToolPlane);
         mafDEL(m_ToolHandler);
         mafMessageHandler::instance()->shutdown();
 
