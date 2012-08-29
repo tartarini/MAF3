@@ -162,6 +162,12 @@ endif(BUILD_TEST_SUITE)
 if(BUILD_QA)
     set( BUILD_DOCUMENTATION ON ) 
     mafDependentOption(BUILD_DOCUMENTATION "Build Documentation for QA." ON BUILD_QA ON)
+    
+    include(CMake/Findgperftools.cmake)
+    if(NOT gperftools_FOUND)
+      message(STATUS "for memory leak detection, install gperftools")
+    endif()
+
 endif(BUILD_QA)
 
 #############################################################################################
