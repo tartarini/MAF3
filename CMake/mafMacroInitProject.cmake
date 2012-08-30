@@ -137,6 +137,7 @@ MACRO(mafMacroInitProject test)
 
   # configure files 
   if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in")
+      message(STATUS "Creating FROM ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in TO ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.h")
       CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.h)
   endif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in")
   # List libraries that are needed by this project.
