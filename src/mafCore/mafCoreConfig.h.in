@@ -2,6 +2,6 @@
 #cmakedefine GPERFTOOLS_ENABLE "@GPERFTOOLS_ENABLE@"
 
 #ifdef GPERFTOOLS_ENABLE
-#include <gperftools/heap-checker.h>
+#include <google/heap-checker.h>
 #endif //GPERFTOOLS_ENABLE
 
