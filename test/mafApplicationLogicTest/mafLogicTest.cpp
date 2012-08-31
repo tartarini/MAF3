@@ -60,8 +60,8 @@ private Q_SLOTS:
 
     /// Cleanup tes variables memory allocation.
     void cleanupTestCase() {
-        m_PluginManager->shutdown();
-        mafDEL(m_Logic);
+        //m_PluginManager->shutdown();
+        //mafDEL(m_Logic);
     }
 
     /// Check the existence of the mafLogic allocation.
