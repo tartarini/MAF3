@@ -135,12 +135,16 @@ MACRO(mafMacroInitProject test)
     endif(BUILD_QA AND gperftools_FOUND)
   endif(UNIX)
 
-  # configure files 
+  # configure files
   if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in")
       message(STATUS "Creating FROM ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in TO ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.h")
       CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.h)
-      #INCLUDE_DIRECTORIES("${CMAKE_CURRENT_BINARY_DIR}")
+      INCLUDE_DIRECTORIES("${CMAKE_CURRENT_BINARY_DIR}")
   endif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in")
+  
+  #here put if need for include in all projects
+  INCLUDE_DIRECTORIES("${MAF_INTERNAL_BUILD_DIR}/src/mafCore")
+  
   # List libraries that are needed by this project.
   mafMacroGetTargetLibraries(dependency_libraries)
   
