@@ -127,5 +127,5 @@ void mafLogicTest::plugObjectTest() {
     QVERIFY(ct == "testObjectCustomPlugged");
 }
 
-//MAF_REGISTER_TEST(mafLogicTest);
+MAF_REGISTER_TEST(mafLogicTest);
 #include "mafLogicTest.moc"
