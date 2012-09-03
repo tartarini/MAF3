@@ -93,8 +93,8 @@ def execute():
             if(str(os.sys.platform).lower() == 'win32'):
                 os.system(absPath + " > " + logResult + " 2>&1 ")
             else:
-                #os.system("HEAPCHECK=local " + absPath + " &> " + logResult)
-                os.system(absPath + " &> " + logResult)
+                os.system("HEAPCHECK=local " + absPath + " &> " + logResult)
+                #os.system(absPath + " &> " + logResult)
             name_key = "test-suite"
             if name_key in param:
                 validate(logResult)
