@@ -97,15 +97,14 @@
   SET(ep_build_testing OFF)
   
 
-    SET(revision_tag 099805b447d54dac22b2e548c078ba39fd724f50)
+    #SET(revision_tag 099805b447d54dac22b2e548c078ba39fd724f50)
     #IF(${proj}_REVISION_TAG)
     #  SET(revision_tag ${${proj}_REVISION_TAG})
     #ENDIF()
     
     ExternalProject_Add(${proj}
       GIT_REPOSITORY "${git_protocol}://github.com/b3c/PythonQt.git"
-      #GIT_TAG "origin/master"
-      GIT_TAG ${revision_tag}
+      GIT_TAG "origin/master"
       CMAKE_GENERATOR ${gen}
       UPDATE_COMMAND ""
       BUILD_COMMAND ""

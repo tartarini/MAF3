@@ -163,9 +163,9 @@ if(BUILD_QA)
     set( BUILD_DOCUMENTATION ON ) 
     mafDependentOption(BUILD_DOCUMENTATION "Build Documentation for QA." ON BUILD_QA ON)
     
-    include(CMake/Findgperftools.cmake)
-    if(NOT gperftools_FOUND)
-      message(STATUS "for memory leak detection, install gperftools")
+    include(CMake/Findvalgrind.cmake)
+    if(NOT valgrind_FOUND)
+      message(STATUS "for memory leak detection, install valgrind")
     endif()
 
 endif(BUILD_QA)

@@ -1,7 +1,7 @@
-//gperftools inclusion for heap checking
-#cmakedefine GPERFTOOLS_ENABLE "@GPERFTOOLS_ENABLE@"
+//configurable header
+#cmakedefine PARAMETER_ENABLE "@PARAMETER_ENABLE@"
 
-#ifdef GPERFTOOLS_ENABLE
-#include <google/heap-checker.h>
-#endif //GPERFTOOLS_ENABLE
+#ifdef PARAMETER_ENABLE
+// do something
+#endif //PARAMETER_ENABLE
 

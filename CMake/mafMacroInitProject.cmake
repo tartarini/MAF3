@@ -128,11 +128,10 @@ MACRO(mafMacroInitProject test)
     )
 
   if(UNIX)
-    if(BUILD_QA AND gperftools_FOUND)
-      set(dependency_libraries ${dependency_libraries} tcmalloc)
-      find_path(gperftools_INCLUDE_DIR tcmalloc.h /usr/include /usr/local/include)
-    set(GPERFTOOLS_ENABLE 1)
-    endif(BUILD_QA AND gperftools_FOUND)
+    if(BUILD_QA AND valgrind_FOUND)
+      add_definitions( -g -O0 )
+    set(valgrind_ENABLE 1)
+    endif(BUILD_QA AND valgrind_FOUND)
   endif(UNIX)
 
   # configure files
