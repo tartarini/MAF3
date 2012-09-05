@@ -37,15 +37,6 @@ if(NOT GIT_FOUND)
   message(FATAL_ERROR "error: Install Git and try to re-configure")
 endif()
 
-if(BUILD_TEST_SUITE)
-	FIND_PACKAGE(Subversion)
-	if(NOT Subversion_FOUND)
-	  message(STATUS "error: Install Subversion for enable tests.")
-	  set(BUILD_TEST_SUITE OFF)
-	  set(DATA_TEST OFF)
-	endif()
-endif(BUILD_TEST_SUITE)
-
 # git protocol to be used
 set(git_protocol "git")
 if(NOT MAF_USE_GIT_PROTOCOL)
@@ -79,7 +70,7 @@ option(MAF_QTGUI "Build mafGUI module. mafCore and mafEventBus will be built any
 option(MAF_SCRIPT_INTERPRETER "Build mafScriptInterpreter module. mafCore, mafEventBus and mafGUI will be built anyway." OFF)
 option(MAF_PLUGINCTK "Build mafPluginCTK module. mafCore and mafEventBus will be built anyway."               ON)
 option(MAF_PLUGIN_OUTOFCORE "Build mafPluginOutOfCore module. mafCore and mafEventBus will be built anyway."               ON)
-option(MAF_PLUGIN_ZIP "Build mafPluginZip module. mafCore and mafEventBus will be built anyway."               OFF)
+option(MAF_PLUGIN_ZIP "Build mafPluginZip module. mafCore and mafEventBus will be built anyway."               ON)
 option(MAF_MSV_EXTENSION "Build MSV Extension. mafCore and mafEventBus will be built anyway."               ON)
 
 
@@ -171,6 +162,12 @@ endif(BUILD_TEST_SUITE)
 if(BUILD_QA)
     set( BUILD_DOCUMENTATION ON ) 
     mafDependentOption(BUILD_DOCUMENTATION "Build Documentation for QA." ON BUILD_QA ON)
+    
+    include(CMake/Findvalgrind.cmake)
+    if(NOT valgrind_FOUND)
+      message(STATUS "for memory leak detection, install valgrind")
+    endif()
+
 endif(BUILD_QA)
 
 #############################################################################################

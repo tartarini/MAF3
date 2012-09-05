@@ -107,8 +107,8 @@ MACRO(mafMacroInitProject test)
       find_program( CODECOV_GCOV gcov )
       add_definitions( -fprofile-arcs -ftest-coverage )
       link_libraries( gcov )
-      set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}  --lgcov" )
-      set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  --lgcov" )
+      set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} " )
+      set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} " )
     ENDIF(WIN32)
     endif(BUILD_QA)
   
@@ -127,8 +127,28 @@ MACRO(mafMacroInitProject test)
     ${QtApp_RCC_SRCS}
     )
 
+  if(UNIX)
+    if(BUILD_QA AND valgrind_FOUND)
+      add_definitions( -g -O0 )
+    set(valgrind_ENABLE 1)
+    endif(BUILD_QA AND valgrind_FOUND)
+  endif(UNIX)
+
+  # configure files
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in")
+      message(STATUS "Creating FROM ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in TO ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.h")
+      CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.h)
+      INCLUDE_DIRECTORIES("${CMAKE_CURRENT_BINARY_DIR}")
+  endif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.h.in")
+  
+  #here put if need for include in all projects
+  INCLUDE_DIRECTORIES("${MAF_INTERNAL_BUILD_DIR}/src/mafCore")
+  
   # List libraries that are needed by this project.
   mafMacroGetTargetLibraries(dependency_libraries)
+  
+  
+  
   SET(PROJECT_LIBS ${dependency_libraries})
 
 ENDMACRO()

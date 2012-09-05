@@ -31,6 +31,7 @@
 #include <vtkTexturedButtonRepresentation2D.h>
 #include <vtkBalloonRepresentation.h>
 #include <vtkCommand.h>
+#include <vtkDataSet.h>
 
 #include <mafVTKWidget.h>
 
@@ -139,6 +140,17 @@ void mafToolVTKButtons::updatePipe(double t) {
     button()->setBounds(b6);
     button()->setFlyTo(FlyTo());
     updatedGraphicObject();
+
+    mafProxy<vtkAlgorithmOutput> *dataSet =  mafProxyPointerTypeCast(vtkAlgorithmOutput, vme->dataSetCollection()->itemAtCurrentTime()->dataValue());
+    if(dataSet)
+    {
+      vtkAlgorithm *producer = (*dataSet)->GetProducer();
+      vtkDataObject *dataObject = producer->GetOutputDataObject(0);
+      vtkDataSet* vtkData = vtkDataSet::SafeDownCast(dataObject);
+
+      button()->setData(vtkData);
+    }
+
 }
 
 void mafToolVTKButtons::showTooltip(QString tooltip) {
@@ -148,7 +160,20 @@ void mafToolVTKButtons::showTooltip(QString tooltip) {
     }
 
     QString matrixString = vme->dataSetCollection()->itemAtCurrentTime()->poseMatrixString();
-    QString text("<b>Data type</b>: ");
+    QString text("<table border=\"0\"");
+    text.append("<tr>");
+    text.append("<td>");
+    QImage preview = button()->getPreview(180,180);
+    QByteArray ba;
+    QBuffer buffer(&ba);
+    buffer.open(QIODevice::WriteOnly);
+    preview.save(&buffer, "PNG");
+
+    text.append(QString("<img src=\"data:image/png;base64,%1\">").arg(QString(buffer.data().toBase64())));
+    text.append("</td>");
+
+    text.append("<td>");
+    text.append("<b>Data type</b>: ");
     text.append(vme->dataSetCollection()->itemAtCurrentTime()->externalDataType());
     text.append("<br>");
 
@@ -185,6 +210,9 @@ void mafToolVTKButtons::showTooltip(QString tooltip) {
     text.append("<tr>");
     text.append("<td>" + QString::number(bounds->zMin()) +"</td>");
     text.append("<td>" + QString::number(bounds->zMax()) +"</td>");
+    text.append("</tr>");
+    text.append("</table>");
+    text.append("</td>");
     text.append("</tr>");
     text.append("</table>");
  
@@ -228,7 +256,7 @@ void mafToolVTKButtons::setFlyTo(bool active) {
 }
 
 bool mafToolVTKButtons::FlyTo() {
-    return button()->FlyTo();
+    return button()->flyTo();
 }
 
 void mafToolVTKButtons::setOnCenter(bool onCenter) {
@@ -236,5 +264,5 @@ void mafToolVTKButtons::setOnCenter(bool onCenter) {
 }
 
 bool mafToolVTKButtons::onCenter() {
-    return button()->OnCenter();
+    return button()->onCenter();
 }

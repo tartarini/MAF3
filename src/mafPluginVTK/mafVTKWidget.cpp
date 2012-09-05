@@ -369,8 +369,11 @@ double *mafVTKWidget::visibleBounds(QString layerName) {
     return NULL;
 }
 
-double *mafVTKWidget::visibleBoundsOnAllLayers() {
-    double bounds[6] = {0,1,0,1,0,1};
+void mafVTKWidget::visibleBoundsOnAllLayers(double bounds[6]) {
+    //init bounds
+    bounds[0] = bounds[2] = bounds[4] = 0.;
+    bounds[1] = bounds[3] = bounds[5] = 1.;
+
     double *b(NULL);
     vtkRenderer *ren(NULL);
     int min_idx, max_idx;
@@ -387,5 +390,4 @@ double *mafVTKWidget::visibleBoundsOnAllLayers() {
             }
         }
     }
-    return bounds;
 }
