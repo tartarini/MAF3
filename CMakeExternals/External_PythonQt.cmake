@@ -96,15 +96,15 @@
   SET(ep_build_shared_libs ON)
   SET(ep_build_testing OFF)
   
-
-    #SET(revision_tag 099805b447d54dac22b2e548c078ba39fd724f50)
-    #IF(${proj}_REVISION_TAG)
-    #  SET(revision_tag ${${proj}_REVISION_TAG})
-    #ENDIF()
+  IF("${QTVERSION}" MATCHES ".*4.7.*")
+    SET(revision_tag 099805b447d54dac22b2e548c078ba39fd724f50)
+  ELSE("${QTVERSION}" MATCHES ".*4.7.*")
+    SET(revision_tag "origin/master")
+  ENDIF("${QTVERSION}" MATCHES ".*4.7.*")
     
     ExternalProject_Add(${proj}
       GIT_REPOSITORY "${git_protocol}://github.com/b3c/PythonQt.git"
-      GIT_TAG "origin/master"
+      GIT_TAG revision_tag
       CMAKE_GENERATOR ${gen}
       UPDATE_COMMAND ""
       BUILD_COMMAND ""

@@ -5,3 +5,9 @@
 // do something
 #endif //PARAMETER_ENABLE
 
+#cmakedefine valgrind_ENABLE "@valgrind_ENABLE@"
+
+#ifdef valgrind_ENABLE
+// do something
+#endif //valgrind_ENABLE
+
