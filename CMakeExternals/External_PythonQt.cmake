@@ -99,7 +99,7 @@
   IF("${QTVERSION}" MATCHES ".*4.7.*")
     SET(revision_tag 099805b447d54dac22b2e548c078ba39fd724f50)
   ELSE("${QTVERSION}" MATCHES ".*4.7.*")
-    SET(revision_tag origin/master)
+    SET(revision_tag master)
   ENDIF("${QTVERSION}" MATCHES ".*4.7.*")
     
     ExternalProject_Add(${proj}
