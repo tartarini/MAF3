@@ -3,10 +3,15 @@
 #
 
 SET(valgrind_FOUND 0)
+
+#check if passed
+get_filename_component(valgrind_LIBRARY_DIR ${valgrind_LIBRARY} PATH)
+
 find_program(valgrind_LIBRARY 
               NAMES valgrind 
-              PATHS /usr/local/bin /usr/bin ${valgrind_LIBRARY})
+              PATHS /usr/local/bin /usr/bin ${valgrind_LIBRARY_DIR})
 
+#fill the directory
 get_filename_component(valgrind_LIBRARY_DIR ${valgrind_LIBRARY} PATH)
 
 MARK_AS_ADVANCED(valgrind_FOUND)
