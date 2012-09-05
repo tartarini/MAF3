@@ -104,7 +104,7 @@
     
     ExternalProject_Add(${proj}
       GIT_REPOSITORY "${git_protocol}://github.com/b3c/PythonQt.git"
-      GIT_TAG revision_tag
+      GIT_TAG ${revision_tag}
       CMAKE_GENERATOR ${gen}
       UPDATE_COMMAND ""
       BUILD_COMMAND ""
