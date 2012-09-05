@@ -16,7 +16,8 @@
 //#define Operation
 //#define ProgrammableOperation
 //#define ProgrammableOpenClinicaSearch
-#define SimJobQsub
+//#define SimJobQsub
+#define CalcRisk
 //#define Log
 
 int main(int argc, char *argv[]) {
@@ -140,6 +141,29 @@ int main(int argc, char *argv[]) {
     outputFiles << "outCases.txt";
     operationParameters.insert("outputFileList", outputFiles);
 #endif
+
+#ifdef CalcRisk
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    dataParameters.append("mafAlgorithmCalculateRisk");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    operationParameters.insert("yearNumber", 4);
+    operationParameters.insert("workflowId", "FGHGFNMSIEOAKMVOESLLCVRT");
+
+    QStringList inputFiles;
+    inputFiles << "Results_TOT_con_ciclo.pdrs";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "outLines.txt" << "RF.txt";
+    operationParameters.insert("outputFileList", outputFiles);
+#endif
+
     
 #ifdef Log    
     eventParameters.append("maf.local.resources.operation.executeWithParameters");
