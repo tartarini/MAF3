@@ -73,7 +73,7 @@ option(MAF_PLUGIN_OUTOFCORE "Build mafPluginOutOfCore module. mafCore and mafEve
 option(MAF_PLUGIN_ZIP "Build mafPluginZip module. mafCore and mafEventBus will be built anyway."               ON)
 option(MAF_MSV_EXTENSION "Build MSV Extension. mafCore and mafEventBus will be built anyway."               ON)
 
-set(valgrind_EXECUTABLE)
+set(valgrind_PATH)
 
 set(MAF_DATA_DIR)
 find_path(MAF_DATA_DIR "README.txt" PATHS "${MAF_SOURCE_DIR}/../maf3data")
