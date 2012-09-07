@@ -3,6 +3,7 @@
 #
 
 SET(valgrind_FOUND 0)
+SET(valgrind_ENABLE 0)
 
 find_program(valgrind_EXECUTABLE 
               NAMES valgrind 
