@@ -100,6 +100,7 @@ int main(int argc, char *argv[]) {
     logic->loadPlugins();
 
     w.setupMainWindow();
+
     int result = a.exec();
 
     mafDEL(logic);

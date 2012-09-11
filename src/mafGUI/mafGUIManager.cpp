@@ -607,7 +607,8 @@ void mafGUIManager::createDefaultMenus() {
 void mafGUIManager::createMenus() {
     int errorLine, errorColumn;
     QString errorMsg;
-    QFile modelFile("Menu.mnu");
+    QString path(UI_PATH);
+    QFile modelFile(path + "Menu.mnu");
     if (!modelFile.exists()) {
         qWarning() << "Menu.mnu " << tr("doesn't exists. The default menu will be created");
         createDefaultMenus();
