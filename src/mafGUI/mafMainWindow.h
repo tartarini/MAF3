@@ -95,6 +95,9 @@ private Q_SLOTS:
     
     /// Called when a subWindow has been destroyed.
     void subWindowDestroyed();
+    
+    /// Update Application.    
+    void updateApplicationShowDialog();
 
 protected:
     /// Method used to catch events related to changes.

@@ -26,6 +26,7 @@
   <Menu title="Window" parent="">
   	<Action title="SideBar" icon="" tip="Show-Hide the sidebar." checkable="1" checked="1" slot="" topic=""></Action>
   	<Action title="LogBar" icon="" tip="Show-Hide the log bar." checkable="1" checked="1" slot="" topic=""></Action>
+  	<Action title="Update" icon="" tip="Show the Update dialog." checkable="0" checked="0" slot="" topic=""></Action>
   </Menu>
   <Menu title="Options" parent="">
   	<Action title="Settings" icon="" tip="Show the application settings page." checkable="0" checked="0" slot="showSettingsDialog()" topic=""></Action>

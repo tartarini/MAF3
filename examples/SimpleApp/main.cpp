@@ -18,6 +18,7 @@
 
 #include <mafMainWindow.h>
 #include <mafLogic.h>
+#include <fvupdater.h>
 
 
 int main(int argc, char *argv[]) {
@@ -27,6 +28,10 @@ int main(int argc, char *argv[]) {
     a.setApplicationName(QString("SimpleApp").append(BUNDLE_SUFFIX));
     a.setApplicationVersion("1.0");
 
+    //--- Updater    
+    FvUpdater::sharedUpdater()->SetFeedURL("https://raw.github.com/pypt/fervor/master/sample/Appcast.xml");
+    //-----------------------
+    
     // Create the application's logic instance
     mafApplicationLogic::mafLogic *logic = new mafApplicationLogic::mafLogic();
     logic->setApplicationName(a.applicationName());

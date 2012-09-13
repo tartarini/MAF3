@@ -6,6 +6,7 @@
 
 SET(foundation_libraries 
    ${PYTHON_LIBRARY}
+   fervor
 )
 
 SET(target_libraries

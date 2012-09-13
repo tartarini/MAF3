@@ -17,6 +17,8 @@
 #include "mafGUIApplicationSettingsDialog.h"
 #include <QToolButton>
 
+#include <fvupdater.h>
+
 using namespace mafCore;
 using namespace mafGUI;
 
@@ -149,6 +151,7 @@ void mafMainWindow::initializeMainWindow() {
 void mafMainWindow::connectCallbacks() {
     mafRegisterLocalCallback("maf.local.gui.action.save", this, "save()");
     mafRegisterLocalCallback("maf.local.gui.action.about", this, "showAbout()");
+    mafRegisterLocalCallback("maf.local.gui.action.update", this, "updateApplicationShowDialog()");
 
     mafRegisterLocalCallback("maf.local.logic.settings.store", this, "writeSettings()");
     mafRegisterLocalCallback("maf.local.logic.settings.restore", this, "readSettings()");
@@ -166,8 +169,19 @@ void mafMainWindow::setupMainWindow() {
     this->show();
 }
 
+void mafMainWindow::updateApplicationShowDialog() {
+    QMessageBox msgBox;
+    QPushButton *updateButton = msgBox.addButton(mafTr("Check Update"), QMessageBox::ActionRole);
+    // ui->updateButton is QButton
+    QObject::connect(updateButton, SIGNAL(clicked()),
+        FvUpdater::sharedUpdater(), SLOT(CheckForUpdatesNotSilent()));
+    
+    msgBox.exec();
+}
+
 void mafMainWindow::showAbout() {
     QMessageBox::about(this, mafTr("About"), mafTr("Simple App v1.0 \nFirst Simple MAF3 application."));
+    
 }
 
 void mafMainWindow::changeEvent(QEvent *e) {

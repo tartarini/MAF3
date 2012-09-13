@@ -310,6 +310,12 @@ void mafGUIManager::createActions() {
     m_MenuItemList.append(settingsAction);
     connect(settingsAction, SIGNAL(triggered()), SLOT(showSettingsDialog()));
 
+    QAction *updateAct = new QAction(tr("&Update"), this);
+    updateAct->setObjectName("Update");
+    updateAct->setIconText(mafTr("Update"));
+    updateAct->setStatusTip(tr("Show the application's Update Dialog"));
+    m_MenuItemList.append(updateAct);
+
     QAction *sideBarAct = new QAction(tr("Sidebar"), this);
     sideBarAct->setObjectName("SideBar");
     sideBarAct->setCheckable(true);
@@ -502,6 +508,7 @@ void mafGUIManager::registerDefaultEvents() {
     provider->createNewId("maf.local.gui.action.copy");
     provider->createNewId("maf.local.gui.action.paste");
     provider->createNewId("maf.local.gui.action.about");
+    provider->createNewId("maf.local.gui.action.update");
 
     // Register API signals.
     QObject *action;
@@ -521,6 +528,8 @@ void mafGUIManager::registerDefaultEvents() {
     mafRegisterLocalSignal("maf.local.gui.action.paste", action, "triggered()");
     action = menuItemByName("About");
     mafRegisterLocalSignal("maf.local.gui.action.about", action, "triggered()");
+    action = menuItemByName("Update");
+    mafRegisterLocalSignal("maf.local.gui.action.update", action, "triggered()");
 }
 
 void mafGUIManager::createDefaultMenus() {
@@ -599,6 +608,7 @@ void mafGUIManager::createDefaultMenus() {
     QMenu *optionsMenu = menuBar->addMenu(tr("Options"));
     optionsMenu->setObjectName("Options");
     optionsMenu->addAction((QAction*)menuItemByName("Settings"));
+    optionsMenu->addAction((QAction*)menuItemByName("Update"));
     m_MenuItemList.append(optionsMenu);
     
     createDefaultToolbars();
