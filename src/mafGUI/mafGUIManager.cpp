@@ -24,6 +24,7 @@
 
 #include <mafObjectBase.h>
 
+#include <fvupdater.h>
 
 #ifdef __APPLE__
 #define UI_PATH QString(QCoreApplication::instance()->applicationName()).append("/Contents/MacOS/")
@@ -82,7 +83,7 @@ void mafGUIManager::newWorkingSession() {
     QModelIndex index = m_Model->index(0, 0);
     m_TreeWidget->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
     m_CompleteFileName = "";
-    Q_EMIT updateApplicationName();
+    Q_EMIT updateApplicationName();    
 }
 
 void mafGUIManager::quitApplication() {
@@ -115,6 +116,8 @@ void mafGUIManager::createAction(QDomElement node) {
     QString checked = attributes.namedItem("checked").nodeValue();
     QString slot = attributes.namedItem("slot").nodeValue();
     QString topic = attributes.namedItem("topic").nodeValue();
+
+    qDebug() << title << slot;
 
     QByteArray ba = title.toAscii();
     QAction *action = new QAction(QIcon(icon), mafTr(ba.constData()), this);
@@ -1099,6 +1102,8 @@ void mafGUIManager::open() {
     updateRecentFileMenu(m_CompleteFileName);
 }
 
+
+
 void mafGUIManager::updateRecentFileMenu(QString fileName) {
     QSettings settings;
     QStringList recentFiles = settings.value("recentFileList").toStringList();
@@ -1137,6 +1142,10 @@ void mafGUIManager::hideTooltip() {
     QToolTip::hideText();
 }
 
+void mafGUIManager::update() {
+    FvUpdater::sharedUpdater()->CheckForUpdatesNotSilent();
+}
+
 void mafGUI::mafGUIManager::registerCallbacks()
 {
     mafRegisterLocalCallback("maf.local.gui.new", this, "newWorkingSession()");
@@ -1165,6 +1174,8 @@ void mafGUI::mafGUIManager::registerCallbacks()
 
     mafRegisterLocalCallback("maf.local.gui.action.saveAs",this,"saveAs()");
     mafRegisterLocalCallback("maf.local.gui.action.save",this,"save()");
+
+    mafRegisterLocalCallback("maf.local.gui.action.update",this,"update()");
 }
 
 void mafGUI::mafGUIManager::registerSignals()

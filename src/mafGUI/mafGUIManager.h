@@ -267,6 +267,9 @@ private Q_SLOTS:
     /// open a working session
     void open();
 
+    /// open a working session
+    void update();
+
     /// Allows to parse the compound widget's layout and return the root object
     QObject *parseCompoundLayoutFile(QString layoutFile);
 };

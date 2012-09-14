@@ -26,14 +26,14 @@
   <Menu title="Window" parent="">
   	<Action title="SideBar" icon="" tip="Show-Hide the sidebar." checkable="1" checked="1" slot="" topic=""></Action>
   	<Action title="LogBar" icon="" tip="Show-Hide the log bar." checkable="1" checked="1" slot="" topic=""></Action>
-  	<Action title="Update" icon="" tip="Show the Update dialog." checkable="0" checked="0" slot="" topic=""></Action>
   </Menu>
   <Menu title="Options" parent="">
   	<Action title="Settings" icon="" tip="Show the application settings page." checkable="0" checked="0" slot="showSettingsDialog()" topic=""></Action>
   </Menu>
   <Menu title="Help" parent="">
   	<Action title="About" icon="" tip="Show the About dialog." checkable="0" checked="0" slot="" topic=""></Action>
+  	<Action title="Update App" icon=":/images/save.png" tip="Update the Application" checkable="0" checked="0" slot="update()" topic=""></Action>
   </Menu>
-  <Toolbar title="File" actionList="New,Open"></Toolbar>
+  <Toolbar title="File" actionList="New,Open,Update"></Toolbar>
   <Toolbar title="Edit" actionList="Cut,Copy,Paste"></Toolbar>
 </data>
