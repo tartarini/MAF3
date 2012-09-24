@@ -47,7 +47,7 @@ set(proj MSVTK)
 
     ExternalProject_Add(${proj}
       GIT_REPOSITORY "https://github.com/MSV-Project/MSVTK.git"
-      #GIT_TAG ${revision_tag}
+      GIT_TAG ${revision_tag}
       #BINARY_DIR ${proj}-build
       INSTALL_COMMAND ""
       CMAKE_GENERATOR ${gen}
