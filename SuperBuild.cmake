@@ -109,10 +109,10 @@ if(MAF_PLUGIN_ZIP)
   include(CMakeExternals/External_QuaZIP.cmake)
 endif(MAF_PLUGIN_ZIP)
 
-if(BUILD_EXAMPLES)
+if(MAF_QTGUI)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} fervor)
   include(CMakeExternals/External_fervor.cmake)
-endif(BUILD_EXAMPLES)
+endif(MAF_QTGUI)
 
 if(BUILD_WRAP)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} PythonQt)

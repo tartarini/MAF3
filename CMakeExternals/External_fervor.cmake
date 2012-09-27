@@ -5,7 +5,7 @@
 SET(proj fervor)
 
   
-  #execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/dgiunchi/fervor.git"
+  #execute_process(COMMAND ${GIT_EXECUTABLE} remote show "${git_protocol}://github.com/b3c/fervor.git"
   #                WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
   #                RESULT_VARIABLE RESULT)
        
@@ -56,7 +56,7 @@ SET(proj fervor)
     #MESSAGE("Adding project:${proj}")
     
     ExternalProject_Add(${proj}
-      GIT_REPOSITORY "${git_protocol}://github.com/dgiunchi/fervor.git"
+      GIT_REPOSITORY "${git_protocol}://github.com/b3c/fervor.git"
       GIT_TAG "origin/master"
       CMAKE_GENERATOR ${gen}
       INSTALL_COMMAND ""
