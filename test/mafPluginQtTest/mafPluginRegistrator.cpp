@@ -3,7 +3,7 @@
  *  mafPluginQt
  *
  *  Created by Paolo Quadrani on 19/03/12.
- *  Copyright 2012 B3C. All rights reserved.
+ *  Copyright 2012 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -45,7 +45,7 @@ mafResources::mafPluginInfo mafPluginRegistrator::pluginInfo() {
     info.m_Version = 1.0;
     info.m_PluginName = "Plugin Qt";
     info.m_Author = "Paolo Quadrani & Daniele Giunchi";
-    info.m_Vendor = "B3C";
+    info.m_Vendor = "SCS-B3C";
     info.m_VendorHomepage = "http:///www.openmaf.org/";
     info.m_Description = "Qt plugin: created only for be compliant to Qt plugins";
 

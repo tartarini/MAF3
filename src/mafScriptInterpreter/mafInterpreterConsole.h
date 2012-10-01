@@ -3,7 +3,7 @@
  *  mafGui
  *
  *  Created by Paolo Quadrani - Daniele Giunchi on 10/06/11.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *

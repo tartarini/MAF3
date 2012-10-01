@@ -3,7 +3,7 @@
  *  mafPluginVTK
  *
  *  Created by Paolo Quadrani on 11/11/10.
- *  Copyright 2010 B3C. All rights reserved.
+ *  Copyright 2010 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
