@@ -4,7 +4,7 @@
  *  mafSerializationTest
  *
  *  Created by Daniele Giunchi on 25/01/2011.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *

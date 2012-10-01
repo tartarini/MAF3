@@ -3,7 +3,7 @@
  *  mafResources
  *
  *  Created by Roberto Mucci - Paolo Quadrani - Daniele Giunchi on 30/12/09.
- *  Copyright 2012 B3C. All rights reserved.
+ *  Copyright 2012 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *

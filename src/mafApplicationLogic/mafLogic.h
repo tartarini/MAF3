@@ -3,7 +3,7 @@
  *  mafApplicationLogic
  *
  *  Created by Daniele Giunchi on 28/06/10.
- *  Copyright 2009-2010 B3C. All rights reserved.
+ *  Copyright 2009-2010 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *

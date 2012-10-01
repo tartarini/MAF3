@@ -3,7 +3,7 @@
  *  vtkMAF
  *
  *  Created by Paolo Quadrani on 28/09/11.
- *  Copyright 2012 B3C. All rights reserved.
+ *  Copyright 2012 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
