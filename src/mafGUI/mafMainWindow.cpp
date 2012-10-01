@@ -168,6 +168,7 @@ void mafMainWindow::setupMainWindow() {
 
 void mafMainWindow::showAbout() {
     QMessageBox::about(this, mafTr("About"), mafTr("Simple App v1.0 \nFirst Simple MAF3 application."));
+    
 }
 
 void mafMainWindow::changeEvent(QEvent *e) {

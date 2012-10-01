@@ -64,6 +64,11 @@ set(PYTHON_LIBRARY "@PYTHON_LIBRARY@")
 set(PYTHON_INCLUDE_DIR "@PYTHON_INCLUDE_DIR@")
 set(PYTHON_LIBRARIES "@PYTHON_LIBRARIES@")
 
+#valgrind
+SET(valgrind_EXECUTABLE "@valgrind_EXECUTABLE@")
+SET(valgrind_PATH "@valgrind_PATH@")
+SET(valgrind_ENABLE "@valgrind_ENABLE@")
+
 # copy options
 SET(MAF_CORE "@MAF_CORE@")
 SET(MAF_EVENT_BUS "@MAF_EVENT_BUS@")

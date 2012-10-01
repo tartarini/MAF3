@@ -18,6 +18,7 @@ include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_OpenCV.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_VTK.cmake)
+include(${MAF_SOURCE_DIR}/CMakeExternals/Find_fervor.cmake)
 
 ## #################################################################
 ## Init Project

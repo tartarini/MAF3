@@ -48,6 +48,7 @@ class mafGUIApplicationSettingsPage;
  - maf.local.gui.action.copy
  - maf.local.gui.action.paste
  - maf.local.gui.action.about
+ - maf.local.gui.action.update
  - maf.local.gui.compoundWidgetConfigure
  - maf.local.gui.showTooltip
  - maf.local.gui.hideTooltip
@@ -265,6 +266,9 @@ private Q_SLOTS:
     
     /// open a working session
     void open();
+
+    /// open a working session
+    void update();
 
     /// Allows to parse the compound widget's layout and return the root object
     QObject *parseCompoundLayoutFile(QString layoutFile);

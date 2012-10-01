@@ -95,7 +95,7 @@ def execute():
             else:
                 valgrindPrefix = ""
                 if(mafPath.valgrind):
-                    valgrindPrefix = valgrindPath + " --leak-check=yes "
+                    valgrindPrefix = mafPath.valgrindPath + " --leak-check=yes "
                 os.system(valgrindPrefix + absPath + " &> " + logResult)
                 #os.system(absPath + " &> " + logResult)
             name_key = "test-suite"

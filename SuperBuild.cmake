@@ -109,7 +109,10 @@ if(MAF_PLUGIN_ZIP)
   include(CMakeExternals/External_QuaZIP.cmake)
 endif(MAF_PLUGIN_ZIP)
 
-
+if(MAF_QTGUI)
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} fervor)
+  include(CMakeExternals/External_fervor.cmake)
+endif(MAF_QTGUI)
 
 if(BUILD_WRAP)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} PythonQt)
@@ -262,13 +265,13 @@ ExternalProject_Add(${proj}
     -DCTK_DIR:PATH=${CTK_DIR}
     # MSVTK
     -DMSVTK_DIR:PATH=${MSVTK_DIR}
-
     # QuaZIP
     -DQuaZIP_DIR:PATH=${QuaZIP_DIR}
     -DQuaZIP_SOURCE_DIR:PATH=${QuaZIP_SOURCE_DIR}
     # MSVTK
     -DMSVTK_DIR:PATH=${MSVTK_DIR}
-
+    # fervor
+    -Dfervor_DIR:PATH=${fervor_DIR}
   INSTALL_COMMAND ""
   )
   

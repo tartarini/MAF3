@@ -51,6 +51,11 @@ SET(PYTHON_INCLUDE_PATH ${PYTHON_INCLUDE_PATH})
 SET(PYTHON_LIBRARIES ${PYTHON_LIBRARIES})
 SET(PYTHON_LIBRARY ${PYTHON_LIBRARY})
 
+#valgrind
+SET(valgrind_EXECUTABLE ${valgrind_EXECUTABLE})
+SET(valgrind_PATH ${valgrind_PATH})
+SET(valgrind_ENABLE ${valgrind_ENABLE})
+
 # Configure MAFConfig.cmake for the install tree.
 CONFIGURE_FILE(
   ${MAF_SOURCE_DIR}/MAFConfig.cmake.in

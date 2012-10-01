@@ -24,6 +24,8 @@
 #include "mafViewVTKButtons.h"
 #include "mafOrthoSlice.h"
 
+#include <fvupdater.h>
+
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     a.setOrganizationName("SCS");
@@ -100,6 +102,12 @@ int main(int argc, char *argv[]) {
     logic->loadPlugins();
 
     w.setupMainWindow();
+
+    //--- Updater
+    FvUpdater::sharedUpdater()->SetFeedURL("http://pypt.github.com/fervor/Appcast.xml");
+    FvUpdater::sharedUpdater()->CheckForUpdatesSilent();
+    //-----------------------
+
     int result = a.exec();
 
     mafDEL(logic);
