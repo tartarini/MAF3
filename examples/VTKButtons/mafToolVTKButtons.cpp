@@ -100,10 +100,13 @@ void mafToolVTKButtons::updatePipe(double t) {
     //Load image only the first time
     if (isLoaded == false) {
         QString iconType = vme->property("iconType").toString();
-        QString iconFileName = mafIconFromObjectType(iconType);
-        button()->setIconFileName(iconFileName);
+        if(iconType.compare("")!=0)
+        {
+            QString iconFileName = mafIconFromObjectType(iconType);
+            button()->setIconFileName(iconFileName);
 
-        isLoaded = true;
+            isLoaded = true;
+        }
     }
 
     int size[2]; size[0] = 16; size[1] = 16;
