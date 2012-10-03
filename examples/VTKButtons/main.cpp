@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
     w.setupMainWindow();
 
     //--- Updater
-    FvUpdater::sharedUpdater()->SetFeedURL("http://pypt.github.com/fervor/Appcast.xml");
+    FvUpdater::sharedUpdater()->SetFeedURL("http://update.scsitaly.com/VTKButtons.xml");
     FvUpdater::sharedUpdater()->CheckForUpdatesSilent();
     //-----------------------
 
