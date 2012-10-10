@@ -3,7 +3,7 @@
  *  mafPluginVTKTest
  *
  *  Created by Roberto Mucci on 26/03/10.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -155,6 +155,9 @@ private Q_SLOTS:
 
     /// MiddleButtonPress event connection test case.
     void mafVTKWidgetMiddleButtonReleaseTest();
+
+    /// visible all bounds function test.
+    void visibleBoundsOnAllLayersTest();
 
     /// Layer API test.
     void mafVTKWidgetLayerTest();
@@ -310,6 +313,13 @@ void mafVTKWidgetTest::mafVTKWidgetLayerTest() {
     layers = m_VTKWidget->layersList();
     n = layers.size();
     QVERIFY(n == 2);
+}
+
+void mafVTKWidgetTest::visibleBoundsOnAllLayersTest() {
+    double b1[6];
+    m_VTKWidget->visibleBoundsOnAllLayers(b1);
+    qDebug() << b1[0] << b1[2] << b1[4];
+    qDebug() << b1[1] << b1[3] << b1[5];
 }
 
 MAF_REGISTER_TEST(mafVTKWidgetTest);

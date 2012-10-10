@@ -3,7 +3,7 @@
  *  mafPluginQt
  *
  *  Created by Paolo Quadrani on 19/03/12.
- *  Copyright 2012 B3C. All rights reserved.
+ *  Copyright 2012 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *

@@ -3,7 +3,7 @@
 #  MAF
 #
 #  Created by Daniele Giunchi - Paolo Quadrani on 10/09/10.
-#  Copyright 2011 B3C. All rights reserved.
+#  Copyright 2011 SCS-B3C. All rights reserved.
 #
 #  See Licence at: http://tiny.cc/QXJ4D
 #
@@ -37,18 +37,10 @@ if(NOT GIT_FOUND)
   message(FATAL_ERROR "error: Install Git and try to re-configure")
 endif()
 
-
-FIND_PACKAGE(Subversion)
-if(NOT Subversion_FOUND)
-  message(STATUS "error: Install Subversion for enable tests.")
-  set(BUILD_TEST_SUITE OFF)
-  set(DATA_TEST OFF)
-endif()
-
 # git protocol to be used
 set(git_protocol "git")
 if(NOT MAF_USE_GIT_PROTOCOL)
-  set(git_protocol "http")
+  set(git_protocol "https")
 endif()
 
 
@@ -78,6 +70,10 @@ option(MAF_QTGUI "Build mafGUI module. mafCore and mafEventBus will be built any
 option(MAF_SCRIPT_INTERPRETER "Build mafScriptInterpreter module. mafCore, mafEventBus and mafGUI will be built anyway." OFF)
 option(MAF_PLUGINCTK "Build mafPluginCTK module. mafCore and mafEventBus will be built anyway."               ON)
 option(MAF_PLUGIN_OUTOFCORE "Build mafPluginOutOfCore module. mafCore and mafEventBus will be built anyway."               ON)
+option(MAF_PLUGIN_ZIP "Build mafPluginZip module. mafCore and mafEventBus will be built anyway."               ON)
+option(MAF_MSV_EXTENSION "Build MSV Extension. mafCore and mafEventBus will be built anyway."               ON)
+
+set(valgrind_PATH)
 
 set(MAF_DATA_DIR)
 find_path(MAF_DATA_DIR "README.txt" PATHS "${MAF_SOURCE_DIR}/../maf3data")
@@ -101,6 +97,11 @@ if(MAF_PLUGIN_OUTOFCORE)
   SET( MAF_RESOURCES ON ) 
   mafDependentOption(MAF_RESOURCES "Build mafResources module." ON MAF_PLUGIN_OUTOFCORE ON)
 endif(MAF_PLUGIN_OUTOFCORE)
+
+if(MAF_PLUGIN_ZIP)
+  SET( MAF_RESOURCES ON ) 
+  mafDependentOption(MAF_RESOURCES "Build mafResources module." ON MAF_PLUGIN_ZIP ON)
+endif(MAF_PLUGIN_ZIP)
 
 if(MAF_PLUGINCTK)
   SET( MAF_RESOURCES ON ) 
@@ -162,6 +163,12 @@ endif(BUILD_TEST_SUITE)
 if(BUILD_QA)
     set( BUILD_DOCUMENTATION ON ) 
     mafDependentOption(BUILD_DOCUMENTATION "Build Documentation for QA." ON BUILD_QA ON)
+    
+    include(CMake/Findvalgrind.cmake)
+    if(NOT valgrind_FOUND)
+      message(STATUS "for memory leak detection, install valgrind")
+    endif()
+
 endif(BUILD_QA)
 
 #############################################################################################
@@ -170,7 +177,7 @@ endif(BUILD_QA)
 if(BUILD_WRAP)
   set( BUILD_DOCUMENTATION ON ) 
   mafDependentOption(BUILD_DOCUMENTATION "Build XML doxygen output for Wrapping." ON BUILD_WRAP ON)
-  include(CMake/mafMacroFindWrap.cmake)
+  include(CMake/mafMacroFindPython.cmake)
 endif(BUILD_WRAP)
 
 #############################################################################################

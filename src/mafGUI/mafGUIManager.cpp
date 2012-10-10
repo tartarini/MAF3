@@ -3,7 +3,7 @@
  *  mafGUI
  *
  *  Created by Paolo Quadrani on 26/10/10.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -24,6 +24,7 @@
 
 #include <mafObjectBase.h>
 
+#include <fvupdater.h>
 
 #ifdef __APPLE__
 #define UI_PATH QString(QCoreApplication::instance()->applicationName()).append("/Contents/MacOS/")
@@ -47,36 +48,10 @@ mafGUIManager::mafGUIManager(QMainWindow *main_win, const QString code_location)
 
     mafCore::mafMessageHandler::instance()->setActiveLogger(m_Logger);
 
-    mafRegisterLocalSignal("maf.local.gui.new", this, "newWorkinSessioneSignal()");
-    mafRegisterLocalCallback("maf.local.gui.new", this, "newWorkingSession()");
-
-    mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)")
-
-    mafRegisterLocalSignal("maf.local.gui.compoundWidgetConfigure", this, "parseCompoundLayoutFileSignal(QString)");
-    mafRegisterLocalCallback("maf.local.gui.compoundWidgetConfigure", this, "parseCompoundLayoutFile(QString)")
-
-    // VME selection callbacks.
-    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateMenuForSelectedVme(mafCore::mafObjectBase *)")
-    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateTreeForSelectedVme(mafCore::mafObjectBase *)")
-    
-    // OperationManager's callback
-    mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
-    
-    // ViewManager's callback.
-    mafRegisterLocalCallback("maf.local.resources.view.select", this, "viewSelected(mafCore::mafObjectBase *)");
-    mafRegisterLocalCallback("maf.local.resources.view.noneViews", this, "viewDestroyed()");
-    mafRegisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "setVMECheckState(mafCore::mafObjectBase *, bool)");
-
     m_UILoader = mafNEW(mafGUI::mafUILoaderQt);
-    //connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*, int)), this, SLOT(showGui(mafCore::mafProxyInterface*, int)));
-    mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "showGui(mafCore::mafProxyInterface*, int)");
 
-    //Tooltip connect
-    mafRegisterLocalSignal("maf.local.gui.showTooltip", this, "showTooltipSignal(const QString &)")
-    mafRegisterLocalCallback("maf.local.gui.showTooltip", this, "showTooltip(const QString &)");
-
-    mafRegisterLocalSignal("maf.local.gui.hideTooltip", this, "hideTooltipSignal()")
-    mafRegisterLocalCallback("maf.local.gui.hideTooltip", this, "hideTooltip()");
+    registerSignals();
+    registerCallbacks();
 
 }
 
@@ -108,7 +83,7 @@ void mafGUIManager::newWorkingSession() {
     QModelIndex index = m_Model->index(0, 0);
     m_TreeWidget->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
     m_CompleteFileName = "";
-    Q_EMIT updateApplicationName();
+    Q_EMIT updateApplicationName();    
 }
 
 void mafGUIManager::quitApplication() {
@@ -141,6 +116,8 @@ void mafGUIManager::createAction(QDomElement node) {
     QString checked = attributes.namedItem("checked").nodeValue();
     QString slot = attributes.namedItem("slot").nodeValue();
     QString topic = attributes.namedItem("topic").nodeValue();
+
+    qDebug() << title << slot;
 
     QByteArray ba = title.toAscii();
     QAction *action = new QAction(QIcon(icon), mafTr(ba.constData()), this);
@@ -336,6 +313,12 @@ void mafGUIManager::createActions() {
     m_MenuItemList.append(settingsAction);
     connect(settingsAction, SIGNAL(triggered()), SLOT(showSettingsDialog()));
 
+    QAction *updateAct = new QAction(tr("&Update"), this);
+    updateAct->setObjectName("Update");
+    updateAct->setIconText(mafTr("Update"));
+    updateAct->setStatusTip(tr("Show the application's Update Dialog"));
+    m_MenuItemList.append(updateAct);
+
     QAction *sideBarAct = new QAction(tr("Sidebar"), this);
     sideBarAct->setObjectName("SideBar");
     sideBarAct->setCheckable(true);
@@ -528,6 +511,7 @@ void mafGUIManager::registerDefaultEvents() {
     provider->createNewId("maf.local.gui.action.copy");
     provider->createNewId("maf.local.gui.action.paste");
     provider->createNewId("maf.local.gui.action.about");
+    provider->createNewId("maf.local.gui.action.update");
 
     // Register API signals.
     QObject *action;
@@ -547,6 +531,8 @@ void mafGUIManager::registerDefaultEvents() {
     mafRegisterLocalSignal("maf.local.gui.action.paste", action, "triggered()");
     action = menuItemByName("About");
     mafRegisterLocalSignal("maf.local.gui.action.about", action, "triggered()");
+    action = menuItemByName("Update");
+    mafRegisterLocalSignal("maf.local.gui.action.update", action, "triggered()");
 }
 
 void mafGUIManager::createDefaultMenus() {
@@ -625,6 +611,7 @@ void mafGUIManager::createDefaultMenus() {
     QMenu *optionsMenu = menuBar->addMenu(tr("Options"));
     optionsMenu->setObjectName("Options");
     optionsMenu->addAction((QAction*)menuItemByName("Settings"));
+    optionsMenu->addAction((QAction*)menuItemByName("Update"));
     m_MenuItemList.append(optionsMenu);
     
     createDefaultToolbars();
@@ -633,7 +620,8 @@ void mafGUIManager::createDefaultMenus() {
 void mafGUIManager::createMenus() {
     int errorLine, errorColumn;
     QString errorMsg;
-    QFile modelFile("Menu.mnu");
+    QString path(UI_PATH);
+    QFile modelFile(path + "Menu.mnu");
     if (!modelFile.exists()) {
         qWarning() << "Menu.mnu " << tr("doesn't exists. The default menu will be created");
         createDefaultMenus();
@@ -1114,6 +1102,8 @@ void mafGUIManager::open() {
     updateRecentFileMenu(m_CompleteFileName);
 }
 
+
+
 void mafGUIManager::updateRecentFileMenu(QString fileName) {
     QSettings settings;
     QStringList recentFiles = settings.value("recentFileList").toStringList();
@@ -1150,4 +1140,48 @@ void mafGUIManager::showTooltip(const QString &text) {
 
 void mafGUIManager::hideTooltip() {
     QToolTip::hideText();
+}
+
+void mafGUIManager::update() {
+    FvUpdater::sharedUpdater()->CheckForUpdatesNotSilent();
+}
+
+void mafGUI::mafGUIManager::registerCallbacks()
+{
+    mafRegisterLocalCallback("maf.local.gui.new", this, "newWorkingSession()");
+
+    mafRegisterLocalCallback("maf.local.resources.plugin.registerLibrary", this, "fillMenuWithPluggedObjects(mafCore::mafPluggedObjectsHash)");
+    mafRegisterLocalCallback("maf.local.gui.compoundWidgetConfigure", this, "parseCompoundLayoutFile(QString)");
+
+      // VME selection callbacks.
+    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateMenuForSelectedVme(mafCore::mafObjectBase *)")
+    mafRegisterLocalCallback("maf.local.resources.vme.select", this, "updateTreeForSelectedVme(mafCore::mafObjectBase *)")
+
+      // OperationManager's callback
+    mafRegisterLocalCallback("maf.local.resources.operation.started", this, "operationDidStart(mafCore::mafObjectBase *)");
+
+    // ViewManager's callback.
+    mafRegisterLocalCallback("maf.local.resources.view.select", this, "viewSelected(mafCore::mafObjectBase *)");
+    mafRegisterLocalCallback("maf.local.resources.view.noneViews", this, "viewDestroyed()");
+    mafRegisterLocalCallback("maf.local.resources.view.sceneNodeShow", this, "setVMECheckState(mafCore::mafObjectBase *, bool)");
+
+    //connect(m_UILoader, SIGNAL(uiLoadedSignal(mafCore::mafProxyInterface*, int)), this, SLOT(showGui(mafCore::mafProxyInterface*, int)));
+    mafRegisterLocalCallback("maf.local.gui.uiloaded", this, "showGui(mafCore::mafProxyInterface*, int)");
+
+    //Tooltip connect
+    mafRegisterLocalCallback("maf.local.gui.showTooltip", this, "showTooltip(const QString &)");
+    mafRegisterLocalCallback("maf.local.gui.hideTooltip", this, "hideTooltip()");
+
+    mafRegisterLocalCallback("maf.local.gui.action.saveAs",this,"saveAs()");
+    mafRegisterLocalCallback("maf.local.gui.action.save",this,"save()");
+
+    mafRegisterLocalCallback("maf.local.gui.action.update",this,"update()");
+}
+
+void mafGUI::mafGUIManager::registerSignals()
+{
+    mafRegisterLocalSignal("maf.local.gui.new", this, "newWorkinSessioneSignal()");
+    mafRegisterLocalSignal("maf.local.gui.showTooltip", this, "showTooltipSignal(const QString &)");
+    mafRegisterLocalSignal("maf.local.gui.hideTooltip", this, "hideTooltipSignal()");
+    mafRegisterLocalSignal("maf.local.gui.compoundWidgetConfigure", this, "parseCompoundLayoutFileSignal(QString)");
 }

@@ -129,11 +129,11 @@ set(proj VTK)
   #if (MAF_USE_PYTHONQT)
   #  list(APPEND VTK_QT_ARGS -DVTK_USE_TK:BOOL=OFF)
   #endif()
-
+  set(revision_tag 1542ba1809f7d87c6c88015c056af39084d00ea4)
   #MESSAGE("Adding project:${proj}")
   ExternalProject_Add(${proj}
-    GIT_REPOSITORY "${git_protocol}://github.com/b3c/VTK.git"
-    #GIT_TAG "origin"
+    GIT_REPOSITORY "${git_protocol}://github.com/MSV-Project/VTK.git"
+    #GIT_TAG ${revision_tag}
     INSTALL_COMMAND ""
     #INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/build/bin
     CMAKE_GENERATOR ${gen}

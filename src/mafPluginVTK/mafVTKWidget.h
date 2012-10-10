@@ -3,7 +3,7 @@
  *  mafPluginVTK
  *
  *  Created by Roberto Mucci - Paolo Quadrani on 12/10/10.
- *  Copyright 2011 B3C.s All rights reserved.
+ *  Copyright 2011 SCS-B3C.s All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -74,7 +74,7 @@ public:
     double *visibleBounds(QString layerName = "base");
 
     /// Allows to retrieve the bounds for visible objects in all the created layers.
-    double *visibleBoundsOnAllLayers();
+    void visibleBoundsOnAllLayers(double bounds[6]);
 
     /// Allow to remove all objects from all layers.
     void removeAllObjects();

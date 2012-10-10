@@ -3,7 +3,7 @@
 #  MSVTK
 #
 #  Created by Paolo Quadrani on 24/10/11.
-#  Copyright 2011 B3C. All rights reserved.
+#  Copyright 2011 SCS-B3C. All rights reserved.
 #
 #  See Licence at: http://tiny.cc/QXJ4D
 #
@@ -18,6 +18,8 @@ include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_OpenCV.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_VTK.cmake)
+include(${MAF_SOURCE_DIR}/CMakeExternals/Find_MSVTK.cmake)
+include(${MAF_SOURCE_DIR}/CMakeExternals/Find_fervor.cmake)
 
 ## #################################################################
 ## Init Project
@@ -41,6 +43,12 @@ ENDIF (APPLE)
 # Create the executable.
 ADD_EXECUTABLE(${PROJECT_NAME} ${GUI_TYPE} ${PROJECT_SRCS})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
+
+## #################################################################
+## copy MSVTK libraries
+## #################################################################
+
+mafCopySharedLibrariesInInstallDir("${MSVTK_DIR}/MSVTK-build/bin")
 
 ## #################################################################
 ## copy ui files

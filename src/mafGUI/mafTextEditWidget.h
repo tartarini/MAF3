@@ -3,7 +3,7 @@
  *  mafGUI
  *
  *  Created by Daniele Giunchi on 14/01/11.
- *  Copyright 2010 B3C. All rights reserved.
+ *  Copyright 2010 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *

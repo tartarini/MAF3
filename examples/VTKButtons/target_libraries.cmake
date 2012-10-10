@@ -15,6 +15,7 @@ if(NOT ${BUILD_SHARED_LIBS})
   SET(foundation_libraries 
   ${foundation_libraries} 
   ${ZLIB_LIBRARY}
+  fervor
 )
 endif(NOT ${BUILD_SHARED_LIBS})
 
@@ -41,6 +42,9 @@ SET(target_libraries
   mafGUI
   ${VTK_LIBRARIES}
   mafPluginVTK
+  msvVTKParallel
+  msvVTKWidgets
+  msvQtWidgets
   )
 
 if(${BUILD_WRAP})

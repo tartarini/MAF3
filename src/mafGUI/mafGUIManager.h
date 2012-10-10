@@ -3,7 +3,7 @@
  *  mafGUI
  *
  *  Created by Paolo Quadrani on 26/10/10.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -48,6 +48,7 @@ class mafGUIApplicationSettingsPage;
  - maf.local.gui.action.copy
  - maf.local.gui.action.paste
  - maf.local.gui.action.about
+ - maf.local.gui.action.update
  - maf.local.gui.compoundWidgetConfigure
  - maf.local.gui.showTooltip
  - maf.local.gui.hideTooltip
@@ -129,6 +130,12 @@ private:
 
     /// Update recent file menu
     void updateRecentFileMenu(QString fileName);
+
+    /// Register signals.
+    void registerSignals();
+
+    /// Register callbacks.
+    void registerCallbacks();
 
     QMenu *m_RecentFilesMenu; ///< Reference to 'Recent File' menu.
     QMenu *m_CurrentMenu; ///< Current menu that has been created during the mnu file parsing.
@@ -259,6 +266,9 @@ private Q_SLOTS:
     
     /// open a working session
     void open();
+
+    /// open a working session
+    void update();
 
     /// Allows to parse the compound widget's layout and return the root object
     QObject *parseCompoundLayoutFile(QString layoutFile);

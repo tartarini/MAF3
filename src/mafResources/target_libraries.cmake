@@ -10,6 +10,14 @@ SET(foundation_libraries
   opencv_core
 )
 
+if(NOT ${BUILD_SHARED_LIBS})
+  FIND_PACKAGE(zlib REQUIRED)
+  SET(foundation_libraries 
+  ${foundation_libraries} 
+  ${ZLIB_LIBRARY}
+)
+endif(NOT ${BUILD_SHARED_LIBS})
+
 SET(target_libraries
   ${MAF_BASE_LIBRARIES}
   ${foundation_libraries}

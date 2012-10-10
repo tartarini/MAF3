@@ -3,7 +3,7 @@
  *  SimpleApp
  *
  *  Created by Paolo Quadrani on 14/12/10.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -168,6 +168,7 @@ void mafMainWindow::setupMainWindow() {
 
 void mafMainWindow::showAbout() {
     QMessageBox::about(this, mafTr("About"), mafTr("Simple App v1.0 \nFirst Simple MAF3 application."));
+    
 }
 
 void mafMainWindow::changeEvent(QEvent *e) {

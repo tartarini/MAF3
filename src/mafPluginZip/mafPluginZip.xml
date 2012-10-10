@@ -1,0 +1,3 @@
+<plugin>
+	<plug classtype="mafPluginZip::mafQuaZIP" baseclass="mafCore::mafObjectBase" label="wrap class for QuaZIP"></plug>
+</plugin>

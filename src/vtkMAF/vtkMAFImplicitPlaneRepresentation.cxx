@@ -92,7 +92,7 @@ int vtkMAFImplicitPlaneRepresentation::ComputeInteractionState(int X, int Y, int
         }
     }
 
-    else if ( this->InteractionState == vtkImplicitPlaneRepresentation::MovingPlane )
+    else if ( this->InteractionState == vtkImplicitPlaneRepresentation::Moving )
     {
         return this->InteractionState;
     }

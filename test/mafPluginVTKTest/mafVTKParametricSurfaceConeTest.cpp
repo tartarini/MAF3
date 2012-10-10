@@ -3,7 +3,7 @@
  *  mafPluginVTKTest
  *
  *  Created by Roberto Mucci on 20/01/11.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *

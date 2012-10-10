@@ -7,6 +7,7 @@
 SET(foundation_libraries 
   qxmlrpc 
   QtSOAP
+  fervor
 )
 
 SET(target_libraries

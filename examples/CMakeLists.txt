@@ -3,7 +3,7 @@
 #  maf
 #
 #  Created by Daniele Giunchi - Paolo Quadrani on 10/09/10.
-#  Copyright 2011 B3C. All rights reserved.
+#  Copyright 2011 SCS-B3C. All rights reserved.
 #
 #  See Licence at: http://tiny.cc/QXJ4D
 #
@@ -11,7 +11,7 @@
 
 
 #############################################################################################
-### find project subdirs avoiding the svn directory and make the SUBDIR CMake command on them.
+### find project subdirs 
 #############################################################################################
 
 include(${MAF_USE_FILE_CONFIG})
@@ -32,4 +32,6 @@ endif(BUILD_WRAP)
 #ADD_SUBDIRECTORY(mafCTKSimpleApp)
 #ADD_SUBDIRECTORY(mafCTKHostedApplication)
 #ADD_SUBDIRECTORY(mapReduceExample)
-ADD_SUBDIRECTORY(VTKButtons)
+if(MAF_MSV_EXTENSION)
+    ADD_SUBDIRECTORY(VTKButtons)
+endif(MAF_MSV_EXTENSION)

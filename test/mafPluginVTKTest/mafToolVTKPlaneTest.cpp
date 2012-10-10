@@ -3,7 +3,7 @@
  *  mafPluginVTK
  *
  *  Created by Paolo Quadrani on 26/1/12.
- *  Copyright 2012 B3C. All rights reserved.
+ *  Copyright 2012 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -122,7 +122,6 @@ private Q_SLOTS:
 
         mafDEL(m_VME);
         mafDEL(m_SceneNode);
-        mafDEL(m_ToolPlane);
         mafDEL(m_ToolHandler);
         mafMessageHandler::instance()->shutdown();
 

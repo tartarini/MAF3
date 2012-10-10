@@ -93,7 +93,11 @@ def execute():
             if(str(os.sys.platform).lower() == 'win32'):
                 os.system(absPath + " > " + logResult + " 2>&1 ")
             else:
-                os.system(absPath + " &> " + logResult)
+                valgrindPrefix = ""
+                if(mafPath.valgrind):
+                    valgrindPrefix = mafPath.valgrindPath + " --leak-check=yes "
+                os.system(valgrindPrefix + absPath + " &> " + logResult)
+                #os.system(absPath + " &> " + logResult)
             name_key = "test-suite"
             if name_key in param:
                 validate(logResult)

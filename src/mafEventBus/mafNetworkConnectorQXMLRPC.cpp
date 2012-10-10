@@ -3,7 +3,7 @@
  *  mafEventBus
  *
  *  Created by Daniele Giunchi on 11/04/10.
- *  Copyright 2011 B3C. All rights reserved.
+ *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -62,7 +62,16 @@ void mafNetworkConnectorQXMLRPC::createClient(const QString hostName, const unsi
         }
     }
 
-    m_Client->setHost( hostName, port );
+    QHttp::ConnectionMode cm = QHttp::ConnectionModeHttp;
+    if(advancedParameters && advancedParameters->contains("connectionmode")) {
+        cm = (QHttp::ConnectionMode) advancedParameters->value("connectionmode").toInt();
+    }
+    
+    if(advancedParameters && advancedParameters->contains("username") && advancedParameters->contains("password")) {
+        m_Client->setUser(advancedParameters->value("username").toString(), advancedParameters->value("password").toString());        
+    }
+    
+    m_Client->setHost( hostName, cm, port );
 
 	// set advanced paramters
 	if ( advancedParameters && advancedParameters->count() ){
@@ -241,8 +250,20 @@ void mafNetworkConnectorQXMLRPC::send(const QString event_id, mafEventArgumentsL
         }
     }
 
-   xmlrpcSend(event_id, *vl);
-   delete vl;
+    if(vl == NULL && externalSend) {
+        QList<xmlrpc::Variant> params;
+        xmlrpcSend(event_id, params);
+        return;
+    }
+
+    if(vl == NULL) {
+        qWarning() << "An EventBus message needs a list as argument";
+        return;
+    }
+
+    xmlrpcSend(event_id, *vl);
+    delete vl;
+
 }
 
 void mafNetworkConnectorQXMLRPC::xmlrpcSend(const QString &methodName, QList<xmlrpc::Variant> parameters) {

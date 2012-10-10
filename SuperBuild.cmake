@@ -91,8 +91,12 @@ if(MAF_RESOURCES)
 endif(MAF_RESOURCES)
 
 if(VTK_MAF)
-  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VTK)
-  include(CMakeExternals/External_VTK.cmake)
+    set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VTK)
+    include(CMakeExternals/External_VTK.cmake)
+    if(MAF_MSV_EXTENSION)
+      set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} MSVTK)
+      include(CMakeExternals/External_MSVTK.cmake)
+    endif(MAF_MSV_EXTENSION)
 endif(VTK_MAF)
 
 if(MAF_PLUGINCTK)
@@ -100,6 +104,15 @@ if(MAF_PLUGINCTK)
   #include(CMakeExternals/External_CTK.cmake)
 endif(MAF_PLUGINCTK)
 
+if(MAF_PLUGIN_ZIP)
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} QuaZIP)
+  include(CMakeExternals/External_QuaZIP.cmake)
+endif(MAF_PLUGIN_ZIP)
+
+if(MAF_QTGUI)
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} fervor)
+  include(CMakeExternals/External_fervor.cmake)
+endif(MAF_QTGUI)
 
 if(BUILD_WRAP)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} PythonQt)
@@ -219,7 +232,7 @@ ExternalProject_Add(${proj}
     #-DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
     #-DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
     -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-    -DSubversion_SVN_EXECUTABLE:FILEPATH=${Subversion_SVN_EXECUTABLE}
+    #-DSubversion_SVN_EXECUTABLE:FILEPATH=${Subversion_SVN_EXECUTABLE}
     -DGIT_EXECUTABLE:FILEPATH=${GIT_EXECUTABLE}
     -DMAF_DATA_DIR:PATH=${MAF_DATA_DIR}
     -DMAF_SUPERBUILD:BOOL=OFF
@@ -250,6 +263,15 @@ ExternalProject_Add(${proj}
     -DOpenCV_DIR:PATH=${OpenCV_DIR} # FindOpenCV expects OpenCV_DIR variable to be defined
     # CTK
     -DCTK_DIR:PATH=${CTK_DIR}
+    # MSVTK
+    -DMSVTK_DIR:PATH=${MSVTK_DIR}
+    # QuaZIP
+    -DQuaZIP_DIR:PATH=${QuaZIP_DIR}
+    -DQuaZIP_SOURCE_DIR:PATH=${QuaZIP_SOURCE_DIR}
+    # MSVTK
+    -DMSVTK_DIR:PATH=${MSVTK_DIR}
+    # fervor
+    -Dfervor_DIR:PATH=${fervor_DIR}
   INSTALL_COMMAND ""
   )
   

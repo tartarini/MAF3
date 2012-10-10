@@ -3,7 +3,7 @@
 #  maf
 #
 #  Created by Daniele Giunchi - Paolo Quadrani on 10/09/10.
-#  Copyright 2009 B3C. All rights reserved.
+#  Copyright 2009 SCS-B3C. All rights reserved.
 #
 #  See Licence at: http://tiny.cc/QXJ4D
 #
@@ -17,6 +17,7 @@ include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_OpenCV.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_PythonQt.cmake)
+include(${MAF_SOURCE_DIR}/CMakeExternals/Find_fervor.cmake)
 
 find_package(PythonLibs)
 
@@ -36,11 +37,12 @@ mafMacroWrapTargetFiles()
 ## #################################################################
 
 # Create the library.
-if(${BUILD_SHARED_LIBS})
+#if(${BUILD_SHARED_LIBS})
   ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
-else(${BUILD_SHARED_LIBS})
-  ADD_LIBRARY(${PROJECT_NAME} STATIC ${PROJECT_SRCS})
-endif(${BUILD_SHARED_LIBS})  
+#else(${BUILD_SHARED_LIBS})
+#  ADD_LIBRARY(${PROJECT_NAME} STATIC ${PROJECT_SRCS})
+#endif(${BUILD_SHARED_LIBS})  
+
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 

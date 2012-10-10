@@ -3,7 +3,7 @@
  *  mafQATest
  *
  *  Created by Paolo Quadrani on 22/09/09.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
@@ -42,10 +42,12 @@ private Q_SLOTS:
     void profilerTest();
     /// Poll URL test
     void pollUrlTest();
+#ifndef valgrind_ENABLE
     /// RunPythonScript test case
     void runPythonScriptTest();
     /// RunScript test case
     void runScriptTest();
+#endif //valgrind_ENABLE
     /// Memory monitor test case
     void memoryMonitorTest();
     /// Validate Plugin test case
@@ -114,6 +116,7 @@ void mafQAManagerTest::pollUrlTest() {
     //m_QAManager->openPollUrl("http://www.biomedtown.org/biomed_town/MAF/MAF3%20Floor/Reception/");
 }
 
+#ifndef valgrind_ENABLE
 void mafQAManagerTest::runPythonScriptTest() {
     //create temporary script
     QFile file("temporaryPythonScript.py");
@@ -163,6 +166,7 @@ void mafQAManagerTest::runScriptTest() {
     res = m_QAManager->runScript(TEST_SCRIPT_NAME,argList, true);
     QCOMPARE(res, 0);
 }
+#endif //valgrind_ENABLE
 
 void mafQAManagerTest::memoryMonitorTest() {
     // Print all monitor result

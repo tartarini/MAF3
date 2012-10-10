@@ -3,7 +3,7 @@
  *  VTKButtons
  *
  *  Created by Roberto Mucci on 17/01/12.
- *  Copyright 2012 B3C. All rights reserved.
+ *  Copyright 2012 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
@@ -31,9 +31,10 @@ mafResources::mafSceneNode *mafViewVTKButtons::createSceneNode(mafResources::maf
     if (sn != NULL) {
         //create the instance for selection pipe.
         mafToolVTKButtons *toolButton = mafNEW(mafToolVTKButtons);
+        toolButton->setVisibility(false);
         toolButton->setFollowSelectedObjectVisibility(true);
         toolButton->setFollowSelectedObject(false);
-        // set the scenenode because the tool even if doesn't forward a vme, it needs to keep knowledge its scenenode.
+        // set the scene node because the tool even if doesn't forward a vme, it needs to keep knowledge its scenenode.
         toolButton->setSceneNode(sn);
         toolButton->setInput(vme);
         m_ToolHandler->addTool(toolButton);

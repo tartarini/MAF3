@@ -3,7 +3,7 @@
  *  mafResourcesTest
  *
  *  Created by Paolo Quadrani on 13/12/11.
- *  Copyright 2009 B3C. All rights reserved.
+ *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
