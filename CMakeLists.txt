@@ -3,7 +3,7 @@
 #  MAF
 #
 #  Created by Daniele Giunchi - Paolo Quadrani on 10/09/10.
-#  Copyright 2011 SCS-B3C. All rights reserved.
+#  Copyright 2011 B3C. All rights reserved.
 #
 #  See Licence at: http://tiny.cc/QXJ4D
 #
@@ -12,6 +12,24 @@
 cmake_minimum_required(VERSION 2.8.4)
 
 project(MAF)
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+#############################################################################################
+### RPATH
+#############################################################################################
+  # use, i.e. don't skip the full RPATH for the build tree
+  SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+
+  # when building, don't use the install RPATH already
+  # (but later on when installing)
+  SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
+
+  # add the automatically determined parts of the RPATH
+  # which point to directories outside the build tree to the install RPATH
+  SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+
+  SET(CMAKE_INSTALL_RPATH "\$ORIGIN")
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 #############################################################################################
 ### MAF3 Options
@@ -43,7 +61,6 @@ if(NOT MAF_USE_GIT_PROTOCOL)
   set(git_protocol "https")
 endif()
 
-
 #############################################################################################
 ### Compilers
 #############################################################################################
@@ -60,18 +77,19 @@ endif(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "Min
 set(MAF_CORE ON)
 set(MAF_EVENT_BUS ON)
 set(MAF_QA ON)
-option(MAF_TIME_SPACE "Build mafTimeSpace module. mafCore and mafEventBus will be built anyway."              ON)
-option(MAF_SERIALIZATION "Build mafSerialization module. mafCore and mafEventBus will be built anyway."       ON)
-option(MAF_RESOURCES "Build mafResources module. mafCore and mafEventBus will be built anyway."               ON)
-option(MAF_PLUGINVTK "Build mafPluginVTK module. mafCore and mafEventBus will be built anyway."               ON)
-option(VTK_MAF "Build vtkMAF VTK extension library."                                                          ON)
-option(MAF_APPLICATION_LOGIC "Build mafApplicationLogic module. mafCore and mafEventBus will be built anyway." ON)
-option(MAF_QTGUI "Build mafGUI module. mafCore and mafEventBus will be built anyway."                         ON)
-option(MAF_SCRIPT_INTERPRETER "Build mafScriptInterpreter module. mafCore, mafEventBus and mafGUI will be built anyway." OFF)
-option(MAF_PLUGINCTK "Build mafPluginCTK module. mafCore and mafEventBus will be built anyway."               ON)
-option(MAF_PLUGIN_OUTOFCORE "Build mafPluginOutOfCore module. mafCore and mafEventBus will be built anyway."               ON)
-option(MAF_PLUGIN_ZIP "Build mafPluginZip module. mafCore and mafEventBus will be built anyway."               ON)
-option(MAF_MSV_EXTENSION "Build MSV Extension. mafCore and mafEventBus will be built anyway."               ON)
+option(MAF_TIME_SPACE "Build mafTimeSpace module. mafCore and mafEventBus will be built anyway."                          ON)
+option(MAF_SERIALIZATION "Build mafSerialization module. mafCore and mafEventBus will be built anyway."                   ON)
+option(MAF_RESOURCES "Build mafResources module. mafCore and mafEventBus will be built anyway."                           ON)
+option(MAF_PLUGINVTK "Build mafPluginVTK module. mafCore and mafEventBus will be built anyway."                           ON)
+option(VTK_MAF "Build vtkMAF VTK extension library."                                                                      ON)
+option(MAF_APPLICATION_LOGIC "Build mafApplicationLogic module. mafCore and mafEventBus will be built anyway."            ON)
+option(MAF_QTGUI "Build mafGUI module. mafCore and mafEventBus will be built anyway."                                     ON)
+option(MAF_SCRIPT_INTERPRETER "Build mafScriptInterpreter module. mafCore, mafEventBus and mafGUI will be built anyway."  OFF)
+option(MAF_PLUGINCTK "Build mafPluginCTK module. mafCore and mafEventBus will be built anyway."                           ON)
+option(MAF_PLUGIN_OUTOFCORE "Build mafPluginOutOfCore module. mafCore and mafEventBus will be built anyway."              ON)
+option(MAF_PLUGIN_ZIP "Build mafPluginZip module. mafCore and mafEventBus will be built anyway."                          ON)
+option(MAF_MSV_EXTENSION "Build MSV Extension. mafCore and mafEventBus will be built anyway."                             ON)
+option(MAFTOOLS "Get MAFTools from git repository."                                                                       OFF)
 
 set(valgrind_PATH)
 
@@ -241,4 +259,3 @@ endif(BUILD_TEST_SUITE)
 if(BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif(BUILD_EXAMPLES)
-
