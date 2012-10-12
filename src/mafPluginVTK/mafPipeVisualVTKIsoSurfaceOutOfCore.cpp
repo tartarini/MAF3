@@ -165,6 +165,9 @@ void mafPipeVisualVTKIsoSurfaceOutOfCore::toVTKImageData(mafProxy<mafVolume> *vo
     // Data values
     vtkData->AllocateScalars();
     vtkDataArray *voxels = vtkData->GetPointData()->GetScalars();
+    if(voxels == NULL) {
+        return;
+    }
     int voxelNum = dimensions[0] * dimensions[1] * dimensions[2] * componentNum;
     void *values = voxels->WriteVoidPointer(0, voxelNum);
     memcpy (values, volData->dataValue(), voxelNum * getByteNum(dataType));

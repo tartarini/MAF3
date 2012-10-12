@@ -45,6 +45,8 @@
 #include "mafVTKParametricSurfaceEllipsoid.h"
 #include "mafDataBoundaryAlgorithmVTK.h"
 
+#include "mafPipeVisualVTKIsoSurfaceOutOfCore.h"
+
 #include <mafPluginConfigurator.h>
 
 #include <vtkMAFLog.h>
@@ -69,6 +71,9 @@ mafPluginRegistrator::mafPluginRegistrator() {
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKBox);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSliceSurface);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKSliceVolume);
+
+    mafRegisterObjectAndAcceptBind(mafPluginVTK::mafPipeVisualVTKIsoSurfaceOutOfCore);
+
 
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafOperationParametricSurface);
     mafRegisterObjectAndAcceptBind(mafPluginVTK::mafOperationTransformVTK);
@@ -109,6 +114,8 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKSliceSurface);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKSliceVolume);
 
+    mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafPipeVisualVTKIsoSurfaceOutOfCore);
+
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafOperationParametricSurface);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafOperationTransformVTK);
     mafUnregisterObjectAndAcceptUnbind(mafPluginVTK::mafOperationVTKAddLandmark);
@@ -145,6 +152,9 @@ void mafPluginRegistrator::registerAllObjects() {
     mafPluggedObjectInformation visualPipeSliceSurface("Visual pipe used to slice a vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSliceSurface");
     mafPluggedObjectInformation visualPipeSliceVolume("Visual pipe used to slice a VTK volume", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
     
+    mafPluggedObjectInformation visualPipeOutOfCoreVolume("Visual pipe used for out of core volume", "mafPluginVTK::mafPipeVisualVTKIsoSurfaceOutOfCore");
+
+
     mafPluggedObjectInformation toolSelection("Tool used to represent selection of data", "mafPluginVTK::mafToolVTKSelection");
     mafPluggedObjectInformation toolAxes("Tool used to represent reference system", "mafPluginVTK::mafToolVTKAxes");
     mafPluggedObjectInformation toolPlane("Tool used to represent plane", "mafPluginVTK::mafToolVTKPlane");
@@ -171,6 +181,9 @@ void mafPluginRegistrator::registerAllObjects() {
     pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeBox);
     pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeSliceSurface);
     pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeSliceVolume);
+
+    pluginHash.insertMulti("mafResources::mafPipeVisual", visualPipeOutOfCoreVolume);
+
     pluginHash.insertMulti("mafResources::mafTool", toolSelection);
     pluginHash.insertMulti("mafResources::mafTool", toolAxes);
     pluginHash.insertMulti("mafResources::mafTool", toolPlane);

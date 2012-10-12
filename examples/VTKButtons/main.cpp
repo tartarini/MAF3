@@ -72,6 +72,7 @@ int main(int argc, char *argv[]) {
     logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "Slice");
     logic->plugObject("mafResources::mafView", "mafViewVTKButtons", "Buttons Slice");
     logic->plugObject("mafResources::mafView", "mafViewVTKButtons", "Buttons Iso");
+    logic->plugObject("mafResources::mafView", "mafPluginVTK::mafViewVTK", "OutOfCore");
     // ... and customize it telling to use mafPipeVisualVTKSurface visual pipe to render vtkPolyData data type.
     logic->customizeVisualization("View Iso", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("View Iso", "vtkRectilinearGrid", "mafPluginVTK::mafPipeVisualVTKIsoSurface");
@@ -88,6 +89,9 @@ int main(int argc, char *argv[]) {
     logic->customizeVisualization("Slice", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
     logic->customizeVisualization("Slice", "vtkRectilinearGrid", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
 
+
+    logic->customizeVisualization("OutOfCore", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKIsoSurfaceOutOfCore");
+    logic->customizeVisualization("OutOfCore", "vtkRectilinearGrid", "mafPluginVTK::mafPipeVisualVTKIsoSurfaceOutOfCore");
     // Example of View customization with a particular widget
     //mafRegisterQtObject(mafOrthoSlice);
     //logic->customizeViewWidget("OrthoSlice", "mafOrthoSlice");
