@@ -13,16 +13,17 @@
 #define MAFTOOLVTKBUTTONS_H
 
 // Includes list
-#include <mafToolVTK.h>
+#include "mafToolVTKButtonsInterface.h"
 #include <QImage>
 
 class msvQVTKButtons;
 class vtkQImageToImageSource;
+class msvQVTKButtonsGroup;
 /**
  Class name: mafToolVTKButtons
  This is the tool representing a VTK buttons.
  */
-class mafToolVTKButtons : public mafPluginVTK::mafToolVTK {
+class mafToolVTKButtons : public mafToolVTKButtonsInterface {
     Q_OBJECT
     
     /// typedef macro.
@@ -50,12 +51,12 @@ public:
     void selectVME();
 
     /// Set the visibility of its rendering scene.
-    /*virtual*/ void setVisibility(bool visible);
+    ///*virtual*/ void setVisibility(bool visible);
 
     /// show label for the Buttons, use update to renderize.
-    void setShowLabel(bool show);
+    //void setShowLabel(bool show);
     /// retrieve show status of the label.
-    bool showLabel();
+    //bool showLabel();
     /// modify the behaviour to FlyTo or ResetCamera.
     void setFlyTo(bool active);
     /// return the current behavior status.
@@ -63,15 +64,15 @@ public:
     /// set if the buttons should stay on the center of the data.
     void setOnCenter(bool onCenter);
     /// return status of the position of the button.
-    bool onCenter();    
+    bool onCenter();
+
+    msvQVTKButtonsInterface *element();
   
 protected:
     /// Object destructor.
     /* virtual */ ~mafToolVTKButtons();
 
-    msvQVTKButtons *button();
 private:
-    msvQVTKButtons *m_Button;
     bool isLoaded;
 };
 

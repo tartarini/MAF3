@@ -18,6 +18,8 @@
 
 class mafVTKWidget;
 class mafSceneNode;
+class mafToolVTKButtonsGroup;
+
 
 /**
  Class name: mafViewVTKButtons
@@ -32,6 +34,9 @@ class mafViewVTKButtons : public mafPluginVTK::mafViewVTK {
 public:
     /// Object constructor.
     mafViewVTKButtons(const QString code_location = "");
+
+    /// Called to show/hide SceneNode.
+    virtual void showSceneNode(mafResources::mafSceneNode *node, bool show = true);
 
     /// Remove scene node passed as argument.
    /*virtual*/ void removeSceneNode(mafResources::mafSceneNode *node);
@@ -57,6 +62,8 @@ protected:
     /* virtual */ ~mafViewVTKButtons();
 
     /* virtual */ mafResources::mafSceneNode *createSceneNode(mafResources::mafVME *vme);
+
+    mafToolVTKButtonsGroup* m_Group; //singleton
 
 };
 
