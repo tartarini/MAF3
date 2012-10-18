@@ -64,6 +64,7 @@ SET(proj QAT)
         ${ep_common_args}
         -DPROJ_SOURCE_DIR=${MAF_ROOT_DIR}/src
         -DPROJ_BINARY_DIR=${MAF_INTERNAL_BUILD_DIR}
+        -Dvalgrind_ENABLE=${valgrind_ENABLE}
       DEPENDS
         ${proj_DEPENDENCIES}
       )
