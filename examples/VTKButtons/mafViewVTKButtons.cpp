@@ -12,14 +12,19 @@
 
 #include "mafViewVTKButtons.h"
 #include "mafToolVTKButtons.h"
+#include "mafToolVTKButtonsGroup.h"
+#include "mafEventBusManager.h"
 #include <mafSceneNode.h>
 #include <mafVME.h>
 #include <mafTool.h>
 #include <mafToolHandler.h>
+#include <vtkAlgorithmOutput.h>
+#include <mafDataSet.h>
 
 using namespace mafPluginVTK;
+using namespace mafCore;
 
-mafViewVTKButtons::mafViewVTKButtons(const QString code_location) : mafViewVTK(code_location) {
+mafViewVTKButtons::mafViewVTKButtons(const QString code_location) : mafViewVTK(code_location), m_Group(NULL) {
     m_UIFilename = "mafVTKButtons.ui";
 }
 
@@ -27,22 +32,61 @@ mafViewVTKButtons::~mafViewVTKButtons() {
 }
 
 mafResources::mafSceneNode *mafViewVTKButtons::createSceneNode(mafResources::mafVME *vme) {
-    mafResources::mafSceneNode *sn = Superclass::createSceneNode(vme);
-    if (sn != NULL) {
+  mafResources::mafSceneNode *sn = Superclass::createSceneNode(vme);
+  
+  if (sn != NULL) {
+    mafProxy<vtkAlgorithmOutput> *dataSet =  mafProxyPointerTypeCast(vtkAlgorithmOutput, vme->dataSetCollection()->itemAtCurrentTime()->dataValue());
+    //if(dataSet)
+    {
+      if(!m_Group)
+      {
         //create the instance for selection pipe.
-        mafToolVTKButtons *toolButton = mafNEW(mafToolVTKButtons);
-        toolButton->setVisibility(false);
-        toolButton->setFollowSelectedObjectVisibility(true);
-        toolButton->setFollowSelectedObject(false);
+        m_Group = mafNEW(mafToolVTKButtonsGroup);
+        m_Group->setFollowSelectedObjectVisibility(true);
+        m_Group->setFollowSelectedObject(false);
         // set the scene node because the tool even if doesn't forward a vme, it needs to keep knowledge its scenenode.
-        toolButton->setSceneNode(sn);
-        toolButton->setInput(vme);
-        m_ToolHandler->addTool(toolButton);
-        mafDEL(toolButton);
-
-        bool res = connect(sn, SIGNAL(modifiedObject()), toolButton, SLOT(updatePipe()));
+        m_Group->setSceneNode(sn);
+        m_Group->setInput(vme);
+        m_ToolHandler->addTool(m_Group);
+        mafDEL(m_Group);
+        bool res = connect(sn, SIGNAL(modifiedObject()), m_Group, SLOT(updatePipe()));
+      }
+      //create the instance for selection pipe.
+      mafToolVTKButtons *toolButton = mafNEW(mafToolVTKButtons);
+      toolButton->setVisibility(false);
+      toolButton->setFollowSelectedObjectVisibility(true);
+      toolButton->setFollowSelectedObject(false);
+      // set the scene node because the tool even if doesn't forward a vme, it needs to keep knowledge its scenenode.
+      toolButton->setSceneNode(sn);
+      toolButton->setInput(vme);
+      m_ToolHandler->addTool(toolButton);
+      mafDEL(toolButton);
+      bool res = connect(sn, SIGNAL(modifiedObject()), toolButton, SLOT(updatePipe()));
     }
-    return sn;
+  }
+  return sn;
+}
+void mafViewVTKButtons::showSceneNode(mafResources::mafSceneNode *node, bool show) {
+  Superclass::showSceneNode(node, show);
+  // Add/remove button to the group
+  if(node != NULL){
+    QList<mafResources::mafTool *> *tList = m_ToolHandler->toolList();
+    for (int i = 0; i < tList->count(); i++) {
+      mafResources::mafTool *tool = tList->at(i);
+      mafToolVTKButtons *button = dynamic_cast<mafToolVTKButtons *>(tool);
+      if (button && button->input() && button->input()->isEqual(node->vme())) {
+        if(show) {
+          m_Group->addButton(button);
+          m_Group->setVisibility(true);
+          m_Group->updatePipe();
+        }
+        else {
+          m_Group->removeButton(button);
+          m_Group->updatePipe();
+        }
+      }
+    }
+  }
 }
 
 void mafViewVTKButtons::removeSceneNode(mafResources::mafSceneNode *node) {
@@ -98,6 +142,7 @@ void mafViewVTKButtons::on_showButtonsCheck_stateChanged(int state) {
     for (int i = 0; i < tList->count(); i++) {
         mafResources::mafTool *tool = tList->at(i);
         mafToolVTKButtons *button = dynamic_cast<mafToolVTKButtons *>(tool);
+        mafToolVTKButtonsGroup *group = dynamic_cast<mafToolVTKButtonsGroup *>(tool);
         if(button) {
             //need to switch off setFollowSelectedObjectVisibility if showButtonsCheck is false
             button->setFollowSelectedObjectVisibility(state);

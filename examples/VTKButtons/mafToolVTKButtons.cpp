@@ -17,6 +17,8 @@
 #include <mafPoint.h>
 
 #include <msvQVTKButtons.h>
+#include <msvQVTKButtonsGroup.h>
+#include <msvQVTKButtonsManager.h>
 
 #include <vtkSmartPointer.h>
 #include <vtkAlgorithmOutput.h>
@@ -34,40 +36,42 @@
 #include <vtkDataSet.h>
 
 #include <mafVTKWidget.h>
+#include <vtkSliderWidget.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location), isLoaded(false), m_Button(NULL){
+mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafToolVTKButtonsInterface(code_location), isLoaded(false){
 
 }
 
-msvQVTKButtons *mafToolVTKButtons::button() {
-    if(m_Button == NULL) {
-        m_Button = new msvQVTKButtons();
-        m_Button->setShowButton(true);
-        bool result = QObject::connect(m_Button, SIGNAL(showTooltip(QString)), this, SLOT(showTooltip(QString)));
-        result = QObject::connect(m_Button, SIGNAL(hideTooltip()), this, SLOT(hideTooltip()));
+msvQVTKButtonsInterface *mafToolVTKButtons::element() {
+    if(m_Element == NULL) {
+        m_Element = msvQVTKButtonsManager::instance()->createButtons();
+        m_Element->setShowButton(true);
+        bool result = QObject::connect(m_Element, SIGNAL(showTooltip(QString)), this, SLOT(showTooltip(QString)));
+        result = QObject::connect(m_Element, SIGNAL(hideTooltip()), this, SLOT(hideTooltip()));
+
     }
-    return m_Button;
+    return m_Element;
 }
 
 mafToolVTKButtons::~mafToolVTKButtons() {
-    if(m_Button) {
-        delete m_Button;
+    if(m_Element) {
+        delete m_Element;
     }
 }
 
 void mafToolVTKButtons::resetTool() {
-    removeWidget(button()->button());
+    removeWidget(static_cast<msvQVTKButtons*>(element())->button());
 }
 
 void mafToolVTKButtons::graphicObjectInitialized() {
     // Graphic widget (render window, interactor...) has been created and initialized.
     // now can add the widget.
-    addWidget(button()->button());
+    addWidget(static_cast<msvQVTKButtons*>(element())->button());
 }
 
 void mafToolVTKButtons::updatePipe(double t) {
@@ -95,17 +99,23 @@ void mafToolVTKButtons::updatePipe(double t) {
     }
 
     ///////////-------- BUTTON WIDGET -----------////////////
-    vtkTexturedButtonRepresentation2D *rep = static_cast<vtkTexturedButtonRepresentation2D *> (button()->button()->GetRepresentation());
+    vtkTexturedButtonRepresentation2D *rep = static_cast<vtkTexturedButtonRepresentation2D *> (static_cast<msvQVTKButtons*>(element())->button()->GetRepresentation());
 
     //Load image only the first time
     if (isLoaded == false) {
         QString iconType = vme->property("iconType").toString();
         if(iconType.compare("")!=0)
         {
+<<<<<<< HEAD
             QString iconFileName = mafIconFromObjectType(iconType);
             button()->setIconFileName(iconFileName);
 
             isLoaded = true;
+=======
+          QString iconFileName = mafIconFromObjectType(iconType);
+          static_cast<msvQVTKButtons*>(element())->setIconFileName(iconFileName);
+          isLoaded = true;
+>>>>>>> buttonsGroupManagerWrap
         }
     }
 
@@ -114,10 +124,10 @@ void mafToolVTKButtons::updatePipe(double t) {
 
     if (showLabel()) {
         QString vmeName = vme->property("objectName").toString();
-        button()->setLabel(vmeName);
+        static_cast<msvQVTKButtons*>(element())->setLabel(vmeName);
     } else {
         QString emptyString;
-        button()->setLabel(emptyString);
+        static_cast<msvQVTKButtons*>(element())->setLabel(emptyString);
     }
 
     //modify position of the vtkButton 
@@ -132,16 +142,16 @@ void mafToolVTKButtons::updatePipe(double t) {
     }
     rep->PlaceWidget(bds, size);
     rep->Modified();
-    button()->button()->SetRepresentation(rep);
+    static_cast<msvQVTKButtons*>(element())->button()->SetRepresentation(rep);
     ///////////-------- BUTTON WIDGET -----------////////////
 
     mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(this->graphicObject());
 
-    button()->setCurrentRenderer(widget->renderer());
+    static_cast<msvQVTKButtons*>(element())->setCurrentRenderer(widget->renderer());
     double b6[6];
     newBounds->bounds(b6);
-    button()->setBounds(b6);
-    button()->setFlyTo(FlyTo());
+    static_cast<msvQVTKButtons*>(element())->setBounds(b6);
+    static_cast<msvQVTKButtons*>(element())->setFlyTo(FlyTo());
     updatedGraphicObject();
 
     mafProxy<vtkAlgorithmOutput> *dataSet =  mafProxyPointerTypeCast(vtkAlgorithmOutput, vme->dataSetCollection()->itemAtCurrentTime()->dataValue());
@@ -151,7 +161,7 @@ void mafToolVTKButtons::updatePipe(double t) {
       vtkDataObject *dataObject = producer->GetOutputDataObject(0);
       vtkDataSet* vtkData = vtkDataSet::SafeDownCast(dataObject);
 
-      button()->setData(vtkData);
+      static_cast<msvQVTKButtons*>(element())->setData(vtkData);
     }
 
 }
@@ -166,7 +176,7 @@ void mafToolVTKButtons::showTooltip(QString tooltip) {
     QString text("<table border=\"0\"");
     text.append("<tr>");
     text.append("<td>");
-    QImage preview = button()->getPreview(180,180);
+    QImage preview = static_cast<msvQVTKButtons*>(element())->getPreview(180,180);
     QByteArray ba;
     QBuffer buffer(&ba);
     buffer.open(QIODevice::WriteOnly);
@@ -225,8 +235,8 @@ void mafToolVTKButtons::showTooltip(QString tooltip) {
 }
 
 void mafToolVTKButtons::hideTooltip() {
-    mafEventBus::mafEventArgumentsList argList;
-    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.gui.hideTooltip", mafEventBus::mafEventTypeLocal, &argList);
+  mafEventBus::mafEventArgumentsList argList;
+  mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.gui.hideTooltip", mafEventBus::mafEventTypeLocal, &argList);
 }
 
 void mafToolVTKButtons::selectVME() {
@@ -241,31 +251,18 @@ void mafToolVTKButtons::selectVME() {
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 }
 
-void mafToolVTKButtons::setVisibility(bool visible) {
-    button()->setShowButton(visible);
-    Superclass::setVisibility(visible);
-    button()->update();
-}
-void mafToolVTKButtons::setShowLabel(bool show) {
-    button()->setShowLabel(show);
-}
-
-bool mafToolVTKButtons::showLabel() {
-    return button()->showLabel();
-}
-
 void mafToolVTKButtons::setFlyTo(bool active) {
-    button()->setFlyTo(active);
+    static_cast<msvQVTKButtons*>(element())->setFlyTo(active);
 }
 
 bool mafToolVTKButtons::FlyTo() {
-    return button()->flyTo();
+    return static_cast<msvQVTKButtons*>(element())->flyTo();
 }
 
 void mafToolVTKButtons::setOnCenter(bool onCenter) {
-    button()->setOnCenter(onCenter);
+    static_cast<msvQVTKButtons*>(element())->setOnCenter(onCenter);
 }
 
 bool mafToolVTKButtons::onCenter() {
-    return button()->onCenter();
+    return static_cast<msvQVTKButtons*>(element())->onCenter();
 }

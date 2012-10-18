@@ -80,9 +80,9 @@ public:
 protected:
     /// Object destructor.
     /* virtual */ ~mafViewVTK();
+    vtkRenderer *m_Renderer; ///< VTK render
 
 private:
-    vtkRenderer *m_Renderer; ///< VTK render.
     bool m_CameraParallel; ///< Flag that store the information on camera type: true means Parallel otherwise Perspective.
     mafCameraDirection m_CameraAxesDirection; ///< Direction in which the camera is looking to.
 };

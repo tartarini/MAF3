@@ -128,7 +128,7 @@ bool mafVTKWidget::deleteLayer(const QString layerName) {
     // Retrieve the renderer associated to the layer. Remove all the view props and delete the renderer.
     vtkRenderer *renderer = m_LayerHash.value(layerName);
     renderer->RemoveAllViewProps();
-    renderer->Delete();
+    //renderer->Delete();
     // Remove the layer from the hash
     int n = m_LayerHash.remove(layerName);
     // and update the number of layers.
@@ -144,7 +144,7 @@ void mafVTKWidget::showLayer(const QString layerName, bool show) {
         int i = 0;
         for (; i < n; ++i) {
             vtkProp3D *prop = vtkProp3D::SafeDownCast(propCollection->GetItemAsObject(i));
-            if (prop && prop->GetVisibility() != show) {
+            if (prop && (prop->GetVisibility() == 1) != show) {
                 prop->SetVisibility(show ? 1 : 0);
             }
         }
@@ -154,7 +154,7 @@ void mafVTKWidget::showLayer(const QString layerName, bool show) {
 void mafVTKWidget::moveLayerTo(const QString layerName, unsigned int layerLevel) {
     vtkRenderer *renderer = m_LayerHash.value(layerName, NULL);
     if (renderer) {
-        int n = m_LayerHash.size();
+        unsigned int n = m_LayerHash.size();
         if (layerLevel >= n) {
             qWarning() << layerLevel << mafTr(" Layer level should be >= 0 and < ") << n;
             return;
