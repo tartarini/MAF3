@@ -16,11 +16,14 @@
 //#define Operation
 //#define ProgrammableOperation
 //#define ProgrammableOpenClinicaSearch
-//#define SimJobQsub
+#define SimJobQsub
+//#define NMSJobQSub
 //#define CalcRisk
 //#define Log
 //#define cha2ans
-#define NMSLoads
+//#define NMSLoads
+//#define NMS2ANS
+//#define LoadExtr
 
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
@@ -134,16 +137,44 @@ int main(int argc, char *argv[]) {
     operationParameters.insert("myFirstParameter", 2.3);
     operationParameters.insert("mySecondParameter", "ughetto");
     operationParameters.insert("jobsNumber", 20);
+    operationParameters.insert("opProg", 0.5);
+    operationParameters.insert("effTrAmd", 0);
     operationParameters.insert("workflowId", "ALEQFHPHAFSPHFAPSHFPHFPSDHF");
 
     QStringList inputFiles;
 //    inputFiles << "load_cases_tot.txt";
-//    inputFiles << "load_cases_tot.txt" << "file_pulled_2" << "file_pulled_3" << "file_pulled_4" << "file_pulled_5" << "file_pulled_6" << "file_pulled_7" << "file_pulled_8"  << "file_pulled_9" << "file_year.lis";
     //inputFiles << "load_cases_tot.txt" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-07-16.1342441306576" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-07-16.1342441274629"  << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-07-16.1342441286972" <<  "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-07-16.1342441295344"  << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-07-16.1342441327200"  <<  "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-07-16.1342441332472" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-07-16.1342441338460" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702681267";
-    inputFiles << "load_cases_tot.txt" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702647587" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702612095"  << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702625587" <<  "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702636999"  << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702661463"  <<  "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702665923" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702673708" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702681267";
+    //inputFiles << "load_cases_tot.txt" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702647587" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702612095"  << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702625587" <<  "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702636999"  << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702661463"  <<  "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702665923" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702673708" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702681267";
+    inputFiles << "load_cases_tot.txt" << "Neck_Length.lis" << "CH.lis" << "Head_Radius.lis" << "keypoints_ansys.lis" << "side_femur.lis" << "Z_LT.lis" << "z_min.lis" << "femur.cdb" << "OC_extracted_data.txt";
     operationParameters.insert("inputFileList", inputFiles);
     QStringList outputFiles;
     outputFiles << "Results_TOT.pdrs";
+    operationParameters.insert("outputFileList", outputFiles);
+#endif
+
+#ifdef NMSJobQSub
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    dataParameters.append("mafAlgorithmNMSJobQSub");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    operationParameters.insert("jobsNumber", 20);
+    operationParameters.insert("opProg", 0.5);
+    operationParameters.insert("effTrAmd", 0);
+    operationParameters.insert("workflowId", "PEPPEHGIDGHAIGHIHKGIAJFJHJFJSSJFPPPPPPPPPPPPPPPP");
+
+    QStringList inputFiles;
+//    inputFiles << "load_cases_tot.txt";
+///    inputFiles << "load_cases_tot.txt" << "Neck_Length.lis" << "CH.lis" << "Head_Radius.lis" << "keypoints_ansys.lis" << "side_femur.lis" << "Z_LT.lis" << "z_min.lis" << "femur.cdb";
+    inputFiles <<"load_cases.txt" << "Biom_Lenght.lis" << "CH.lis" << "Diaphysis_Lenght.lis" << "Head_Radius.lis" << "IF.lis" << "Neck_Length.lis" << "NL.lis" << "PNL.lis" << "side_femur.lis" << "Z_LT_NMS.lis" << "z_min.lis" << "LE_ME.lis" << "femur.cdb" << "OC_extracted_data.txt";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "Results_NMSJob.pdrs";
     operationParameters.insert("outputFileList", outputFiles);
 #endif
 
@@ -163,6 +194,7 @@ int main(int argc, char *argv[]) {
 
     QStringList inputFiles;
     //inputFiles << "Results_TOT_con_ciclo.pdrs";
+    //inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-17.1347897249351";
     inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-17.1347897249351";
     //inputFiles << "https://www.physiomespace.com/Members/testUser/dataresource.2012-09-17.1347897249351";
     operationParameters.insert("inputFileList", inputFiles);
@@ -186,12 +218,12 @@ int main(int argc, char *argv[]) {
     operationParameters.insert("workflowId", "MAMMHGHAOIRAIXAFKDOOEJMM");
 
     QStringList inputFiles;
-    inputFiles << "load_cases.txt";
-    //inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-17.1347897249351";
+    //inputFiles << "load_cases.txt";
+    inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-17.1347897249351";
     //inputFiles << "https://www.physiomespace.com/Members/testUser/dataresource.2012-09-17.1347897249351";
     operationParameters.insert("inputFileList", inputFiles);
     QStringList outputFiles;
-    outputFiles << "load_case_tot.txt";
+    outputFiles << "load_cases_tot.txt";
     operationParameters.insert("outputFileList", outputFiles);
 #endif
 
@@ -209,15 +241,59 @@ int main(int argc, char *argv[]) {
     operationParameters.insert("workflowId", "OSLOFOGJSONEIFOLEPJJJJJJJJ");
 
     QStringList inputFiles;
-    //inputFiles << "BW.txt" << "Head_Radius.lis" << "side_femur.lis";
-    inputFiles << "BW.txt" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702625587" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702661463";
+    //inputFiles << "BW.txt" << "Head_Radius.lis" << "side_femur.lis" << "CH.lis" << "LE_ME.lis";
+    inputFiles << "BW.txt" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702625587" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702661463" << "CH.lis" << "LE_ME.lis";
     operationParameters.insert("inputFileList", inputFiles);
     QStringList outputFiles;
     outputFiles << "OUTPUT_FORCES.txt" << "MAT_ROT_ISB_GLOB.txt" << "KP_ISB.txt";
     operationParameters.insert("outputFileList", outputFiles);
 #endif
 
-    
+#ifdef NMS2ANS
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    dataParameters.append("mafAlgorithmNMS2ANS");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    operationParameters.insert("workflowId", "KKKKKKKKKKHGHAHHHFHHFHFHFHFHHFHFH");
+
+    QStringList inputFiles;
+    inputFiles << "OUTPUT_FORCES.txt";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "load_cases.txt";
+    operationParameters.insert("outputFileList", outputFiles);
+#endif
+
+#ifdef LoadExtr
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    dataParameters.append("mafAlgorithmLoadsExtraction");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    operationParameters.insert("activity", "NW");
+    operationParameters.insert("limit", 200);
+    operationParameters.insert("workflowId", "HHHHHHHHHHHHHHHHHHHHHhhhhhh");
+
+    QStringList inputFiles;
+    //inputFiles << "ccd_angle.lis" << "Neck_Lenght.lis" << "anteversion.lis" << "weight.txt";
+    inputFiles <<"https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702605495"<< "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702647587" << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702590771" << "weight.txt";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "out.txt";
+    operationParameters.insert("outputFileList", outputFiles);
+#endif
+
 #ifdef Log    
     eventParameters.append("maf.local.resources.operation.executeWithParameters");
     listToSend.append(Q_ARG(QVariantList, eventParameters));
