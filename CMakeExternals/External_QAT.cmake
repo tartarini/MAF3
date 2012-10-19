@@ -62,7 +62,7 @@ SET(proj QAT)
       INSTALL_COMMAND ""
       CMAKE_ARGS
         ${ep_common_args}
-        -DPROJ_SOURCE_DIR=${MAF_ROOT_DIR}/src
+        -DPROJ_SOURCE_DIR=${MAF_ROOT_DIR}
         -DPROJ_BINARY_DIR=${MAF_INTERNAL_BUILD_DIR}
         -Dvalgrind_ENABLE=${valgrind_ENABLE}
       DEPENDS
