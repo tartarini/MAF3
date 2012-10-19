@@ -43,7 +43,7 @@ using namespace mafEventBus;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafToolVTKButtonsInterface(code_location), isLoaded(false){
+mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafToolVTKButtonsInterface(code_location){
 
 }
 
@@ -101,22 +101,10 @@ void mafToolVTKButtons::updatePipe(double t) {
     ///////////-------- BUTTON WIDGET -----------////////////
     vtkTexturedButtonRepresentation2D *rep = static_cast<vtkTexturedButtonRepresentation2D *> (static_cast<msvQVTKButtons*>(element())->button()->GetRepresentation());
 
-    //Load image only the first time
-    if (isLoaded == false) {
-        QString iconType = vme->property("iconType").toString();
-        if(iconType.compare("")!=0)
-        {
-<<<<<<< HEAD
-            QString iconFileName = mafIconFromObjectType(iconType);
-            button()->setIconFileName(iconFileName);
-
-            isLoaded = true;
-=======
-          QString iconFileName = mafIconFromObjectType(iconType);
-          static_cast<msvQVTKButtons*>(element())->setIconFileName(iconFileName);
-          isLoaded = true;
->>>>>>> buttonsGroupManagerWrap
-        }
+    QString iconType = vme->property("iconType").toString();
+    if (iconType != "") {
+      QString iconFileName = mafIconFromObjectType(iconType);
+      element()->setIconFileName(iconFileName);
     }
 
     int size[2]; size[0] = 16; size[1] = 16;

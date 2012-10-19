@@ -72,8 +72,6 @@ protected:
     /// Object destructor.
     /* virtual */ ~mafToolVTKButtons();
 
-private:
-    bool isLoaded;
 };
 
 #endif // MAFTOOLVTKBUTTONS_H
