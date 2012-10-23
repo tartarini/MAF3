@@ -80,7 +80,7 @@ SET(proj QAT)
 
 #ENDIF(RESULT)
 
-  SET(${qxmlrpc_enabling_variable}_FIND_PACKAGE_CMD QAT)
+  SET(${QAT_enabling_variable}_FIND_PACKAGE_CMD QAT)
     
 
 
