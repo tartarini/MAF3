@@ -120,8 +120,7 @@ if(BUILD_WRAP)
 endif(BUILD_WRAP)
 
 if(BUILD_QA)
-  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} QAT)
-  include(CMakeExternals/External_QAT.cmake)
+  subdirs(qa)
 endif(BUILD_QA)
 
 #remove duplicates

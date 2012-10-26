@@ -1,0 +1,17 @@
+mafOperation
+mafPipe
+mafResource
+mafImporter
+mafDataSet
+mafDataSetCollection
+mafMemento
+mafVisitor
+mafSceneNode
+mafTool
+mafView
+mafViewManager
+mafOperationManager
+mafVME
+mafUndoStackCommand
+QObject
+QWidget
