@@ -16,7 +16,7 @@
 //#define Operation
 //#define ProgrammableOperation
 //#define ProgrammableOpenClinicaSearch
-#define SimJobQsub
+//#define SimJobQsub
 //#define NMSJobQSub
 //#define CalcRisk
 //#define Log
@@ -24,6 +24,7 @@
 //#define NMSLoads
 //#define NMS2ANS
 //#define LoadExtr
+#define bcube
 
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
@@ -308,6 +309,26 @@ int main(int argc, char *argv[]) {
     operationParameters.insert("workflowId", argv[4]);
     operationParameters.insert("serviceName", argv[5]);
     
+#endif
+
+#ifdef bcube
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    dataParameters.append("mafAlgorithm-----------");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("evalModule", 1.0);
+    operationParameters.insert("workflowId", "MAMMHGHAOIRAIXAFKDOOEJMM");
+
+    QStringList inputFiles;
+    inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-10-22.1350926551047";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "resultbcube.txt";
+    operationParameters.insert("outputFileList", outputFiles);
 #endif
     
     dataParameters.push_back(operationParameters);
