@@ -316,7 +316,7 @@ int main(int argc, char *argv[]) {
     listToSend.append(Q_ARG(QVariantList, eventParameters));
 
     //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
-    dataParameters.append("mafAlgorithm-----------");
+    dataParameters.append("mafAlgorithmBoneMorphometry");
 
     QVariantMap operationParameters;
     operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
