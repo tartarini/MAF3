@@ -101,7 +101,7 @@ MACRO(mafMacroInitProject test)
     endforeach()
   else(${test})
     if(BUILD_QA)
-    if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
       
       find_program( CODECOV_GCOV gcov )
       add_definitions( -fprofile-arcs -ftest-coverage )
