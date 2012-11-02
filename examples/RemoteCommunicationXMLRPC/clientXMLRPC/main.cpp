@@ -24,7 +24,8 @@
 //#define NMSLoads
 //#define NMS2ANS
 //#define LoadExtr
-#define bcube
+//#define bcube
+#define AnsysSearch
 
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
@@ -328,6 +329,27 @@ int main(int argc, char *argv[]) {
     operationParameters.insert("inputFileList", inputFiles);
     QStringList outputFiles;
     outputFiles << "resultbcube.txt";
+    operationParameters.insert("outputFileList", outputFiles);
+#endif
+
+#ifdef AnsysSearch
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    dataParameters.append("mafAlgorithmAnsysTissueDBSearch");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("orientation", "L");
+    operationParameters.insert("numberClosestBones", "5");
+    operationParameters.insert("workflowId", "MAMMHGHAOIRAIXAFKDOOEJMM");
+
+    QStringList inputFiles;
+    inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-10-22.1350926551047";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "resultAnsysSearchTissueDB.txt";
     operationParameters.insert("outputFileList", outputFiles);
 #endif
     
