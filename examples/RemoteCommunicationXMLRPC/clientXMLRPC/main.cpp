@@ -26,7 +26,7 @@
 //#define cha2ans
 //#define NMSLoads
 //#define SpineLoads
-#define FallLoads
+//#define FallLoads
 //#define NMS2ANS
 //#define Spine2ANS
 //#define LoadExtr
