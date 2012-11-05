@@ -21,6 +21,8 @@ include(${MAF_SOURCE_DIR}/CMakeExternals/Find_VTK.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_MSVTK.cmake)
 include(${MAF_SOURCE_DIR}/CMakeExternals/Find_fervor.cmake)
 
+include(${CMAKE_ROOT}/Modules/FindOpenSSL.cmake)
+
 ## #################################################################
 ## Init Project
 ## #################################################################
@@ -85,6 +87,8 @@ if(QT_PHONON_FOUND)
   list(APPEND additionallibs ${QT_PHONON_LIBRARY_RELEASE})
 endif(QT_PHONON_FOUND)
   list(APPEND additionallibs ${PYTHON_LIBRARY})
+  list(APPEND additionallibs ${OPENSSL_SSL_LIBRARY})
+  list(APPEND additionallibs ${OPENSSL_CRYPTO_LIBRARY})
 
   FOREACH(additionallib ${additionallibs})
     get_filename_component(r_additionallib ${additionallib} REALPATH)
