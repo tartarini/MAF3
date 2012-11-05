@@ -16,13 +16,19 @@
 //#define Operation
 //#define ProgrammableOperation
 //#define ProgrammableOpenClinicaSearch
-#define SimJobQsub
+//#define SimJobQsub
 //#define NMSJobQSub
+//#define SFJobQSub
+//#define SpineJobQSub
 //#define CalcRisk
+//#define RiskSpine
 //#define Log
 //#define cha2ans
 //#define NMSLoads
+//#define SpineLoads
+#define FallLoads
 //#define NMS2ANS
+//#define Spine2ANS
 //#define LoadExtr
 
 int main(int argc, char *argv[]) {
@@ -163,18 +169,70 @@ int main(int argc, char *argv[]) {
     operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
     operationParameters.insert("myFirstParameter", 2.3);
     operationParameters.insert("mySecondParameter", "ughetto");
-    operationParameters.insert("jobsNumber", 20);
+    //operationParameters.insert("jobsNumber", 20);
+    operationParameters.insert("jobsNumber", 150);
     operationParameters.insert("opProg", 0.5);
     operationParameters.insert("effTrAmd", 0);
-    operationParameters.insert("workflowId", "PEPPEHGIDGHAIGHIHKGIAJFJHJFJSSJFPPPPPPPPPPPPPPPP");
+    operationParameters.insert("workflowId", "PEPPEHGIDGHAIGHIHKGIAJFJHJF");
 
     QStringList inputFiles;
 //    inputFiles << "load_cases_tot.txt";
 ///    inputFiles << "load_cases_tot.txt" << "Neck_Length.lis" << "CH.lis" << "Head_Radius.lis" << "keypoints_ansys.lis" << "side_femur.lis" << "Z_LT.lis" << "z_min.lis" << "femur.cdb";
-    inputFiles <<"load_cases.txt" << "Biom_Lenght.lis" << "CH.lis" << "Diaphysis_Lenght.lis" << "Head_Radius.lis" << "IF.lis" << "Neck_Length.lis" << "NL.lis" << "PNL.lis" << "side_femur.lis" << "Z_LT_NMS.lis" << "z_min.lis" << "LE_ME.lis" << "femur.cdb" << "OC_extracted_data.txt";
+    inputFiles <<"load_cases.txt" << "Biom_Lenght.lis" << "CH.lis" << "Diaphysis_Lenght.lis" << "Head_Radius.lis" << "IF.lis" << "Neck_Length.lis" << "NL.lis" << "PNL.lis" << "side_femur.lis" << "Z_LT_NMS.lis" << "z_min.lis" << "LE_ME.lis" << "femur.cdb" << "MAT_ROT_ISB_GLOB.txt" << "KP_ISB.txt" << "OC_extracted_data.txt";
     operationParameters.insert("inputFileList", inputFiles);
     QStringList outputFiles;
     outputFiles << "Results_NMSJob.pdrs";
+    operationParameters.insert("outputFileList", outputFiles);
+#endif
+
+#ifdef SFJobQSub
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    dataParameters.append("mafAlgorithmSFJobQSub");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    //operationParameters.insert("jobsNumber", 20);
+    operationParameters.insert("jobsNumber", 4);
+    operationParameters.insert("opProg", 0.5);
+    operationParameters.insert("effTrAmd", 0);
+    operationParameters.insert("workflowId", "MMMMMMARCOOOOOOOOOOOOAMMMMM");
+
+    QStringList inputFiles;
+//    inputFiles << "SF_load_cases.txt" <<"2844_material_mapped.cdb" << "Head_Radius.lis" << "keypoints_ansys.lis" << "Neck_Length.lis" << "side_femur.lis" << "Z_LT.lis" << "Parameters.mac" << "OC_extracted_data.txt";
+    inputFiles << "SF_load_cases.txt" <<"femur.cdb" << "Head_Radius.lis" << "keypoints_ansys.lis" << "Neck_Length.lis" << "side_femur.lis" << "Z_LT.lis" << "OC_extracted_data.txt";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "Results_TOT.pdrs";
+    operationParameters.insert("outputFileList", outputFiles);
+#endif
+
+#ifdef SpineJobQSub
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    dataParameters.append("mafAlgorithmSpineJobQSub");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    operationParameters.insert("jobsNumber", 150);
+    operationParameters.insert("opProg", 0.5);
+    operationParameters.insert("effTrAmd", 0);
+    operationParameters.insert("workflowId", "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
+
+    QStringList inputFiles;
+
+    inputFiles << "Spine_load_cases.dat" << "vertebra.cdb" << "ref_sys.txt" << "id_vertebra.info" << "OC_extracted_data.txt";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "Results_TOT_Spine.pdrs";
     operationParameters.insert("outputFileList", outputFiles);
 #endif
 
@@ -196,6 +254,31 @@ int main(int argc, char *argv[]) {
     //inputFiles << "Results_TOT_con_ciclo.pdrs";
     //inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-17.1347897249351";
     inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-17.1347897249351";
+    //inputFiles << "https://www.physiomespace.com/Members/testUser/dataresource.2012-09-17.1347897249351";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "outLines.txt" << "RF.txt";
+    operationParameters.insert("outputFileList", outputFiles);
+#endif
+
+#ifdef RiskSpine
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    dataParameters.append("mafAlgorithmRiskSpine");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    operationParameters.insert("yearNumber", 4);
+    operationParameters.insert("workflowId", "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
+
+    QStringList inputFiles;
+    inputFiles << "esempio_di_output_simulazione_vertebrae.pdrs";
+    //inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-17.1347897249351";
+    //inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-17.1347897249351";
     //inputFiles << "https://www.physiomespace.com/Members/testUser/dataresource.2012-09-17.1347897249351";
     operationParameters.insert("inputFileList", inputFiles);
     QStringList outputFiles;
@@ -249,6 +332,48 @@ int main(int argc, char *argv[]) {
     operationParameters.insert("outputFileList", outputFiles);
 #endif
 
+#ifdef SpineLoads
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    dataParameters.append("mafAlgorithmSpineLoads");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    operationParameters.insert("workflowId", "OOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+
+    QStringList inputFiles;
+    inputFiles << "OC_extracted_data.txt";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "esempio_di_output_getspineforces.txt";
+    operationParameters.insert("outputFileList", outputFiles);
+#endif
+
+#ifdef FallLoads
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    dataParameters.append("mafAlgorithmFallLoads");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    operationParameters.insert("workflowId", "UUUUUUUUUUUUUUUUUUUUUUUUUU");
+
+    QStringList inputFiles;
+    inputFiles << "OC_extracted_data.txt";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "Fall_output.txt";
+    operationParameters.insert("outputFileList", outputFiles);
+#endif
+
 #ifdef NMS2ANS
     eventParameters.append("maf.local.resources.operation.executeWithParameters");
     listToSend.append(Q_ARG(QVariantList, eventParameters));
@@ -267,6 +392,27 @@ int main(int argc, char *argv[]) {
     operationParameters.insert("inputFileList", inputFiles);
     QStringList outputFiles;
     outputFiles << "load_cases.txt";
+    operationParameters.insert("outputFileList", outputFiles);
+#endif
+
+#ifdef Spine2ANS
+    eventParameters.append("maf.local.resources.operation.executeWithParameters");
+    listToSend.append(Q_ARG(QVariantList, eventParameters));
+
+    //remote data parameters (need to send for operation < nameOfOperation , List of QVariant arguments >
+    dataParameters.append("mafAlgorithmSpine2ANS");
+
+    QVariantMap operationParameters;
+    operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
+    operationParameters.insert("myFirstParameter", 2.3);
+    operationParameters.insert("mySecondParameter", "ughetto");
+    operationParameters.insert("workflowId", "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+
+    QStringList inputFiles;
+    inputFiles << "esempio_di_output_getspineforces.txt";
+    operationParameters.insert("inputFileList", inputFiles);
+    QStringList outputFiles;
+    outputFiles << "Spine_load_cases.dat";
     operationParameters.insert("outputFileList", outputFiles);
 #endif
 
