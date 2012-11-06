@@ -489,14 +489,14 @@ int main(int argc, char *argv[]) {
     QVariantMap operationParameters;
     operationParameters.insert("storageServiceURI", "http://ws.physiomespace.com/WSExecute.cgi");
     operationParameters.insert("orientation", "L");
-    operationParameters.insert("numberClosestBones", "5");
-    operationParameters.insert("workflowId", "MAMMHGHAOIRAIXAFKDOOEJMM");
+    operationParameters.insert("numberClosestBones", "2");
+    operationParameters.insert("workflowId", "dannoxTestForAnsysTissueDBSearch");
 
     QStringList inputFiles;
-    inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-10-22.1350926551047";
+    inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702681267";
     operationParameters.insert("inputFileList", inputFiles);
     QStringList outputFiles;
-    outputFiles << "resultAnsysSearchTissueDB.txt";
+    outputFiles << "output.txt";
     operationParameters.insert("outputFileList", outputFiles);
 #endif
     
