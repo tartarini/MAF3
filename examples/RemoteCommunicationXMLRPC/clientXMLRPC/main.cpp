@@ -493,7 +493,7 @@ int main(int argc, char *argv[]) {
     operationParameters.insert("workflowId", "dannoxTestForAnsysTissueDBSearch");
 
     QStringList inputFiles;
-    inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702681267";
+    inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-11-06.1352214676723";
     operationParameters.insert("inputFileList", inputFiles);
     QStringList outputFiles;
     outputFiles << "myoutput.txt";
