@@ -496,7 +496,7 @@ int main(int argc, char *argv[]) {
     inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-09-03.1346702681267";
     operationParameters.insert("inputFileList", inputFiles);
     QStringList outputFiles;
-    outputFiles << "output.txt";
+    outputFiles << "myoutput.txt";
     operationParameters.insert("outputFileList", outputFiles);
 #endif
     
