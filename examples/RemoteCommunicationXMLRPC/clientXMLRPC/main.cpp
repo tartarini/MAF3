@@ -30,8 +30,8 @@
 //#define NMS2ANS
 //#define Spine2ANS
 //#define LoadExtr
-//#define bcube
-#define AnsysSearch
+#define bcube
+//#define AnsysSearch
 
 
 int main(int argc, char *argv[]) {
@@ -472,7 +472,7 @@ int main(int argc, char *argv[]) {
     operationParameters.insert("workflowId", "MAMMHGHAOIRAIXAFKDOOEJMM");
 
     QStringList inputFiles;
-    inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-10-22.1350926551047";
+    inputFiles << "https://www.physiomespace.com/Members/vphop-project/dataresource.2012-10-22.1350926546955";
     operationParameters.insert("inputFileList", inputFiles);
     QStringList outputFiles;
     outputFiles << "resultbcube.txt";
