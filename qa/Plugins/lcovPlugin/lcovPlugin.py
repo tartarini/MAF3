@@ -10,18 +10,18 @@ try:
 except ImportError:
     import mafPath
 
-modulesDir = os.path.abspath(mafPath.mafSourcesDir)
-currentModule = ""
-
 class lcovPlugin(AbstractPlugin):
     def __init__(self):
         AbstractPlugin.__init__(self)
+        self.currentModule = ""
 
     def execute(self):
-        baseDir = modulesDir
-        for item in os.listdir(baseDir):
-            if (os.path.isfile(os.path.join(baseDir, item))==False):
-                if(item.find("maf") != -1):
+        sourceDir = os.path.join(self.Parameters['sourceDir'])
+        for item in os.listdir(sourceDir):
+            if (os.path.isfile(os.path.join(sourceDir, item))==False):
+                import re
+                x = re.compile(self.Parameters['filter'])
+                if(re.match(x, item)):
                    if(str(sys.platform).lower() == "win32"):
                        print "Script not valid on Windows"
                        exit()
@@ -55,26 +55,22 @@ class lcovPlugin(AbstractPlugin):
                        print os.environ
                        print os.getuid()
                        exit()
-
-                   if(len(sys.argv) != 2):
-                       usage()
-                       exit()
-
-                   currentModule = sys.argv[1]
-                   run()
+                   
+                   self.currentModule = item
+                   self.run()
 
         
     def run(self):
         extScriptDir = currentPathScript
-        baseDir = modulesDir
-        moduleDir = os.path.join(baseDir,currentModule)
-        testDir = os.path.join(mafPath.mafTestsDir, currentModule + "Test")
+        baseDir = os.path.join(self.Parameters['sourceDir'])
+        moduleDir = os.path.join(baseDir,self.currentModule)
+        testDir = os.path.join(mafPath.mafTestsDir, self.currentModule + "Test")
         binDir = os.path.join(mafPath.mafBinaryDir, "bin") #here can be also with Debug
         qaResultsDir = os.path.join(mafPath.mafQADir, "QAResults")
         LCOVExternalCoverageDir = os.path.join(qaResultsDir, "externalCoverage")
 
-        if(os.path.exists(moduleDir) == False):
-            print "Module Dir doesn't exist %s" % moduleDir
+        if(os.path.exists(baseDir) == False):
+            print "Module Dir doesn't exist %s" % baseDir
             exit()
 
         if(os.path.exists(testDir) == False):
@@ -92,17 +88,17 @@ class lcovPlugin(AbstractPlugin):
         if(os.path.exists(LCOVExternalCoverageDir) == False):
             os.mkdir(LCOVExternalCoverageDir);
 
-        moduleCoverageReportDir = os.path.join(LCOVExternalCoverageDir, currentModule +"Coverage")
+        moduleCoverageReportDir = os.path.join(LCOVExternalCoverageDir, self.currentModule +"Coverage")
 
         os.system("rm -fR "+ moduleCoverageReportDir)
         os.mkdir(moduleCoverageReportDir);
 
-        gcdaDir = os.path.join(mafPath.mafBinaryDir,"src",currentModule,"CMakeFiles",currentModule+".dir")
+        gcdaDir = os.path.join(mafPath.mafBinaryDir,"src",self.currentModule,"CMakeFiles",self.currentModule+".dir")
         os.chdir(gcdaDir)
 
         os.system("find . -type f -name '*.gcda' -print | xargs /bin/rm -f")
 
-        executableTest = currentModule + "Test"
+        executableTest = self.currentModule + "Test"
     
         os.chdir(binDir)
         os.environ['LD_LIBRARY_PATH'] = binDir
@@ -120,16 +116,16 @@ class lcovPlugin(AbstractPlugin):
         os.system("find . -type f -name 'ui_*.gcno' -print | xargs /bin/rm -f")
         os.system("find . -type f -name 'ui_*.gcda' -print | xargs /bin/rm -f")
 
-        commandLcov = "lcov  --directory . --capture --output-file " + moduleCoverageReportDir + "/" + currentModule + "_t.info"
-        commandLcovExtract = "lcov  --extract " + moduleCoverageReportDir + "/" + currentModule + "_t.info \"*/"+currentModule+"*\" -o " + moduleCoverageReportDir + "/" + currentModule + "ext.info"
+        commandLcov = "lcov  --directory . --capture --output-file " + moduleCoverageReportDir + "/" + self.currentModule + "_t.info"
+        commandLcovExtract = "lcov  --extract " + moduleCoverageReportDir + "/" + self.currentModule + "_t.info \"*/"+self.currentModule+"*\" -o " + moduleCoverageReportDir + "/" + self.currentModule + "ext.info"
     
-        commandLcovRemove = "lcov  --remove " + moduleCoverageReportDir + "/" + currentModule + "ext.info \"*/ui_*\" -o " + moduleCoverageReportDir + "/" + currentModule + ".info" 
+        commandLcovRemove = "lcov  --remove " + moduleCoverageReportDir + "/" + self.currentModule + "ext.info \"*/ui_*\" -o " + moduleCoverageReportDir + "/" + self.currentModule + ".info" 
 
         os.system(commandLcov)
         os.system(commandLcovExtract)
         os.system(commandLcovRemove)
 
-        commandGenHtml = "genhtml -o " + moduleCoverageReportDir +  " --num-spaces 2 " + moduleCoverageReportDir + "/" + currentModule + ".info"
+        commandGenHtml = "genhtml -o " + moduleCoverageReportDir +  " --num-spaces 2 " + moduleCoverageReportDir + "/" + self.currentModule + ".info"
 
         os.system(commandGenHtml)
         os.chdir(extScriptDir)
