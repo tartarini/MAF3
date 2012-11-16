@@ -1,6 +1,6 @@
 from xml.dom import minidom as xd
 import re, os, time
-from Rules.AbstractRule import AbstractRule
+from AbstractRule import AbstractRule
 
 class OneClassPerFileDeclarationRule(AbstractRule):
     def __init__(self):
