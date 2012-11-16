@@ -1,6 +1,6 @@
 from xml.dom import minidom as xd
 import re
-from Rules.AbstractRule import AbstractRule
+from AbstractRule import AbstractRule
 import os
 
 class SourcesCommentRule(AbstractRule):

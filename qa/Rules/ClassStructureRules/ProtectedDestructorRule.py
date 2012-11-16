@@ -1,6 +1,6 @@
 from xml.dom import minidom as xd
 import re
-from Rules.AbstractRule import AbstractRule
+from AbstractRule import AbstractRule
 
 class ProtectedDestructorRule(AbstractRule):
     def __init__(self):
