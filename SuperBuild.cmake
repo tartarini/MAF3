@@ -90,6 +90,11 @@ if(MAF_RESOURCES)
   include(CMakeExternals/External_OpenCV.cmake)
 endif(MAF_RESOURCES)
 
+if(MAF_PLUGINCTK)
+  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} CTK)
+  include(CMakeExternals/External_CTK.cmake)
+endif(MAF_PLUGINCTK)
+
 if(VTK_MAF)
     set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} VTK)
     include(CMakeExternals/External_VTK.cmake)
@@ -98,11 +103,6 @@ if(VTK_MAF)
       include(CMakeExternals/External_MSVTK.cmake)
     endif(MAF_MSV_EXTENSION)
 endif(VTK_MAF)
-
-if(MAF_PLUGINCTK)
-  set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} CTK)
-  include(CMakeExternals/External_CTK.cmake)
-endif(MAF_PLUGINCTK)
 
 if(MAF_PLUGIN_ZIP)
   set(MAF_DEPENDENCIES ${MAF_DEPENDENCIES} QuaZIP)
