@@ -49,7 +49,7 @@ mafMacroWrapTargetFiles()
 
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
-LINK_DIRECTORIES(${VTK_LIBRARY_DIRS})
+LINK_DIRECTORIES(${CTK_LIBRARY_DIRS})
 
 ## #################################################################
 ## copy ui files and xml configuration file

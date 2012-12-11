@@ -9,12 +9,16 @@ int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     a.setOrganizationName("SCS");
     a.setOrganizationDomain("scsolutions.org");
-    a.setApplicationName("SimpleApp");
+    a.setApplicationName("mafCTKSimpleApp");
     a.setApplicationVersion("1.0");
 
     // Create the application's logic instance
     mafApplicationLogic::mafLogic *logic = new mafApplicationLogic::mafLogic();
-    // and initialize it. This initialization will load dynamically the mafResources Library.
+    
+    logic->pushLibraryToLoad("mafResources");
+    logic->pushLibraryToLoad("mafSerialization");
+
+
     bool ok = logic->initialize();
     if(!ok) {
         exit(1);
@@ -51,7 +55,7 @@ int main(int argc, char *argv[]) {
 
     // Eventually call the loadPlugins method with custom directory to allow the application
     // load custom plugins located in custom directories.
-//    logic->loadPlugins(cusom_plugin_path);
+    logic->loadPlugins();
 
     w.setupMainWindow();
     int result = a.exec();
