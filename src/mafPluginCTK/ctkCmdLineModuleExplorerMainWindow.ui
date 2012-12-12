@@ -274,7 +274,7 @@
   </widget>
   <action name="actionRun">
    <property name="icon">
-    <iconset resource="resources/ctkCmdLineModuleExplorer.qrc">
+    <iconset resource="ctkCmdLineModuleExplorer.qrc">
      <normaloff>:/icons/run.png</normaloff>:/icons/run.png</iconset>
    </property>
    <property name="text">
@@ -289,7 +289,7 @@
   </action>
   <action name="actionCancel">
    <property name="icon">
-    <iconset resource="resources/ctkCmdLineModuleExplorer.qrc">
+    <iconset resource="ctkCmdLineModuleExplorer.qrc">
      <normaloff>:/icons/stop.png</normaloff>:/icons/stop.png</iconset>
    </property>
    <property name="text">
@@ -323,7 +323,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources/ctkCmdLineModuleExplorer.qrc">
+    <iconset resource="ctkCmdLineModuleExplorer.qrc">
      <normaloff>:/icons/pause.png</normaloff>:/icons/pause.png</iconset>
    </property>
    <property name="text">
@@ -374,7 +374,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="resources/ctkCmdLineModuleExplorer.qrc"/>
+  <include location="ctkCmdLineModuleExplorer.qrc"/>
  </resources>
  <connections/>
 </ui>
