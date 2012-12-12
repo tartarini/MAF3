@@ -53,8 +53,10 @@ bool mafOperationCTKCommandLineModuleExplorer::initialize() {
   cmdLineParser.addArgument("verbose", "v", QVariant::Bool, "Be verbose.");
   cmdLineParser.addArgument("help", "h", QVariant::Bool, "Print this help text.");
 
-  bool parseOkay = false;
-  QHash<QString, QVariant> args; // = cmdLineParser.parseArguments(argc, argv, &parseOkay);
+  bool parseOkay = true;
+  
+  QStringList sList;
+  QHash<QString, QVariant> args = cmdLineParser.parseArguments(sList, &parseOkay);
 
   QTextStream out(stdout, QIODevice::WriteOnly);
 
@@ -147,7 +149,10 @@ bool mafOperationCTKCommandLineModuleExplorer::initialize() {
     mainWindow.addModule(args["module"].toString());
   }
 
+  //mainWindow.setWindowModality(Qt::ApplicationModal);
   mainWindow.show();
+  QEventLoop loop;
+  loop.exec();
 }
 
 void mafOperationCTKCommandLineModuleExplorer::execute() {
