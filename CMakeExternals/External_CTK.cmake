@@ -67,6 +67,13 @@ set(proj CTK)
         -DCTK_PLUGIN_org.commontk.dah.examplehost:BOOL=ON
         -DCTK_PLUGIN_org.commontk.dah.host:BOOL=ON
         -DCTK_USE_GIT_PROTOCOL:BOOL=OFF
+        -DCTK_APP_ctkCommandLineModuleExplorer=ON
+        -DCTK_LIB_CommandLineModules/Core=ON
+        -DCTK_LIB_CommandLineModules/Frontend/QtWebKit=ON
+        -DCTK_LIB_CommandLineModules/Frontend/QtGui=ON
+        -DCTK_LIB_CommandLineModules/Backend/LocalProcess=ON
+        -DCTK_LIB_CommandLineModules/Backend/FunctionPointer=ON
+        
       DEPENDS ${proj_DEPENDENCIES}
      )
   SET(CTK_DIR ${CMAKE_CURRENT_BINARY_DIR}/${proj}-build)
