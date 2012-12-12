@@ -1,3 +1,4 @@
 <plugin>
 	<plug classtype="mafPluginCTK::mafImporterCTKDICOM" baseclass="mafResources::mafImporter" label="Import DICOM data"></plug>
+    <plug classtype="mafPluginCTK::mafOperationCTKCommandLineModuleExplorer" baseclass="mafResources::mafOperation" label="Command Line Interface"></plug>
 </plugin>

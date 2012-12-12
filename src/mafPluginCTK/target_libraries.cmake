@@ -13,6 +13,11 @@ SET(foundation_libraries
 SET(CTK_LIBRARIES
   CTKDICOMCore
   CTKDICOMWidgets
+  CTKCommandLineModulesBackendFunctionPointer
+  CTKCommandLineModulesBackendLocalProcess
+  CTKCommandLineModulesCore
+  CTKCommandLineModulesFrontendQtGui
+  CTKCommandLineModulesFrontendQtWebKit
   )
 
 SET(target_libraries
