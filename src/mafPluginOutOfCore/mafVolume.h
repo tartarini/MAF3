@@ -14,6 +14,7 @@
 
 // Includes list
 #include <mafPluginOutOfCoreDefinitions.h>
+#include <mafResource.h>
 #include <mafMatrix.h>
 
 namespace mafPluginOutOfCore {
@@ -22,7 +23,7 @@ namespace mafPluginOutOfCore {
  Class name: mafVolume
  This is the MAF3 Volume class.
  */
-class MAFPLUGINOUTOFCORESHARED_EXPORT mafVolume : public mafCore::mafObject {
+class MAFPLUGINOUTOFCORESHARED_EXPORT mafVolume : public mafResources::mafResource {
     Q_OBJECT
     // properties of the original volume
     //Q_PROPERTY(mafDataType    dataType           READ dataType           WRITE setDataType)
@@ -45,7 +46,7 @@ class MAFPLUGINOUTOFCORESHARED_EXPORT mafVolume : public mafCore::mafObject {
     //Q_PROPERTY(QString        fileName           READ fileName           WRITE setFileName)
 
     /// typedef macro.
-    mafSuperclassMacro(mafCore::mafObject);
+    mafSuperclassMacro(mafResources::mafResource);
 
 public:
     /// Object constructor.

@@ -63,7 +63,8 @@ bool mafPipeVisualVTKIsoSurfaceOutOfCore::acceptObject(mafCore::mafObjectBase *o
     mafVME *vme = qobject_cast<mafVME*>(obj);
     if(vme != NULL) {
         QString dataType = vme->dataSetCollection()->itemAtCurrentTime()->externalDataType();
-        if(dataType.startsWith("mafPluginOutOfCore::mafVolume", Qt::CaseSensitive)) {
+        if(dataType.contains("mafPluginOutOfCore", Qt::CaseSensitive) &&
+           dataType.contains("mafVolume")) {
             return true;
         }
     }

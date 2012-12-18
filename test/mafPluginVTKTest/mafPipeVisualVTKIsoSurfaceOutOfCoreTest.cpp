@@ -192,7 +192,7 @@ void mafPipeVisualVTKIsoSurfaceOutOfCoreTest::encodeVolume() {
     volume->setSpacing(spacing);
     volume->setDimensions(dimensions);
     volume->setLevelNum(2);                   // level number for 4M memory limit
-    volume->setMemoryLimit(4 * 1024);         // 4M memory limit
+    volume->setMemoryLimit(1);         // 4M memory limit
     volume->setFileName("graySphere.raw");    // External data file name
     // dataValue
     ushort *data = new ushort[dimensions[2] * dimensions[1] * dimensions[0]];
@@ -328,13 +328,7 @@ void mafPipeVisualVTKIsoSurfaceOutOfCoreTest::updatePipeTestFromPlugIn() {
     qDebug() << "Vendor: " << info.m_Vendor;
     qDebug() << "Description: " << info.m_Description;
 
-    QStringList binding_class_list;
-    binding_class_list = mafCoreRegistration::acceptObject(m_VME);
-    int num = binding_class_list.count();
-    QVERIFY(num != 0);
-
-    QString check("mafPluginVTK::mafPipeVisualVTKIsoSurfaceOutOfCore");
-    QVERIFY(binding_class_list.contains(check));
+    QVERIFY(mafPipeVisualVTKIsoSurfaceOutOfCore::acceptObject(m_VME));
 
     // update the mafVolume data
     m_Volume->setMemoryLimit(64 * 1024);
