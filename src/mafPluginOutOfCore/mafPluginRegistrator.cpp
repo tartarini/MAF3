@@ -11,6 +11,7 @@
 
 #include "mafPluginRegistrator.h"
 #include "mafMementoVolume.h"
+#include "mafImporterOutOfCoreVolume.h"
 
 #include <mafPluginConfigurator.h>
 
@@ -22,19 +23,23 @@ using namespace mafPluginOutOfCore;
 mafPluginRegistrator::mafPluginRegistrator() {
     // Register to the mafObjectFactory the plug-in object's types.
     mafRegisterObject(mafPluginOutOfCore::mafMementoVolume);
+    mafRegisterObjectAndAcceptBind(mafPluginOutOfCore::mafImporterOutOfCoreVolume);
 }
 
 mafPluginRegistrator::~mafPluginRegistrator() {
     // When the library is Un-Loaded it has to remove from the mafObjectFactory its object's types.
     mafUnregisterObject(mafPluginOutOfCore::mafMementoVolume);
+    mafUnregisterObjectAndAcceptUnbind(mafPluginOutOfCore::mafImporterOutOfCoreVolume);
 }
 
 void mafPluginRegistrator::registerAllObjects() {
     mafPluggedObjectsHash pluginHash;
 
     mafPluggedObjectInformation mementoVolume("Memento Volume", "mafPluginOutOfCore::mafMementoVolume");
+    mafPluggedObjectInformation importerOutOfCore("Import OutOfCore Volume", "mafPluginOutOfCore::mafImporterOutOfCoreVolume");
     
     pluginHash.insertMulti("mafCore::mafMemento", mementoVolume);
+    pluginHash.insertMulti("mafResources::mafImporter", importerOutOfCore);
     
     mafEventBus::mafEventArgumentsList argList;
     argList.append(mafEventArgument(mafCore::mafPluggedObjectsHash, pluginHash));
