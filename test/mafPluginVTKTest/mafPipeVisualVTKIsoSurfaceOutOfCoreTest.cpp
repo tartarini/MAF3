@@ -292,7 +292,7 @@ void mafPipeVisualVTKIsoSurfaceOutOfCoreTest::updatePipeTest() {
     for (int i = 20; i < 200; i += 20) {
         pipe->setContourValue(QString::number(i));
         pipe->updatePipe();
-        QTest::qSleep(500);
+        QTest::qSleep(2500);
     }
 
     // set the size of ROI, using the level = 1
@@ -362,7 +362,7 @@ void mafPipeVisualVTKIsoSurfaceOutOfCoreTest::updatePipeTestFromPlugIn() {
     ((mafVTKWidget*)m_RenderWidget)->update();
     ((mafVTKWidget*)m_RenderWidget)->GetRenderWindow()->Render();
     //m_Iren->Start();
-    QTest::qSleep(2000);
+    QTest::qSleep(22000);
 
     mafDEL(visualPipe);
     pluginManager->shutdown();

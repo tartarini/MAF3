@@ -766,7 +766,7 @@ void mafExternalDataCodecBrickedVolumeTest::initGrayVolume() {
     m_GrayVolume->setBrickSize(16);
     m_GrayVolume->setMemoryLimit(64);               // 64k for test, 1M for default
     m_DecodedGrayVolume->setMemoryLimit(64);
-    m_GrayVolume->setFileName("Gary716458");        // External data file name
+    m_GrayVolume->setFileName("Gray716458");        // External data file name
     // dataValue
     ushort *data = new ushort[dimensions[2] * dimensions[1] * dimensions[0]];
     for (int z = 0; z < dimensions[2]; ++z) {

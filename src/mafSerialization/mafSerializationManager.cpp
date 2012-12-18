@@ -32,7 +32,6 @@ mafSerializationManager::mafSerializationManager(const QString code_location) : 
     plugCodec("XML","mafSerialization::mafCodecXML");
     plugCodec("RAW","mafSerialization::mafCodecRawBinary");
     plugCodec("RAW_LOD","mafSerialization::mafCodecRawVolume");
-    plugCodec("RAW_BRICKED_LOD","mafSerialization::mafCodecBrickedVolume");
     plugSerializer("file", "mafSerialization::mafSerializerFileSystem");
 }
 
@@ -97,6 +96,7 @@ void mafSerializationManager::saveMemento(mafMemento *memento, const QString &ur
     }
     
     // Pass the memento to the codec and ask him to encode the given data.
+    qDebug() << codecType.toAscii().data();
     mafCodec *codec = (mafCodec *)mafNEWFromString(codecType);
 
     // Check the protocol of the given 'url' and create the corresponding mafSerialize class

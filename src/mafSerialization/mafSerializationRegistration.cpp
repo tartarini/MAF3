@@ -18,8 +18,6 @@ using namespace mafSerialization;
 void mafSerializationRegistration::registerSerializationObjects() {
         mafRegisterObject(mafSerialization::mafCodecRawBinary);
         mafRegisterObject(mafSerialization::mafCodecRawASCII);
-        mafRegisterObject(mafSerialization::mafCodecVolume);
-        mafRegisterObject(mafSerialization::mafCodecBrickedVolume);
         mafRegisterObject(mafSerialization::mafCodecXML);
         mafRegisterObject(mafSerialization::mafSerializerFileSystem);
 
@@ -29,8 +27,6 @@ void mafSerializationRegistration::registerSerializationObjects() {
 void mafSerializationRegistration::unregisterSerializationObjects() {
         mafUnregisterObject(mafSerialization::mafCodecRawBinary);
         mafUnregisterObject(mafSerialization::mafCodecRawASCII);
-        mafUnregisterObject(mafSerialization::mafCodecVolume);
-        mafUnregisterObject(mafSerialization::mafCodecBrickedVolume);
         mafUnregisterObject(mafSerialization::mafCodecXML);
         mafUnregisterObject(mafSerialization::mafSerializerFileSystem);
 }

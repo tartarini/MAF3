@@ -16,8 +16,6 @@
 #include "mafSerialization_global.h"
 #include "mafCodecRawBinary.h"
 #include "mafCodecRawASCII.h"
-#include "mafCodecVolume.h"
-#include "mafCodecBrickedVolume.h"
 #include "mafCodecXML.h"
 #include "mafSerializerFileSystem.h"
 //#include "mafCSVReader.h"

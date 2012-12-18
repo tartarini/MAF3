@@ -77,6 +77,11 @@ void mafPipeVisualVTKIsoSurfaceOutOfCore::updatePipe(double t) {
     mafDataSet *data = dataSetForInput(0, t);
     mafProxy<mafVolume> *dataSet = mafProxyPointerTypeCast(mafVolume, data->dataValue());
     
+    if(dataSet->externalData() == NULL) {
+        qWarning() << "Visualization of Data not compatible with data type";
+        return;
+    }
+
     vtkImageData *vtkData = vtkImageData::New();
     toVTKImageData(dataSet, vtkData);
     vtkData->GetScalarRange(m_Range);
@@ -175,6 +180,6 @@ void mafPipeVisualVTKIsoSurfaceOutOfCore::toVTKImageData(mafProxy<mafVolume> *vo
     // Spacing
     float *spacing = volData->spacing();
     vtkData->SetSpacing(spacing[0], spacing[1], spacing[2]);
-
+    vtkData->UpdateData();
     // Pose matrix ?
 }
