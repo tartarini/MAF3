@@ -13,6 +13,7 @@
 #include <mafVME.h>
 #include <mafDataSet.h>
 
+using namespace mafEventBus;
 using namespace mafPluginOutOfCore;
 using namespace mafResources;
 
@@ -33,28 +34,37 @@ void mafImporterOutOfCoreVolume::execute() {
         cleanup();
         return;
     }
-    
-    /*QByteArray ba = filename().toAscii();
-    m_Reader->SetFileName(ba.constData());
-    m_Reader->Update();
-    
-    m_ImportedData = m_Reader->GetOutputPort();
-    m_ImportedData.setExternalCodecType("VTK");
-    m_ImportedData.setClassTypeNameFunction(vtkClassTypeNameExtract);
+
+    QString encodeType = "RAW";
+    mafCore::mafMemento *memento = 0;
+
+    QString volumeFileName = filename();
+
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(QString, volumeFileName));
+    argList.append(mafEventArgument(QString, encodeType));
+    QGenericReturnArgument retVal = mafEventReturnArgument(mafCore::mafMemento*, memento);
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal, &argList, &retVal);
+
+    // verify memento
+    mafVolume *volume = mafNEW(mafPluginOutOfCore::mafVolume);
+    volume->setMemento(memento);
+    mafDEL(memento);
+            
+    m_ImportedData = volume;
+    m_ImportedData.setExternalCodecType("mafVolume");
+    //m_ImportedData.setClassTypeNameFunction(vtkClassTypeNameExtract);
     QString dataType = m_ImportedData.externalDataType();
+    char *v = dataType.toAscii().data();
 
     //here set the mafDataset with the VTK data
     importedData(&m_ImportedData);
     
     //set the default boundary algorithm for VTK vme
     mafResources::mafVME * vme = qobject_cast<mafResources::mafVME *> (this->m_Output);
-    vme->dataSetCollection()->itemAtCurrentTime()->setBoundaryAlgorithmName("mafPluginVTK::mafDataBoundaryAlgorithmVTK");
+    //vme->dataSetCollection()->itemAtCurrentTime()->setBoundaryAlgorithmName("mafPluginVTK::mafDataBoundaryAlgorithmVTK");
 
-    if (dataType.compare("vtkPolyData") == 0) {
-        vme->setProperty("iconType", "mafVMESurfaceVTK");
-    } else {
-        vme->setProperty("iconType", "mafVMEVolumeVTK");
-    }*/
-    
+    vme->setProperty("iconType", "mafVMEVolumeVTK"); // need to change icon even if probably it will be the same pic
+
     Q_EMIT executionEnded();
 }
