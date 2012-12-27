@@ -55,10 +55,9 @@ void mafImporterOutOfCoreVolume::execute() {
     mafDEL(memento);
             
     m_ImportedData = volume;
-    m_ImportedData.setExternalCodecType("mafVolume");
+    m_ImportedData.setExternalCodecType("VOLUME_LOD");
     //m_ImportedData.setClassTypeNameFunction(vtkClassTypeNameExtract);
-    QString dataType = m_ImportedData.externalDataType();
-    char *v = dataType.toAscii().data();
+    m_ImportedData.setExternalDataType(QString("mafVolume"));
 
     //here set the mafDataset with the VTK data
     importedData(&m_ImportedData);
