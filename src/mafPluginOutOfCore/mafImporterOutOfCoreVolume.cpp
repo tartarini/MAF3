@@ -68,5 +68,8 @@ void mafImporterOutOfCoreVolume::execute() {
 
     vme->setProperty("iconType", "mafVMEVolumeVTK"); // need to change icon even if probably it will be the same pic
 
+    volume->setMemoryLimit(64 * 1024);
+    volume->updateDataValue();
+
     Q_EMIT executionEnded();
 }
