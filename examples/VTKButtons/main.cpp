@@ -41,8 +41,9 @@ int main(int argc, char *argv[]) {
     
     
     /// push libraries to load during initialization.
-    logic->pushLibraryToLoad("mafResources");
     logic->pushLibraryToLoad("mafSerialization");
+    logic->pushLibraryToLoad("mafResources");
+
     
     // and initialize it. This initialization will load dynamically the mafResources Library.
     bool ok = logic->initialize();
@@ -90,8 +91,8 @@ int main(int argc, char *argv[]) {
     logic->customizeVisualization("Slice", "vtkRectilinearGrid", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
 
 
-    logic->customizeVisualization("OutOfCore", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKIsoSurfaceOutOfCore");
-    logic->customizeVisualization("OutOfCore", "vtkRectilinearGrid", "mafPluginVTK::mafPipeVisualVTKIsoSurfaceOutOfCore");
+    logic->customizeVisualization("OutOfCore", "mafVolume", "mafPluginVTK::mafPipeVisualVTKIsoSurfaceOutOfCore");
+
     // Example of View customization with a particular widget
     //mafRegisterQtObject(mafOrthoSlice);
     //logic->customizeViewWidget("OrthoSlice", "mafOrthoSlice");

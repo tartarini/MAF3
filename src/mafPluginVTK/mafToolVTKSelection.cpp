@@ -82,6 +82,10 @@ void mafToolVTKSelection::updatePipe(double t) {
     if (dataSet == NULL) {
         m_OutlineCornerFilter->RemoveAllInputs();
     } else {
+        vtkAlgorithmOutput *aout = vtkAlgorithmOutput::SafeDownCast(*dataSet);
+        if(!aout) {
+            return;
+        }
         m_OutlineCornerFilter->SetInputConnection(*dataSet);
         m_OutlineCornerFilter->Update();
     }

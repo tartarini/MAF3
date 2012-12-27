@@ -132,7 +132,7 @@ void mafImporterOutOfCoreVolumeTest::initializeTestData() {
 
 void mafImporterOutOfCoreVolumeTest::importOutOfCoreFile() {
     QVariantList op;
-    op.append(QVariant("mafPluginVTK::mafImporterVTK"));
+    op.append(QVariant("mafPluginOutOfCore::mafImporterOutOfCoreVolume"));
     QVariantMap params;
     params.insert("filename", QVariant(m_OutOfCoreFile));
     op.push_back(params); // Needs push_back to preserve the QVariantList structure as second element of the main variant list.
@@ -141,9 +141,9 @@ void mafImporterOutOfCoreVolumeTest::importOutOfCoreFile() {
     listToSend.append(mafEventArgument(QVariantList, op));
     m_EventBus->notifyEvent("maf.local.resources.operation.executeWithParameters", mafEventTypeLocal, &listToSend);
 
-    QTime dieTime = QTime::currentTime().addSecs(3);
+    QTime dieTime = QTime::currentTime().addSecs(10);
     while(QTime::currentTime() < dieTime) {
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 3);
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 10);
     }
     
 }

@@ -18,6 +18,7 @@ using namespace mafPluginOutOfCore;
 using namespace mafResources;
 
 mafImporterOutOfCoreVolume::mafImporterOutOfCoreVolume(const QString code_location) : mafImporter(code_location) {
+    m_MultiThreaded = false;
 }
 
 mafImporterOutOfCoreVolume::~mafImporterOutOfCoreVolume() {
@@ -45,6 +46,8 @@ void mafImporterOutOfCoreVolume::execute() {
     argList.append(mafEventArgument(QString, encodeType));
     QGenericReturnArgument retVal = mafEventReturnArgument(mafCore::mafMemento*, memento);
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal, &argList, &retVal);
+
+    //don't use serialization
 
     // verify memento
     mafVolume *volume = mafNEW(mafPluginOutOfCore::mafVolume);
