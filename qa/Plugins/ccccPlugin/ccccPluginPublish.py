@@ -74,7 +74,7 @@ def publishReport():
             xml = fromstring(str(f.read()))
 
             #with lxml create html
-            absPathXslt = os.path.join(currentPathScript,"cccc.xslt")
+            absPathXslt = os.path.join(currentPathScript,"ccccPlugin.xslt")
        
             fileXslt = open(absPathXslt, 'r') 
             #print xsltH + headString + centerString + str(fileXslt.read()) + tailString + xsltT
