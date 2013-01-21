@@ -94,42 +94,48 @@ class lcovPlugin(AbstractPlugin):
         os.mkdir(moduleCoverageReportDir);
 
         gcdaDir = os.path.join(mafPath.mafBinaryDir,"src",self.currentModule,"CMakeFiles",self.currentModule+".dir")
-        os.chdir(gcdaDir)
+        
+        try:
+          os.chdir(gcdaDir)
 
-        os.system("find . -type f -name '*.gcda' -print | xargs /bin/rm -f")
+          os.system("find . -type f -name '*.gcda' -print | xargs /bin/rm -f")
 
-        executableTest = self.currentModule + "Test"
+          executableTest = self.currentModule + "Test"
     
-        os.chdir(binDir)
-        os.environ['LD_LIBRARY_PATH'] = binDir
-        os.environ['DISPLAY'] = "localhost:0.0"
-        os.system("Xvfb :0.0 &")
-        os.system("./" + executableTest)
+          os.chdir(binDir)
+          os.environ['LD_LIBRARY_PATH'] = binDir
+          os.environ['DISPLAY'] = "localhost:0.0"
+          os.system("Xvfb :0.0 &")
+          os.system("./" + executableTest)
     
-        os.chdir(gcdaDir)
-        os.system("find . -type f -name 'moc_*.gcno' -print | xargs /bin/rm -f")
-        os.system("find . -type f -name 'moc_*.gcda' -print | xargs /bin/rm -f")
+          os.chdir(gcdaDir)
+          os.system("find . -type f -name 'moc_*.gcno' -print | xargs /bin/rm -f")
+          os.system("find . -type f -name 'moc_*.gcda' -print | xargs /bin/rm -f")
     
-        os.system("find . -type f -name 'qrc_*.gcno' -print | xargs /bin/rm -f")
-        os.system("find . -type f -name 'qrc_*.gcda' -print | xargs /bin/rm -f")
+          os.system("find . -type f -name 'qrc_*.gcno' -print | xargs /bin/rm -f")
+          os.system("find . -type f -name 'qrc_*.gcda' -print | xargs /bin/rm -f")
     
-        os.system("find . -type f -name 'ui_*.gcno' -print | xargs /bin/rm -f")
-        os.system("find . -type f -name 'ui_*.gcda' -print | xargs /bin/rm -f")
+          os.system("find . -type f -name 'ui_*.gcno' -print | xargs /bin/rm -f")
+          os.system("find . -type f -name 'ui_*.gcda' -print | xargs /bin/rm -f")
 
-        commandLcov = "lcov  --directory . --capture --output-file " + moduleCoverageReportDir + "/" + self.currentModule + "_t.info"
-        commandLcovExtract = "lcov  --extract " + moduleCoverageReportDir + "/" + self.currentModule + "_t.info \"*/"+self.currentModule+"*\" -o " + moduleCoverageReportDir + "/" + self.currentModule + "ext.info"
+          commandLcov = "lcov  --directory . --capture --output-file " + moduleCoverageReportDir + "/" + self.currentModule + "_t.info"
+          commandLcovExtract = "lcov  --extract " + moduleCoverageReportDir + "/" + self.currentModule + "_t.info \"*/"+self.currentModule+"*\" -o " + moduleCoverageReportDir + "/" + self.currentModule + "ext.info"
     
-        commandLcovRemove = "lcov  --remove " + moduleCoverageReportDir + "/" + self.currentModule + "ext.info \"*/ui_*\" -o " + moduleCoverageReportDir + "/" + self.currentModule + ".info" 
+          commandLcovRemove = "lcov  --remove " + moduleCoverageReportDir + "/" + self.currentModule + "ext.info \"*/ui_*\" -o " + moduleCoverageReportDir + "/" + self.currentModule + ".info" 
 
-        os.system(commandLcov)
-        os.system(commandLcovExtract)
-        os.system(commandLcovRemove)
+          os.system(commandLcov)
+          os.system(commandLcovExtract)
+          os.system(commandLcovRemove)
 
-        commandGenHtml = "genhtml -o " + moduleCoverageReportDir +  " --num-spaces 2 " + moduleCoverageReportDir + "/" + self.currentModule + ".info"
+          commandGenHtml = "genhtml -o " + moduleCoverageReportDir +  " --num-spaces 2 " + moduleCoverageReportDir + "/" + self.currentModule + ".info"
 
-        os.system(commandGenHtml)
-        os.chdir(extScriptDir)
-
+          os.system(commandGenHtml)
+          os.chdir(extScriptDir)
+        
+        except:
+          os.system(commandGenHtml)
+          os.chdir(extScriptDir)
+          
 def usage():
     print "Usage:  python lcovPluginScript.py <moduleName>"
 
