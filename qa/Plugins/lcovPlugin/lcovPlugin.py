@@ -133,7 +133,6 @@ class lcovPlugin(AbstractPlugin):
           os.chdir(extScriptDir)
         
         except:
-          os.system(commandGenHtml)
           os.chdir(extScriptDir)
           
 def usage():
