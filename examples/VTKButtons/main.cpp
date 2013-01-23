@@ -87,6 +87,7 @@ int main(int argc, char *argv[]) {
     logic->customizeVisualization("Buttons Iso", "vtkPolyData", "mafPluginVTK::mafPipeVisualVTKSurface");
     logic->customizeVisualization("Buttons Iso", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKIsoSurface");
     logic->customizeVisualization("Buttons Iso", "vtkRectilinearGrid", "mafPluginVTK::mafPipeVisualVTKIsoSurface");
+    logic->customizeVisualization("Buttons Iso", "mafVolume", "mafPluginVTK::mafPipeVisualVTKIsoSurfaceOutOfCore");
     logic->customizeVisualization("Slice", "vtkStructuredPoints", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
     logic->customizeVisualization("Slice", "vtkRectilinearGrid", "mafPluginVTK::mafPipeVisualVTKSliceVolume");
 

@@ -47,13 +47,33 @@ void mafImporterOutOfCoreVolume::execute() {
     QGenericReturnArgument retVal = mafEventReturnArgument(mafCore::mafMemento*, memento);
     mafEventBusManager::instance()->notifyEvent("maf.local.serialization.load", mafEventTypeLocal, &argList, &retVal);
 
-    //don't use serialization
+    /*
+    QString encodeType = "VOLUME_LOD";
+    mafCore::mafMemento *memento = 0;
+
+    QString volumeFileName = filename();
+
+    mafVolume *volume = mafNEW(mafPluginOutOfCore::mafVolume);
+    mafCore::mafProxy<mafVolume> container;
+    container = (mafVolume*)volume;
+
+    mafEventArgumentsList argList;
+    argList.append(mafEventArgument(mafCore::mafProxyInterface *, &container));
+    argList.append(mafEventArgument(QString, volumeFileName));
+    argList.append(mafEventArgument(QString, encodeType));
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.update", mafEventTypeLocal, &argList);
+
+    */
 
     // verify memento
     mafVolume *volume = mafNEW(mafPluginOutOfCore::mafVolume);
     volume->setMemento(memento);
+    QString fn = volumeFileName.mid(volumeFileName.lastIndexOf("/")+1,volumeFileName.lastIndexOf(".") - volumeFileName.lastIndexOf("/")).append(".raw");
+    //volume->setFileName(fn);
     mafDEL(memento);
-            
+
+    char *v = fn.toAscii().data();
+
     m_ImportedData = volume;
     m_ImportedData.setExternalCodecType("VOLUME_LOD");
     //m_ImportedData.setClassTypeNameFunction(vtkClassTypeNameExtract);

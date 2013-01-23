@@ -12,8 +12,9 @@
 #include "mafPluginRegistrator.h"
 #include "mafMementoVolume.h"
 #include "mafImporterOutOfCoreVolume.h"
-#include "mafExternalDataCodecVolume.h"
 
+#include "mafExternalDataCodecVolume.h"
+#include "mafExternalDataCodecBrickedVolume.h"
 #include <mafPluginConfigurator.h>
 
 using namespace mafCore;
@@ -25,6 +26,8 @@ mafPluginRegistrator::mafPluginRegistrator() {
     // Register to the mafObjectFactory the plug-in object's types.
     mafRegisterObject(mafPluginOutOfCore::mafMementoVolume);
     mafRegisterObject(mafPluginOutOfCore::mafExternalDataCodecVolume);
+    mafRegisterObject(mafPluginOutOfCore::mafExternalDataCodecBrickedVolume);
+
     mafRegisterObjectAndAcceptBind(mafPluginOutOfCore::mafImporterOutOfCoreVolume);
 }
 
@@ -32,6 +35,8 @@ mafPluginRegistrator::~mafPluginRegistrator() {
     // When the library is Un-Loaded it has to remove from the mafObjectFactory its object's types.
     mafUnregisterObject(mafPluginOutOfCore::mafMementoVolume);
     mafUnregisterObject(mafPluginOutOfCore::mafExternalDataCodecVolume);
+    mafUnregisterObject(mafPluginOutOfCore::mafExternalDataCodecBrickedVolume);
+
     mafUnregisterObjectAndAcceptUnbind(mafPluginOutOfCore::mafImporterOutOfCoreVolume);
 }
 
@@ -51,6 +56,15 @@ void mafPluginRegistrator::registerAllObjects() {
     // register external codec
     QString encodeType = "VOLUME_LOD";
     QString codec = "mafPluginOutOfCore::mafExternalDataCodecVolume";
+    argList.clear();
+    argList.append(mafEventArgument(QString, encodeType));
+    argList.append(mafEventArgument(QString, codec));
+    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.plugCodec", mafEventTypeLocal, &argList);
+
+
+    // register external codec
+    encodeType = "VOLUME_BRICKED_LOD";
+    codec = "mafPluginOutOfCore::mafExternalDataCodecBrickedVolume";
     argList.clear();
     argList.append(mafEventArgument(QString, encodeType));
     argList.append(mafEventArgument(QString, codec));

@@ -1,3 +1,5 @@
 <plugin>
 	<plug classtype="mafPluginOutOfCore::mafMementoVolume" baseclass="mafCore::mafMemento" label="Memento for Volume"></plug>
+	<codec classtype="mafPluginOutOfCore::mafExternalDataCodecVolume" encodetype="VOLUME_LOD"></codec>
+	<codec classtype="mafPluginOutOfCore::mafExternalDataCodecBrickedVolume" encodetype="VOLUME_BRICKED_LOD"></codec>
 </plugin>

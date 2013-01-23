@@ -144,10 +144,23 @@ void mafToolVTKButtons::updatePipe(double t) {
     button()->setFlyTo(FlyTo());
     updatedGraphicObject();
 
-    mafProxy<vtkAlgorithmOutput> *dataSet =  mafProxyPointerTypeCast(vtkAlgorithmOutput, vme->dataSetCollection()->itemAtCurrentTime()->dataValue());
-    if(dataSet)
+
+    mafProxyInterface *pi =  vme->dataSetCollection()->itemAtCurrentTime()->dataValue();
+    if(pi == NULL) {
+        return;
+    }
+
+    QString dt = pi->externalDataType();
+    char *m = dt.toAscii().data();
+
+    mafProxy<vtkAlgorithmOutput> *dataSet =  mafProxyPointerTypeCast(vtkAlgorithmOutput, pi);
+    if(dataSet && dt.contains("vtkAlgorithmOutput"))
     {
       vtkAlgorithm *producer = (*dataSet)->GetProducer();
+      //
+      if(producer == NULL) {
+          return;
+      }
       vtkDataObject *dataObject = producer->GetOutputDataObject(0);
       vtkDataSet* vtkData = vtkDataSet::SafeDownCast(dataObject);
 
