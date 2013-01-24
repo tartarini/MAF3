@@ -33,7 +33,7 @@ set(proj MSVTK)
     
     #SET(revision_tag 107ffad7)
 
-    SET(revision_tag 3d2f6001cc19dc42deda07efba99b67ed39cc1fc)
+    SET(revision_tag be7ac42df80978183a8ff05bea52b8223f64ff6d)
     IF(${proj}_REVISION_TAG)
       SET(revision_tag ${${proj}_REVISION_TAG})
     ENDIF()
