@@ -35,7 +35,9 @@ mafViewVTKButtons::~mafViewVTKButtons() {
 bool mafViewVTKButtons::initialize() {
     if (Superclass::initialize()) {
       msvQVTKButtonsManager::instance()->setRenderer(m_Renderer);
+      return true;
     }
+    return false;
 }
 
 mafResources::mafSceneNode *mafViewVTKButtons::createSceneNode(mafResources::mafVME *vme) {
