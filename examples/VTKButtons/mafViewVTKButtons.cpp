@@ -13,6 +13,7 @@
 #include "mafViewVTKButtons.h"
 #include "mafToolVTKButtons.h"
 #include "mafToolVTKButtonsGroup.h"
+#include "msvQVTKButtonsManager.h"
 #include "mafEventBusManager.h"
 #include <mafSceneNode.h>
 #include <mafVME.h>
@@ -29,6 +30,12 @@ mafViewVTKButtons::mafViewVTKButtons(const QString code_location) : mafViewVTK(c
 }
 
 mafViewVTKButtons::~mafViewVTKButtons() {
+}
+
+bool mafViewVTKButtons::initialize() {
+    if (Superclass::initialize()) {
+      msvQVTKButtonsManager::instance()->setRenderer(m_Renderer);
+    }
 }
 
 mafResources::mafSceneNode *mafViewVTKButtons::createSceneNode(mafResources::mafVME *vme) {

@@ -39,10 +39,13 @@ public:
     virtual void showSceneNode(mafResources::mafSceneNode *node, bool show = true);
 
     /// Remove scene node passed as argument.
-   /*virtual*/ void removeSceneNode(mafResources::mafSceneNode *node);
+    /*virtual*/ void removeSceneNode(mafResources::mafSceneNode *node);
 
-   /// Remove vtkButtons.
-   virtual void clearScene();
+    /// Remove vtkButtons.
+    virtual void clearScene();
+
+    /// Crete view.
+    /*virtual*/ bool initialize();
 
 public Q_SLOTS:
     /// Show/hide buttons

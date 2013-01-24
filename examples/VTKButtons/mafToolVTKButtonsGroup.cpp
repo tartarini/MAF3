@@ -48,8 +48,8 @@ mafToolVTKButtonsGroup::mafToolVTKButtonsGroup(const QString code_location) : ma
 }
 
 msvQVTKButtonsInterface *mafToolVTKButtonsGroup::element() {
-  if(m_Element== NULL) {
-    m_Element = m_Element = msvQVTKButtonsManager::instance()->createGroup();
+  if(m_Element == NULL) {
+    m_Element = msvQVTKButtonsManager::instance()->createGroup();
     m_Element->setShowButton(true);
     bool result = QObject::connect(m_Element, SIGNAL(showTooltip(QString)), this, SLOT(showTooltip(QString)));
     result = QObject::connect(m_Element, SIGNAL(hideTooltip()), this, SLOT(hideTooltip()));
@@ -72,6 +72,7 @@ void mafToolVTKButtonsGroup::graphicObjectInitialized() {
     // Graphic widget (render window, interactor...) has been created and initialized.
     // now can add the widget.
     addWidget(static_cast<msvQVTKButtonsGroup*>(element())->slider());
+    //static_cast<msvVTKButtonsGroup*>(static_cast<msvQVTKButtonsGroup*>(element())->getVTKButtonsInterface())->ShowSlider(false);
 }
 
 void mafToolVTKButtonsGroup::addButton(mafToolVTKButtonsInterface *button) {
@@ -109,7 +110,9 @@ void mafToolVTKButtonsGroup::updatePipe(double t) {
   QString iconType = vme->property("iconType").toString();
   if (iconType != "") {
     QString iconFileName = mafIconFromObjectType(iconType);
-    element()->setIconFileName(iconFileName);
+    QImage image;
+    image.load(iconFileName);
+    element()->setImage(image);
   }
 
   int size[2]; size[0] = 16; size[1] = 16;
@@ -127,7 +130,7 @@ void mafToolVTKButtonsGroup::updatePipe(double t) {
   mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(this->graphicObject());
 
   static_cast<msvQVTKButtonsGroup*>(element())->setCurrentRenderer(widget->renderer());
-
+  static_cast<msvQVTKButtonsGroup*>(element())->update();
 }
 
 // void mafToolVTKButtonsInterface::showTooltip(QString tooltip) {
