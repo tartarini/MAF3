@@ -50,7 +50,7 @@ mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafToolVTKBu
 msvQVTKButtonsInterface *mafToolVTKButtons::element() {
     if(m_Element == NULL) {
         m_Element = msvQVTKButtonsManager::instance()->createButtons();
-        m_Element->setShowButton(true);
+        //m_Element->setShowButton(true);
         bool result = QObject::connect(m_Element, SIGNAL(showTooltip(QString)), this, SLOT(showTooltip(QString)));
         result = QObject::connect(m_Element, SIGNAL(hideTooltip()), this, SLOT(hideTooltip()));
 
@@ -99,16 +99,18 @@ void mafToolVTKButtons::updatePipe(double t) {
     }
 
     ///////////-------- BUTTON WIDGET -----------////////////
-    vtkTexturedButtonRepresentation2D *rep = static_cast<vtkTexturedButtonRepresentation2D *> (static_cast<msvQVTKButtons*>(element())->button()->GetRepresentation());
+    //vtkTexturedButtonRepresentation2D *rep = static_cast<vtkTexturedButtonRepresentation2D *> (static_cast<msvQVTKButtons*>(element())->button()->GetRepresentation());
 
     QString iconType = vme->property("iconType").toString();
     if (iconType != "") {
       QString iconFileName = mafIconFromObjectType(iconType);
-      element()->setIconFileName(iconFileName);
+      QImage image;
+      image.load(iconFileName);
+      element()->setImage(image);
     }
 
     int size[2]; size[0] = 16; size[1] = 16;
-    rep->GetBalloon()->SetImageSize(size);
+    //rep->GetBalloon()->SetImageSize(size);
 
     if (showLabel()) {
         QString vmeName = vme->property("objectName").toString();
@@ -128,9 +130,9 @@ void mafToolVTKButtons::updatePipe(double t) {
         bds[1] = newBounds->yMin(); 
         bds[2] = newBounds->zMin();
     }
-    rep->PlaceWidget(bds, size);
-    rep->Modified();
-    static_cast<msvQVTKButtons*>(element())->button()->SetRepresentation(rep);
+    //rep->PlaceWidget(bds, size);
+    //rep->Modified();
+    //static_cast<msvQVTKButtons*>(element())->button()->SetRepresentation(rep);
     ///////////-------- BUTTON WIDGET -----------////////////
 
     mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(this->graphicObject());
