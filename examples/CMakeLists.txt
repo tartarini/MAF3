@@ -23,7 +23,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 ADD_SUBDIRECTORY(qaCheck)
 ADD_SUBDIRECTORY(RemoteCommunicationXMLRPC)
 ADD_SUBDIRECTORY(SimpleApp)
-
+ADD_SUBDIRECTORY(ChartSample)
 
 if(BUILD_WRAP)
 ADD_SUBDIRECTORY(mafPythonQtExample)
