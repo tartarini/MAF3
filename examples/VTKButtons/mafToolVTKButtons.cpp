@@ -158,64 +158,98 @@ void mafToolVTKButtons::updatePipe(double t) {
 
 void mafToolVTKButtons::showTooltip(QString tooltip) {
     mafVME *vme = input();
-    if(vme == NULL) {
+    if(vme == NULL || !(vme->showAdditionalInfo() || vme->showBounds() || vme->showDataType() || vme->showPoseMatrix() || vme->showPreview() || vme->showPreview())) {
         return;
     }
 
     QString matrixString = vme->dataSetCollection()->itemAtCurrentTime()->poseMatrixString();
     QString text("<table border=\"0\"");
     text.append("<tr>");
-    text.append("<td>");
-    QImage preview = static_cast<msvQVTKButtons*>(element())->getPreview(180,180);
-    QByteArray ba;
-    QBuffer buffer(&ba);
-    buffer.open(QIODevice::WriteOnly);
-    preview.save(&buffer, "PNG");
 
-    text.append(QString("<img src=\"data:image/png;base64,%1\">").arg(QString(buffer.data().toBase64())));
-    text.append("</td>");
+    if(vme->showPreview())
+    {
+      text.append("<td>");
+      QImage preview = static_cast<msvQVTKButtons*>(element())->getPreview(256,256);
+      QByteArray ba;
+      QBuffer buffer(&ba);
+      buffer.open(QIODevice::WriteOnly);
+      preview.save(&buffer, "PNG");
 
-    text.append("<td>");
-    text.append("<b>Data type</b>: ");
-    text.append(vme->dataSetCollection()->itemAtCurrentTime()->externalDataType());
-    text.append("<br>");
 
-     QStringList list = matrixString.split(" ");
-     int numElement = list.count();
-     int i = 0;
+      text.append(QString("<img src=\"data:image/png;base64,%1\">").arg(QString(buffer.data().toBase64())));
 
-     text.append("<b>Pose Matrix</b>:");
-     text.append("<table border=\"0.2\">");
-     for ( ; i < numElement; i++ ) {
-         text.append("<tr>");
-         text.append("<td>" + list[i] +"</td>");
-         i++;
-         text.append("<td>" + list[i] +"</td>");
-         i++;
-         text.append("<td>" + list[i] +"</td>");
-         i++;
-         text.append("<td>" + list[i] +"</td>");
-         text.append("</tr>");
-     }
-     text.append("</table>");
+      text.append("</td>");
+    }
 
-    mafBounds *bounds = vme->dataSetCollection()->itemAtCurrentTime()->bounds();
-    text.append("<b>Bounds: (min - max)</b>:");
-    text.append("<table border=\"0.2\">");
-    text.append("<tr>");
-    text.append("<td>" + QString::number(bounds->xMin()) +"</td>");
-    text.append("<td>" + QString::number(bounds->xMax()) +"</td>");
-    text.append("</tr>");
-    text.append("<tr>");
-    text.append("<td>" + QString::number(bounds->yMin()) +"</td>");
-    text.append("<td>" + QString::number(bounds->yMax()) +"</td>");
-    text.append("</tr>");
-    text.append("<tr>");
-    text.append("<td>" + QString::number(bounds->zMin()) +"</td>");
-    text.append("<td>" + QString::number(bounds->zMax()) +"</td>");
-    text.append("</tr>");
-    text.append("</table>");
-    text.append("</td>");
+    if(vme->showAdditionalInfo() || vme->showBounds() || vme->showDataType() || vme->showPoseMatrix() || vme->showPreview())
+    {
+      text.append("<td>");
+
+      if(vme->showDataType())
+      {
+        text.append("<b>Data type</b>: ");
+        text.append(vme->dataSetCollection()->itemAtCurrentTime()->externalDataType());
+        text.append("<br><br>");
+      }
+
+      if(vme->showPoseMatrix())
+      {
+        QStringList list = matrixString.split(" ");
+        int numElement = list.count();
+        int i = 0;
+
+        text.append("<b>Pose Matrix</b>:");
+        text.append("<table border=\"0\">");
+        for ( ; i < numElement; i++ ) {
+          text.append("<tr>");
+          text.append("<td>" + list[i] +"</td>");
+          i++;
+          text.append("<td>" + list[i] +"</td>");
+          i++;
+          text.append("<td>" + list[i] +"</td>");
+          i++;
+          text.append("<td>" + list[i] +"</td>");
+          text.append("</tr>");
+        }
+        text.append("</table>");
+        text.append("<br><br>");
+      }
+
+      if(vme->showBounds())
+      {
+        mafBounds *bounds = vme->dataSetCollection()->itemAtCurrentTime()->bounds();
+        text.append("<b>Bounds: (min - max)</b>:");
+        text.append("<table border=\"0\">");
+        text.append("<tr>");
+        text.append("<td>" + QString::number(bounds->xMin()) +"</td>");
+        text.append("<td>" + QString::number(bounds->xMax()) +"</td>");
+        text.append("</tr>");
+        text.append("<tr>");
+        text.append("<td>" + QString::number(bounds->yMin()) +"</td>");
+        text.append("<td>" + QString::number(bounds->yMax()) +"</td>");
+        text.append("</tr>");
+        text.append("<tr>");
+        text.append("<td>" + QString::number(bounds->zMin()) +"</td>");
+        text.append("<td>" + QString::number(bounds->zMax()) +"</td>");
+        text.append("</tr>");
+        text.append("</table>");
+        text.append("<br>");
+      }
+
+      if(vme->showAdditionalInfo())
+      {
+        text.append("<table>");
+        text.append("<tr>");
+        text.append("<td><b>Description:</b></td>");
+        text.append("</tr>");
+        text.append("<tr>");
+        text.append("<td>" + vme->additionalInfo() +"</td>");
+        text.append("</tr>");
+        text.append("</table>");
+      }
+
+      text.append("</td>");
+    }
     text.append("</tr>");
     text.append("</table>");
  
