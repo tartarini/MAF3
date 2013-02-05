@@ -47,6 +47,7 @@ MainWindow::MainWindow()
 	//view = new MyFasterGraphicView(scene);
 	view->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 
+    // add the canvas
     layout->addWidget(view);
 
     QWidget *widget = new QWidget;

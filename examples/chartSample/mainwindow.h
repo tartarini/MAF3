@@ -167,7 +167,7 @@ public:
 		//innerGridLayout->addLayout(rightLayout, 1, 1, 1, 1/*, Qt::AlignRight*/);
 		QFrame *rightFrame = new QFrame;
 		rightFrame->setLayout(rightLayout);
-		innerGridLayout->addWidget(rightFrame, 1, 1, 1, 1/*, Qt::AlignRight*/);
+                innerGridLayout->addWidget(rightFrame, 1, 1, 1, 1/*, Qt::AlignRight*/);
 		bottomLayout = new QHBoxLayout();
 		//innerGridLayout->addLayout(bottomLayout, 2, 0, 1, 2/*, Qt::AlignCenter*/);
 		QFrame *bottomFrame = new QFrame;

@@ -7,52 +7,46 @@
 //#include "mafNodeConnectorGraphicWidget.h"
 
 void mafNodeGraphicWidget::hide() {
-	this->widget()->close();
+    this->widget()->close();
 }
 
 //dw slot
 void mafNodeGraphicWidget::deleted() {
-	this->widget()->close();
-	//delete this;
+    this->widget()->close();
+    //delete this;
 }
 
 void mafNodeGraphicWidget::deleted(int result) {
-	this->widget()->close();
+    this->widget()->close();
 }
 
 mafNodeGraphicWidget::~mafNodeGraphicWidget() {
-	removeWigetFromConnectors();
-	//deleteConnections();
-	//dw new 
-	if (scene() != NULL) {
-		this->scene()->removeItem(this);
-	}
+    removeWigetFromConnectors();
+    //deleteConnections();
+    if (scene() != NULL) {
+        this->scene()->removeItem(this);
+    }
 }
 
 //! [0]
 mafNodeGraphicWidget::mafNodeGraphicWidget(QMenu *contextMenu,
                                          QGraphicsItem *parent, /*//dw can we really assume our scene type*/ QGraphicsScene /*mafDiagramScene*/ *scene, Qt::WindowFlags wFlags)
 			 : /*QGraphicsPolygonItem(parent, scene) //dw*/ /*QFrame(parent->parentWidget(), 0)*/
-QGraphicsProxyWidget(parent, /*//dw668: did this cause decorations now in 4.7 but no in 4.5.2?: Qt::Window*/ wFlags), mMaxRadius(1)
+QGraphicsProxyWidget(parent, wFlags), mMaxRadius(1)
 {
-	//dw new4: is this a problem? check it
     setCacheMode(DeviceCoordinateCache);
 
     mContextMenu = contextMenu;
-	isMoving = false;
+    isMoving = false;
 
-	//dw new:
-	setZValue(1);
-	//param
-	mNoResize = true;
-	if (mNoResize) {
-		mControlResizeHandles = true;
-	}
-	else {
-		//param
-		mControlResizeHandles = false;
-	}
-
+    setZValue(1);
+    //param
+    mNoResize = true;
+    if (mNoResize) {
+        mControlResizeHandles = true;
+    } else {
+        mControlResizeHandles = false;
+    }
 
 /*
     QPainterPath path;

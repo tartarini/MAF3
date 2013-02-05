@@ -27,15 +27,21 @@ class mafDiagramScene : public QGraphicsScene
     Q_OBJECT
 
 public:
-    enum Mode { InsertItem, InsertLine, InsertText, MoveItem, /*//dw*/ InsertNode, InsertNode2 };
+    enum Mode { InsertItem, InsertLine, InsertText, MoveItem, InsertNode, InsertNode2 };
 
     mafDiagramScene(QMenu *itemMenu, QObject *parent = 0);
     QColor lineColor() const
         { return mLineColor; }
     void setLineColor(const QColor &color);
 
-	//dw new3: moved and ugly
-	QMenu *mItemMenu;
+    QMenu *mItemMenu;
+
+    //extended API for draw by functions.
+    void drawNode(mafNodeGraphicWidget *node);
+    void drawArrow();
+    void deleteNode();
+    void deleteArrow();
+
 
 public slots:
     void setMode(Mode mode);

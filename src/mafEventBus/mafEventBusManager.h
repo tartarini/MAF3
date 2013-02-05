@@ -91,6 +91,9 @@ public:
     /// Create the client for remote communication according to the given protocol, server host and port.
     bool createClient(const QString &communication_protocol, const QString &server_host, unsigned int port);
 
+    /// retireve all information for event bus manager connections
+    const mafEventBusConnectionInfoHash &connectionInfosDump();
+
 public Q_SLOTS:
     /// Intercepts objects deletion and detach them from the event bus.
     void detachObjectFromBus();
@@ -111,6 +114,7 @@ private:
 
     bool m_SkipDetach; ///< lifesafe variable to avoid the detach from eventbus.
 
+    mutable mafEventBusConnectionInfoHash m_ConnectionInfoHash;
 };
 
 } // namespace mafEventBus

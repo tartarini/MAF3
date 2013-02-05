@@ -16,7 +16,6 @@
 
 using namespace mafEventBus;
 
-
 mafEventBusManager::mafEventBusManager() : m_EnableEventLogging(false), m_LogEventTopic("*"), m_SkipDetach(false) {
     // Create local event dispatcher.
     m_LocalDispatcher = new mafEventDispatcherLocal();
@@ -39,6 +38,9 @@ mafEventBusManager::~mafEventBusManager() {
         delete i.value();
         ++i;
     }
+    // clean connection info vector.
+    m_ConnectionInfoHash.clear();
+    // clean hash for network connectors.
     m_NetworkConnectorHash.clear();
 
     // disconnect detachFromEventBus
@@ -81,6 +83,34 @@ bool mafEventBusManager::addEventProperty(const mafEvent &props) const {
     QString topic = props[TOPIC].toString();
     QObject *obj = props[OBJECT].value<QObject*>();
 
+    /// add to connection infos array this connection
+    /// chek also if already exists and one of observer or signal is empty
+    if(!m_ConnectionInfoHash.contains(topic)) {
+        mafEventBusConnectionInfo info;
+        info.type = (mafEventType) props[TYPE].toInt();
+        if(props[SIGTYPE].toInt() == mafSignatureTypeCallback) {
+            info.slotName.push_back(props[SIGNATURE].toString());
+            info.observers.push_back(obj);
+        } else { //is a signal
+            info.emitter = obj;
+            info.signalName.append(props[SIGNATURE].toString());
+        }
+        //info.callers;
+        //info.counter;
+        m_ConnectionInfoHash.insert(topic,info);
+    } else {
+        //check the type, and complete the information
+        mafEventBusConnectionInfo info = m_ConnectionInfoHash.value(topic);
+        if(info.type == mafSignatureTypeCallback) {
+            info.slotName.push_back(props[SIGNATURE].toString());
+            info.observers.push_back(obj);
+            m_ConnectionInfoHash.insert(topic,info);
+        } else { //no sense if is a signal
+        }
+    }
+
+
+
     if(props[TYPE].toInt() == mafEventTypeLocal) {
         // Local event dispatching.
         if(props[SIGTYPE].toInt() == mafSignatureTypeCallback) {
@@ -122,6 +152,19 @@ void mafEventBusManager::detachObjectFromBus() {
 }
 
 void mafEventBusManager::removeObserver(const QObject *obj, const QString topic, bool qt_disconnect) {
+    /// remove to connection infos array this connection
+    mafEventBusConnectionInfo info = m_ConnectionInfoHash.value(topic);
+    int counter = 0;
+    foreach (QObject *o, info.observers) {
+        if(o == obj) {
+            info.observers.remove(counter);
+            info.slotName.remove(counter);
+            break;
+        }
+        counter++;
+    }
+
+
     if(obj == NULL) {
         return;
     }
@@ -130,6 +173,12 @@ void mafEventBusManager::removeObserver(const QObject *obj, const QString topic,
 }
 
 void mafEventBusManager::removeSignal(const QObject *obj, QString topic, bool qt_disconnect) {
+    /// remove to connection infos array this connection
+    mafEventBusConnectionInfo info = m_ConnectionInfoHash.value(topic);
+    info.emitter = NULL;
+    info.signalName = "";
+
+
     if(obj == NULL) {
         return;
     }
@@ -146,7 +195,27 @@ void mafEventBusManager::removeSignal(const QObject *obj, QString topic, bool qt
 bool mafEventBusManager::removeEventProperty(const mafEvent &props) const {
     bool result(false);
     QString topic = props[TOPIC].toString();
-    
+    QObject *obj = props[OBJECT].value<QObject*>();
+
+    /// remove from connection info
+    if(props[SIGTYPE].toInt() == mafSignatureTypeCallback) {
+        mafEventBusConnectionInfo info = m_ConnectionInfoHash.value(topic);
+        int counter = 0;
+        foreach (QObject *o, info.observers) {
+            if(o == obj) {
+                info.observers.remove(counter);
+                info.slotName.remove(counter);
+                break;
+            }
+            counter++;
+        }
+    } else {
+        mafEventBusConnectionInfo info = m_ConnectionInfoHash.value(topic);
+        info.emitter = NULL;
+        info.signalName = "";
+    }
+
+
     if(props.eventType() == mafEventTypeLocal) {
         // Local event dispatching.
         if(props[SIGTYPE].toInt() == mafSignatureTypeCallback) {
@@ -179,6 +248,11 @@ void mafEventBusManager::notifyEvent(const QString topic, mafEventType ev_type, 
             qDebug() << mafTr("Event notification for TOPIC: %1").arg(topic);
         }
     }
+
+    /// increment in correct connection info item inside the array, the counter and insert the caller if possible
+    mafEventBusConnectionInfo info = m_ConnectionInfoHash.value(topic);
+    info.counter++;
+
 
     //event dispatched in local channel
     mafEvent *event_dic = new mafEvent(topic, ev_type, synch);
@@ -252,4 +326,8 @@ bool mafEventBusManager::createClient(const QString &communication_protocol, con
         }
     }
     return res;
+}
+
+const mafEventBusConnectionInfoHash &mafEventBusManager::connectionInfosDump() {
+    return m_ConnectionInfoHash;
 }

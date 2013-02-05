@@ -20,6 +20,22 @@ mafDiagramScene::mafDiagramScene(QMenu *itemMenu, QObject *parent)
 }
 //! [0]
 
+void mafDiagramScene::drawNode(mafNodeGraphicWidget *node) {
+    emit mafNodeGraphicWidgetInserted(node);
+}
+
+void mafDiagramScene::drawArrow() {
+
+}
+
+void mafDiagramScene::deleteNode() {
+
+}
+
+void mafDiagramScene::deleteArrow() {
+
+}
+
 //! [1]
 void mafDiagramScene::setLineColor(const QColor &color)
 {

@@ -43,26 +43,25 @@ public:
         virtual ~mafNodeGraphicWidget();
     void deleteConnections();
 
-        void addConnector(mafNodeConnectorGraphicWidget* nc);
+    void addConnector(mafNodeConnectorGraphicWidget* nc);
 
 
 	//dw
-	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-	void setWidget(QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void setWidget(QWidget *widget);
 
-	QRectF boundingRect() const;
-	QPainterPath shape() const;
+    QRectF boundingRect() const;
+    QPainterPath shape() const;
 
-	//void update(const QRectF & rect = QRectF());
+    //void update(const QRectF & rect = QRectF());
+    QList<mafNodeConnectorGraphicWidget *> connectors;
 
-        QList<mafNodeConnectorGraphicWidget *> connectors;
+public slots:
+        void deleted();
+        void deleted(int result);
 
-	public slots:
-		void deleted();
-		void deleted(int result);
-
-		//dw try overriding QWidget slot
-		void hide();
+        //dw try overriding QWidget slot
+        void hide();
 
 /*
 void 	accepted ()
