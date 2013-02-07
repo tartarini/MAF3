@@ -8,14 +8,14 @@ const qreal Pi = 3.14;
 
 mafNodeConnectionGraphicWidget::~mafNodeConnectionGraphicWidget(){
 	if (this->mStartConnector != NULL) {
-		this->mStartConnector->removeConnection(this);
+                //this->mStartConnector->removeConnection(this);
 		this->mStartConnector = NULL;
 	}
 	if (this->mEndConnector != NULL) {
-		this->mEndConnector->removeConnection(this);
+                //this->mEndConnector->removeConnection(this);
 		this->mEndConnector = NULL;
 	}
-	//dw new
+
 	if (scene() != NULL) {
 		this->scene()->removeItem(this);
 	}
@@ -521,6 +521,8 @@ void mafNodeConnectionGraphicWidget::recreatePath(QPointF& controlPoint1, QPoint
 	QPainterPath p(a);
 	p.cubicTo(controlPoint1, controlPoint2, b);
 	this->setPath(p);
+
+        update();
 }
 
 

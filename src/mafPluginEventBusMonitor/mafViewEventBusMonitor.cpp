@@ -10,15 +10,32 @@
  */
 
 #include "mafViewEventBusMonitor.h"
-#include <mafDiagramScene.h>
 
+#include <QPaintEvent>
 #include <QWidget>
+
 
 using namespace mafEventBus;
 using namespace mafResources;
 using namespace mafPluginEventBusMonitor;
 
-class ExampleBaseNode : public mafNodeGraphicWidget {
+#define LINE_SPACE 40
+
+#include <QGraphicsView>
+#include <QPaintEvent>
+
+MyFasterGraphicView::MyFasterGraphicView(QGraphicsScene* scene): QGraphicsView(scene) {}
+void MyFasterGraphicView::paintEvent ( QPaintEvent * event) {
+        QRect r = event->region().boundingRect();
+        QRect r1 = scene()->itemsBoundingRect().toRect();
+
+        QPaintEvent *newEvent=new QPaintEvent(r1);
+        QGraphicsView::paintEvent(newEvent);
+        delete newEvent;
+}
+
+
+class mafNodeAdvancedGraphicWidget : public mafNodeGraphicWidget {
 public:
         QGridLayout  *innerGridLayout;
         QHBoxLayout *topLayout;
@@ -26,15 +43,19 @@ public:
         QVBoxLayout *rightLayout;
         QHBoxLayout *bottomLayout;
 
+        const QVector<mafNodeConnectorGraphicWidget *> &connectorVector() {
+            return m_ConnectorVector;
+        }
+
 
         void setWidget(QWidget *widget) {
                 //does this work for all possible wiget types
                 mafNodeGraphicWidget::setWidget(widget);
-                widget->setObjectName("ExampleBaseNode");
+                widget->setObjectName("mafNodeAdvancedGraphicWidget");
         }
 
 
-        ExampleBaseNode(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0, Qt::WindowFlags wFlags = 0) : mafNodeGraphicWidget(contextMenu, parent, scene, wFlags) {
+        mafNodeAdvancedGraphicWidget(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0, Qt::WindowFlags wFlags = 0) : mafNodeGraphicWidget(contextMenu, parent, scene, wFlags) {
                                 //dw new
                 QFrame *outterFrame = new QFrame;
                 //QWidget *outterFrame = new QWidget;
@@ -123,7 +144,7 @@ public:
                 setWidget(outterFrame);
 
 
-                outterFrame->setObjectName("ExampleBaseNode");
+                outterFrame->setObjectName("mafNodeAdvancedGraphicWidget");
         }
 
 
@@ -163,7 +184,9 @@ public:
 
                 //innerGridLayout->upd
 
-                addConnector(new mafNodeConnectorGraphicWidget(this, scene(), l, t, align, false));
+                mafNodeConnectorGraphicWidget *connector = new mafNodeConnectorGraphicWidget(this, scene(), l, t, align, false);
+                m_ConnectorVector.push_back(connector);
+                addConnector(connector);
         }
 
 
@@ -182,7 +205,7 @@ public:
                                 else {
                                         oc = c->startConnector();
                                 }
-                                ExampleBaseNode* oi = static_cast<ExampleBaseNode*>(oc->parentItem());
+                                mafNodeAdvancedGraphicWidget* oi = static_cast<mafNodeAdvancedGraphicWidget*>(oc->parentItem());
                                 //otherwise self-connections on this node (but not when on same connector) would be written twice, so do nothing in one of the two cases
                                 if (this == oi && this->connectors.indexOf(con) < oi->connectors.indexOf(oc)) {
                                         continue;
@@ -203,7 +226,7 @@ public:
                 out << "\n";
         }
 
-        virtual void deserialize(QTextStream& out, QMap<int, ExampleBaseNode*>& map) {
+        virtual void deserialize(QTextStream& out, QMap<int, mafNodeAdvancedGraphicWidget*>& map) {
                 //typeId is read by caller
                 QString  l;
                 if ((l=out.readLine()) != "") {
@@ -241,27 +264,202 @@ public:
         }
 
         virtual int getId() = 0;
+
+private:
+        QVector<mafNodeConnectorGraphicWidget *> m_ConnectorVector;
 };
 
-//"ExampleNode1: dialog, single in, only one connection"
-class ExampleNode1 : public ExampleBaseNode {
+//"mafNodeAdvancedGraphicWidget: dialog, single in, only one connection"
+class mafNodeCompoundGraphicWidget : public mafNodeAdvancedGraphicWidget {
 public:
-        ExampleNode1(QString name, mafNodeConnectorGraphicWidget::ConnectorAlignment alignment = mafNodeConnectorGraphicWidget::Left, mafNodeConnectorGraphicWidget::ConnectorType type = mafNodeConnectorGraphicWidget::In ,QMenu *contextMenu = NULL, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0) : ExampleBaseNode(contextMenu, parent, scene) {
-                /*
-                QLabel* in0 = new QLabel("in0");
-                this->innerGridLayout->addWidget(in0);
-
-                //dialog->setAttribute(Qt::WA_DeleteOnClose);
-                //this->setWidget(dialog);
-
-                addConnector(new mafNodeGraphicWidget(this, scene, in0, mafNodeGraphicWidget::In, mafNodeGraphicWidget::Left, true));
-                */
-                //FIXME:
-                addConnectorAndLabel(name, type, alignment);
+        mafNodeCompoundGraphicWidget(QMenu *contextMenu = NULL, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0) : mafNodeAdvancedGraphicWidget(contextMenu, parent, scene) {
         }
-        int getId() { return 1; }
-};
 
+        void setNodeToConnectorAndLabel(QString name, mafNodeConnectorGraphicWidget::ConnectorAlignment alignment = mafNodeConnectorGraphicWidget::Left, mafNodeConnectorGraphicWidget::ConnectorType type = mafNodeConnectorGraphicWidget::In ) {
+            m_Id = 1;
+            addConnectorAndLabel(name, type, alignment);
+        }
+
+        void setNodeBox(const QVector<QString> &strings, const QVector<mafNodeConnectorGraphicWidget::ConnectorAlignment> &alignments, const QVector<mafNodeConnectorGraphicWidget::ConnectorType> types) {
+                //QFormLayout *layout2 = new QFormLayout;
+                /*
+                QLabel* out0 = new QLabel("out0");
+                out0->setAlignment(Qt::AlignRight);
+                QLabel* in0 = new QLabel("in0");
+
+                innerGridLayout->addWidget(in0,0,0);
+                innerGridLayout->addWidget(out0,0,1);
+                QLabel* in1 = new QLabel("in1");
+                innerGridLayout->addWidget(in1,1,0,1,2);
+                QLabel* in2 = new QLabel("in2");
+                innerGridLayout->addWidget(in2,2,0,1,2);
+                QLabel* inout0 = new QLabel("inOut0");
+                inout0->setAlignment(Qt::AlignRight);
+                innerGridLayout->addWidget(inout0,3,0,1,2);
+
+                QSpinBox* spinBox = new QSpinBox();
+                spinBox->setMinimum(0);
+                spinBox->setMaximum(9);
+                innerGridLayout->addWidget(spinBox,4,0,1,2);
+                */
+
+                int numberOfItems = strings.count();
+                int index = 0;
+                for(; index < numberOfItems; ++index) {
+                    setNodeToConnectorAndLabel(strings.at(index), alignments.at(index), types.at(index));
+                }
+
+                /*QSpinBox* spinBox = new QSpinBox();
+                spinBox->setMinimum(0);
+                spinBox->setMaximum(9);
+                leftLayout->addWidget(spinBox);
+                addConnector(new mafNodeConnectorGraphicWidget(this, scene, spinBox, mafNodeConnectorGraphicWidget::InOut));*/
+
+                //QDialog *dialog1 = new QDialog();
+                //dw from: http://lists.trolltech.com/qt-interest/2002-05/thread00837-0.html
+                //MyDialog::MyDialog(QWidget* parent, const char* name)	: QDialog(parent, name, true, WStyle_Customize | WStyle_DialogBorder | WStyle_Title | WStyle_SysMenu)
+
+                /*
+                QDialog *dialog1 = new QDialog(NULL, Qt::WindowType::FramelessWindowHint);
+                dialog1->setLayout(layout2);
+                */
+
+                //dialog1->setAttribute(Qt::WA_DeleteOnClose);
+
+                //dw new3
+                //dialog1->setStyle(new QStyle::());
+
+                //dialog1->setSizeGripEnabled(false);
+
+                //dialog1->setFixedSize(dialog1->size());
+                //dialog1->setSizePolicy(QSizePolicy::Fixed);
+                //layout2->setSizeConstraint(QLayout::SetFixedSize);
+
+                //dialog1->layout()->setSizeConstraint( QLayout::SetFixedSize ) ;
+                //dialog1->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+
+                /*
+                this->setWidget(dialog1);
+                setWindowFlags(dialog1->windowFlags() | Qt::Tool);
+                */
+                /*
+                addConnector(new mafNodeGraphicWidget(this, scene, out0, mafNodeGraphicWidget::Out, mafNodeGraphicWidget::Right));
+                addConnector(new mafNodeGraphicWidget(this, scene, in0, mafNodeGraphicWidget::In));
+                addConnector(new mafNodeGraphicWidget(this, scene, in1, mafNodeGraphicWidget::In));
+                addConnector(new mafNodeGraphicWidget(this, scene, in2, mafNodeGraphicWidget::In));
+                addConnector(new mafNodeGraphicWidget(this, scene, inout0, mafNodeGraphicWidget::InOut, mafNodeGraphicWidget::Right));
+                addConnector(new mafNodeGraphicWidget(this, scene, spinBox, mafNodeGraphicWidget::InOut));
+                */
+                m_Id = 5;
+        }
+
+        void setNodeFilter(QString left, QString right) {
+            QVector<QString> strings;
+            strings << left << right;
+
+            QVector<mafNodeConnectorGraphicWidget::ConnectorAlignment> alignments;
+            alignments << mafNodeConnectorGraphicWidget::Left << mafNodeConnectorGraphicWidget::Right;
+
+            QVector<mafNodeConnectorGraphicWidget::ConnectorType> types;
+            types << mafNodeConnectorGraphicWidget::InOut << mafNodeConnectorGraphicWidget::InOut;
+
+
+            setNodeBox(strings, alignments, types);
+
+            /*
+            //QFormLayout *layout = new QFormLayout;
+            QLabel* inout0 = new QLabel("inout0");
+            QLabel* inout1 = new QLabel("inout1");
+            inout1->setAlignment(Qt::AlignRight);
+            //layout->addRow(inout0, inout1);
+            //QGroupBox *dialog = new QGroupBox();
+            //dialog->setLayout(layout);
+
+            innerGridLayout->addWidget(inout0,0,0);
+            innerGridLayout->addWidget(inout1,0,1);
+            */
+
+            /*
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            this->setWidget(dialog);
+
+            setWindowFlags(dialog->windowFlags() | Qt::Tool | Qt::WindowType::FramelessWindowHint);
+            */
+
+            /*
+            addConnector(new mafNodeGraphicWidget(this, scene, inout0, mafNodeGraphicWidget::InOut, mafNodeGraphicWidget::Left, false));
+            addConnector(new mafNodeGraphicWidget(this, scene, inout1, mafNodeGraphicWidget::InOut, mafNodeGraphicWidget::Right, false));
+            */
+            m_Id = 6;
+        }
+
+        void setSource(QString label) {
+            setNodeToConnectorAndLabel(label, mafNodeConnectorGraphicWidget::Right, mafNodeConnectorGraphicWidget::Out);
+
+            /*
+            //QFormLayout *layout = new QFormLayout;
+            QLabel* out0 = new QLabel("out0");
+            out0->setAlignment(Qt::AlignRight);
+            */
+            /*
+            layout->addRow(out0);
+            QDialog *dialog = new QDialog(NULL);
+            dialog->setWindowTitle("ExampleNode7: frame with title, 1 x out, multi connection");
+            //QToolBox *dialog = new QToolBox();
+            dialog->setWindowTitle("xxx7");
+            dialog->setLayout(layout);
+            //dialog->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+            //dialog->setFixedSize(dialog->sizeHint());
+            //layout->setSizeConstraint(QLayout::SetFixedSize);
+            this->mNoResize = false;
+            */
+
+            //dialog->setAttribute(Qt::WA_DeleteOnClose);
+            //this->setWidget(dialog);
+
+            /*
+            innerGridLayout->addWidget(out0);
+            addConnector(new mafNodeGraphicWidget(this, scene, out0, mafNodeGraphicWidget::Out, mafNodeGraphicWidget::Right, false));
+            */
+            m_Id = 7;
+        }
+
+        void setSink(QString label) {
+            setNodeToConnectorAndLabel(label, mafNodeConnectorGraphicWidget::Left, mafNodeConnectorGraphicWidget::In);
+
+            /*
+            //QFormLayout *layout = new QFormLayout;
+            QLabel* out0 = new QLabel("out0");
+            out0->setAlignment(Qt::AlignRight);
+            */
+            /*
+            layout->addRow(out0);
+            QDialog *dialog = new QDialog(NULL);
+            dialog->setWindowTitle("ExampleNode7: frame with title, 1 x out, multi connection");
+            //QToolBox *dialog = new QToolBox();
+            dialog->setWindowTitle("xxx7");
+            dialog->setLayout(layout);
+            //dialog->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+            //dialog->setFixedSize(dialog->sizeHint());
+            //layout->setSizeConstraint(QLayout::SetFixedSize);
+            this->mNoResize = false;
+            */
+
+            //dialog->setAttribute(Qt::WA_DeleteOnClose);
+            //this->setWidget(dialog);
+
+            /*
+            innerGridLayout->addWidget(out0);
+            addConnector(new mafNodeGraphicWidget(this, scene, out0, mafNodeGraphicWidget::Out, mafNodeGraphicWidget::Right, false));
+            */
+            m_Id = 7;
+        }
+
+        int getId() { return m_Id; }
+private:
+        unsigned int m_Id;
+};
 
 mafViewEventBusMonitor::mafViewEventBusMonitor(const QString code_location) : m_Scene(NULL), mafView(code_location) {
 }
@@ -272,20 +470,20 @@ bool mafViewEventBusMonitor::initialize() {
         //scene = new DiagramScene(itemMenu);
         QMenu *itemMenu = new QMenu;
         m_Scene = new mafDiagramScene(itemMenu, NULL);
-        m_Scene->setSceneRect(QRectF(0, 0, 500, 500));
 
-        //dw
+
         connect(m_Scene, SIGNAL(nodeItemInserted(mafNodeGraphicWidget *)),
             this, SLOT(itemInserted(mafNodeGraphicWidget *)));
 
         QHBoxLayout *layout = new QHBoxLayout;
 
-        QGraphicsView *view = new QGraphicsView(m_Scene);
+        generateEventBusDiagramConnections();
 
-        view->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+        m_View = new MyFasterGraphicView(m_Scene);
+        m_View->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 
         // add the canvas
-        layout->addWidget(view);
+        layout->addWidget(m_View);
 
         m_RenderWidget = new QWidget();
         ((QWidget *)m_RenderWidget)->setLayout(layout);
@@ -293,7 +491,7 @@ bool mafViewEventBusMonitor::initialize() {
         m_RenderWidget->setObjectName("EventBus Monitor");
         setupSceneGraph();
 
-        generateEventBusDiagramConnections();
+
 
         return true;
     }
@@ -318,20 +516,36 @@ void mafViewEventBusMonitor::generateEventBusDiagramConnections() {
 
         //analyze
         m_Scene->setMode(mafDiagramScene::InsertNode);
-        ExampleNode1 *node1 = new ExampleNode1(topic, mafNodeConnectorGraphicWidget::Right, mafNodeConnectorGraphicWidget::In, NULL,NULL,m_Scene);
-        ExampleNode1 *node2 = new ExampleNode1("cribbio", mafNodeConnectorGraphicWidget::Left, mafNodeConnectorGraphicWidget::InOut, NULL,NULL,m_Scene);
+        mafNodeCompoundGraphicWidget *node1 = new mafNodeCompoundGraphicWidget(NULL,NULL,m_Scene);
+        node1->setSource(topic);
+        mafNodeCompoundGraphicWidget *node2 = new mafNodeCompoundGraphicWidget(NULL,NULL,m_Scene);
+        node2->setNodeFilter(info.signalName,"");
 
-        node1->setPos(QPointF(-250,count*30));
-        node2->setPos(QPointF(550,count*30));
+        node1->setPos(QPointF(50,count*LINE_SPACE));
+        node2->setPos(QPointF(550,count*LINE_SPACE));
+
+        if(info.slotName.count()) {
+            mafNodeCompoundGraphicWidget *node3 = new mafNodeCompoundGraphicWidget(NULL,NULL,m_Scene);
+            node3->setSink(info.slotName.at(0));
+            node3->setPos(QPointF(1250,count*LINE_SPACE));
+            m_Scene->drawNode(node3);
+        }
 
         m_Scene->drawNode(node1);
         m_Scene->drawNode(node2);
 
         m_Scene->setMode(mafDiagramScene::InsertItem);
+
+        mafNodeConnectorGraphicWidget *node11 = node1->connectorVector().at(0);
+        mafNodeConnectorGraphicWidget *node21 = node2->connectorVector().at(0);
+        mafNodeConnectionGraphicWidget *tmpArrow = new mafNodeConnectionGraphicWidget(node11, node21, NULL, m_Scene);
+
+        m_Scene->drawArrow(tmpArrow);
+
         count++;
     }
 
     int numberOfConnections = count;
-    m_Scene->setSceneRect(QRectF(0, 0, 500, (numberOfConnections+2) * 30 ));
+    m_Scene->setSceneRect(QRectF(50, 0, 2000, (numberOfConnections+2) * 30 + 50 ));
     m_Scene->update();
 }

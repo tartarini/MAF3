@@ -16,10 +16,14 @@
  
 #include "mafPluginEventBusMonitor_global.h"
 #include "mafPluginEventBusMonitorDefinitions.h"
+#include <mafDiagramScene.h>
 
 
 //class forwarding
+class QGraphicsView;
+class QPaintEvent;
 class mafDiagramScene;
+
 
 namespace mafPluginEventBusMonitor {
 
@@ -40,15 +44,27 @@ public:
 
     /// generate diagram of event
     void generateEventBusDiagramConnections();
-    
+
+public slots:
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafViewEventBusMonitor();
 
 private:
     mafDiagramScene *m_Scene;
+    QGraphicsView *m_View;
 };
 
-} // namespace mafScriptInterpreter
+class MyFasterGraphicView : public QGraphicsView
+{
+Q_OBJECT
+public:
+        MyFasterGraphicView(QGraphicsScene* scene);
+protected:
+        void paintEvent ( QPaintEvent * event);
+};
+
+}
 
 #endif // MAFVIEWEVENTBUSMONITOR_H

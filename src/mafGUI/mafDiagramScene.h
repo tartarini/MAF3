@@ -38,10 +38,7 @@ public:
 
     //extended API for draw by functions.
     void drawNode(mafNodeGraphicWidget *node);
-    void drawArrow();
-    void deleteNode();
-    void deleteArrow();
-
+    void drawArrow(mafNodeConnectionGraphicWidget *node);
 
 public slots:
     void setMode(Mode mode);

@@ -115,7 +115,7 @@ private:
 };
 //! [0]
 
-class ExampleBaseNode : public mafNodeGraphicWidget {
+class mafNodeAdvancedGraphicWidget : public mafNodeGraphicWidget {
 public:
 	QGridLayout  *innerGridLayout;
 	QHBoxLayout *topLayout;
@@ -127,11 +127,11 @@ public:
         void setWidget(QWidget *widget) {
 		//does this work for all possible wiget types
 		mafNodeGraphicWidget::setWidget(widget);
-		widget->setObjectName("ExampleBaseNode");
+                widget->setObjectName("mafNodeAdvancedGraphicWidget");
 	}
  
 
-	ExampleBaseNode(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0, Qt::WindowFlags wFlags = 0) : mafNodeGraphicWidget(contextMenu, parent, scene, wFlags) {
+        mafNodeAdvancedGraphicWidget(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0, Qt::WindowFlags wFlags = 0) : mafNodeGraphicWidget(contextMenu, parent, scene, wFlags) {
 				//dw new
 		QFrame *outterFrame = new QFrame;
 		//QWidget *outterFrame = new QWidget;
@@ -220,7 +220,7 @@ public:
 		setWidget(outterFrame);
 
 
-		outterFrame->setObjectName("ExampleBaseNode");
+                outterFrame->setObjectName("mafNodeAdvancedGraphicWidget");
 	}
 
 
@@ -279,7 +279,7 @@ public:
 				else {
 					oc = c->startConnector();
 				}
-				ExampleBaseNode* oi = static_cast<ExampleBaseNode*>(oc->parentItem());
+                                mafNodeAdvancedGraphicWidget* oi = static_cast<mafNodeAdvancedGraphicWidget*>(oc->parentItem());
 				//otherwise self-connections on this node (but not when on same connector) would be written twice, so do nothing in one of the two cases
 				if (this == oi && this->connectors.indexOf(con) < oi->connectors.indexOf(oc)) {
 					continue;
@@ -300,7 +300,7 @@ public:
 		out << "\n";
 	}
 
-	virtual void deserialize(QTextStream& out, QMap<int, ExampleBaseNode*>& map) {
+        virtual void deserialize(QTextStream& out, QMap<int, mafNodeAdvancedGraphicWidget*>& map) {
 		//typeId is read by caller
 		QString  l;
 		if ((l=out.readLine()) != "") {
@@ -341,9 +341,9 @@ public:
 };
 
 //"ExampleNode1: dialog, single in, only one connection"
-class ExampleNode1 : public ExampleBaseNode {
+class ExampleNode1 : public mafNodeAdvancedGraphicWidget {
 public:
-	ExampleNode1(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0) : ExampleBaseNode(contextMenu, parent, scene) {
+        ExampleNode1(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0) : mafNodeAdvancedGraphicWidget(contextMenu, parent, scene) {
 		/*
 		QLabel* in0 = new QLabel("in0");
 		this->innerGridLayout->addWidget(in0);
@@ -360,9 +360,9 @@ public:
 };
 
 //"ExampleNode2: groupBox, single in, multi connection"
-class ExampleNode2 : public ExampleBaseNode {
+class ExampleNode2 : public mafNodeAdvancedGraphicWidget {
 public:
-	ExampleNode2(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0) : ExampleBaseNode(contextMenu, parent, scene) {
+        ExampleNode2(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0) : mafNodeAdvancedGraphicWidget(contextMenu, parent, scene) {
 		/*
 		QLabel* in0 = new QLabel("in0");
 
@@ -384,9 +384,9 @@ public:
 };
 
 //"ExampleNode5: dialog, single in, only one connection"
-class ExampleNode5 : public ExampleBaseNode {
+class ExampleNode5 : public mafNodeAdvancedGraphicWidget {
 public:
-	ExampleNode5(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0) : ExampleBaseNode(contextMenu, parent, scene) {
+        ExampleNode5(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0) : mafNodeAdvancedGraphicWidget(contextMenu, parent, scene) {
 		//QFormLayout *layout2 = new QFormLayout;
 		/*
 		QLabel* out0 = new QLabel("out0");
@@ -462,9 +462,9 @@ public:
 };
 
 //"ExampleNode6: groupBox, 2x inout, multi connection"
-class ExampleNode6 : public ExampleBaseNode {
+class ExampleNode6 : public mafNodeAdvancedGraphicWidget {
 public:
-	ExampleNode6(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0) : ExampleBaseNode(contextMenu, parent, scene) {
+        ExampleNode6(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0) : mafNodeAdvancedGraphicWidget(contextMenu, parent, scene) {
 
                 addConnectorAndLabel("inout0", mafNodeConnectorGraphicWidget::InOut, mafNodeConnectorGraphicWidget::Left);
                 addConnectorAndLabel("inout1", mafNodeConnectorGraphicWidget::InOut, mafNodeConnectorGraphicWidget::Right);
@@ -498,9 +498,9 @@ public:
 };
 
 //"ExampleNode7: frame with title, 1 x out, multi connection"
-class ExampleNode7 : public ExampleBaseNode {
+class ExampleNode7 : public mafNodeAdvancedGraphicWidget {
 public:
-        ExampleNode7(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0) : ExampleBaseNode(contextMenu, parent, scene, Qt::Dialog | Qt::CustomizeWindowHint | Qt::MSWindowsFixedSizeDialogHint | Qt::WindowTitleHint | Qt::Tool) {
+        ExampleNode7(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0) : mafNodeAdvancedGraphicWidget(contextMenu, parent, scene, Qt::Dialog | Qt::CustomizeWindowHint | Qt::MSWindowsFixedSizeDialogHint | Qt::WindowTitleHint | Qt::Tool) {
                 addConnectorAndLabel("out0", mafNodeConnectorGraphicWidget::Out, mafNodeConnectorGraphicWidget::Right);
 
 		/*
@@ -533,9 +533,9 @@ public:
 };
 
 //"ExampleNode8: only groupBox"
-class ExampleNode8 : public ExampleBaseNode {
+class ExampleNode8 : public mafNodeAdvancedGraphicWidget {
 public:
-	ExampleNode8(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0) : ExampleBaseNode(contextMenu, parent, scene) {
+        ExampleNode8(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0) : mafNodeAdvancedGraphicWidget(contextMenu, parent, scene) {
 
                 addConnectorAndLabel("t0", mafNodeConnectorGraphicWidget::InOut, mafNodeConnectorGraphicWidget::Top);
                 addConnectorAndLabel("t1", mafNodeConnectorGraphicWidget::InOut, mafNodeConnectorGraphicWidget::Top);
@@ -575,8 +575,8 @@ public:
 			mode = 0;
 		}
 	}
-	ExampleBaseNode* createNode(int type) {
-		ExampleBaseNode *node2 = NULL;
+        mafNodeAdvancedGraphicWidget* createNode(int type) {
+                mafNodeAdvancedGraphicWidget *node2 = NULL;
 		switch (type) {
 			case 1:
 				node2 = new ExampleNode1(mItemMenu,NULL,this);
@@ -609,13 +609,13 @@ class MyFasterGraphicView : public QGraphicsView
 {
 Q_OBJECT
 public:
-	MyFasterGraphicView(QGraphicsScene* scene): QGraphicsView(scene) {}
+        MyFasterGraphicView(QGraphicsScene* scene): QGraphicsView(scene) {}
 protected:
-	void paintEvent ( QPaintEvent * event) {
-		QPaintEvent *newEvent=new QPaintEvent(event->region().boundingRect());
-		QGraphicsView::paintEvent(newEvent);
-		delete newEvent;
-	}
+        void paintEvent ( QPaintEvent * event) {
+                QPaintEvent *newEvent=new QPaintEvent(event->region().boundingRect());
+                QGraphicsView::paintEvent(newEvent);
+                delete newEvent;
+        }
 };
 
 

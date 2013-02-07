@@ -537,9 +537,9 @@ void MainWindow::fileSave() {
     QTextStream out(&f);
 
 	foreach( QGraphicsItem* i, scene->items()) {
-		//if (i->inherits("ExampleBaseNode")) {
+                //if (i->inherits("mafNodeAdvancedGraphicWidget")) {
 		if (i->type() == mafNodeGraphicWidget::Type) {
-			ExampleBaseNode* n = static_cast<ExampleBaseNode*>(i);
+                        mafNodeAdvancedGraphicWidget* n = static_cast<mafNodeAdvancedGraphicWidget*>(i);
 			n->serialize(out);
 		}
 	}
@@ -572,12 +572,12 @@ void MainWindow::fileOpen() {
 
 
     QTextStream in(&f);
-	QMap<int, ExampleBaseNode*> map ;
+        QMap<int, mafNodeAdvancedGraphicWidget*> map ;
 
 	while (!in.atEnd()) {
 		QString l = in.readLine();
 		int type = l.split("=")[1].toInt();
-		ExampleBaseNode* n = scene->createNode(type);
+                mafNodeAdvancedGraphicWidget* n = scene->createNode(type);
 		n->deserialize(in, map);
 	}
 }
@@ -635,9 +635,9 @@ void MainWindow::createMenus()
 void  MainWindow::setNodeGraphicWidgetsStyle(const QString &styleName) {
 	/*
 	foreach( QGraphicsItem* i, scene->items()) {
-		//if (i->inherits("ExampleBaseNode")) {
+                //if (i->inherits("mafNodeAdvancedGraphicWidget")) {
 		if (i->type() == mafNodeGraphicWidget::Type) {
-			ExampleBaseNode* n = static_cast<ExampleBaseNode*>(i);
+                        mafNodeAdvancedGraphicWidget* n = static_cast<mafNodeAdvancedGraphicWidget*>(i);
 			n->widget()->setStyle(styleName);
 		}
 	}
@@ -650,9 +650,9 @@ void  MainWindow::setNodeGraphicWidgetsStyle(const QString &styleName) {
 void MainWindow::setNodeGraphicWidgetsStylesheet(const QString &stylesheetName)  {
 	currentStylesheet = stylesheetName;
 	foreach( QGraphicsItem* i, scene->items()) {
-		//if (i->inherits("ExampleBaseNode")) {
+                //if (i->inherits("mafNodeAdvancedGraphicWidget")) {
 		if (i->type() == mafNodeGraphicWidget::Type) {
-			ExampleBaseNode* n = static_cast<ExampleBaseNode*>(i);
+                        mafNodeAdvancedGraphicWidget* n = static_cast<mafNodeAdvancedGraphicWidget*>(i);
 			n->widget()->setStyleSheet(stylesheetName);
 			n->update();
 		}
@@ -663,7 +663,7 @@ void MainWindow::setNoteItemsWindowFlags(Qt::WindowFlags flags) {
 	currentWindowFlags = flags;
 	foreach( QGraphicsItem* i, scene->items()) {
 		if (i->type() == mafNodeGraphicWidget::Type) {
-			ExampleBaseNode* n = static_cast<ExampleBaseNode*>(i);
+                        mafNodeAdvancedGraphicWidget* n = static_cast<mafNodeAdvancedGraphicWidget*>(i);
 			/*
 			If the widget had type Qt::Widget or Qt::SubWindow and becomes a window (Qt::Window, Qt::Dialog, etc.),
 			it is put at position (0, 0) on the desktop. If the widget is a window and becomes a Qt::Widget or Qt::SubWindow,

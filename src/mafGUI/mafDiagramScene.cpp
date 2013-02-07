@@ -24,17 +24,11 @@ void mafDiagramScene::drawNode(mafNodeGraphicWidget *node) {
     emit mafNodeGraphicWidgetInserted(node);
 }
 
-void mafDiagramScene::drawArrow() {
-
+void mafDiagramScene::drawArrow(mafNodeConnectionGraphicWidget *arrow) {
+    arrow->updatePosition();
+    arrow->update();
 }
 
-void mafDiagramScene::deleteNode() {
-
-}
-
-void mafDiagramScene::deleteArrow() {
-
-}
 
 //! [1]
 void mafDiagramScene::setLineColor(const QColor &color)
