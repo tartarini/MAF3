@@ -10,6 +10,7 @@
  */
 
 #include "mafViewEventBusMonitor.h"
+#include "mafQGraphicsViewDiagram.h"
 
 #include <QPaintEvent>
 #include <QWidget>
@@ -23,17 +24,6 @@ using namespace mafPluginEventBusMonitor;
 
 #include <QGraphicsView>
 #include <QPaintEvent>
-
-MyFasterGraphicView::MyFasterGraphicView(QGraphicsScene* scene): QGraphicsView(scene) {}
-void MyFasterGraphicView::paintEvent ( QPaintEvent * event) {
-        QRect r = event->region().boundingRect();
-        QRect r1 = scene()->itemsBoundingRect().toRect();
-
-        QPaintEvent *newEvent=new QPaintEvent(r1);
-        QGraphicsView::paintEvent(newEvent);
-        delete newEvent;
-}
-
 
 class mafNodeAdvancedGraphicWidget : public mafNodeGraphicWidget {
 public:
@@ -479,7 +469,7 @@ bool mafViewEventBusMonitor::initialize() {
 
         generateEventBusDiagramConnections();
 
-        m_View = new MyFasterGraphicView(m_Scene);
+        m_View = new mafQGraphicsViewDiagram(m_Scene);
         m_View->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 
         // add the canvas
@@ -522,25 +512,37 @@ void mafViewEventBusMonitor::generateEventBusDiagramConnections() {
         node2->setNodeFilter(info.signalName,"");
 
         node1->setPos(QPointF(50,count*LINE_SPACE));
-        node2->setPos(QPointF(550,count*LINE_SPACE));
-
-        if(info.slotName.count()) {
-            mafNodeCompoundGraphicWidget *node3 = new mafNodeCompoundGraphicWidget(NULL,NULL,m_Scene);
-            node3->setSink(info.slotName.at(0));
-            node3->setPos(QPointF(1250,count*LINE_SPACE));
-            m_Scene->drawNode(node3);
-        }
-
+        node2->setPos(QPointF(450,count*LINE_SPACE));
         m_Scene->drawNode(node1);
         m_Scene->drawNode(node2);
+
+        //second connector
+        mafNodeConnectorGraphicWidget *node22 = node2->connectorVector().at(1);
+
+        QVector<mafNodeCompoundGraphicWidget *>nodeSlots;
+
+        int i = 0;
+        int numberOfSlots = info.slotName.count();
+        for(; i<numberOfSlots;++i) {
+            mafNodeCompoundGraphicWidget *ns = new mafNodeCompoundGraphicWidget(NULL,NULL,m_Scene);
+            ns->setSink(info.slotName.at(0));
+            ns->setPos(QPointF(1050,count*LINE_SPACE));
+            nodeSlots.push_back(ns);
+            m_Scene->drawNode(ns);
+
+            mafNodeConnectionGraphicWidget *ar  = new mafNodeConnectionGraphicWidget(node22, ns->connectorVector().at(0), NULL, m_Scene);
+            m_Scene->drawArrow(ar);
+            ++count;
+        }
+
 
         m_Scene->setMode(mafDiagramScene::InsertItem);
 
         mafNodeConnectorGraphicWidget *node11 = node1->connectorVector().at(0);
         mafNodeConnectorGraphicWidget *node21 = node2->connectorVector().at(0);
-        mafNodeConnectionGraphicWidget *tmpArrow = new mafNodeConnectionGraphicWidget(node11, node21, NULL, m_Scene);
+        mafNodeConnectionGraphicWidget *signalArrow = new mafNodeConnectionGraphicWidget(node11, node21, NULL, m_Scene);
 
-        m_Scene->drawArrow(tmpArrow);
+        m_Scene->drawArrow(signalArrow);
 
         count++;
     }

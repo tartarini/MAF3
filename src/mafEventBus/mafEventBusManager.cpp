@@ -101,7 +101,7 @@ bool mafEventBusManager::addEventProperty(const mafEvent &props) const {
     } else {
         //check the type, and complete the information
         mafEventBusConnectionInfo info = m_ConnectionInfoHash.value(topic);
-        if(info.type == mafSignatureTypeCallback) {
+        if(props[SIGTYPE].toInt() == mafSignatureTypeCallback) {
             info.slotName.push_back(props[SIGNATURE].toString());
             info.observers.push_back(obj);
             m_ConnectionInfoHash.insert(topic,info);

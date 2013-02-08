@@ -24,7 +24,6 @@ class QGraphicsView;
 class QPaintEvent;
 class mafDiagramScene;
 
-
 namespace mafPluginEventBusMonitor {
 
 /**
@@ -54,15 +53,6 @@ protected:
 private:
     mafDiagramScene *m_Scene;
     QGraphicsView *m_View;
-};
-
-class MyFasterGraphicView : public QGraphicsView
-{
-Q_OBJECT
-public:
-        MyFasterGraphicView(QGraphicsScene* scene);
-protected:
-        void paintEvent ( QPaintEvent * event);
 };
 
 }

@@ -377,7 +377,7 @@ void mafNodeConnectorGraphicWidget::deleteConnection(mafNodeConnectionGraphicWid
 	//deleting arrow will also remove it from this connector
 	//dw new
 	//arrow->setParentItem(NULL);
-	delete arrow;
+        //delete arrow;
 	//arrows removed during connection destruction, but attached outside => bad idea
 }
 
