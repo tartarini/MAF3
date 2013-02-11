@@ -15,8 +15,6 @@
 #include "mafGUIDefinitions.h"
 #include <mafNodeGraphicWidget.h>
 
-//class forwarding
-
 namespace mafGUI {
 
 class MAFGUISHARED_EXPORT mafNodeAdvancedGraphicWidget : public mafNodeGraphicWidget {

@@ -87,8 +87,8 @@ void mafViewEventBusMonitor::generateEventBusDiagramConnections() {
 
         node1->setPos(QPointF(50,count*LINE_SPACE));
         node2->setPos(QPointF(450,count*LINE_SPACE));
-        m_Scene->drawNode(node1);
-        m_Scene->drawNode(node2);
+        m_Scene->insertNode(node1);
+        m_Scene->insertNode(node2);
 
         //second connector
         mafNodeConnectorGraphicWidget *node22 = node2->connectorVector().at(1);
@@ -102,10 +102,10 @@ void mafViewEventBusMonitor::generateEventBusDiagramConnections() {
             ns->setSink(info.slotName.at(0));
             ns->setPos(QPointF(1050,count*LINE_SPACE));
             nodeSlots.push_back(ns);
-            m_Scene->drawNode(ns);
+            m_Scene->insertNode(ns);
 
             mafNodeConnectionGraphicWidget *ar  = new mafNodeConnectionGraphicWidget(node22, ns->connectorVector().at(0), NULL, m_Scene);
-            m_Scene->drawArrow(ar);
+            m_Scene->insertArrow(ar);
             ++count;
         }
 
@@ -116,7 +116,7 @@ void mafViewEventBusMonitor::generateEventBusDiagramConnections() {
         mafNodeConnectorGraphicWidget *node21 = node2->connectorVector().at(0);
         mafNodeConnectionGraphicWidget *signalArrow = new mafNodeConnectionGraphicWidget(node11, node21, NULL, m_Scene);
 
-        m_Scene->drawArrow(signalArrow);
+        m_Scene->insertArrow(signalArrow);
 
         count++;
     }

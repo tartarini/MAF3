@@ -22,7 +22,6 @@
 //class forwarding
 class QGraphicsView;
 class QPaintEvent;
-class mafDiagramScene;
 
 namespace mafPluginEventBusMonitor {
 
@@ -51,7 +50,7 @@ protected:
     /* virtual */ ~mafViewEventBusMonitor();
 
 private:
-    mafDiagramScene *m_Scene;
+    mafGUI::mafDiagramScene *m_Scene;
     QGraphicsView *m_View;
 };
 

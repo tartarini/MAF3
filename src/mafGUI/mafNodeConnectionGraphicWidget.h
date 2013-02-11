@@ -1,9 +1,10 @@
-#ifndef CONNECTION_H
-#define CONNECTION_H
+#ifndef MAFNODECONNECTIONGRAPHICWIDGET_H
+#define MAFNODECONNECTIONGRAPHICWIDGET_H
 
-#include <QGraphicsLineItem>
 #include "mafNodeGraphicWidget.h"
 #include "mafNodeConnectorGraphicWidget.h"
+
+#include <QGraphicsLineItem>
 
 QT_BEGIN_NAMESPACE
 class QGraphicsPolygonItem;
@@ -14,11 +15,9 @@ class QGraphicsSceneMouseEvent;
 class QPainterPath;
 QT_END_NAMESPACE
 
-class mafNodeConnectorGraphicWidget;
+namespace mafGUI {
 
-//! [0]
-class mafNodeConnectionGraphicWidget : public QGraphicsPathItem
-{
+class mafNodeConnectionGraphicWidget : public QGraphicsPathItem {
 public:
     enum { Type = UserType + 666 + 0 };
 	int type() const
@@ -55,13 +54,13 @@ private:
     mafNodeConnectorGraphicWidget *mEndConnector;
     QColor mColor;
     
-	qreal arrowSize;
-	bool mBidirectional;
+    qreal arrowSize;
+    bool mBidirectional;
 
-	void debugPaint(QPainter *painter, QPointF& controlPoint1, QPointF& controlPoint2);
-
+    void debugPaint(QPainter *painter, QPointF& controlPoint1, QPointF& controlPoint2);
 
 };
-//! [0]
+
+} // end namespace mafGUI
 
 #endif

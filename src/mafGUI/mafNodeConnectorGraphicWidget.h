@@ -1,42 +1,56 @@
-#ifndef NODE_H
-#define NODE_H
+/*
+ *  mafNodeConnectorGraphicWidget.h
+ *  mafGUI
+ *
+ *  Created by Daniele Giunchi on 11/02/13.
+ *  Copyright 2011 SCS-B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
+ */
+
+#ifndef MAFNODECONNECTORGRAPHICWIDGET_H
+#define MAFNODECONNECTORGRAPHICWIDGET_H
 
 #include <QGraphicsItem>
 #include <QList>
 #include <QLabel>
 
-#include "mafNodeGraphicWidget.h"
-#include "mafNodeConnectionGraphicWidget.h"
-
-//class Edge;
-//class GraphWidget;
 QT_BEGIN_NAMESPACE
 class QGraphicsSceneMouseEvent;
 QT_END_NAMESPACE
 
+namespace mafGUI {
+
+// forward classes
 class mafNodeGraphicWidget;
 class mafNodeConnectionGraphicWidget;
 
-class mafNodeConnectorGraphicWidget : public QGraphicsItem
-{
-public:
-	enum { Type = UserType + 666 + 6 };
-	int type() const
-        { return Type;}
-	enum ConnectorType { In=1, Out=2, InOut=3 };
-	ConnectorType connectorType() const
-        { return mConnectorType; }
-	void setConnectorType(ConnectorType c) {
-		mConnectorType = c;
-	}
+/**
+Class Name: mafNodeConnectorGraphicWidget
+Representation of the connector widget in the node widget.
+*/
+class mafNodeConnectorGraphicWidget : public QGraphicsItem {
+public:        
+        enum { Type = UserType + 666 + 6 };
+        int type() const
+           { return Type;}
 
-	enum ConnectorAlignment { None=0, Left=1, Right=2, Bottom=3, Top=4 };
-	ConnectorAlignment connectorAlignment() const {
-		return mConnectorAlignment;
-	}
-	void setConnectorAlignment(ConnectorAlignment alignment) {
-		mConnectorAlignment = alignment;
-	}
+        /// enum connector type
+        enum ConnectorType { In=1, Out=2, InOut=3 };
+
+        /// enum connector alignment
+        enum ConnectorAlignment { None=0, Left=1, Right=2, Bottom=3, Top=4 };
+
+        /// retrieve connector type
+        ConnectorType connectorType() const;
+
+        /// set connector type
+        void setConnectorType(ConnectorType c);
+
+        ConnectorAlignment connectorAlignment() const;
+
+        void setConnectorAlignment(ConnectorAlignment alignment);
 
 	bool singleConnection() const { return mSingleConnection; }
 	void setSingleConnection(bool singleConnection) {
@@ -50,7 +64,7 @@ public:
 
 
     mafNodeConnectorGraphicWidget(mafNodeGraphicWidget *parent, QGraphicsScene *scene, /*QLabel*/QWidget* widget, ConnectorType  con = In, const ConnectorAlignment connectorAlignment = Left, const bool singleConnection = false, const bool disableWidgetOnConnection = false, const int radius = 7, const bool selfConnections = false);
-        virtual ~mafNodeConnectorGraphicWidget();
+    virtual ~mafNodeConnectorGraphicWidget();
 /*
     void addEdge(Edge *edge);
     QList<Edge *> edges() const;
@@ -106,8 +120,8 @@ protected:
 private:
 
 	void debugPaint(QPainter *painter);
-
-
 };
 
-#endif
+} // end namespace mafGUI
+
+#endif // MAFNODECONNECTORGRAPHICWIDGET

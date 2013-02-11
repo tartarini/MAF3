@@ -1,10 +1,20 @@
-//dw
-#ifndef mafNodeGraphicWidget_H
-#define mafNodeGraphicWidget_H
+/*
+ *  mafNodeGraphicWidget.h
+ *  mafGUI
+ *
+ *  Created by Daniele Giunchi on 11/02/13.
+ *  Copyright 2011 SCS-B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
+ */
+
+#ifndef MAFNODEGRAPHICWIDGET_H
+#define MAFNODEGRAPHICWIDGET_H
 
 #include "mafGUIDefinitions.h"
 #include "mafDiagramScene.h"
-
+#include <mafNodeConnectorGraphicWidget.h>
 
 #include <QGraphicsPixmapItem>
 #include <QList>
@@ -23,37 +33,51 @@ class QPainter;
 class QStyleOptionGraphicsItem;
 class QWidget;
 class QPolygonF;
-/*//dw
-class QGraphicsProxyWidget;*/
 QT_END_NAMESPACE
 
-class mafNodeConnectorGraphicWidget;
+namespace mafGUI {
+
+// forwar classes
 class mafNodeConnectionGraphicWidget;
 
-//! [0]
+/**
+Class name: mafNodeGraphicWidget
+Class which represent the basic class for node widget.
+*/
 class mafNodeGraphicWidget : public QGraphicsProxyWidget {
 	Q_OBJECT
 public:
+    /// type enum
     enum { Type = UserType + 666 + 1 };
-	int type() const
-        { return Type;}
 
+    /// retrieve type.
+    int type() const;
+
+    /// object constructor.
     mafNodeGraphicWidget(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0, Qt::WindowFlags wFlags = 0);
-        virtual ~mafNodeGraphicWidget();
+
+    /// object destructor.
+    virtual ~mafNodeGraphicWidget();
+
+    /// remove all connections.
     void deleteConnections();
 
+    /// add connector to the node.
     void addConnector(mafNodeConnectorGraphicWidget* nc);
 
-
-	//dw
+    /// paint method.
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+    /// set a widget to the node.
     void setWidget(QWidget *widget);
 
+    /// retrieve the bounding rect.
     QRectF boundingRect() const;
+
+    /// retrieve the shape of the node.
     QPainterPath shape() const;
 
-    //void update(const QRectF & rect = QRectF());
-    QList<mafNodeConnectorGraphicWidget *> connectors;
+    QList<mafNodeConnectorGraphicWidget *> &connectors();
 
 public slots:
         void deleted();
@@ -93,6 +117,7 @@ protected:
 	//dw 669: new
 	void resizeEvent ( QGraphicsSceneResizeEvent * event );
 
+    QList<mafNodeConnectorGraphicWidget *> m_Connectors;
 
 private:
     QMenu *mContextMenu;
@@ -112,8 +137,6 @@ private:
 
 };
 
+} // end namespace mafGUI
 
-//! [0]
-
-
-#endif
+#endif // MAFNODEGRAPHICWIDGET

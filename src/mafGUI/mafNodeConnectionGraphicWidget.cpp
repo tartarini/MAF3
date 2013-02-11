@@ -1,8 +1,8 @@
-#include <QtGui>
-
 #include "mafNodeConnectionGraphicWidget.h"
 #include "mafNodeConnectorGraphicWidget.h"
 #include <math.h>
+
+using namespace mafGUI;
 
 const qreal Pi = 3.14;
 
@@ -21,7 +21,6 @@ mafNodeConnectionGraphicWidget::~mafNodeConnectionGraphicWidget(){
 	}
 }
 
-//! [0]
 mafNodeConnectionGraphicWidget::mafNodeConnectionGraphicWidget(mafNodeConnectorGraphicWidget *startConnector, mafNodeConnectorGraphicWidget *endConnector,
          QGraphicsItem *parent, QGraphicsScene *scene, bool bidirectional)
 		 : QGraphicsPathItem(parent, scene)

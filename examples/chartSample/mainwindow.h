@@ -27,6 +27,8 @@ QT_END_NAMESPACE
 
 class ExampleDiagramScene;
 
+using namespace mafGUI;
+
 //! [0]
 class MainWindow : public QMainWindow
 {
@@ -113,9 +115,9 @@ private:
 	QString currentStylesheet;
 	Qt::WindowFlags currentWindowFlags;
 };
-//! [0]
 
-class mafNodeAdvancedGraphicWidget : public mafNodeGraphicWidget {
+
+class mafNodeAdvancedGraphicWidget : public mafGUI::mafNodeGraphicWidget {
 public:
 	QGridLayout  *innerGridLayout;
 	QHBoxLayout *topLayout;
@@ -270,7 +272,7 @@ public:
 		out << "typeId=" << QString::number(getId()) << "\n";
 		out << "uid=" << QString::number((size_t) this) << ", x=" << QString::number(pos().x()) << ", y=" << QString::number(pos().y()) << "\n";
 		//connections that start on this node
-                foreach(mafNodeConnectorGraphicWidget* con, connectors) {
+                foreach(mafNodeConnectorGraphicWidget* con, connectors()) {
 			foreach(mafNodeConnectionGraphicWidget* c, con->arrows) {
                                 mafNodeConnectorGraphicWidget* oc = NULL;
 				if (c->startConnector() == con) {
@@ -281,18 +283,18 @@ public:
 				}
                                 mafNodeAdvancedGraphicWidget* oi = static_cast<mafNodeAdvancedGraphicWidget*>(oc->parentItem());
 				//otherwise self-connections on this node (but not when on same connector) would be written twice, so do nothing in one of the two cases
-				if (this == oi && this->connectors.indexOf(con) < oi->connectors.indexOf(oc)) {
+                                if (this == oi && this->connectors().indexOf(con) < oi->connectors().indexOf(oc)) {
 					continue;
 				}
 				if (c->startConnector() == con) {
-					out << "startNodeConnector=" << QString::number(this->connectors.indexOf(con));
+                                        out << "startNodeConnector=" << QString::number(this->connectors().indexOf(con));
 					out << ", endNodeUid=" << QString::number((size_t) oi);
-					out << ", endNodeConnector=" << QString::number(oi->connectors.indexOf(oc));
+                                        out << ", endNodeConnector=" << QString::number(oi->connectors().indexOf(oc));
 				}
 				else {
-					out << "endNodeConnector=" << QString::number(this->connectors.indexOf(con));
+                                        out << "endNodeConnector=" << QString::number(this->connectors().indexOf(con));
 					out << ", startNodeUid=" << QString::number((size_t) oi);
-					out << ", startNodeConnector=" << QString::number(oi->connectors.indexOf(oc));
+                                        out << ", startNodeConnector=" << QString::number(oi->connectors().indexOf(oc));
 				}
 				out << "\n";
 			}
@@ -320,8 +322,8 @@ public:
 			//only the second node creates the connection
 			if (map.contains(oid)) {
 				mafNodeGraphicWidget* other = map[oid];
-                                mafNodeConnectorGraphicWidget* thisCon = this->connectors[c];
-                                mafNodeConnectorGraphicWidget* oCon = other->connectors[oc];
+                                mafNodeConnectorGraphicWidget* thisCon = this->connectors()[c];
+                                mafNodeConnectorGraphicWidget* oCon = other->connectors()[oc];
 				mafNodeConnectionGraphicWidget* newCon = NULL;
 				if (isStart) {
 					newCon = new mafNodeConnectionGraphicWidget(thisCon, oCon, NULL, this->scene());
@@ -559,7 +561,7 @@ public:
 	int getId() { return 8; }
 };
 
-class ExampleDiagramScene : public mafDiagramScene {
+class ExampleDiagramScene : public mafGUI::mafDiagramScene {
 public:
 	int mode;
         ExampleDiagramScene(QMenu *itemMenu, QObject* parent = 0) : mafDiagramScene(itemMenu, parent ), mode(0) {

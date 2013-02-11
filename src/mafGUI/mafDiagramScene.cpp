@@ -1,36 +1,42 @@
-#include <QtGui>
+/*
+ *  mafDiagramScene.cpp
+ *  mafGUI
+ *
+ *  Created by Daniele Giunchi on 11/02/13.
+ *  Copyright 2013 SCS-B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
+ */
 
 #include "mafDiagramScene.h"
-/*
-#include "mafNodeConnectionGraphicWidget.h"
-#include "mafNodeConnectorGraphicWidget.h"
-*/
 
-//! [0]
-mafDiagramScene::mafDiagramScene(QMenu *itemMenu, QObject *parent)
-    : QGraphicsScene(parent)
+using namespace mafGUI;
+
+mafDiagramScene::mafDiagramScene(QMenu *itemMenu, QObject *parent) : QGraphicsScene(parent)
 {
     mItemMenu = itemMenu;
     mMode = MoveItem;
     mLineColor = Qt::black;
-	tmpArrow = NULL;
-	tmpConnector = NULL;
-	lastHighlighted = NULL;
-	mDebugDraw = false;
+    tmpArrow = NULL;
+    tmpConnector = NULL;
+    lastHighlighted = NULL;
+    mDebugDraw = false;
 }
-//! [0]
 
-void mafDiagramScene::drawNode(mafNodeGraphicWidget *node) {
+QColor mafDiagramScene::lineColor() const {
+    return mLineColor;
+}
+
+void mafDiagramScene::insertNode(mafNodeGraphicWidget *node) {
     emit mafNodeGraphicWidgetInserted(node);
 }
 
-void mafDiagramScene::drawArrow(mafNodeConnectionGraphicWidget *arrow) {
+void mafDiagramScene::insertArrow(mafNodeConnectionGraphicWidget *arrow) {
     arrow->updatePosition();
     arrow->update();
 }
 
-
-//! [1]
 void mafDiagramScene::setLineColor(const QColor &color)
 {
     mLineColor = color;
@@ -42,36 +48,20 @@ void mafDiagramScene::setLineColor(const QColor &color)
     }
 	*/
 }
-//! [1]
 
 void mafDiagramScene::setMode(Mode mode)
 {
     mMode = mode;
 }
 
-
-/*
-void mafDiagramScene::setItemType(DiagramItem::DiagramType type)
-{
-    mItemType = type;
+void mafDiagramScene::setMenu(QMenu *menu) {
+    mItemMenu = menu;
 }
 
-//! [5]
-void mafDiagramScene::editorLostFocus(DiagramTextItem *item)
-{
-    QTextCursor cursor = item->textCursor();
-    cursor.clearSelection();
-    item->setTextCursor(cursor);
-
-    if (item->toPlainText().isEmpty()) {
-        removeItem(item);
-        item->deleteLater();
-    }
+QMenu *mafDiagramScene::menu() {
+    return mItemMenu;
 }
-*/
-//! [5]
 
-//! [6]
 void mafDiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 	if (mouseEvent->button() == Qt::LeftButton) {
@@ -79,18 +69,14 @@ void mafDiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		foreach(QGraphicsItem * g, startConnectors) {
                         if (g->type() == mafNodeConnectorGraphicWidget::Type) {
                                 mafNodeConnectorGraphicWidget* start = dynamic_cast<mafNodeConnectorGraphicWidget*>(g);
-				//dw ugly
+
 				if (start->mSingleConnection) {
 					start->deleteConnections();
 				}
 
                                 tmpConnector = new mafNodeConnectorGraphicWidget(NULL, this, NULL,mafNodeConnectorGraphicWidget::InOut);
 				tmpConnector->setPos(mouseEvent->scenePos());
-				//dw needed? addItem(tmpConnector);
-				
-				//dw667 backmerge: to slow if connector is child of item
-				//addItem(tmpConnector);
-				
+
 				if (isDebugDraw()) {
 					//debug draw
 					tmpConnector->mRadius = 5;
@@ -102,12 +88,12 @@ void mafDiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 
                                 if (start->connectorType() != mafNodeConnectorGraphicWidget::In) {
-                                        tmpArrow = new mafNodeConnectionGraphicWidget(start, tmpConnector, NULL, this);
+                                        tmpArrow = new mafGUI::mafNodeConnectionGraphicWidget(start, tmpConnector, NULL, this);
 				}
 				else {
-                                        tmpArrow = new mafNodeConnectionGraphicWidget(tmpConnector, start, NULL, this);
+                                        tmpArrow = new mafGUI::mafNodeConnectionGraphicWidget(tmpConnector, start, NULL, this);
 				}
-				//dw needed? addItem(tmpArrow);
+
 				start->setHighlight(true);
 				existingConnector = start;
 
@@ -119,20 +105,15 @@ void mafDiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 				tmpArrow->updatePosition();
 				tmpArrow->update();
 
-				//dw667 backmerge: was commented
-				//QGraphicsScene::mousePressEvent(mouseEvent);
+                                //QGraphicsScene::mousePressEvent(mouseEvent);
 				return;
-				//addItem(tmpArrow);
-				//if (
 			}
 		}
 	}
 
     QGraphicsScene::mousePressEvent(mouseEvent);
 }
-//! [9]
 
-//! [10]
 void mafDiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     if (tmpArrow != 0) {
@@ -213,7 +194,7 @@ void mafDiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 			tmpConnector->update();
 		}
 
-        //QLineF newLine(line->line().p1(), mouseEvent->scenePos());
+                //QLineF newLine(line->line().p1(), mouseEvent->scenePos());
 		//line->setLine(newLine);
                 //tmpConnector = new mafNodeConnectorGraphicWidget(NULL, scene, NULL, mafNodeConnectorGraphicWidget::InOut);
                 //tmpConnector-> = new mafNodeConnectorGraphicWidget(NULL, scene, NULL, mafNodeConnectorGraphicWidget::InOut);
@@ -228,9 +209,7 @@ void mafDiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     }
 	QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
-//! [10]
 
-//! [11]
 void mafDiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     if (tmpArrow != 0) {
@@ -260,9 +239,7 @@ void mafDiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
         delete tmpArrow;
 		tmpArrow = 0;
-		//dw now done in dtor, good idea?
-		//dw new
-		//removeItem(tmpConnector);
+                //removeItem(tmpConnector);
         delete tmpConnector;
 		//tmpConnector->deleteLater();
 		tmpConnector = 0;
@@ -277,10 +254,9 @@ void mafDiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
             mafNodeConnectorGraphicWidget *endConnector =
                 qgraphicsitem_cast<mafNodeConnectorGraphicWidget *>(endConnectors.first());
 
-			//dw new: verify again:
                         if (!((startConnector->connectorType() == mafNodeConnectorGraphicWidget::In && endConnector->connectorType() == mafNodeConnectorGraphicWidget::In) || (startConnector->connectorType() == mafNodeConnectorGraphicWidget::Out && endConnector->connectorType() == mafNodeConnectorGraphicWidget::Out)))
 			{
-                                mafNodeConnectionGraphicWidget *arrow = new mafNodeConnectionGraphicWidget(startConnector, endConnector, NULL, this);
+                               mafNodeConnectionGraphicWidget *arrow = new mafNodeConnectionGraphicWidget(startConnector, endConnector, NULL, this);
 				arrow->setColor(mLineColor);
 				startConnector->addConnection(arrow);
 				endConnector->addConnection(arrow);
@@ -292,12 +268,9 @@ void mafDiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 				arrow->endConnector()->update();
 			}
 
-//            arrow->setZValue(2.0);
-            //addItem(arrow);
 			startConnector->setHighlight(false);
 			endConnector->setHighlight(false);
-            //arrow->updatePosition();
-			//dw new
+                        //arrow->updatePosition();
 
 			/*startConnector->updatePosition();
 			startConnector->update();
@@ -314,15 +287,11 @@ void mafDiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		return;
     }
 
-//! [12] //! [13]
     //line = 0;
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
-//! [13]
 
-//! [14]
-bool mafDiagramScene::isItemChange(int type)
-{
+bool mafDiagramScene::isItemChange(int type) {
     foreach (QGraphicsItem *item, selectedItems()) {
         if (item->type() == type)
             return true;
@@ -330,11 +299,7 @@ bool mafDiagramScene::isItemChange(int type)
     return false;
 }
 
-
 void mafDiagramScene::setDebugDraw(bool enabled) {
 	mDebugDraw = enabled;
 	this->update();
 }
-
-
-

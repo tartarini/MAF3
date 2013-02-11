@@ -1,16 +1,22 @@
-//dw 
-//#include <QtGui>
+/*
+ *  mafNodeGraphicWidget.h
+ *  mafGUI
+ *
+ *  Created by Daniele Giunchi on 11/02/13.
+ *  Copyright 2011 SCS-B3C. All rights reserved.
+ *
+ *  See Licence at: http://tiny.cc/QXJ4D
+ *
+ */
 
 #include "mafNodeGraphicWidget.h"
-//#include "arrow.h"
-//dw
-//#include "mafNodeConnectorGraphicWidget.h"
+
+using namespace mafGUI;
 
 void mafNodeGraphicWidget::hide() {
     this->widget()->close();
 }
 
-//dw slot
 void mafNodeGraphicWidget::deleted() {
     this->widget()->close();
     //delete this;
@@ -28,12 +34,16 @@ mafNodeGraphicWidget::~mafNodeGraphicWidget() {
     }
 }
 
-//! [0]
-mafNodeGraphicWidget::mafNodeGraphicWidget(QMenu *contextMenu,
-                                         QGraphicsItem *parent, /*//dw can we really assume our scene type*/ QGraphicsScene /*mafDiagramScene*/ *scene, Qt::WindowFlags wFlags)
-			 : /*QGraphicsPolygonItem(parent, scene) //dw*/ /*QFrame(parent->parentWidget(), 0)*/
-QGraphicsProxyWidget(parent, wFlags), mMaxRadius(1)
-{
+int mafNodeGraphicWidget::type() const {
+    return Type;
+}
+
+QList<mafNodeConnectorGraphicWidget *> &mafNodeGraphicWidget::connectors() {
+    return m_Connectors;
+}
+
+mafNodeGraphicWidget::mafNodeGraphicWidget(QMenu *contextMenu, QGraphicsItem *parent, QGraphicsScene *scene, Qt::WindowFlags wFlags) :
+QGraphicsProxyWidget(parent, wFlags), mMaxRadius(1) {
     setCacheMode(DeviceCoordinateCache);
 
     mContextMenu = contextMenu;
@@ -104,192 +114,93 @@ QGraphicsProxyWidget(parent, wFlags), mMaxRadius(1)
 */
 
 /*    setPolygon(mPolygon);*/
-	 setFlag(QGraphicsItem::ItemIsMovable, true);
-	 setFlag(QGraphicsItem::ItemIsSelectable, true);
-	 setFlag(QGraphicsItem::ItemIsFocusable, true);
+    setFlag(QGraphicsItem::ItemIsMovable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlag(QGraphicsItem::ItemIsFocusable, true);
 
-
-	 //dw why is that needed
-	 //dialog1->setWindowFlags(Qt::WindowMov);
-	 //widget()->setWindowFlags(Qt::WindowFlags);
-
-	 //dw new
-	 if (scene != NULL){
-		scene->addItem(this);
-	 }
+    if (scene != NULL){
+        scene->addItem(this);
+    }
 	 
-
-/*
-QDialog signals:
-void 	accepted ()
-void 	finished ( int result )
-void 	rejected ()
-*/
-	 /*
-	 connect(dialog1, SIGNAL(accepted()), this, SLOT(deleted()));
-	 connect(dialog1, SIGNAL(finished(int)), this, SLOT(deleted(int)));
-	 connect(dialog1, SIGNAL(rejected()), this, SLOT(deleted()));
-	 */
-
-/*
-QWidget signals:
-void 	customContextMenuRequested ( const QPoint & pos )
-*/
-/*
-QObject signals:
-void 	destroyed ( QObject * obj = 0 )
-*/
-
-	//dw big problem: we do not have dialog1 here with new design, but when to do it? ==> override setWidget()
-	//connect(dialog1, SIGNAL(destroyed()), this, SLOT(deleted()));
 }
-//! [0]
 
+QRectF mafNodeGraphicWidget::boundingRect() const {
+    QRectF rec(QGraphicsProxyWidget::boundingRect());
+    qreal extra = 3;//2 * (mMaxRadius) ;
+    rec = rec.normalized().adjusted(-extra, 0, extra, 0);
 
-QRectF mafNodeGraphicWidget::boundingRect() const
-{
-	/*
-    qreal adjust = 5;
-    return QRectF(-radius - adjust, -radius - adjust,
-                  2*(radius + adjust), 2*(radius + adjust));
-				  */
-
-	//dw new
-	QRectF rec(QGraphicsProxyWidget::boundingRect());
-	//order matters!!!
-	//rec.setX(rec.x() - 2 * (mMaxRadius));
-	//rec.setWidth(rec.width() + 2 * (mMaxRadius));
-	qreal extra = 3;//2 * (mMaxRadius) ;
-	rec = rec.normalized().adjusted(-extra, 0, extra, 0);
-
-	//rec.setWidth(rec.width() - 2 * (mMaxRadius + 1));
-	//rec.setX(rec.x() + (mMaxRadius + 1));
-	//rec.setWidth(rec.width() - 4);
-	//rec.setX(rec.x() + 2);
-	return rec;
+    return rec;
 }
 
 QPainterPath mafNodeGraphicWidget::shape() const {
+    QPainterPath p;// = QGraphicsProxyWidget::shape();
+    QRectF rec(QGraphicsProxyWidget::boundingRect());
+    p.addRect(rec);
 
-	QPainterPath p;// = QGraphicsProxyWidget::shape();
-	QRectF rec(QGraphicsProxyWidget::boundingRect());
-	//rec.setWidth(rec.width() - 2 * (mMaxRadius + 1));
-	//rec.setX(rec.x() + (mMaxRadius + 1));
-	p.addRect(rec);
-	
-	/*//exclude children
-        foreach (mafNodeConnectorGraphicWidget *c, connectors) {
-		//dw problem: label already deleted but connector tries to enable it?
-        //c->deleteConnections();
-		p = p.subtracted(c->shape());
-    }*/
-
-	/*//add children
-        foreach (mafNodeConnectorGraphicWidget *c, connectors) {
-		p.addPath(this->mapFromItem(c, c->shape()));
-    }*/
-
-	return p;
+    return p;
 }
 
-
 void mafNodeGraphicWidget::setWidget(QWidget *widget) {
-	//does this work for all possible wiget types
-	QGraphicsProxyWidget::setWidget(widget);
-	connect(widget, SIGNAL(destroyed()), this, SLOT(deleted()));
+    QGraphicsProxyWidget::setWidget(widget);
+    connect(widget, SIGNAL(destroyed()), this, SLOT(deleted()));
 }
 
 void mafNodeGraphicWidget::addConnector(mafNodeConnectorGraphicWidget* nc) {
-	connectors.append(nc);
-	if (nc->mRadius > mMaxRadius) {
-		mMaxRadius = nc->mRadius;
-	}
+    connectors().append(nc);
+    if (nc->mRadius > mMaxRadius) {
+        mMaxRadius = nc->mRadius;
+    }
 
-	updateConnectorsPos();
-	prepareGeometryChange();
+    updateConnectorsPos();
+    prepareGeometryChange();
 }
 
-
-//! [2]
-void mafNodeGraphicWidget::deleteConnections()
-{
-    foreach (mafNodeConnectorGraphicWidget *c, connectors) {
-		//dw problem: label already deleted but connector tries to enable it?
+void mafNodeGraphicWidget::deleteConnections() {
+    foreach (mafNodeConnectorGraphicWidget *c, connectors()) {
         c->deleteConnections();
     }
-
-	//dw good location?, needed?
-	//this->scene()->removeItem(this);
 }
-//! [2]
 
 void mafNodeGraphicWidget::removeWigetFromConnectors() {
-        foreach (mafNodeConnectorGraphicWidget *c, connectors) {
-		//dw problem: label already deleted but connector tries to enable it?
-        c->removeWidget();
+    foreach (mafNodeConnectorGraphicWidget *c, connectors()) {
+       c->removeWidget();
     }
 }
 
-//! [5]
-void mafNodeGraphicWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
-{
+void mafNodeGraphicWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
     scene()->clearSelection();
     setSelected(true);
-	//dw new3
-    //mContextMenu->exec(event->screenPos());
-	if (mContextMenu != NULL) {
-		mContextMenu->exec(event->screenPos());
-	}
+    if (mContextMenu != NULL) {
+        mContextMenu->exec(event->screenPos());
+    }
 }
-//! [5]
 
-//! [6]
-QVariant mafNodeGraphicWidget::itemChange(GraphicsItemChange change, //dw FIXME: needs much cleanup
-                     const QVariant &value)
-{
+QVariant mafNodeGraphicWidget::itemChange(GraphicsItemChange change,
+                     const QVariant &value) {
+    if (change == QGraphicsItem::ItemPositionChange) {
+        updateConnectorsPos();
+    }
+    if (change == QGraphicsItem::ItemVisibleHasChanged && !value.value<bool>()) {
+        deleted();
+        return value;
+    }
 
-	//dw now in paint, check if this is a good idea (e.g. when is it called)
-	//dw667 backmerge: was commented, but is shotgun approach!!!
-	if (change == QGraphicsItem::ItemPositionChange) {
-		updateConnectorsPos();
-	}
-   //does this create loop on selection?
-   
-
-   //dw if visibilty changes to false, kill wiget (TODO: make configurable, usfull for Dialogs and such)
-   if (change == QGraphicsItem::ItemVisibleHasChanged && !value.value<bool>()) {
-	   deleted();
-	   return value;
-   }
-
-
-
-   /*
-   //dw 669: turn back on resize handle controlling
-   //dw new3: do not allow cursor changes, better only over connector!
-   */
    if (mControlResizeHandles && change == QGraphicsItem::ItemCursorChange) {
 	   QCursor cur = qVariantValue<QCursor>(value);
-	   //FIXME: do we really have to do this by hand?
-	   //suppress all resizes
-	   if (cur.shape() == Qt::SizeVerCursor || cur.shape() == Qt::SizeHorCursor || cur.shape() == Qt::SizeBDiagCursor || cur.shape() == Qt::SizeFDiagCursor) {
+           if (cur.shape() == Qt::SizeVerCursor || cur.shape() == Qt::SizeHorCursor || cur.shape() == Qt::SizeBDiagCursor || cur.shape() == Qt::SizeFDiagCursor) {
 		   if (mNoResize) {
 			   return Qt::ArrowCursor;
 		   }
 		   else {
-                                foreach (mafNodeConnectorGraphicWidget *con, connectors) {
+                       foreach (mafNodeConnectorGraphicWidget *con, connectors()) {
 					if (con->isUnderMouse()) {
 						return Qt::ArrowCursor;
 					}
 				}
 		   }
 	   }
-   }/**/
+   }
 
-   
-   //dw 669: turn back on resize handle controlling
-   //dw ugly hack, find better way
-   //dw deselecting proxy item dialog will cause error sometimes, has size of bounding rect, will not redraw connections 
    if (change == QGraphicsItem::ItemSelectedChange || change == QGraphicsItem::ItemTransformChange || change == QGraphicsItem::ItemScaleChange
 	   || change == QGraphicsItem::ItemSendsGeometryChanges || change == QGraphicsItem::ItemMatrixChange) {
 	   /*
@@ -308,99 +219,49 @@ QVariant mafNodeGraphicWidget::itemChange(GraphicsItemChange change, //dw FIXME:
 	   updateConnectorsPos();
    }
 
-   
-   /*//dw debug help
-   if (change == QGraphicsItem::ItemSelectedChange || change == QGraphicsItem::ItemEnabledChange || change == QGraphicsItem::ItemVisibleHasChanged || change == QGraphicsItem::ItemPositionChange
-	   || change == QGraphicsItem::ItemZValueChange || change == QGraphicsItem::ItemZValueHasChanged) {
-	    //scene()->clearSelection();
-		//setSelected(true);
-		//return true;
-		return QGraphicsProxyWidget::itemChange(change, value);
-	}*/
-
-
-	return QGraphicsProxyWidget::itemChange(change, value);
+    return QGraphicsProxyWidget::itemChange(change, value);
     //return value;
 }
-//! [6]
 
-//dw669: new, fixes connector position on resizing, why can it not be done in itemChange?
-        void mafNodeGraphicWidget::resizeEvent ( QGraphicsSceneResizeEvent * event ) {
+void mafNodeGraphicWidget::resizeEvent ( QGraphicsSceneResizeEvent * event ) {
 		QGraphicsProxyWidget::resizeEvent(event);
 		updateConnectorsPos();
-	}
+}
 
-//dw new4: remove again
 void mafNodeGraphicWidget::hoverMoveEvent ( QGraphicsSceneHoverEvent * event )  {
 	event->ignore();
 	return;
 }
 
 void mafNodeGraphicWidget::updateConnectorsPos() {
-        foreach (mafNodeConnectorGraphicWidget *con, connectors) {
-		//dw667 backmerge: was active
-        //con->updatePositionGeometry();
-		//dw new
+    foreach (mafNodeConnectorGraphicWidget *con, connectors()) {
 		con->updatePosition();
     }
-	//dw667: was active
-	//update();
 }
 
 
 void mafNodeGraphicWidget::debugPaint(QPainter *painter) {
-	//dw debug
 	static int i = 0, j=0, k=0;
 	painter->fillRect(boundingRect(), /*Qt::green*/ QColor(i=(i+19)%256 , j=(j+51)%256, k=(k+11)%256)); // to see item.
-	//painter->fillPath(shape(), QColor(i=(i+19)%256 , j=(j+51)%256, k=(k+11)%256));
 }
 
+void mafNodeGraphicWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *w) {
+    if (static_cast<mafDiagramScene*>(scene())->isDebugDraw()) {
+        debugPaint(painter);
+    }
+    //updateConnectorsPos();
 
-//dw
-void mafNodeGraphicWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *w)
-{
-        if (static_cast<mafDiagramScene*>(scene())->isDebugDraw()) {
-		debugPaint(painter);
-	}
-	//dw new
-	//dw667: was active
-	//updateConnectorsPos();
-
-	QGraphicsProxyWidget::paint(painter, option, w);
-	//dw new2
-	//QGraphicsItem::paint(painter, option, w);
-
-	//dw new3: why do we have to call paint of children???
-	//dw667: was active
-	/*
-        foreach (mafNodeConnectorGraphicWidget *c, connectors) {
-		//dw problem: label already deleted but connector tries to enable it?
+    QGraphicsProxyWidget::paint(painter, option, w);
+    //QGraphicsItem::paint(painter, option, w);
+    /*
+    foreach (mafNodeConnectorGraphicWidget *c, connectors) {
         c->paint(painter, option, w);
-		c->update();
+        c->update();
     }
-	*/
+    */
 }
 
-/*
-//dw new3
-void mafNodeGraphicWidget::update(const QRectF & rect) {
-	
-	//dw new3: why do ourself
-        foreach (mafNodeConnectorGraphicWidget *c, connectors) {
-		//dw problem: label already deleted but connector tries to enable it?
-        //c->paint(painter, option, w);
-		c->update(rect);
-    }
-	
-	QGraphicsProxyWidget::update(rect);
-}
-*/
-
-
-//dw TODO: move to good visible location, check which types should be included
-//const char* mafNodeGraphicWidget::shouldNotMoveTypes[] = {"QLineEdit", "foo", "bar"};
 const char* mafNodeGraphicWidget::shouldMoveOnClickTypes[] = {"QDialog", "QFrame", "QGroupBox"};
-
 
 bool mafNodeGraphicWidget::shouldMoveNode(QGraphicsSceneMouseEvent *mouseEvent) {
 	QPointF pos = mouseEvent->pos();
@@ -436,39 +297,19 @@ void mafNodeGraphicWidget::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 void mafNodeGraphicWidget::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent) {
 	if (isMoving) {
 		QGraphicsItem::mouseMoveEvent(mouseEvent);
-
-		//dw667 backmerge: was active
-		/*
-		//dw new5
-                foreach (mafNodeConnectorGraphicWidget *con, connectors) {
-			//dw667 backmerge: was active
-			//con->updatePositionGeometry();
-			//dw667 backmerge: new
-			con->updatePosition();
-		}
-		*/
 	}
 	else {
 		QGraphicsProxyWidget::mouseMoveEvent(mouseEvent);
 	}
-
-	//scene()->clearSelection();
-	//setSelected(true);
-
-	//dw667 backmerge: was active
-	//updateConnectorsPos();
 }
 
 void mafNodeGraphicWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
 	if (isMoving) {
 		isMoving = false;
 	}
-	//call both always to lose no events and to not have to do the same shit for clicks too
-	QGraphicsItem::mouseReleaseEvent(mouseEvent);
+
+        QGraphicsItem::mouseReleaseEvent(mouseEvent);
 	QGraphicsProxyWidget::mouseReleaseEvent(mouseEvent);
 	scene()->clearSelection();
 	setSelected(true);
-
-	//updateConnectorsPos();
 }
-

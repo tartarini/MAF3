@@ -2,15 +2,15 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QStyleOption>
-//dw
 #include <QPointF>
 #include <QSize>
 #include <QGraphicsWidget>
 
-//#include "edge.h"
 #include "mafNodeConnectorGraphicWidget.h"
-//#include "mafNodeGraphicWidget.h"
-//#include "graphwidget.h"
+#include "mafNodeConnectionGraphicWidget.h"
+
+using namespace mafGUI;
+
 mafNodeConnectorGraphicWidget::~mafNodeConnectorGraphicWidget() {
 	this->deleteConnections();
 	//dw super class destructor should do this, right?
@@ -50,19 +50,20 @@ mafNodeConnectorGraphicWidget::mafNodeConnectorGraphicWidget(mafNodeGraphicWidge
 	highlight = false;
 }
 
-//dw667 backmerge: was active
-/*
-void mafNodeConnectorGraphicWidget::updatePositionGeometry() {
-	//prepareGeometryChange();
-	updatePosition();
-        foreach (mafNodeConnectionGraphicWidget *c, this->arrows) {
-		//dw problem: label already deleted but connector tries to enable it?
-        //c->paint(painter, option, w);
-		c->updatePositionGeometry();
-    }
-	update();
+mafNodeConnectorGraphicWidget::ConnectorType mafNodeConnectorGraphicWidget::connectorType() const {
+    return mConnectorType;
 }
-*/
+
+void mafNodeConnectorGraphicWidget::setConnectorType(ConnectorType c) {
+        mConnectorType = c;
+}
+
+mafNodeConnectorGraphicWidget::ConnectorAlignment mafNodeConnectorGraphicWidget::connectorAlignment() const {
+        return mConnectorAlignment;
+}
+void mafNodeConnectorGraphicWidget::setConnectorAlignment(ConnectorAlignment alignment) {
+        mConnectorAlignment = alignment;
+}
 
 void mafNodeConnectorGraphicWidget::updatePosition() {
 	this->prepareGeometryChange();
@@ -248,15 +249,14 @@ void mafNodeConnectorGraphicWidget::debugPaint(QPainter *painter) {
 
 void mafNodeConnectorGraphicWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget* w)
 {
-	Q_UNUSED(option);
+    Q_UNUSED(option);
     Q_UNUSED(w);
 
-	//dw 699:
-	painter->setRenderHint(QPainter::Antialiasing);
+    painter->setRenderHint(QPainter::Antialiasing);
 
-        if (static_cast<mafDiagramScene*>(scene())->isDebugDraw()) {
-		debugPaint(painter);
-	}
+    if (static_cast<mafDiagramScene*>(scene())->isDebugDraw()) {
+        debugPaint(painter);
+    }
 
     painter->setPen(Qt::NoPen);
     painter->setBrush(Qt::darkGray);
