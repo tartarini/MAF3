@@ -11,7 +11,7 @@
 
 #include "mafNodeCompoundGraphicWidget.h"
 
-using namespace mafPluginEventBusMonitor;
+using namespace mafGUI;
 
 mafNodeCompoundGraphicWidget::mafNodeCompoundGraphicWidget(QMenu *contextMenu, QGraphicsItem *parent, QGraphicsScene *scene) : mafNodeAdvancedGraphicWidget(contextMenu, parent, scene) {
 }

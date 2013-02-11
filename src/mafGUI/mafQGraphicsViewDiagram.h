@@ -12,22 +12,21 @@
 #ifndef MAFQGRAPHICSVIEW_H
 #define MAFQGRAPHICSVIEW_H
  
-#include "mafPluginEventBusMonitor_global.h"
-#include "mafPluginEventBusMonitorDefinitions.h"
+#include "mafGUIDefinitions.h"
 
 #include <QGraphicsView>
 
 //class forwarding
 class QPaintEvent;
 
-namespace mafPluginEventBusMonitor {
+namespace mafGUI {
 
 /**
  Class name: mafQGraphicsViewDiagram
  Simple class for drawing the correct area
 */
 
-class MAFPLUGINEVENTBUSMONITORSHARED_EXPORT mafQGraphicsViewDiagram : public QGraphicsView {
+class MAFGUISHARED_EXPORT mafQGraphicsViewDiagram : public QGraphicsView {
 Q_OBJECT
 public:
     // object constructor.

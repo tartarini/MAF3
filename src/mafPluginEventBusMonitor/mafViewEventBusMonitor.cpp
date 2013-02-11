@@ -19,6 +19,7 @@
 
 using namespace mafEventBus;
 using namespace mafResources;
+using namespace mafGUI;
 using namespace mafPluginEventBusMonitor;
 
 #define LINE_SPACE 40

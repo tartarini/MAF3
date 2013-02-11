@@ -12,15 +12,14 @@
 #ifndef MAFNODEADVANCEDGRAPHICWIDGET_H
 #define MAFNODEADVANCEDGRAPHICWIDGET_H
 
-#include "mafPluginEventBusMonitor_global.h"
-#include "mafPluginEventBusMonitorDefinitions.h"
+#include "mafGUIDefinitions.h"
 #include <mafNodeGraphicWidget.h>
 
 //class forwarding
 
-namespace mafPluginEventBusMonitor {
+namespace mafGUI {
 
-class mafNodeAdvancedGraphicWidget : public mafNodeGraphicWidget {
+class MAFGUISHARED_EXPORT mafNodeAdvancedGraphicWidget : public mafNodeGraphicWidget {
 public:
         /// object constructor.
         mafNodeAdvancedGraphicWidget(QMenu *contextMenu, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0, Qt::WindowFlags wFlags = 0);

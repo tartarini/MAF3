@@ -2,14 +2,14 @@
 #ifndef mafNodeGraphicWidget_H
 #define mafNodeGraphicWidget_H
 
+#include "mafGUIDefinitions.h"
+#include "mafDiagramScene.h"
+
+
 #include <QGraphicsPixmapItem>
 #include <QList>
-
-//dw
 #include <QGraphicsProxyWidget>
 #include <QtGui>
-//dw new
-#include "mafDiagramScene.h"
 
 QT_BEGIN_NAMESPACE
 class QPixmap;
@@ -31,8 +31,7 @@ class mafNodeConnectorGraphicWidget;
 class mafNodeConnectionGraphicWidget;
 
 //! [0]
-class mafNodeGraphicWidget : public /*QGraphicsPolygonItem //dw*/ /*QFrame*/ QGraphicsProxyWidget
-{
+class mafNodeGraphicWidget : public QGraphicsProxyWidget {
 	Q_OBJECT
 public:
     enum { Type = UserType + 666 + 1 };

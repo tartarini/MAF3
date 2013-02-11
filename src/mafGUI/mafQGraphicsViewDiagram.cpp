@@ -16,14 +16,13 @@
 
 #include <QPaintEvent>
 
-using namespace mafPluginEventBusMonitor;
+using namespace mafGUI;
 
 mafQGraphicsViewDiagram::mafQGraphicsViewDiagram(QGraphicsScene* scene): QGraphicsView(scene) {}
 void mafQGraphicsViewDiagram::paintEvent ( QPaintEvent * event) {
-        QRect r = event->region().boundingRect();
-        QRect r1 = scene()->itemsBoundingRect().toRect();
+        QRect r = scene()->itemsBoundingRect().toRect();
 
-        QPaintEvent *newEvent=new QPaintEvent(r1);
+        QPaintEvent *newEvent=new QPaintEvent(r);
         QGraphicsView::paintEvent(newEvent);
         delete newEvent;
 }
