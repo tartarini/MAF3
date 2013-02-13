@@ -119,6 +119,9 @@ if(BUILD_WRAP)
   include(CMakeExternals/External_PythonQt.cmake)
 endif(BUILD_WRAP)
 
+if(BUILD_QA)
+  subdirs(qa)
+endif(BUILD_QA)
 
 #remove duplicates
 list(REMOVE_DUPLICATES MAF_DEPENDENCIES)

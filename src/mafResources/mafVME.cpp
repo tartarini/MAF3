@@ -23,6 +23,7 @@ using namespace mafResources;
 using namespace mafEventBus;
 
 mafVME::mafVME(const QString code_location) : mafResource(code_location), m_DataSetCollection(NULL), m_DataPipe(NULL), m_CanRead(true), m_CanWrite(true) {
+
     m_UIFilename = "vmeGeneric.ui";
     m_ColorR = 1;
     m_ColorG = 1;
@@ -36,7 +37,15 @@ mafVME::mafVME(const QString code_location) : mafResource(code_location), m_Data
     mafInteractor *inter = new mafInteractorSelection();
     pushInteractor(inter);
     mafDEL(inter);
-    
+
+    m_AdditionalInfo = "";
+
+    m_ShowDataType = true;
+    m_ShowPoseMatrix = true;
+    m_ShowBounds = true;
+    m_ShowAdditionalInfo = true;
+    m_ShowPreview = true;
+
     connect(this, SIGNAL(modifiedObject()), this, SLOT(execute()));
 }
 
@@ -296,4 +305,27 @@ void mafVME::updateBounds() {
         m_BoundZmin = QString::number(bVariant->zMin());
         m_BoundZmax = QString::number(bVariant->zMax());
     }
+}
+void mafVME::on_additionalInfo_textChanged(QString text) {
+  setAdditionalInfo(text);
+}
+
+void mafVME::on_showDataType_stateChanged(int show) {
+  setShowDataType(show != 0);
+}
+
+void mafVME::on_showPoseMatrix_stateChanged(int show) {
+  setShowPoseMatrix(show != 0);
+}
+
+void mafVME::on_showBounds_stateChanged(int show) {
+  setShowBounds(show != 0);
+}
+
+void mafVME::on_showAdditionalInfo_stateChanged(int show) {
+  setShowAdditionalInfo(show != 0);
+}
+
+void mafVME::on_showPreview_stateChanged(int show) {
+  setShowPreview(show != 0);
 }

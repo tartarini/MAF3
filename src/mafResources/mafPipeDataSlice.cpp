@@ -90,7 +90,7 @@ void mafPipeDataSlice::setPlaneNormalAxes(mafPlaneNormal axes) {
             m_XVector[1] = 0.;
             m_XVector[2] = 0.;
             m_YVector[0] = 0.;
-            m_YVector[1] = 1.;
+            m_YVector[1] = -1.;
             m_YVector[2] = 0.;
             m_Normal[0] = 0.;
             m_Normal[1] = 0.;

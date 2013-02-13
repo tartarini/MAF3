@@ -66,9 +66,16 @@ void mafPipeDataSliceVolume::updatePipe(double t) {
     mat->DeepCopy(m_TransformMatrix.rawData());
     m_Transform->SetInput(mat);
     mat->Delete();
-    
+
     m_Slicer->SetInputConnection(*volume);
     m_Slicer->SetPlaneOrigin(sliceOrigin());
+
+    double sp[3] = {.33, .33, 1.};
+    if(vtkImageData *image = vtkImageData::SafeDownCast((*volume)->GetProducer()->GetOutputDataObject(0))) {
+        image->GetSpacing(sp);
+    }
+    vtkImageData *outImage = vtkImageData::SafeDownCast(m_Slicer->GetOutputDataObject(1));
+    outImage->SetSpacing(sp);
 
     m_Slicer->SetPlaneAxisX(xVector());
     m_Slicer->SetPlaneAxisY(yVector());

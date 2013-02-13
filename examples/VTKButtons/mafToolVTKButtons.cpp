@@ -17,6 +17,8 @@
 #include <mafPoint.h>
 
 #include <msvQVTKButtons.h>
+#include <msvQVTKButtonsGroup.h>
+#include <msvQVTKButtonsManager.h>
 
 #include <vtkSmartPointer.h>
 #include <vtkAlgorithmOutput.h>
@@ -34,40 +36,42 @@
 #include <vtkDataSet.h>
 
 #include <mafVTKWidget.h>
+#include <vtkSliderWidget.h>
 
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
 using namespace mafPluginVTK;
 
-mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafPluginVTK::mafToolVTK(code_location), isLoaded(false), m_Button(NULL){
+mafToolVTKButtons::mafToolVTKButtons(const QString code_location) : mafToolVTKButtonsInterface(code_location){
 
 }
 
-msvQVTKButtons *mafToolVTKButtons::button() {
-    if(m_Button == NULL) {
-        m_Button = new msvQVTKButtons();
-        m_Button->setShowButton(true);
-        bool result = QObject::connect(m_Button, SIGNAL(showTooltip(QString)), this, SLOT(showTooltip(QString)));
-        result = QObject::connect(m_Button, SIGNAL(hideTooltip()), this, SLOT(hideTooltip()));
+msvQVTKButtonsInterface *mafToolVTKButtons::element() {
+    if(m_Element == NULL) {
+        m_Element = msvQVTKButtonsManager::instance()->createButtons();
+        //m_Element->setShowButton(true);
+        bool result = QObject::connect(m_Element, SIGNAL(showTooltip(QString)), this, SLOT(showTooltip(QString)));
+        result = QObject::connect(m_Element, SIGNAL(hideTooltip()), this, SLOT(hideTooltip()));
+
     }
-    return m_Button;
+    return m_Element;
 }
 
 mafToolVTKButtons::~mafToolVTKButtons() {
-    if(m_Button) {
-        delete m_Button;
+    if(m_Element) {
+        delete m_Element;
     }
 }
 
 void mafToolVTKButtons::resetTool() {
-    removeWidget(button()->button());
+    removeWidget(static_cast<msvQVTKButtons*>(element())->button());
 }
 
 void mafToolVTKButtons::graphicObjectInitialized() {
     // Graphic widget (render window, interactor...) has been created and initialized.
     // now can add the widget.
-    addWidget(button()->button());
+    addWidget(static_cast<msvQVTKButtons*>(element())->button());
 }
 
 void mafToolVTKButtons::updatePipe(double t) {
@@ -95,29 +99,25 @@ void mafToolVTKButtons::updatePipe(double t) {
     }
 
     ///////////-------- BUTTON WIDGET -----------////////////
-    vtkTexturedButtonRepresentation2D *rep = static_cast<vtkTexturedButtonRepresentation2D *> (button()->button()->GetRepresentation());
+    //vtkTexturedButtonRepresentation2D *rep = static_cast<vtkTexturedButtonRepresentation2D *> (static_cast<msvQVTKButtons*>(element())->button()->GetRepresentation());
 
-    //Load image only the first time
-    if (isLoaded == false) {
-        QString iconType = vme->property("iconType").toString();
-        if(iconType.compare("")!=0)
-        {
-            QString iconFileName = mafIconFromObjectType(iconType);
-            button()->setIconFileName(iconFileName);
-
-            isLoaded = true;
-        }
+    QString iconType = vme->property("iconType").toString();
+    if (iconType != "") {
+      QString iconFileName = mafIconFromObjectType(iconType);
+      QImage image;
+      image.load(iconFileName);
+      element()->setImage(image);
     }
 
     int size[2]; size[0] = 16; size[1] = 16;
-    rep->GetBalloon()->SetImageSize(size);
+    //rep->GetBalloon()->SetImageSize(size);
 
     if (showLabel()) {
         QString vmeName = vme->property("objectName").toString();
-        button()->setLabel(vmeName);
+        static_cast<msvQVTKButtons*>(element())->setLabel(vmeName);
     } else {
         QString emptyString;
-        button()->setLabel(emptyString);
+        static_cast<msvQVTKButtons*>(element())->setLabel(emptyString);
     }
 
     //modify position of the vtkButton 
@@ -130,18 +130,18 @@ void mafToolVTKButtons::updatePipe(double t) {
         bds[1] = newBounds->yMin(); 
         bds[2] = newBounds->zMin();
     }
-    rep->PlaceWidget(bds, size);
-    rep->Modified();
-    button()->button()->SetRepresentation(rep);
+    //rep->PlaceWidget(bds, size);
+    //rep->Modified();
+    //static_cast<msvQVTKButtons*>(element())->button()->SetRepresentation(rep);
     ///////////-------- BUTTON WIDGET -----------////////////
 
     mafVTKWidget *widget = qobject_cast<mafVTKWidget *>(this->graphicObject());
 
-    button()->setCurrentRenderer(widget->renderer());
+    static_cast<msvQVTKButtons*>(element())->setCurrentRenderer(widget->renderer());
     double b6[6];
     newBounds->bounds(b6);
-    button()->setBounds(b6);
-    button()->setFlyTo(FlyTo());
+    static_cast<msvQVTKButtons*>(element())->setBounds(b6);
+    static_cast<msvQVTKButtons*>(element())->setFlyTo(FlyTo());
     updatedGraphicObject();
 
 
@@ -164,71 +164,105 @@ void mafToolVTKButtons::updatePipe(double t) {
       vtkDataObject *dataObject = producer->GetOutputDataObject(0);
       vtkDataSet* vtkData = vtkDataSet::SafeDownCast(dataObject);
 
-      button()->setData(vtkData);
+      static_cast<msvQVTKButtons*>(element())->setData(vtkData);
     }
 
 }
 
 void mafToolVTKButtons::showTooltip(QString tooltip) {
     mafVME *vme = input();
-    if(vme == NULL) {
+    if(vme == NULL || !(vme->showAdditionalInfo() || vme->showBounds() || vme->showDataType() || vme->showPoseMatrix() || vme->showPreview() || vme->showPreview())) {
         return;
     }
 
     QString matrixString = vme->dataSetCollection()->itemAtCurrentTime()->poseMatrixString();
     QString text("<table border=\"0\"");
     text.append("<tr>");
-    text.append("<td>");
-    QImage preview = button()->getPreview(180,180);
-    QByteArray ba;
-    QBuffer buffer(&ba);
-    buffer.open(QIODevice::WriteOnly);
-    preview.save(&buffer, "PNG");
 
-    text.append(QString("<img src=\"data:image/png;base64,%1\">").arg(QString(buffer.data().toBase64())));
-    text.append("</td>");
+    if(vme->showPreview())
+    {
+      text.append("<td>");
+      QImage preview = static_cast<msvQVTKButtons*>(element())->getPreview(256,256);
+      QByteArray ba;
+      QBuffer buffer(&ba);
+      buffer.open(QIODevice::WriteOnly);
+      preview.save(&buffer, "PNG");
 
-    text.append("<td>");
-    text.append("<b>Data type</b>: ");
-    text.append(vme->dataSetCollection()->itemAtCurrentTime()->externalDataType());
-    text.append("<br>");
 
-     QStringList list = matrixString.split(" ");
-     int numElement = list.count();
-     int i = 0;
+      text.append(QString("<img src=\"data:image/png;base64,%1\">").arg(QString(buffer.data().toBase64())));
 
-     text.append("<b>Pose Matrix</b>:");
-     text.append("<table border=\"0.2\">");
-     for ( ; i < numElement; i++ ) {
-         text.append("<tr>");
-         text.append("<td>" + list[i] +"</td>");
-         i++;
-         text.append("<td>" + list[i] +"</td>");
-         i++;
-         text.append("<td>" + list[i] +"</td>");
-         i++;
-         text.append("<td>" + list[i] +"</td>");
-         text.append("</tr>");
-     }
-     text.append("</table>");
+      text.append("</td>");
+    }
 
-    mafBounds *bounds = vme->dataSetCollection()->itemAtCurrentTime()->bounds();
-    text.append("<b>Bounds: (min - max)</b>:");
-    text.append("<table border=\"0.2\">");
-    text.append("<tr>");
-    text.append("<td>" + QString::number(bounds->xMin()) +"</td>");
-    text.append("<td>" + QString::number(bounds->xMax()) +"</td>");
-    text.append("</tr>");
-    text.append("<tr>");
-    text.append("<td>" + QString::number(bounds->yMin()) +"</td>");
-    text.append("<td>" + QString::number(bounds->yMax()) +"</td>");
-    text.append("</tr>");
-    text.append("<tr>");
-    text.append("<td>" + QString::number(bounds->zMin()) +"</td>");
-    text.append("<td>" + QString::number(bounds->zMax()) +"</td>");
-    text.append("</tr>");
-    text.append("</table>");
-    text.append("</td>");
+    if(vme->showAdditionalInfo() || vme->showBounds() || vme->showDataType() || vme->showPoseMatrix() || vme->showPreview())
+    {
+      text.append("<td>");
+
+      if(vme->showDataType())
+      {
+        text.append("<b>Data type</b>: ");
+        text.append(vme->dataSetCollection()->itemAtCurrentTime()->externalDataType());
+        text.append("<br><br>");
+      }
+
+      if(vme->showPoseMatrix())
+      {
+        QStringList list = matrixString.split(" ");
+        int numElement = list.count();
+        int i = 0;
+
+        text.append("<b>Pose Matrix</b>:");
+        text.append("<table border=\"0\">");
+        for ( ; i < numElement; i++ ) {
+          text.append("<tr>");
+          text.append("<td>" + list[i] +"</td>");
+          i++;
+          text.append("<td>" + list[i] +"</td>");
+          i++;
+          text.append("<td>" + list[i] +"</td>");
+          i++;
+          text.append("<td>" + list[i] +"</td>");
+          text.append("</tr>");
+        }
+        text.append("</table>");
+        text.append("<br><br>");
+      }
+
+      if(vme->showBounds())
+      {
+        mafBounds *bounds = vme->dataSetCollection()->itemAtCurrentTime()->bounds();
+        text.append("<b>Bounds: (min - max)</b>:");
+        text.append("<table border=\"0\">");
+        text.append("<tr>");
+        text.append("<td>" + QString::number(bounds->xMin()) +"</td>");
+        text.append("<td>" + QString::number(bounds->xMax()) +"</td>");
+        text.append("</tr>");
+        text.append("<tr>");
+        text.append("<td>" + QString::number(bounds->yMin()) +"</td>");
+        text.append("<td>" + QString::number(bounds->yMax()) +"</td>");
+        text.append("</tr>");
+        text.append("<tr>");
+        text.append("<td>" + QString::number(bounds->zMin()) +"</td>");
+        text.append("<td>" + QString::number(bounds->zMax()) +"</td>");
+        text.append("</tr>");
+        text.append("</table>");
+        text.append("<br>");
+      }
+
+      if(vme->showAdditionalInfo())
+      {
+        text.append("<table>");
+        text.append("<tr>");
+        text.append("<td><b>Description:</b></td>");
+        text.append("</tr>");
+        text.append("<tr>");
+        text.append("<td>" + vme->additionalInfo() +"</td>");
+        text.append("</tr>");
+        text.append("</table>");
+      }
+
+      text.append("</td>");
+    }
     text.append("</tr>");
     text.append("</table>");
  
@@ -238,8 +272,8 @@ void mafToolVTKButtons::showTooltip(QString tooltip) {
 }
 
 void mafToolVTKButtons::hideTooltip() {
-    mafEventBus::mafEventArgumentsList argList;
-    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.gui.hideTooltip", mafEventBus::mafEventTypeLocal, &argList);
+  mafEventBus::mafEventArgumentsList argList;
+  mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.gui.hideTooltip", mafEventBus::mafEventTypeLocal, &argList);
 }
 
 void mafToolVTKButtons::selectVME() {
@@ -254,31 +288,18 @@ void mafToolVTKButtons::selectVME() {
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 }
 
-void mafToolVTKButtons::setVisibility(bool visible) {
-    button()->setShowButton(visible);
-    Superclass::setVisibility(visible);
-    button()->update();
-}
-void mafToolVTKButtons::setShowLabel(bool show) {
-    button()->setShowLabel(show);
-}
-
-bool mafToolVTKButtons::showLabel() {
-    return button()->showLabel();
-}
-
 void mafToolVTKButtons::setFlyTo(bool active) {
-    button()->setFlyTo(active);
+    static_cast<msvQVTKButtons*>(element())->setFlyTo(active);
 }
 
 bool mafToolVTKButtons::FlyTo() {
-    return button()->flyTo();
+    return static_cast<msvQVTKButtons*>(element())->flyTo();
 }
 
 void mafToolVTKButtons::setOnCenter(bool onCenter) {
-    button()->setOnCenter(onCenter);
+    static_cast<msvQVTKButtons*>(element())->setOnCenter(onCenter);
 }
 
 bool mafToolVTKButtons::onCenter() {
-    return button()->onCenter();
+    return static_cast<msvQVTKButtons*>(element())->onCenter();
 }

@@ -63,6 +63,8 @@
 #include <vtkDoubleArray.h>
 #include <vtkLinearTransform.h>
 #include <vtkStreamingDemandDrivenPipeline.h>
+#include <vtkInformation.h>
+#include <vtkDataObject.h>
 
 #include <vtkMath.h>
 #include <math.h>
@@ -391,75 +393,80 @@ template<typename InputDataType, typename OutputDataType> void vtkMAFVolumeSlice
     const double xaxis[3] = { this->GlobalPlaneAxisX[0] * dx * this->SamplingTableMultiplier[0], this->GlobalPlaneAxisX[1] * dx * this->SamplingTableMultiplier[1], this->GlobalPlaneAxisX[2] * dx * this->SamplingTableMultiplier[2]};
     const double yaxis[3] = { this->GlobalPlaneAxisY[0] * dy * this->SamplingTableMultiplier[0], this->GlobalPlaneAxisY[1] * dy * this->SamplingTableMultiplier[1], this->GlobalPlaneAxisY[2] * dy * this->SamplingTableMultiplier[2]};
     const double offset[3] = {(this->GlobalPlaneOrigin[0] - this->DataOrigin[0]) * this->SamplingTableMultiplier[0],
-        (this->GlobalPlaneOrigin[1] - this->DataOrigin[1]) * this->SamplingTableMultiplier[1],
-        (this->GlobalPlaneOrigin[2] - this->DataOrigin[2]) * this->SamplingTableMultiplier[2]};
-    
+                             (this->GlobalPlaneOrigin[1] - this->DataOrigin[1]) * this->SamplingTableMultiplier[1],
+                             (this->GlobalPlaneOrigin[2] - this->DataOrigin[2]) * this->SamplingTableMultiplier[2]};
+
     // prepare sampling table
     int   *stIndices[3];
     double *stOffsets[3];
-    
-    for (int c = 0; c < 3; c++) 
+
+    for (int c = 0; c < 3; c++)
     {
-        const int indexMultiplier = ((c == 0) ? 1 : (c == 1 ? this->DataDimensions[0] : (this->DataDimensions[0] * this->DataDimensions[1]))) * numComp;
-        stIndices[c] = new int   [SamplingTableSize + 1];
-        stOffsets[c] = new double [SamplingTableSize + 1];
-        
-        const double *coords = this->VoxelCoordinates[c];
-        const int lastIndex = this->DataDimensions[c] - 1;
-        const double coordToIndex = double(SamplingTableSize - 1) / (coords[lastIndex] - coords[0]);
-        for (int i = 0, ti0 = 0; i <= lastIndex; i++) 
+      const int indexMultiplier = ((c == 0) ? 1 : (c == 1 ? this->DataDimensions[0] : (this->DataDimensions[0] * this->DataDimensions[1]))) * numComp;
+      stIndices[c] = new int   [SamplingTableSize + 1];
+      stOffsets[c] = new double [SamplingTableSize + 1];
+
+      const double *coords = this->VoxelCoordinates[c];
+      const int lastIndex = this->DataDimensions[c] - 1;
+      const double coordToIndex = double(SamplingTableSize - 1) / (coords[lastIndex] - coords[0]);
+      for (int i = 0, ti0 = 0; i <= lastIndex; i++)
+      {
+        const int ti1 = (i != lastIndex) ? (coords[i] - coords[0]) * coordToIndex : (SamplingTableSize);
+        if (ti1 <= ti0)
+          continue;
+        for (int ti = ti0; ti <= ti1; ti++)
         {
-            const int ti1 = (i != lastIndex) ? (coords[i] - coords[0]) * coordToIndex : (SamplingTableSize);
-            if (ti1 <= ti0)
-                continue;
-            for (int ti = ti0; ti <= ti1; ti++) 
-            {
-                stIndices[c][ti] = (i - 1) * indexMultiplier;
-                stOffsets[c][ti] = double(ti1 - ti) / double(ti1 - ti0);
-            }
-            ti0 = ti1;
+          stIndices[c][ti] = (i - 1) * indexMultiplier;
+          stOffsets[c][ti] = double(ti1 - ti) / double(ti1 - ti0);
         }
+        ti0 = ti1;
+      }
     }
-    
+
     const double shift = this->Window / 2.0 - this->Level;
     const double scale = 1.0 / this->Window;
-    
+
     memset(output, 0, sizeof(OutputDataType) * xs * ys * numComp);
     OutputDataType *pixel = output;
     const InputDataType *samplingPtr[8] = { input, input + numComp, input + this->DataDimensions[0] * numComp, input + (this->DataDimensions[0] + 1) * numComp,
-        input + this->DataDimensions[0] * this->DataDimensions[1] * numComp, input + (this->DataDimensions[0] * this->DataDimensions[1] + 1) * numComp, input + (this->DataDimensions[0] * this->DataDimensions[1] + this->DataDimensions[0]) * numComp, input + (this->DataDimensions[0] * this->DataDimensions[1] + this->DataDimensions[0] + 1) * numComp };
-    
-    for (int yi = 0; yi < ys; yi++) 
+                                            input + this->DataDimensions[0] * this->DataDimensions[1] * numComp, input + (this->DataDimensions[0] * this->DataDimensions[1] + 1) * numComp, input + (this->DataDimensions[0] * this->DataDimensions[1] + this->DataDimensions[0]) * numComp, input + (this->DataDimensions[0] * this->DataDimensions[1] + this->DataDimensions[0] + 1) * numComp };
+
+    for (int yi = 0; yi < ys; yi++)
     {
-        double p[3] = {yi * yaxis[0] + offset[0], yi * yaxis[1] + offset[1], yi * yaxis[2] + offset[2]};
-        for (int xi = 0; xi < xs; xi++, p[0] += xaxis[0], p[1] += xaxis[1], p[2] += xaxis[2], pixel += numComp) 
+      double p[3] = {yi * yaxis[0] + offset[0], yi * yaxis[1] + offset[1], yi * yaxis[2] + offset[2]};
+      for (int xi = 0; xi < xs; xi++, p[0] += xaxis[0], p[1] += xaxis[1], p[2] += xaxis[2], pixel += numComp)
+      {
+        // find index
+        const unsigned int pi[3] = { u_int(p[0]), u_int(p[1]), u_int(p[2])};
+        if (pi[0] > SamplingTableSize || pi[1] > SamplingTableSize || pi[2] > SamplingTableSize)
+          continue;
+
+        int   index = stIndices[0][pi[0]] + stIndices[1][pi[1]] + stIndices[2][pi[2]];
+        for (int comp = 0; comp < numComp; comp++)
         {
-            // find index
-            const unsigned int pi[3] = { u_int(p[0]), u_int(p[1]), u_int(p[2])};
-            if (pi[0] > SamplingTableSize || pi[1] > SamplingTableSize || pi[2] > SamplingTableSize)
-                continue;
-            
-            // tri-linear interpolation
-            int   index = stIndices[0][pi[0]] + stIndices[1][pi[1]] + stIndices[2][pi[2]];
-            for (int comp = 0; comp < numComp; comp++) 
+          double sample = 0.0;
+          //if(TriLinearInterpolationOn)
+          //{
+            for (int z = 0, si = 0; z < 2; z++)
             {
-                double sample = 0.f;
-                for (int z = 0, si = 0; z < 2; z++) 
-                {
-                    const double zweight = z ? 1.f - stOffsets[2][pi[2]] : stOffsets[2][pi[2]];
-                    for (int y = 0; y < 2; y++) 
-                    {
-                        const double yzweight = (y ? 1.f - stOffsets[1][pi[1]] : stOffsets[1][pi[1]]) * zweight;
-                        for (int x = 0; x < 2; x++, si++)
-                            sample += samplingPtr[si][index + comp] * (x ? 1.f - stOffsets[0][pi[0]] : stOffsets[0][pi[0]]) * yzweight;
-                    }
-                }
-                
-                // mapping
-                //clip(((sample + shift) * scale), pixel[comp]);
-                pixel[comp] = sample;
+              const double zweight = z ? 1.f - stOffsets[2][pi[2]] : stOffsets[2][pi[2]];
+              for (int y = 0; y < 2; y++)
+              {
+                const double yzweight = (y ? 1.f - stOffsets[1][pi[1]] : stOffsets[1][pi[1]]) * zweight;
+                for (int x = 0; x < 2; x++, si++)
+                  sample += samplingPtr[si][index + comp] * (x ? 1.f - stOffsets[0][pi[0]] : stOffsets[0][pi[0]]) * yzweight;
+              }
             }
+          //}
+          //else
+          //{
+          //  sample = input[index + comp];
+          //}
+          // mapping
+          //clip(((sample + shift) * scale), pixel[comp]);
+          pixel[comp] = sample;
         }
+      }
     }
     delete [] stIndices[0];
     delete [] stIndices[1];
@@ -475,7 +482,7 @@ void vtkMAFVolumeSlicer::CalculateTextureCoordinates(const double point[3], cons
     const double c[3]  = { point[0] - this->GlobalPlaneOrigin[0], point[1] - this->GlobalPlaneOrigin[1], point[2] - this->GlobalPlaneOrigin[2] };
     
 	double tx = (c[0] * GlobalPlaneAxisY[1] - c[1] * GlobalPlaneAxisY[0]) / (GlobalPlaneAxisX[0] * GlobalPlaneAxisY[1] - GlobalPlaneAxisX[1] * GlobalPlaneAxisY[0]);
-	double ty = (c[0] * GlobalPlaneAxisX[1] - c[1] * GlobalPlaneAxisX[0]) / (GlobalPlaneAxisX[0] * GlobalPlaneAxisY[1] - GlobalPlaneAxisX[1] * GlobalPlaneAxisY[0]);
+        double ty = (c[0] * GlobalPlaneAxisX[1] - c[1] * GlobalPlaneAxisX[0]) / (GlobalPlaneAxisX[0] * GlobalPlaneAxisY[1] - GlobalPlaneAxisX[1] * GlobalPlaneAxisY[0]);
 	if (fabs(GlobalPlaneAxisX[0] * GlobalPlaneAxisY[1] - GlobalPlaneAxisX[1] * GlobalPlaneAxisY[0]) < 1.e-10f) {
 		tx = (c[0] * GlobalPlaneAxisY[2] - c[2] * GlobalPlaneAxisY[0]) / (GlobalPlaneAxisX[0] * GlobalPlaneAxisY[2] - GlobalPlaneAxisX[2] * GlobalPlaneAxisY[0]);
 		ty = (c[0] * GlobalPlaneAxisX[2] - c[2] * GlobalPlaneAxisX[0]) / (GlobalPlaneAxisX[0] * GlobalPlaneAxisY[2] - GlobalPlaneAxisX[2] * GlobalPlaneAxisY[0]);
@@ -883,7 +890,7 @@ int vtkMAFVolumeSlicer::RequestInformation(
 
         // intersect plane with the bounding box
         double spacing[3] = {1.f, 1.f, 1.f};
-        double t[24][2], minT = VTK_FLOAT_MAX, maxT = VTK_FLOAT_MIN, minS = VTK_FLOAT_MAX, maxS = VTK_FLOAT_MIN;
+        double t[24][2], minT = VTK_DOUBLE_MAX, maxT = VTK_DOUBLE_MIN, minS = VTK_DOUBLE_MAX, maxS = VTK_DOUBLE_MIN;
         int    numberOfPoints = 0;
         for (int i = 0; i < 3; i++) 
         {
@@ -922,7 +929,15 @@ int vtkMAFVolumeSlicer::RequestInformation(
         double maxSpacing = max(maxS - minS, maxT - minT);
         spacing[0] = spacing[1] = max(maxSpacing, 1.e-8f);
         output->SetSpacing(spacing);
-        if (fabs(minT) > 1.e-3 || fabs(minS) > 1.e-3) 
+
+        //
+        vtkInformation* info = output->GetPipelineInformation();
+        if(info->Has(vtkDataObject::SPACING()))
+          {
+            info->Set(vtkDataObject::SPACING(),spacing,3);
+          }
+
+        if (fabs(minT) > 1.e-5 || fabs(minS) > 1.e-5)
         {
             this->GlobalPlaneOrigin[0] += minT * this->GlobalPlaneAxisX[0] * dims[0] + minS * this->GlobalPlaneAxisY[0] * dims[1];
             this->GlobalPlaneOrigin[1] += minT * this->GlobalPlaneAxisX[1] * dims[0] + minS * this->GlobalPlaneAxisY[1] * dims[1];

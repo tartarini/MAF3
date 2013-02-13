@@ -43,14 +43,18 @@ class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {
     Q_PROPERTY(QString boundXmax READ boundXmax WRITE setBoundXmax)
     Q_PROPERTY(QString boundYmax READ boundYmax WRITE setBoundYmax)
     Q_PROPERTY(QString boundZmax READ boundZmax WRITE setBoundZmax)
-
     Q_PROPERTY(double colorR READ colorR WRITE  setColorR)
     Q_PROPERTY(double colorG READ colorG WRITE  setColorG)
     Q_PROPERTY(double colorB READ colorB WRITE  setColorB)
-
+    Q_PROPERTY(QString additionalInfo READ additionalInfo WRITE setAdditionalInfo)
+    Q_PROPERTY(bool showDataType READ showDataType WRITE setShowDataType)
+    Q_PROPERTY(bool showPoseMatrix READ showPoseMatrix WRITE setShowPoseMatrix)
+    Q_PROPERTY(bool showBounds READ showBounds WRITE setShowBounds)
+    Q_PROPERTY(bool showAdditionalInfo READ showAdditionalInfo WRITE setShowAdditionalInfo)
+    Q_PROPERTY(bool showPreview READ showPreview WRITE setShowPreview)
     Q_PROPERTY(QString objectType READ objectType STORED false)
-    
     Q_PROPERTY(mafResources::mafBoundsPointer bounds READ bounds STORED false)
+
     /// typedef macro.
     mafSuperclassMacro(mafResources::mafResource);
 
@@ -123,6 +127,24 @@ public:
     /// Return 3D bound of the current dataset containing the external data of the VME.
     QString boundZmax();
 
+    ///
+    QString additionalInfo();
+
+    ///
+    bool showDataType();
+
+    ///
+    bool showPoseMatrix();
+
+    ///
+    bool showBounds();
+
+    ///
+    bool showAdditionalInfo();
+
+    ///
+    bool showPreview();
+
     /// Set 3D bound of the current dataset containing the external data of the VME.
     void  setBoundXmin(QString bound);
 
@@ -159,6 +181,25 @@ public:
     /// set blue component of vme color.
     void setColorB(double colorB);
 
+    ///
+    void setAdditionalInfo(QString text);
+
+
+    ///
+    void setShowDataType(bool show);
+
+    ///
+    void setShowPoseMatrix(bool show);
+
+    ///
+    void setShowBounds(bool show);
+
+    ///
+    void setShowAdditionalInfo(bool show);
+
+    ///
+    void setShowPreview(bool show);
+
     /// Fill parameter 'b' with 3D bounds of the VME data at given time. Default value means current time.
     void bounds(double b[6], double t = -1);
     
@@ -188,6 +229,24 @@ public Q_SLOTS:
     /// Update bounds of the VME
     void updateBounds();
 
+    ///
+    void on_additionalInfo_textChanged(QString text);
+
+    ///
+    void on_showDataType_stateChanged(int show);
+
+    ///
+    void on_showPoseMatrix_stateChanged(int show);
+
+    ///
+    void on_showBounds_stateChanged(int show);
+
+    ///
+    void on_showAdditionalInfo_stateChanged(int show);
+
+    ///
+    void on_showPreview_stateChanged(int show);
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafVME();
@@ -210,7 +269,12 @@ private:
     QString m_BoundXmax;                ///< 3D bound of the current dataset
     QString m_BoundYmax;                ///< 3D bound of the current dataset
     QString m_BoundZmax;                ///< 3D bound of the current dataset
-
+    QString m_AdditionalInfo;
+    bool m_ShowDataType;
+    bool m_ShowPoseMatrix;
+    bool m_ShowBounds;
+    bool m_ShowAdditionalInfo;
+    bool m_ShowPreview;
 
 };
 
@@ -243,6 +307,30 @@ inline double mafVME::colorG() const {
 
 inline double mafVME::colorB() const {
     return m_ColorB;
+}
+
+inline QString mafVME::additionalInfo() {
+    return m_AdditionalInfo;
+}
+
+inline bool mafVME::showDataType() {
+    return m_ShowDataType;
+}
+
+inline bool mafVME::showPoseMatrix() {
+    return m_ShowPoseMatrix;
+}
+
+inline bool mafVME::showBounds() {
+    return m_ShowBounds;
+}
+
+inline bool mafVME::showAdditionalInfo() {
+    return m_ShowAdditionalInfo;
+}
+
+inline bool mafVME::showPreview() {
+    return m_ShowPreview;
 }
 
 inline void mafVME::setColorR(double colorR) {
@@ -285,6 +373,32 @@ inline void mafVME::setBoundYmax(QString bound) {
 inline void mafVME::setBoundZmax(QString bound) {
     m_BoundZmax = bound;
 }
+
+inline void mafVME::setAdditionalInfo(QString text) {
+    m_AdditionalInfo = text;
+}
+
+inline void mafVME::setShowDataType(bool show) {
+    m_ShowDataType = show;
+}
+
+inline void mafVME::setShowPoseMatrix(bool show) {
+    m_ShowPoseMatrix = show;
+}
+
+inline void mafVME::setShowBounds(bool show) {
+    m_ShowBounds = show;
+}
+
+inline void mafVME::setShowAdditionalInfo(bool show) {
+    m_ShowAdditionalInfo = show;
+}
+
+inline void mafVME::setShowPreview(bool show) {
+    m_ShowPreview = show;
+}
+
+
 
 } // mafResources
 
