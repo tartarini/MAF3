@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>193</width>
-    <height>407</height>
+    <width>190</width>
+    <height>401</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>130</y>
+     <y>180</y>
      <width>171</width>
-     <height>241</height>
+     <height>211</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -43,8 +43,8 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>171</width>
-     <height>101</height>
+     <width>241</width>
+     <height>161</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -81,6 +81,13 @@
       </property>
      </widget>
     </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Buttons position:</string>
+      </property>
+     </widget>
+    </item>
     <item row="3" column="1">
      <widget class="QComboBox" name="positionComboBox">
       <item>
@@ -95,10 +102,24 @@
       </item>
      </widget>
     </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label">
+    <item row="4" column="0">
+     <widget class="QLineEdit" name="filePathLineEdit">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QPushButton" name="browseFileButton">
       <property name="text">
-       <string>Buttons position:</string>
+       <string>Browse</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QPushButton" name="animatePathButton">
+      <property name="text">
+       <string>Animate</string>
       </property>
      </widget>
     </item>

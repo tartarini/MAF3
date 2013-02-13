@@ -21,6 +21,10 @@
 #include <mafToolHandler.h>
 #include <vtkAlgorithmOutput.h>
 #include <mafDataSet.h>
+#include <QObject>
+#include <QFileDialog>
+#include <QLineEdit>
+#include <QXmlStreamReader>
 
 using namespace mafPluginVTK;
 using namespace mafCore;
@@ -208,4 +212,173 @@ void mafViewVTKButtons::on_positionComboBox_activated(int state) {
     }
 }
 
+void mafViewVTKButtons::on_browseFileButton_clicked() {
+    //open dialog for selecting the name of the session
+    QFileDialog::Options options;
+    //    if (!native->isChecked())
+    //        options |= QFileDialog::DontUseNativeDialog;
+    QString selectedFilter;
+    QString w = "*.xml";
+    QString file;
+    file = QFileDialog::getOpenFileName(NULL,
+                              mafTr("Import Data"),
+                              ".",
+                              w,
+                              &selectedFilter,
+                              options);
 
+    // set filename
+    this->widget()->findChild<QLineEdit*>("filePathLineEdit")->setText(file);
+    this->xmlParse(file);
+}
+
+void mafViewVTKButtons::on_animatePathButton_clicked() {
+  msvQVTKButtonsManager::instance()->animate();
+}
+
+void mafViewVTKButtons::xmlParse(QString xmlFilePath) {
+    msvQVTKButtonsManager::instance()->clearCameraBrakPoints();
+    /* We'll parse the path xml */
+    QFile* file = new QFile(xmlFilePath);
+    /* If we can't open it, let's show an error message. */
+    if (!file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+        // OG MESSAGE
+        return;
+    }
+    /* QXmlStreamReader takes any QIODevice. */
+    QXmlStreamReader xml(file);
+
+    //QList< QMap<QString,QString> > persons;
+    /* We'll parse the XML until we reach end of it.*/
+    while(!xml.atEnd() &&
+            !xml.hasError()) {
+        /* Read next element.*/
+        QXmlStreamReader::TokenType token = xml.readNext();
+        /* If token is just StartDocument, we'll go to next.*/
+        if(token == QXmlStreamReader::StartDocument) {
+            continue;
+        }
+        /* If token is StartElement, we'll see if we can read it.*/
+        if(token == QXmlStreamReader::StartElement) {
+            /* If it's named persons, we'll go to the next.*/
+            if(xml.name() == "cameraBreakPoints") {
+                continue;
+            }
+            /* If it's named person, we'll dig the information from there.*/
+            if(xml.name() == "cameraBreakPoint") {
+                this->xmlParseCamraBreakPoint(xml);
+            }
+        }
+    }
+    /* Error handling. */
+    if(xml.hasError()) {
+        //LOG MESSAGAE
+    }
+    /* Removes any device() or data from the reader
+     * and resets its internal state to the initial state. */
+    xml.clear();
+    //this->addPersonsToUI(persons);
+}
+
+void mafViewVTKButtons::xmlParseCamraBreakPoint(QXmlStreamReader& xml) {
+
+
+    //QMap<QString, QString> person;
+    /* Let's check that we're really getting a person. */
+    if(xml.tokenType() != QXmlStreamReader::StartElement &&
+            xml.name() == "cameraBreakPoint") {
+        //return NULL;
+    }
+
+    /* Next element...
+    xml.readNext();
+    /*
+     * We're going to loop over the things because the order might change.
+     * We'll continue the loop until we hit an EndElement named cameraBreakPoint.
+     */
+    double *position = new double[3];
+    double *focalPoint = new double[3];
+    double *viewUp = new double[3];
+    while(!(xml.tokenType() == QXmlStreamReader::EndElement &&
+            xml.name() == "cameraBreakPoint")) {
+        if(xml.tokenType() == QXmlStreamReader::StartElement) {
+            /* We've found first name. */
+            if(xml.name() == "position") {
+              this->xmlParseCoordinate(xml,"position",position);
+            }
+            /* We've found surname. */
+            if(xml.name() == "focalPoint") {
+              this->xmlParseCoordinate(xml,"focalPoint",focalPoint);
+            }
+            /* We've found email. */
+            if(xml.name() == "viewUp") {
+              this->xmlParseCoordinate(xml,"viewUp",viewUp);
+            }
+        }
+        /* ...and next... */
+        xml.readNext();
+    }
+    msvQVTKButtonsManager::instance()->addCameraBreakPoint(position,focalPoint,viewUp);
+    delete position;
+    delete focalPoint;
+    delete viewUp;
+
+}
+
+void mafViewVTKButtons::xmlParseCoordinate(QXmlStreamReader& xml, QString tagName, double xyz[3]) {
+
+    //QMap<QString, QString> person;
+    /* Let's check that we're really getting a person. */
+    if(xml.tokenType() != QXmlStreamReader::StartElement &&
+            xml.name() == "cameraBreakPoint") {
+        //return NULL;
+    }
+
+    /* Next element...
+    xml.readNext();
+    /*
+     * We're going to loop over the things because the order might change.
+     * We'll continue the loop until we hit an EndElement named tagName.
+     */
+    while(!(xml.tokenType() == QXmlStreamReader::EndElement &&
+            xml.name() == tagName)) {
+        if(xml.tokenType() == QXmlStreamReader::StartElement) {
+            /* We've found x. */
+            if(xml.name() == "x") {
+              xyz[0] = this->xmlReadDouble(xml);
+            }
+            /* We've found y. */
+            if(xml.name() == "y") {
+              xyz[1] = this->xmlReadDouble(xml);
+            }
+            /* We've found z. */
+            if(xml.name() == "z") {
+              xyz[2] = this->xmlReadDouble(xml);
+            }
+
+        }
+        /* ...and next... */
+        xml.readNext();
+    }
+}
+
+double mafViewVTKButtons::xmlReadDouble(QXmlStreamReader& xml)
+{
+  /* We need a start element, like <foo> */
+      if(xml.tokenType() != QXmlStreamReader::StartElement) {
+          return 0;
+      }
+      /* Let's read the name... */
+      //QString elementName = xml.name().toString();
+      /* ...go to the next. */
+      xml.readNext();
+      /*
+       * This elements needs to contain Characters so we know it's
+       * actually data, if it's not we'll leave.
+       */
+      if(xml.tokenType() != QXmlStreamReader::Characters) {
+          return 0;
+      }
+      /* Now we can add it to the map.*/
+      return xml.text().toString().toDouble();
+}

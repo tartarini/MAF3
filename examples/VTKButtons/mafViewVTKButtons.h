@@ -60,6 +60,14 @@ public Q_SLOTS:
     /// Set position on buttons on corner/center
     void on_positionComboBox_activated(int state);
 
+    void on_browseFileButton_clicked();
+    void on_animatePathButton_clicked();
+
+    void xmlParse(QString xmlFilePath);
+    void xmlParseCamraBreakPoint(QXmlStreamReader& xml);
+    void xmlParseCoordinate(QXmlStreamReader& xml, QString tagName, double xyz[3]);
+    double xmlReadDouble(QXmlStreamReader& xml);
+
 protected:
     /// Object destructor.
     /* virtual */ ~mafViewVTKButtons();
