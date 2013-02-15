@@ -812,7 +812,7 @@ void mafExternalDataCodecVolumeTest::convertVTKToLOD() {
     int *dimensions;
     v->GetDimensions(dimensions);
 
-    float *data = new float[dimensions[0] * dimensions[1]];
+    float *data = new float[dimensions[0] * dimensions[1] * dimensions[2]];
     vtkUnsignedIntArray *ar = vtkUnsignedIntArray::SafeDownCast(v->GetPointData()->GetScalars());
     qint64 index = 0;
 
@@ -822,11 +822,11 @@ void mafExternalDataCodecVolumeTest::convertVTKToLOD() {
         for (int z = 0; z < zDim; ++z) {
             for (int y = 0; y < yDim; ++y) {
                 for (int x = 0; x < xDim; ++x) {
-                    data[y * xDim + x] = ar->GetTuple1(index);
+                    data[z * yDim * xDim + y * xDim + x] = ar->GetTuple1(index);
                     ++index;
                 }
             }
-            file.write((const char*)data, sizeof(float) * xDim * yDim);
+            file.write((const char*)data, sizeof(float) * xDim * yDim * zDim);
         }
 
 
