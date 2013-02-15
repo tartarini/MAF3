@@ -16,6 +16,18 @@ if(NOT ${BUILD_SHARED_LIBS})
   ${foundation_libraries} 
   ${ZLIB_LIBRARY}
 )
+
+SET(VTK_LIBRARIES
+  vtkHybrid
+  vtkRendering
+  vtkVolumeRendering
+  vtkGraphics
+  vtkImaging
+  vtkIO
+  vtkFiltering
+  vtkCommon
+  QVTK
+)
 endif(NOT ${BUILD_SHARED_LIBS})
 
 SET(target_libraries
@@ -24,6 +36,7 @@ SET(target_libraries
   mafCore
   mafEventBus
   mafResources
+  ${VTK_LIBRARIES}
   mafPluginOutOfCore
   mafQA
   )

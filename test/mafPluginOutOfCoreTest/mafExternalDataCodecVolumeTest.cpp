@@ -20,6 +20,12 @@
 #include <mafExternalDataCodecVolume.h>
 #include <mafResourcesRegistration.h>
 
+#include <vtkAlgorithmOutput.h>
+#include <vtkImageData.h>
+#include <vtkDataSetReader.h>
+#include <vtkPointData.h>
+#include <vtkUnsignedIntArray.h>
+
 #ifdef WIN32
     #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
 #else
@@ -112,6 +118,8 @@ private:
 
     /// verify the volume data of the Float volume.
     void verifyFloatVolumeData();
+
+    void convertVTKToLOD();
 
 private:
     mafVolume *m_GrayVolume;                    ///< Test var (Gray, unsigned short).
@@ -781,6 +789,49 @@ void mafExternalDataCodecVolumeTest::verifyFloatVolumeData() {
          }
     }
     QVERIFY(dataEqual);
+}
+
+void mafExternalDataCodecVolumeTest::convertVTKToLOD() {
+    QString origin = "/Users/dannox/Desktop/2924_D/2924_D.1.vtk";
+    //read vtk
+    vtkDataSetReader *m_Reader = vtkDataSetReader::New();
+    m_Reader->SetFileName(origin.toAscii().data());
+    m_Reader->Update();
+
+    QString url = "/Users/dannox/Desktop/2924_D/2924_D.lod";
+    QFile file(url);
+
+    if (!file.open(QIODevice::WriteOnly)) {
+        qDebug() << ("Not able to open file " + url);
+        return;
+    }
+
+
+    vtkImageData *v = vtkImageData::SafeDownCast(m_Reader->GetOutput(0));
+    int levels = m_FloatVolume->levelNum();
+    int *dimensions;
+    v->GetDimensions(dimensions);
+
+    float *data = new float[dimensions[0] * dimensions[1]];
+    vtkUnsignedIntArray *ar = vtkUnsignedIntArray::SafeDownCast(v->GetPointData()->GetScalars());
+    qint64 index = 0;
+
+        qint64 xDim = dimensions[0] ;
+        qint64 yDim = dimensions[1] ;
+        qint64 zDim = dimensions[2] ;
+        for (int z = 0; z < zDim; ++z) {
+            for (int y = 0; y < yDim; ++y) {
+                for (int x = 0; x < xDim; ++x) {
+                    data[y * xDim + x] = ar->GetTuple1(index);
+                    ++index;
+                }
+            }
+            file.write((const char*)data, sizeof(float) * xDim * yDim);
+        }
+
+
+    delete []data;
+    file.close();
 }
 
 MAF_REGISTER_TEST(mafExternalDataCodecVolumeTest);
