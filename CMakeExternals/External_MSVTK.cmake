@@ -33,7 +33,7 @@ set(proj MSVTK)
     
     #SET(revision_tag 107ffad7)
 
-    SET(revision_tag 1f2526b1749551f45068682801415a57a8cf5b4a)
+    SET(revision_tag 5bc76a69fcdbeb3d233ff49fdca1e9a880c1a18c)
     IF(${proj}_REVISION_TAG)
       SET(revision_tag ${${proj}_REVISION_TAG})
     ENDIF()
@@ -58,6 +58,10 @@ set(proj MSVTK)
         -DQT_QMAKE_EXECUTABLE:FILEPATH=${QT_QMAKE_EXECUTABLE}
         -DMSVTK_USE_GIT_PROTOCOL:BOOL=OFF
         -DVTK_DIR=${VTK_DIR}
+        -DMSVTK_APP_ButtonClusters=OFF
+        -DMSVTK_APP_ECG=OFF
+        -DMSVTK_APP_GridViewer=OFF
+        -DMSVTK_APP_HAI=OFF
       DEPENDS ${proj_DEPENDENCIES}
      )
   SET(MSVTK_DIR ${CMAKE_CURRENT_BINARY_DIR}/${proj}-build)
