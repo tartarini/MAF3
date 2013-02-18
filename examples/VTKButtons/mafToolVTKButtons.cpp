@@ -59,9 +59,9 @@ msvQVTKButtonsInterface *mafToolVTKButtons::element() {
 }
 
 mafToolVTKButtons::~mafToolVTKButtons() {
-    if(m_Element) {
-        delete m_Element;
-    }
+//    if(m_Element) {
+//        delete m_Element;
+//    }
 }
 
 void mafToolVTKButtons::resetTool() {
