@@ -24,7 +24,7 @@
 #include <vtkImageData.h>
 #include <vtkDataSetReader.h>
 #include <vtkPointData.h>
-#include <vtkUnsignedIntArray.h>
+#include <vtkUnsignedCharArray.h>
 
 #ifdef WIN32
     #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
@@ -173,9 +173,7 @@ void mafExternalDataCodecVolumeTest::initTestCase() {
     m_CodecVolume = mafNEW(mafPluginOutOfCore::mafExternalDataCodecVolume);
 
     // initialize the volumes
-    initGrayVolume();
-    initRGBVolume();
-    initFloatVolume();
+    convertVTKToLOD();
 }
 
 void mafExternalDataCodecVolumeTest::cleanupTestCase() {
@@ -792,13 +790,16 @@ void mafExternalDataCodecVolumeTest::verifyFloatVolumeData() {
 }
 
 void mafExternalDataCodecVolumeTest::convertVTKToLOD() {
-    QString origin = "/Users/dannox/Desktop/2924_D/2924_D.1.vtk";
+
+
+
+    QString origin = "/Users/Alberto/Desktop/2924_D/2924_D.1.vtk";
     //read vtk
     vtkDataSetReader *m_Reader = vtkDataSetReader::New();
     m_Reader->SetFileName(origin.toAscii().data());
     m_Reader->Update();
 
-    QString url = "/Users/dannox/Desktop/2924_D/2924_D.lod";
+    QString url = "/Users/Alberto/Desktop/2924_D/2924_D.raw";
     QFile file(url);
 
     if (!file.open(QIODevice::WriteOnly)) {
@@ -808,12 +809,58 @@ void mafExternalDataCodecVolumeTest::convertVTKToLOD() {
 
 
     vtkImageData *v = vtkImageData::SafeDownCast(m_Reader->GetOutput(0));
-    int levels = m_FloatVolume->levelNum();
-    int *dimensions;
-    v->GetDimensions(dimensions);
 
-    float *data = new float[dimensions[0] * dimensions[1] * dimensions[2]];
-    vtkUnsignedIntArray *ar = vtkUnsignedIntArray::SafeDownCast(v->GetPointData()->GetScalars());
+    int dimensions[3];
+    double spacing[3];
+    v->GetDimensions(dimensions);
+    v->GetSpacing(spacing);
+
+//    // create the Float volume (float)
+//    m_FloatVolume        = mafNEW(mafPluginOutOfCore::mafVolume);
+//    m_DecodedFloatVolume = mafNEW(mafPluginOutOfCore::mafVolume);
+//    m_FloatFileName      = "/Users/Alberto/Desktop/2924_D/2924_D.lod";   // Meta-data file name
+
+
+//    m_FloatVolume->setDataType(mafPluginOutOfCore::mafVolFloat);
+//    m_FloatVolume->setBitsStored(32);
+//    m_FloatVolume->setBigEndian(false);
+//    m_FloatVolume->setComponentNum(1);
+//    m_FloatVolume->setOriginalDimensions(dimensions);
+//    float spacing2[3];
+//    spacing2[0] = spacing[0];
+//    spacing2[1] = spacing[1];
+//    spacing2[2] = spacing[2];
+//    m_FloatVolume->setSpacing(spacing2);
+//    m_FloatVolume->setDimensions(dimensions);
+//    m_FloatVolume->setLevelNum(4);                      // level number for 16M memory limit
+//    m_FloatVolume->setMemoryLimit(16 * 1024);           // 16M
+//    m_DecodedFloatVolume->setMemoryLimit(16 * 1024);
+//    m_FloatVolume->setFileName("2924_D.raw");    // External data file name
+
+//    mafMementoVolume *memento = (mafMementoVolume*)m_FloatVolume->createMemento();
+//    QVERIFY(memento);
+
+//    mafEventArgumentsList argList;
+//    argList.append(mafEventArgument(mafCore::mafMemento *, memento));
+//    argList.append(mafEventArgument(QString, m_FloatFileName));
+//    argList.append(mafEventArgument(QString, memento->encodeType()));
+//    mafEventBusManager::instance()->notifyEvent("maf.local.serialization.save", mafEventTypeLocal, &argList);
+
+//    // meta data file
+//    QVERIFY(QFile::exists(m_FloatFileName));
+//    QFileInfo metaFileInfo(m_FloatFileName);
+//    QVERIFY(metaFileInfo.size() > 0);
+
+//    // volume data file
+//    QVERIFY(QFile::exists(m_WorkingDirectory + m_FloatVolume->fileName()));
+//    QFileInfo dataFileInfo(m_WorkingDirectory + m_FloatVolume->fileName());
+//    QVERIFY(dataFileInfo.size() > 0);
+
+//    mafDEL(memento);
+    // no dataValue, use encodeFloatVolume to save the volume data directly
+
+    unsigned char *data = new unsigned char[dimensions[0] * dimensions[1] * dimensions[2]];
+    vtkUnsignedCharArray *ar = vtkUnsignedCharArray::SafeDownCast(v->GetPointData()->GetScalars());
     qint64 index = 0;
 
         qint64 xDim = dimensions[0] ;
@@ -826,9 +873,13 @@ void mafExternalDataCodecVolumeTest::convertVTKToLOD() {
                     ++index;
                 }
             }
-            file.write((const char*)data, sizeof(float) * xDim * yDim * zDim);
         }
-
+    qint64 retval = file.write((const char*)data, sizeof(unsigned char) * xDim * yDim * zDim);
+    file.flush();
+    if(retval == -1)
+    {
+      qDebug() << ("Not able to write on file!");
+    }
 
     delete []data;
     file.close();

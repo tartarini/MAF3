@@ -120,13 +120,13 @@ void * mafExternalDataCodecVolume::decode(int startPos[3], int dimensions[3], in
     qint64 bytesPerVoxel = volume->bytesPerVoxel();
     int *oriDims = volume->originalDimensions();
     int  originalDimensions[3] = { oriDims[0], oriDims[1], oriDims[2] };
-    for (int i = 1; i < level; ++i) {
-        fileOffset += originalDimensions[0] * originalDimensions[1] * originalDimensions[2] * bytesPerVoxel;
-        for(int j = 0; j < 3; ++j)
-            originalDimensions[j] = originalDimensions[j] >> 1;
-    }
-    // the start offset of the data in the file
-    fileOffset += startPos[2] * originalDimensions[1] * originalDimensions[0] * bytesPerVoxel;
+//    for (int i = 1; i < level; ++i) {
+//        fileOffset += originalDimensions[0] * originalDimensions[1] * originalDimensions[2] * bytesPerVoxel;
+//        for(int j = 0; j < 3; ++j)
+//            originalDimensions[j] = originalDimensions[j] >> 1;
+//    }
+//    // the start offset of the data in the file
+//    fileOffset += startPos[2] * originalDimensions[1] * originalDimensions[0] * bytesPerVoxel;
 
     // determine the slice number for the memory mapped file
     qint64 mappedSlices  = dimensions[2];
