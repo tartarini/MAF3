@@ -1,0 +1,16 @@
+#ExampleBaseNode {
+    background-color: rgb(0,0,0,0);
+    border-width: 0px;
+    border-style: none;
+    padding: 0px;
+}
+
+#ExampleBaseNode > QWidget {
+    border-color: rgb(255,0,0,200);
+    background-color: rgb(122,122,0,111);
+    border-width: 4px;
+    border-style: solid;
+    padding: 0px;
+    border-radius: 16px;
+/*    font: 10px;*/
+}

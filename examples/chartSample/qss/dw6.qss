@@ -1,0 +1,10 @@
+
+#ExampleBaseNode {
+    border-color: rgb(255,255,255,155);
+    background-color: rgb(122,122,0,111);
+    border-width: 2px;
+    border-style: solid;
+    padding: 2px;
+    font: 10px;
+    border-radius: 16px;
+}

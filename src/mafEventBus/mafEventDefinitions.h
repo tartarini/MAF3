@@ -104,7 +104,8 @@ typedef QHash<QString, mafNetworkConnector *> mafNetworkConnectorHash;
 ///< Enum that identify the mafEventType's type: Local or Remote.
 typedef enum {
     mafEventTypeLocal,
-    mafEventTypeRemote
+    mafEventTypeRemote,
+    mafEventTypeAll,
 } mafEventType;
 
 ///< Enum that identify the mafSignatureType's type: Signal or Callback.
@@ -129,6 +130,20 @@ typedef QList<mafEvent *> mafEventItemListType;
 
 /// map which represent list of function to be registered in the server, with parameters
 typedef QMap<QString, QList<QVariant::Type> >  mafRegisterMethodsMap;
+
+
+/// this struct will be usefull for tracing all the connection inside the event bus manager.
+typedef struct {
+    mafEventType type;
+    QObject *emitter;
+    QVector<QObject*> observers;
+    QString signalName;
+    QVector<QString> slotName;
+    QVector<QObject*> callers;
+    unsigned int counter;
+} mafEventBusConnectionInfo;
+
+typedef QHash<QString, mafEventBusConnectionInfo> mafEventBusConnectionInfoHash;
 
 } // namespace mafEventBus
 

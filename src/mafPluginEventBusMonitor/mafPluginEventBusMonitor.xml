@@ -1,0 +1,3 @@
+<plugin>
+    <plug classtype="mafPluginEventBusMonitor::mafViewEventBusMonitor" baseclass="mafResources::mafView" label="EventBusView"></plug>
+</plugin>

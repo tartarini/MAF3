@@ -1,0 +1,31 @@
+/* a little green 2 */
+
+#ExampleBaseNode  {
+    background-color: rgb(0,0,0,0);
+    border-width: 0px;
+    border-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+#ExampleBaseNode > QWidget {
+    border-color: #1a7b1e;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1a7b1e, stop: 1 #56d75a);
+    border-width: 3px;
+    border-style: solid;
+    padding: 4px;
+    font: 16px;
+    border-top-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    margin: 0px;
+}
+
+#ExampleBaseNode > QWidget QWidget {
+/*
+    background-color: rgb(0,0,0,0);
+    border-style: none;
+    padding: 0px;
+    margin: 0px;
+*/
+    font: 10px;
+}

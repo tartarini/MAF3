@@ -50,6 +50,7 @@ if(${MAF_PLUGIN_ZIP})
   ADD_SUBDIRECTORY(mafPluginZip)
 endif(${MAF_PLUGIN_ZIP})
 
+ADD_SUBDIRECTORY(mafPluginEventBusMonitor)
 #ADD_SUBDIRECTORY(mafPluginGimias)
 
 
