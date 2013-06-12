@@ -27,7 +27,7 @@ void mafNodeGraphicWidget::deleted(int result) {
 }
 
 mafNodeGraphicWidget::~mafNodeGraphicWidget() {
-    removeWigetFromConnectors();
+    removeWidgetFromConnectors();
     //deleteConnections();
     if (scene() != NULL) {
         this->scene()->removeItem(this);
@@ -161,7 +161,7 @@ void mafNodeGraphicWidget::deleteConnections() {
     }
 }
 
-void mafNodeGraphicWidget::removeWigetFromConnectors() {
+void mafNodeGraphicWidget::removeWidgetFromConnectors() {
     foreach (mafNodeConnectorGraphicWidget *c, connectors()) {
        c->removeWidget();
     }

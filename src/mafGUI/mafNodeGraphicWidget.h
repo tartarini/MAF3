@@ -77,13 +77,17 @@ public:
     /// retrieve the shape of the node.
     QPainterPath shape() const;
 
+    /// retrieve connectors
     QList<mafNodeConnectorGraphicWidget *> &connectors();
 
 public slots:
+        /// slot for deletion of the widget
         void deleted();
+
+        /// slot for deletion of the widget
         void deleted(int result);
 
-        //dw try overriding QWidget slot
+        /// overriding QWidget slot
         void hide();
 
 /*
@@ -92,29 +96,33 @@ void 	finished ( int result )
 void 	rejected ()
 */
 
-//dw666 orig:	QList<mafNodeConnectorGraphicWidget *> connectors;
-
 protected:
+    /// callback for context menu
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+    /// callback for change item
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
+    /// callback for mouse press
 	void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    /// callback for mouse move
 	void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    /// callback for mouse release
 	void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
 
+    /// callback for moving node if possible
 	bool shouldMoveNode(QGraphicsSceneMouseEvent *mouseEvent);
 	//const static QStringList shouldNotMoveTypes << "foo" << "bar";
 	//const static char* shouldNotMoveTypes = {};
 	const static char* shouldMoveOnClickTypes[];
 
-
+    /// callback for mouse over
 	void hoverMoveEvent ( QGraphicsSceneHoverEvent * event );
 
 
 	bool mControlResizeHandles;
 	bool mNoResize;
 
-	//dw 669: new
+    /// callback for resize
 	void resizeEvent ( QGraphicsSceneResizeEvent * event );
 
     QList<mafNodeConnectorGraphicWidget *> m_Connectors;
@@ -123,17 +131,18 @@ private:
     QMenu *mContextMenu;
 
 
-
+    /// update the position of he connectors
 	void updateConnectorsPos();
 
 	bool isMoving;
 
-	void removeWigetFromConnectors();
+    /// delete widget from Connector
+    void removeWidgetFromConnectors();
 
+    /// debug for paint
 	void debugPaint(QPainter *painter);
 
 	int mMaxRadius;
-
 
 };
 

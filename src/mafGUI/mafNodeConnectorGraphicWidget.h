@@ -32,38 +32,46 @@ Representation of the connector widget in the node widget.
 */
 class mafNodeConnectorGraphicWidget : public QGraphicsItem {
 public:        
-        enum { Type = UserType + 666 + 6 };
-        int type() const
-           { return Type;}
+    /// enum for the Type.
+    enum { Type = UserType + 1000 };
 
-        /// enum connector type
-        enum ConnectorType { In=1, Out=2, InOut=3 };
+    /// retrieve type.
+    int type() const;
 
-        /// enum connector alignment
-        enum ConnectorAlignment { None=0, Left=1, Right=2, Bottom=3, Top=4 };
+    /// enum connector type.
+    enum ConnectorType { In=1, Out=2, InOut=3 };
 
-        /// retrieve connector type
-        ConnectorType connectorType() const;
+    /// enum connector alignment.
+    enum ConnectorAlignment { None=0, Left=1, Right=2, Bottom=3, Top=4 };
 
-        /// set connector type
-        void setConnectorType(ConnectorType c);
+    /// retrieve connector type.
+    ConnectorType connectorType() const;
 
-        ConnectorAlignment connectorAlignment() const;
+    /// set connector type.
+    void setConnectorType(ConnectorType c);
 
-        void setConnectorAlignment(ConnectorAlignment alignment);
+    /// retrieve alignment of the connector.
+    ConnectorAlignment connectorAlignment() const;
 
-	bool singleConnection() const { return mSingleConnection; }
-	void setSingleConnection(bool singleConnection) {
-		mSingleConnection = singleConnection;
-	}
+    /// set the alignment of the connector.
+    void setConnectorAlignment(ConnectorAlignment alignment);
 
-	bool selfConnections() const { return mSelfConnections; }
-	void setSelfConnections(bool selfConnections) {
-		mSelfConnections = selfConnections;
-	}
+    /// check if the connection is single.
+    bool singleConnection() const;
 
+    /// set single connection active or not.
+    void setSingleConnection(bool singleConnection);
 
+    /// check if available self connection
+    bool selfConnections() const;
+
+    /// set self connection active or not.
+    void setSelfConnections(bool selfConnections);
+
+    /// object constructor.
     mafNodeConnectorGraphicWidget(mafNodeGraphicWidget *parent, QGraphicsScene *scene, /*QLabel*/QWidget* widget, ConnectorType  con = In, const ConnectorAlignment connectorAlignment = Left, const bool singleConnection = false, const bool disableWidgetOnConnection = false, const int radius = 7, const bool selfConnections = false);
+
+    /// object destructor.
     virtual ~mafNodeConnectorGraphicWidget();
 /*
     void addEdge(Edge *edge);
