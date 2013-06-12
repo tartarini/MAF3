@@ -44,7 +44,7 @@ class mafNodeConnectionGraphicWidget;
 Class name: mafNodeGraphicWidget
 Class which represent the basic class for node widget.
 */
-class mafNodeGraphicWidget : public QGraphicsProxyWidget {
+class MAFGUISHARED_EXPORT mafNodeGraphicWidget : public QGraphicsProxyWidget {
 	Q_OBJECT
 public:
     /// type enum

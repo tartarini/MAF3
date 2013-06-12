@@ -12,6 +12,7 @@
 #ifndef MAFNODECONNECTORGRAPHICWIDGET_H
 #define MAFNODECONNECTORGRAPHICWIDGET_H
 
+#include "mafGUIDefinitions.h"
 #include <QGraphicsItem>
 #include <QList>
 #include <QLabel>
@@ -30,7 +31,7 @@ class mafNodeConnectionGraphicWidget;
 Class Name: mafNodeConnectorGraphicWidget
 Representation of the connector widget in the node widget.
 */
-class mafNodeConnectorGraphicWidget : public QGraphicsItem {
+class MAFGUISHARED_EXPORT mafNodeConnectorGraphicWidget : public QGraphicsItem {
 public:        
     /// enum for the Type.
     enum { Type = UserType + 1000 };

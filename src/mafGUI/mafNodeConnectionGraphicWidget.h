@@ -12,6 +12,7 @@
 #ifndef MAFNODECONNECTIONGRAPHICWIDGET_H
 #define MAFNODECONNECTIONGRAPHICWIDGET_H
 
+#include "mafGUIDefinitions.h"
 #include "mafNodeGraphicWidget.h"
 #include "mafNodeConnectorGraphicWidget.h"
 
@@ -32,7 +33,7 @@ namespace mafGUI {
 Class Name:mafNodeConnectionGraphicWidget.
 Class that represents the widget for connect two node widgets.
 */
-class mafNodeConnectionGraphicWidget : public QGraphicsPathItem {
+class MAFGUISHARED_EXPORT mafNodeConnectionGraphicWidget : public QGraphicsPathItem {
 public:
 
     /// type enum
