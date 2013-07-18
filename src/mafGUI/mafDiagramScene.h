@@ -37,7 +37,7 @@ class mafNodeGraphicWidget;
 Class Name: mafDiagramScene
 Manager of the scene in which adding items.
 */
-class mafDiagramScene : public QGraphicsScene
+class MAFGUISHARED_EXPORT mafDiagramScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
