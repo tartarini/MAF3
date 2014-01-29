@@ -1,6 +1,6 @@
-execute_process(COMMAND ${GIT_EXECUTABLE} clone -b refactorExternalTools "git://github.com/b3c/QAT.git"
-			  WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-			  RESULT_VARIABLE RESULT)
+execute_process(COMMAND ${GIT_EXECUTABLE} clone -b master "git://github.com/b3c/QAT.git"
+			    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+			    RESULT_VARIABLE RESULT)
 
 SET(SOURCE_DIR ${MAF_SOURCE_DIR})
 SET(BINARY_DIR ${MAF_BINARY_DIR})
