@@ -1,5 +1,6 @@
 #execute_process(COMMAND ${GIT_EXECUTABLE} clone -b refactorExternalTools "git://github.com/dgiunchi/QAT.git"
-execute_process(COMMAND ${GIT_EXECUTABLE} clone -b refactorExternalTools "git://github.com/INSIGNEO/QAT.git"
+#execute_process(COMMAND ${GIT_EXECUTABLE} clone -b refactorExternalTools "git://github.com/INSIGNEO/QAT.git"
+execute_process(COMMAND ${GIT_EXECUTABLE} clone -b master "git://github.com/b3c/QAT.git"
 			  WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
 			  RESULT_VARIABLE RESULT)
 
