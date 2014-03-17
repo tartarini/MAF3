@@ -77,6 +77,7 @@ endif(CMAKE_GENERATOR STREQUAL "Unix Makefiles" OR CMAKE_GENERATOR STREQUAL "Min
 set(MAF_CORE ON)
 set(MAF_EVENT_BUS ON)
 set(MAF_QA ON)
+option(MAF_PLUGIN_EVENTBUSMONITOR "Build mafPluginEventBusMonitor module. mafCore and mafEventBus will be built anyway."  ON)
 option(MAF_TIME_SPACE "Build mafTimeSpace module. mafCore and mafEventBus will be built anyway."                          ON)
 option(MAF_SERIALIZATION "Build mafSerialization module. mafCore and mafEventBus will be built anyway."                   ON)
 option(MAF_RESOURCES "Build mafResources module. mafCore and mafEventBus will be built anyway."                           ON)
@@ -103,6 +104,11 @@ endif(${MAF_DATA_DIR})
   
 include(CMake/mafUtilities.cmake)
 ### set modules interdependencies
+if(MAF_PLUGIN_EVENTBUSMONITOR)
+  SET( MAF_RESOURCES ON )
+  mafDependentOption(MAF_RESOURCES "Build mafResources module." ON MAF_PLUGIN_EVENTBUSMONITOR ON)
+endif(MAF_PLUGIN_EVENTBUSMONITOR)
+
 if(MAF_PLUGINVTK)
   SET( MAF_RESOURCES ON ) 
   SET( VTK_MAF ON ) 
