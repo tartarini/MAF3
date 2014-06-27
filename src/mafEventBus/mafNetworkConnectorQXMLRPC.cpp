@@ -45,7 +45,7 @@ mafNetworkConnector *mafNetworkConnectorQXMLRPC::clone() {
     return copy;
 }
 
-void mafNetworkConnectorQXMLRPC::createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParameters ) {
+void mafNetworkConnectorQXMLRPC::createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParameters, QString path ) {
     bool result(false);
     if(m_Client == NULL) {
         m_Client = new xmlrpc::Client(NULL);
@@ -71,7 +71,7 @@ void mafNetworkConnectorQXMLRPC::createClient(const QString hostName, const unsi
         m_Client->setUser(advancedParameters->value("username").toString(), advancedParameters->value("password").toString());        
     }
     
-    m_Client->setHost( hostName, cm, port );
+    m_Client->setHost( hostName, cm, port , path);
 
 	// set advanced paramters
 	if ( advancedParameters && advancedParameters->count() ){

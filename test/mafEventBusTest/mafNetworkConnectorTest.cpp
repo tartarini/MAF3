@@ -27,7 +27,7 @@ public:
     testNetworkConnectorCustom();
 
     /// Create and initialize client
-    /*virtual*/ void createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParamters = NULL);
+    /*virtual*/ void createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParamters = NULL, QString path="/");
 
     /// Return the string variable initializated and updated from the data pipe.
     /*virtual*/ void createServer(const unsigned int port);
@@ -71,7 +71,7 @@ void testNetworkConnectorCustom::startListen() {
     m_ConnectorStatus = "Server Listening";
 }
 
-void testNetworkConnectorCustom::createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParamters) {
+void testNetworkConnectorCustom::createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParamters, QString path) {
     m_ConnectorStatus = "Client Created - Host: ";
     m_ConnectorStatus.append(hostName);
     m_ConnectorStatus.append(" Port: ");

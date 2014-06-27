@@ -36,7 +36,7 @@ public:
     /*virtual*/ ~mafNetworkConnectorQtSoap();
 
     /// create the unique instance of the client.
-    /*virtual*/ void createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParameters = NULL );
+    /*virtual*/ void createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParameters = NULL, QString path="/" );
 
 	/// Set advanced parameters
 	/* REQUIRE(advancedParameters->contains("Action")) 

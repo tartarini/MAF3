@@ -43,7 +43,7 @@ void mafNetworkConnectorQtSoap::registerServerMethod(QString methodName, QList<Q
    m_RegisterMethodsMap.insert(methodName, types);
 }
 
-void mafNetworkConnectorQtSoap::createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParameters ) {
+void mafNetworkConnectorQtSoap::createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParameters, QString path ) {
     if(m_Http == NULL) {
         m_Http = new QtSoapHttpTransport();
         QObject::connect(m_Http, SIGNAL(responseReady()), this, SLOT(retrieveRemoteResponse()));

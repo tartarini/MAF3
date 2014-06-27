@@ -40,7 +40,7 @@ public:
     /*virtual*/ ~mafNetworkConnectorQXMLRPC();
 
     /// create the unique instance of the client, proxyHost and proxyPort are optional.
-    /*virtual*/ void createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParameters = NULL);
+    /*virtual*/ void createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParameters = NULL, QString path="/");
 
     /// create the unique instance of the server.
     /*virtual*/ void createServer(const unsigned int port);
