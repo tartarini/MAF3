@@ -4,7 +4,7 @@
 
 set(proj CTK)
 
-#execute_process(COMMAND ${GIT_EXECUTABLE} remote show "http://github.com/commontk/CTK.git"
+#execute_process(COMMAND ${GIT_EXECUTABLE} remote show "https://github.com/commontk/CTK.git"
 #                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
 #                  RESULT_VARIABLE RESULT)
 #IF(RESULT)
@@ -45,7 +45,7 @@ set(proj CTK)
       ENDIF()
     ENDFOREACH()
     ExternalProject_Add(${proj}
-      GIT_REPOSITORY "http://github.com/commontk/CTK.git"
+      GIT_REPOSITORY "https://github.com/commontk/CTK.git"
       GIT_TAG ${revision_tag}
       DOWNLOAD_DIR "${ep_build_dir}/${proj}"
       #BINARY_DIR ${proj}-build
