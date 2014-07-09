@@ -22,10 +22,12 @@ mafGUIApplicationSettingsDialog::mafGUIApplicationSettingsDialog() {
     m_ContentsWidget->setViewMode(QListView::IconMode);
     m_ContentsWidget->setIconSize(QSize(96, 84));
     m_ContentsWidget->setMovement(QListView::Static);
-    m_ContentsWidget->setMaximumWidth(128);
+    m_ContentsWidget->setMaximumWidth(118);
     m_ContentsWidget->setMinimumWidth(84);
+	m_ContentsWidget->setMaximumHeight(300); 
+	m_ContentsWidget->setMinimumHeight(250);
     m_ContentsWidget->setSpacing(12);
-    m_ContentsWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+    m_ContentsWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     m_PagesWidget = new QStackedWidget;
     m_PagesWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
