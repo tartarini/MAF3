@@ -95,11 +95,11 @@ option(MAFTOOLS "Get MAFTools from git repository."                             
 set(valgrind_PATH)
 
 set(MAF_DATA_DIR)
-find_path(MAF_DATA_DIR "README.txt" PATHS "${MAF_SOURCE_DIR}/../maf3data")
+find_path(MAF_DATA_DIR "README.txt" PATHS "${MAF_SOURCE_DIR}/../MAF3Data")
 
 if(${MAF_DATA_DIR})
 else(${MAF_DATA_DIR})
-  set(MAF_DATA_DIR "${MAF_SOURCE_DIR}/../maf3data")
+  set(MAF_DATA_DIR "${MAF_SOURCE_DIR}/../MAF3Data")
 endif(${MAF_DATA_DIR})
   
 include(CMake/mafUtilities.cmake)

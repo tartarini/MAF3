@@ -1,5 +1,5 @@
 MACRO (mafDataTestDownload)
-  set(GIT_REPOSITORY "git://github.com/b3c/maf3data.git")
+  set(GIT_REPOSITORY "git://github.com/openmaf/MAF3Data.git")
 
   if(NOT EXISTS ${MAF_DATA_DIR})
   execute_process(
