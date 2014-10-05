@@ -83,7 +83,9 @@ void mafSerializationManager::setIgnoreModified(bool value) {
     m_IgnoreModified = value;
 }
 
-void mafSerializationManager::saveMemento(mafMemento *memento, const QString &url, const QString &encode_type) {
+void mafSerializationManager::saveMemento(mafMemento   *memento,
+		                                  const QString &url,
+		                                  const QString &encode_type) {
     REQUIRE(memento != NULL);
 
     QString codecType;
@@ -134,7 +136,8 @@ void mafSerializationManager::saveMemento(mafMemento *memento, const QString &ur
     mafDEL(ser);
 }
 
-mafMemento *mafSerializationManager::loadMemento(const QString &url, const QString &encode_type) {
+mafMemento *mafSerializationManager::loadMemento(const QString &url,
+		                                         const QString &encode_type) {
     QByteArray ba;
     if(!m_CodecHash.contains(encode_type)) {
         ba = mafTr("No codec associated with the '%1' encoding type.").arg(encode_type).toAscii();
