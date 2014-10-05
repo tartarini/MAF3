@@ -50,6 +50,20 @@ option(MAF_SUPERBUILD "Always keep ON superbuild" ON)
 mark_as_advanced(MAF_SUPERBUILD)
 mark_as_advanced(BUILD_SHARED_LIBS)
 
+##############################################################################
+# HDF5
+
+if (NOT DEFINED ENV{HDF5_ROOT})
+  set(ENV{HDF5_ROOT} "$ENV{HDF5_DIR}")
+endif()
+
+find_package(HDF5)
+
+# TODO remove DaT
+message("---------------->$LINK_LIBS=${LINK_LIBS} HDF5_INCLUDE_DIR=${HDF5_INCLUDE_DIR}" )
+##############################################################################
+
+
 FIND_PACKAGE(Git)
 if(NOT GIT_FOUND)
   message(FATAL_ERROR "error: Install Git and try to re-configure")
