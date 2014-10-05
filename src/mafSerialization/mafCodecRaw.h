@@ -20,7 +20,7 @@ namespace mafSerialization {
 /**
  Class name: mafCodecRaw
  This is the base class for the MAF3 to encode/decode maf objects
- into a raww memory dump.
+ into a raw memory dump.
  @sa mafCodec, mafSerializationManager
  */
 class MAFSERIALIZATIONSHARED_EXPORT mafCodecRaw : public mafCodec {
