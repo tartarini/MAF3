@@ -5,7 +5,7 @@
  *  Created by Paolo Quadrani on 27/03/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
- *  See Licence at: http://tiny.cc/QXJ4D
+ *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
@@ -21,7 +21,7 @@ namespace mafSerialization {
     
 /**
  Class name: mafSerializationManager
- This singletone provides the facade class for the object serialization mechanism.
+ This singleton provides the facade class for the object serialization mechanism.
  It provides also the creation of 3 new IDs:
  - maf.local.serialization.load
  - maf.local.serialization.save : topic used for save the memento of a serializable object which can be serialized by a codec (XML, RAW ...) in an external file. Generally with a Hierarchical data system all the mementoes will be serialized in a unique file.
