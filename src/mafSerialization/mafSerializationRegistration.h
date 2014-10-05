@@ -26,7 +26,8 @@ namespace mafSerialization {
 
 /**
  Class name: mafSerializationRegistration
- This class allows object rigisteration for all the classes present in mafSerialization module.
+ This class allows object registration for all the classes present in
+ mafSerialization module.
  */
 class mafSerializationRegistration {
     public:

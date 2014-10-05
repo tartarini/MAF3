@@ -99,7 +99,7 @@ void mafSerializationManager::saveMemento(mafMemento   *memento,
     }
     
     // Pass the memento to the codec and ask him to encode the given data.
-    mafCodec *codec = (mafCodec *)mafNEWFromString(codecType);
+    mafCodec *codec = (mafCodec *) mafNEWFromString(codecType);
 
     // Check the protocol of the given 'url' and create the corresponding mafSerialize class
     QUrl u(url);
@@ -118,15 +118,18 @@ void mafSerializationManager::saveMemento(mafMemento   *memento,
     QString serializer_type = m_SerializerHash[s];
 
     // Create the instance of correct serializer
-    mafSerializer *ser = (mafSerializer *)mafNEWFromString(serializer_type);
+    mafSerializer *ser = (mafSerializer *) mafNEWFromString(serializer_type);
+
     // Give it the data URL
     ser->setDataURL(u.toString());
-    // ... and open the output connection.
+
+    // Open the output connection.
     ser->openDevice(mafSerializerOpenModeOut);
 
     // Give the device to the codec
     codec->setDevice(ser->ioDevice());
-    // ... and encode data into the stream
+
+    // Encode data into the stream
     codec->encode(memento);
 
     // Finally close the connection.
