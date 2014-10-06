@@ -13,7 +13,8 @@
 
 using namespace mafSerialization;
 
-mafSerializerFileSystem::mafSerializerFileSystem(const QString code_location) : mafSerializer(code_location), m_File(NULL) {
+mafSerializerFileSystem::mafSerializerFileSystem(const QString code_location)
+   : mafSerializer(code_location), m_File(NULL) {
 }
 
 mafSerializerFileSystem::~mafSerializerFileSystem() {
@@ -21,7 +22,7 @@ mafSerializerFileSystem::~mafSerializerFileSystem() {
 }
 
 void mafSerializerFileSystem::openDevice(mafSerializerOpenMode mode) {
-    // Check the existance of the IO device
+    // Check the existence of the IO device
     if(m_IODevice == NULL) {
         m_IODevice = new QFile();
         m_File = (QFile *)m_IODevice;
@@ -31,7 +32,8 @@ void mafSerializerFileSystem::openDevice(mafSerializerOpenMode mode) {
     m_File->setFileName(f);
 
     // Create the connection with the media; in this case open the file on disk.
-    QIODevice::OpenMode open_mode = (mode == mafSerializerOpenModeIn) ? QIODevice::ReadOnly : QIODevice::WriteOnly /*QIODevice::Append*/;
+    QIODevice::OpenMode open_mode = (mode == mafSerializerOpenModeIn)
+    		? QIODevice::ReadOnly : QIODevice::WriteOnly /*QIODevice::Append*/;
     bool file_opened = m_File->open(open_mode);
 
     if(!file_opened) {

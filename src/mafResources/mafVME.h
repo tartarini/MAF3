@@ -29,7 +29,8 @@ class mafInteractor;
 
 /**
 Class name: mafVME
-This class defines the base class for the VMEs in MAF3. The VME is also observer for the TIME_SET signal to be
+This class defines the base class for the VMEs in MAF3. The VME is also
+observer for the TIME_SET signal to be
 notified when new timestamp has been assigned to the system.
 */
 class MAFRESOURCESSHARED_EXPORT mafVME : public mafResource {

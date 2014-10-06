@@ -19,10 +19,12 @@ namespace mafSerialization {
 
 /**
  * Class name: mafCodecVolume
- * Codec to Encode/Decode maf volume objects into a raw memory dump using multiresolution.
- * The meta information of the raw volume is stored in its media device, and the data item is the file
- * name. The raw volume stores its data from the highest resolution to the lowest resolution in one large file.
- * In the decode, the memory limit is used to determine which level of the volume data to be loaded.
+ * Codec to Encode/Decode maf volume objects into a raw memory dump using
+ * multiresolution. The meta information of the raw volume is stored in
+ * its media device, and the data item is the file name. The raw volume
+ * stores its data from the highest resolution to the lowest resolution in
+ * one large file. In the decode, the memory limit is used to determine
+ * which level of the volume data to be loaded.
  * @sa mafCodec, mafSerializationManager
  */
 class MAFSERIALIZATIONSHARED_EXPORT mafCodecVolume : public mafCodecRaw {

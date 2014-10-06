@@ -25,7 +25,8 @@ class mafVME;
 /**
 Class name: mafMementoVME
 This class defines the MAF3 memento class for storing a mafVME state.
- This is used to restore a previous stored VME state (undo mechanism or serialization porpouses).
+ This is used to restore a previous stored VME state (undo mechanism or
+ serialization purposes).
  @sa mafCore::mafMemento mafResources::mafMementoResource
 */
 class MAFRESOURCESSHARED_EXPORT mafMementoVME : public mafCore::mafMemento {
@@ -37,7 +38,8 @@ public:
     /// object constructor.
     mafMementoVME(const QString code_location = "");
     /// object overloaded constructor.
-    mafMementoVME(const mafCore::mafObject *obj, bool binary = true, const QString code_location = "");
+    mafMementoVME(const mafCore::mafObject *obj, bool binary = true,
+    		            const QString code_location = "");
 
 protected:
     /// Object destructor.
