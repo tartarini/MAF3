@@ -20,7 +20,8 @@ namespace mafSerialization {
 
 /**
  Class name: mafSerializerFileSystem
- This class is responsible to write input DataStream into a file based on local filesystem.
+ This class is responsible to write input DataStream into a file based on local
+ filesystem.
  @sa mafSerializer
  */
 class MAFSERIALIZATIONSHARED_EXPORT mafSerializerFileSystem : public mafSerializer {

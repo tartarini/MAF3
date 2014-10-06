@@ -32,8 +32,9 @@ namespace mafSerialization {
 class mafSerializationRegistration {
     public:
     /// Register all the concrete objects that can be instantiated by the mafObjectFactory.
-    /** This registration is needed to instantiate object by using the mafNEWFromString macro present in objectFactory
-    which needs as input the object type to instantiate as string.*/
+    /** This registration is needed to instantiate object by using the
+     * mafNEWFromString macro present in objectFactory
+     * which needs as input the object type to instantiate as string.*/
     MAFSERIALIZATIONSHARED_EXPORT static void registerSerializationObjects();
 
     /// Unregister all the concrete objects from mafObjectFactory.
@@ -41,10 +42,12 @@ class mafSerializationRegistration {
 };
 
 extern "C" {
-    /// Initialize the module by instantiating the singletons and register all the classes with the mafObjectFactory.
+    /// Initialize the module by instantiating the singletons and register
+    /// all the classes with the mafObjectFactory.
     MAFSERIALIZATIONSHARED_EXPORT void initializeModule();
 
-    /// Shutdown the module by shuting down the singletons and un-register all the classes from the mafObjectFactory.
+    /// Shutdown the module by shuting down the singletons and un-register
+    /// all the classes from the mafObjectFactory.
     MAFSERIALIZATIONSHARED_EXPORT void shutdownModule();
 }
 
