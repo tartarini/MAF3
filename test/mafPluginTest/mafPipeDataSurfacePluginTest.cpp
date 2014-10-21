@@ -14,7 +14,7 @@
 using namespace mafPluginTest;
 
 mafPipeDataSurfacePluginTest::mafPipeDataSurfacePluginTest(const QString code_location) : mafPipeData(code_location) {
-    QByteArray ba = mafTr("plugin pipeline created!!").toAscii();
+    QByteArray ba = mafTr("plugin pipeline created!!").toLatin1();
     qDebug("%s", ba.data());
 }
 
@@ -22,7 +22,7 @@ mafPipeDataSurfacePluginTest::~mafPipeDataSurfacePluginTest() {
 }
 
 void mafPipeDataSurfacePluginTest::updatePipe(double t) {
-    QByteArray ba = mafTr("plugin executed at time %1!!").arg(t).toAscii();
+    QByteArray ba = mafTr("plugin executed at time %1!!").arg(t).toLatin1();
     qDebug("%s", ba.data());
     Superclass::updatePipe(t);
 }

@@ -25,6 +25,7 @@ namespace mafPluginQtTest {
 class MAFPLUGINQTTESTSHARED_EXPORT mafPluginRegistrator : public QObject, mafResources::mafPluginQtInterface {
     Q_OBJECT
     Q_INTERFACES(mafResources::mafPluginQtInterface)
+	Q_PLUGIN_METADATA(IID "mafPluginQtTest" FILE "mafPluginQtTest.json")
     
 public:
     /// Object destructor

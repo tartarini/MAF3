@@ -2,15 +2,14 @@
  *  mafObjectBaseTest.cpp
  *  mafCoreTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafObjectBase.h>
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
@@ -34,46 +33,13 @@ inline bool testObjectBaseCustom::customBool() const {
     return m_CustomVar;
 }
 
-/**
- Class name: mafObjectBaseTest
- This class implements the test suite for mafObjectBase.
- */
+void mafObjectBaseTest::initTestCase() {
+    m_ObjTestVar = mafNEW(mafCore::mafObjectBase);
+}
 
-//! <title>
-//mafObjectBase
-//! </title>
-//! <description>
-//mafObjectBase defines the MAF3 base object.
-//Its main function is to provide a unique ID (mafId) to each mafObject and to add the object to the mafObjectRegistry.
-//! </description>
-
-class mafObjectBaseTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_ObjTestVar = mafNEW(mafCore::mafObjectBase);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        m_ObjTestVar->release();
-    }
-
-    /// Test the ID generation for the mafObjectBase
-    void objectIdTest();
-    /// Test the creation of the objectHash.
-//    void createObjectHashTest();
-    /// Test the isEqual method.
-    void isEqualTest();
-
-    /// Modified test
-    void modifiedTest();
-
-private:
-    mafObjectBase *m_ObjTestVar; ///< Test variable
-};
+void mafObjectBaseTest::cleanupTestCase() {
+    m_ObjTestVar->release();
+}
 
 void mafObjectBaseTest::objectIdTest() {
     //! <snippet>
@@ -121,6 +87,5 @@ void mafObjectBaseTest::modifiedTest() {
     m_ObjTestVar->description();
 }
 
-MAF_REGISTER_TEST(mafObjectBaseTest);
 #include "mafObjectBaseTest.moc"
 

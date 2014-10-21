@@ -106,7 +106,7 @@ void mafVME::setDataPipe(const QString &pipe_type) {
     if ( new_pipe ) {
         setDataPipe(new_pipe);
     } else {
-        QByteArray ba = mafTr("%1 does not represent a type of mafPipeData.").arg(pipe_type).toAscii();
+        QByteArray ba = mafTr("%1 does not represent a type of mafPipeData.").arg(pipe_type).toLatin1();
         qWarning("%s", ba.data());
     }
     mafDEL(obj);

@@ -9,8 +9,7 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafMonitorMemory.h>
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
@@ -40,38 +39,11 @@ void testMonitorMemoryCustom::update() {
     m_FreeSpace = 300;
 }
 
-//------------------------------------------------------------------------------------------
+void mafMonitorMemoryTest::initTestCase() {
+}
 
-
-//! <title>
-//mafMonitorMemoryTest
-//! </title>
-//! <description>
-//mafMonitorMemoryTest define a modality of visiting object checking the hash code
-//giving in input from the constructor of the visitor
-//! </description>
-
-/**
- Class name: mafMonitorMemoryTest
- This class implements the test suite for mafMonitorMemory.
- */
-class mafMonitorMemoryTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-    }
-
-    /// register new object in factory test case.
-    void memoryTest();
-
-private:
-};
+void mafMonitorMemoryTest::cleanupTestCase() {
+}
 
 void mafMonitorMemoryTest::memoryTest() {
     //! <snippet>
@@ -89,7 +61,6 @@ void mafMonitorMemoryTest::memoryTest() {
     mafDEL(monitor);
 }
 
-MAF_REGISTER_TEST(mafMonitorMemoryTest);
 #include "mafMonitorMemoryTest.moc"
 
 

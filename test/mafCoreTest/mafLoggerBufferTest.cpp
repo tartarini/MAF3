@@ -9,62 +9,21 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafLoggerBuffer.h>
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
-/**
- Class name: mafLoggerBufferTest
- This class implements the test suite for mafLoggerBuffer.
- */
+void mafLoggerBufferTest::initTestCase() {
+    //! <snippet>
+    m_Logger = mafNEW(mafCore::mafLoggerBuffer);
+    //! </snippet>
+}
 
-//! <title>
-//mafLoggerBuffer
-//! </title>
-//! <description>
-//mafLoggerBuffer defines the MAF3 logging class that will store messages into a buffer that
-//can be queried later or linked to a UI Widget. It defines the variable QString m_BufferLog
-//containing all the logged messages for a specific session.
-//It also redifine "virtual void loggedMessage(QtMsgType type, QString &msg)" used to log
-// the given message to the buffer.
-//! </description>
-
-class mafLoggerBufferTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        //! <snippet>
-        m_Logger = mafNEW(mafCore::mafLoggerBuffer);
-        //! </snippet>
-    }
-
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        //! <snippet>
-        mafDEL(m_Logger);
-        //! </snippet>
-    }
-
-    /// create new object and check that is not NULL test case.
-    void mafLoggerBufferConstructorTest();
-
-    /// log a string into the buffer
-    void logMessageTest();
-
-    /// test for the clearBuffer method.
-    void clearLogHistoryTest();
-
-    /// test equal.
-    void equalTest();
-
-private:
-    mafLoggerBuffer *m_Logger; ///< Testing variable.
-    mafLogger *m_DefaultLogger;
-};
+void mafLoggerBufferTest::cleanupTestCase() {
+    //! <snippet>
+    mafDEL(m_Logger);
+    //! </snippet>
+}
 
 void mafLoggerBufferTest::mafLoggerBufferConstructorTest() {
     QVERIFY(m_Logger != NULL);
@@ -144,6 +103,5 @@ void mafLoggerBufferTest::equalTest() {
     mafDEL(logger);
 }
 
-MAF_REGISTER_TEST(mafLoggerBufferTest);
 #include "mafLoggerBufferTest.moc"
 

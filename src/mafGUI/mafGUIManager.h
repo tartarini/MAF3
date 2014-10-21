@@ -14,13 +14,12 @@
 
 // Includes list
 #include "mafGUIDefinitions.h"
-#include <QtGui>
 #include <QDomDocument>
 #include <mafLogic.h>
 
 // Class forwarding list
 class mafOperationWidget;
-
+class QMainWindow;
 namespace mafGUI {
 
 // Class forwarding list

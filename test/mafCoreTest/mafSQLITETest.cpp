@@ -2,60 +2,25 @@
  *  mafSQLITETest.cpp
  *  mafCoreTest
  *
- *  Created by Paolo Quadrani on 07/10/11.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 08/07/14.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafSQLITE.h>
-#include <QSqlDatabase>
-#include <QSqlQuery>
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
-/**
- Class name: mafSQLITETest
- This class implements the test suite for mafSQLITE.
- */
+void mafSQLITETest::initTestCase() {
+    initializeDB();
+    m_SQLITE = NULL;
+}
 
-//! <title>
-// mafSQLITE
-//! </title>
-//! <description>
-// mafSQLITE defines the MAF3 SQLITE class that will interface SQLITE DB calls to manage the given table on a given DB.
-//! </description>
-
-class mafSQLITETest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        initializeDB();
-        m_SQLITE = NULL;
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_SQLITE);
-    }
-
-    /// create new object and check that is not NULL test case.
-    void mafSQLITEConstructorTest();
-
-    /// log a string into the log file.
-    void fillTableTest();
-
-private:
-    /// Create a test DB with a table inside.
-    void initializeDB();
-
-    mafSQLITE *m_SQLITE; ///< Test variable
-    QString m_DBName; ///< Test variable
-};
+void mafSQLITETest::cleanupTestCase() {
+    mafDEL(m_SQLITE);
+}
 
 void mafSQLITETest::initializeDB() {
     m_DBName = QDir::tempPath();
@@ -117,5 +82,4 @@ void mafSQLITETest::fillTableTest() {
     
 }
 
-MAF_REGISTER_TEST(mafSQLITETest);
 #include "mafSQLITETest.moc"

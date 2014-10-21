@@ -12,7 +12,7 @@
 #ifndef MAFMAINWINDOW_H
 #define MAFMAINWINDOW_H
 
-#include <QtGui>
+
 #include <QMainWindow>
 
 #include "mafGUIManager.h"

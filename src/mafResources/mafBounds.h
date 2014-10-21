@@ -26,6 +26,7 @@ namespace mafResources {
  This class defines the 3D bounds used by VMEs.
  */
 class MAFRESOURCESSHARED_EXPORT mafBounds : public mafCore::mafReferenceCounted {
+	Q_OBJECT
     /// typedef macro.
     mafSuperclassMacro(mafCore::mafReferenceCounted);
 
@@ -94,10 +95,10 @@ public:
      void center(mafPoint &p);
 
     /// Transform bounds applying the pose matrix.
-    void transformBounds(mafMatrix *matrix);
+    void transformBounds(mafMatrix4x4 *matrix);
     
     /// return the transformation matrix
-    mafMatrix *transformation() const;
+    mafMatrix4x4 *transformation() const;
     
     /// dump the description of the object (information, attributes, variables...)
     /*virtual*/ void description() const;
@@ -113,7 +114,7 @@ private:
     double m_XMax; ///< Maximum X value
     double m_YMax; ///< Maximum Y value
     double m_ZMax; ///< Maximum Z value
-    mafMatrix *m_TransformationMatrix; /// current transformation matrix
+    mafMatrix4x4 *m_TransformationMatrix; /// current transformation matrix
 };
 
 
@@ -146,7 +147,7 @@ inline double mafBounds::zMax() const {
 }
 
     
-inline mafMatrix *mafBounds::transformation() const {
+inline mafMatrix4x4 *mafBounds::transformation() const {
     return m_TransformationMatrix;
 }
     

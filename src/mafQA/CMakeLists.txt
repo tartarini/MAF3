@@ -13,7 +13,7 @@
 ## Init Project
 ## #################################################################
 
-mafMacroInitProject(0)
+mafMacroInitProject("library")
 
 
 ## #################################################################
@@ -46,4 +46,4 @@ mafMacroWrapBuild()
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject(0)
+mafMacroBuildProject("test") #include Test

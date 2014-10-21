@@ -5,8 +5,7 @@
 # 
 
 SET(foundation_libraries 
-  qxmlrpc
-  QtSOAP
+
 )
 
 SET(target_libraries

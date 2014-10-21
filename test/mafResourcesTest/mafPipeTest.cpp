@@ -2,19 +2,14 @@
  *  mafPipeTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafResourcesRegistration.h>
-#include <mafPipe.h>
-#include <mafVME.h>
-#include <mafDataSet.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -62,39 +57,16 @@ void testPipeCustom::updatePipe(double t) {
 }
 //------------------------------------------------------------------------------------------
 
-/**
- Class name: mafPipeTest
- This class implements the test suite for mafPipe.
- */
-class mafPipeTest : public QObject {
-    Q_OBJECT
+void mafPipeTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    mafResourcesRegistration::registerResourcesObjects();
+    m_Pipe = mafNEW(testPipeCustom);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        mafResourcesRegistration::registerResourcesObjects();
-        m_Pipe = mafNEW(testPipeCustom);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_Pipe);
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafPipe allocation test case.
-    void mafPipeAllocationTest();
-    /// Test the creation and update methods.
-    void mafPipeCreationAndUpdateTest();
-    /// Test the input management of the mafPipe
-    void inputManagementTest();
-    /// Test the parameter initialization through hash
-    void setParameterHashTest();
-
-private:
-    testPipeCustom *m_Pipe; ///< Test var.
-};
+void mafPipeTest::cleanupTestCase() {
+    mafDEL(m_Pipe);
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafPipeTest::mafPipeAllocationTest() {
     QVERIFY(m_Pipe != NULL);
@@ -167,5 +139,4 @@ void mafPipeTest::setParameterHashTest() {
     QVERIFY(res == val.toString());
 }
 
-MAF_REGISTER_TEST(mafPipeTest);
 #include "mafPipeTest.moc"

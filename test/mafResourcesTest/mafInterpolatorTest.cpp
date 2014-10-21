@@ -2,17 +2,14 @@
  *  mafInterpolatorTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafResourcesRegistration.h>
-#include <mafCoreSingletons.h>
-#include <mafInterpolator.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -53,35 +50,15 @@ mafDataSet *testInterpolatorCustom::itemAt(mafDataSetMap *collection, double t) 
 //------------------------------------------------------------------------------------------
 
 
-/**
- Class name: mafInterpolatorTest
- This class implements the test suite for mafInterpolator.
- */
-class mafInterpolatorTest: public QObject {
-    Q_OBJECT
+void mafInterpolatorTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    m_Interpolator = mafNEW(testInterpolatorCustom);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        m_Interpolator = mafNEW(testInterpolatorCustom);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_Interpolator);
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafInterpolatorBefore allocation test case.
-    void mafInterpolatorAllocationTest();
-    /// Test the interpolation strategy.
-    void mafInterpolationStrategyTest();
-
-private:
-    testInterpolatorCustom *m_Interpolator; ///< Test var.
-    mafDataSetMap m_ItemMap; ///< Test data collection.
-};
+void mafInterpolatorTest::cleanupTestCase() {
+    mafDEL(m_Interpolator);
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafInterpolatorTest::mafInterpolatorAllocationTest() {
     QVERIFY(m_Interpolator != NULL);
@@ -94,5 +71,4 @@ void mafInterpolatorTest::mafInterpolationStrategyTest() {
     QCOMPARE(m_Interpolator->interpolatedItem(), res);
 }
 
-MAF_REGISTER_TEST(mafInterpolatorTest);
 #include "mafInterpolatorTest.moc"

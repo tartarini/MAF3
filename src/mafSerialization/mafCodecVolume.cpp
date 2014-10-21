@@ -738,7 +738,7 @@ void mafCodecVolume::encode(QString url, void *data, int dataType, int component
     // open file
     QFile file(url);
     if (!file.open(QIODevice::WriteOnly)) {
-        QByteArray ba = mafTr("Not able to open file '%1'").arg(url).toAscii();
+        QByteArray ba = mafTr("Not able to open file '%1'").arg(url).toLatin1();
         qCritical("%s", ba.data());
         return;
     }
@@ -764,7 +764,7 @@ void * mafCodecVolume::decode(QString url, int dataType, int componentNum, int o
     // open file
     QFile file(url);
     if (!file.open(QIODevice::ReadOnly)) {
-        QByteArray ba = mafTr("Not able to open file '%1'").arg(url).toAscii();
+        QByteArray ba = mafTr("Not able to open file '%1'").arg(url).toLatin1();
         qCritical("%s", ba.data());
         return 0;
     } 

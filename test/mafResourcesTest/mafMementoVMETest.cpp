@@ -2,25 +2,16 @@
  *  mafMementoVMETest.cpp
  *  mafResourcesTest
  *
- *  Created by Roberto Mucci on 24/05/10.
+ *  Created by Roberto Mucci - Daniele Giunchi on 24/05/10.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafResourcesRegistration.h>
-#include <mafDataSet.h>
-#include "mafPipeData.h"
-#include <mafProxy.h>
-#include <mafExternalDataCodec.h>
-#include <mafProxy.h>
-#include <mafProxyInterface.h>
-#include <mafVME.h>
+#include "mafResourcesTestList.h"
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(WIN32)
 #define SERIALIZATION_LIBRARY_NAME "mafSerialization.dll"
 #else
 #ifdef __APPLE__
@@ -35,14 +26,7 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
-//! <title>
-//mafMementoVME
-//! </title>
-//! <description>
-//mafMementoVME aims to store a mafVME state implementing a sort
-//of undo mechanism for the object's state. This is used to restore
-// a previous stored VME state (undo mechanism or serialization porpouses).
-//! </description>
+
 
 //------------------------------------------------------------------------------------------
 
@@ -104,9 +88,9 @@ void testExtDataCodecCustom::decode(const char *input_string, bool binary) {
 char *testExtDataCodecCustom::encode(bool binary) {
     Q_UNUSED(binary);
     mafProxy<QString> *dataSet = mafProxyPointerTypeCast(QString, this->externalData());
-    QString dataString = dataSet->externalData()->toAscii();
+    QString dataString = dataSet->externalData()->toLatin1();
     char *output_string = new char[dataString.size()+1];
-    QByteArray ba = dataString.toAscii();
+    QByteArray ba = dataString.toLatin1();
     memcpy(output_string, ba.data(),dataString.size()+1);
     return output_string;
 }
@@ -146,42 +130,23 @@ void testDataPipe::updatePipe(double t) {
 
 //------------------------------------------------------------------------------------------
 
-/**
- Class name: mafMementoVMETest
- This class implements the test suite for mafMementoVME.
- */
-class mafMementoVMETest : public QObject {
-    Q_OBJECT
+void mafMementoVMETest::initTestCase() {
+    // Create before the instance of the Serialization manager, which will register signals.
+    bool res(false);
+    res = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
+    QVERIFY(res);
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        // Create before the instance of the Serialization manager, which will register signals.
-        bool res(false);
-        res = mafInitializeModule(SERIALIZATION_LIBRARY_NAME);
-        QVERIFY(res);
+    mafMessageHandler::instance()->installMessageHandler();
+    mafResourcesRegistration::registerResourcesObjects();
+    mafRegisterObject(testExtDataCodecCustom);
+    m_VME = mafNEW(mafResources::mafVME);
+}
 
-        mafMessageHandler::instance()->installMessageHandler();
-        mafResourcesRegistration::registerResourcesObjects();
-        mafRegisterObject(testExtDataCodecCustom);
-        m_VME = mafNEW(mafResources::mafVME);
-    }
 
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_VME);
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafMementoVME allocation test case.
-    void mafMementoVMEDefaultAllocationTest();
-    /// mafMementoVME allocation test case.
-    void mafMementoVMECustomAllocationTest();
-
-private:
-    mafVME *m_VME; ///< Test var.
-    mafDataSet *m_DataSet; 
-};
+void mafMementoVMETest::cleanupTestCase() {
+    mafDEL(m_VME);
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafMementoVMETest::mafMementoVMEDefaultAllocationTest() {
     QVERIFY(m_VME != NULL);
@@ -199,9 +164,9 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
     mafDataSet *dataSet = mafNEW(mafResources::mafDataSet);
     dataSet->setDataValue(&container);
 
-    mafMatrix *matrix = new mafMatrix();
-    matrix->setIdentity();
-    matrix->setElement(0,0,3);
+    mafMatrix4x4 *matrix = new mafMatrix4x4();
+    matrix->setToIdentity();
+    (*matrix)(0,0) = 3.;
 
     dataSet->setPoseMatrix(matrix);
 
@@ -213,9 +178,9 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
     mafDataSet *dataSet2 = mafNEW(mafResources::mafDataSet);
     dataSet2->setDataValue(&container2);
 
-    mafMatrix *matrix2 = new mafMatrix();
-    matrix2->setIdentity();
-    matrix2->setElement(1,0,5);
+    mafMatrix4x4 *matrix2 = new mafMatrix4x4();
+    matrix2->setToIdentity();
+    (*matrix2)(1,0) = 5;
 
     dataSet2->setPoseMatrix(matrix2);
     
@@ -265,5 +230,5 @@ void mafMementoVMETest::mafMementoVMECustomAllocationTest() {
     mafDEL(memento);
 }
 
-MAF_REGISTER_TEST(mafMementoVMETest);
+
 #include "mafMementoVMETest.moc"

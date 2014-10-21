@@ -52,7 +52,7 @@
         } \
     }
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(WIN32)
 #define mafDELThread(thread_pointer) \
     if(thread_pointer != NULL) { \
         thread_pointer->exit(0); \

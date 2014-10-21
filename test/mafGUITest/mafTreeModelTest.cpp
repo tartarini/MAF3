@@ -9,52 +9,21 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-
-#include <mafResourcesDefinitions.h>
-#include <mafVME.h>
-
-#include <mafGUIRegistration.h>
-#include <QtGui>
-#include <mafTreeModel.h>
+#include "mafGUITestList.h"
 
 using namespace mafCore;
 using namespace mafGUI;
 using namespace mafResources;
 
-/**
- Class name: mafTreeModelTest
- This class implements the test suite for mafTreeModel.
- */
-class mafTreeModelTest : public QObject {
-    Q_OBJECT
+void mafTreeModelTest::initTestCase() {
+    // Register all the creatable objects for the mafGUI module.
+    mafGUIRegistration::registerGUIObjects();
+    m_TreeModel = new mafTreeModel();
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        // Register all the creatable objects for the mafGUI module.
-        mafGUIRegistration::registerGUIObjects();
-        m_TreeModel = new mafTreeModel();
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        delete m_TreeModel;
-    }
-
-    /// allocation test case.
-    void mafTreeModelAllocationTest();
-
-    /// hierarchy set/get Test case and insert Item in model.
-    void hierarchyAndInsertItemTest();
-
-    /// clearing the model test
-    void clearTest();
-
-private:
-    mafTreeModel *m_TreeModel; ///< Reference to the tree item.
-};
+void mafTreeModelTest::cleanupTestCase() {
+    delete m_TreeModel;
+}
 
 void mafTreeModelTest::mafTreeModelAllocationTest() {
     QVERIFY(m_TreeModel != NULL);
@@ -125,7 +94,5 @@ void mafTreeModelTest::clearTest() {
     m_TreeModel->clearModel();
 }
 
-
-MAF_REGISTER_TEST(mafTreeModelTest);
 #include "mafTreeModelTest.moc"
 

@@ -10,6 +10,8 @@
  */
 
 #include "mafNodeGraphicWidget.h"
+#include <QMenu>
+#include <QPainter>
 
 using namespace mafGUI;
 
@@ -186,15 +188,15 @@ QVariant mafNodeGraphicWidget::itemChange(GraphicsItemChange change,
     }
 
    if (mControlResizeHandles && change == QGraphicsItem::ItemCursorChange) {
-	   QCursor cur = qVariantValue<QCursor>(value);
+	   QCursor cur = value.value<QCursor>();
            if (cur.shape() == Qt::SizeVerCursor || cur.shape() == Qt::SizeHorCursor || cur.shape() == Qt::SizeBDiagCursor || cur.shape() == Qt::SizeFDiagCursor) {
 		   if (mNoResize) {
-			   return Qt::ArrowCursor;
+			   return static_cast<int>(Qt::ArrowCursor);
 		   }
 		   else {
                        foreach (mafNodeConnectorGraphicWidget *con, connectors()) {
 					if (con->isUnderMouse()) {
-						return Qt::ArrowCursor;
+						return static_cast<int>(Qt::ArrowCursor);
 					}
 				}
 		   }

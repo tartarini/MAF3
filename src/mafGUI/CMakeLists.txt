@@ -10,17 +10,9 @@
 #
 
 ## #################################################################
-## Find the external packages.
-## #################################################################
-
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_fervor.cmake)
-
-## #################################################################
 ## Init Project
 ## #################################################################
-mafMacroInitProject(0)
+mafMacroInitProject("library")
 
 ## #################################################################
 ## Wrapping
@@ -40,7 +32,7 @@ mafMacroWrapTargetFiles()
 #endif(${BUILD_SHARED_LIBS})  
 
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS} Qt5::UiTools)
 
 ## #################################################################
 ## copy mnu file
@@ -59,4 +51,4 @@ mafMacroWrapBuild()
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject(0)
+mafMacroBuildProject("library")

@@ -138,7 +138,7 @@ bool mafEventDispatcher::disconnectSignal(const mafEvent &props) {
     QString sig = props[SIGNATURE].toString();
     QString event_sig = SIGNAL_SIGNATURE;
     event_sig.append(sig);
-    bool result = obj_signal->disconnect(obj_signal, event_sig.toAscii(), 0, 0);
+    bool result = obj_signal->disconnect(obj_signal, event_sig.toLatin1(), 0, 0);
     return result;
 }
 
@@ -156,7 +156,7 @@ bool mafEventDispatcher::disconnectCallback(const mafEvent &props) {
         QObject *objSignal = (*itemSignal)[OBJECT].value<QObject *>();
         QObject *objSlot = props[OBJECT].value<QObject *>();
     
-        result = disconnect(objSignal, event_sig.toAscii(), objSlot, observer_sig.toAscii());
+        result = disconnect(objSignal, event_sig.toLatin1(), objSlot, observer_sig.toLatin1());
     } else {
         qDebug() << mafTr("Callback has not corresponding signal.");
     }
@@ -242,7 +242,7 @@ bool mafEventDispatcher::addObserver(const mafEvent &props) {
         this->m_CallbacksHash.insertMulti(topic, dict);
         QObject *objSignal = (*itemEventProp)[OBJECT].value<QObject *>();
 
-        return connect(objSignal, event_sig.toAscii(), objSlot, observer_sig.toAscii());
+        return connect(objSignal, event_sig.toLatin1(), objSlot, observer_sig.toLatin1());
     }
     
     qDebug() << mafTr("Signal not valid for topic: %1").arg(topic);
@@ -356,10 +356,10 @@ bool mafEventDispatcher::registerSignal(const mafEvent &props) {
         QObject *obj = props[OBJECT].value<QObject *>();
         QByteArray ba;
         if(obj != NULL) {
-            ba = mafTr("Object %1 is trying to register a signal with Topic '%2' that has been already registered!!").arg(obj->metaObject()->className(), topic).toAscii();
+            ba = mafTr("Object %1 is trying to register a signal with Topic '%2' that has been already registered!!").arg(obj->metaObject()->className(), topic).toLatin1();
             qWarning("%s", ba.data());
         } else {
-            ba = mafTr("NULL is trying to register a signal with Topic '%2' that has been already registered!!").arg(topic).toAscii();
+            ba = mafTr("NULL is trying to register a signal with Topic '%2' that has been already registered!!").arg(topic).toLatin1();
             qWarning("%s", ba.data());
         }
         return false;
@@ -393,7 +393,7 @@ bool mafEventDispatcher::registerSignal(const mafEvent &props) {
              event_sig.append(sig);
 
              QObject *objSlot = (*currentEvent)[OBJECT].value<QObject *>();
-             cumulativeConnect = cumulativeConnect && connect(objSignal, event_sig.toAscii(), objSlot, observer_sig.toAscii());
+             cumulativeConnect = cumulativeConnect && connect(objSignal, event_sig.toLatin1(), objSlot, observer_sig.toLatin1());
          }
          mafEvent *dict = const_cast<mafEvent *>(&props);
          this->m_SignalsHash.insert(topic, dict);

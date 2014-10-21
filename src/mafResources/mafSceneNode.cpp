@@ -65,7 +65,7 @@ void mafSceneNode::setVisualPipe(QString visualPipeType) {
     }
     
     if(visualPipeType.isEmpty()) {
-        QByteArray ba = mafTr("Pipe type not valid, impossible create Visual pipe!").toAscii();
+        QByteArray ba = mafTr("Pipe type not valid, impossible create Visual pipe!").toLatin1();
         qCritical(ba.constData());
         return;
     }

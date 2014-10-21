@@ -52,4 +52,5 @@ mafResources::mafPluginInfo mafPluginRegistrator::pluginInfo() {
     return info;
 }
 
-Q_EXPORT_PLUGIN2(mafPluginQtTest, mafPluginQtTest::mafPluginRegistrator)
+Q_PLUGIN_METADATA(IID "mafPluginQtTest" FILE "mafPluginQtTest.json")
+

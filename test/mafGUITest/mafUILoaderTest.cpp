@@ -9,13 +9,7 @@
  *
  */
 
-#include <mafTestConfig.h>
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafProxyInterface.h>
-#include <mafEventBusManager.h>
-#include <mafUILoader.h>
-#include <QDebug>
+#include "mafGUITestList.h"
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -64,36 +58,16 @@ void testmafUILoaderCustom::uiLoaded(mafCore::mafProxyInterface  *widget, int ui
     m_IsUILoaded = true;
 }
 
-/**
- Class name: mafUILoaderTest
- This class implements the test suite for mafUILoader.
- */
-class mafUILoaderTest : public QObject {
-    Q_OBJECT
+void mafUILoaderTest::initTestCase() {
+    m_UILoader = new testmafUILoaderCustom();
+    mafRegisterLocalCallback("maf.local.gui.uiloaded", m_UILoader, "uiLoaded(mafCore::mafProxyInterface *, int)");
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_UILoader = new testmafUILoaderCustom();
-        mafRegisterLocalCallback("maf.local.gui.uiloaded", m_UILoader, "uiLoaded(mafCore::mafProxyInterface *, int)");
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        delete m_UILoader;
-        m_UILoader = NULL;
-       mafEventBusManager::instance()->shutdown();
-    }
-
-    /// mafUILoader allocation test case.
-    void mafUILoaderAllocationTest();
-
-    /// mafUILoader allocation test case.
-    void mafUILoaderUILoadTest();
-
-private:
-    testmafUILoaderCustom *m_UILoader; ///< Reference to the GUI Manager.
-};
+void mafUILoaderTest::cleanupTestCase() {
+    delete m_UILoader;
+    m_UILoader = NULL;
+    mafEventBusManager::instance()->shutdown();
+}
 
 void mafUILoaderTest::mafUILoaderAllocationTest() {
     QVERIFY(m_UILoader != NULL);
@@ -106,5 +80,4 @@ void mafUILoaderTest::mafUILoaderUILoadTest() {
     QVERIFY(m_UILoader->isUILoaded() == true);
 }
 
-MAF_REGISTER_TEST(mafUILoaderTest);
 #include "mafUILoaderTest.moc"

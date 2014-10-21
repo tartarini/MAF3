@@ -131,5 +131,5 @@ void mafSyntaxHighlighter::removeFormat(const QString& name) {
 
 const QTextCharFormat &mafSyntaxHighlighter::format(const QString &name) {
     QReadLocker locker(m_Lock);
-    return m_Formats[name.toAscii()];
+    return m_Formats[name.toLatin1()];
 }

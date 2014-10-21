@@ -73,7 +73,7 @@ int mafResource::setInput(mafResource *resource, const int idx) {
     REQUIRE(idx >= 0);
 
     if(m_InputList->contains(resource)) {
-        QByteArray ba = mafTr("Object %1 already present in input list").arg(resource->objectName()).toAscii();
+        QByteArray ba = mafTr("Object %1 already present in input list").arg(resource->objectName()).toLatin1();
         qWarning("%s", ba.data());
         return m_InputList->indexOf(resource);
     }
@@ -107,7 +107,7 @@ void mafResource::removeInput(const int idx) {
         // remove the object from the input list
         m_InputList->removeAt(idx);
     } else {
-        QByteArray ba = mafTr("Index %1 outside input list range.").arg(idx).toAscii();
+        QByteArray ba = mafTr("Index %1 outside input list range.").arg(idx).toLatin1();
         qWarning("%s", ba.data());
     }
 }
@@ -119,7 +119,7 @@ void mafResource::removeInput(mafResource *resource) {
     if(idx != -1) {
         removeInput(idx);
     } else {
-        QByteArray ba = mafTr("Object %1 not present in input list").arg(resource->objectName()).toAscii();
+        QByteArray ba = mafTr("Object %1 not present in input list").arg(resource->objectName()).toLatin1();
         qWarning("%s", ba.data());
     }
 }

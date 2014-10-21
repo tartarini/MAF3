@@ -42,7 +42,7 @@ mafId mafIdProvider::createNewId(const QString id_name) {
             m_IdHash.insert(m_Id, id_name);
         } else {
             // if the Event id is already defined, return the previous defined ID value.
-            QByteArray ba = mafTr("ID with name '%1'' has been already defined!").arg(id_name).toAscii();
+            QByteArray ba = mafTr("ID with name '%1'' has been already defined!").arg(id_name).toLatin1();
             qWarning("%s", ba.data());
             return id_value;
         }

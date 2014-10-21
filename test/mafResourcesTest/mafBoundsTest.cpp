@@ -2,83 +2,35 @@
  *  mafBoundsTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 13/12/11.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 13/12/11.
  *  Copyright 2012 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafBounds.h>
-#include <mafMatrix.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafResources;
 
-/**
- Class name: mafBoundsTest
- This class implements the test suite for mafBounds.
- */
-
-//! <title>
-//mafBounds
-//! </title>
-//! <description>
-//mafBounds defines the MAF3 base object for 3D bounds.
-//! </description>
-
-class mafBoundsTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_ObjTestVar = new mafResources::mafBounds();
-        
-        double a[6] = {-2,2,-2,2,-2,2};
-        double b[6] = {-1,3,-1,3,-1,3};
-        m_ObjTestA = new mafResources::mafBounds(a); 
-        m_ObjTestB = new mafResources::mafBounds(b);
-
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        m_ObjTestVar->release();
-        
-        m_ObjTestA->release();
-        m_ObjTestB->release();
-    }
-
-    /// Test the constructors
-    void objectAllocationTest();
-
-    /// Test the bound values.
-    void boundsTest();
+void mafBoundsTest::initTestCase() {
+	mafMessageHandler::instance()->installMessageHandler();
+    m_ObjTestVar = new mafResources::mafBounds();
     
-    /// test is two mafBounds objects are equal.
-    void equalTest();
-    
-    /// unite test.
-    void uniteBoundsTest();
-    
-    /// intersection test.
-    void intersectBoundsTest();
-    
-    /// point inside/outside bounds test
-    void pointInsideOutsideBounds();
-    
-    /// unite without a pivot variable
-    void autoUniteTest();
+    double a[6] = {-2,2,-2,2,-2,2};
+    double b[6] = {-1,3,-1,3,-1,3};
+    m_ObjTestA = new mafResources::mafBounds(a); 
+    m_ObjTestB = new mafResources::mafBounds(b);
 
-    /// Transform test.
-    void transformBoundsTest();
+}
+
+void mafBoundsTest::cleanupTestCase() {
+    m_ObjTestVar->release();
     
-private:
-    mafBounds *m_ObjTestVar; ///< Test variable
-    mafBounds *m_ObjTestA; ///< Test variable
-    mafBounds *m_ObjTestB; ///< Test variable
-};
+    m_ObjTestA->release();
+    m_ObjTestB->release();
+	mafMessageHandler::instance()->shutdown();
+}
 
 void mafBoundsTest::objectAllocationTest() {
     m_ObjTestVar->retain();
@@ -178,11 +130,11 @@ void mafBoundsTest::transformBoundsTest() {
     mafBounds *b0 = new mafBounds(b, mafCodeLocation);
 
     // Create a transformation matrix.
-    mafMatrix m;
-    m.setIdentity();
-    m.setElement(0, 3, 3);
-    m.setElement(1, 3, 2);
-    m.setElement(2, 3, 1);
+    mafMatrix4x4 m;
+    m.setToIdentity();
+    m(0,3) = 3.;
+	m(1,3) = 2.;
+    m(2,3) = 1.;
 
     // Transform the bounds using the matrix.
     b0->transformBounds(&m);
@@ -203,12 +155,12 @@ void mafBoundsTest::transformBoundsTest() {
     double bCube[6] = {-.5, .5, -.5, .5, -.5, .5};
     mafBounds *boundsCube = new mafBounds(bCube, mafCodeLocation);
 
-    mafMatrix *transformMatrix = new mafMatrix();
-    transformMatrix->setIdentity();
-    transformMatrix->setElement(0,0,0.707);
-    transformMatrix->setElement(0,1,-.707);
-    transformMatrix->setElement(1,0,.707);
-    transformMatrix->setElement(1,1,.707);
+    mafMatrix4x4 *transformMatrix = new mafMatrix4x4();
+    transformMatrix->setToIdentity();
+    (*transformMatrix)(0,0) = 0.707;
+    (*transformMatrix)(0,1) = -.707;
+    (*transformMatrix)(1,0) = .707;
+    (*transformMatrix)(1,1) = .707;
 
     boundsCube->transformBounds(transformMatrix);
     double x_min = boundsCube->xMin();
@@ -223,5 +175,4 @@ void mafBoundsTest::transformBoundsTest() {
     transformMatrix = NULL;
 }
 
-MAF_REGISTER_TEST(mafBoundsTest);
 #include "mafBoundsTest.moc"

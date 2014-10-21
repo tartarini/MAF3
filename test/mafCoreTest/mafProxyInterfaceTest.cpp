@@ -2,49 +2,24 @@
  *  mafProxyInterfaceTest.cpp
  *  mafCoreTest
  *
- *  Created by Paolo Quadrani on 27/03/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 27/03/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreRegistration.h>
-#include <mafProxyInterface.h>
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
-/**
- Class name: mafProxyInterfaceTest
- This class implements the test suite for mafProxyInterface.
- */
-class mafProxyInterfaceTest : public QObject {
-    Q_OBJECT
+void mafProxyInterfaceTest::initTestCase() {
+    m_ContainerInterface = new mafProxyInterface();
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_ContainerInterface = new mafProxyInterface();
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        delete m_ContainerInterface;
-    }
-
-    /// Create new object and check that is not NULL test case.
-    void mafProxyInterfaceAllocationTest();
-
-    /// Test the set/get external data type.
-    void externalDataTypeTest();
-
-    /// Test the set/get external codec type.
-    void externalCodecTypeTest();
-
-private:
-    mafProxyInterface *m_ContainerInterface; ///< Test var.
-};
+void mafProxyInterfaceTest::cleanupTestCase() {
+    delete m_ContainerInterface;
+}
 
 void mafProxyInterfaceTest::mafProxyInterfaceAllocationTest() {
     QVERIFY(m_ContainerInterface != NULL);
@@ -62,6 +37,5 @@ void mafProxyInterfaceTest::externalCodecTypeTest() {
     QCOMPARE(m_ContainerInterface->externalCodecType(), ext);
 }
 
-MAF_REGISTER_TEST(mafProxyInterfaceTest);
 #include "mafProxyInterfaceTest.moc"
 

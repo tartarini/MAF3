@@ -2,48 +2,24 @@
  *  mafMementoTest.cpp
  *  mafCoreTest
  *
- *  Created by Paolo Quadrani on 27/03/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 27/03/09.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreRegistration.h>
-#include <mafMemento.h>
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
-/**
- Class name: mafMementoTest
- This class implements the test suite for mafMemento.
- */
-class mafMementoTest : public QObject {
-    Q_OBJECT
+void mafMementoTest::initTestCase() {
+    m_Memento = mafNEW(mafCore::mafMemento);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_Memento = mafNEW(mafCore::mafMemento);
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_Memento);
-    }
-
-    /// create new object and check that is not NULL test case.
-    void mafMementoConstructorTest();
-    /// Classtype test
-    void classTypeMementoTest();
-
-    /// isEqual Test
-    void isEqualTest();
-
-private:
-    mafMemento *m_Memento;
-};
+void mafMementoTest::cleanupTestCase() {
+    mafDEL(m_Memento);
+}
 
 void mafMementoTest::mafMementoConstructorTest() {
     QVERIFY(m_Memento != NULL);
@@ -80,6 +56,5 @@ void mafMementoTest::isEqualTest() {
     mafDEL(memento);
 }
 
-MAF_REGISTER_TEST(mafMementoTest);
 #include "mafMementoTest.moc"
 

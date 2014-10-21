@@ -2,23 +2,14 @@
  *  mafVMETest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 14/07/14.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafResourcesRegistration.h>
-#include <mafResourcesSingletons.h>
-#include <mafPipeData.h>
-#include <mafProxy.h>
-#include <mafInteractor.h>
-#include <mafMemento.h>
-#include <mafVME.h>
-#include <mafDataSet.h>
-#include <mafVMEManager.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -131,70 +122,28 @@ void testVMEConcurrentAccess::startElaboration() {
 //------------------------------------------------------------------------------------------
 
 
-/**
- Class name: mafVMETest
- This class implements the test suite for mafVME.
- */
-
- //! <title>
-//mafVME
-//! </title>
-//! <description>
-//mafVME defines the base class for the VMEs in MAF3.
-//! </description>
-
-class mafVMETest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        mafResourcesRegistration::registerResourcesObjects();
-        
-        mafRegisterObject(testVMEPipeDataCustom);
-        //! <snippet>
-        m_VME = mafNEW(mafResources::mafVME);
-        //! </snippet>
-
-        m_EventBus = mafEventBusManager::instance();
-        m_VMEManager = mafVMEManager::instance();
-        m_VMEManager->shutdown();
-        
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_VME);
-        mafUnregisterObject(testVMEPipeDataCustom);
-        m_EventBus->notifyEvent("maf.local.resources.hierarchy.request");
-        m_EventBus->shutdown();
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafVME allocation test case.
-    void mafVMEAllocationTest();
-
-    /// Data pipe test suite
-    void mafVMEDataPipeTest();
-
-    /// Memento test suite.
-    void mafVMEMementoTest();
-
-    /// Interactor assignment test suite.
-    void mafVMEInteractorTest();
-
-    /// Output data test suite.
-    void mafVMEOutputDataTest();
+void mafVMETest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    mafResourcesRegistration::registerResourcesObjects();
     
-    /// Test the concurrent access to the VME.
-    void mafVMEConcurrentAccessTest();
+    mafRegisterObject(testVMEPipeDataCustom);
+    //! <snippet>
+    m_VME = mafNEW(mafResources::mafVME);
+    //! </snippet>
 
-private:
-    mafVME *m_VME; ///< Test var.
-    mafEventBusManager *m_EventBus;
-    mafVMEManager *m_VMEManager;
-};
+    m_EventBus = mafEventBusManager::instance();
+    m_VMEManager = mafVMEManager::instance();
+    m_VMEManager->shutdown();
+    
+}
+
+void mafVMETest::cleanupTestCase() {
+    mafDEL(m_VME);
+    mafUnregisterObject(testVMEPipeDataCustom);
+    m_EventBus->notifyEvent("maf.local.resources.hierarchy.request");
+    m_EventBus->shutdown();
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafVMETest::mafVMEAllocationTest() {
     QVERIFY(m_VME != NULL);
@@ -294,5 +243,4 @@ void mafVMETest::mafVMEConcurrentAccessTest() {
     qDebug() << mafTr("**** End of VME concurrent access ****");
 }
 
-MAF_REGISTER_TEST(mafVMETest);
 #include "mafVMETest.moc"

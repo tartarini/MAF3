@@ -16,7 +16,6 @@
 
 namespace mafResources {
 
-class mafMatrix;
 class mafDataSetCollection;
 
 /**
@@ -115,8 +114,8 @@ protected:
 
 private:
     mafDataSetCollection *m_DataSetCollection; ///< Dataset collection of the input VME.
-    mafMatrix *m_Matrix; ///< New matrix pose.
-    mafMatrix *m_OldMatrix; ///< Backup pose matrix
+    mafMatrix4x4 *m_Matrix; ///< New matrix pose.
+    mafMatrix4x4 *m_OldMatrix; ///< Backup pose matrix
 };
 
 } // namespace mafResources

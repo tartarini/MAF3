@@ -5,8 +5,7 @@
 # 
 
 SET(foundation_libraries 
-  ${QXMLRPC_LIBRARY} 
-  ${QTSOAP_LIBRARY}
+
 )
 
 if(NOT ${BUILD_SHARED_LIBS})
@@ -17,6 +16,11 @@ if(NOT ${BUILD_SHARED_LIBS})
 )
 endif(NOT ${BUILD_SHARED_LIBS})
 
+set(ADDITIONAL_LIBS "")
+if(WIN32)
+  set(ADDITIONAL_LIBS Qt5::WinMain)
+endif(WIN32)
+
 SET(target_libraries
   ${MAF_BASE_LIBRARIES}
   ${foundation_libraries}
@@ -25,7 +29,7 @@ SET(target_libraries
   mafApplicationLogic
   mafResources
   mafGUI
-  fervor
+  ${ADDITIONAL_LIBS}
   )
 
 

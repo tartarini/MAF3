@@ -11,10 +11,10 @@
 
 #include "mafMonitorHardDisk.h"
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(WIN32)
     #include "windows.h"
 #else
-    #ifdef __APPLE__
+    #if defined(__APPLE__)
         #include <sys/mount.h>
     #else
         #include <sys/vfs.h>
@@ -30,7 +30,7 @@ mafMonitorHardDisk::~mafMonitorHardDisk() {
 }
 
 void mafMonitorHardDisk::update() {
-#ifdef WIN32
+#if defined(_WIN32) || defined(WIN32)
     __int64 lpFreeBytesAvaibleToCaller, lpTotalNumberOfBytes, lpTotalNumberOfFreeBytes;
 
     GetDiskFreeSpaceEx(L"C:\\", (PULARGE_INTEGER)&lpFreeBytesAvaibleToCaller,

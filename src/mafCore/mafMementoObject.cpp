@@ -30,7 +30,7 @@ mafMementoObject::mafMementoObject(const mafObject *obj, const QString code_loca
             continue;
         }
         QString propName = qmp.name();
-        QVariant value = obj->property(propName.toAscii());
+        QVariant value = obj->property(propName.toLatin1());
 
         if (value.canConvert(QVariant::List)) {
             item.m_Multiplicity = value.toList().count();

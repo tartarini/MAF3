@@ -30,10 +30,10 @@ void mafVisitorBounds::visit(mafObjectBase *object) {
         mafBounds *b = new mafBounds();
         b->setBounds(boundsProp.value<mafBoundsPointer>());
         if(m_AbsolutePoseFlag) {
-            mafMatrixPointer absMatrix = NULL;
+            mafMatrix4x4Pointer absMatrix = NULL;
             mafEventArgumentsList argList;
             argList.append(mafEventArgument(mafCore::mafObjectBase *, object));
-            QGenericReturnArgument ret_val = mafEventReturnArgument(mafResources::mafMatrixPointer, absMatrix);
+            QGenericReturnArgument ret_val = mafEventReturnArgument(mafResources::mafMatrix4x4Pointer, absMatrix);
             mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.absolutePoseMatrix", mafEventTypeLocal, &argList, &ret_val);
             
             qDebug() << object->objectName();

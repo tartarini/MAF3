@@ -2,60 +2,30 @@
  *  mafImporterTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafImporter.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
 
-/**
- Class name: mafImporterTest
- This class implements the test suite for mafImporter.
- */
-
-//! <title>
-// mafImporterTest
-//! </title>
-//! <description>
-// mafImporterTest represents the test suite for mafImporter.
-//! </description>
-class mafImporterTest: public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        
-        m_Importer = mafNEW(mafResources::mafImporter);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_Importer);
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafImporter allocation test case.
-    void mafImporterAllocationTest();
+void mafImporterTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
     
-    /// acceptObject test case.
-    void acceptObjectTest();
-    
-    /// filename test.
-    void filenameTest();
+    m_Importer = mafNEW(mafResources::mafImporter);
+}
 
-private:
-    mafImporter *m_Importer; ///< Test var.
-};
+void mafImporterTest::cleanupTestCase() {
+    mafDEL(m_Importer);
+    mafMessageHandler::instance()->shutdown();
+}
+
 
 void mafImporterTest::mafImporterAllocationTest() {
     QVERIFY(m_Importer != NULL);
@@ -82,5 +52,4 @@ void mafImporterTest::filenameTest() {
     QCOMPARE(import_file, f);
 }
 
-MAF_REGISTER_TEST(mafImporterTest);
 #include "mafImporterTest.moc"

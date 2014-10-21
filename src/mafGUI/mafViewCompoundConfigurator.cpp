@@ -69,7 +69,7 @@ void mafViewCompoundConfigurator::parseDocument(QDomNode current, QObject *paren
                 for (; i < s; ++i) {
                     QDomNode n(attributes.item(i));
                     if (n.nodeName() != "classtype") {
-                        QByteArray ba(n.nodeName().toAscii());
+                        QByteArray ba(n.nodeName().toLatin1());
                         bool isOk(obj->setProperty(ba.constData(), n.nodeValue()));
                         if (!isOk) {
                             qWarning() << mafTr("Problem assigning property named: %1 to view of type: %2").arg(n.nodeName(), viewClassType);

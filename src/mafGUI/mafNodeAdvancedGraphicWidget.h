@@ -15,6 +15,10 @@
 #include "mafGUIDefinitions.h"
 #include <mafNodeGraphicWidget.h>
 
+class QGridLayout;
+class QHBoxLayout;
+class QVBoxLayout;
+
 namespace mafGUI {
 
 class MAFGUISHARED_EXPORT mafNodeAdvancedGraphicWidget : public mafNodeGraphicWidget {
@@ -41,7 +45,7 @@ public:
         virtual int getId() = 0;
 
 private:
-        QGridLayout  *innerGridLayout;
+        QGridLayout *innerGridLayout;
         QHBoxLayout *topLayout;
         QVBoxLayout *leftLayout;
         QVBoxLayout *rightLayout;

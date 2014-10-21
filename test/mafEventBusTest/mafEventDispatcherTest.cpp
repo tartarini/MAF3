@@ -9,8 +9,7 @@
  *
  */
 
-#include "mafTestSuite.h"
-#include <mafEventBusManager.h>
+#include "mafEventBusTestList.h"
 
 using namespace mafEventBus;
 
@@ -69,60 +68,17 @@ void testObjectCustomForDispatcher::registerCustomCallback() {
 //-------------------------------------------------------------------------
 
 
-/**
- Class name: mafEventDispatcherTest
- This class implements the test suite for mafEventDispatcher.
- */
+void mafEventDispatcherTest::initTestCase() {
+    m_ObjTestObserver = new testObjectCustomForDispatcher;
+    m_ObjTestObserver->setObjectName("TestObserver");
+    m_EventDispatcher = new mafEventBus::mafEventDispatcher;
+    m_EventDispatcher->setObjectName("EventDispatcher");
+}
 
-//! <title>
-//mafEventDispatcher
-//! </title>
-//! <description>
-//mafEventDispatcher allows dispatching events coming from local application
-//to attached observers.
-//! </description>
-
-class mafEventDispatcherTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_ObjTestObserver = new testObjectCustomForDispatcher;
-        m_ObjTestObserver->setObjectName("TestObserver");
-        m_EventDispatcher = new mafEventBus::mafEventDispatcher;
-        m_EventDispatcher->setObjectName("EventDispatcher");
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        delete m_ObjTestObserver;
-        delete m_EventDispatcher;
-    }
-
-    /// mafEventDispatcher allocation test case.
-    void mafEventDispatcherAllocationTest();
-    /// Test the add and remove observer.
-    void mafEventDispatcherAddAndRemoveObserverAndNotifyEventTest();
-    /// Test the add and remove signal.
-    void mafEventDispatcherRegisterAndRemoveSignalAndNotifyEventTest();
-    /// Test if the signal is present after registration
-    void isSignalPresentTest();
-    /// Remove observer given a pointer.
-    void removeObserverTest();
-    /// Remove item from the dispatcher.
-    void removeItemTest();
-    /// Remove signal given a pointer.
-    void removeSignalTest();
-    /// test if the local signal is present
-    void isLocalSignalPresentTest();
-    /// reverse order registration test
-    void reverseOrderRegistrationTest();
-
-private:
-    mafEventDispatcher *m_EventDispatcher; ///< Test var.
-    testObjectCustomForDispatcher *m_ObjTestObserver; ///< Test Object var
-};
+void mafEventDispatcherTest::cleanupTestCase() {
+    delete m_ObjTestObserver;
+    delete m_EventDispatcher;
+}
 
 void mafEventDispatcherTest::mafEventDispatcherAllocationTest() {
     QVERIFY(m_EventDispatcher != NULL);
@@ -290,5 +246,4 @@ void mafEventDispatcherTest::isLocalSignalPresentTest() {
     QVERIFY(m_EventDispatcher->isLocalSignalPresent("maf.wrong.topic") == false);
 }
 
-MAF_REGISTER_TEST(mafEventDispatcherTest);
 #include "mafEventDispatcherTest.moc"

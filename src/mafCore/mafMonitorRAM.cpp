@@ -11,7 +11,7 @@
 
 #include "mafMonitorRAM.h"
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(WIN32)
     #include "windows.h"
 #else
     #ifdef __APPLE__
@@ -38,7 +38,7 @@ mafMonitorRAM::~mafMonitorRAM() {
 }
 
 void mafMonitorRAM::update() {
-#ifdef WIN32
+#if defined(_WIN32) || defined(WIN32)
     MEMORYSTATUS memoryStatus;
     GlobalMemoryStatus(&memoryStatus);
 

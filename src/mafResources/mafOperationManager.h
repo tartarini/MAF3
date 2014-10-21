@@ -93,7 +93,7 @@ Q_SIGNALS:
     int undoStackSizeSignal() const;
 
     /// Signal connected with currentOperation slot.
-    const mafCore::mafObjectBase *currentOperationSignal() const;
+    mafCore::mafObjectBase *currentOperationSignal();
 
     /// Signal connected with the executionPool slot.
     const mafExecutionPool *executionPoolSignal();
@@ -159,7 +159,7 @@ private Q_SLOTS:
     int undoStackSize() const;
 
     /// Return current operation
-    const mafCore::mafObjectBase *currentOperation() const;
+    mafCore::mafObjectBase *currentOperation();
 
     /// Return the execution pool containing the runngin operations in background.
     const mafExecutionPool *executionPool() const;
@@ -192,8 +192,8 @@ private:
 
     mutable QMutex m_Mutex;
     QList<mafOperation *> m_UndoStack;    ///< Undo stack which is a linked list of operations
-    mafOperation *m_CurrentOperation;       ///< Current operation handled by th manager
-    mafOperation *m_LastUndoneOperation;       ///< Last undone operation 
+    mafResources::mafOperation *m_CurrentOperation;       ///< Current operation handled by th manager
+    mafResources::mafOperation *m_LastUndoneOperation;       ///< Last undone operation 
 
     mafExecutionPool m_ExecutionPool; ///< Pool of running operations.
     mafCore::mafId m_ExecWithParameters; ///< Id associated with the EXECUTE_WITH_PARAMETERS event.
@@ -202,10 +202,6 @@ private:
 /////////////////////////////////////////////////////////////
 // Inline methods
 /////////////////////////////////////////////////////////////
-
-inline const mafCore::mafObjectBase *mafOperationManager::currentOperation() const {
-    return (mafCore::mafObjectBase *)m_CurrentOperation;
-}
 
 inline int mafOperationManager::undoStackSize() const {
     return m_UndoStack.size();

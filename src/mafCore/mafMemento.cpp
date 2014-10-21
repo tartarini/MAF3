@@ -27,6 +27,7 @@ mafMemento::mafMemento(const mafObject *obj, const QString code_location) : mafO
 }
 
 mafMemento::~mafMemento() {
+	
 }
 
 bool mafMemento::isEqual(const mafObjectBase *obj) const {

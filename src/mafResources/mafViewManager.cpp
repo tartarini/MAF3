@@ -206,7 +206,7 @@ void mafViewManager::sceneNodeShow(mafCore::mafObjectBase *node, bool show) {
             m_SelectedView->showSceneNode(node_to_show, show);
             //m_SelectedPipeVisual = node_to_show->visualPipe();
         } else {
-            QByteArray ba = mafTr("There is no view selected.").toAscii();
+            QByteArray ba = mafTr("There is no view selected.").toLatin1();
             qCritical(ba.constData());
         }
     }

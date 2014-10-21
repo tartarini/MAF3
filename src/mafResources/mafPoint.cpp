@@ -50,15 +50,15 @@ void mafPoint::pos(double p[3]) {
 }
 
 
-void mafPoint::transformPoint(mafMatrix *matrix) {
-    mafMatrix p0(4,1);
-    p0.setElement(0,0, m_X);
-    p0.setElement(1,0, m_Y);
-    p0.setElement(2,0, m_Z);
-    p0.setElement(3,0, 1.);
+void mafPoint::transformPoint(mafMatrix4x4 *matrix) {
+    QGenericMatrix<1,4,qreal> p0;
+    p0(0,0) = m_X;
+    p0(1,0) = m_Y;
+    p0(2,0) = m_Z;
+    p0(3,0) = 1.;
 
-    mafMatrix pt0 = (*matrix) * p0;
-    m_X = pt0.element(0, 0);
-    m_Y = pt0.element(1, 0);
-    m_Z = pt0.element(2, 0);
+    QGenericMatrix<1,4,qreal> pt0 = (*matrix) * p0; // inverted when changed matrix base class
+    m_X = pt0(0,0);
+    m_Y = pt0(1,0);
+    m_Z = pt0(2,0);
 }

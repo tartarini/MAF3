@@ -2,18 +2,14 @@
  *  mafLogicTest.cpp
  *  mafLogicTest
  *
- *  Created by Paolo Quadrani on 12/11/10.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 12/11/10.
  *  Copyright 2010 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include "mafTestSuite.h"
-#include <mafPluginManager.h>
-#include <mafLogic.h>
-#include <mafCoreSingletons.h>
-#include <mafObject.h>
+#include "mafApplicationLogicTestList.h"
 
 using namespace mafCore;
 using namespace mafApplicationLogic;
@@ -39,47 +35,21 @@ testObjectCustomPlugged::testObjectCustomPlugged(QString code_location) : mafObj
 }
 //----------------------------------------------------------------------
 
-/**
- Class name: mafLogicTest
- This class implements the test suite for mafLogic.
- */
-class mafLogicTest : public QObject {
-    Q_OBJECT
+void mafLogicTest::initTestCase() {
+    // Calls needed to initialize settings' information.
+    qApp->setOrganizationName("SCS");
+    qApp->setOrganizationDomain("scsolutions.org");
+    qApp->setApplicationName("mafApplicationLogicTest");
+    // Create the instance of mafLogic.
+    m_Logic = mafNEW(mafApplicationLogic::mafLogic);
+    m_PluginManager = mafPluginManager::instance();
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        // Calls needed to initialize settings' information.
-        qApp->setOrganizationName("SCS");
-        qApp->setOrganizationDomain("scsolutions.org");
-        qApp->setApplicationName("mafApplicationLogicTest");
-        // Create the instance of mafLogic.
-        m_Logic = mafNEW(mafApplicationLogic::mafLogic);
-        m_PluginManager = mafPluginManager::instance();
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        m_PluginManager->shutdown();
-        mafDEL(m_Logic);
-    }
-
-    /// Check the existence of the mafLogic allocation.
-    void mafLogicAllocationTest();
-
-    /// Test the initialization of the mafLogic
-    void initializeTest();
-
-    /// Test the working directory accessors.
-    void workingDirectoryTest();
-
-    /// Test the plugObject functionality.
-    void plugObjectTest();
-
-private:
-    mafLogic *m_Logic; ///< Test variable.
-    mafPluginManager *m_PluginManager; ///< Test var.
-};
+/// Cleanup tes variables memory allocation.
+void mafLogicTest::cleanupTestCase() {
+    m_PluginManager->shutdown();
+    mafDEL(m_Logic);
+}
 
 void mafLogicTest::mafLogicAllocationTest() {
     QVERIFY(m_Logic != NULL);
@@ -127,5 +97,4 @@ void mafLogicTest::plugObjectTest() {
     QVERIFY(ct == "testObjectCustomPlugged");
 }
 
-MAF_REGISTER_TEST(mafLogicTest);
 #include "mafLogicTest.moc"

@@ -27,7 +27,7 @@ include(${CMAKE_ROOT}/Modules/FindOpenSSL.cmake)
 ## Init Project
 ## #################################################################
 
-mafMacroInitProject(0)
+mafMacroInitProject("application")
 
 ## #################################################################
 ## Build rules
@@ -63,7 +63,7 @@ mafCopyFilesFromExtension("xml" ${PROJECT_NAME})
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject(1)
+mafMacroBuildProject("application")
 
 INSTALL(TARGETS ${PROJECT_NAME}
   DESTINATION ${PROJECT_NAME}/bin

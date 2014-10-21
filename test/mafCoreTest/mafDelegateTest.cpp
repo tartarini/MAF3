@@ -2,16 +2,14 @@
  *  mafDelegateTest.cpp
  *  mafCoreTest
  *
- *  Created by Paolo Quadrani on 23/11/11.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 23/11/11.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreRegistration.h>
-#include <mafDelegate.h>
+#include "mafCoreTestList.h"
 
 //-------------------------------------------------------------------------
 /**
@@ -55,41 +53,14 @@ void testDelegate::setMyVariable(int v) {
 //-------------------------------------------------------------------------
 
 
-using namespace mafCore;
+void mafDelegateTest::initTestCase() {
+    m_Delegate = new testDelegate;
+}
 
-/**
- Class name: mafDelegateTest
- This class implements the test suite for mafDelegate.
- */
-class mafDelegateTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_Delegate = new testDelegate;
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        delete m_Delegate;
-    }
-
-    /// create new object and check that is not NULL test case.
-    void mafDelegateConstructorTest();
-
-    /// Test the presence of method definition
-    void isMethodDefinedTest();
-
-    /// Verify that the shouldExecuteLocalCode return true by default.
-    void shouldExecuteLocalCodeTest();
-
-    /// Test the method execution.
-    void executeMethodTest();
-
-private:
-    testDelegate *m_Delegate; ///< Test variable.
-};
+/// Cleanup test variables memory allocation.
+void mafDelegateTest::cleanupTestCase() {
+    delete m_Delegate;
+}
 
 void mafDelegateTest::mafDelegateConstructorTest() {
     QVERIFY(m_Delegate != NULL);
@@ -131,5 +102,4 @@ void mafDelegateTest::executeMethodTest() {
     QVERIFY(v == val);
 }
 
-MAF_REGISTER_TEST(mafDelegateTest);
 #include "mafDelegateTest.moc"

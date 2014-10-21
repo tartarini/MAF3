@@ -5,9 +5,6 @@
 # 
 
 SET(foundation_libraries 
-  ${QXMLRPC_LIBRARY} 
-  ${QTSOAP_LIBRARY}
-  fervor
 )
 
 if(NOT ${BUILD_SHARED_LIBS})

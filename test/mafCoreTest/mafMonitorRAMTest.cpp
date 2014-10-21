@@ -9,42 +9,17 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafMonitorRAM.h>
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
-//! <title>
-//mafMonitorRAMTest
-//! </title>
-//! <description>
-//mafMonitorRAMTest define a modality of visiting object checking the hash code
-//giving in input from the constructor of the visitor
-//! </description>
+void mafMonitorRAMTest::initTestCase() {
+    mafCore::mafMessageHandler::instance()->installMessageHandler();
+}
 
-/**
- Class name: mafMonitorRAMTest
- This class implements the test suite for mafMonitorRAM.
- */
-class mafMonitorRAMTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafCore::mafMessageHandler::instance()->installMessageHandler();
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafCore::mafMessageHandler::instance()->shutdown();
-    }
-
-    /// register new object in factory test case.
-    void memoryTest();
-
-private:
-};
+void mafMonitorRAMTest::cleanupTestCase() {
+    mafCore::mafMessageHandler::instance()->shutdown();
+}
 
 void mafMonitorRAMTest::memoryTest() {
     //! <snippet>
@@ -59,7 +34,6 @@ void mafMonitorRAMTest::memoryTest() {
     mafDEL(monitor);
 }
 
-MAF_REGISTER_TEST(mafMonitorRAMTest);
 #include "mafMonitorRAMTest.moc"
 
 

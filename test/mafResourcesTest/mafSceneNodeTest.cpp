@@ -2,20 +2,14 @@
  *  mafSceneNodeTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafResourcesRegistration.h>
-#include <mafSceneNode.h>
-#include <mafPipeVisual.h>
-#include <mafVME.h>
-
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -62,30 +56,15 @@ void testVisualPipeCustomForSceneNode::updatePipe(double t) {
 //------------------------------------------------------------------------------------------
 
 
-/**
- Class name: mafSceneNodeTest
- This class implements the test suite for mafSceneNode.
- */
-class mafSceneNodeTest : public QObject {
-    Q_OBJECT
+void mafSceneNodeTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    mafResourcesRegistration::registerResourcesObjects();
+    mafRegisterObject(testVisualPipeCustomForSceneNode);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        mafResourcesRegistration::registerResourcesObjects();
-        mafRegisterObject(testVisualPipeCustomForSceneNode);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// set visual pipe test case.
-    void mafSceneNodeSetVisualPipeTest();
-
-};
+void mafSceneNodeTest::cleanupTestCase() {
+    mafMessageHandler::instance()->shutdown();
+}
 
 
 void mafSceneNodeTest::mafSceneNodeSetVisualPipeTest() {
@@ -99,6 +78,5 @@ void mafSceneNodeTest::mafSceneNodeSetVisualPipeTest() {
     mafDEL(vme);
 }
 
-MAF_REGISTER_TEST(mafSceneNodeTest);
 #include "mafSceneNodeTest.moc"
 

@@ -35,7 +35,7 @@ void mafSerializerFileSystem::openDevice(mafSerializerOpenMode mode) {
     bool file_opened = m_File->open(open_mode);
 
     if(!file_opened) {
-        QByteArray ba = mafTr("Not able to open file '%1'").arg(dataURL().toString()).toAscii();
+        QByteArray ba = mafTr("Not able to open file '%1'").arg(dataURL().toString()).toLatin1();
         qCritical("%s", ba.data());
     }
 }

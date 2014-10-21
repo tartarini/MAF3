@@ -14,7 +14,7 @@
 using namespace mafCore;
 using namespace mafResources;
 
-mafOperation::mafOperation(const QString code_location) : mafResource(code_location), m_Status(mafOperationStatusIdle), m_CanUnDo(true), m_CanAbort(true), m_InputPreserve(true), m_MultiThreaded(true) {
+mafOperation::mafOperation(const QString code_location) : mafResource(code_location), m_Status(mafOperationStatusIdle), m_CanUnDo(true), m_CanAbort(true), m_InputPreserve(true), m_MultiThreaded(false) {
     connect(this, SIGNAL(executionEnded()), this, SLOT(fillDictionary()));
     connect(this, SIGNAL(executionEnded()), this, SLOT(terminate()));
 }
@@ -32,7 +32,7 @@ void mafOperation::setParameters(const QVariantMap &parameters) {
     QByteArray ba;
     while (i.hasNext()) {
         i.next();
-        ba = i.key().toAscii();
+        ba = i.key().toLatin1();
         this->setProperty(ba.constData(), i.value()); 
     }
 }
@@ -72,7 +72,7 @@ void mafOperation::fillDictionary() {
     for ( ; i < num; ++i) {
         const QMetaProperty qmp = meta->property(i);
         QString propName = qmp.name();
-        QVariant value = this->property(propName.toAscii());
+        QVariant value = this->property(propName.toLatin1());
         dictionary()->insert(propName, value);   
     }
     

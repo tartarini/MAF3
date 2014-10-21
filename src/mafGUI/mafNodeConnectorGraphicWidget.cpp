@@ -19,9 +19,16 @@ mafNodeConnectorGraphicWidget::~mafNodeConnectorGraphicWidget() {
 }
 
 mafNodeConnectorGraphicWidget::mafNodeConnectorGraphicWidget(mafNodeGraphicWidget *parent1, QGraphicsScene *scene1, /*QLabel*/QWidget* widget, mafNodeConnectorGraphicWidget::ConnectorType conType1, const ConnectorAlignment connectorAlignment, bool singleConnection, bool disableWidgetOnConnection, int radius, bool selfConnections)
-        : QGraphicsItem(parent1, scene1),
+        : QGraphicsItem(parent1), //was scene1 as second arg
 		//: QGraphicsItem(NULL, scene1),
-        mConnectorType(conType1), parent(parent1), mWidget(widget), mConnectorAlignment(connectorAlignment), mSingleConnection(singleConnection), mDisableWidgetOnConnection(disableWidgetOnConnection), mSelfConnections(selfConnections), mRadius(radius) {
+        mConnectorType(conType1), 
+		parent(parent1), 
+		mWidget(widget), 
+		mConnectorAlignment(connectorAlignment), 
+		mSingleConnection(singleConnection), 
+		mDisableWidgetOnConnection(disableWidgetOnConnection), 
+		mSelfConnections(selfConnections), 
+		mRadius(radius) {
 	//orig
     //setFlag(ItemIsMovable);
     setCacheMode(DeviceCoordinateCache);

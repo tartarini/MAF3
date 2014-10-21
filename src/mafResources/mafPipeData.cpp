@@ -28,7 +28,7 @@ mafPipeData::~mafPipeData() {
 int mafPipeData::addInput(mafVME *vme) {
     REQUIRE(vme != NULL);
     if(this->inputList()->contains(vme)) {
-        QByteArray ba = mafTr("Object %1 already present in input list").arg(vme->objectName()).toAscii();
+        QByteArray ba = mafTr("Object %1 already present in input list").arg(vme->objectName()).toLatin1();
         qWarning("%s", ba.data());
         return this->inputList()->indexOf(vme);
     }

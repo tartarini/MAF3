@@ -9,8 +9,7 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafMonitor.h>
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
@@ -40,30 +39,13 @@ void testMonitorImplement::update() {
 //-------------------------------------------------------------------------
 
 
-/**
- Class name: mafMonitorTest
- This class implements the test suite for mafMonitor.
- */
-class mafMonitorTest : public QObject {
-    Q_OBJECT
+void mafMonitorTest::initTestCase() {
+    m_Monitor = mafNEW(testMonitorImplement);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_Monitor = mafNEW(testMonitorImplement);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_Monitor);
-    }
-
-    /// register new object in factory test case.
-    void monitorTest();
-
-private:
-    testMonitorImplement *m_Monitor; ///< Test Var.
-};
+void mafMonitorTest::cleanupTestCase() {
+    mafDEL(m_Monitor);
+}
 
 void mafMonitorTest::monitorTest() {
     QVERIFY(m_Monitor != NULL);
@@ -73,7 +55,6 @@ void mafMonitorTest::monitorTest() {
     QCOMPARE(*m_Monitor->resultBuffer(), res);
 }
 
-MAF_REGISTER_TEST(mafMonitorTest);
 #include "mafMonitorTest.moc"
 
 

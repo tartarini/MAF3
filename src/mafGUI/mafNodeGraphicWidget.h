@@ -19,7 +19,7 @@
 #include <QGraphicsPixmapItem>
 #include <QList>
 #include <QGraphicsProxyWidget>
-#include <QtGui>
+#include <QGraphicsSceneMouseEvent>
 
 QT_BEGIN_NAMESPACE
 class QPixmap;

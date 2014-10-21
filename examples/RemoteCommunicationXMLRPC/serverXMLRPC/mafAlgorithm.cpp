@@ -25,8 +25,8 @@ void mafAlgorithm::execute() {
     qDebug() << mafTr("Executing testProcess!!!");
 
     QStringList commandAndParameters;
-    commandAndParameters << m_FileNameInput.toAscii()  \
-                        << m_FileNameOutput.toAscii() \
+    commandAndParameters << m_FileNameInput.toLatin1()  \
+                        << m_FileNameOutput.toLatin1() \
                         << QString::number(m_IterationParameter);
 
     bool ok = QProcess::execute("./testProcess" ,commandAndParameters) == 0;

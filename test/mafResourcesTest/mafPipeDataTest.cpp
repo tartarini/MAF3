@@ -2,19 +2,14 @@
  *  mafPipeDataTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 14/07/14.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafPipeData.h>
-#include <mafResourcesRegistration.h>
-#include <mafVME.h>
-#include <mafDataSet.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -55,48 +50,21 @@ void testDataPipeCustom::updatePipe(double t) {
 
 //------------------------------------------------------------------------------------------
 
-/**
- Class name: mafPipeDataTest
- This class implements the test suite for mafPipeData.
- */
-class mafPipeDataTest : public QObject {
-    Q_OBJECT
+void mafPipeDataTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    mafResourcesRegistration::registerResourcesObjects();
+    m_DataPipe = mafNEW(testDataPipeCustom);
+    m_Vme = mafNEW(mafResources::mafVME);
+    m_Vme->setDataPipe(m_DataPipe);
+    m_DataPipe->release();
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        mafResourcesRegistration::registerResourcesObjects();
-        m_DataPipe = mafNEW(testDataPipeCustom);
-        m_Vme = mafNEW(mafResources::mafVME);
-        m_Vme->setDataPipe(m_DataPipe);
-        m_DataPipe->release();
-    }
+/// Cleanup test variables memory allocation.
+void mafPipeDataTest::cleanupTestCase() {
+    mafDEL(m_Vme);
+    mafMessageHandler::instance()->shutdown();
+}
 
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_Vme);
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafPipeData allocation test case.
-    void mafPipeDataAllocationTest();
-    /// Test the creation and update methods..
-    void mafPipeDataCreationAndUpdateTest();
-
-    /// Test the data pipe decoration mechanism.
-    void decorateTest();
-
-    /// Test add and remove input
-    void addRemoveInputTest();
-
-    /// Test add and remove input
-    void outputTest();
-
-private:
-    testDataPipeCustom *m_DataPipe; ///< Test var.
-    mafVME *m_Vme; ///< vme assigned to the data pipe
-};
 
 void mafPipeDataTest::mafPipeDataAllocationTest() {
     QVERIFY(m_DataPipe != NULL);
@@ -177,5 +145,4 @@ void mafPipeDataTest::outputTest() {
     mafDEL(vme1);
 }
 
-MAF_REGISTER_TEST(mafPipeDataTest);
 #include "mafPipeDataTest.moc"

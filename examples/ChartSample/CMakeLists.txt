@@ -23,7 +23,7 @@ include(${MAF_SOURCE_DIR}/CMakeExternals/Find_fervor.cmake)
 ## Init Project
 ## #################################################################
 
-mafMacroInitProject(0)
+mafMacroInitProject("application")
 
 ## #################################################################
 ## Build rules
@@ -52,4 +52,4 @@ mafCopyFilesFromExtension("xml" ${PROJECT_NAME})
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject(1)
+mafMacroBuildProject("application")

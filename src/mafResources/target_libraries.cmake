@@ -5,9 +5,7 @@
 # 
 
 SET(foundation_libraries 
-  qxmlrpc
-  QtSOAP
-  opencv_core
+
 )
 
 if(NOT ${BUILD_SHARED_LIBS})
