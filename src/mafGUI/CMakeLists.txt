@@ -24,11 +24,16 @@ mafMacroWrapTargetFiles()
 ## Build rules
 ## #################################################################
 
+set(RESOURCE1 ${CMAKE_SOURCE_DIR}/src/mafGUI/mafGUIImages.qrc)
+set(RESOURCE2 ${CMAKE_SOURCE_DIR}/src/mafGUI/mafGUIVMEImages.qrc)
+qt5_add_resources(RESOURCE_ADDED ${RESOURCE1} ${RESOURCE2})
+
+
 # Create the library.
 #if(${BUILD_SHARED_LIBS})
-  ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
+  ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS} ${RESOURCE_ADDED})
 #else(${BUILD_SHARED_LIBS})
-#  ADD_LIBRARY(${PROJECT_NAME} STATIC ${PROJECT_SRCS})
+#  ADD_LIBRARY(${PROJECT_NAME} STATIC ${PROJECT_SRCS} ${RESOURCE_ADDED})
 #endif(${BUILD_SHARED_LIBS})  
 
 
