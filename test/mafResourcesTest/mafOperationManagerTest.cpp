@@ -9,26 +9,13 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafCoreRegistration.h>
-#include <mafResourcesSingletons.h>
-#include <mafEventBusManager.h>
-#include <mafVMEManager.h>
-#include <mafOperationManager.h>
-#include <mafOperation.h>
-#include <mafOperationWorker.h>
-#include <mafVME.h>
+#include "mafResourcesTestList.h"
 
 #define kMAX_COUNT 50000
 
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
-
-//==========================================================================================
-// Objects used in test suite.
-//==========================================================================================
 
 /**
  Class name: testEndlessOperation
@@ -54,6 +41,7 @@ public Q_SLOTS:
 
 testEndlessOperation::testEndlessOperation(const QString code_location) : mafOperation(code_location) {
     m_CanUnDo = false;
+	m_MultiThreaded = true;
     setObjectName("testEndlessOperation");
 }
 
@@ -105,6 +93,7 @@ private:
 
 testNotUndoOperation::testNotUndoOperation(const QString code_location) : mafOperation(code_location), m_Val(0) {
     m_CanUnDo = false;
+	m_MultiThreaded = true;
     setObjectName("NotUndoOperation");
 }
 
@@ -166,6 +155,7 @@ private:
 };
 
 testUndoOperation::testUndoOperation(const QString code_location) : mafOperation(code_location), m_Val(0) {
+	m_MultiThreaded = true;
     setObjectName("UndoOperation");
 }
 
@@ -327,109 +317,66 @@ void testAutoCancelMultiThreadOperation::terminated() {
 // Test Suite
 //==========================================================================================
 
-/**
- Class name: mafOperationManagerTest
- This class implements the test suite for mafOperationManager.
- */
-class mafOperationManagerTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafRegisterLocalSignal("maf.local.resources.vme.add.test", this, "vmeAddSignalTest(mafCore::mafObjectBase *)")
-        mafRegisterLocalCallback("maf.local.resources.vme.add.test", this, "vmeAddTest(mafCore::mafObjectBase *)")
-        mafMessageHandler::instance()->installMessageHandler();
-        m_EventBus = mafEventBusManager::instance();
-
-        m_VMEManager = mafVMEManager::instance();
-
-        //Request hierarchy
-        mafHierarchyPointer hierarchy;
-        QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
-        mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
-
-        //Select root
-        mafObject *root;
-        ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
-        mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
-
-        m_OperationManager = mafOperationManager::instance();
-
-        // Register all the creatable objects for the mafResources module.
-        mafResourcesRegistration::registerResourcesObjects();
-
-        // Register custom operations.
-        mafRegisterObject(testEndlessOperation);
-        mafRegisterObject(testNotUndoOperation);
-        mafRegisterObject(testUndoOperation);
-        mafRegisterObject(testAutoCancelSingleThreadOperation);
-        mafRegisterObject(testAutoCancelMultiThreadOperation);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        qDebug() << "cleanup test suite...";
-        m_OperationManager->shutdown();
-        m_VMEManager->shutdown();
-
-        // Unregister custom operations.
-        mafUnregisterObject(testEndlessOperation);
-        mafUnregisterObject(testNotUndoOperation);
-        mafUnregisterObject(testUndoOperation);
-        mafUnregisterObject(testAutoCancelSingleThreadOperation);
-        mafUnregisterObject(testAutoCancelMultiThreadOperation);
-
-
-        //restore vme manager status
-        m_EventBus->notifyEvent("maf.local.resources.hierarchy.request");
-
-        m_EventBus->shutdown();
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafOperationManager allocation test case.
-    void mafOperationManagerAllocationTest();
-
-    /// Start and cancel test case.
-    void cancelStartTest();
-
-    /// Abort execution test
-    void abortExecutionTest();
-
-    /// Undo-Redo functionality test
-    void undoRedoExecutionTest();
+void mafOperationManagerTest::initTestCase() {
     
-    /// Operation which stop its execution, canceling it.
-    void cancelExecutionTest();
+    mafRegisterLocalSignal("maf.local.resources.vme.add.test", this, "vmeAddSignalTest(mafCore::mafObjectBase *)")
+    mafRegisterLocalCallback("maf.local.resources.vme.add.test", this, "vmeAddTest(mafCore::mafObjectBase *)")
+    mafMessageHandler::instance()->installMessageHandler();
 
-public:
-    /// Utility method to start operations. Return the operation started.
-    const mafCore::mafObjectBase *startOperation(QString opType);
+    m_EventBus = mafEventBusManager::instance();
+    m_VMEManager = mafVMEManager::instance();
 
-    /// Utility method to retrieve the execution pool.
-    const mafExecutionPool *retrievePool();
+    //Request hierarchy
+    mafHierarchyPointer hierarchy = NULL;
+    
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafHierarchyPointer, hierarchy);
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.request", mafEventTypeLocal, NULL, &ret_val);
+    //Select root
+    mafObject *root;
+    ret_val = mafEventReturnArgument(mafCore::mafObject *, root);
+    mafEventBus::mafEventBusManager::instance()->notifyEvent("maf.local.resources.hierarchy.root", mafEventTypeLocal, NULL, &ret_val);
 
-public Q_SLOTS:
-    void vmeAddTest(mafCore::mafObjectBase *vme);
+    m_OperationManager = mafOperationManager::instance();
 
-Q_SIGNALS:
-    void vmeAddSignalTest(mafCore::mafObjectBase *vme);
+    // Register all the creatable objects for the mafResources module.
+    mafResourcesRegistration::registerResourcesObjects();
 
-private:
-    mafEventBusManager *m_EventBus; ///< Reference to the event bus.
-    mafOperationManager *m_OperationManager; ///< Reference to the OperationManager.
-    const mafExecutionPool *m_ExecutionPool; ///< Pool of running thread.
-    mafVMEManager *m_VMEManager; ///< Manager needed for the hierarchy.
-};
+    // Register custom operations.
+    mafRegisterObject(testEndlessOperation);
+    mafRegisterObject(testNotUndoOperation);
+    mafRegisterObject(testUndoOperation);
+    mafRegisterObject(testAutoCancelSingleThreadOperation);
+    mafRegisterObject(testAutoCancelMultiThreadOperation);
+}
 
-const mafCore::mafObjectBase *mafOperationManagerTest::startOperation(QString opType) {
+
+void mafOperationManagerTest::cleanupTestCase() {
+    qDebug() << "cleanup test suite...";
+    m_OperationManager->shutdown();
+    m_VMEManager->shutdown();
+
+    // Unregister custom operations.
+    mafUnregisterObject(testEndlessOperation);
+    mafUnregisterObject(testNotUndoOperation);
+    mafUnregisterObject(testUndoOperation);
+    mafUnregisterObject(testAutoCancelSingleThreadOperation);
+    mafUnregisterObject(testAutoCancelMultiThreadOperation);
+
+
+    //restore vme manager status
+    m_EventBus->notifyEvent("maf.local.resources.hierarchy.request");
+
+    m_EventBus->shutdown();
+    mafMessageHandler::instance()->shutdown();
+}
+
+mafCore::mafObjectBase *mafOperationManagerTest::startOperation(QString opType) {
     mafEventArgumentsList argList;
     argList.append(mafEventArgument(QString, opType));
     m_EventBus->notifyEvent("maf.local.resources.operation.start", mafEventTypeLocal, &argList);
 
-    const mafCore::mafObjectBase *op = NULL;
-    QGenericReturnArgument ret_val = mafEventReturnArgument(const mafCore::mafObjectBase*, op);
+    mafCore::mafObjectBase *op = NULL;
+    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, op);
     m_EventBus->notifyEvent("maf.local.resources.operation.currentRunning", mafEventTypeLocal, NULL, &ret_val);
     return op;
 }
@@ -446,6 +393,7 @@ const mafExecutionPool *mafOperationManagerTest::retrievePool() {
  }
 
 void mafOperationManagerTest::mafOperationManagerAllocationTest() {
+	
     QVERIFY(m_OperationManager != NULL);
 
     m_ExecutionPool = this->retrievePool();
@@ -453,11 +401,12 @@ void mafOperationManagerTest::mafOperationManagerAllocationTest() {
 
     int poolSize = m_ExecutionPool->size();
     QVERIFY(poolSize == 0);
+	
 }
 
 
 void mafOperationManagerTest::cancelStartTest() {
-    const mafCore::mafObjectBase *op = this->startOperation("testEndlessOperation");
+    mafCore::mafObjectBase *op = this->startOperation("testEndlessOperation");
 
     // Cancel the operation's execution
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.stop", mafEventTypeLocal);
@@ -585,6 +534,4 @@ void mafOperationManagerTest::cancelExecutionTest() {
 
 }
 
-
-MAF_REGISTER_TEST(mafOperationManagerTest);
 #include "mafOperationManagerTest.moc"

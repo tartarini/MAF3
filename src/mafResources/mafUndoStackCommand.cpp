@@ -21,7 +21,7 @@ mafUndoStackCommand::mafUndoStackCommand(mafOperation *rec, QString action, cons
     QString action_sig = CALLBACK_SIGNATURE;
     action_sig.append(action);
 
-    bool result = connect(this, SIGNAL(executeCommand()), rec, action_sig.toAscii(), Qt::DirectConnection);
+    bool result = connect(this, SIGNAL(executeCommand()), rec, action_sig.toLatin1(), Qt::DirectConnection);
 }
 
 mafUndoStackCommand::~mafUndoStackCommand() {

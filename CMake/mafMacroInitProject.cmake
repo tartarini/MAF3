@@ -8,6 +8,25 @@
 #  See Licence at: http://tiny.cc/QXJ4D
 #
 #
+
+################### PUBLIC INTERFACE
+MACRO(mafMacroInitProject type)
+  
+  if( ${type} STREQUAL "application" )
+      InitializeApplication()
+  elseif ( ${type} STREQUAL "library" )
+      InitializeLibrary()
+  elseif( ${type} STREQUAL "test")
+      InitializeTest()
+  elseif( ${type} STREQUAL "plugin")
+      InitializePlugin()
+  else() 
+      message(FATAL_ERROR "${type} not recognized. Select between application, library, plugin, test")
+  endif()
+
+ENDMACRO()
+
+################### PRIVATE IMPLEMENTATION (don't call from outside)
 MACRO(filterForMoc outputList inputList)
 set(${outputList})
 
@@ -23,8 +42,8 @@ endforeach(file ${inputList})
 
 ENDMACRO()
 
-MACRO(mafMacroInitProject test)
 
+MACRO(InternalPreInitialize)
   # Extract current directory name to use as project name
 
   file(GLOB CUR_FILE "CMakeLists.txt")
@@ -56,19 +75,18 @@ MACRO(mafMacroInitProject test)
     set(include_file_list ${include_file_list} ${decorator_file_header_list})
   endif(BUILD_WRAP)
 
-  
-  # Set your list of sources here.
-
+   
   SET(PROJECT_SRCS
-	${implementation_file_list}
-	${implementation_file_list_vtkMAF}
+  ${implementation_file_list}
+  ${implementation_file_list_vtkMAF}
 
-	${input_include_file_list}
-	${templete_file_list1}
+  ${input_include_file_list}
+  ${templete_file_list1}
 
-	${templete_file_list2}
-	${ui_file_list}
-	${resource_file_list}
+  ${templete_file_list2}
+  ${ui_file_list}
+    ${uis_hdrs}
+  ${resource_file_list}
 
   )
   
@@ -82,25 +100,10 @@ MACRO(mafMacroInitProject test)
   
   ## Add the project binary dir as include dir for the .moc files.
   INCLUDE_DIRECTORIES("${PROJECT_BINARY_DIR}")
+ENDMACRO()
 
-  set(MY_MOC_CXX)
-  set(MY_UI_CXX)
-  set(QtApp_RCC_SRCS)
-  if(${test})
-    ## Moc the tests:
-    foreach(FILE_NAME_ABS ${implementation_file_list})
-      ## extract the base file name.
-      get_filename_component(FILE_NAME ${FILE_NAME_ABS} NAME_WE)
-      ## Exclude the main.cpp file (it doesn't ned to be 'mocced')
-      if(NOT ${FILE_NAME} STREQUAL "main")
-        ## Assign the moc custom filename
-        set(MOC_FILE "${FILE_NAME}.moc")
-        QT4_GENERATE_MOC(${FILE_NAME_ABS} ${MOC_FILE})
-        LIST(APPEND MY_MOC_CXX "${PROJECT_BINARY_DIR}/${MOC_FILE}")
-      endif(NOT ${FILE_NAME} STREQUAL "main")
-    endforeach()
-  else(${test})
-    if(BUILD_QA)
+MACRO(InternalInitialize)
+  if(BUILD_QA)
     if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
       
       find_program( CODECOV_GCOV gcov )
@@ -113,22 +116,12 @@ MACRO(mafMacroInitProject test)
             message("gcov not present.")
     ENDIF(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     endif(BUILD_QA)
-  
-    QT4_WRAP_UI(MY_UI_CXX ${ui_file_list})
-    # generate rules for building source files from the resources
-    QT4_ADD_RESOURCES(QtApp_RCC_SRCS ${resource_file_list})
-    ## Moc the library's .h files
+ENDMACRO()
 
-    QT4_WRAP_CPP(MY_MOC_CXX ${include_file_list})
-    
-  endif(${test})
+MACRO(InternalPostInitialize)
   SET(PROJECT_SRCS 
     ${PROJECT_SRCS}
-    ${MY_MOC_CXX}
-    ${MY_UI_CXX}
-    ${QtApp_RCC_SRCS}
     )
-
   if(UNIX)
     if(BUILD_QA AND valgrind_FOUND)
       add_definitions( -g -O0 )
@@ -149,8 +142,32 @@ MACRO(mafMacroInitProject test)
   # List libraries that are needed by this project.
   mafMacroGetTargetLibraries(dependency_libraries)
   
-  
-  
   SET(PROJECT_LIBS ${dependency_libraries})
-
 ENDMACRO()
+
+MACRO(InitializeApplication)
+  InternalPreInitialize()
+  InternalInitialize()
+  InternalPostInitialize()
+ENDMACRO()
+
+MACRO(InitializeLibrary)
+  InternalPreInitialize()
+  InternalInitialize()
+  InternalPostInitialize()
+ENDMACRO()
+
+MACRO(InitializeTest)
+  InternalPreInitialize()
+  #InternalInitialize()
+  InternalPostInitialize()
+ENDMACRO()
+
+MACRO(InitializePlugin)
+  InternalPreInitialize()
+  InternalInitialize()
+  InternalPostInitialize()
+ENDMACRO()
+
+
+

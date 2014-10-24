@@ -15,7 +15,7 @@
 #include "mafGUI_global.h"
 
 #include <QWidget>
-#include <QUiLoader>
+#include <QtUiTools/QUiLoader>
 #include <QPlainTextEdit>
 #include <QSyntaxHighlighter>
 #include <QTextCharFormat>

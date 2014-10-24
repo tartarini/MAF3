@@ -51,7 +51,7 @@ mafMementoVME::mafMementoVME(const mafObject *obj, bool binary, const QString co
             mafMementoPropertyItem item;
             const QMetaProperty qmp = obj->metaObject()->property(i);
             QString propName = qmp.name();
-            QVariant value = obj->property(propName.toAscii());
+            QVariant value = obj->property(propName.toLatin1());
             item.m_Multiplicity = 1;
             item.m_Name = qmp.name();
             item.m_Value = value;

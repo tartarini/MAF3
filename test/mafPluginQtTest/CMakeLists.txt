@@ -13,29 +13,21 @@
 ## Find the external packages.
 ## #################################################################
 
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_OpenCV.cmake)
-
 ## #################################################################
 ## Init Project
 ## #################################################################
 
-mafMacroInitProject(0)
+mafMacroInitProject("plugin")
 
 ## #################################################################
 ## Build rules
 ## #################################################################
 
-# Create the executable.
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
-
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SUFFIX ".mafplugin")
+mafMacroConfigureProject("plugin")
 
 ## #################################################################
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject(0)
+mafMacroBuildProject("test")
 

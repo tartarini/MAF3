@@ -130,7 +130,7 @@ void mafPluginManager::registerPlugin(mafCore::mafPluggedObjectsHash pluginHash)
         objInfo = iter.value();
         base_class = iter.key();
         if(base_class.isEmpty()) {
-            QByteArray ba = mafTr("Try to plug %1 that has no base class reference!!").arg(objInfo.m_ClassType).toAscii();
+            QByteArray ba = mafTr("Try to plug %1 that has no base class reference!!").arg(objInfo.m_ClassType).toLatin1();
             qWarning("%s", ba.data());
         } else {
             m_PluggedObjectsHash.insertMulti(base_class, objInfo);

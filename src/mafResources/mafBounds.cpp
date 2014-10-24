@@ -10,22 +10,24 @@
  */
 
 #include "mafBounds.h"
-#include "mafMatrix.h"
+#include "mafMatrix4x4.h"
+
+#include <QGenericMatrix>
 
 using namespace mafCore;
 using namespace mafResources;
 
 mafBounds::mafBounds(const QString code_location) : mafCore::mafReferenceCounted(), m_XMin(0), m_YMin(0), m_ZMin(0), m_XMax(-1), m_YMax(-1), m_ZMax(-1) {
-    m_TransformationMatrix = new mafMatrix(4,4);
-    m_TransformationMatrix->setIdentity();
+    m_TransformationMatrix = new mafMatrix4x4();
+    m_TransformationMatrix->setToIdentity();
 }
 
 // mafBounds::mafBounds(const mafBounds &p) : m_XMin(p.xMin()), m_YMin(p.yMin()), m_ZMin(p.zMin()), m_XMax(p.xMax()), m_YMax(p.yMax()), m_ZMax(p.zMax()) {
 // }
 
 mafBounds::mafBounds(double b[6], const QString code_location) : m_XMin(b[0]), m_XMax(b[1]), m_YMin(b[2]), m_YMax(b[3]), m_ZMin(b[4]), m_ZMax(b[5]) {
-    m_TransformationMatrix = new mafMatrix(4,4);
-    m_TransformationMatrix->setIdentity();
+    m_TransformationMatrix = new mafMatrix4x4();
+    m_TransformationMatrix->setToIdentity();
 }
 
 mafBounds::~mafBounds() {
@@ -39,7 +41,7 @@ mafBounds &mafBounds::operator =(const mafBounds& obj) {
     m_YMax = obj.yMax();
     m_ZMin = obj.zMin();
     m_ZMax = obj.zMax();
-    m_TransformationMatrix = obj.transformation()->clone();
+    m_TransformationMatrix = new mafMatrix4x4(*(obj.transformation()));
     return *this;
 }
 
@@ -70,7 +72,7 @@ void mafBounds::unite(const mafBounds &b) {
     
     this->setBounds(bounds);
     
-    m_TransformationMatrix->setIdentity();
+    m_TransformationMatrix->setToIdentity();
 }
 
 void mafBounds::intersect(const mafBounds &b) {
@@ -110,7 +112,7 @@ void mafBounds::intersect(const mafBounds &b) {
     }
     
     this->setBounds(outputBound);
-    this->transformation()->setIdentity();
+    this->transformation()->setToIdentity();
 }
 
 void mafBounds::bounds(double *b) {
@@ -130,7 +132,7 @@ void mafBounds::setBounds(double b[6]) {
     m_YMax = b[3];
     m_ZMin = b[4];
     m_ZMax = b[5];
-    m_TransformationMatrix->setIdentity();
+    m_TransformationMatrix->setToIdentity();
 }
 
 void mafBounds::setBounds(mafBounds *b) {
@@ -141,7 +143,7 @@ void mafBounds::setBounds(mafBounds *b) {
     m_ZMin = b->zMin();
     m_ZMax = b->zMax();
     delete m_TransformationMatrix;
-    m_TransformationMatrix = b->transformation()->clone();
+    m_TransformationMatrix = new mafMatrix4x4(*(b->transformation()));
 }
 
 double mafBounds::length() {
@@ -175,85 +177,73 @@ bool mafBounds::isPointInBounds(mafPoint *p) {
         p->z() >= m_ZMin && p->z() <= m_ZMax;
 }
 
-void mafBounds::transformBounds(mafMatrix *matrix) {
+void mafBounds::transformBounds(mafMatrix4x4 *matrix) {
     if (matrix == NULL) {
         return;
     }
 
     (*m_TransformationMatrix) = (*matrix) * (*m_TransformationMatrix);
     
-    mafMatrix boundsMatrix(4, 8);
+    QGenericMatrix<8,4, double> boundsMatrix;
+ 
+    boundsMatrix(0,0) = m_XMin;
+    boundsMatrix(1,0) =  m_YMin;
+    boundsMatrix(2,0) =  m_ZMin;
+    boundsMatrix(3,0) =  1.;
 
-    mafMatrix p0(4,1);
-    p0.setElement(0,0, m_XMin);
-    p0.setElement(1,0, m_YMin);
-    p0.setElement(2,0, m_ZMin);
-    p0.setElement(3,0, 1.);
-    boundsMatrix.setColumn(p0, 0);
+    
+    boundsMatrix(0,1) = m_XMax;
+    boundsMatrix(1,1) = m_YMin;
+    boundsMatrix(2,1) = m_ZMin;
+    boundsMatrix(3,1) = 1.;
+    
 
-    mafMatrix p1(4,1);
-    p1.setElement(0,0, m_XMax);
-    p1.setElement(1,0, m_YMin);
-    p1.setElement(2,0, m_ZMin);
-    p1.setElement(3,0, 1.);
-    boundsMatrix.setColumn(p1, 1);
+    boundsMatrix(0,2) = m_XMax;
+    boundsMatrix(1,2) = m_YMax;
+    boundsMatrix(2,2) = m_ZMin;
+    boundsMatrix(3,2) = 1.;
 
-    mafMatrix p2(4,1);
-    p2.setElement(0,0, m_XMax);
-    p2.setElement(1,0, m_YMax);
-    p2.setElement(2,0, m_ZMin);
-    p2.setElement(3,0, 1.);
-    boundsMatrix.setColumn(p2, 2);
 
-    mafMatrix p3(4,1);
-    p3.setElement(0,0, m_XMin);
-    p3.setElement(1,0, m_YMax);
-    p3.setElement(2,0, m_ZMin);
-    p3.setElement(3,0, 1.);
-    boundsMatrix.setColumn(p3, 3);
+    boundsMatrix(0,3) = m_XMin;
+    boundsMatrix(1,3) = m_YMax;
+    boundsMatrix(2,3) = m_ZMin;
+    boundsMatrix(3,3) = 1.;
 
-    mafMatrix p4(4,1);
-    p4.setElement(0,0, m_XMin);
-    p4.setElement(1,0, m_YMin);
-    p4.setElement(2,0, m_ZMax);
-    p4.setElement(3,0, 1.);
-    boundsMatrix.setColumn(p4, 4);
+    boundsMatrix(0,4) = m_XMin;
+    boundsMatrix(1,4) = m_YMin;
+    boundsMatrix(2,4) = m_ZMax;
+    boundsMatrix(3,4) = 1.;
 
-    mafMatrix p5(4,1);
-    p5.setElement(0,0, m_XMax);
-    p5.setElement(1,0, m_YMin);
-    p5.setElement(2,0, m_ZMax);
-    p5.setElement(3,0, 1.);
-    boundsMatrix.setColumn(p5, 5);
+    boundsMatrix(0,5) = m_XMax;
+    boundsMatrix(1,5) = m_YMin;
+    boundsMatrix(2,5) = m_ZMax;
+    boundsMatrix(3,5) = 1.;
 
-    mafMatrix p6(4,1);
-    p6.setElement(0,0, m_XMax);
-    p6.setElement(1,0, m_YMax);
-    p6.setElement(2,0, m_ZMax);
-    p6.setElement(3,0, 1.);
-    boundsMatrix.setColumn(p6, 6);
+    boundsMatrix(0,6) = m_XMax;
+    boundsMatrix(1,6) = m_YMax;
+    boundsMatrix(2,6) = m_ZMax;
+    boundsMatrix(3,6) = 1.;
+    
+    boundsMatrix(0,7) = m_XMin;
+    boundsMatrix(1,7) = m_YMax;
+    boundsMatrix(2,7) = m_ZMax;
+    boundsMatrix(3,7) = 1.;
 
-    mafMatrix p7(4,1);
-    p7.setElement(0,0, m_XMin);
-    p7.setElement(1,0, m_YMax);
-    p7.setElement(2,0, m_ZMax);
-    p7.setElement(3,0, 1.);
-    boundsMatrix.setColumn(p7, 7);
 
-    mafMatrix transformedBounds = (*matrix) * boundsMatrix;
+    QGenericMatrix<8,4, qreal> transformedBounds = (*matrix) * boundsMatrix; // check this! before was inverted but generic multiplication (reverted again...since generic matrix takes as first the number of columns!)
 
-    m_XMax = m_XMin = transformedBounds.element(0, 0);
-    m_YMax = m_YMin = transformedBounds.element(1, 0);
-    m_ZMax = m_ZMin = transformedBounds.element(2, 0);
+    m_XMax = m_XMin = transformedBounds(0,0);
+    m_YMax = m_YMin = transformedBounds(1,0);
+    m_ZMax = m_ZMin = transformedBounds(2,0);
     double x, y, z;
     for (int i = 1; i < 8; ++i) {
-        x = transformedBounds.element(0, i);
+        x = transformedBounds(0,i);
         m_XMin = x < m_XMin ? x : m_XMin;
         m_XMax = x > m_XMax ? x : m_XMax;
-        y = transformedBounds.element(1, i);
+        y = transformedBounds(1,i);
         m_YMin = y < m_YMin ? y : m_YMin;
         m_YMax = y > m_YMax ? y : m_YMax;
-        z = transformedBounds.element(2, i);
+        z = transformedBounds(2,i);
         m_ZMin = z < m_ZMin ? z : m_ZMin;
         m_ZMax = z > m_ZMax ? z : m_ZMax;
     }
@@ -266,5 +256,5 @@ void mafBounds::description() const {
     qDebug() << "Z Min: " << m_ZMin << " Z Max: " << m_ZMax;
     
     qDebug() << "Transform Matrix: ";
-    m_TransformationMatrix->description();
+    qDebug() <<  m_TransformationMatrix;
 }

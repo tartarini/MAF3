@@ -91,7 +91,7 @@ void mafPipe::removeInput(mafVME *vme) {
         // Remove the found VME.
         m_InputList->removeAt(idx);
     } else {
-        QByteArray ba = mafTr("Object %1 not present in input list").arg(vme->objectName()).toAscii();
+        QByteArray ba = mafTr("Object %1 not present in input list").arg(vme->objectName()).toLatin1();
         qWarning("%s", ba.data());
     }
 }
@@ -104,7 +104,7 @@ void mafPipe::removeInput(const int idx) {
         mafVME *vme = m_InputList->at(idx);
         m_InputList->removeAt(idx);
     } else {
-        QByteArray ba = mafTr("Index %1 outside input list range.").arg(idx).toAscii();
+        QByteArray ba = mafTr("Index %1 outside input list range.").arg(idx).toLatin1();
         qWarning("%s", ba.data());
     }
 }
@@ -115,7 +115,7 @@ void mafPipe::setParametersHash(const QVariantHash hash) {
     QVariantHash::iterator iter = m_ParametersHash.begin();
     while (iter != m_ParametersHash.end()) {
         // Cycle over all hash items and set parameters present as properties.
-        QByteArray ba = iter.key().toAscii();
+        QByteArray ba = iter.key().toLatin1();
         QVariant val(iter.value());
         setProperty(ba.constData(), val);
         ++iter;

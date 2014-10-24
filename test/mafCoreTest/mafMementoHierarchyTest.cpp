@@ -9,42 +9,18 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafHierarchy.h>
-#include <mafMementoHierarchy.h>
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
-/**
- Class name: mafMementoHierarchyTest
- This class implements the test suite for mafMementoHierarchy.
- */
-class mafMementoHierarchyTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        // Create before the instance of the Serialization manager, which will register signals.
-
-        mafMessageHandler::instance()->installMessageHandler();
+void mafMementoHierarchyTest::initTestCase() {
+    // Create before the instance of the Serialization manager, which will register signals.
+    mafMessageHandler::instance()->installMessageHandler();
 }
 
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafMementoHierarchy allocation test case.
-    void mafMementoHierarchyDefaultAllocationTest();
-
-    /// mafMementoHierarchy traverse a more complex hierarchy
-    void mafMementoHierarchyTraverseTreeTest();
-
-    
-private:
-};
+void mafMementoHierarchyTest::cleanupTestCase() {
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafMementoHierarchyTest::mafMementoHierarchyDefaultAllocationTest() {
     mafHierarchy *h = mafNEW(mafCore::mafHierarchy);
@@ -102,6 +78,4 @@ void mafMementoHierarchyTest::mafMementoHierarchyTraverseTreeTest() {
     mafDEL(h);
 }
 
-
-MAF_REGISTER_TEST(mafMementoHierarchyTest);
 #include "mafMementoHierarchyTest.moc"

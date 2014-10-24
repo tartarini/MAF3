@@ -21,27 +21,33 @@ mafLoggerConsole::~mafLoggerConsole() {
 }
 
 void mafLoggerConsole::loggedMessage(const QtMsgType type, const QString &msg) {
-    printf("%s ---> " , QDateTime::currentDateTime().toString(mafDateTimeLogFormat).toStdString().c_str());
+	QString dt(QDateTime::currentDateTime().toString(mafDateTimeLogFormat));
+	std::string cp; 
+	cp.append(QDateTime::currentDateTime().toString(mafDateTimeLogFormat).toLatin1());
+	cp.append(" ---> ");
+	std::cout << cp << " " << "---> ";
+	std::string message;
+	message.append(msg.toLatin1());
     switch (type) {
     case QtDebugMsg:
         if(logMode() == mafLogModeTestSuite) {
-            printf("%s %s\n", TEST_SUITE_LOG_PREFIX ,msg.toStdString().c_str());
+			std::cout << TEST_SUITE_LOG_PREFIX << " " << message << std::endl;
         } else {
-            printf("Debug: %s\n", msg.toStdString().c_str());
+			std::cout << "Debug:" << message << std::endl;
         }
         break;
     case QtWarningMsg:
         if(logMode() == mafLogModeTestSuite) {
-            printf("%s %s\n", TEST_SUITE_LOG_PREFIX ,msg.toStdString().c_str());
+			std::cout << TEST_SUITE_LOG_PREFIX << " " << message << std::endl;
         } else {
-        printf("Warning: %s\n", msg.toStdString().c_str());    
+			std::cout << "Warning:" << message << std::endl;
         }
         break;
     case QtCriticalMsg:
-        printf("Critical: %s\n", msg.toStdString().c_str());    
+		std::cout << "Critical:" << message << std::endl;
         break;
     case QtFatalMsg:
-        printf("Fatal: %s\n", msg.toStdString().c_str());    
+		std::cout << "Fatal:" << message << std::endl;
         //abort();
         break;
     }

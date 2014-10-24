@@ -2,15 +2,14 @@
  *  mafLoggerTest.cpp
  *  mafCoreTest
  *
- *  Created by Paolo Quadrani on 27/03/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 27/03/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafLogger.h>
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
@@ -54,43 +53,13 @@ void testLoggerCustom::loggedMessage(const QtMsgType type, const QString &msg) {
 
 //-------------------------------------------------------------------------
 
-
-/**
- Class name: mafLoggerTest
- This class implements the test suite for mafLogger.
- */
-class mafLoggerTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    ///!brief Initialize test variables
-    void initTestCase() {
+void mafLoggerTest::initTestCase() {
         m_Logger = mafNEW(testLoggerCustom);
     }
 
-    ///!brief Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_Logger);
-    }
-
-    /// create new object and check that is not NULL test case.
-    void mafLoggerConstructorTest();
-
-    /// Test the logging modality switch.
-    void setLogModeTest();
-
-    /// Test the logger enable functionality.
-    void setEnabledTest();
-
-    /// Test the logging.
-    void logMessageTest();
-
-    /// Test isEqual function.
-    void isEqualTest();
-
-private:
-    testLoggerCustom *m_Logger; ///< Test variable
-};
+void mafLoggerTest::cleanupTestCase() {
+    mafDEL(m_Logger);
+}
 
 void mafLoggerTest::mafLoggerConstructorTest() {
     QVERIFY(m_Logger != NULL);
@@ -132,6 +101,5 @@ void mafLoggerTest::isEqualTest() {
     mafDEL(myLogger);
 }
 
-MAF_REGISTER_TEST(mafLoggerTest);
 #include "mafLoggerTest.moc"
 

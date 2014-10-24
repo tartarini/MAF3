@@ -2,53 +2,25 @@
  *  mafPointTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 13/12/11.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 13/12/11.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafPoint.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafResources;
 
-/**
- Class name: mafPointTest
- This class implements the test suite for mafPoint.
- */
+void mafPointTest::initTestCase() {
+    m_ObjTestVar = new mafResources::mafPoint();
+}
 
-//! <title>
-//mafPoint
-//! </title>
-//! <description>
-// mafPoint defines the MAF3 base object for 3D point.
-//! </description>
-
-class mafPointTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_ObjTestVar = new mafResources::mafPoint();
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        m_ObjTestVar->release();
-    }
-
-    /// Test the ID generation for the mafObjectBase
-    void objectAllocationTest();
-    
-    /// test point equality
-    void pointsEqualTest();
-
-private:
-    mafPoint *m_ObjTestVar; ///< Test variable
-};
+/// Cleanup test variables memory allocation.
+void mafPointTest::cleanupTestCase() {
+    m_ObjTestVar->release();
+}
 
 void mafPointTest::objectAllocationTest() {
     QVERIFY(m_ObjTestVar);
@@ -71,10 +43,7 @@ void mafPointTest::pointsEqualTest() {
     double p[3] = {1.,2.,3.};
     pointB = new mafPoint(p);
     
-    QVERIFY(!(*pointA != *pointB));
-    
-    
+    QVERIFY(!(*pointA != *pointB));    
 }
 
-MAF_REGISTER_TEST(mafPointTest);
 #include "mafPointTest.moc"

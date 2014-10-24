@@ -2,74 +2,39 @@
  *  mafInterpolatorNearestTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafResourcesRegistration.h>
-#include <mafCoreSingletons.h>
-#include <mafInterpolatorNearest.h>
-#include <mafDataSet.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafResources;
 
-/**
- Class name: mafInterpolatorNearestTest
- This class implements the test suite for mafInterpolatorNearest.
- */
+void mafInterpolatorNearestTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
 
-//! <title>
-//mafInterpolatorNearest
-//! </title>
-//! <description>
-//mafInterpolatorNearest provides the mechanism to return the element nearest the the given timestamp.
-//First element or last one are returned for timestamps outside the definition range of the collection.
-//! </description>
+    //! <snippet>
+    m_Interpolator = mafNEW(mafResources::mafInterpolatorNearest);
+    //! </snippet>
 
-class mafInterpolatorNearestTest: public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-
-        //! <snippet>
-        m_Interpolator = mafNEW(mafResources::mafInterpolatorNearest);
-        //! </snippet>
-
-        double ts[10] = {0.5, 1.5, 10.5, 11.0, 12.8, 23.9, 52.1, 53.0, 53.1, 53.2};
-        for(int i = 0; i < 10; ++i) {
-            mafDataSet *item = mafNEW(mafResources::mafDataSet);
-            m_ItemMap.insert(ts[i], item);
-            mafDEL(item);
-        }
+    double ts[10] = {0.5, 1.5, 10.5, 11.0, 12.8, 23.9, 52.1, 53.0, 53.1, 53.2};
+    for(int i = 0; i < 10; ++i) {
+        mafDataSet *item = mafNEW(mafResources::mafDataSet);
+        m_ItemMap.insert(ts[i], item);
+        mafDEL(item);
     }
+}
 
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        m_ItemMap.clear();
-        mafDEL(m_Interpolator);
-        mafEventBus::mafEventBusManager::instance()->shutdown();
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafInterpolatorNearest allocation test case.
-    void mafInterpolatorNearestAllocationTest();
-    /// Test the interpolation strategy.
-    void mafInterpolationNearestStrategyTest();
-    /// Test the interpolation empty collection.
-    void mafInterpolationNearestEmptyCollTest();
-
-private:
-    mafInterpolator *m_Interpolator; ///< Test var.
-    mafDataSetMap m_ItemMap; ///< Test data collection.
-};
+void mafInterpolatorNearestTest::cleanupTestCase() {
+    m_ItemMap.clear();
+    mafDEL(m_Interpolator);
+    mafEventBus::mafEventBusManager::instance()->shutdown();
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafInterpolatorNearestTest::mafInterpolatorNearestAllocationTest() {
     QVERIFY(m_Interpolator != NULL);
@@ -111,5 +76,4 @@ void mafInterpolatorNearestTest::mafInterpolationNearestEmptyCollTest() {
     QVERIFY(item != NULL);
 }
 
-MAF_REGISTER_TEST(mafInterpolatorNearestTest);
 #include "mafInterpolatorNearestTest.moc"

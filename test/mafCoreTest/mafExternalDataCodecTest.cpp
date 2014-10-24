@@ -2,15 +2,14 @@
  *  mafExternalDataCodecTest.cpp
  *  mafSerializationTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafExternalDataCodec.h>
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
@@ -56,41 +55,19 @@ char * testExternalDataCodecCustom::encode(bool binary) {
     Q_UNUSED(binary);
     m_CodecString.clear();
     m_CodecString.append("Coded data");
-    m_ByteArray = m_CodecString.toAscii();
+    m_ByteArray = m_CodecString.toLatin1();
     return m_ByteArray.data();
 }
 //------------------------------------------------------------------------------------------
 
-/**
- Class name: mafExternalDataCodecTest
- This class implements the test suite for mafExternalDataCodec.
- */
-class mafExternalDataCodecTest: public QObject {
-    Q_OBJECT
+void mafExternalDataCodecTest::initTestCase() {
+    m_ExternalDataCodec = mafNEW(testExternalDataCodecCustom);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_ExternalDataCodec = mafNEW(testExternalDataCodecCustom);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_ExternalDataCodec);
-    }
-
-    /// mafCodec allocation test case.
-    void mafCodecAllocationTest();
-    /// test the encode method.
-    void encodeTest();
-    /// test the decode method.
-    void decodeTest();
-
-private:
-    testExternalDataCodecCustom *m_ExternalDataCodec; ///< Test var
-    QDataStream m_StreamExternal; ///< Test buffer data.
-    QDataStream m_StreamInExternal; ///< Test buffer data.
-};
+/// Cleanup test variables memory allocation.
+void mafExternalDataCodecTest::cleanupTestCase() {
+    mafDEL(m_ExternalDataCodec);
+}
 
 void mafExternalDataCodecTest::mafCodecAllocationTest() {
     QVERIFY(m_ExternalDataCodec != NULL);
@@ -98,7 +75,7 @@ void mafExternalDataCodecTest::mafCodecAllocationTest() {
 
 void mafExternalDataCodecTest::encodeTest() {
     char * outputString = m_ExternalDataCodec->encode();
-    QByteArray ba = m_ExternalDataCodec->codecString().toAscii();
+    QByteArray ba = m_ExternalDataCodec->codecString().toLatin1();
     bool compare = strcmp(outputString, ba.data()) == 0;
     QVERIFY(compare);
 }
@@ -107,7 +84,7 @@ void mafExternalDataCodecTest::decodeTest() {
     QString res = "Coded data";
 
     // Call the encode function by passing the string as argument.
-    QByteArray ba = res.toAscii();
+    QByteArray ba = res.toLatin1();
     m_ExternalDataCodec->decode(ba.data());
 
     QString stringReturned(m_ExternalDataCodec->codecString());
@@ -115,7 +92,6 @@ void mafExternalDataCodecTest::decodeTest() {
     QCOMPARE(res, stringReturned);
 }
 
-MAF_REGISTER_TEST(mafExternalDataCodecTest);
 #include "mafExternalDataCodecTest.moc"
 
 

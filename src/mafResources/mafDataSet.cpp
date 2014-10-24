@@ -33,18 +33,18 @@ mafDataSet::~mafDataSet() {
 }
 
 
-mafMatrix *mafDataSet::poseMatrix() {
+mafMatrix4x4 *mafDataSet::poseMatrix() {
     if(m_Matrix == NULL) {
-        m_Matrix = new mafMatrix();
-        m_Matrix->setIdentity();
+        m_Matrix = new mafMatrix4x4();
+        m_Matrix->setToIdentity();
     }
     return m_Matrix;
 }
 
 QString mafDataSet::poseMatrixString() {
     if(m_Matrix == NULL) {
-        m_Matrix = new mafMatrix();
-        m_Matrix->setIdentity();
+        m_Matrix = new mafMatrix4x4();
+        m_Matrix->setToIdentity();
     }
     QString matrixString;
     //Create a string with the values of matrix element separated by a blank space.
@@ -52,7 +52,7 @@ QString mafDataSet::poseMatrixString() {
     for ( ; r < 4; ++r) {
         int c = 0;
         for ( ; c < 4 ; ++c ) {
-            matrixString.append(QString::number(m_Matrix->element(r,c)));
+            matrixString.append(QString::number((*m_Matrix)(r,c)));
             if (r != 3 || c != 3) {
                 matrixString.append(" ");
             }
@@ -115,12 +115,12 @@ mafProxyInterface *mafDataSet::dataValue() {
     return m_DataValue;
 }
 
-void mafDataSet::setPoseMatrix(const mafMatrix *matrix) {
+void mafDataSet::setPoseMatrix(const mafMatrix4x4 *matrix) {
     if(matrix == NULL) {
         return;
     }
     
-    m_Matrix = matrix->clone();
+    m_Matrix = new mafMatrix4x4(*matrix);
     setModified();
 }
 
@@ -136,24 +136,24 @@ void mafDataSet::setPoseMatrixString(const QString matrixString) {
     for ( ; i < numElement; i++ ) {
         list[i].toDouble(&ok);
         if (!ok || numElement != 16) {
-            QByteArray ba = mafTr("Trying to assign an invalid string to pose Matrix.").toAscii();
+            QByteArray ba = mafTr("Trying to assign an invalid string to pose Matrix.").toLatin1();
             qWarning("%s", ba.data());
             return;
         }
     }
 
-    mafMatrix *matrix = new mafMatrix();
+    mafMatrix4x4 *matrix = new mafMatrix4x4();
     int counter = 0;
     int r = 0;
     for ( ; r < 4; ++r) {
         int c = 0;
         for ( ; c < 4 ; ++c) {
             double val = list[counter].toDouble();
-            matrix->setElement(r,c,val);
+            (*matrix)(r,c) = val;
             ++counter;
         }
     }
-    m_Matrix = matrix->clone();
+    m_Matrix = new mafMatrix4x4(*matrix);
     setModified();
 }
 

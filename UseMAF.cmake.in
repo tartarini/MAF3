@@ -44,15 +44,20 @@ link_directories(
 #
 INCLUDE(ExternalProject)
 get_filename_component(CUR_ABSOLUTE_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
-include("${CUR_ABSOLUTE_DIR}/../MAFConfig.cmake")
+
+if(NOT DEFINED MAF_DIR)
+    include("${CUR_ABSOLUTE_DIR}/../MAFConfig.cmake")
+else(NOT DEFINED MAF_DIR)
+    include("${MAF_DIR}/MAFConfig.cmake")
+endif(NOT DEFINED MAF_DIR)
 
 # Add cmake module path.
 set(CMAKE_MODULE_PATH "${MAF_ROOT_DIR}/CMake")
 
 include(${CMAKE_MODULE_PATH}/mafCopySharedLibrariesInInstallDir.cmake)
 include(${CMAKE_MODULE_PATH}/mafMacroInitProject.cmake)
-include(${CMAKE_MODULE_PATH}/mafMacroInstallProject.cmake)
-include(${CMAKE_MODULE_PATH}/mafMacroInstallPlugin.cmake)
+include(${CMAKE_MODULE_PATH}/mafMacroConfigureProject.cmake)
+include(${CMAKE_MODULE_PATH}/mafMacroBuildProject.cmake)
 include(${CMAKE_MODULE_PATH}/mafMacroSetupQt.cmake)
 include(${CMAKE_MODULE_PATH}/mafMacroWrapTargetFiles.cmake)
 include(${CMAKE_MODULE_PATH}/mafMacroTargetLibraries.cmake)

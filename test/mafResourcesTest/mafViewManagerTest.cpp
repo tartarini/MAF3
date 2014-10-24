@@ -2,21 +2,14 @@
  *  mafViewManagerTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafResourcesRegistration.h>
-#include <mafEventBusManager.h>
-#include <mafViewManager.h>
-#include <mafView.h>
-#include <mafToolHandler.h>
-#include <mafMemento.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -91,59 +84,31 @@ bool testViewCustom::initialize() {
 }
 
 
-/**
- Class name: mafViewManagerTest
- This class implements the test suite for mafViewManager.
- */
-class mafViewManagerTest : public QObject {
-    Q_OBJECT
+void mafViewManagerTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    // Register all the objects that can be instantiated for the mafResources module.
+    mafResourcesRegistration::registerResourcesObjects();
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        // Register all the objects that can be instantiated for the mafResources module.
-        mafResourcesRegistration::registerResourcesObjects();
+    m_Observer = new testViewManagerObserver();
 
-        m_Observer = new testViewManagerObserver();
+    m_EventBus = mafEventBusManager::instance();
+    m_ViewManager = mafViewManager::instance();
+    
+    mafRegisterObject(testViewCustom);
+}
 
-        m_EventBus = mafEventBusManager::instance();
-        m_ViewManager = mafViewManager::instance();
-        
-        mafRegisterObject(testViewCustom);
-    }
+/// Cleanup test variables memory allocation.
+void mafViewManagerTest::cleanupTestCase() {
+    m_ViewManager->shutdown();
 
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        m_ViewManager->shutdown();
+    delete m_Observer;
 
-        delete m_Observer;
+    mafUnregisterObject(testViewCustom);
 
-        mafUnregisterObject(testViewCustom);
-
-        // Shutdown event-bus singleton and core singletons.
-        m_EventBus->shutdown();
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafViewManager allocation test case.
-    void mafViewManagerAllocationTest();
-    /// Test for createView.
-    void createViewTest();
-    /// Test select View method
-    void selectViewTest();
-    /// Test memento (for store and retrieve settings)
-    void mementoViewTest();
-    /// Test the view remove and destruction
-    void removeAndDestructionTest();
-
-private:
-    mafViewManager *m_ViewManager; ///< View Manager test variable
-    mafEventBusManager *m_EventBus; ///< Reference to the event bus.
-    testViewManagerObserver *m_Observer; ///< test observer for view created and selected.
-    QString m_Hash1;
-    QString m_Hash2;
-};
+    // Shutdown event-bus singleton and core singletons.
+    m_EventBus->shutdown();
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafViewManagerTest::mafViewManagerAllocationTest() {
     QVERIFY(m_ViewManager != NULL);
@@ -228,6 +193,5 @@ void mafViewManagerTest::removeAndDestructionTest() {
     QVERIFY(hash1 != hash2);
 }
 
-MAF_REGISTER_TEST(mafViewManagerTest);
 #include "mafViewManagerTest.moc"
 

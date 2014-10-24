@@ -2,20 +2,19 @@
  *  mafTimerTest.cpp
  *  mafTimeSpaceTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
+#include "mafTimeSpaceTestList.h"
 #include <QEventLoop>
 
 #include <mafCoreSingletons.h>
 #include <mafCoreRegistration.h>
 #include <mafEventBusManager.h>
-#include <mafTimer.h>
 #include <mafObject.h>
 
 using namespace mafCore;
@@ -80,48 +79,17 @@ void testObjectCustom::updateObject() {
 }
 //-------------------------------------------------------------------------
 
+void mafTimerTest::initTestCase() {
+    m_TimerTest = mafNEW(mafTimeSpace::mafTimer);
+    m_ObjectTest = mafNEW(testObjectCustom);
+}
 
-/**
- Class name: mafTimerTest
- This class implements the test suite for mafTimer.
- */
-
-
- //! <title>
-//mafTimer
-//! </title>
-//! <description>
-//This class provides the wrapper for the QTimer necessary to send events through the Event Bus.
-//By default the constructed timer is single shot. To enable cyclic timing use setSingleShot method and
-//pass to it a 'false' boolean value. All the timing value (intervals) are expressed in milliseconds.
-//! </description>
-
-class mafTimerTest: public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_TimerTest = mafNEW(mafTimeSpace::mafTimer);
-        m_ObjectTest = mafNEW(testObjectCustom);
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_TimerTest);
-        mafDEL(m_ObjectTest);
-        mafEventBusManager::instance()->shutdown();
-    }
-
-    /// mafTimer allocation test case.
-    void mafTimerAllocationTest();
-    /// one-hsot timing test case.
-    void startOneShotTest();
-
-private:
-    mafTimer *m_TimerTest; ///< Test var
-    testObjectCustom *m_ObjectTest; ///< Test object that observe the timer events.
-};
+/// Cleanup tes variables memory allocation.
+void mafTimerTest::cleanupTestCase() {
+    mafDEL(m_TimerTest);
+    mafDEL(m_ObjectTest);
+    mafEventBusManager::instance()->shutdown();
+}
 
 void mafTimerTest::mafTimerAllocationTest() {
     QVERIFY(m_TimerTest != NULL);
@@ -139,5 +107,5 @@ void mafTimerTest::startOneShotTest() {
     qDebug() << "var value = " << m_ObjectTest->var();
 }
 
-MAF_REGISTER_TEST(mafTimerTest);
+
 #include "mafTimerTest.moc"

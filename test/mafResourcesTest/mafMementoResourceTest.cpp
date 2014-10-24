@@ -9,52 +9,22 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafResourcesRegistration.h>
-#include <mafMementoResource.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafResources;
 
-//! <title>
-//mafMementoResource
-//! </title>
-//! <description>
-//mafMementoResource defines the MAF3 base resource for storing
-//a mafResource state. This can be used to restore a previous
-//stored resource state (undo mechanism or serialization purposes).
-//! </description>
+void mafMementoResourceTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    mafResourcesRegistration::registerResourcesObjects();
+    m_MementoResource = NULL;
+}
 
-/**
- Class name: mafMementoResourceTest
- This class implements the test suite for mafMementoResource.
- */
-class mafMementoResourceTest : public QObject {
-    Q_OBJECT
+void mafMementoResourceTest::cleanupTestCase() {
+    mafDEL(m_MementoResource);
+    mafMessageHandler::instance()->shutdown();
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        mafResourcesRegistration::registerResourcesObjects();
-        m_MementoResource = NULL;
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_MementoResource);
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafMementoResource allocation test case.
-    void mafMementoResourceDefaultAllocationTest();
-    /// mafMementoResource allocation test case.
-    void mafMementoResourceCustomAllocationTest();
-
-private:
-    mafMementoResource *m_MementoResource; ///< Test var.
-};
 
 void mafMementoResourceTest::mafMementoResourceDefaultAllocationTest() {
     mafMemento *m = (mafMemento *)mafNEWFromString("mafResources::mafMementoResource");
@@ -77,6 +47,5 @@ void mafMementoResourceTest::mafMementoResourceCustomAllocationTest() {
     mafDEL(obj);
 }
 
-MAF_REGISTER_TEST(mafMementoResourceTest);
 #include "mafMementoResourceTest.moc"
 

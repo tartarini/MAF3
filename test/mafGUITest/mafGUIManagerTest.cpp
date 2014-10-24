@@ -2,63 +2,36 @@
  *  mafGUIManagerTest.cpp
  *  mafGUITest
  *
- *  Created by Paolo Quadrani on 26/10/10.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 26/10/10.
  *  Copyright 2010 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafGUIRegistration.h>
-#include <mafGUIManager.h>
+#include "mafGUITestList.h"
 
 using namespace mafCore;
 using namespace mafGUI;
 
-/**
- Class name: mafGUIManagerTest
- This class implements the test suite for mafGUIManager.
- */
-class mafGUIManagerTest : public QObject {
-    Q_OBJECT
+void mafGUIManagerTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    // Register all the creatable objects for the mafGUI module.
+    mafGUIRegistration::registerGUIObjects();
+    m_MainWin = new QMainWindow();
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        // Register all the creatable objects for the mafGUI module.
-        mafGUIRegistration::registerGUIObjects();
-        m_MainWin = new QMainWindow();
+    mafLogger *logger = mafCore::mafMessageHandler::instance()->activeLogger();
+    m_GUIManager = new mafGUIManager(m_MainWin, mafCodeLocation);
+    //need to change the logger
+    mafCore::mafMessageHandler::instance()->setActiveLogger(logger);
+}
 
-        mafLogger *logger = mafCore::mafMessageHandler::instance()->activeLogger();
-        m_GUIManager = new mafGUIManager(m_MainWin, mafCodeLocation);
-        //need to change the logger
-        mafCore::mafMessageHandler::instance()->setActiveLogger(logger);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_GUIManager);
-        delete m_MainWin;
-        mafEventBus::mafEventBusManager::instance()->shutdown();
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// allocation test case.
-    void mafGUIManagerAllocationTest();
-    /// Creation menu test.
-    void mafGUIManagerCreateMenuTest();
-    /// Fill menu test.
-    void mafGUIManagerFillMenuTest();
-    /// Max recent file number test
-    void maxRecentFileTest();
-
-private:
-    mafGUIManager *m_GUIManager; ///< Reference to the GUI Manager.
-    QMainWindow *m_MainWin;
-};
+void mafGUIManagerTest::cleanupTestCase() {
+    mafDEL(m_GUIManager);
+    delete m_MainWin;
+    mafEventBus::mafEventBusManager::instance()->shutdown();
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafGUIManagerTest::mafGUIManagerAllocationTest() {
     QVERIFY(m_GUIManager != NULL);
@@ -127,5 +100,4 @@ void mafGUIManagerTest::maxRecentFileTest() {
     QVERIFY(m == 10);
 }
 
-MAF_REGISTER_TEST(mafGUIManagerTest);
 #include "mafGUIManagerTest.moc"

@@ -2,17 +2,14 @@
  *  mafDataBoundaryAlgorithmTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafResourcesRegistration.h>
-#include <mafCoreSingletons.h>
-#include <mafDataBoundaryAlgorithm.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -32,10 +29,10 @@ public:
     testDataBoundaryAlgorithmCustom(const QString code_location = "");
 
     /// Algorithm that will be used to extract the boundary from the given data value and pose matrix.
-    /*virtual*/ mafProxyInterface *calculateBoundary(mafProxyInterface *data, mafMatrix *matrix);
+    /*virtual*/ mafProxyInterface *calculateBoundary(mafProxyInterface *data, mafMatrix4x4 *matrix);
 
     /// Algorithm that will be used to extract the boundary from the given bounds and pose matrix.
-    /*virtual*/ mafCore::mafProxyInterface *calculateBoundary(double bounds[6], mafMatrix *matrix = NULL);
+    /*virtual*/ mafCore::mafProxyInterface *calculateBoundary(double bounds[6], mafMatrix4x4 *matrix = NULL);
 
     /// Return bounds of the bounding box.
     /*virtual*/ void bounds(double bounds[6]);
@@ -54,7 +51,7 @@ QString testDataBoundaryAlgorithmCustom::boundaryItem() {
     return m_BoundaryItem;
 }
 
-mafProxyInterface *testDataBoundaryAlgorithmCustom::calculateBoundary(mafProxyInterface *data, mafMatrix *matrix) {
+mafProxyInterface *testDataBoundaryAlgorithmCustom::calculateBoundary(mafProxyInterface *data, mafMatrix4x4 *matrix) {
     Q_UNUSED(data);
     Q_UNUSED(matrix);
 
@@ -62,7 +59,7 @@ mafProxyInterface *testDataBoundaryAlgorithmCustom::calculateBoundary(mafProxyIn
     return NULL;
 }
 
-mafCore::mafProxyInterface *testDataBoundaryAlgorithmCustom::calculateBoundary(double bounds[6], mafMatrix *matrix){
+mafCore::mafProxyInterface *testDataBoundaryAlgorithmCustom::calculateBoundary(double bounds[6], mafMatrix4x4 *matrix){
     Q_UNUSED(bounds);
     Q_UNUSED(matrix);
 
@@ -75,34 +72,15 @@ void testDataBoundaryAlgorithmCustom::bounds(double bounds[6]) {
 }
 //------------------------------------------------------------------------------------------
 
-/**
- Class name: mafDataBoundaryAlgorithmTest
- This class implements the test suite for mafInterpolator.
- */
-class mafDataBoundaryAlgorithmTest: public QObject {
-    Q_OBJECT
+void mafDataBoundaryAlgorithmTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    m_BoundaryAlgorithm = mafNEW(testDataBoundaryAlgorithmCustom);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        m_BoundaryAlgorithm = mafNEW(testDataBoundaryAlgorithmCustom);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_BoundaryAlgorithm);
-         mafMessageHandler::instance()->shutdown();
-    }
-
-    /// testDataBoundaryAlgorithmCustom allocation test case.
-    void mafBoundaryAlgorithmAllocationTest();
-    /// Test the boundary algorithm strategy.
-    void mafBoundaryAlgorithmStrategyTest();
-
-private:
-    testDataBoundaryAlgorithmCustom *m_BoundaryAlgorithm; ///< Test var.
-};
+void mafDataBoundaryAlgorithmTest::cleanupTestCase() {
+    mafDEL(m_BoundaryAlgorithm);
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafDataBoundaryAlgorithmTest::mafBoundaryAlgorithmAllocationTest() {
     QVERIFY(m_BoundaryAlgorithm != NULL);
@@ -114,6 +92,4 @@ void mafDataBoundaryAlgorithmTest::mafBoundaryAlgorithmStrategyTest() {
     QCOMPARE(m_BoundaryAlgorithm->boundaryItem(), res);
 }
 
-
-MAF_REGISTER_TEST(mafDataBoundaryAlgorithmTest);
 #include "mafDataBoundaryAlgorithmTest.moc"

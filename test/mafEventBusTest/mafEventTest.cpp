@@ -10,50 +10,17 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafEvent.h>
+#include "mafEventBusTestList.h"
 
 using namespace mafEventBus;
 
-/**
- Class name: mafEventTest
- This class implements the test suite for mafEvent.
- */
+void mafEventTest::initTestCase() {
+    m_Event = new mafEvent();
+}
 
-//! <title>
-//mafEvent
-//! </title>
-//! <description>
-//mafEvent is the object which contain information in a dictionary structure,
-//regarding message between classes through mafEventBus
-//! </description>
-
-class mafEventTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_Event = new mafEvent();
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        delete m_Event;
-    }
-
-    /// mafEventDispatcherRemote allocation test case.
-    void mafEventAllocationTest();
-
-    /// test all the accessors of a mafEvent
-    void mafEventAccessorsTest();
-    
-    /// Test arguments and retval methods
-    void mafEventArgListRetValTest();
-
-private:
-    mafEvent *m_Event; ///< Test var.
-};
+void mafEventTest::cleanupTestCase() {
+    delete m_Event;
+}
 
 void mafEventTest::mafEventAllocationTest() {
     QVERIFY(m_Event != NULL);
@@ -98,5 +65,4 @@ void mafEventTest::mafEventArgListRetValTest() {
     delete ev;
 }
 
-MAF_REGISTER_TEST(mafEventTest);
 #include "mafEventTest.moc"

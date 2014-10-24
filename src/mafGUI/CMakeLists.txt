@@ -10,17 +10,9 @@
 #
 
 ## #################################################################
-## Find the external packages.
-## #################################################################
-
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_fervor.cmake)
-
-## #################################################################
 ## Init Project
 ## #################################################################
-mafMacroInitProject(0)
+mafMacroInitProject("library")
 
 ## #################################################################
 ## Wrapping
@@ -32,15 +24,20 @@ mafMacroWrapTargetFiles()
 ## Build rules
 ## #################################################################
 
+set(RESOURCE1 ${CMAKE_SOURCE_DIR}/src/mafGUI/mafGUIImages.qrc)
+set(RESOURCE2 ${CMAKE_SOURCE_DIR}/src/mafGUI/mafGUIVMEImages.qrc)
+qt5_add_resources(RESOURCE_ADDED ${RESOURCE1} ${RESOURCE2})
+
+
 # Create the library.
 #if(${BUILD_SHARED_LIBS})
-  ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
+  ADD_LIBRARY(${PROJECT_NAME} SHARED ${PROJECT_SRCS} ${RESOURCE_ADDED})
 #else(${BUILD_SHARED_LIBS})
-#  ADD_LIBRARY(${PROJECT_NAME} STATIC ${PROJECT_SRCS})
+#  ADD_LIBRARY(${PROJECT_NAME} STATIC ${PROJECT_SRCS} ${RESOURCE_ADDED})
 #endif(${BUILD_SHARED_LIBS})  
 
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS} Qt5::UiTools)
 
 ## #################################################################
 ## copy mnu file
@@ -59,4 +56,4 @@ mafMacroWrapBuild()
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject(0)
+mafMacroBuildProject("library")

@@ -18,6 +18,9 @@ using namespace mafCore;
 using namespace mafResources;
 using namespace mafEventBus;
 
+#include <QMessageBox>
+#include <fstream>
+
 mafVMEManager* mafVMEManager::instance() {
     static mafVMEManager instanceVMEManager;
     return &instanceVMEManager;
@@ -107,10 +110,10 @@ void mafVMEManager::initializeConnections() {
 
 }
 
-void mafVMEManager::vmeSelect(mafObjectBase *vme) {
+void mafVMEManager::vmeSelect(mafCore::mafObjectBase *vme) {
     mafVME *vme_to_select = qobject_cast<mafResources::mafVME *>(vme);
     if(NULL == vme_to_select) {
-        QByteArray ba = mafTr("Trying to select an object that not represent a mafVME.").toAscii();
+        QByteArray ba = mafTr("Trying to select an object that not represent a mafVME.").toLatin1();
         qWarning("%s", ba.data());
         return;
     }
@@ -118,9 +121,9 @@ void mafVMEManager::vmeSelect(mafObjectBase *vme) {
     m_SelectedVME = vme_to_select;
 }
 
-void mafVMEManager::vmeAdd(mafObjectBase *vme) {
+void mafVMEManager::vmeAdd(mafCore::mafObjectBase *vme) {
     if(NULL == vme) {
-        QByteArray ba = mafTr("Trying to add an object that not represent a mafVME.").toAscii();
+        QByteArray ba = mafTr("Trying to add an object that not represent a mafVME.").toLatin1();
         qWarning("%s", ba.data());
         return;
     }
@@ -132,10 +135,10 @@ void mafVMEManager::vmeAdd(mafObjectBase *vme) {
     }
 }
 
-void mafVMEManager::vmeRemove(mafObjectBase *vme) {
+void mafVMEManager::vmeRemove(mafCore::mafObjectBase *vme) {
     mafVME *vme_to_remove = qobject_cast<mafResources::mafVME *>(vme);
     if(NULL == vme_to_remove) {
-        QByteArray ba = mafTr("Trying to remove an object that not represent a mafVME.").toAscii();
+        QByteArray ba = mafTr("Trying to remove an object that not represent a mafVME.").toLatin1();
         qWarning("%s", ba.data());
         return;
     }
@@ -144,13 +147,13 @@ void mafVMEManager::vmeRemove(mafObjectBase *vme) {
 
     // select root.
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase*, m_Root));
+    argList.append(mafEventArgument( mafCore::mafObjectBase *, m_Root));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
 
     m_VMEHierarchy->removeHierarchyNode(vme);
 }
 
-void mafVMEManager::vmeReparent(mafObjectBase *vme, mafObjectBase *vmeParent) {
+void mafVMEManager::vmeReparent(mafCore::mafObjectBase *vme, mafCore::mafObjectBase *vmeParent) {
   if (m_VMEHierarchy != NULL) {
     QString objName = vme->metaObject()->className();
     if (objName.contains("mafSceneNode")) {
@@ -185,7 +188,7 @@ mafCore::mafHierarchyPointer mafVMEManager::requestVMEHierarchy() {
     if ( m_VMEHierarchy == NULL ) {
          m_VMEHierarchy = mafNEW(mafCore::mafHierarchy);
     }
-
+	
     if (m_Root == NULL) {
         //Create a new root.
         m_Root = mafNEW(mafResources::mafVME);
@@ -196,9 +199,10 @@ mafCore::mafHierarchyPointer mafVMEManager::requestVMEHierarchy() {
         mafEventArgumentsList argList;
         argList.append(mafEventArgument(mafCore::mafObjectBase *, m_Root));
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.add", mafEventTypeLocal, &argList);
-
+        
         //Select root
         mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.select", mafEventTypeLocal, &argList);
+		//DEBUG_VAR_FILE("C:\\Projects\\MAF3.buildcmakeTESTCMAKE\\build\\bin\\Release\\debugLog.txt", m_Root)
      }
 
      return m_VMEHierarchy;
@@ -209,11 +213,11 @@ mafCore::mafHierarchyPointer mafVMEManager::newVMEHierarchy() {
     return requestVMEHierarchy();
 }
 
-mafMatrixPointer mafVMEManager::absolutePoseMatrix(mafCore::mafObjectBase *vme) {
+mafMatrix4x4Pointer mafVMEManager::absolutePoseMatrix(mafCore::mafObjectBase *vme) {
     //calculate absolute matrix navigating hierarchy from leaf to root and compose the absolute pose matrix 
     //for vme.
-    mafMatrix *matrix = qobject_cast<mafVME *>(vme)->dataSetCollection()->itemAtCurrentTime()->poseMatrix();
-    mafMatrix *result = matrix->clone();
+    mafMatrix4x4 *matrix = qobject_cast<mafVME *>(vme)->dataSetCollection()->itemAtCurrentTime()->poseMatrix();
+    mafMatrix4x4 *result = new mafMatrix4x4(*matrix);
     
     if(m_VMEHierarchy == NULL) {
         return NULL;
@@ -224,7 +228,7 @@ mafMatrixPointer mafVMEManager::absolutePoseMatrix(mafCore::mafObjectBase *vme) 
     while(m_VMEHierarchy->hasParent()) {
         m_VMEHierarchy->moveTreeIteratorToParent();
         mafVME *parentVME = qobject_cast<mafVME *>(m_VMEHierarchy->currentData());
-        mafMatrix *matrixParentVME = parentVME->dataSetCollection()->poseMatrix();
+        mafMatrix4x4 *matrixParentVME = parentVME->dataSetCollection()->poseMatrix();
         *result = (*matrixParentVME) * (*result);
     }
         

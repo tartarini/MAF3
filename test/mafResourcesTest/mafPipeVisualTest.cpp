@@ -9,11 +9,7 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafPipeVisual.h>
-#include <mafVME.h>
-#include <mafProxy.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -67,34 +63,16 @@ void testVisualPipeCustomForVisualPipe::updatePipe(double t) {
 
 //------------------------------------------------------------------------------------------
 
-/**
- Class name: mafPipeVisualTest
- This class implements the test suite for mafPipeVisual.
- */
-class mafPipeVisualTest : public QObject {
-    Q_OBJECT
+void mafPipeVisualTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    m_VisualPipe = mafNEW(testVisualPipeCustomForVisualPipe);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        m_VisualPipe = mafNEW(testVisualPipeCustomForVisualPipe);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_VisualPipe);
-        mafMessageHandler::instance()->shutdown();
-        mafEventBus::mafEventBusManager::instance()->shutdown();
-    }
-
-    /// mafPipeVisual allocation test case.
-    void mafPipeVisualAllocationTest();
-    /// Test the creation and update methods..
-    void mafPipeVisualCreationAndUpdateTest();
-private:
-    testVisualPipeCustomForVisualPipe *m_VisualPipe; ///< Test var.
-};
+void mafPipeVisualTest::cleanupTestCase() {
+    mafDEL(m_VisualPipe);
+    mafMessageHandler::instance()->shutdown();
+    mafEventBus::mafEventBusManager::instance()->shutdown();
+}
 
 void mafPipeVisualTest::mafPipeVisualAllocationTest() {
     QVERIFY(m_VisualPipe != NULL);
@@ -109,5 +87,4 @@ void mafPipeVisualTest::mafPipeVisualCreationAndUpdateTest() {
     QCOMPARE(m_VisualPipe->pipeline(), res);
 }
 
-MAF_REGISTER_TEST(mafPipeVisualTest);
 #include "mafPipeVisualTest.moc"

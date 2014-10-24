@@ -38,7 +38,7 @@ void mafReferenceCounted::ref() {
 
 void mafReferenceCounted::deleteObject() {
     --m_ReferenceCount;
-    //char *name = this->objectName().toAscii().data();
+    //char *name = this->objectName().toLatin1().data();
     if(m_ReferenceCount == 0) {
         this->setParent(NULL);
         delete this;

@@ -36,10 +36,10 @@ void mafClientXMLRPC::connectToServer(unsigned int port, QString address) {
 
         QByteArray ba;
         if(res) {
-            ba = mafTr("Client has been created").toAscii();
+            ba = mafTr("Client has been created").toLatin1();
             qDebug("%s", ba.data());
         } else {
-            ba = mafTr("Problem on create instance of the Client").toAscii();
+            ba = mafTr("Problem on create instance of the Client").toLatin1();
             qCritical("%s", ba.data());
         }
     }

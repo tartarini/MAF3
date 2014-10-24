@@ -148,7 +148,8 @@ private:
 
 inline void mafLogic::setWorkingDirectory(const QString wd) {
     m_WorkingDirectory =  QDir::toNativeSeparators(wd);
-#ifndef WIN32
+
+#if !defined(_WIN32) && !defined(WIN32)
     m_WorkingDirectory.replace('\\','/');
 #endif
 }

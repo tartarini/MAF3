@@ -2,40 +2,25 @@
  *  mafResourcesRegistrationTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafResourcesRegistration.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafResources;
 
-/**
- Class name: mafResourcesRegistrationTest
- This class implements the test suite for mafResourcesRegistration.
- */
-class mafResourcesRegistrationTest: public QObject {
-    Q_OBJECT
+void mafResourcesRegistrationTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafResourcesRegistration registration test case.
-    void registrationAndUnregistrationTest();
-};
+void mafResourcesRegistrationTest::cleanupTestCase() {
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafResourcesRegistrationTest::registrationAndUnregistrationTest() {
     // Register all the objects in the mafResources module.
@@ -52,5 +37,4 @@ void mafResourcesRegistrationTest::registrationAndUnregistrationTest() {
     mafResourcesRegistration::unregisterResourcesObjects();
 }
 
-MAF_REGISTER_TEST(mafResourcesRegistrationTest);
 #include "mafResourcesRegistrationTest.moc"

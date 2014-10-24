@@ -156,8 +156,8 @@ void mafOperationManager::startOperation(const QString operation) {
     REQUIRE(!operation.isEmpty());
 
     //request of the selected vme
-    mafObjectBase *selectedObj = NULL;
-    QGenericReturnArgument ret_val = mafEventReturnArgument(mafCore::mafObjectBase *, selectedObj);
+    mafCore::mafObjectBase *selectedObj = NULL;
+    QGenericReturnArgument ret_val = mafEventReturnArgument( mafCore::mafObjectBase *, selectedObj);
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.vme.selected", mafEventTypeLocal, NULL, &ret_val);
     mafResource *resource = qobject_cast<mafResource *>(selectedObj);
     
@@ -177,8 +177,12 @@ void mafOperationManager::startOperation(const QString operation) {
     
     // Notify the observers that the new operation has started.
     mafEventArgumentsList argList;
-    argList.append(mafEventArgument(mafCore::mafObjectBase*, m_CurrentOperation));
+    argList.append(mafEventArgument(mafCore::mafObjectBase *, m_CurrentOperation));
     mafEventBusManager::instance()->notifyEvent("maf.local.resources.operation.started", mafEventTypeLocal, &argList);
+}
+
+mafCore::mafObjectBase *mafOperationManager::currentOperation() {
+	return m_CurrentOperation;
 }
 
 void mafOperationManager::executeOperation() {
@@ -206,17 +210,21 @@ void mafOperationManager::executeOperation() {
             // Create a resource worker and pass to it the resource to be execute in a separate thread.
             mafOperationWorker *worker = new mafOperationWorker(m_CurrentOperation);
             // become observer wo be notified when the work is done.
-            connect(m_CurrentOperation, SIGNAL(executionCanceled()), worker, SIGNAL(workAborted()));
-            connect(worker, SIGNAL(workDone()), this, SLOT(executionEnded()));
-            connect(worker, SIGNAL(workAborted()), this, SLOT(stopOperation()));
+			bool result(false);
+            result = connect(m_CurrentOperation, SIGNAL(executionCanceled()), worker, SIGNAL(workAborted()));
+            result = connect(worker, SIGNAL(workDone()), this, SLOT(executionEnded()));
+            result = connect(worker, SIGNAL(workAborted()), this, SLOT(stopOperation()));
             // Put the worker into the pool.
             m_ExecutionPool << worker;
             // Start the work.
             qDebug() << "Starting worker...";
+			
             worker->start();
+			
         } else {
-            connect(m_CurrentOperation, SIGNAL(executionCanceled()), this, SLOT(stopOperation()));
-            connect(m_CurrentOperation, SIGNAL(executionEnded()), this, SLOT(executionEnded()));
+			bool result(false);
+            result = connect(m_CurrentOperation, SIGNAL(executionCanceled()), this, SLOT(stopOperation()));
+            result = connect(m_CurrentOperation, SIGNAL(executionEnded()), this, SLOT(executionEnded()));
             qDebug() << "Execute Operation ...";
             m_CurrentOperation->execute();
         }
@@ -391,6 +399,5 @@ bool mafOperationManager::canSelectVME(mafCore::mafObjectBase *vme) {
     }
     
     // multi thread case
-    mafVME *v = qobject_cast<mafVME *>(vme);    
-    return v->canRead();
+    return (qobject_cast<mafVME *>(vme))->canRead();
 }

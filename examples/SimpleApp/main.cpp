@@ -4,7 +4,7 @@
     #define BUNDLE_SUFFIX ".app"
 #endif
 
-#include <QtGui/QApplication>
+#include <QApplication>
 #include "mafApplicationConfig.h"
 #include "mafOperationSimpleApp.h"
 
@@ -18,7 +18,6 @@
 
 #include <mafMainWindow.h>
 #include <mafLogic.h>
-#include <fvupdater.h>
 
 
 int main(int argc, char *argv[]) {
@@ -94,10 +93,7 @@ int main(int argc, char *argv[]) {
 
     w.setupMainWindow();
 
-    //--- Updater
-    FvUpdater::sharedUpdater()->SetFeedURL("http://pypt.github.com/fervor/Appcast.xml");
-    FvUpdater::sharedUpdater()->CheckForUpdatesSilent();
-    //-----------------------
+
 
     int result = a.exec();
 

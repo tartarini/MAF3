@@ -9,40 +9,15 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafMonitorHardDisk.h>
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
-//! <title>
-//mafMonitorHardDiskTest
-//! </title>
-//! <description>
-//mafMonitorHardDiskTest define a modality of visiting object checking the hash code
-//giving in input from the constructor of the visitor
-//! </description>
+void mafMonitorHardDiskTest::initTestCase() {
+}
 
-/**
- Class name: mafMonitorHardDiskTest
- This class implements the test suite for mafMonitorHardDisk.
- */
-class mafMonitorHardDiskTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-    }
-
-    /// register new object in factory test case.
-    void storageTest();
-
-private:
-};
+void mafMonitorHardDiskTest::cleanupTestCase() {
+}
 
 void mafMonitorHardDiskTest::storageTest() {
     //! <snippet>
@@ -66,7 +41,6 @@ void mafMonitorHardDiskTest::storageTest() {
     mafDEL(monitor);
 }
 
-MAF_REGISTER_TEST(mafMonitorHardDiskTest);
 #include "mafMonitorHardDiskTest.moc"
 
 

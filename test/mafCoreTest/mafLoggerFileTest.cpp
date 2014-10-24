@@ -2,15 +2,14 @@
  *  mafLoggerTest.cpp
  *  mafCoreTest
  *
- *  Created by Paolo Quadrani on 27/03/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 27/03/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafLoggerFile.h>
+#include "mafCoreTestList.h"
 
 #include <QFileInfo>
 
@@ -31,35 +30,15 @@ using namespace mafCore;
 //message into the temporary file created.
 //! </description>
 
-class mafLoggerFileTest : public QObject {
-    Q_OBJECT
+void mafLoggerFileTest::initTestCase() {
+    //! <snippet>
+    m_Logger = mafNEW(mafCore::mafLoggerFile);
+    //! </snippet>
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        //! <snippet>
-        m_Logger = mafNEW(mafCore::mafLoggerFile);
-        //! </snippet>
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_Logger);
-    }
-
-    /// create new object and check that is not NULL test case.
-    void mafLoggerFileConstructorTest();
-
-    /// test for the clearBuffer method.
-    void clearLogHistoryTest();
-
-    /// log a string into the log file.
-    void logMessageTest();
-
-private:
-    mafLoggerFile *m_Logger; ///< Test variable
-    mafLogger *m_DefaultLogger;
-};
+void mafLoggerFileTest::cleanupTestCase() {
+    mafDEL(m_Logger);
+}
 
 void mafLoggerFileTest::mafLoggerFileConstructorTest() {
     QVERIFY(m_Logger != NULL);
@@ -98,5 +77,4 @@ void mafLoggerFileTest::clearLogHistoryTest() {
     QVERIFY(QFile::exists(log_file)); // Should exists.
 }
 
-MAF_REGISTER_TEST(mafLoggerFileTest);
 #include "mafLoggerFileTest.moc"

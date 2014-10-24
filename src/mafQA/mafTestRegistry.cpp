@@ -10,6 +10,7 @@
  */
 
 #include "mafTestRegistry.h"
+#include <typeinfo>
 
 using namespace mafQA;
 
@@ -20,6 +21,16 @@ mafTestRegistry* mafTestRegistry::instance() {
 
 void mafTestRegistry::registerTest(QObject* test) {
     m_TestSuite += test;
+}
+
+bool mafTestRegistry::isRegistered(QObject* obj) {
+	Q_FOREACH(QObject* test, m_TestSuite) {
+		QString f(typeid(*test).name());
+	    if(f.compare(typeid(*obj).name()) == 0) {
+			return true;
+		}
+	}
+	return false;
 }
 
 int mafTestRegistry::runTests(int argc, char* argv[]) {

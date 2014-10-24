@@ -51,7 +51,7 @@ void mafLoggerFile::loggedMessage(const QtMsgType type, const QString &msg) {
     bufferLog.append(msg);
     bufferLog.append("\n");
 
-    m_TempFileLog->write(bufferLog.toAscii());
+    m_TempFileLog->write(bufferLog.toLatin1());
 }
 
 void mafLoggerFile::clearLogHistory() {

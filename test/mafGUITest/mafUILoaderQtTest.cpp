@@ -2,19 +2,14 @@
  *  mafUILoaderQtTest.cpp
  *  mafGUITest
  *
- *  Created by Paolo Quadrani on 26/10/10.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 26/10/10.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestConfig.h>
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafProxy.h>
-#include <mafEventBusManager.h>
-#include <mafUILoaderQt.h>
+#include "mafGUITestList.h"
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -57,40 +52,20 @@ void testUILoaderRequestor::uiQtLoaded(mafCore::mafProxyInterface *widget) {
 
 //----------------------------------------------------------------------
 
-/**
- Class name: mafUILoaderQtTest
- This class implements the test suite for mafUILoaderQt.
- */
-class mafUILoaderQtTest : public QObject {
-    Q_OBJECT
+void mafUILoaderQtTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    m_UILoader = new mafUILoaderQt(mafCodeLocation);
+    m_LoadRequestor = new testUILoaderRequestor();
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        m_UILoader = new mafUILoaderQt(mafCodeLocation);
-        m_LoadRequestor = new testUILoaderRequestor();
-    }
 
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        delete m_LoadRequestor;
-        m_LoadRequestor = NULL;
-        mafDEL(m_UILoader);
-        mafEventBusManager::instance()->shutdown();
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafUILoader allocation test case.
-    void mafUILoaderQtAllocationTest();
-
-    /// mafUILoader allocation test case.
-    void mafUILoaderQtUILoadTest();
-
-private:
-    mafUILoaderQt *m_UILoader; ///< Reference to the UI Loader.
-    testUILoaderRequestor *m_LoadRequestor; ///< Variable containing the UI load requestor.
-};
+void mafUILoaderQtTest::cleanupTestCase() {
+    delete m_LoadRequestor;
+    m_LoadRequestor = NULL;
+    mafDEL(m_UILoader);
+    mafEventBusManager::instance()->shutdown();
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafUILoaderQtTest::mafUILoaderQtAllocationTest() {
     QVERIFY(m_UILoader != NULL);
@@ -103,5 +78,4 @@ void mafUILoaderQtTest::mafUILoaderQtUILoadTest() {
     QVERIFY(m_LoadRequestor->widgetLoaded() != NULL);
 }
 
-MAF_REGISTER_TEST(mafUILoaderQtTest);
 #include "mafUILoaderQtTest.moc"

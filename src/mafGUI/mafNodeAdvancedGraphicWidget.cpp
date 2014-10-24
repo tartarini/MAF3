@@ -10,6 +10,7 @@
  */
 
 #include "mafNodeAdvancedGraphicWidget.h"
+#include <QVBoxLayout>
 
 using namespace mafGUI;
 

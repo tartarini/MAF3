@@ -13,9 +13,12 @@
 #include "ui_mafMainWindow.h"
 
 #include <mafEventBusManager.h>
-
 #include "mafGUIApplicationSettingsDialog.h"
+
+#include <QSplitter>
 #include <QToolButton>
+#include <QMessageBox>
+
 
 using namespace mafCore;
 using namespace mafGUI;
@@ -339,7 +342,7 @@ void mafMainWindow::subWindowDestroyed() {
     mafEventBus::mafEventArgumentsList argList;
     mafObjectBase *view = m_ViewSubWindowHash.value(subWindow);
     if(view == NULL) {
-        QByteArray ba = mafTr("View doesn't exist!!").toAscii();
+        QByteArray ba = mafTr("View doesn't exist!!").toLatin1();
         qCritical(ba.constData());
         return;
     }
@@ -357,7 +360,7 @@ void mafMainWindow::subWindowSelected(QMdiSubWindow *sub_win) {
         mafEventBus::mafEventArgumentsList argList;
         mafObjectBase *view = m_ViewSubWindowHash.value(sub_win);
         if(view == NULL) {
-            QByteArray ba = mafTr("View doesn't exist!!").toAscii();
+            QByteArray ba = mafTr("View doesn't exist!!").toLatin1();
             qCritical(ba.constData());
             return;
         }

@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
     QByteArray ba;
     if(argc != 6) {
-        ba = mafTr("Usage: \nclientXMLRPC port server_address dbName workflowId serviceName").toAscii();
+        ba = mafTr("Usage: \nclientXMLRPC port server_address dbName workflowId serviceName").toLatin1();
         qDebug("%s", ba.data());
         exit(0);
     }

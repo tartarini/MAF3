@@ -1,3 +1,0 @@
-<plugin>
-	<plug classtype="mafPluginOutOfCore::mafMementoVolume" baseclass="mafCore::mafMemento" label="Memento for Volume"></plug>
-</plugin>

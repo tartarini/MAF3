@@ -9,13 +9,8 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafHierarchy.h>
-#include <mafSceneNode.h>
-#include <mafVME.h>
-#include <mafPipeVisual.h>
-#include <mafVisitorFindSceneNodeByVMEHash.h>
-#include <iostream>
+#include "mafResourcesTestList.h"
+
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
@@ -48,71 +43,21 @@ private:
 
 };
 
-/**
- Class name: mafHierarchyTest
- This class implements the test suite for mafHierarchy.
- */
+void mafHierarchyTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    m_Hierarchy = mafNEW(mafCore::mafHierarchy);
+    unbalancedTreeRandomCreation(3000); //Qt Creator gives problems in test machine with 10^5 nodes
 
-//! <title>
-//mafHierarchy
-//! </title>
-//! <description>
-//mafHierarchy provides basic API manage a tree of generic mafObjectBase.
-//A scenegraph contains a tree of scenenodes which are defined as structs
-//that contains a VME and a VisualPipe. It is also defined a tree iterator,
-//that represents the current position inside the tree.
-//! </description>
-class mafHierarchyTest: public QObject {
-    Q_OBJECT
+    m_HierarchyToManage = mafNEW(mafCore::mafHierarchy);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        m_Hierarchy = mafNEW(mafCore::mafHierarchy);
-        unbalancedTreeRandomCreation(3000); //Qt Creator gives problems in test machine with 10^5 nodes
-
-        m_HierarchyToManage = mafNEW(mafCore::mafHierarchy);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        unbalancedTreeDestruction();
-        mafDEL(m_Hierarchy);
-        mafDEL(m_HierarchyToManage);
-        mafEventBus::mafEventBusManager::instance()->shutdown();
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafSceneGraph allocation test case.
-    void mafSceneGraphAllocationTest();
-    
-    /// check if has parent retrieve true or false depending if the selected node is root.
-    void mafScenegraphRootTest();
-    
-    /// benchmarking test, search in a vme added in the middle of tree generation
-    void mafSceneGraphBenchmarkMiddleTest();
-
-    /// benchmarking test, search in a vme added in the end of tree generation
-    void mafSceneGraphBenchmarkEndTest();
-
-    /// mafSceneGraph manage test case.
-    void mafSceneGraphManageTest();
-
-
-private:
-    mafHierarchy *m_HierarchyToManage; ///< Test var.
-    mafHierarchy *m_Hierarchy; ///< Test var.
-    QString m_CustomHashInTheMiddle; ///< hash to find that is located in the middle of the generation of the tree
-    QString m_CustomHashInTheEnd; ///< hash to find that is located in the end of the generation of the tree
-    QList<mafVME *> m_VMEList; ///< VME list which must be used to delete internal objects
-
-    /// function for quick random creation of an unbalanced tree
-    void unbalancedTreeRandomCreation(unsigned int numberOfElements);
-    /// function for the destruction of the tree
-    void unbalancedTreeDestruction();
-
-};
+void mafHierarchyTest::cleanupTestCase() {
+    unbalancedTreeDestruction();
+    mafDEL(m_Hierarchy);
+    mafDEL(m_HierarchyToManage);
+    mafEventBus::mafEventBusManager::instance()->shutdown();
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafHierarchyTest::mafSceneGraphAllocationTest() {
     QVERIFY(m_Hierarchy != NULL);
@@ -323,5 +268,4 @@ void mafHierarchyTest::unbalancedTreeDestruction() {
     m_Hierarchy->clear();
 }
 
-MAF_REGISTER_TEST(mafHierarchyTest);
 #include "mafHierarchyTest.moc"

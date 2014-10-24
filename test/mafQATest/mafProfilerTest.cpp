@@ -1,55 +1,28 @@
 /*
- *  mafProfilerTest.cpp
+ *  mafQAProfilerTest.cpp
  *  mafQATest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include "mafProfiler.h"
+#include "mafQATestList.h"
 
 using namespace mafCore;
 using namespace mafQA;
 
-/**
- Class name: mafProfilerTest
- This class implements the test suite for mafProfiler.
- */
+void mafProfilerTest::initTestCase() {
+    //! <snippet>
+    m_Profiler = mafProfiler::instance();
+    //! </snippet>
+}
 
-//! <title>
-//mafProfiler
-//! </title>
-//! <description>
-//mafProfiler allows calculating timing performances of blocks or code between two "Start" and "Stop" consecutive calls.
-//! </description>
-class mafProfilerTest: public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        //! <snippet>
-        m_Profiler = mafProfiler::instance();
-        //! </snippet>
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        m_Profiler->shutdown();
-    }
-
-    /// mafProfiler allocation test case.
-    void mafProfilerAllocationTest();
-    /// Test profiler
-    void profilerTest();
-
-private:
-    mafProfiler *m_Profiler; ///< Test var.
-};
+void mafProfilerTest::cleanupTestCase() {
+    m_Profiler->shutdown();
+}
 
 void mafProfilerTest::mafProfilerAllocationTest() {
     QVERIFY(m_Profiler != NULL);
@@ -83,6 +56,4 @@ void mafProfilerTest::profilerTest() {
     QVERIFY(buff->length() > 0);
 }
 
-
-MAF_REGISTER_TEST(mafProfilerTest);
 #include "mafProfilerTest.moc"

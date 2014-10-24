@@ -52,7 +52,7 @@ void mafLogicLight::sendRequestToServer(mafEvent *event_dictionary, mafEventArgu
     //need check for event coherency
     mafEventType evType = event_dictionary->eventType();
     if(evType != mafEventTypeRemote) {
-        QByteArray ba = mafTr("Wrong event type").toAscii();
+        QByteArray ba = mafTr("Wrong event type").toLatin1();
         qWarning("%s", ba.data());
         return;
     }

@@ -16,7 +16,7 @@
 using namespace mafQA;
 using namespace mafCore;
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(WIN32)
     #define OPEN_CMD "start"
 #else
     #ifdef __APPLE__
@@ -89,7 +89,7 @@ void mafQAManager::printOnConsole() {
 void mafQAManager::printOnFile(QString filename) {
     QFile f(filename);
     if(!f.open(QIODevice::WriteOnly)) {
-        QByteArray ba = mafTr("Unable to open file %1").arg(filename).toAscii();
+        QByteArray ba = mafTr("Unable to open file %1").arg(filename).toLatin1();
         qCritical("%s", ba.constData());
     }
     QTextStream dataStream(&f);

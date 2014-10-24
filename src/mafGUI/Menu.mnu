@@ -34,6 +34,6 @@
   	<Action title="About" icon="" tip="Show the About dialog." checkable="0" checked="0" slot="" topic=""></Action>
   	<Action title="Update App" icon=":/images/save.png" tip="Update the Application" checkable="0" checked="0" slot="update()" topic=""></Action>
   </Menu>
-  <Toolbar title="File" actionList="New,Open,Update"></Toolbar>
+  <Toolbar title="File" actionList="New,Open,Save,Save As"></Toolbar>
   <Toolbar title="Edit" actionList="Cut,Copy,Paste"></Toolbar>
 </data>

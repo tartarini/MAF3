@@ -9,9 +9,7 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafEventDispatcherLocal.h>
-#include <mafEvent.h>
+#include "mafEventBusTestList.h"
 
 using namespace mafEventBus;
 
@@ -93,49 +91,15 @@ testObjectCustomForDispatcherLocal::testObjectCustomForDispatcherLocal() : m_Var
 //-------------------------------------------------------------------------
 
 
-/**
- Class name: mafEventDispatcherLocalTest
- This class implements the test suite for mafEventDispatcherLocal.
- */
+void mafEventDispatcherLocalTest::initTestCase() {
+    m_ObjTest = new testObjectCustomForDispatcherLocal;
+    m_EventDispatcherLocal =new mafEventBus::mafEventDispatcherLocal;
+}
 
-//! <title>
-//mafEventDispatcherLocal
-//! </title>
-//! <description>
-//mafEventDispatcherLocal allows dispatching events coming from local
-//application to attached observers.
-//! </description>
-
-class mafEventDispatcherLocalTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_ObjTest = new testObjectCustomForDispatcherLocal;
-        m_EventDispatcherLocal =new mafEventBus::mafEventDispatcherLocal;
-
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        delete m_ObjTest;
-        delete m_EventDispatcherLocal;
-    }
-
-    /// mafEventDispatcherLocal allocation test case.
-    void mafEventDispatcherLocalAllocationTest();
-
-    /// notify event test which cover all the possibilities in terms of arguments
-    void notifyEventWithoutReturnValueTest();
-
-    /// notify event test which cover all the possibilities in terms of arguments with returned value
-    void notifyEventWitReturnValueTest();
-
-private:
-    testObjectCustomForDispatcherLocal *m_ObjTest; ///< Test Object var
-    mafEventDispatcherLocal *m_EventDispatcherLocal; ///< Test var.
-};
+void mafEventDispatcherLocalTest::cleanupTestCase() {
+    delete m_ObjTest;
+    delete m_EventDispatcherLocal;
+}
 
 void mafEventDispatcherLocalTest::mafEventDispatcherLocalAllocationTest() {
     QVERIFY(m_EventDispatcherLocal != NULL);
@@ -421,5 +385,4 @@ void mafEventDispatcherLocalTest::notifyEventWitReturnValueTest() {
     delete propCallback10;
 }
 
-MAF_REGISTER_TEST(mafEventDispatcherLocalTest);
 #include "mafEventDispatcherLocalTest.moc"

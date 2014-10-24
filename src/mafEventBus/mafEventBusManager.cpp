@@ -11,8 +11,10 @@
 
 #include "mafEventBusManager.h"
 #include "mafTopicRegistry.h"
-#include "mafNetworkConnectorQtSoap.h"
-#include "mafNetworkConnectorQXMLRPC.h"
+#include "mafNetworkConnector.h"
+
+#include <QMutex>
+#include <QMutexLocker>
 
 using namespace mafEventBus;
 
@@ -29,7 +31,6 @@ mafEventBusManager::mafEventBusManager() : m_EnableEventLogging(false), m_LogEve
     qRegisterMetaType<mafEventBus::mafEventArgumentsListPointer>("mafEventBus::mafEventArgumentsListPointer");
     qRegisterMetaType<mafEventBus::mafRegisterMethodsMap>("mafEventBus::mafRegisterMethodsMap");
     qRegisterMetaType<QVariantList>("QVariantList");
-    qRegisterMetaType<xmlrpc::Variant>("xmlrpc::Variant");
 }
 
 mafEventBusManager::~mafEventBusManager() {
@@ -74,8 +75,7 @@ void mafEventBusManager::shutdown() {
 }
 
 void mafEventBusManager::initializeNetworkConnectors() {
-    plugNetworkConnector("SOAP", new mafNetworkConnectorQtSoap());
-    plugNetworkConnector("XMLRPC", new mafNetworkConnectorQXMLRPC());
+
 }
 
 bool mafEventBusManager::addEventProperty(const mafEvent &props) const {
@@ -241,7 +241,7 @@ bool mafEventBusManager::removeEventProperty(const mafEvent &props) const {
 }
 
 void mafEventBusManager::notifyEvent(const QString topic, mafEventType ev_type, mafEventArgumentsList *argList, QGenericReturnArgument *returnArg, bool synch /*= true*/) const {
-    QMutex mutex;
+	QMutex mutex;
     QMutexLocker locker(&mutex);
     if(m_EnableEventLogging) {
         if(m_LogEventTopic == "*" || m_LogEventTopic == topic) {
@@ -261,7 +261,7 @@ void mafEventBusManager::notifyEvent(const QString topic, mafEventType ev_type, 
 }
 
 void mafEventBusManager::notifyEvent(const mafEvent &event_dictionary, mafEventArgumentsList *argList, QGenericReturnArgument *returnArg) const {
-    QMutex mutex;
+	QMutex mutex;
     QMutexLocker locker(&mutex);
     //event dispatched in remote channel
     if(event_dictionary[TYPE].toInt() == mafEventTypeLocal) {
@@ -306,7 +306,7 @@ void mafEventBusManager::startListen() {
     if(connector) {
         connector->startListen();
     } else {
-        QByteArray ba = mafTr("Server can not start. Create it first, then call startListen again!!").toAscii();
+        QByteArray ba = mafTr("Server can not start. Create it first, then call startListen again!!").toLatin1();
         qWarning("%s", ba.data());
     }
 }

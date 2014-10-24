@@ -9,62 +9,26 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafCodecXML.h>
-#include <mafObject.h>
-#include <mafMementoObject.h>
+#include "mafSerializationTestList.h"
 
 using namespace mafCore;
 using namespace mafSerialization;
 
-/**
- Class name: mafCodecXMLTest
- This class implements the test suite for mafCodecXML.
- */
+void mafCodecXMLTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    m_ObjectTest = mafNEW(mafCore::mafObject);
+    m_CodecXML = mafNEW(mafSerialization::mafCodecXML);
+    m_List.push_back("one");
+    m_List.push_back("two");
+    m_List.push_back("three");
+}
 
-//! <title>
-//mafCodecXML
-//! </title>
-//! <description>
-//mafCodecXML is a codec to Encode/Decode maf objects into XML structure.
-//! </description>
-
-class mafCodecXMLTest: public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        m_ObjectTest = mafNEW(mafCore::mafObject);
-        m_CodecXML = mafNEW(mafSerialization::mafCodecXML);
-        m_List.push_back("one");
-        m_List.push_back("two");
-        m_List.push_back("three");
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_ObjectTest);
-        mafDEL(m_CodecXML);
-        m_List.clear();
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafCodecXML allocation test case.
-    void mafCodecXMLAllocationTest();
-    /// test the encode method.
-    void encodeTest();
-    /// test the decode method.
-    void decodeTest();
-
-private:
-    mafCodecXML *m_CodecXML; ///< Test var
-    mafObject *m_ObjectTest; ///< Test Object.
-    QBuffer buffer; ///< Test buffer data.
-    QVariantList m_List;
-};
+void mafCodecXMLTest::cleanupTestCase() {
+    mafDEL(m_ObjectTest);
+    mafDEL(m_CodecXML);
+    m_List.clear();
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafCodecXMLTest::mafCodecXMLAllocationTest() {
     QVERIFY(m_CodecXML != NULL);
@@ -101,7 +65,7 @@ void mafCodecXMLTest::encodeTest() {
 
     QVERIFY(s > 0);
 
-    qDebug() << "\n" << buffer.data();
+    //qDebug() << "\n" << buffer.data();
 
     mafDEL(m2);
     mafDEL(m1);
@@ -140,10 +104,10 @@ void mafCodecXMLTest::decodeTest() {
         QVERIFY(m_List.at(i).toString().compare(obj->tagList()->at(i).toString()) == 0);
 
     }
+	mafDEL(m); // LEAK OR CRASH IN VS2013
     mafDEL(obj);
-    mafDEL(m);
+    
 }
 
-MAF_REGISTER_TEST(mafCodecXMLTest);
 #include "mafCodecXMLTest.moc"
 

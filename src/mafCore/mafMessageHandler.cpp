@@ -15,7 +15,7 @@
 
 using namespace mafCore;
 
-static void mafMessageHandlerOutput(QtMsgType type, const char *msg) {
+static void mafMessageHandlerOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     mafMessageHandler *handler = mafMessageHandler::instance();
     QString msg_to_forward = msg;
     mafLogger *current_logger = handler->activeLogger();
@@ -57,16 +57,18 @@ mafMessageHandler* mafMessageHandler::instance() {
 
 void mafMessageHandler::shutdown() {
     if(!m_OldMsgHandlerStack.isEmpty()) {
-        qInstallMsgHandler(m_OldMsgHandlerStack.top());
+        qInstallMessageHandler(m_OldMsgHandlerStack.top());
         m_OldMsgHandlerStack.pop();
+		 mafDEL(m_DefaultLogger);
     } else {
         mafDEL(m_DefaultLogger);
-        qInstallMsgHandler(0);
+        qInstallMessageHandler(0);
     }
+	m_ActiveLogger = NULL;
 }
 
 void mafMessageHandler::installMessageHandler() {
-    QtMsgHandler messageHandler = qInstallMsgHandler(mafMessageHandlerOutput);
+    QtMessageHandler messageHandler = qInstallMessageHandler(mafMessageHandlerOutput);
     if(messageHandler) {
         m_OldMsgHandlerStack.push(messageHandler);
     }

@@ -74,7 +74,7 @@ Q_SIGNALS:
     mafCore::mafObject *rootSignal() const;
     
     /// Signal for calculating absolute pose matrix of a VME
-    mafResources::mafMatrixPointer absolutePoseMatrixSignal(mafCore::mafObjectBase *vme);
+    mafResources::mafMatrix4x4Pointer absolutePoseMatrixSignal(mafCore::mafObjectBase *vme);
 
 private Q_SLOTS:
     /// Return the current selected vme.
@@ -105,7 +105,7 @@ private Q_SLOTS:
     mafCore::mafObject *root() const;
     
     /// Return absolute pose matrix of a VME.
-    mafResources::mafMatrixPointer absolutePoseMatrix(mafCore::mafObjectBase *vme);
+    mafResources::mafMatrix4x4Pointer absolutePoseMatrix(mafCore::mafObjectBase *vme);
 
 protected:
     /// Object destructor
@@ -121,8 +121,8 @@ private:
     /// Remove the VME from the managed VME tree.
 //    void removeVME(mafVME *vme);
 
-    mafCore::mafObject *m_SelectedVME; ///< Keep track of the selected VME.
-    mafCore::mafObject *m_Root; ///< Root of the tree.
+    mafCore::mafObjectBase *m_SelectedVME; ///< Keep track of the selected VME.
+    mafCore::mafObjectBase *m_Root; ///< Root of the tree.
     mafCore::mafHierarchy *m_VMEHierarchy; ///< Hierarchy indicizing the mafVME.
 };
 
@@ -139,7 +139,7 @@ inline mafCore::mafHierarchy *mafVMEManager::hierarchy() const {
 }
     
 inline mafCore::mafObject *mafVMEManager::root() const {
-    return m_Root;
+    return (mafCore::mafObject *)m_Root;
 }
 
 } // namespace mafResources

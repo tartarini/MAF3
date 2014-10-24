@@ -29,7 +29,7 @@ mafMementoDataSet::mafMementoDataSet(const mafObject *obj, bool binary, const QS
   
   m_DataSet = const_cast<mafResources::mafDataSet*>(qobject_cast<const mafResources::mafDataSet*>(obj));
   mafMementoPropertyList *list = mementoPropertyList();
-  mafMatrix *matrix = m_DataSet->poseMatrix();
+  mafMatrix4x4 *matrix = m_DataSet->poseMatrix();
 
   mafMementoPropertyItem item;
  

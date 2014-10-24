@@ -2,16 +2,14 @@
  *  mafSerializerTest.cpp
  *  mafSerializationTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafSerializer.h>
+#include "mafSerializationTestList.h"
 
 using namespace mafCore;
 using namespace mafSerialization;
@@ -57,44 +55,15 @@ void testSerializerCustom::closeDevice() {
 
 //------------------------------------------------------------------------------------------
 
-/**
- Class name: mafSerializerTest
- This class implements the test suite for mafSerializer.
- */
+void mafSerializerTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    m_Serializer = mafNEW(testSerializerCustom);
+}
 
- //! <title>
-//mafSerializer
-//! </title>
-//! <description>
-//mafSerializer is the base class that define the interface for MAF3 serializer.
-//! </description>
-
-class mafSerializerTest: public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        m_Serializer = mafNEW(testSerializerCustom);
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_Serializer);
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafSerializer allocation test case.
-    void mafSerializerAllocationTest();
-    /// test the openDevice/closeDevice method.
-    void openCloseDeviceTest();
-    /// test the data URL assignment.
-    void dataURLTest();
-
-private:
-    testSerializerCustom *m_Serializer; ///< Test var
-};
+void mafSerializerTest::cleanupTestCase() {
+    mafDEL(m_Serializer);
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafSerializerTest::mafSerializerAllocationTest() {
     QVERIFY(m_Serializer != NULL);
@@ -126,6 +95,5 @@ void mafSerializerTest::dataURLTest() {
     QCOMPARE(res, urlString);
 }
 
-MAF_REGISTER_TEST(mafSerializerTest);
 #include "mafSerializerTest.moc"
 

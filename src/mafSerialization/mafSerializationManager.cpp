@@ -93,7 +93,7 @@ void mafSerializationManager::saveMemento(mafMemento   *memento,
     if(m_CodecHash.contains(encode_type)) {
         codecType = m_CodecHash.value(encode_type);
     } else {
-        ba = mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toAscii();
+        ba = mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toLatin1();
         qWarning("%s", ba.data());
         codecType = m_CodecHash.value("RAW");
     }
@@ -105,7 +105,7 @@ void mafSerializationManager::saveMemento(mafMemento   *memento,
     QUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
-        ba = mafTr("Invalid URL: %1").arg(u.toString()).toAscii();
+        ba = mafTr("Invalid URL: %1").arg(u.toString()).toLatin1();
         qCritical("%s", ba.data());
         return;
     }
@@ -143,7 +143,7 @@ mafMemento *mafSerializationManager::loadMemento(const QString &url,
 		                                         const QString &encode_type) {
     QByteArray ba;
     if(!m_CodecHash.contains(encode_type)) {
-        ba = mafTr("No codec associated with the '%1' encoding type.").arg(encode_type).toAscii();
+        ba = mafTr("No codec associated with the '%1' encoding type.").arg(encode_type).toLatin1();
         qCritical("%s", ba.data());
         return NULL;
     }
@@ -155,7 +155,7 @@ mafMemento *mafSerializationManager::loadMemento(const QString &url,
     QUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
-        ba = mafTr("Invalid URL: %1").arg(u.toString()).toAscii();
+        ba = mafTr("Invalid URL: %1").arg(u.toString()).toLatin1();
         qCritical("%s", ba.data());
         return NULL;
     }
@@ -180,7 +180,7 @@ mafMemento *mafSerializationManager::loadMemento(const QString &url,
     mafMemento *m = codec->decode();
 
     if(m == NULL) {
-        ba = mafTr("Impossible load memento.").toAscii();
+        ba = mafTr("Impossible load memento.").toLatin1();
         qCritical("%s", ba.data());
         mafDEL(codec);
         mafDEL(ser);
@@ -203,7 +203,7 @@ void mafSerializationManager::exportExternalData(mafCore::mafProxyInterface *ext
     if(m_CodecHash.contains(encode_type)) {
         codecType = m_CodecHash.value(encode_type);
     } else {
-        ba = mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toAscii();
+        ba = mafTr("Codec not found for %1 type; will be used the RAW default.").arg(encode_type).toLatin1();
         qWarning("%s", ba.data());
         codecType = m_CodecHash.value("RAW");
     }
@@ -216,7 +216,7 @@ void mafSerializationManager::exportExternalData(mafCore::mafProxyInterface *ext
     QUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
-        ba = mafTr("Invalid URL: %1").arg(u.toString()).toAscii();
+        ba = mafTr("Invalid URL: %1").arg(u.toString()).toLatin1();
         qCritical("%s", ba.data());
         return;
      }
@@ -250,7 +250,7 @@ void mafSerializationManager::exportExternalData(mafCore::mafProxyInterface *ext
 mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const QString &url, const QString &encode_type) {
     QByteArray ba;
     if(!m_CodecHash.contains(encode_type)) {
-        ba = mafTr("No codec associated with the '%1' encoding type.").arg(encode_type).toAscii();
+        ba = mafTr("No codec associated with the '%1' encoding type.").arg(encode_type).toLatin1();
         qCritical("%s", ba.data());
         return NULL;
     }
@@ -259,7 +259,7 @@ mafCore::mafProxyInterface * mafSerializationManager::importExternalData(const Q
     QUrl u(url);
     u =  QUrl::fromUserInput(url);
     if (!u.isValid()) {
-        ba = mafTr("Invalid URL: %1").arg(u.toString()).toAscii();
+        ba = mafTr("Invalid URL: %1").arg(u.toString()).toLatin1();
         qCritical("%s", ba.data());
         return NULL;
     }

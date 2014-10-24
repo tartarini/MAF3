@@ -31,7 +31,7 @@ public:
     mafNetworkConnector();
 
     /// create the unique instance of the client.
-    virtual void createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParameters = NULL, QString path = "/") = 0;
+    virtual void createClient(const QString hostName, const unsigned int port, QMap<QString,QVariant> *advancedParameters = NULL) = 0;
 
     /// create the unique instance of the server.
     virtual void createServer(const unsigned int port) = 0;

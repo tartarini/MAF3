@@ -10,27 +10,17 @@
 #
 
 ## #################################################################
-## Find the external packages.
-## #################################################################
-
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_OpenCV.cmake)
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_fervor.cmake)
-
-## #################################################################
 ## Init Project
 ## #################################################################
 
-mafMacroInitProject(1)
+mafMacroInitProject("test")
 
 ## #################################################################
 ## Build rules
 ## #################################################################
 
 # Create the executable.
-ADD_EXECUTABLE(${PROJECT_NAME} ${PROJECT_SRCS})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
+mafMacroConfigureProject("test")
 
 ## #################################################################
 ## copy ui files
@@ -42,4 +32,4 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject(0)
+mafMacroBuildProject("test")

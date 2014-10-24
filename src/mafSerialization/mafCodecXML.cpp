@@ -98,7 +98,7 @@ mafMemento *mafCodecXML::decode() {
 
     mafMemento* memento = (mafMemento *)mafNEWFromString(mementoType);
     if(memento == NULL) {
-        QByteArray ba = mafTr("Problem on loading memento: %1").arg(mementoType).toAscii();
+        QByteArray ba = mafTr("Problem on loading memento: %1").arg(mementoType).toLatin1();
         qCritical("%s", ba.data());
         return NULL;
     }

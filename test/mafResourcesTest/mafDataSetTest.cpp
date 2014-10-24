@@ -2,19 +2,14 @@
  *  mafDataSetTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 14/07/14.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafDataSet.h>
-#include <mafProxy.h>
-#include <mafEventBusManager.h>
-#include <mafDataBoundaryAlgorithm.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafEventBus;
@@ -59,10 +54,10 @@ public:
     ~testDataBoundaryCustom();
 
     /// Boundary algorithm.
-    /*virtual*/ mafProxyInterface *calculateBoundary(mafProxyInterface *data, mafMatrix *m);
+    /*virtual*/ mafProxyInterface *calculateBoundary(mafProxyInterface *data, mafMatrix4x4 *m);
 
     /// Boundary algorithm.
-    /*virtual*/ mafCore::mafProxyInterface *calculateBoundary(double bounds[6], mafMatrix *matrix = NULL);
+    /*virtual*/ mafCore::mafProxyInterface *calculateBoundary(double bounds[6], mafMatrix4x4 *matrix = NULL);
 
     /// Return bounds of the bounding box.
     /*virtual*/ void bounds(double bounds[6]);
@@ -79,7 +74,7 @@ testDataBoundaryCustom::testDataBoundaryCustom(const QString code_location) : ma
 testDataBoundaryCustom::~testDataBoundaryCustom() {
 }
 
-mafProxyInterface *testDataBoundaryCustom::calculateBoundary(mafProxyInterface *data, mafMatrix *m) {
+mafProxyInterface *testDataBoundaryCustom::calculateBoundary(mafProxyInterface *data, mafMatrix4x4 *m) {
     Q_UNUSED(m);
     mafProxy<testExternalDataType> *container = mafProxyPointerTypeCast(testExternalDataType, data);
     testExternalDataType *value = container->externalData();
@@ -95,7 +90,7 @@ void testDataBoundaryCustom::bounds(double bounds[6]) {
     Q_UNUSED(bounds);
 }
 
-mafCore::mafProxyInterface *testDataBoundaryCustom::calculateBoundary(double bounds[6], mafMatrix *matrix) {
+mafCore::mafProxyInterface *testDataBoundaryCustom::calculateBoundary(double bounds[6], mafMatrix4x4 *matrix) {
     Q_UNUSED(bounds);
     Q_UNUSED(matrix);
     return NULL;
@@ -134,58 +129,26 @@ void testDataSetObserver::dataDidDisconnected() {
     qDebug() << mafTr("Dataset I'm observing has been disconnected!!");
 }
 
-//------------------------------------------------------------------------------------------
+void mafDataSetTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    mafEventBusManager::instance();
 
-/**
- Class name: mafDataSetTest
- This class implements the test suite for mafDataSet.
- */
+    //! <snippet>
+    m_DataSet = mafNEW(mafResources::mafDataSet);
+    //! </snippet>
 
-//! <title>
-//mafDataSet
-//! </title>
-//! <description>
-//mafDataSet is the base resource class for MAF3.
-//It provides basic API to set input and get output from a mafResource.
-//! </description>
-class mafDataSetTest : public QObject {
-    Q_OBJECT
+    // instantiate the observer and connect it to the event bus.
+    m_Observer = mafNEW(testDataSetObserver);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        mafEventBusManager::instance();
-
-        //! <snippet>
-        m_DataSet = mafNEW(mafResources::mafDataSet);
-        //! </snippet>
-
-        // instantiate the observer and connect it to the event bus.
-        m_Observer = mafNEW(testDataSetObserver);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        // Free allocated memory
-        mafDEL(m_DataSet);
-        mafDEL(m_Observer);
-        // Shutdown eventbus singleton and core singletons.
-        mafEventBusManager::instance()->shutdown();
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafDataSet allocation test case.
-    void mafDataSetAllocationTest();
-    /// Test the external data value assignment.
-    void mafDataSetValueTest();
-    /// Boundary algorithm test.
-    void mafDataSetBoundaryTest();
-
-private:
-    mafDataSet *m_DataSet; ///< Test var.
-    testDataSetObserver *m_Observer; ///< Test observer
-};
+void mafDataSetTest::cleanupTestCase() {
+    // Free allocated memory
+    mafDEL(m_DataSet);
+    mafDEL(m_Observer);
+    // Shutdown eventbus singleton and core singletons.
+    mafEventBusManager::instance()->shutdown();
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafDataSetTest::mafDataSetAllocationTest() {
     QVERIFY(m_DataSet != NULL);
@@ -234,5 +197,4 @@ void mafDataSetTest::mafDataSetBoundaryTest() {
     delete external_data;
 }
 
-MAF_REGISTER_TEST(mafDataSetTest);
 #include "mafDataSetTest.moc"

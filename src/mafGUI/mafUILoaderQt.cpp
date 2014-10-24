@@ -23,7 +23,7 @@ mafUILoaderQt::~mafUILoaderQt() {
 }
 
 void mafUILoaderQt::uiLoad(const QString &fileName, int ui_type) {
-    QFile file(fileName.toAscii());
+    QFile file(fileName.toLatin1());
     file.open(QFile::ReadOnly);
     mafProxy<QWidget> *arg = new mafProxy<QWidget>();
     *arg = m_UILoaderQt.load(&file);

@@ -27,7 +27,7 @@
 #include <mafHierarchy.h>
 #include <mafProxyInterface.h>
 
-#include "mafMatrix.h"
+#include "mafMatrix4x4.h"
 
 namespace mafResources {
 

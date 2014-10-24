@@ -2,20 +2,14 @@
  *  mafPluginManagerTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2012 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafResourcesRegistration.h>
-#include <mafEventBusManager.h>
-#include <mafPluginManager.h>
-#include <mafPipeData.h>
-#include <mafPlugin.h>
+#include "mafResourcesTestList.h"
 
 #define TEST_LIBRARY_NAME "mafPluginTest.mafplugin"
 
@@ -84,63 +78,31 @@ mafPipeData *testPluginObserver::pluggedPipe() {
 //---------------------------------------------------------------------------------------------------------
 
 
-/**
- Class name: mafPluginManagerTest
- This class implements the test suite for mafPluginManager.
- */
+void mafPluginManagerTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    mafResourcesRegistration::registerResourcesObjects();
+    mafEventBusManager::instance();
 
-//! <title>
-//mafPluginManager
-//! </title>
-//! <description>
-//mafPluginManager provides the engine for loading plug-ins and define
-//the ID: REGISTER_PLUGIN used by external libraries to register their plugged objects.
-//! </description>
+    // Initialize the plug-in name with prefix and extension.
+    m_PluginName.append(TEST_LIBRARY_NAME);
+    m_QtPluginName.append(TEST_QTLIBRARY_NAME);
+    
+    //! <snippet>
+    m_PluginManager = mafPluginManager::instance();
+    //! </snippet>
 
-class mafPluginManagerTest : public QObject {
-    Q_OBJECT
+    m_Observer = mafNEW(testPluginObserver);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        mafResourcesRegistration::registerResourcesObjects();
-        mafEventBusManager::instance();
-
-        // Initialize the plug-in name with prefix and extension.
-        m_PluginName.append(TEST_LIBRARY_NAME);
-        m_QtPluginName.append(TEST_QTLIBRARY_NAME);
-        
-        //! <snippet>
-        m_PluginManager = mafPluginManager::instance();
-        //! </snippet>
-
-        m_Observer = mafNEW(testPluginObserver);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        // Free allocated memory
-        mafDEL(m_Observer);
-        m_PluginManager->shutdown();
-        // Shutdown eventbus singleton and core singletons.
-        mafEventBusManager::instance()->shutdown();
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafPluginManager allocation test case.
-    void mafPluginManagerAllocationTest();
-    /// Test loading plug-in compiled as dynamic library
-    void mafPluginManagerLoadPluginTest();
-    /// Test loading plug-in compiled as dynamic library
-    void mafPluginManagerLoadQtPluginTest();
-
-private:
-    mafPluginManager *m_PluginManager; ///< Test var.
-    QString m_PluginName; ///< Test var.
-    QString m_QtPluginName; ///< Test var.
-    testPluginObserver *m_Observer; ///< Test observer.
-};
+/// Cleanup test variables memory allocation.
+void mafPluginManagerTest::cleanupTestCase() {
+    // Free allocated memory
+    mafDEL(m_Observer);
+    m_PluginManager->shutdown();
+    // Shutdown eventbus singleton and core singletons.
+    mafEventBusManager::instance()->shutdown();
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafPluginManagerTest::mafPluginManagerAllocationTest() {
     QVERIFY(m_PluginManager != NULL);
@@ -244,5 +206,4 @@ void mafPluginManagerTest::mafPluginManagerLoadQtPluginTest() {
     QCOMPARE(res, objInfo.m_ClassType);
 }
 
-MAF_REGISTER_TEST(mafPluginManagerTest);
 #include "mafPluginManagerTest.moc"

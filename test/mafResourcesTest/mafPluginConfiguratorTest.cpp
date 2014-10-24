@@ -2,58 +2,29 @@
  *  mafPluginConfiguratorTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 06/06/11.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 06/06/11.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafResourcesRegistration.h>
-#include <mafPluginConfigurator.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafEventBus;
 using namespace mafResources;
 
-/**
- Class name: mafPluginConfiguratorTest
- This class implements the test suite for mafPluginConfigurator.
- */
+void mafPluginConfiguratorTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    mafResourcesRegistration::registerResourcesObjects();
+    initializeTestData();
+}
 
- //! <title>
-//mafPluginConfigurator
-//! </title>
-//! <description>
-//mafPluginConfigurator defines the parser of XML configuration file to plug objects into the framework and customize the plug in an easy way.
-//! </description>
-
-class mafPluginConfiguratorTest : public QObject {
-    Q_OBJECT
-
-    /// Prepare the test data to be used into the test suite.
-    void initializeTestData();
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        mafResourcesRegistration::registerResourcesObjects();
-        initializeTestData();
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        QFile::remove(m_ConfigFile);
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// Test the parsing method.
-    void mafPluginConfiguratorParseTest();
-
-private:
-   QString m_ConfigFile; ///< Test var.
-};
+/// Cleanup test variables memory allocation.
+void mafPluginConfiguratorTest::cleanupTestCase() {
+    QFile::remove(m_ConfigFile);
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafPluginConfiguratorTest::initializeTestData() {
     m_ConfigFile = QDir::tempPath();
@@ -89,6 +60,4 @@ void mafPluginConfiguratorTest::mafPluginConfiguratorParseTest() {
     QVERIFY(res);
 }
 
-
-MAF_REGISTER_TEST(mafPluginConfiguratorTest);
 #include "mafPluginConfiguratorTest.moc"

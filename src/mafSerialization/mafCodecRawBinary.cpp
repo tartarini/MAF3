@@ -98,7 +98,7 @@ mafMemento *mafCodecRawBinary::decode() {
 
     while(!m_DataStreamRead.atEnd()) {
         m_DataStreamRead >> mementoTagSeparator;
-        qDebug() << "*****" << mementoTagSeparator << "*****"; 
+        //qDebug() << "*****" << mementoTagSeparator << "*****"; 
         if(mementoTagSeparator != "MementoType") {
             item.m_Name = mementoTagSeparator;
             if (mementoTagSeparator.isEmpty()) {

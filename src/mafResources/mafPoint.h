@@ -73,7 +73,7 @@ public:
     void pos(double p[3]);
 
     /// Transform point applying the pose matrix.
-    void transformPoint(mafMatrix *matrix);
+    void transformPoint(mafMatrix4x4 *matrix);
 
 protected:
     /// Object destructor.

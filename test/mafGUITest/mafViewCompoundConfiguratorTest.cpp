@@ -2,20 +2,14 @@
  *  mafViewCompoundConfiguratorTest.cpp
  *  mafGUITest
  *
- *  Created by Paolo Quadrani on 30/11/11.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 30/11/11.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestConfig.h>
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafGUIRegistration.h>
-#include <mafViewCompoundConfigurator.h>
-
-#include <QPushButton>
+#include "mafGUITestList.h"
 
 using namespace mafCore;
 using namespace mafGUI;
@@ -108,46 +102,25 @@ testVisualPipeForCompound::testVisualPipeForCompound(const QString code_location
 //----------------------------------------------------------------------------------------------
 
 
-/**
- Class name: mafViewCompoundConfiguratorTest
- This class implements the test suite for mafViewCompoundConfigurator.
- */
-class mafViewCompoundConfiguratorTest : public QObject {
-    Q_OBJECT
+void mafViewCompoundConfiguratorTest::initTestCase() {
+    // Register all objects for the mafGUI module.
+    mafGUIRegistration::registerGUIObjects();
+    mafRegisterObject(testViewForCompound);
+    mafRegisterObject(testVisualPipeForCompound);
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        // Register all objects for the mafGUI module.
-        mafGUIRegistration::registerGUIObjects();
-        mafRegisterObject(testViewForCompound);
-        mafRegisterObject(testVisualPipeForCompound);
+    m_ConfigFilename = MAF_DATA_DIR;
+    m_ConfigFilename.append("/GUI/CompoundViewConfiguratorTestData.xml");
+    
+    m_Configurator = new mafViewCompoundConfigurator();
+}
 
-		m_ConfigFilename = MAF_DATA_DIR;
-		m_ConfigFilename.append("/GUI/CompoundViewConfiguratorTestData.xml");
-		
-		m_Configurator = new mafViewCompoundConfigurator();
+void mafViewCompoundConfiguratorTest::cleanupTestCase() {
+    QObject *ro = m_Configurator->rootObject();
+    if(ro) {
+        delete ro;
     }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        QObject *ro = m_Configurator->rootObject();
-        if(ro) {
-            delete ro;
-        }
-		delete m_Configurator;
-    }
-
-    /// allocation test case.
-    void mafViewCompoundConfiguratorAllocationTest();
-
-    /// allocation test case.
-    void mafViewCompoundConfiguratorParseTest();
-
-private:
-    mafViewCompoundConfigurator *m_Configurator; ///< Reference to the compound view configurator.
-	QString m_ConfigFilename; ///< Filename for the configurator.
-};
+    delete m_Configurator;
+}
 
 void mafViewCompoundConfiguratorTest::mafViewCompoundConfiguratorAllocationTest() {
     QVERIFY(m_Configurator != NULL);
@@ -159,5 +132,4 @@ void mafViewCompoundConfiguratorTest::mafViewCompoundConfiguratorParseTest() {
     QVERIFY(obj != NULL);
 }
 
-MAF_REGISTER_TEST(mafViewCompoundConfiguratorTest);
 #include "mafViewCompoundConfiguratorTest.moc"

@@ -2,16 +2,14 @@
  *  mafProxyTest.cpp
  *  mafCoreTest
  *
- *  Created by Paolo Quadrani on 27/03/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 27/03/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafProxy.h>
-
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
@@ -50,46 +48,13 @@ testCustomDataType::~testCustomDataType() {
     m_Value = 0;
 }
 
-/**
- Class name: mafProxyTest
- This class implements the test suite for mafProxy.
- */
+void mafProxyTest::initTestCase() {
+}
 
-//! <title>
-//mafProxy
-//! </title>
-//! <description>
-//mafProxy This class defines the base concrete class container for the MAF3 dataset values.
-//! </description>
-
-class mafProxyTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        delete t;
-        delete tw;
-    }
-
-    /// create new object and check that is not NULL test case.
-    void mafProxyAllocationTest();
-    /// Check internal data type existance.
-    void mafProxyInternalDataTest();
-    /// Check mafProxyInterface 'wrapped' into QVariant.
-    void mafProxyToVariant();
-
-private:
-    //! <snippet>
-    mafProxy<testCustomDataType> m_Wrapper; ///< Test var.
-    //! </snippet>
-    testCustomDataType *t;  ///< First object of external to MAF type.
-    testCustomDataType *tw; ///< Second object of external to MAF type.
-};
+void mafProxyTest::cleanupTestCase() {
+    delete t;
+    delete tw;
+}
 
 void mafProxyTest::mafProxyAllocationTest() {
     // Create the istance of external data object.
@@ -158,5 +123,4 @@ void mafProxyTest::mafProxyToVariant() {
     QVERIFY(val_source == val);
 }
 
-MAF_REGISTER_TEST(mafProxyTest);
 #include "mafProxyTest.moc"

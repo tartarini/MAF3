@@ -2,55 +2,24 @@
  *  mafTopicRegistryTest.cpp
  *  mafEventBusTest
  *
- *  Created by Roberto Mucci on 26/01/11.
+ *  Created by Roberto Mucci - Daniele Giunchi on 26/01/11.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafTopicRegistry.h>
+#include "mafEventBusTestList.h"
 
 using namespace mafEventBus;
 
-/**
- Class name: mafTopicRegistryTest
- This class implements the test suite for mafTopicRegistry.
- */
+void mafTopicRegistryTest::initTestCase() {
+    m_TopicRegistry = mafTopicRegistry::instance();
+}
 
-//! <title>
-//mafTopicRegistry
-//! </title>
-//! <description>
-//mafTopicRegistry provides the registration of topic and topic owner in a hash.
-//! </description>
-
-class mafTopicRegistryTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_TopicRegistry = mafTopicRegistry::instance();
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        m_TopicRegistry->shutdown();
-    }
-
-    /// mafTopicRegistry registration test case.
-    void mafTopicRegistryRegisterTest();
-
-    /// mafTopicRegistry owner test case.
-    void mafTopicRegistryOwnerTest();
-
-
-private:
-    mafTopicRegistry *m_TopicRegistry; ///< Test var.
-
-};
+void mafTopicRegistryTest::cleanupTestCase() {
+    m_TopicRegistry->shutdown();
+}
 
 void mafTopicRegistryTest::mafTopicRegistryRegisterTest() {
     QVERIFY(m_TopicRegistry != NULL);
@@ -112,8 +81,6 @@ void mafTopicRegistryTest::mafTopicRegistryOwnerTest() {
     m_TopicRegistry->dump();
 }
 
-
-MAF_REGISTER_TEST(mafTopicRegistryTest);
 #include "mafTopicRegistryTest.moc"
 
 

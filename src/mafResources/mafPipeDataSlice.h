@@ -74,10 +74,10 @@ public:
     void pushSlice(double distance);
 
     /// Assign the transform matrix to use for the cut.
-    void setTransformMatrix(mafMatrix &m);
+    void setTransformMatrix(mafMatrix4x4 &m);
 
     /// Return the transform matrix used for the cut.
-    const mafMatrix *transformMatrix() const;
+    const mafMatrix4x4 *transformMatrix() const;
 
 protected:
     /// Object destructor.
@@ -89,7 +89,7 @@ protected:
     /// Return the Y vector that defines the slicing plane.
     const double *yVector() const;
 
-    mafMatrix m_TransformMatrix; ///< Transformation Matrix to use for the cut.
+    mafMatrix4x4 m_TransformMatrix; ///< Transformation Matrix to use for the cut.
 
 private:
     double m_SliceOrigin[3]; ///< Origin of the slice.
@@ -139,7 +139,7 @@ inline const double *mafPipeDataSlice::yVector() const {
     return &m_YVector[0];
 }
 
-inline const mafMatrix *mafPipeDataSlice::transformMatrix() const {
+inline const mafMatrix4x4 *mafPipeDataSlice::transformMatrix() const {
     return &m_TransformMatrix;
 }
 

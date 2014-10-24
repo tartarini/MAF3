@@ -20,7 +20,7 @@ include(${MAF_SOURCE_DIR}/CMakeExternals/Find_PythonQt.cmake)
 ## Init Project
 ## #################################################################
 
-mafMacroInitProject(0)
+mafMacroInitProject("application")
 
 INCLUDE_DIRECTORIES("${MAF_ROOT_BINARY_DIR}/wrap/mafPythonQtDecorators/mafCore")
 
@@ -48,4 +48,4 @@ mafCopyFilesFromExtension("xml" ${PROJECT_NAME})
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject(1)
+mafMacroBuildProject("application")

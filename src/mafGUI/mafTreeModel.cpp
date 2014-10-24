@@ -76,7 +76,7 @@ void mafTreeModel::replaceDataModel(bool init) {
     if(init) {
         m_Hierarchy->moveTreeIteratorToRootNode();
         data = m_Hierarchy->currentData();
-        ba = data->objectName().toAscii();
+        ba = data->objectName().toLatin1();
         char *v = ba.data();
         ti = m_ItemsHash.value(dataHash(data));
         ti->setObject(data);
@@ -87,7 +87,7 @@ void mafTreeModel::replaceDataModel(bool init) {
     for(;i < size; ++i) {
         m_Hierarchy->moveTreeIteratorToNthChild(i);
         data = m_Hierarchy->currentData();
-        ba = data->objectName().toAscii();
+        ba = data->objectName().toLatin1();
         char *v = ba.data();
         ti = m_ItemsHash.value(dataHash(data));
         ti->setObject(data);
@@ -195,7 +195,7 @@ void mafTreeModel::itemReparent(QObject *obj, QObject *parent) {
     newParent->appendRow(newItem);
     m_ItemsHash.insert(dataHash(obj), newItem);
 
-    QByteArray ba = obj->objectName().toAscii();
+    QByteArray ba = obj->objectName().toLatin1();
     char *v = ba.data();
     int i=0, size = child->rowCount();
     for(;i<size;i++) {
@@ -272,4 +272,6 @@ QModelIndex mafTreeModel::indexFromData(QObject *data) {
         }
         return ti->index();
     }
+
+	return QModelIndex();
 }

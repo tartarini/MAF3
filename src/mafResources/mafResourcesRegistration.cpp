@@ -68,8 +68,8 @@ void mafResourcesRegistration::registerResourcesObjects() {
     mafRegisterObjectAndAcceptBind(mafResources::mafImporter);
 
 
-    qRegisterMetaType<mafResources::mafMatrixPointer>("mafResources::mafMatrixPointer");
-    qRegisterMetaType<mafResources::mafMatrix>("mafResources::mafMatrix");
+    qRegisterMetaType<mafResources::mafMatrix4x4Pointer>("mafResources::mafMatrix4x4Pointer");
+    qRegisterMetaType<mafResources::mafMatrix4x4>("mafResources::mafMatrix4x4");
     qRegisterMetaType<mafResources::mafResourceWorkerPointer>("mafResources::mafResourceWorkerPointer");
     qRegisterMetaType<mafExecutionPoolPointer>("mafExecutionPoolPointer");
     qRegisterMetaType<mafResources::mafPointPointer>("mafResources::mafPointPointer");

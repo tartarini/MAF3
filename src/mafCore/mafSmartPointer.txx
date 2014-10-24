@@ -16,5 +16,6 @@ mafSmartPointer<T>::mafSmartPointer(T *p) : QPointer<T>(p) {
 
 template<class T>
 mafSmartPointer<T>::~mafSmartPointer() {
-    m_ObjectBase->release();
+	this->clear();
+	m_ObjectBase->release();
 }

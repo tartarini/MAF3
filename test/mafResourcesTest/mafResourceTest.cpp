@@ -2,64 +2,31 @@
  *  mafResourceTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafMementoResource.h>
-#include <mafResource.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafEventBus;
 using namespace mafResources;
 
-/**
- Class name: mafResourceTest
- This class implements the test suite for mafResource.
- */
+void mafResourceTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    mafEventBusManager::instance();
+    m_Resource = mafNEW(mafResources::mafResource);
+}
 
-//! <title>
-//mafResource
-//! </title>
-//! <description>
-//mafResource is the base resource class for MAF3.
-//It provides basic API to set input and get output from a mafResource.
-//! </description>
-
-class mafResourceTest: public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        mafEventBusManager::instance();
-        m_Resource = mafNEW(mafResources::mafResource);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_Resource);
-        mafEventBusManager::instance()->shutdown();
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafResource allocation test case.
-    void mafResourceAllocationTest();
-    /// Test the add input functionality
-    void mafResourceAddInputTest();
-    /// Test the remove input functionality
-    void mafResourceRemoveInputTest();
-    /// Test the createMemento functionality.
-    void mafResourceCreateMementoTest();
-
-private:
-    mafResource *m_Resource; ///< Test var.
-};
+/// Cleanup test variables memory allocation.
+void mafResourceTest::cleanupTestCase() {
+    mafDEL(m_Resource);
+    mafEventBusManager::instance()->shutdown();
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafResourceTest::mafResourceAllocationTest() {
     QVERIFY(m_Resource != NULL);
@@ -150,5 +117,4 @@ void mafResourceTest::mafResourceCreateMementoTest() {
     mafDEL(obj1);
 }
 
-MAF_REGISTER_TEST(mafResourceTest);
 #include "mafResourceTest.moc"

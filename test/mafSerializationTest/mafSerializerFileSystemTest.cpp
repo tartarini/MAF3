@@ -2,60 +2,28 @@
  *  mafSerializerFileSystemTest.cpp
  *  mafSerializationTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafSerializerFileSystem.h>
+#include "mafSerializationTestList.h"
 
 using namespace mafCore;
 using namespace mafSerialization;
 
-/**
- Class name: mafSerializerFileSystemTest
- This class implements the test suite for mafSerializerFileSystem.
- */
+void mafSerializerFileSystemTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    m_Serializer = mafNEW(mafSerialization::mafSerializerFileSystem);
+}
 
-//! <title>
-//mafSerializerFileSystem
-//! </title>
-//! <description>
-//This class is responsible to write input DataStream into a file based on local filesystem.
-//! </description>
-
-class mafSerializerFileSystemTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        m_Serializer = mafNEW(mafSerialization::mafSerializerFileSystem);
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        QFile::remove(m_TestURL);
-        mafDEL(m_Serializer);
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafSerializerFileSystem allocation test case.
-    void mafSerializerFileSystemAllocationTest();
-    /// Test the writing feature for the FileSystem Serializer
-    void mafSerializerFileSystemWritingTest();
-    /// Test the reading feature for the FileSystem Serializer
-    void mafSerializerFileSystemReadingTest();
-
-private:
-    mafSerializerFileSystem *m_Serializer; ///< Test var
-    QString m_TestURL; ///< Test URL for file.
-};
+void mafSerializerFileSystemTest::cleanupTestCase() {
+    QFile::remove(m_TestURL);
+    mafDEL(m_Serializer);
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafSerializerFileSystemTest::mafSerializerFileSystemAllocationTest() {
     QVERIFY(m_Serializer != NULL);
@@ -121,5 +89,4 @@ void mafSerializerFileSystemTest::mafSerializerFileSystemReadingTest() {
     QVERIFY(strVar == "Test1");
 }
 
-MAF_REGISTER_TEST(mafSerializerFileSystemTest);
 #include "mafSerializerFileSystemTest.moc"

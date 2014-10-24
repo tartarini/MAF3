@@ -2,19 +2,14 @@
  *  mafDataSetCollectionTest.cpp
  *  mafResourcesTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafResourcesRegistration.h>
-#include <mafProxy.h>
-#include <mafMatrix.h>
-#include <mafDataSetCollection.h>
-#include <mafDataSet.h>
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafResources;
@@ -96,57 +91,23 @@ private:
 
 
 
-/**
- Class name: mafDataSetCollectionTest
- This class implements the test suite for mafDataSetCollection.
- */
+void mafDataSetCollectionTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    mafResourcesRegistration::registerResourcesObjects();
+    //! <snippet>
+    m_Collection = mafNEW(mafResources::mafDataSetCollection);
+    //! </snippet>
 
- //! <title>
-//mafDataSetCollection
-//! </title>
-//! <description>
-//mafDataSetCollection is the class representing the time varying data for MAF3.
-//! </description>
-class mafDataSetCollectionTest : public QObject {
-    Q_OBJECT
+    m_PoseObserver = new testPoseObserver;
+    connect(m_Collection, SIGNAL(modifiedObject()), m_PoseObserver, SLOT(turnOnModifyFlag()), Qt::DirectConnection);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        mafResourcesRegistration::registerResourcesObjects();
-        //! <snippet>
-        m_Collection = mafNEW(mafResources::mafDataSetCollection);
-        //! </snippet>
 
-        m_PoseObserver = new testPoseObserver;
-        connect(m_Collection, SIGNAL(modifiedObject()), m_PoseObserver, SLOT(turnOnModifyFlag()), Qt::DirectConnection);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_Collection);
-        delete m_PoseObserver;
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafDataSetCollection allocation test case.
-    void collectionAllocationTest();
-    /// Test orientation and pose for mafDataSetCollection
-    void collectionPoseMatrixTest();
-    /// Test the pose matrix synchronization
-    void collectionSynchronizePoseTest();
-    /// Test new item insertion
-    void collectionInsertItemTest();
-    /// Test the setDataSet method
-    void collectionDataSetTest();
-    /// Test the remove item from the collection
-    void collectionRemoveItemTest();
-
-private:
-    mafDataSetCollection *m_Collection; ///< Test var.
-    testPoseObserver *m_PoseObserver; ///< Modify dataset collection's pose observer;
-};
+void mafDataSetCollectionTest::cleanupTestCase() {
+    mafDEL(m_Collection);
+    delete m_PoseObserver;
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafDataSetCollectionTest::collectionAllocationTest() {
     QVERIFY(m_Collection != NULL);
@@ -182,9 +143,9 @@ void mafDataSetCollectionTest::collectionSynchronizePoseTest() {
     // reset the modify flag
     m_PoseObserver->resetModifyFlag();
 
-    mafMatrix m;
-    m.setIdentity();
-    m.setElement(0, 1, 2.5);
+    mafMatrix4x4 m;
+    m.setToIdentity();
+    m(0,1) = 2.5;
 
     // Assign a pose matrix (collection notify the changes)
     m_Collection->setPose(m);
@@ -194,7 +155,7 @@ void mafDataSetCollectionTest::collectionSynchronizePoseTest() {
     // reset again the modify flag
     m_PoseObserver->resetModifyFlag();
 
-    m.setIdentity();
+    m.setToIdentity();
     m_Collection->synchronizeItemWithPose(m);
     
     res = m_PoseObserver->isModified();
@@ -203,12 +164,12 @@ void mafDataSetCollectionTest::collectionSynchronizePoseTest() {
 
 void mafDataSetCollectionTest::collectionInsertItemTest() {
     // Create a test matrix to add to the collection.
-    mafMatrix *newMatrix = new mafMatrix();
-    newMatrix->setIdentity();
+    mafMatrix4x4 *newMatrix = new mafMatrix4x4();
+    newMatrix->setToIdentity();
     
-    newMatrix->setElement(0, 3, 5.0);
-    newMatrix->setElement(1, 3, 1.3);
-    newMatrix->setElement(2, 3, 4.1);
+    (*newMatrix)(0,3) = 5.0;
+	(*newMatrix)(1,3) = 1.3;
+	(*newMatrix)(2,3) = 4.1;
 
     mafDataSet *item = mafNEW(mafResources::mafDataSet);
     item->setPoseMatrix(newMatrix);
@@ -217,15 +178,15 @@ void mafDataSetCollectionTest::collectionInsertItemTest() {
     //! <snippet>
     bool result_insert = m_Collection->insertItem(item, 1.5);
     //! </snippet>
-    cv::Mat mat;
+
     
     QVERIFY(result_insert);
 
     //! <snippet>
-    mafMatrix *m = m_Collection->poseMatrix(1.5);
+    mafMatrix4x4 *m = m_Collection->poseMatrix(1.5);
     //! </snippet>
     
-    QVERIFY(m->element(1,2) == newMatrix->element(1,2));
+    QVERIFY((*m)(1,2) == (*newMatrix)(1,2));
     
     mafDEL(item);
 
@@ -233,6 +194,7 @@ void mafDataSetCollectionTest::collectionInsertItemTest() {
 }
 
 void mafDataSetCollectionTest::collectionDataSetTest() {
+
     // Create the container for the external data type.
     mafProxy<testCustomExternalData> container;
     container = new testCustomExternalData();
@@ -272,16 +234,19 @@ void mafDataSetCollectionTest::collectionDataSetTest() {
     delete extData1;
     testCustomAnotherExternalData *extData2 = another_container.externalData();
     delete extData2;
+
+	mafDEL(data);
 }
 
 void mafDataSetCollectionTest::collectionRemoveItemTest() {
     // Create a test matrix to add to the collection.
-    mafMatrix *newMatrix = new mafMatrix();
-    newMatrix->setIdentity();
+    mafMatrix4x4 *newMatrix = new mafMatrix4x4();
+    newMatrix->setToIdentity();
     
-    newMatrix->setElement(0, 3, 5.0);
-    newMatrix->setElement(1, 3, 1.3);
-    newMatrix->setElement(2, 3, 4.1);
+    (*newMatrix)(0,3) = 5.0;
+	(*newMatrix)(1,3) = 1.3;
+	(*newMatrix)(2,3) = 4.1;
+    
 
     mafDataSet *item = mafNEW(mafResources::mafDataSet);
     item->setPoseMatrix(newMatrix);
@@ -310,5 +275,4 @@ void mafDataSetCollectionTest::collectionRemoveItemTest() {
     delete newMatrix;
 }
 
-MAF_REGISTER_TEST(mafDataSetCollectionTest);
 #include "mafDataSetCollectionTest.moc"

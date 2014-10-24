@@ -9,49 +9,23 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-
-#include <mafGUIRegistration.h>
-#include <QtGui>
-#include <mafTreeItem.h>
+#include "mafGUITestList.h"
 
 using namespace mafCore;
 using namespace mafGUI;
 
-/**
- Class name: mafTreeItemTest
- This class implements the test suite for mafTreeItem.
- */
-class mafTreeItemTest : public QObject {
-    Q_OBJECT
+void mafTreeItemTest::initTestCase() {
+    // Register all the creatable objects for the mafGUI module.
+    mafGUIRegistration::registerGUIObjects();
+    m_BaseObject = mafNEW(mafCore::mafObjectBase);
+    m_BaseObject->setObjectName("TestObjectName");
+    m_TreeItem = new mafTreeItem(m_BaseObject);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        // Register all the creatable objects for the mafGUI module.
-        mafGUIRegistration::registerGUIObjects();
-        m_BaseObject = mafNEW(mafCore::mafObjectBase);
-        m_BaseObject->setObjectName("TestObjectName");
-        m_TreeItem = new mafTreeItem(m_BaseObject);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        delete m_TreeItem;
-        mafDEL(m_BaseObject);
-    }
-
-    /// allocation test case.
-    void mafTreeItemAllocationTest();
-
-    /// retrieve data test
-    void dataTest();
-
-private:
-    mafTreeItem *m_TreeItem; ///< Reference to the tree item.
-    mafObjectBase *m_BaseObject;
-};
+void mafTreeItemTest::cleanupTestCase() {
+    delete m_TreeItem;
+    mafDEL(m_BaseObject);
+}
 
 void mafTreeItemTest::mafTreeItemAllocationTest() {
     QVERIFY(m_TreeItem != NULL);
@@ -62,6 +36,5 @@ void mafTreeItemTest::dataTest() {
     QVERIFY(m_TreeItem->data()->objectName() == "TestObjectName");
 }
 
-MAF_REGISTER_TEST(mafTreeItemTest);
 #include "mafTreeItemTest.moc"
 

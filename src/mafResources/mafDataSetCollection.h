@@ -45,13 +45,13 @@ public:
     void setPose(double rx, double ry, double rz, double x = 0.0, double y = 0.0, double z = 0.0, double t = -1);
 
     /// Assign the pose matrix to the current data.
-    void setPose(const mafMatrix &matrix, double t = -1);
+    void setPose(const mafMatrix4x4 &matrix, double t = -1);
 
     /// Assign the given matrix passed as argument without notifying connected slots with modifiedObject
-    void synchronizeItemWithPose(const mafMatrix &matrix, double t = -1);
+    void synchronizeItemWithPose(const mafMatrix4x4 &matrix, double t = -1);
 
     /// Return the current data pose matrix.
-    mafMatrix *poseMatrix(double t = -1);
+    mafMatrix4x4 *poseMatrix(double t = -1);
 
     /// Set the orientation for the data at the timestamp 't'
     /** The input angle are expressed in degrees and are the rotation around the main axis (Yaw-Pitch_Roll convention).*/
@@ -135,10 +135,10 @@ protected:
     bool acceptData(mafDataSet *data);
 
     /// Write into the given matrix the given orientation.
-    void writeOrientation(double rx, double ry, double rz, mafMatrix *m);
+    void writeOrientation(double rx, double ry, double rz, mafMatrix4x4 *m);
 
     /// Write into the given matrix the given position.
-    void writePosition(double x, double y, double z, mafMatrix *m);
+    void writePosition(double x, double y, double z, mafMatrix4x4 *m);
 
 private:
     mafDataSetMap *m_CollectionMap; ///< Collection of data.

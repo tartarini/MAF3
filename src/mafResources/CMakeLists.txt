@@ -10,18 +10,10 @@
 #
 
 ## #################################################################
-## Find the external packages.
-## #################################################################
-
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_OpenCV.cmake)
-
-## #################################################################
 ## Init Project
 ## #################################################################
 
-mafMacroInitProject(0)
+mafMacroInitProject("library")
 
 ## #################################################################
 ## Wrapping
@@ -49,16 +41,6 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 mafCopyFilesFromExtension("ui" "mafResources")
 
 ## #################################################################
-## copy OpenCV libraries
-## #################################################################
-
-if(WIN32)
-    mafCopySharedLibrariesInInstallDir("${OpenCV_DIR}/bin")
-else(WIN32)
-    mafCopySharedLibrariesInInstallDir("${OpenCV_DIR}/lib")	
-endif(WIN32)
-
-## #################################################################
 ## Wrapping Build rules
 ## #################################################################
 
@@ -68,6 +50,6 @@ mafMacroWrapBuild()
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject(0)
+mafMacroBuildProject("library")
 
 

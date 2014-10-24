@@ -2,18 +2,16 @@
  *  mafCoreRegistrationTest.cpp
  *  mafCoreTest
  *
- *  Created by Paolo Quadrani on 27/03/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 27/03/09.
  *  Copyright 2011 SCS-B3C. All rights reserved.
  *
  *  See License at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreRegistration.h>
-#include <mafObject.h>
+#include "mafCoreTestList.h"
 
-using namespace mafCore;
+using namespace mafCore; 
 
 //----------------------------------------------------------------------------------------------------
 /**
@@ -49,33 +47,14 @@ bool testObjectCustomForCoreRegistration::acceptObject(mafCore::mafObjectBase *o
 //----------------------------------------------------------------------------------------------------
 
 
-/**
- Class name: mafCoreRegistrationTest
- This class implements the test suite for mafCoreRegistration.
- */
-class mafCoreRegistrationTest : public QObject {
-    Q_OBJECT
+void mafCoreRegistrationTest::initTestCase() {
+    mafCoreRegistration::registerCoreObjects();
+    m_Object = NULL;
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafCoreRegistration::registerCoreObjects();
-        m_Object = NULL;
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_Object);
-    }
-
-    /// Call the registration for the objects present in mafCore module.
-    void mafCoreRegistrationRegisterObjectsTest();
-    /// mafCoreRegistration acceptObject test case
-    void acceptObjectTest();
-
-private:
-    mafObject *m_Object; ///< Test var.
-};
+void mafCoreRegistrationTest::cleanupTestCase() {
+    mafDEL(m_Object);
+}
 
 void mafCoreRegistrationTest::mafCoreRegistrationRegisterObjectsTest() {
     m_Object = (mafObject *)mafNEWFromString("mafCore::mafObject");
@@ -115,6 +94,5 @@ void mafCoreRegistrationTest::acceptObjectTest() {
     mafUnregisterObjectAndAcceptUnbind(testObjectCustomForCoreRegistration);
 }
 
-MAF_REGISTER_TEST(mafCoreRegistrationTest);
 #include "mafCoreRegistrationTest.moc"
 

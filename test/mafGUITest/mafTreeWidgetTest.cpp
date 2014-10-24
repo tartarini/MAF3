@@ -9,51 +9,21 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafHierarchy.h>
-
-#include <mafResourcesDefinitions.h>
-#include <mafVME.h>
-
-#include <mafGUIRegistration.h>
-#include <QtGui>
-#include <mafTreeWidget.h>
-#include <mafTreeModel.h>
-
-
+#include "mafGUITestList.h"
 
 using namespace mafCore;
 using namespace mafGUI;
 using namespace mafResources;
 
-/**
- Class name: mafTreeWidgetTest
- This class implements the test suite for mafTreeWidget.
- */
-class mafTreeWidgetTest : public QObject {
-    Q_OBJECT
+void mafTreeWidgetTest::initTestCase() {
+    // Register all the creatable objects for the mafGUI module.
+    mafGUIRegistration::registerGUIObjects();
+    m_TreeWidget = new mafTreeWidget();
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        // Register all the creatable objects for the mafGUI module.
-        mafGUIRegistration::registerGUIObjects();
-        m_TreeWidget = new mafTreeWidget();
-    }
+void mafTreeWidgetTest::cleanupTestCase() {
 
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-
-    }
-
-    /// allocation test case.
-    void mafTreeWidgetAllocationTest();
-
-private:
-    mafTreeWidget *m_TreeWidget; ///< Reference to the Tree Widget.
-
-};
+}
 
 void mafTreeWidgetTest::mafTreeWidgetAllocationTest() {
     QVERIFY(m_TreeWidget != NULL);
@@ -104,5 +74,4 @@ void mafTreeWidgetTest::mafTreeWidgetAllocationTest() {
     mafDEL(vmeRoot);
 }
 
-MAF_REGISTER_TEST(mafTreeWidgetTest);
 #include "mafTreeWidgetTest.moc"

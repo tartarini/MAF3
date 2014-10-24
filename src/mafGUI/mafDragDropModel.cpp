@@ -41,8 +41,8 @@ bool mafDragDropModel::dropMimeData(const QMimeData *data,
     mafObjectBase *objParent = qobject_cast<mafObjectBase*>(itemParent->data());
     mafObjectBase *obj = qobject_cast<mafObjectBase*>(item->data());
 
-    //char *v = obj->objectName().toAscii().data();
-    //char *vp = objParent->objectName().toAscii().data();
+    //char *v = obj->objectName().toLatin1().data();
+    //char *vp = objParent->objectName().toLatin1().data();
     
     //Notify vme reparent
     mafEventArgumentsList argList;

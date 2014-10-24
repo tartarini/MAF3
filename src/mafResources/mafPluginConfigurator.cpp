@@ -17,7 +17,7 @@ using namespace mafResources;
 void mafPluginConfigurator::parseDocument(QDomNode current) {
     mafEventBus::mafEventArgumentsList argList;
     mafCore::mafPluggedObjectsHash pluginHash;
-    QByteArray ba = current.nodeName().toAscii();
+    QByteArray ba = current.nodeName().toLatin1();
     char *name = ba.data();
     QDomNodeList dnl = current.childNodes();
     for (int n=0; n < dnl.count(); ++n) {
@@ -63,6 +63,7 @@ bool mafPluginConfigurator::parseConfigurationFile(QString configFile) {
     int errorLine, errorColumn;
     QString errorMsg;
     QFile cfgFile(configFile);
+	qDebug() << configFile;
     if (!cfgFile.exists()) {
         qWarning() << configFile << " " << mafTr("doesn't exists. The default plug will be called.");
         return false;

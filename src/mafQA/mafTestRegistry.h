@@ -35,7 +35,13 @@ public:
     /** This method is called  by MAF_REGISTER_TEST, and you should
       not use this method directly.
      */
-    void registerTest(QObject*);
+    void registerTest(QObject* test);
+
+	///!brief Check if test is already present
+    /** This method is called  by MAF_REGISTER_TEST, and you should
+      not use this method directly.
+     */
+	bool isRegistered(QObject *obj);
 
     ///!brief Run all registered tests using QTest::qExec()
     int runTests(int argc, char* argv[]);

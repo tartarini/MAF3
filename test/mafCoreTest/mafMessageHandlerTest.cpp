@@ -2,59 +2,25 @@
  *  mafMessageHandlerTest.cpp
  *  mafCoreTest
  *
- *  Created by Paolo Quadrani on 27/03/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 27/03/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafLogger.h>
-#include <mafLoggerConsole.h>
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
-/**
- Class name: mafMessageHandlerTest
- This class implements the test suite for mafMessageHandler.
- */
+void mafMessageHandlerTest::initTestCase() {
+    m_Handler = mafMessageHandler::instance();
+    m_Handler->installMessageHandler();
+}
 
-//! <title>
-//mafMessageHandler
-//! </title>
-//! <description>
-//mafMessageHandler is a singleton which provides the dispatching of logging messages.
-//The message is forwarded to the current active logger only if it is enabled and the
-//message type has not been filtered.
-//For example: if the logger is in the mode of enable logging only for Critical messages,
-//a message is forwarded to it only if it is critical and so on.
-//! </description>
-
-class mafMessageHandlerTest : public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_Handler = mafMessageHandler::instance();
-        m_Handler->installMessageHandler();
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        m_Handler->shutdown();
-    }
-
-    /// create new object and check that is not NULL test case.
-    void mafMessageHandlerConstructorTest();
-
-    /// Test the active logging assignment.
-    void setActiveloggerTest();
-
-private:
-    mafMessageHandler *m_Handler; ///< Testing variable.
-};
+void mafMessageHandlerTest::cleanupTestCase() {
+    m_Handler->shutdown();
+}
 
 void mafMessageHandlerTest::mafMessageHandlerConstructorTest() {
     QVERIFY(m_Handler != NULL);
@@ -74,7 +40,6 @@ void mafMessageHandlerTest::setActiveloggerTest() {
     m_Handler->setDeafultLoggerAsActive();
 }
 
-MAF_REGISTER_TEST(mafMessageHandlerTest);
 #include "mafMessageHandlerTest.moc"
 
 

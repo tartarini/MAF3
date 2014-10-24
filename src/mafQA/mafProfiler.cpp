@@ -8,6 +8,9 @@
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
+#if defined(_WIN32) || defined(WIN32)
+    #pragma warning( disable : 4530 )
+#endif
 
 #include "mafProfiler.h"
 

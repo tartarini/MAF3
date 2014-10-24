@@ -68,13 +68,13 @@ public:
     void setDataValue(mafCore::mafProxyInterface *data_value);
 
     /// Set the pose for the current data.
-    void setPoseMatrix(const mafMatrix *matrix);
+    void setPoseMatrix(const mafMatrix4x4 *matrix);
 
     /// Set the pose for the current data through matrixString.
     void setPoseMatrixString(const QString matrixString);
 
     /// Return the pose matrix of the current data.
-    mafMatrix *poseMatrix();
+    mafMatrix4x4 *poseMatrix();
 
     /// Return the pose matrixString of the current data.
     QString poseMatrixString();
@@ -136,7 +136,7 @@ protected:
 private:
     mafCore::mafProxyInterface *m_DataValue; ///< Data value present into the current dataset at current timestamp.
     mafCore::mafProxyInterface *m_DataBoundary; ///< Represent the boundary of current data value at current timestamp.
-    mafMatrix *m_Matrix; ///< Pose matrix
+    mafMatrix4x4 *m_Matrix; ///< Pose matrix
     mafDataBoundaryAlgorithm *m_DataBoundaryAlgorithm; ///< Represent the class that will calculate the boundary of the m_DataValue and generate as output a boundary to be visualized.
     QString m_DataBoundaryAlgorithmName; ///< Name of the mafDataBoundaryAlgorithm.
     QString m_ExternalDataType; ///< Type of data contained in the mafDataSet.

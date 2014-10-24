@@ -2,16 +2,16 @@
  *  mafCoreSingletonsTest.cpp
  *  mafCoreTest
  *
- *  Created by Paolo Quadrani on 27/03/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 27/03/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
+#include "mafCoreTestList.h"
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(WIN32)
     #define TEST_LIBRARY_NAME "mafModuleTest.dll"
 #else
     #ifdef __APPLE__
@@ -23,29 +23,12 @@
 
 using namespace mafCore;
 
-/**
- Class name: mafCoreSingletonsTest
- This class implements the test suite for mafCoreSingletons.
- */
-class mafCoreSingletonsTest : public QObject {
-    Q_OBJECT
+void mafCoreSingletonsTest::initTestCase() {
+    m_IdProvider = mafIdProvider::instance();
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_IdProvider = mafIdProvider::instance();
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-    }
-
-    /// Call the initialization for mafCoreSingletons and verify that are initialized.
-    void mafSingletonsInitializeTest();
-
-private:
-    mafIdProvider *m_IdProvider; ///< Test var.
-};
+void mafCoreSingletonsTest::cleanupTestCase() {
+}
 
 void mafCoreSingletonsTest::mafSingletonsInitializeTest() {
     QVERIFY(m_IdProvider != NULL);
@@ -61,6 +44,4 @@ void mafCoreSingletonsTest::mafSingletonsInitializeTest() {
     QVERIFY(result);
 }
 
-
-MAF_REGISTER_TEST(mafCoreSingletonsTest);
 #include "mafCoreSingletonsTest.moc"

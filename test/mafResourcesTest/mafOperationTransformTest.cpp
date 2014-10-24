@@ -9,79 +9,41 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafResourcesRegistration.h>
-#include <mafOperationTransform.h>
-#include <mafVMEManager.h>
-#include <mafVME.h>
-#include <mafDataSet.h>
-#include <QDebug>
+#include "mafResourcesTestList.h"
 
 using namespace mafResources;
 using namespace mafEventBus;
 
-/**
- Class name: mafOperationTransformTest
- This class implements the test suite for mafOperationTransform.
- */
+void mafOperationTransformTest::initTestCase() {        
+    mafMessageHandler::instance()->installMessageHandler();
+    mafResourcesRegistration::registerResourcesObjects();
 
-//! <title>
-//mafOperationTransform
-//! </title>
-//! <description>
-//mafOperationTransform will move a VME modifying its pose matrix.
-//! </description>
+    m_VMEManager = mafVMEManager::instance();
+    
+    // Create the parametric operation.
+    m_OpTransform = mafNEW(mafResources::mafOperationTransform);
+    
+    m_VME = mafNEW(mafResources::mafVME);
+    
+    mafMatrix4x4 *newMatrix = new mafMatrix4x4();
+    newMatrix->setToIdentity();
 
-class mafOperationTransformTest : public QObject {
-    Q_OBJECT
+    m_DataSet = mafNEW(mafResources::mafDataSet);
+    m_DataSet->setPoseMatrix(newMatrix);
+    m_VME->dataSetCollection()->insertItem(m_DataSet);
+    
+    m_OpTransform->setInput(m_VME);
+    m_OpTransform->initialize();
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {        
-        mafMessageHandler::instance()->installMessageHandler();
-        mafResourcesRegistration::registerResourcesObjects();
+}
 
-        m_VMEManager = mafVMEManager::instance();
-        
-        // Create the parametric operation.
-        m_OpTransform = mafNEW(mafResources::mafOperationTransform);
-        
-        m_VME = mafNEW(mafResources::mafVME);
-        
-        mafMatrix *newMatrix = new mafMatrix();
-        newMatrix->setIdentity();
-
-        m_DataSet = mafNEW(mafResources::mafDataSet);
-        m_DataSet->setPoseMatrix(newMatrix);
-        m_VME->dataSetCollection()->insertItem(m_DataSet);
-        
-        m_OpTransform->setInput(m_VME);
-        m_OpTransform->initialize();
-
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_DataSet);
-        mafDEL(m_VME);
-        mafDEL(m_OpTransform);
-        m_VMEManager->shutdown();
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// Test the operation's execution.
-    void testExecute();
-
-   /// Test Set/Get method of transform operation
-    void SetGetTest();
-
-private:
-    mafOperationTransform *m_OpTransform; ///< Transform operation.
-    mafVME *m_VME; ///< represents the vme that will be moved
-    mafVMEManager *m_VMEManager; ///< instance of mafVMEManager.
-    mafDataSet *m_DataSet;
-};
+void mafOperationTransformTest::cleanupTestCase() {
+    mafDEL(m_DataSet);
+    mafDEL(m_VME);
+    mafDEL(m_OpTransform);
+    m_VMEManager->shutdown();
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafOperationTransformTest::testExecute() {
     double x, y, z;
@@ -159,7 +121,6 @@ void mafOperationTransformTest::SetGetTest() {
 }
 
 
-MAF_REGISTER_TEST(mafOperationTransformTest);
 #include "mafOperationTransformTest.moc"
 
 

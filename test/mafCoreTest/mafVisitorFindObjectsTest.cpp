@@ -9,8 +9,7 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafVisitorFindObjects.h>
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
@@ -41,32 +40,13 @@ void testVisitorFindObjectsCustom::visit(mafObjectBase *obj) {
 
 //------------------------------------------------------------------------------------------
 
-/**
- Class name: mafVisitorFindObjectsTest
- This class implements the test suite for mafVisitorFindObjects.
- */
-class mafVisitorFindObjectsTest : public QObject {
-    Q_OBJECT
+void mafVisitorFindObjectsTest::initTestCase() {
+    m_VisitorFindObjects = mafNEW(testVisitorFindObjectsCustom);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_VisitorFindObjects = mafNEW(testVisitorFindObjectsCustom);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_VisitorFindObjects);
-    }
-
-    /// mafVisitorFindObjects allocation test case.
-    void mafVisitorFindObjectsAllocationTest();
-    /// Test the creation and update methods..
-    void mafVisitorFindObjectsObjectListTest();
-
-private:
-    testVisitorFindObjectsCustom *m_VisitorFindObjects; ///< Test var.
-};
+void mafVisitorFindObjectsTest::cleanupTestCase() {
+    mafDEL(m_VisitorFindObjects);
+}
 
 void mafVisitorFindObjectsTest::mafVisitorFindObjectsAllocationTest() {
     QVERIFY(m_VisitorFindObjects != NULL);
@@ -89,6 +69,5 @@ void mafVisitorFindObjectsTest::mafVisitorFindObjectsObjectListTest() {
     mafDEL(obj2);
 }
 
-MAF_REGISTER_TEST(mafVisitorFindObjectsTest);
 #include "mafVisitorFindObjectsTest.moc"
 

@@ -2,16 +2,14 @@
  *  mafCodecTest.cpp
  *  mafSerializationTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafCodec.h>
+#include "mafSerializationTestList.h"
 
 using namespace mafCore;
 using namespace mafSerialization;
@@ -59,44 +57,15 @@ void testCodecCustom::encode(mafMemento *memento) {
 //------------------------------------------------------------------------------------------
 
 
-/**
- Class name: mafCodecTest
- This class implements the test suite for mafCodec.
- */
+void mafCodecTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    m_Codec = mafNEW(testCodecCustom);
+}
 
- //! <title>
-//mafCodec
-//! </title>
-//! <description>
-//mafCodec is the base class that define the interface for MAF3 codec.
-//! </description>
-
-class mafCodecTest: public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        m_Codec = mafNEW(testCodecCustom);
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_Codec);
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafCodec allocation test case.
-    void mafCodecAllocationTest();
-    /// test the encode method.
-    void encodeTest();
-    /// test the decode method.
-    void decodeTest();
-
-private:
-    testCodecCustom *m_Codec; ///< Test var
-};
+void mafCodecTest::cleanupTestCase() {
+    mafDEL(m_Codec);
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafCodecTest::mafCodecAllocationTest() {
     QVERIFY(m_Codec != NULL);
@@ -116,7 +85,5 @@ void mafCodecTest::decodeTest() {
     QCOMPARE(m_Codec->codecString(), res);
 }
 
-
-MAF_REGISTER_TEST(mafCodecTest);
 #include "mafCodecTest.moc"
 

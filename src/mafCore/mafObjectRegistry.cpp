@@ -14,6 +14,8 @@
 #include "mafObjectFactory.h"
 #include "mafVisitorFindObjectsByHashCode.h"
 
+#include <QtConcurrent>
+
 using namespace mafCore;
 
 

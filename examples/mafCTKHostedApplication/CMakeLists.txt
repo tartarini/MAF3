@@ -33,7 +33,7 @@ include_directories("${CTK_BINARY_DIR}/Plugins/org.commontk.dah.app")
 ## Init Project
 ## #################################################################
 
-mafMacroInitProject(0)
+mafMacroInitProject("application")
 
 ## #################################################################
 ## Build rules
@@ -62,4 +62,4 @@ mafCopyFilesFromExtension("ui" "SimpleApp")
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject(1)
+mafMacroBuildProject("application")

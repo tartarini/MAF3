@@ -11,53 +11,21 @@
  */
 
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafCSVReader.h>
+#include "mafSerializationTestList.h"
+#include "mafCSVReaderTest.h"
 
 using namespace mafCore;
 using namespace mafSerialization;
 
-/**
- Class name: mafCSVReaderTest
- This class implements the test suite for mafCodecRawASCII.
- */
+void mafCSVReaderTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    m_CSVReader = mafNEW(mafSerialization::mafCSVReader);
+}
 
-//! <title>
-//mafCSVReader
-//! </title>
-//! <description>
-//mafCSVReader is help class in order to read Comma Separated Value file. Currently it is only a tool that will be used from a mafCodec
-//! </description>
-
-class mafCSVReaderTest: public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        m_CSVReader = mafNEW(mafSerialization::mafCSVReader);
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_CSVReader);
-    }
-
-    /// mafCodecRawASCII allocation test case.
-    void mafCSVReaderAllocationTest();
-
-    /// test the decode method.
-    void csvFromFileTest();
-
-    /// test the encode method.
-    void csvFromStringTest();
-
-
-private:
-    mafCSVReader *m_CSVReader; ///< Test var
-};
+void mafCSVReaderTest::cleanupTestCase() {
+    mafDEL(m_CSVReader);
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafCSVReaderTest::mafCSVReaderAllocationTest() {
     QVERIFY(m_CSVReader != NULL);
@@ -103,6 +71,6 @@ void mafCSVReaderTest::csvFromStringTest() {
 }
 
 
-//MAF_REGISTER_TEST(mafCSVReaderTest);
+
 #include "mafCSVReaderTest.moc"
 

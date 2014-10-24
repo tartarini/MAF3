@@ -46,14 +46,21 @@ namespace mafQA {
 		public:
             ///!brief Registration class constructor.
             /** The constructor also register also the test passed as typename into the test suite registry. */
-            mafTestRegistration() {
+            mafTestRegistration() : m_TestToRegister(NULL){
                 m_TestToRegister = new T();
-                mafTestRegistry::instance()->registerTest(m_TestToRegister);
+				if(mafTestRegistry::instance()->isRegistered(m_TestToRegister) == false) {
+                    mafTestRegistry::instance()->registerTest(m_TestToRegister);
+				} else {
+					delete m_TestToRegister;
+					m_TestToRegister = NULL;
+				}
 			}
 
             ///!brief Registration class destructor
             ~mafTestRegistration() {
-                delete m_TestToRegister;
+				if(m_TestToRegister) {
+                    delete m_TestToRegister;
+				}
 			}
 		
 		private:

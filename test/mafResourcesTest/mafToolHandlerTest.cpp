@@ -9,46 +9,21 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafResourcesRegistration.h>
-#include <mafToolHandler.h>
-#include <mafTool.h>
-
+#include "mafResourcesTestList.h"
 
 using namespace mafCore;
 using namespace mafResources;
 
-/**
- Class name: mafToolHandlerTest
- This class implements the test suite for mafToolHandler.
- */
-class mafToolHandlerTest : public QObject {
-    Q_OBJECT
+void mafToolHandlerTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    mafResourcesRegistration::registerResourcesObjects();
+    m_Handler = mafNEW(mafResources::mafToolHandler);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        mafResourcesRegistration::registerResourcesObjects();
-        m_Handler = mafNEW(mafResources::mafToolHandler);
-    }
-
-    /// Cleanup test variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_Handler);
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// Allocation test case.
-    void mafToolHandlerAllocationTest();
-
-    /// Add and remove test
-    void mafToolHandlerAddRemoveTest();
-
-private:
-    mafToolHandler *m_Handler; ///< Test Var.
-};
+void mafToolHandlerTest::cleanupTestCase() {
+    mafDEL(m_Handler);
+    mafMessageHandler::instance()->shutdown();
+}
 
 
 void mafToolHandlerTest::mafToolHandlerAllocationTest() {
@@ -91,6 +66,5 @@ void mafToolHandlerTest::mafToolHandlerAddRemoveTest() {
     QVERIFY(num == 0);
 }
 
-MAF_REGISTER_TEST(mafToolHandlerTest);
 #include "mafToolHandlerTest.moc"
 

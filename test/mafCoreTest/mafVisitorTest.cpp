@@ -9,10 +9,7 @@
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafObject.h>
-
-#include <mafVisitor.h>
+#include "mafCoreTestList.h"
 
 using namespace mafCore;
 
@@ -38,34 +35,16 @@ testVisitorImplement::testVisitorImplement(const QString code_location) : mafVis
 //-------------------------------------------------------------------------
 
 
-/**
- Class name: mafVisitorTest
- This class implements the test suite for mafVisitor.
- */
-class mafVisitorTest : public QObject {
-    Q_OBJECT
+void mafVisitorTest::initTestCase() {
+    m_Object = mafNEW(mafCore::mafObject);
+    m_Object->setObjectName("Test");
+    m_VisitorImplement = mafNEW(testVisitorImplement);
+}
 
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        m_Object = mafNEW(mafCore::mafObject);
-        m_Object->setObjectName("Test");
-        m_VisitorImplement = mafNEW(testVisitorImplement);
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_Object);
-        mafDEL(m_VisitorImplement);
-    }
-
-    /// register new object in factory test case.
-    void visitorTest();
-
-private:
-    testVisitorImplement *m_VisitorImplement; ///< Test variable
-    mafObject *m_Object; ///< test var.
-};
+void mafVisitorTest::cleanupTestCase() {
+    mafDEL(m_Object);
+    mafDEL(m_VisitorImplement);
+}
 
 void mafVisitorTest::visitorTest() {
     m_Object->acceptVisitor(m_VisitorImplement);
@@ -73,6 +52,5 @@ void mafVisitorTest::visitorTest() {
     QCOMPARE(res, m_Object->objectName());
 }
 
-MAF_REGISTER_TEST(mafVisitorTest);
 #include "mafVisitorTest.moc"
 

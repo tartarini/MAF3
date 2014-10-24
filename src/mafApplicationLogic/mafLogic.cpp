@@ -17,9 +17,10 @@
 
 #define PLUGIN_EXTENSION_FILTER "*.mafplugin"
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(WIN32)
     #define SHARED_OBJECT_PREFIX ""
-    #define SHARED_OBJECT_SUFFIX ".dll"
+    //#define SHARED_OBJECT_SUFFIX ".dll"
+    #define SHARED_OBJECT_SUFFIX ""
 #else
     #define SHARED_OBJECT_PREFIX "lib"
     #ifdef __APPLE__
@@ -87,14 +88,17 @@ bool mafLogic::initialize() {
             QString soLibName(SHARED_OBJECT_PREFIX);
             soLibName.append(so);
             soLibName.append(SHARED_OBJECT_SUFFIX);
+			
             handler = mafInitializeModule(soLibName);
+			
+
             if(handler) {
                 m_LibraryHandlersHash.insert(soLibName, handler);
             } 
-            
+			
             result = result && (handler != NULL);
         }
-
+		
         requestNewHierarchy();
     }
     
@@ -110,9 +114,7 @@ mafCore::mafHierarchy *mafLogic::requestNewHierarchy() {
     // Initialize data hierarchy
     mafEvent ev("maf.local.resources.hierarchy.new");
     ev.setReturnValue(mafEventReturnArgument(mafCore::mafHierarchyPointer, m_Hierarchy));
-
     mafEventBusManager::instance()->notifyEvent(ev);
-   
     return m_Hierarchy;
 }
 
@@ -170,7 +172,7 @@ void mafLogic::loadPlugins(QString plugin_dir) {
         // For each plugin file ask the plugin manager to load it through the event bus.
         Q_FOREACH(QString file, plugin_list) {
             file = dir.absoluteFilePath(file);
-            QByteArray ba = file.toAscii();
+            QByteArray ba = file.toLatin1();
             char *v = ba.data();
             mafEvent ev("maf.local.resources.plugin.loadLibrary");
             ev.addParameter(mafEventArgument(QString, file));
@@ -240,7 +242,7 @@ void mafLogic::restoreHierarchy(QString fileName) {
     mafEventBusManager::instance()->notifyEvent(ev);
     
     if(mementoHierarchy == NULL) {
-        QByteArray ba = mafTr("Impossible to load MSF").toAscii();
+        QByteArray ba = mafTr("Impossible to load MSF").toLatin1();
         qCritical("%s", ba.data());
         return;
     }

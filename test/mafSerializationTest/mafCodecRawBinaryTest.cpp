@@ -2,71 +2,34 @@
  *  mafCodecRawBinaryTest.cpp
  *  mafSerializationTest
  *
- *  Created by Paolo Quadrani on 22/09/09.
+ *  Created by Paolo Quadrani - Daniele Giunchi on 22/09/09.
  *  Copyright 2009 SCS-B3C. All rights reserved.
  *
  *  See Licence at: http://tiny.cc/QXJ4D
  *
  */
 
-#include <mafTestSuite.h>
-#include <mafCoreSingletons.h>
-#include <mafCodecRawBinary.h>
-#include <mafObject.h>
-#include <mafMementoObject.h>
+#include "mafSerializationTestList.h"
 
 using namespace mafCore;
 using namespace mafSerialization;
 
-/**
- Class name: mafCodecRawBinaryTest
- This class implements the test suite for mafCodecRawBinary.
- */
+void mafCodecRawBinaryTest::initTestCase() {
+    mafMessageHandler::instance()->installMessageHandler();
+    m_ObjectTest = mafNEW(mafCore::mafObject);
+    m_CodecRaw = mafNEW(mafSerialization::mafCodecRawBinary);
+    m_List.push_back("one");
+    m_List.push_back("two");
+    m_List.push_back("three");
 
-//! <title>
-//mafCodecRawBinary
-//! </title>
-//! <description>
-//mafCodecRawBinary is a codec to Encode/Decode maf objects into a raw memory dump.
-//! </description>
+}
 
-class mafCodecRawBinaryTest: public QObject {
-    Q_OBJECT
-
-private Q_SLOTS:
-    /// Initialize test variables
-    void initTestCase() {
-        mafMessageHandler::instance()->installMessageHandler();
-        m_ObjectTest = mafNEW(mafCore::mafObject);
-        m_CodecRaw = mafNEW(mafSerialization::mafCodecRawBinary);
-        m_List.push_back("one");
-        m_List.push_back("two");
-        m_List.push_back("three");
-
-    }
-
-    /// Cleanup tes variables memory allocation.
-    void cleanupTestCase() {
-        mafDEL(m_ObjectTest);
-        mafDEL(m_CodecRaw);
-        m_List.clear();
-        mafMessageHandler::instance()->shutdown();
-    }
-
-    /// mafCodecRawBinary allocation test case.
-    void mafCodecRawBinaryAllocationTest();
-    /// test the encode method.
-    void encodeTest();
-    /// test the decode method.
-    void decodeTest();
-
-
-private:
-    mafCodecRawBinary *m_CodecRaw; ///< Test var
-    mafObject *m_ObjectTest; ///< Test Object.
-    QBuffer m_Buffer; ///< Test buffer data.
-    QVariantList m_List; ///< Test QList.
-};
+void mafCodecRawBinaryTest::cleanupTestCase() {
+    mafDEL(m_ObjectTest);
+    mafDEL(m_CodecRaw);
+    m_List.clear();
+    mafMessageHandler::instance()->shutdown();
+}
 
 void mafCodecRawBinaryTest::mafCodecRawBinaryAllocationTest() {
     QVERIFY(m_CodecRaw != NULL);
@@ -145,12 +108,10 @@ void mafCodecRawBinaryTest::decodeTest() {
         QVERIFY(m_List.at(i).toString().compare(obj->tagList()->at(i).toString()) == 0);
 
     }
-
+	mafDEL(m); // LEAK OR CRASH IN VS2013
     mafDEL(obj);
-    mafDEL(m);
+    
 }
 
-
-MAF_REGISTER_TEST(mafCodecRawBinaryTest);
 #include "mafCodecRawBinaryTest.moc"
 

@@ -20,7 +20,7 @@ mafDelegate::~mafDelegate() {
 }
 
 bool mafDelegate::isMethodDefined(QString signature) {
-    int idx = this->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(signature.toAscii()));
+    int idx = this->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(signature.toLatin1()));
     return idx != -1;
 }
 
@@ -40,48 +40,48 @@ void mafDelegate::executeMethod(QString signature, mafArgumentList *argList /* =
         // return value is NULL => void
         if (argList == NULL || argList->count() == 0) {
             // Method with neither arguments.
-            metaObject()->invokeMethod((QObject *)this, method.toAscii(), Qt::DirectConnection);
+            metaObject()->invokeMethod((QObject *)this, method.toLatin1(), Qt::DirectConnection);
         } else {
             // Method with arguments.
             switch (argList->count()) {
                 case 1:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), \
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), \
                         Qt::DirectConnection, argList->at(0));
                     break;
                 case 2:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), \
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), \
                         Qt::DirectConnection, argList->at(0), argList->at(1));
                     break;
                 case 3:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), \
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), \
                         Qt::DirectConnection, argList->at(0), argList->at(1), argList->at(2));
                     break;
                 case 4:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), \
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), \
                         Qt::DirectConnection, argList->at(0), argList->at(1), argList->at(2), argList->at(3));
                     break;
                 case 5:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), \
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), \
                         Qt::DirectConnection, argList->at(0), argList->at(1), argList->at(2), argList->at(3), argList->at(4));
                     break;
                 case 6:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), \
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), \
                         Qt::DirectConnection, argList->at(0), argList->at(1), argList->at(2), argList->at(3), argList->at(4), argList->at(5));
                     break;
                 case 7:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), \
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), \
                         Qt::DirectConnection, argList->at(0), argList->at(1), argList->at(2), argList->at(3), argList->at(4), argList->at(5), argList->at(6));
                     break;
                 case 8:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), \
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), \
                         Qt::DirectConnection, argList->at(0), argList->at(1), argList->at(2), argList->at(3), argList->at(4), argList->at(5), argList->at(6), argList->at(7));
                     break;
                 case 9:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), \
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), \
                         Qt::DirectConnection, argList->at(0), argList->at(1), argList->at(2), argList->at(3), argList->at(4), argList->at(5), argList->at(6), argList->at(7), argList->at(8));
                     break;
                 case 10:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), \
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), \
                         Qt::DirectConnection, argList->at(0), argList->at(1), argList->at(2), argList->at(3), argList->at(4), argList->at(5), argList->at(6), argList->at(7), argList->at(8), argList->at(9));
                     break;
             }
@@ -90,47 +90,47 @@ void mafDelegate::executeMethod(QString signature, mafArgumentList *argList /* =
         // delegate method has return value.
         if (argList == NULL || argList->count() == 0) {
             // Method has no arguments.
-            metaObject()->invokeMethod((QObject *)this, method.toAscii(), Qt::DirectConnection, *ret);
+            metaObject()->invokeMethod((QObject *)this, method.toLatin1(), Qt::DirectConnection, *ret);
         } else {
             // Method has also arguments.
             switch (argList->count()) {
                 case 1:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), Qt::DirectConnection, *ret, argList->at(0));
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), Qt::DirectConnection, *ret, argList->at(0));
                     break;
                 case 2:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), Qt::DirectConnection,\
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), Qt::DirectConnection,\
                         *ret, argList->at(0), argList->at(1));
                     break;
                 case 3:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), Qt::DirectConnection,\
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), Qt::DirectConnection,\
                         *ret, argList->at(0), argList->at(1), argList->at(2));
                     break;
                 case 4:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), Qt::DirectConnection,\
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), Qt::DirectConnection,\
                         *ret, argList->at(0), argList->at(1), argList->at(2), argList->at(3));
                     break;
                 case 5:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), Qt::DirectConnection,\
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), Qt::DirectConnection,\
                         *ret, argList->at(0), argList->at(1), argList->at(2), argList->at(3), argList->at(4));
                     break;
                 case 6:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), Qt::DirectConnection,\
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), Qt::DirectConnection,\
                         *ret, argList->at(0), argList->at(1), argList->at(2), argList->at(3), argList->at(4), argList->at(5));
                     break;
                 case 7:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), Qt::DirectConnection,\
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), Qt::DirectConnection,\
                         *ret, argList->at(0), argList->at(1), argList->at(2), argList->at(3), argList->at(4), argList->at(5), argList->at(6));
                     break;
                 case 8:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), Qt::DirectConnection,\
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), Qt::DirectConnection,\
                         *ret, argList->at(0), argList->at(1), argList->at(2), argList->at(3), argList->at(4), argList->at(5), argList->at(6), argList->at(7));
                     break;
                 case 9:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), Qt::DirectConnection,\
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), Qt::DirectConnection,\
                         *ret, argList->at(0), argList->at(1), argList->at(2), argList->at(3), argList->at(4), argList->at(5), argList->at(6), argList->at(7), argList->at(8));
                     break;
                 case 10:
-                    metaObject()->invokeMethod((QObject *)this, method.toAscii(), Qt::DirectConnection,\
+                    metaObject()->invokeMethod((QObject *)this, method.toLatin1(), Qt::DirectConnection,\
                         *ret, argList->at(0), argList->at(1), argList->at(2), argList->at(3), argList->at(4), argList->at(5), argList->at(6), argList->at(7), argList->at(8), argList->at(9));
                     break;
             }

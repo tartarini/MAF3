@@ -102,7 +102,7 @@ void mafPipeDataSlice::setPlaneNormalAxes(mafPlaneNormal axes) {
     }
 }
 
-void mafPipeDataSlice::setTransformMatrix(mafMatrix &m) {
+void mafPipeDataSlice::setTransformMatrix(mafMatrix4x4 &m) {
     m_TransformMatrix = m;
     setModified();
 }

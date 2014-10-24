@@ -10,17 +10,10 @@
 #
 
 ## #################################################################
-## Find the external packages.
-## #################################################################
-
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_qxmlrpc.cmake)
-include(${MAF_SOURCE_DIR}/CMakeExternals/Find_QtSOAP.cmake)
-
-## #################################################################
 ## Init Project
 ## #################################################################
 
-mafMacroInitProject(1)
+mafMacroInitProject("test")
 
 ## #################################################################
 ## Build rules
@@ -34,4 +27,4 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROJECT_LIBS})
 ## Installation
 ## #################################################################
 
-mafMacroInstallProject(0)
+mafMacroBuildProject("test")

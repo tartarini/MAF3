@@ -11,7 +11,7 @@
 
 #include "mafOperationTransform.h"
 #include "mafDataSet.h"
-#include "mafMatrix.h"
+#include "mafMatrix4x4.h"
 #include "mafVME.h"
 #include "mafDataSetCollection.h"
 
@@ -38,8 +38,8 @@ bool mafOperationTransform::acceptObject(mafCore::mafObjectBase *obj) {
 bool mafOperationTransform::initialize() {
     mafVME *inVME = qobject_cast<mafVME*>(input());
     m_DataSetCollection = inVME->dataSetCollection();
-    m_OldMatrix = m_DataSetCollection->poseMatrix()->clone();
-    m_OldMatrix->description();
+    m_OldMatrix = new mafMatrix4x4(*(m_DataSetCollection->poseMatrix()));
+    qDebug() << m_OldMatrix;
 
     return Superclass::initialize();
 }
@@ -142,8 +142,8 @@ void mafOperationTransform::setZRot(const QString zrot) {
 
 void mafOperationTransform::execute() {
     m_Status = mafOperationStatusExecuting;
-    m_Matrix = m_DataSetCollection->poseMatrix()->clone();
-    m_Matrix->description();
+    m_Matrix = new mafMatrix4x4(*(m_DataSetCollection->poseMatrix()));
+    qDebug() << m_Matrix;
     qDebug() << mafTr("Executing transform operation...");
     Q_EMIT executionEnded();
 }
